@@ -1061,8 +1061,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-    if(forceEnd)
-        return;
+  //  if(forceEnd)
+    //    return;
     
     
     
