@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.downloadListener">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.downloadItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[appUrl path]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.downloadItem.downloadState">
+            </PersistentString>
+            <PersistentString
+               value = "item.downloadItem.downloadState != DownloadStateWaitingStart &amp;&amp; item.downloadItem.downloadState != DownloadStateCompleted">
+            </PersistentString>
+            <PersistentString
+               value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

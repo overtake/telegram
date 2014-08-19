@@ -1,0 +1,30 @@
+//
+//  TGImageView.h
+//  Telegram
+//
+//  Created by keepcoder on 17.07.14.
+//  Copyright (c) 2014 keepcoder. All rights reserved.
+//
+
+#import "BTRImageView.h"
+
+#import "TGImageObject.h"
+
+@interface TGImageView : BTRImageView<NSImageDelegate,TGImageObjectDelegate>
+
+
+
+@property (nonatomic,strong) TGImageObject *object;
+
+
+@property (nonatomic, strong) NSColor *borderColor;
+@property (nonatomic) int blurRadius;
+@property (nonatomic) int roundSize;
+@property (nonatomic) float borderWidth;
+
+@property (nonatomic, copy) dispatch_block_t tapBlock;
+
+
+@property (nonatomic) BOOL isNotNeedHackMouseUp;
+
+@end

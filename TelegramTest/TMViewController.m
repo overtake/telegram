@@ -1,0 +1,102 @@
+//
+//  TMViewController.m
+//  Telegram P-Edition
+//
+//  Created by Dmitry Kondratyev on 12/15/13.
+//  Copyright (c) 2013 keepcoder. All rights reserved.
+//
+
+#import "TMViewController.h"
+#import "TMView.h"
+
+@interface TMViewController ()
+@end
+
+@implementation TMViewController
+
+- (id)initWithFrame:(NSRect)frame {
+    self = [super init];
+    if(self) {
+        self.frameInit = frame;
+    }
+    return self;
+}
+
+- (void) setHidden:(BOOL)isHidden {
+    [self.view setHidden:isHidden];
+}
+
+- (void)setCenterNavigationBarView:(TMView *)centerNavigationBarView {
+    [self setCenterNavigationBarView:centerNavigationBarView animated:NO];
+}
+
+- (void)setCenterNavigationBarView:(TMView *)centerNavigationBarView animated:(BOOL)animation {
+    self->_centerNavigationBarView = centerNavigationBarView;
+    
+    if(self.navigationViewController && self.navigationViewController.currentController == self)
+        [self.navigationViewController.nagivationBarView setCenterView:centerNavigationBarView animated:animation];
+}
+
+- (void)setLeftNavigationBarView:(TMView *)leftNavigationBarView {
+    [self setLeftNavigationBarView:leftNavigationBarView animated:NO];
+}
+
+- (void)setLeftNavigationBarView:(TMView *)leftNavigationBarView animated:(BOOL)animation {
+    self->_leftNavigationBarView = leftNavigationBarView;
+    
+    if(self.navigationViewController && self.navigationViewController.currentController == self)
+        [self.navigationViewController.nagivationBarView setLeftView:leftNavigationBarView animated:animation];
+}
+
+- (void)setRightNavigationBarView:(TMView *)rightNavigationBarView {
+    [self setRightNavigationBarView:rightNavigationBarView animated:NO];
+}
+
+- (void)setRightNavigationBarView:(TMView *)rightNavigationBarView animated:(BOOL)animation {
+    self->_rightNavigationBarView = rightNavigationBarView;
+    
+    if(self.navigationViewController && self.navigationViewController.currentController == self)
+        [self.navigationViewController.nagivationBarView setRightView:rightNavigationBarView animated:animation];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [[Telegram sharedInstance] makeFirstController:self];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    
+}
+- (void)viewDidDisappear:(BOOL)animated {
+
+}
+
+- (void)rightButtonAction {
+    
+}
+
+- (IBAction)backOrClose:(NSMenuItem *)sender {
+    if(self.popover) {
+        [self.popover close];
+        self.popover = nil;
+        return;
+    }
+    
+    if([[Telegram rightViewController] isModalViewActive]) {
+        [[Telegram rightViewController] hideModalView:YES animation:YES];
+    } else {
+        [[Telegram rightViewController] navigationGoBack];
+    }
+}
+
+- (void)loadView {
+//    [super loadView];
+    self.view = [[TMView alloc] initWithFrame: self.frameInit];
+}
+
+- (TMView *)view {
+    return (TMView *)[super view];
+}
+
+@end

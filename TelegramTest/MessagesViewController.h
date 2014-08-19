@@ -1,0 +1,103 @@
+//
+//  MessagesViewController.h
+//  TelegramTest
+//
+//  Created by Dmitry Kondratyev on 10/29/13.
+//  Copyright (c) 2013 keepcoder. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+#import "MessagesTableView.h"
+#import "UploadOperation.h"
+#import "TMElements.h"
+#import "MessagesDelegate.h"
+#import "MesssageInputGrowingTextView.h"
+#import "ConnectionStatusViewControllerView.h"
+#import <CoreLocation/CoreLocation.h>
+@class MessageTableItem;
+
+@interface MessagesViewController : TMViewController<NSTableViewDataSource, NSTableViewDelegate,NSTextFieldDelegate, NSTextViewDelegate,MessagesDelegate>
+
+
+typedef enum {
+    MessagesViewControllerStateNone,
+    MessagesViewControllerStateEditable,
+    MessagesViewControllerStateFiltred
+} MessagesViewControllerState;
+
+@property (nonatomic, strong) NSMutableArray *selectedMessages;
+@property (nonatomic, strong) MessagesTableView *table;
+@property (nonatomic, strong) TL_conversation *dialog;
+
+@property (nonatomic) MessagesViewControllerState state;
+
+@property (nonatomic,strong,readonly) ConnectionStatusViewControllerView *connectionController;
+
+@property (nonatomic,copy) dispatch_block_t didUpdatedTable;
+
+- (void)sendTyping;
+- (void)sendMessage;
+- (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated;
+- (void)setSelectedMessage:(MessageTableItem *)item selected:(BOOL)selected;
+- (void)deleteSelectedMessages;
+- (void)cancelSelectionAndScrollToBottom;
+- (void)unSelectAll:(BOOL)animated;
+- (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
+- (void)setStringValueToTextField:(NSString *)stringValue;
+- (void)drop;
+
+//- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
+
+- (void)saveInputText;
+
+- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;
+- (void)setCurrentConversation:(TL_conversation *)dialog;
+
+- (void)setHistoryFilter:(Class)filter force:(BOOL)force;
+- (void)updateLoading;
+- (MessageTableItem *)objectAtIndex:(NSUInteger)position;
+- (NSUInteger)indexOfObject:(MessageTableItem *)item;
+- (MessageTableItem *)itemOfMsgId:(int)msg_id;
+
++(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
+
+- (NSUInteger)messagesCount;
+
+- (void)clearHistory:(TL_conversation *)dialog;
+- (void)leaveOrReturn:(TL_conversation *)dialog;
+- (void)deleteDialog:(TL_conversation *)dialog;
+- (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback;
+
+- (void)deleteItem:(MessageTableItem *)item;
+- (void)resendItem:(MessageTableItem *)item;
+
+
+- (void)sendImage:(NSString *)file_path file_data:(NSData *)data;
+- (void)sendVideo:(NSString *)file_path;
+- (void)sendDocument:(NSString *)file_path;
+
+
+- (void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendVideo:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
+;
+- (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
+;
+
+
+- (void)sendAudio:(NSString *)file_path;
+- (void)sendMessage:(NSString *)message ;
+- (void)sendLocation:(CLLocationCoordinate2D)coordinates;
+- (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)shareContact:(TGUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)sendSecretTTL:(int)ttl;
+
+- (void)sendSecretTTL:(int)ttl callback:(dispatch_block_t)callback;
+
+- (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
+
+- (void)hideTopInfoView:(BOOL)animated;
+- (void)showTopInfoView:(BOOL)animated;
+
+- (void)showConnectionController:(BOOL)animated;
+- (void)hideConnectionController:(BOOL)animated;
+@end

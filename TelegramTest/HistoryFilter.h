@@ -1,0 +1,51 @@
+//
+//  HistoryFilter.h
+//  Messenger for Telegram
+//
+//  Created by keepcoder on 14.05.14.
+//  Copyright (c) 2014 keepcoder. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@class ChatHistoryController;
+
+@interface HistoryFilter : NSObject
+
+@property (nonatomic,weak) RPCRequest *request;
+typedef enum {
+    HistoryFilterNone = 1 << 1,
+    HistoryFilterAllMedia = 1 << 2,
+    HistoryFilterPhoto = 1 << 3,
+    HistoryFilterVideo = 1 << 4,
+    HistoryFilterAudio = 1 << 5,
+    HistoryFilterDocuments = 1 << 6,
+    HistoryFilterText = 1 << 7,
+    HistoryFilterContact = 1 << 8,
+    HistoryFilterSearch = 1 << 9
+} HistoryFilterType;
+
+@property (nonatomic,weak) ChatHistoryController *controller;
+
+
+-(id)initWithController:(ChatHistoryController *)controller;
+
+- (NSMutableDictionary *)messageKeys;
+- (NSMutableArray *)messageItems;
++ (NSMutableDictionary *)messageKeys;
++ (NSMutableArray *)messageItems;
+
++(void)removeItems:(NSArray *)messageIds;
+
++(void)removeAllItems:(int)peerId;
+
+-(int)type;
++(int)type;
+
++(void)drop;
+
+
+-(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback;
+-(void)remoteRequest:(BOOL)next callback:(void (^)(id response))callback;
+
+@end

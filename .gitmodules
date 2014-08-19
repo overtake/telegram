@@ -1,0 +1,3 @@
+[submodule "MtProtoKit"]
+	path = MtProtoKit
+	url = https://github.com/iakovlev-peter/MtProtoKit.git

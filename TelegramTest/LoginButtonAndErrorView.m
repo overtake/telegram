@@ -1,0 +1,176 @@
+//
+//  LoginButtonAndErrorView.m
+//  Messenger for Telegram
+//
+//  Created by Dmitry Kondratyev on 3/12/14.
+//  Copyright (c) 2014 keepcoder. All rights reserved.
+//
+
+#import "LoginButtonAndErrorView.h"
+
+@interface LoginButtonAndErrorView()
+@end
+
+@implementation LoginButtonAndErrorView
+
+- (id)initWithFrame:(NSRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.errorTextField = [TMTextField defaultTextField];
+        [self.errorTextField setEditable:NO];
+        [self.errorTextField setWantsLayer:IS_RETINA];
+        [self.errorTextField setFrameOrigin:NSMakePoint(0, 0)];
+        [self.errorTextField setFont:[NSFont fontWithName:@"Helvetica" size:13]];
+        [self.errorTextField setTextColor:[NSColor redColor]];
+        self.errorTextField.layer.opacity = 0;
+        [self addSubview:self.errorTextField];
+        
+        self.textButton = [[TMTextButton alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+        [self.textButton setFont:[NSFont fontWithName:@"Helvetica" size:15]];
+        [self.textButton setDisableColor:NSColorFromRGB(0xaeaeae)];
+        [self.textButton setTextColor:BLUE_UI_COLOR];
+        [self.textButton setWantsLayer:IS_RETINA];
+        [self.textButton sizeToFit];
+        [self addSubview: self.textButton];
+    }
+    return self;
+}
+
+- (void)setButtonText:(NSString *)string {
+    self.textButton.stringValue = string;
+    [self.textButton sizeToFit];
+    
+    float errorOffset = 0;
+    if(self.errorTextField.layer.opacity != 0)
+        errorOffset = self.errorTextField.bounds.size.height + 5;
+    
+    [self.textButton setFrameOrigin:NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - errorOffset)];
+}
+
+- (void)prepareForLoading {
+    [self.textButton setDisable:YES];
+}
+
+- (void)loadingSuccess {
+    [self.textButton setDisable:NO];
+    [self.textButton setTextColor:BLUE_UI_COLOR];
+}
+
+- (void)showErrorWithText:(NSString *)text {
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        [self.errorTextField setHidden:self.errorTextField.layer.opacity == 0];
+        [self.textButton setHidden:self.textButton.layer.opacity == 0];
+
+        if(!IS_RETINA) {
+            [self setWantsLayer:NO];
+            [self.errorTextField setWantsLayer:NO];
+            [self.textButton setWantsLayer:NO];
+        }
+    }];
+    
+    float duration = 0.1;
+    float offsetError = 5;
+    
+    BOOL fromOpacity, toOpacity;
+
+    NSPoint fromPoint, toPoint;
+  
+    [self prepareForAnimation];
+    [self.errorTextField prepareForAnimation];
+    [self.textButton prepareForAnimation];
+    
+    self.errorTextField.layer.opacity = self.errorTextField.isHidden ? 0 : 1;
+    [self.errorTextField setHidden:NO];
+    
+    self.textButton.layer.opacity = self.textButton.isHidden ? 0 : 1;
+    [self.textButton setHidden:NO];
+    
+    if(text) {
+        [self.errorTextField setStringValue:text];
+        [self.errorTextField sizeToFit];
+        [self.errorTextField setFrameOrigin:NSMakePoint(self.errorTextField.frame.origin.x, self.bounds.size.height - self.errorTextField.bounds.size.height)];
+        
+        fromOpacity = 0;
+        toOpacity = 1;
+        
+        toPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - self.errorTextField.bounds.size.height - offsetError);
+        fromPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height);
+        
+    } else {
+        fromOpacity = 1;
+        toOpacity = 0;
+        
+        fromPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - self.errorTextField.bounds.size.height - offsetError);
+        toPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height);
+    }
+    
+    
+    if(toOpacity != self.errorTextField.layer.opacity)
+        [self.errorTextField setAnimation:[TMAnimations fadeWithDuration:duration fromValue:fromOpacity toValue:toOpacity] forKey:@"alpha"];
+    
+    if(!NSEqualPoints(toPoint, self.textButton.frame.origin))
+        [self.textButton setAnimation:[TMAnimations postionWithDuration:duration fromValue:fromPoint toValue:toPoint] forKey:@"position"];
+
+    [CATransaction commit];
+}
+
+- (void)performTextToBottomWithDuration:(float)duration {
+
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        self.textButton.layer.opacity = 0;
+        [self.errorTextField setHidden:self.errorTextField.layer.opacity == 0];
+        [self.textButton setHidden:self.textButton.layer.opacity == 0];
+
+        if(!IS_RETINA) {
+            [self setWantsLayer:NO];
+            [self.errorTextField setWantsLayer:NO];
+            [self.textButton setWantsLayer:NO];
+        }
+    }];
+    
+    [self prepareForAnimation];
+    [self.errorTextField prepareForAnimation];
+    [self.textButton prepareForAnimation];
+    
+    self.errorTextField.layer.opacity = self.errorTextField.isHidden ? 0 : 1;
+    [self.errorTextField setHidden:NO];
+    
+    self.textButton.layer.opacity = self.textButton.isHidden ? 0 : 1;
+    [self.textButton setHidden:NO];
+    
+    //Fade errorTextField if that need
+    if(self.errorTextField.layer.opacity) {
+        [self.errorTextField setAnimation:[TMAnimations fadeWithDuration:duration * 0.5 fromValue:self.errorTextField.layer.opacity toValue:0] forKey:@"alpha"];
+    }
+    
+    NSPoint toPoint = NSMakePoint(0, 0);
+    NSPoint fromPoint = self.textButton.frame.origin;
+    
+    CAAnimation *positionAnimation = [TMAnimations postionWithDuration:duration * (7 / 13.0) fromValue:fromPoint toValue:toPoint];
+    positionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    [self.textButton setAnimation:positionAnimation forKey:@"position2"];
+    
+    
+    CAAnimation *positionAnimation2 = [TMAnimations postionWithDuration:duration * (3 / 13.0) fromValue:NSMakePoint(0, 0) toValue:NSMakePoint(0, -self.textButton.bounds.size.height)];
+    positionAnimation2.beginTime = CACurrentMediaTime() + positionAnimation.duration;
+    positionAnimation2.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    
+    [self.textButton setAnimation:positionAnimation2 forKey:@"position"];
+    
+    
+    CABasicAnimation *opacityAnimation = (CABasicAnimation *)[TMAnimations fadeWithDuration:duration * (6 / 13.0) fromValue:1 toValue:0.2];
+    positionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    [self.textButton setAnimation:opacityAnimation forKey:@"opacity"];
+    
+    CAAnimation *opacityAnimation2 = [TMAnimations fadeWithDuration:duration * (3 / 13.0) fromValue:0.1 toValue:0];
+    opacityAnimation2.beginTime = CACurrentMediaTime() + opacityAnimation.duration;
+    opacityAnimation2.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    [self.textButton setAnimation:opacityAnimation2 forKey:@"opacity2"];
+    [CATransaction begin];
+}
+
+
+@end

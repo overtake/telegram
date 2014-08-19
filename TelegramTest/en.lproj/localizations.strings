@@ -1,0 +1,129 @@
+/*
+ localization.strings
+ TelegramTest
+ 
+ Created by keepcoder on 03.11.13.
+ Copyright (c) 2013 keepcoder. All rights reserved.
+ */
+"APP_NAME" = "Messenger for Telegram";
+
+"#TEXT_CHOOSE_CONVERSATION" = "Choose conversation \n to start messaging";
+
+"#ACTION_ADD_MEMBERS" = "Add members";
+"#ACTION_PARTICIPANTS" = "Participants";
+
+"#ACTION_DELETE_AND_EXIT" = "Delete and exit";
+"#ACTION_START_SECRET_CHAT" = "Start secret chat";
+"#ACTION_DELETE_CONVERSATION" = "Delete conversation";
+"#ACTION_ADD_TO_CONTACTS" = "Add to contacts";
+
+"#ACTION_REMOVE_FROM_CONTACTS" = "Remove from contacts";
+"#ACTION_WRITE_A_MESSAGE" = "Write a message";
+
+"Settings" = "Settings";
+"Mute" = "Mute";
+"Unmute" = "Unmute";
+"Actions" = "Actions";
+"Search" = "Search";
+"Send" = "Send";
+"Photo" = "Photo";
+"Video" = "Video";
+"Document" = "Document";
+"Contact" = "Contact";
+"Location" = "Location";
+"members" = "members";
+"Connecting" = "Connecting...";
+"online" = "online";
+"offline" = "offline";
+"Geo" = "Geo";
+"Audio" = "Audio";
+"Unsupported" = "Unsupported";
+"Open" = "Open";
+"Download" = "Download";
+"Save" = "Save";
+"changed group name" = "changed group name";
+"removed group photo" = "removed group photo";
+"changed group photo" = "changed group photo";
+"invited" = "invited";
+"created chat" = "created chat";
+"kicked" = "kicked";
+"left the group";
+"Empty" = "Empty";
+"Write a message..." = "Write a message...";
+
+//date
+"Time.last_seen" = "last seen";
+"Time.today" = "today";
+"Time.yesterday" = "yesterday";
+"Time.tomorrow" = "tomorrow";
+"Time.at" = "at";
+"Time.JustNow" = "just now";
+"Time.Ago" = " ago";
+"Time.FromNow" = "from now";
+"Time.FromNowPrefix" = " ";
+"Time.LessThan" = "less than ";
+"Time.About" = "";
+"Time.Over" = "over ";
+"Time.Almost" = "";
+"Time.Seconds" = "seconds";
+"Time.Minute" = "minute";
+"Time.MinuteCard" = "minutes";
+"Time.Minutes" = "minutes";
+"Time.MinutesA" = "minutes";
+"Time.Hour" = "hour";
+"Time.HourCard" = "hours";
+"Time.Hours" = "hours";
+"Time.HoursA" = "hours";
+"Time.Day" = "day";
+"Time.DayCard" = "days";
+"Time.Days" = "days";
+"Time.DaysA" = "days";
+"Time.Month" = "month";
+"Time.MonthCard" = "months";
+"Time.Months" = "months";
+"Time.MonthsA" = "months";
+"Time.Year" = "year";
+"Time.YearCard" = "years";
+"Time.YearAbout" = "years";
+"Time.Years" = "years";
+"Time.YearsA" = "years";
+"Time.YearsAbout" = "years";
+"Month.GenJanuary" = "January";
+"Month.GenFebruary" = "February";
+"Month.GenMarch" = "March";
+"Month.GenApril" = "April";
+"Month.GenMay" = "May";
+"Month.GenJune" = "June";
+"Month.GenJuly" = "July";
+"Month.GenAugust" = "August";
+"Month.GenSeptember" = "September";
+"Month.GenOctober" = "October";
+"Month.GenNovember" = "November";
+"Month.GenDecember" = "December";
+"Month.ShortJanuary" = "Jan";
+"Month.ShortFebruary" = "Feb";
+"Month.ShortMarch" = "Mar";
+"Month.ShortApril" = "Apr";
+"Month.ShortMay" = "May";
+"Month.ShortJune" = "Jun";
+"Month.ShortJuly" = "Jul";
+"Month.ShortAugust" = "Aug";
+"Month.ShortSeptember" = "Sep";
+"Month.ShortOctober" = "Oct";
+"Month.ShortNovember" = "Nov";
+"Month.ShortDecember" = "Dec";
+"Weekday.ShortMonday" = "Mon";
+"Weekday.ShortTuesday" = "Tue";
+"Weekday.ShortWednesday" = "Wed";
+"Weekday.ShortThursday" = "Thu";
+"Weekday.ShortFriday" = "Fri";
+"Weekday.ShortSaturday" = "Sat";
+"Weekday.ShortSunday" = "Sun";
+"Weekday.Monday" = "Monday";
+"Weekday.Tuesday" = "Tuesday";
+"Weekday.Wednesday" = "Wednesday";
+"Weekday.Thursday" = "Thursday";
+"Weekday.Friday" = "Friday";
+"Weekday.Saturday" = "Saturday";
+"Weekday.Sunday" = "Sunday";
+

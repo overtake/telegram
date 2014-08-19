@@ -1,0 +1,122 @@
+//
+// Prefix header for all source files of the 'TelegramTest' target in the 'TelegramTest' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+#import <POP/POP.h>
+
+#import "ImageUtils.h"
+
+
+#import "CMath.h"
+#import "SharedManager.h"
+#import "TLClassStore.h"
+#import "TLObject.h"
+#import "UsersManager.h"
+#import "DialogsManager.h"
+#import "MessagesManager.h"
+#import "BlockedUsersManager.h"
+#import "BroadcastManager.h"
+#import "TLRPCApi.h"
+#import "RPCRequest.h"
+#import "Storage.h"
+#import "Notification.h"
+#import "ChatsManager.h"
+#import "FullChatManager.h"
+#import "TGDcAuth.h"
+#import "TGEncryptedChat+Extensions.h"
+#import "LoopingUtils.h"
+#import "TL_peerSecret.h"
+#import "TL_peerBroadcast.h"
+#import "TL_localMessage.h"
+#import "TL_broadcast.h"
+#import "MessageSender.h"
+#import "TMElements.h"
+#import "Categories.h"
+#import "Managers.h"
+#import "MTNetwork.h"
+#import "TLAPIAdd.h"
+#import "TimeObserver.h"
+#import "TL_destructMessage.h"
+#import "TL_outDocument.h"
+#import "TL_localMessageService.h"
+#import "TL_localMessageForwarded.h"
+#import "FileUtils.h"
+#import "Telegram.h"
+#import "SettingsArchiver.h"
+#import "Application.h"
+#define MAX_CHAT_USERS 199
+#define MAX_BROADCAST_USERS 100
+#define TGMINFAKEID 1500000000
+#define TGMINSECRETID 800000000
+//#define NSLocalizedString(key, comment) \
+//[[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:@"localizations"]
+#define FONT_NAME @"Helvetica Neue"
+#define FONT_NAME_LIGHT @"Helvetica-Light"
+#define FONT_SIZE 13
+
+#define API_VERSION  [NSString stringWithFormat:@"%@.%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]] 
+
+#define NSColorFromRGB(rgbValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define NSColorFromRGBWithAlpha(rgbValue, alphaValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:(alphaValue)]
+
+#define  keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
+
+#define VIDEO_COMPRESSED_PROGRESS 10.0f
+#define MAX_FILE_SIZE 1073741824
+
+#define MIN_FILE_DOWNLOAD_SIZE 10*1024*1024
+
+#define IS_RETINA ([[NSScreen mainScreen] backingScaleFactor] == 2.0)
+//#define IS_RETINA NO
+
+#import <objc/runtime.h>
+#define DYNAMIC_PROPERTY(Name) static char k##Name; - (id) get##Name { return objc_getAssociatedObject(self, &k##Name);}; - (void) set##Name:(id)object { objc_setAssociatedObject(self, &k##Name, object, OBJC_ASSOCIATION_RETAIN); }
+
+
+
+
+#define ICON_SIZE 48.0f
+#define LINK_COLOR BLUE_UI_COLOR
+
+#define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define TLog(fmt, ...) 0 //NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define ELog(fmt, ...) NSLog((@"ERROR %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define SLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+#define PLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+#define CHECK_LOCKER(isLocked) if(isLocked) return;
+
+#define LIGHT_BLUE NSColorFromRGB(0x99b8d0)
+#define DARK_BLUE NSColorFromRGB(0x57a4e1)
+#define BLUE_UI_COLOR NSColorFromRGB(0x3395cc) //0x3395cc
+
+#define LIGHT_GRAY NSColorFromRGB(0xa1a1a1)
+#define DARK_GRAY NSColorFromRGB(0xa0a0a0)
+#define VERY_GRAY NSColorFromRGB(0x909090)
+#define DARK_GREEN NSColorFromRGB(0x458b42)
+
+#define DARK_BLACK NSColorFromRGB(0x222222)
+
+#define DIALOG_BORDER_COLOR NSColorFromRGB(0xf4f4f4)
+//#define DIALOG_BORDER_COLOR [NSColor redColor]
+#define DIALOG_BORDER_WIDTH 2
+
+
+#define weakify() __block __typeof(&*self)strongSelf = self;
+
+#define weak() __weak typeof(self) weakSelf = self;
+
+
+#define DEBUG_SERVER isTestServer()
+
+#define TEST_LOGS 1
+
+#define CA_DEBUG_TRANSACTIONS 1
+
+
+#endif
