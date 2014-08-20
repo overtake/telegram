@@ -143,6 +143,7 @@ static NSString *kUpdateState = @"kUpdateState";
             return;
         }
         [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
+        
     }
     
     if([update isKindOfClass:[TL_updateShortMessage class]]) {
@@ -152,6 +153,7 @@ static NSString *kUpdateState = @"kUpdateState";
             return;
         }
         [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
+        
     }
     
     
@@ -527,6 +529,21 @@ static NSString *kUpdateState = @"kUpdateState";
         TL_localMessage *msg = [TL_localMessage createWithN_id:0 from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] n_out:NO unread:YES date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
+        
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateContactRegistered class]]) {
+        
+        TGUser *user = [[UsersManager sharedManager] find:[update user_id]];
+        
+        NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
+        
+        TL_localMessageService *message = [TL_localMessageService createWithN_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] n_out:YES unread:NO date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        
+        [MessagesManager addAndUpdateMessage:message];
+
+        return;
     }
     
 }
