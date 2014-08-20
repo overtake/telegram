@@ -24,7 +24,6 @@
 @implementation SettingsArchiver
 
 
-
 static NSString *kArchivedSettings = @"kArchivedSettings";
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
