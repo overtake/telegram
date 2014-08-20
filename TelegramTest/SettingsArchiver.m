@@ -42,7 +42,6 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     return self;
 }
 
-// first init
 -(id)init {
     if(self = [super init]) {
         [self initialize];
