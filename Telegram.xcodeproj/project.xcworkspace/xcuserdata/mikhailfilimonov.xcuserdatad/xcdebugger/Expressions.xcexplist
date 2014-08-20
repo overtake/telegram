@@ -3,17 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.item.downloadListener">
-            </PersistentString>
-            <PersistentString
-               value = "self.item.downloadItem">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
@@ -32,6 +21,31 @@
             </PersistentString>
             <PersistentString
                value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "self.table.scrollView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.downloadListener">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.downloadItem">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

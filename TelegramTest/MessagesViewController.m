@@ -1506,14 +1506,14 @@ static NSTextAttachment *headerMediaIcon() {
         self.locked = YES;
         
         if(self.messages.count > 1) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+        //    dispatch_async(dispatch_get_main_queue(), ^{
                 NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO];
                 NSSize oldsize = self.table.scrollView.documentSize;
                 NSPoint offset = self.table.scrollView.documentOffset;
                 
-                [self.table beginUpdates];
+              //  [self.table beginUpdates];
                 [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
-                [self.table endUpdates];
+               // [self.table endUpdates];
                 
                 if(!next) {
                     NSSize newsize = self.table.scrollView.documentSize;
@@ -1524,7 +1524,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self didUpdateTable];
                 self.locked = NO;
                 
-            });
+           // });
         } else {
             [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO];
             [self.table reloadData];
@@ -1580,6 +1580,10 @@ static NSTextAttachment *headerMediaIcon() {
         
         // assert(prevResult.count > 0);
         
+        if(message_id != 0 && prev && self.historyController.prevState == ChatHistoryStateRemote) {
+            self.historyController.nextState = self.historyController.prevState;
+        }
+        
         
         NSUInteger pos = prev ? 0 : self.messages.count;
         if(isFirst && prev) {
@@ -1606,16 +1610,19 @@ static NSTextAttachment *headerMediaIcon() {
                 NSUInteger index = [self indexOfObject:item];
                 NSRect rect = [self.table rectOfRow:index];
                 
-            
-                rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
+                
+                if(message_id != 0) {
+                    rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+                }
+                
+                if(self.table.scrollView.documentSize.height > NSHeight(self.table.containerView.frame))
+                    rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
                 
                 if(rect.origin.y < 0)
                     rect.origin.y = 0;
                 
                 
-                if(message_id != 0) {
-                    rect.origin.y += roundf((self.table.containerView.contentView.frame.size.height - rect.size.height) / 2) ;
-                }
+                
                 
                 
                 [self.table.scrollView scrollToPoint:rect.origin animation:NO];
@@ -1623,9 +1630,10 @@ static NSTextAttachment *headerMediaIcon() {
                 //bug fix
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSUInteger index = [self indexOfObject:item];
-                    if(message_id && index != NSNotFound) {
-                        MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+                    NSUInteger idx = [self indexOfObject:item];
+                    if(message_id && idx != NSNotFound) {
+                        MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:idx];
+                        
                         if(cell && [cell isKindOfClass:[MessageTableCellContainerView class]]) {
                             
                             for(int i = 0; i < self.messages.count; i++) {
