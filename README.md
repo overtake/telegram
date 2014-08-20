@@ -1,7 +1,19 @@
-telegramosx
+Telegram for OSX
 ===========
 
-For Quick start 
+[Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
+
+This repo contains official [Telegram Messenger](https://telegram.org/dl/osx) source code.
+
+### API, Protocol documentation
+
+Documentation for Telegram API is available here: http://core.telegram.org/api
+
+Documentation for MTproto protocol is available here: http://core.telegram.org/mtproto
+
+### For Quick Start Usage
+
+
 
 1. Checkout repository
 2. Switch MtProtoKit submodule to 'unstable' branch
@@ -19,7 +31,3 @@ For Quick start
 #define BUNDLE_IDENTIFIER @"ru.keepcoder.Telegram"  // bundle name
 #endif
 ```
-
-4. Build and Enjoy :)
-
-
