@@ -518,6 +518,23 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 
+-(void)updateMessages:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            int destructTime = INT32_MAX;
+            
+            if([obj isKindOfClass:[TL_destructMessage class]])
+                destructTime = [(TL_destructMessage *)obj destruction_time];
+            
+             [db executeUpdate:@"update messages set message_text = ?, unread = ?, n_out = ?, from_id = ?, peer_id = ?, date = ?, serialized = ?, random_id = ?, destruct_time = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",obj.message,@(obj.unread),@(obj.n_out),@(obj.from_id),@(obj.peer_id),@(obj.date),[[TLClassStore sharedManager] serialize:obj],@(obj.randomId), @(destructTime), @(obj.filterType),@(obj.fakeId),@(obj.dstate),@(obj.n_id),nil];
+            
+        }];
+    
+    }];
+}
+
 
 -(void)insertMessage:(TGMessage *)message completeHandler:(dispatch_block_t)completeHandler {
     [self insertMessages:@[message] completeHandler:completeHandler];

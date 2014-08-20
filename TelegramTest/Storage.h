@@ -171,4 +171,6 @@ extern NSString *const FILE_NAMES;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
 
+-(void)updateMessages:(NSArray *)messages;
+
 @end

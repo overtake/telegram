@@ -40,7 +40,7 @@
         
         [self.object media].document = [TL_outDocument outWithDocument:(TL_document *)[self.object media].document file_path:self.path];
         
-        [[Storage manager] insertMessage:self.object  completeHandler:nil];
+        [[Storage manager] updateMessages:@[self.object]];
     }
     [super setDownloadState:downloadState];
 }

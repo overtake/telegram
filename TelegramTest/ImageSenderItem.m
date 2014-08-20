@@ -60,6 +60,9 @@
         [compressImage([self.image TIFFRepresentation], 0.83) writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
         
+        image = nil;
+        thumb = nil;
+        
         
     }
     return self;
