@@ -414,6 +414,29 @@ void open_link(NSString *link) {
 }
 
 
+BOOL NSSizeNotZero(NSSize size) {
+    return size.width > 0 || size.height > 0;
+}
+
+BOOL NSContainsSize(NSSize size1, NSSize size2) {
+    return size1.width == size2.width && size1.height == size2.height;
+}
+
+
+NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
+    NSImage *source = image;
+    NSImage *target = [[NSImage alloc]initWithSize:backSize];
+    
+    [target lockFocus];
+    [source drawInRect:NSMakeRect(0,0,backSize.width,backSize.height)
+              fromRect:NSMakeRect(difference.x,difference.y,backSize.width,backSize.height)
+             operation:NSCompositeCopy
+              fraction:1.0];
+    [target unlockFocus];
+    
+    return target;
+}
+
 NSString *exportPath(long randomId, NSString *extension) {
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = appName();

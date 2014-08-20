@@ -15,7 +15,7 @@
 @property (nonatomic,strong) DraggingItemView *documentView;
 
 @property (nonatomic,strong) NSTrackingArea *trackingArea;
-
+@property (nonatomic,assign) DraggingViewType type;
 @end
 
 @implementation DraggingControllerView
@@ -50,6 +50,10 @@
     return self;
 }
 
++(void)setType:(DraggingViewType)type {
+    [[self view] setType:type];
+}
+
 - (void)mouseExited:(NSEvent *)theEvent {
     [self removeFromSuperview];
 }
@@ -80,11 +84,22 @@
     float maxHeight = (forRect.size.height - (margin*3) ) / 2;
     
     self.frame = NSMakeRect(0, 0, forRect.size.width, forRect.size.height);
+    
+    
+    [_mediaView setHidden:self.type == DraggingTypeSingleChoose];
+    
     _mediaView.frame = NSMakeRect(margin, margin, forRect.size.width- (margin *2), maxHeight);
-    _documentView.frame = NSMakeRect(margin, _mediaView.frame.origin.y+maxHeight+margin, _mediaView.frame.size.width, maxHeight);
+    
+    
+    if(!_mediaView.isHidden)
+        _documentView.frame = NSMakeRect(margin, _mediaView.frame.origin.y+maxHeight+margin, _mediaView.frame.size.width, maxHeight);
+    else
+        _documentView.frame = NSMakeRect(margin, margin, _mediaView.frame.size.width, forRect.size.height - margin * 2);
+    
+    
     
     _mediaView.dragEntered = NO;
-    self.mediaView.dragEntered = NO;
+    _documentView.dragEntered = NO;
 }
 
 + (DraggingControllerView *)view {

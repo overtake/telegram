@@ -35,7 +35,9 @@
             
            
             
-            imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), 40, 250);
+            imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+            
+            self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
         }
         
        

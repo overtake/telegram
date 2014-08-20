@@ -18,7 +18,6 @@
 #import "TGTimer.h"
 #import "NSStringCategory.h"
 
-#define PROGRESS_WIDTH 200.0f
 #define OFFSET 75.0f
 
 @interface MessageTableCellAudioView()
@@ -140,7 +139,7 @@ static TGAudioPlayer *player;
     [self.stateTextField setHidden:NO];
     [self.stateTextField setStringValue:string];
     [self.stateTextField sizeToFit];
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x +  PROGRESS_WIDTH - self.stateTextField.bounds.size.width, self.durationView.frame.origin.y - 2)];
+    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + [self progressWidth] - self.stateTextField.bounds.size.width, self.durationView.frame.origin.y - 2)];
     
 //    [self.stateTextField setTextColor:[NSColor redColor]];
 //    [self.stateTextField setBackgroundColor:[NSColor redColor]];
@@ -154,8 +153,12 @@ static TGAudioPlayer *player;
     self.cellState = CellStateNeedDownload;
 }
 
+-(float)progressWidth {
+    return MAX(160, MIN(205, self.item.message.media.audio.duration * 30));
+}
+
 - (NSRect)progressRect {
-    return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, self.containerView.frame.origin.y + 5, PROGRESS_WIDTH, 2);
+    return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, self.containerView.frame.origin.y + 5, [self progressWidth], 2);
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -180,7 +183,7 @@ static TGAudioPlayer *player;
    //     duration = 1;
     
     if((self.item.state == AudioStatePlaying || self.item.state == AudioStatePaused) && player) {
-         float progress = MAX( MIN(self.currentTime / duration * PROGRESS_WIDTH, PROGRESS_WIDTH), 0);
+         float progress = MAX( MIN(self.currentTime / duration * [self progressWidth], [self progressWidth]), 0);
         
         NSLog(@"duration:%f, progress%fб currenttime:%f",duration,progress,self.currentTime);
         

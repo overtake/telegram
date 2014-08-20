@@ -8,8 +8,17 @@
 
 #import "TMView.h"
 
+
+
 @interface DraggingControllerView : TMView
 
+typedef enum {
+    DraggingTypeMultiChoose,
+    DraggingTypeSingleChoose
+} DraggingViewType;
+
 + (DraggingControllerView *)view;
+
++(void)setType:(DraggingViewType)type;
 
 @end

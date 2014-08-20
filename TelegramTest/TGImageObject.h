@@ -28,6 +28,7 @@
 @property (nonatomic,assign,readonly) int sourceId;
 
 @property (nonatomic,assign) NSSize imageSize;
+@property (nonatomic,assign) NSSize realSize;
 
 @property (nonatomic,strong,readonly) DownloadItem *downloadItem;
 @property (nonatomic,strong,readonly) DownloadEventListener *downloadListener;

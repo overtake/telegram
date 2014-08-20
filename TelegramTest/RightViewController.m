@@ -35,13 +35,16 @@
 
                 
                 if(files.count == 1 && ![mediaTypes() containsObject:[[files[0] pathExtension] lowercaseString]]) {
-                    return NSDragOperationLink;
+                     [DraggingControllerView setType:DraggingTypeSingleChoose];
+                } else {
+                    [DraggingControllerView setType:DraggingTypeMultiChoose];
                 }
             }
             
+            
             [self addSubview:[DraggingControllerView view]];
+            
         }
-        
     }
     
     

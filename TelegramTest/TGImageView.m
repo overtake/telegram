@@ -94,11 +94,24 @@
                 [ASQueue dispatchOnStageQueue:^{
                     if([self.object.location hashCacheKey] == [object.location hashCacheKey]) {
                         
-                        if(object.imageSize.width == 0 || object.imageSize.height == 0) {
+                        if(!NSSizeNotZero(object.imageSize)) {
                             object.imageSize = self.frame.size;
                         }
                         
-                        roundImage = [self roundedImage:newImage size:object.imageSize];
+                        
+                        NSImage *img = newImage;
+                        
+                        //crop image if size < realsize and < const
+                        
+                        if(NSSizeNotZero(object.realSize) && NSSizeNotZero(object.imageSize) && object.realSize.width > MIN_IMG_SIZE.width && object.realSize.width > MIN_IMG_SIZE.height && object.imageSize.width == MIN_IMG_SIZE.width && object.imageSize.height == MIN_IMG_SIZE.height) {
+                            
+                            int difference = roundf( (object.realSize.width - object.imageSize.width) /2);
+                            
+                            img = cropImage(newImage,object.imageSize, NSMakePoint(difference, 0));
+                            
+                        }
+                        
+                        roundImage = [self roundedImage:img size:object.imageSize];
                         [[ImageCache sharedManager] setRoundImageToMemory:roundImage hash:[self getKeyFromFileLocation:object.location]];
                         [[ASQueue mainQueue] dispatchOnQueue:^{
                             
