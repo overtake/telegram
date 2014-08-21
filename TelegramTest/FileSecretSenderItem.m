@@ -237,20 +237,6 @@
                 [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] setLocation:newLocation];
                 [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:1] setLocation:newLocation];
                 
-                
-                NSImage *image  = imageFromFile(strongSelf.filePath);
-                
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
-                
-                [[ImageCache sharedManager] setImage:image forLocation:newLocation];
-                
-                [[Storage manager] insertMedia:strongSelf.message];
-                
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
-                
-                [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
-
-              
             }
             
             if(strongSelf.uploadType == UploadVideoType ) {
@@ -286,6 +272,24 @@
             
             strongSelf.message.dstate = DeliveryStateNormal;
             [strongSelf.message save:YES];
+            
+            
+            if(strongSelf.uploadType == UploadImageType) {
+                NSImage *image  = imageFromFile(strongSelf.filePath);
+                
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+                
+                [[ImageCache sharedManager] setImage:image forLocation:newLocation];
+                
+                [[Storage manager] insertMedia:strongSelf.message];
+                
+                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
+                
+                [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+
+            }
+            
+            
             strongSelf.state = MessageSendingStateSent;
             
  

@@ -87,8 +87,6 @@
     self.state = DocumentStateDownloaded;
     
     
-    
-    self.message.media.document.thumb.bytes = nil;
     __block NSString *filePath = locationFilePath(self.message.media.document.thumb.location, @"tiff");
 
     if(self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {

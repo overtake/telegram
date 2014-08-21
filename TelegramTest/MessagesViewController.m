@@ -1861,9 +1861,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
     
-    if(message.length > 4096)
-        message = [message substringToIndex:4096];
-    
     if(!self.dialog.canSendMessage)
         return;
     
@@ -1878,9 +1875,38 @@ static NSTextAttachment *headerMediaIcon() {
         
         Class cs = self.dialog.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
-        MessageSenderItem *sender = [[cs alloc] initWithMessage:message forDialog:self.dialog];
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+//        for (int i =0; i < 10; i++) {
+//            MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forDialog:self.dialog];
+//            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+//            [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+//        }
+        
+        static const NSInteger messagePartLimit = 4096;
+        
+        
+        if (message.length <= messagePartLimit) {
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forDialog:self.dialog];
+            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+            [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+        }
+        
+        else
+        {
+            for (NSUInteger i = 0; i < message.length; i += messagePartLimit)
+            {
+                NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
+                if (substring.length != 0) {
+                    
+                    NSLog(@"%@",substring);
+                    
+                     MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forDialog:self.dialog];
+                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+                     [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+                }
+                
+            }
+        }
+        
         
     }];
 }

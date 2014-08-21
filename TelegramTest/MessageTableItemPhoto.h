@@ -11,7 +11,6 @@
 @interface MessageTableItemPhoto : MessageTableItem
 
 @property (nonatomic, strong) TGFileLocation *photoLocation;
-@property (nonatomic, strong) NSImage *cachePhoto;
 
 @property (nonatomic) int photoSize;
 

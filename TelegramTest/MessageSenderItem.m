@@ -15,12 +15,13 @@
 
 @implementation MessageSenderItem
 
--(void)setState:(MessageState)state {
-    [super setState:state];
-}
+
 
 -(id)initWithMessage:(NSString *)message forDialog:(TL_conversation *)dialog {
     if(self = [super init]) {
+        
+        
+        
         self.dialog = dialog;
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] dialog:dialog];
@@ -32,9 +33,13 @@
 }
 
 
+-(SendingQueueType)sendingQueue {
+    return SendingQueueMessage;
+}
+
 -(void)performRequest {
     
-     id request;
+    id request;
     
     if(self.dialog.type != DialogTypeBroadcast) {
         request = [TLAPI_messages_sendMessage createWithPeer:[self.dialog inputPeer] message:[self.message message] random_id:[self.message randomId]];

@@ -26,9 +26,16 @@ typedef enum {
     MessageSendingStateError = 32
 } MessageState;
 
+
+typedef enum {
+    SendingQueueNone,
+    SendingQueueMessage
+} SendingQueueType;
+
 @property (nonatomic,strong) RPCRequest *rpc_request;
 @property (nonatomic,assign) float progress;
 @property (atomic,assign) MessageState state;
+
 
 
 @property (nonatomic,strong) TL_localMessage *message;
@@ -53,7 +60,6 @@ typedef enum {
 
 +(BOOL)allSendersSaved;
 
--(void)performRequest;
 
 -(void)cancel;
 -(void)resend;

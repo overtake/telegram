@@ -357,7 +357,10 @@ static NSMutableArray *filters;
         };
         
 
-        for (MessageTableItem *item in result) {
+        for (int i = (int) result.count - 1; i >= 0; i --) {
+            
+            
+            MessageTableItem *item = result[i];
             
              if((item.message.dstate == DeliveryStateError || item.message.dstate == DeliveryStatePending) && !item.messageSender) {
                 

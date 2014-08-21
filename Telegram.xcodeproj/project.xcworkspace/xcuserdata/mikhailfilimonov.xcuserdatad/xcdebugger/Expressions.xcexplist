@@ -3,10 +3,81 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[TL_localMessage setDstate:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.downloadListener">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.downloadItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.cachePhoto">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "self.table.scrollView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[strongSelf rowItem].lastMessage.dstate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.historyController.prevState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
                value = "[appUrl path]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+            <PersistentString
+               value = "message.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.n_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -25,27 +96,13 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
-      </ContextState>
-      <ContextState
-         contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
+         contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
          <PersistentStrings>
             <PersistentString
-               value = "result">
+               value = "maxSize">
             </PersistentString>
             <PersistentString
-               value = "self.table.scrollView.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.item.downloadListener">
-            </PersistentString>
-            <PersistentString
-               value = "self.item.downloadItem">
+               value = "image.size">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

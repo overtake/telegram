@@ -264,9 +264,6 @@
 }
 
 -(void)setString:(NSString *)string {
-    if(string.length > 4096)
-        string = [string substringToIndex:4096];
-    
     [super setString:string];
 }
 

@@ -37,7 +37,7 @@
         if(error && error.code == 516) {
             [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
-        
+        [self.object media].document.thumb.bytes = nil;
         [self.object media].document = [TL_outDocument outWithDocument:(TL_document *)[self.object media].document file_path:self.path];
         
         [[Storage manager] updateMessages:@[self.object]];

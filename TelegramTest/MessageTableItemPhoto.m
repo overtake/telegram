@@ -17,11 +17,13 @@
         NSSize imageSize = NSZeroSize;
         TGPhoto *photo = object.media.photo;
         
+        NSImage *cachePhoto;
+        
         if(photo.sizes.count) {
             //Find cacheImage;
             for(TGPhotoSize *photoSize in photo.sizes) {
                 if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-                    self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
+                    cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
                     break;
                 }
             }
@@ -31,13 +33,26 @@
             self.photoLocation = photoSize.location;
             self.photoSize = photoSize.size;
             
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:self.cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
+            imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+            
+            
+            if(cachePhoto && imageSize.width == MIN_IMG_SIZE.width && imageSize.height == MIN_IMG_SIZE.height && photoSize.w > MIN_IMG_SIZE.width && photoSize.h > MIN_IMG_SIZE.height) {
+                
+                cachePhoto = [ImageUtils imageResize:cachePhoto newSize:NSMakeSize(photoSize.w, photoSize.h)];
+                
+                cachePhoto = cropImage(cachePhoto, imageSize,NSMakePoint((photoSize.w - imageSize.width)/2, 0));
+                
+            }
+            
+            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
+            
+            
+            
+            self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
            
             
-            imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
             
-            self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
         }
         
        
@@ -50,8 +65,6 @@
 
 -(void)setMessageSender:(SenderItem *)messageSender {
     [super setMessageSender:messageSender];
-    
-    self.imageObject.isLoaded = YES;
 }
 
 

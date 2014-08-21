@@ -205,6 +205,42 @@ static int MAX_WORKER_POLL = 5;
     MTRequest *mtrequest = [[MTRequest alloc] init];
     mtrequest.body = request.object;
     blockedRequest.mtrequest = mtrequest;
+    
+    
+    static NSArray *sequentialMessageClasses = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+                  {
+        sequentialMessageClasses = @[
+            [TLAPI_messages_sendMessage class],
+            [TLAPI_messages_sendMedia class],
+            [TLAPI_messages_forwardMessage class],
+            [TLAPI_messages_sendEncrypted class],
+            [TLAPI_messages_sendEncryptedFile class]
+        ];
+    });
+    
+    for (Class sequentialClass in sequentialMessageClasses)
+    {
+        if ([mtrequest.body isKindOfClass:sequentialClass])
+        {
+            [mtrequest setShouldDependOnRequest:^bool (MTRequest *anotherRequest)
+             {
+                 for (Class sequentialClass in sequentialMessageClasses)
+                 {
+                     if ([anotherRequest.body isKindOfClass:sequentialClass])
+                         return true;
+                 }
+                 
+                 return false;
+             }];
+            
+            break;
+        }
+    }
+    
+    
+    
     [mtrequest setCompleted:^(id result, NSTimeInterval t, id error) {
         blockedRequest.response = result;
         if(error)

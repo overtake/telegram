@@ -356,6 +356,8 @@
 		[self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:0x7d861a08]];
         [self.classes setObject:[TL_initConnection class] forKey:[NSNumber numberWithInt:1769565673]];
         
+        [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:(int32_t)0xcb9f372d]];
+        
         //свои консуторы начинаем с 1? но эт не правильно инфа.
         [self.classes setObject:[TL_messageActionEncryptedChat class] forKey:[NSNumber numberWithInt:1]];
         [self.classes setObject:[TL_peerSecret class] forKey:[NSNumber numberWithInt:2]];

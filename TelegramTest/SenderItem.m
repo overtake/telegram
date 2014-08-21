@@ -16,6 +16,9 @@
 
 @implementation SenderItem
 
+
+
+
 - (id)initWithTempPath:(NSData *)temp_path_to_file path_to_file:(NSString *)path_to_file forDialog:(TL_conversation *)dialog {    if(self = [super init]) {
         [NSException raise:@"Fatal error" format:@"Can't use (%@) this class for send message with data",NSStringFromClass([self class])];
     }
@@ -33,6 +36,14 @@
     if(self = [super init]) {
         [NSException raise:@"Fatal sending error" format:@"Can't use (%@) this class class for send message with file path",NSStringFromClass([self class])];
     }
+    return self;
+}
+
+-(id)init {
+    if(self = [super init]) {
+        self.state = MessageStateWaitSend;
+    }
+    
     return self;
 }
 
@@ -88,24 +99,28 @@
     return item;
 }
 
-
+static NSMutableArray *queue;
 static NSMutableArray *waiting;
 
 +(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         waiting = [[NSMutableArray alloc] init];
+        queue = [[NSMutableArray alloc] init];
     });
 }
 
 -(void)setState:(MessageState)state {
     self->_state = state;
+    
+    
     [LoopingUtils runOnMainQueueAsync:^{
         [self notifyAllListeners:@selector(onStateChanged:)];
         
         if(state == MessageSendingStateSent || state == MessageSendingStateError || state == MessageSendingStateCancelled) {
             [self removeAllListeners];
             self.rpc_request = nil;
+            
             
             if(state == MessageSendingStateError) {
                 if(self.message.dstate != DeliveryStateError) {
@@ -143,13 +158,37 @@ static NSMutableArray *waiting;
                 [waiting addObject:self];
             }
             
-            if(state == MessageSendingStateSent) {
+            if(state == MessageSendingStateSent || state == MessageSendingStateCancelled) {
                 [waiting removeObject:self];
             }
-        } synchronous:YES];
+
+        }];
     }];
 }
 
+
+//+ (void)sendingDequeue {
+//    
+//    if(queue.count > 0) {
+//          
+//        SenderItem *item = queue[0];
+//        
+//        if(item.state == MessageSendingStateSent || item.state == MessageSendingStateError || item.state == MessageSendingStateCancelled) {
+//            [queue removeObject:item];
+//            
+//            if(queue.count > 0) {
+//                item = queue[0];
+//                
+//                [item perform];
+//            }
+//        } else if(queue.count == 1 && item.state == MessageStateWaitSend) {
+//            [item perform];
+//        }
+//        
+//    }
+// 
+//    
+//}
 
 
 +(void)appTerminatedNeedSaveSenders {
@@ -247,12 +286,24 @@ static NSMutableArray *waiting;
     [self removeAllListeners];
 }
 
+
+-(void)perform {
+    self.state = MessageStateSending;
+    self.message.dstate = DeliveryStatePending;
+    
+    [self performRequest];
+}
+
 -(void)send {
-    if(self.state != MessageStateSending && self.state != MessageSendingStateSent) {
-        self.state = MessageStateSending;
-        self.message.dstate = DeliveryStatePending;
-        [self performRequest];
-    }
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        if(self.state != MessageStateSending && self.state != MessageSendingStateSent) {
+            [self perform];
+        }
+        
+    }];
+    
 }
 
 

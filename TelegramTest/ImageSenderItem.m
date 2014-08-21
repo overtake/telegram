@@ -31,19 +31,30 @@
         self.image = image;
         
         image = prettysize(image);
-        image = [ImageUtils imageResize:image newSize:NSMakeSize(MAX(50, image.size.width), MAX(50, image.size.height))];
         
-        NSImage *thumb = strongResize(image, 320.0f);
+        NSSize realSize = image.size;
+        NSSize maxSize = strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
         
-        NSData *preview = compressImage([thumb TIFFRepresentation], 0.1);
         
-        NSSize maxsize = strongsize(NSMakeSize(image.size.width, image.size.height), 800.0f);
+        image = [ImageUtils imageResize:image newSize:NSMakeSize(MAX(50,realSize.width), MAX(50,realSize.height))];
         
-        TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:maxsize.width h:maxsize.height bytes:preview];
+        if(realSize.width > MIN_IMG_SIZE.width && realSize.height > MIN_IMG_SIZE.height && maxSize.width == MIN_IMG_SIZE.width && maxSize.height == MIN_IMG_SIZE.height) {
+            
+            int difference = roundf( (realSize.width - maxSize.width) /2);
+            
+            image = cropImage(image,maxSize, NSMakePoint(difference, 0));
+            
+        }
+        
+        
+        NSData *preview = compressImage([image TIFFRepresentation], 0.1);
+        
+        
+        TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:realSize.width h:realSize.height bytes:preview];
         
        
         
-        TL_photoSize *size1 = [TL_photoSize createWithType:@"x" location:size.location w:maxsize.width h:maxsize.height size:0];
+        TL_photoSize *size1 = [TL_photoSize createWithType:@"x" location:size.location w:realSize.width h:realSize.height size:0];
         
         NSMutableArray *sizes = [[NSMutableArray alloc] init];
         
@@ -53,6 +64,9 @@
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:0 access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
         
+        
+       
+        
         [[ImageCache sharedManager] setImage:image forLocation:size.location];
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:dialog];
@@ -60,8 +74,6 @@
         [compressImage([self.image TIFFRepresentation], 0.83) writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
         
-        image = nil;
-        thumb = nil;
         
         
     }
@@ -137,20 +149,26 @@
                 ((TL_localMessage *)strongSelf.message).media = msg.media;
             }
             
-            [[Storage manager] insertMedia:strongSelf.message];
-            
-            [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+           
             
            
-            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
             
-            [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
             
             strongSelf.uploadOperation = nil;
             
             strongSelf.message.dstate = DeliveryStateNormal;
             
             [strongSelf.message save:YES];
+            
+            [[Storage manager] insertMedia:strongSelf.message];
+            
+            [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+            
+            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
+            
+            [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+            
+            
             strongSelf.state = MessageSendingStateSent;
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
