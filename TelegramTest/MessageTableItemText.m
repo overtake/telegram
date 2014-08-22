@@ -113,7 +113,7 @@
     static NSMutableParagraphStyle *paragraphStyle = nil;
     if(!paragraphStyle) {
         paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        [paragraphStyle setLineSpacing:1];
+        [paragraphStyle setLineSpacing:0.7];
         [paragraphStyle setMinimumLineHeight:18];
         [paragraphStyle setMaximumLineHeight:19];
         

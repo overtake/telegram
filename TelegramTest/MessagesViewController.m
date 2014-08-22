@@ -1040,16 +1040,14 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
- //    [self.table beginUpdates];
+     [self.table beginUpdates];
     
     
     [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
     
     
-    // [self.table endUpdates];
+     [self.table endUpdates];
     
-    [self.table.layer removeAllAnimations];
-    [self.table.scrollView.layer removeAllAnimations];
     
     
     if(isScrollToEnd || forceEnd) {

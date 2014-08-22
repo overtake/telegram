@@ -146,6 +146,7 @@
        } completionHandler:^{
            [self setString:@""];
            [self textDidChange:nil];
+           [self setSelectedRange:NSMakeRange(0, 0)];
        }];
         
     } else {
