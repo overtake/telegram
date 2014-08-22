@@ -217,8 +217,11 @@
     
     if(position == 0 && dialog.top_message > TGMINFAKEID) {
         [self.tableView scrollToBeginningOfDocument:self];
-        
     }
+    
+    if(position != 0 && position >= self.tableView.count)
+        position = (int) self.tableView.count-1;
+    
     
     DialogTableItem *object = (DialogTableItem *) [self.tableView itemByHash:[DialogTableItem hash:dialog]];
     if(object) {
