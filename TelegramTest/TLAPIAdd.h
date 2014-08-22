@@ -22,3 +22,4 @@
 @property long msg_id;
 @property (nonatomic, strong) id query;
 @end
+
