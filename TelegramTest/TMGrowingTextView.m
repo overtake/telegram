@@ -96,6 +96,11 @@
     [self.scrollView setHasVerticalScroller:self.string.length != 0];
     [[self.scrollView verticalScroller] setControlSize: NSSmallControlSize];
     
+    
+    
+    
+    self.scrollView.verticalScrollElasticity = self.scrollView.documentSize.height <= self.scrollView.frame.size.height ? NSScrollElasticityNone : NSScrollElasticityAllowed;
+    
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
     
