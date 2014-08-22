@@ -83,8 +83,8 @@
     NSRange range = [applicationInfoAttributedString appendString:NSLocalizedString(@"Telegram Messenger", nil) withColor:BLUE_UI_COLOR];
     [applicationInfoAttributedString setLink:@"telegram_site" forRange:range];
     
-    [applicationInfoAttributedString appendString:@".\n"  withColor:NSColorFromRGB(0x9b9b9b)];
-    [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Description", nil) withColor:NSColorFromRGB(0x9b9b9b)];
+  //  [applicationInfoAttributedString appendString:@".\n"  withColor:NSColorFromRGB(0x9b9b9b)];
+   // [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Description", nil) withColor:NSColorFromRGB(0x9b9b9b)];
     
     [applicationInfoAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:applicationInfoAttributedString.range];
     

@@ -1873,11 +1873,17 @@ static NSTextAttachment *headerMediaIcon() {
         
         Class cs = self.dialog.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
-//        for (int i =0; i < 10; i++) {
-//            MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forDialog:self.dialog];
-//            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-//            [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
-//        }
+        if([message isEqualToString:@"*!testmessages!#"] && [UsersManager currentUserId] == 438078) {
+            for (int i =0; i < 10; i++) {
+                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forDialog:self.dialog];
+                sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+                [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+            }
+            
+            return;
+        }
+        
+
         
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];

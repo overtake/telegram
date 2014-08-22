@@ -68,6 +68,9 @@
             <PersistentString
                value = "message.length">
             </PersistentString>
+            <PersistentString
+               value = "[UsersManager currentUserId]">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -80,6 +83,9 @@
                value = "message.n_id">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
