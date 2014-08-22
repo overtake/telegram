@@ -1880,6 +1880,7 @@ static NSTextAttachment *headerMediaIcon() {
 //        }
         
         static const NSInteger messagePartLimit = 4096;
+        NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         
         if (message.length <= messagePartLimit) {
@@ -1895,15 +1896,20 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    NSLog(@"%@",substring);
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forDialog:self.dialog];
+                    sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
-                     MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forDialog:self.dialog];
-                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-                     [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+                    [preparedItems insertObject:sender.tableItem atIndex:0];
+                    
                 }
                 
             }
+            
+            [self.historyController addItems:preparedItems conversation:self.dialog callback:callback sentControllerCallback:nil];
         }
+        
+        
+        
         
         
     }];

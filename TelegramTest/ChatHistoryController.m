@@ -853,10 +853,12 @@ static NSMutableArray *filters;
             
             
             if(items.count > 0) {
-                MessageTableItem *item = [items lastObject];
+              //  MessageTableItem *item = [items lastObject];
                 
-                [item.messageSender addEventListener:self];
-                [item.messageSender send];
+                [items enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL *stop) {
+                    [item.messageSender addEventListener:self];
+                    [item.messageSender send];
+                }];
                 
             }
             
