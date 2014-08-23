@@ -25,7 +25,7 @@ DYNAMIC_PROPERTY(CacheKey);
     
     NSString *string = [self getCacheKey];
     if(!string) {
-        string = [NSString stringWithFormat:@"%ld_%ld", self.volume_id, self.secret];
+        string = [NSString stringWithFormat:@"%lu_%lu", self.volume_id, self.secret];
         [self setCacheKey:string];
     }
     
