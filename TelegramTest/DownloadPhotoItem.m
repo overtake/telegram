@@ -26,6 +26,7 @@
        self.size = size;
        self.dc_id = object.dc_id;
        self.n_id = object.volume_id;
+        
     }
     return self;
 }

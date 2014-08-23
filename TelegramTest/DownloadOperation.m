@@ -78,25 +78,19 @@
     
     [DownloadQueue dispatchOnStageQueue:^{
         if(_item.fileType == DownloadFileImage) {
+            NSData *imageData = [NSData dataWithContentsOfFile:self.item.path] ;
             
-            [ImageStorage loadFileWithPath:_item.path completeHandler:^(NSData *imageData) {
-                
-                [DownloadQueue dispatchOnStageQueue:^{
-                    if(imageData == nil || (imageData.length == 0 || (self.item.size > 0 && self.item.size > imageData.length))) {
-                        [self load];
-                    } else {
-                        _item.isRemoteLoaded = NO;
-                        _item.result = imageData;
-                        _item.downloadState = DownloadStateCompleted;
-                        [self.target performSelectorInBackground:self.selector withObject:self];
-                    }
-                }];
-            }];
-            
+            if(imageData == nil || (imageData.length == 0 || (self.item.size > 0 && self.item.size > imageData.length))) {
+                    [self load];
+            } else {
+                _item.isRemoteLoaded = NO;
+                _item.result = imageData;
+                _item.downloadState = DownloadStateCompleted;
+                [self.target performSelectorInBackground:self.selector withObject:self];
+            }
         } else
             [self load];
     }];
-    
     
 }
 

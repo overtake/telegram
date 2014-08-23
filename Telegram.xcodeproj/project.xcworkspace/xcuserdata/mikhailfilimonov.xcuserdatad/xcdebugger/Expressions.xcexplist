@@ -60,6 +60,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.document.thumb.location">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -72,6 +80,9 @@
                value = "[UsersManager currentUserId]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
@@ -88,6 +99,17 @@
          contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageView setObject:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -100,6 +122,9 @@
                value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__23-[DownloadItem notify:]_block_invoke_3:DownloadItem.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">

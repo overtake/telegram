@@ -50,18 +50,15 @@
             
              NSString *thumbLocation = locationFilePath([self.object media].document.thumb.location, @"tiff");
             
-            [ASQueue dispatchOnStageQueue:^{
-                
-                NSImage *image = previewImageForDocument([self path]);
-                if(image) {
-                    NSData *data = [image TIFFRepresentation];
-                    [data writeToURL:[NSURL fileURLWithPath:thumbLocation] atomically:NO];
-
-                    [[ImageCache sharedManager] setImage:image forLocation:[self.object media].document.thumb.location];
+            NSImage *image = previewImageForDocument([self path]);
+            if(image) {
+                NSData *data = compressImage([image TIFFRepresentation], 0.6);
+                [data writeToFile:thumbLocation atomically:YES];
+                [[ImageCache sharedManager] setImage:image forLocation:[self.object media].document.thumb.location];
                     
-                }
+            }
+            
                 
-            } synchronous:YES];
         }
         
     }

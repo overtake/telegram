@@ -16,7 +16,7 @@
 
 -(id)initWithLocation:(TGFileLocation *)location {
     if(self = [self initWithLocation:location placeHolder:nil sourceId:0 size:0]) {
-        _location = location;
+        
     }
     
     return self;
@@ -24,7 +24,7 @@
 
 -(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder {
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:0 size:0]) {
-        _location = location;
+        
     }
     
     return self;
@@ -33,7 +33,7 @@
 
 -(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId {
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:0]) {
-        _location = location;
+        
     }
     
     return self;
@@ -53,7 +53,7 @@
 
 -(void)initDownloadItem {
     if(_downloadItem) {
-        [_downloadItem cancel];
+        return;
     }
     
     _downloadItem = [[DownloadPhotoItem alloc] initWithObject:_location size:_size];
@@ -75,6 +75,7 @@
         [object.delegate didDownloadImage:image object:object];
         
         item.object = nil;
+        object.downloadItem = nil;
         
     }];
     

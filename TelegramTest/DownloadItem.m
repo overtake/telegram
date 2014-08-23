@@ -88,6 +88,7 @@ static int futureUniqueKey = 0;
      self.downloadState = DownloadStateCanceled;
     
     [DownloadQueue removeItem:self];
+    [self removeAllEvents];
    
 }
 
@@ -136,7 +137,7 @@ static int futureUniqueKey = 0;
                     default:
                         break;
                 }
-            } synchronous:YES];
+            } synchronous:NO];
             
         }];
         
