@@ -87,29 +87,29 @@
     self.state = DocumentStateDownloaded;
     
     
-    __block NSString *filePath = locationFilePath(self.message.media.document.thumb.location, @"tiff");
-
-    if(self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-        
-        [ASQueue dispatchOnStageQueue:^{
-            
-            NSImage *image = previewImageForDocument([self path]);
-            if(image) {
-                NSData *data = [image TIFFRepresentation];
-                [data writeToURL:[NSURL fileURLWithPath:filePath] atomically:NO];
-                
-                [[ASQueue mainQueue] dispatchOnQueue:^{
-                    self.cachedThumb = nil;
-                    [[ImageCache sharedManager] setImage:image forLocation:self.message.media.document.thumb.location];
-                    
-                    if(self.cell.item == self) {
-                        [self.cell redrawThumb:image];
-                    }
-                }];
-            }
-        
-        }];
-    }
+//    __block NSString *filePath = locationFilePath(self.message.media.document.thumb.location, @"tiff");
+//
+//    if(self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+//        
+//        [ASQueue dispatchOnStageQueue:^{
+//            
+//            NSImage *image = previewImageForDocument([self path]);
+//            if(image) {
+//                NSData *data = [image TIFFRepresentation];
+//                [data writeToURL:[NSURL fileURLWithPath:filePath] atomically:NO];
+//                
+//                [[ASQueue mainQueue] dispatchOnQueue:^{
+//                    self.cachedThumb = nil;
+//                    [[ImageCache sharedManager] setImage:image forLocation:self.message.media.document.thumb.location];
+//                    
+//                    if(self.cell.item == self) {
+//                        [self.cell redrawThumb:image];
+//                    }
+//                }];
+//            }
+//        
+//        }];
+//    }
     
    
    

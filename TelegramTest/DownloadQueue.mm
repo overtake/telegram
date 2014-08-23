@@ -112,7 +112,6 @@
             
             if([current.item isEqualToItem:operation.item]) {
                 
-                current.item.downloadState = operation.item.downloadState;
                 current.item.result = operation.item.result;
                 
                 if(current.item.downloadState == DownloadStateDownloading)

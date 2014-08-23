@@ -8,6 +8,7 @@
 
 #import "DownloadDocumentItem.h"
 #import "FileUtils.h"
+#import "ImageCache.h"
 @implementation DownloadDocumentItem
 
 
@@ -25,8 +26,9 @@
 }
 
 -(void)setDownloadState:(DownloadState)downloadState {
-    if(downloadState == DownloadStateCompleted) {
+    if(self.downloadState != DownloadStateCompleted && downloadState == DownloadStateCompleted) {
         NSString *old_path = self.path;
+        
         
         self.path = mediaFilePath([self.object media]);
         
@@ -37,10 +39,31 @@
         if(error && error.code == 516) {
             [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
+        
+        
         [self.object media].document.thumb.bytes = nil;
         [self.object media].document = [TL_outDocument outWithDocument:(TL_document *)[self.object media].document file_path:self.path];
         
         [[Storage manager] updateMessages:@[self.object]];
+        
+        if([self.object media].document.thumb && ![[self.object media].document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            
+             NSString *thumbLocation = locationFilePath([self.object media].document.thumb.location, @"tiff");
+            
+            [ASQueue dispatchOnStageQueue:^{
+                
+                NSImage *image = previewImageForDocument([self path]);
+                if(image) {
+                    NSData *data = [image TIFFRepresentation];
+                    [data writeToURL:[NSURL fileURLWithPath:thumbLocation] atomically:NO];
+
+                    [[ImageCache sharedManager] setImage:image forLocation:[self.object media].document.thumb.location];
+                    
+                }
+                
+            } synchronous:YES];
+        }
+        
     }
     [super setDownloadState:downloadState];
 }
