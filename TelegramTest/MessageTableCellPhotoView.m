@@ -83,7 +83,7 @@
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    const int borderOffset = IS_RETINA ? self.imageView.borderWidth*2 : self.imageView.borderWidth;
+    const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
     NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
