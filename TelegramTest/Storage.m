@@ -1534,13 +1534,17 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             
             conversation = [[TL_conversation alloc] init];
-            int type = [result boolForColumn:@"type"];
+            int type = [result intForColumn:@"type"];
+            
             if(type == DialogTypeSecretChat) {
                 conversation.peer = [TL_peerSecret createWithChat_id:[result intForColumn:@"peer_id"]];
-            } else {
-                conversation.peer = [TGPeer peerForId:[result intForColumn:@"peer_id"]];
+            } else if(type == DialogTypeUser) {
+                conversation.peer = [TL_peerUser createWithUser_id:[result intForColumn:@"peer_id"]];
+            } else if(type == DialogTypeChat) {
+                conversation.peer = [TL_peerChat createWithChat_id:-[result intForColumn:@"peer_id"]];
+            } else if(type == DialogTypeBroadcast) {
+                conversation.peer = [TL_peerBroadcast createWithChat_id:[result intForColumn:@"peer_id"]];
             }
-            
             
             id notifyObject = [result dataForColumn:@"notify_settings"];
             
