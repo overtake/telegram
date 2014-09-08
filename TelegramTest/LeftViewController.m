@@ -154,6 +154,11 @@ static const int bottomOffset = 58;
 
 }
 
+
+-(void)setUnreadCount:(int)count {
+    [self.tabController setUnreadCount:count];
+}
+
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
     [self.tabViewController showControllerByIndex:index];
 }

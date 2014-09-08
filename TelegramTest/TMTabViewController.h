@@ -33,4 +33,6 @@
 -(void)removeTab:(TMTabItem *)tab;
 -(void)removeTabAtIndex:(NSUInteger)index;
 
+- (void)setUnreadCount:(int)count;
+
 @end

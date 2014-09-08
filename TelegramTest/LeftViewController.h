@@ -28,6 +28,8 @@
 -(void)updateSize;
 -(BOOL)canMinimisize;
 
+-(void)setUnreadCount:(int)count;
+
 - (void)showNewConversationPopover:(NewConversationAction)action;
 - (void)showNewConversationPopover:(NewConversationAction)action toButton:(id)button;
 - (void)showNewConversationPopover:(NewConversationAction)action filter:(NSArray *)filter target:(id)target selector:(SEL)selector toButton:(id)button title:(NSString *)title;

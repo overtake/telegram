@@ -255,7 +255,7 @@ static NSDictionary *attributes() {
         [self.titleTextField setSelector:@selector(dialogTitle)];
         [self.titleTextField setEncryptedSelector:@selector(dialogTitleEncrypted)];
         [self.titleTextField setDrawsBackground:NO];
-        [[self.titleTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
+        [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         [self.controll addSubview:self.titleTextField];
@@ -265,7 +265,7 @@ static NSDictionary *attributes() {
         [self.messageTextField setBordered:NO];
         [self.messageTextField setBackgroundColor:[NSColor clearColor]];
         [self.messageTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5]];
-        [[self.messageTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
+        [[self.messageTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.messageTextField cell] setTruncatesLastVisibleLine:YES];
         [self.messageTextField setAutoresizingMask:NSViewWidthSizable];
         [self.controll addSubview:self.messageTextField];
