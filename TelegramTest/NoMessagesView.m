@@ -32,11 +32,11 @@
         [_field setSelectable:NO];
         [_field setDrawsBackground:NO];
         [_field setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        [_field setAutoresizingMask:NSViewWidthSizable];
+        [_field setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
         [_field setTextColor:NSColorFromRGB(0x9b9b9b)];
         [_field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
         
-        
+       // [self.field setBackgroundColor:NSColorFromRGB(0xf43d2)];
         
         [self addSubview:_field];
         
@@ -73,7 +73,7 @@
     
     NSMutableParagraphStyle *subParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     [subParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-    [subParagraphStyle setAlignment:NSCenterTextAlignment];
+    [subParagraphStyle setAlignment:NSLeftTextAlignment];
     [subParagraphStyle setParagraphSpacing:4];
     
     NSMutableParagraphStyle *subParagraphStyle2 = [[NSMutableParagraphStyle alloc] init];
@@ -146,15 +146,19 @@
         
         [self.field setAttributedStringValue:self.secret];
         
+        
+        
     } else {
         [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
     }
     
+
+
     
     [self.field sizeToFit];
     
-    [self.field setFrameSize:NSMakeSize(self.bounds.size.width, self.field.frame.size.height)];
-    [self.field setFrameOrigin:NSMakePoint(0, roundf((self.frame.size.height - self.field.frame.size.height) / 2))];
+    [self.field setFrameSize:NSMakeSize(230, self.field.frame.size.height)];
+    [self.field setCenterByView:self];
 }
 
 

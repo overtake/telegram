@@ -47,7 +47,7 @@ static int offsetEditable = 30;
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
-       // [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
+        [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         
         self.lastSeenTextField = [[TMTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];

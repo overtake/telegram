@@ -3,10 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
+         contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
-               value = "[strongSelf rowItem].lastMessage.dstate">
+               value = "[appUrl path]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -224,6 +224,14 @@
          contextName = "-[TMTextField placeholderView:]:TMTextField.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSThread currentThread]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__23-[DownloadItem notify:]_block_invoke_3:DownloadItem.m">
       </ContextState>
       <ContextState
@@ -277,10 +285,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
+         contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
          <PersistentStrings>
             <PersistentString
-               value = "[appUrl path]">
+               value = "[strongSelf rowItem].lastMessage.dstate">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

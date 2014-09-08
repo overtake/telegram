@@ -106,6 +106,7 @@
     if(self.isForwadedMessage) {
         width -= 50;
     }
+
     
     float oldWidth = self.blockSize.width;
     

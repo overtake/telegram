@@ -22,10 +22,9 @@ NSInteger gNSStringGeometricsTypesetterBehavior = NSTypesetterLatestBehavior ;
 		// height of one line if length is 0.  Our API specifies 0.0 for an empty string.
 		NSSize size = NSMakeSize(width, height) ;
      
-		NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:size] ;
-
-		NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self] ;
-		NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init] ;
+		NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:size];
+		NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self];
+		NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
 		[layoutManager addTextContainer:textContainer] ;
 		[textStorage addLayoutManager:layoutManager] ;
 		[layoutManager setHyphenationFactor:0.0] ;
