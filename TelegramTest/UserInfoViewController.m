@@ -309,7 +309,7 @@
         [self.editContainer buildPage];
     }
     
-    NSLog(@"norma %f %d, edit %f %d", self.normalContainer.layer.opacity, self.normalContainer.isHidden, self.editContainer.layer.opacity, self.editContainer.isHidden);
+    DLog(@"norma %f %d, edit %f %d", self.normalContainer.layer.opacity, self.normalContainer.isHidden, self.editContainer.layer.opacity, self.editContainer.isHidden);
     
     if(state != UserInfoViewControllerNormal) {
         [self.normalContainer setHidden:YES];

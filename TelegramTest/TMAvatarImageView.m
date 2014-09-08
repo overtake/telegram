@@ -252,13 +252,13 @@ static NSCache *photosBigCache() {
             }
             
             if(rebuild) {
-                NSLog(@"rebuild chat photo true");
+                DLog(@"rebuild chat photo true");
                 self->_chat = nil;
                 self.isNeedPlaceholder = NO;
                 [self setChat:chat animated:YES];
                 self.isNeedPlaceholder = YES;
             } else {
-                NSLog(@"rebuild chat photo false");
+                DLog(@"rebuild chat photo false");
             }
         }
     }

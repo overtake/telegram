@@ -162,7 +162,7 @@
 - (void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-//    NSLog(@"newSize %@", NSStringFromSize(newSize));
+//    DLog(@"newSize %@", NSStringFromSize(newSize));
     [self buildForSize:newSize];
 }
 

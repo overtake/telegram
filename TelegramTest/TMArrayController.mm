@@ -95,7 +95,7 @@
 }
 
 - (void)dump {
-    NSLog(@"arraycontroller  %@", self.list);
+    DLog(@"arraycontroller  %@", self.list);
 }
 
 - (BOOL)_insert:(id<TMArrayControllerObjectDelegate>)object atIndex:(NSUInteger)atIndex tableRedraw:(BOOL)tableRedraw {

@@ -439,7 +439,7 @@
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        NSLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
+        DLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);

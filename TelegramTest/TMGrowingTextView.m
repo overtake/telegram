@@ -291,7 +291,7 @@
 - (BOOL)isEnterEvent:(NSEvent *)e {
     NSUInteger flags = (e.modifierFlags & NSDeviceIndependentModifierFlagsMask);
     BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
-//    NSLog(@"log %lu", (unsigned long)flags);
+//    DLog(@"log %lu", (unsigned long)flags);
     //numpad enter fix
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;

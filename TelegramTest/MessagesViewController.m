@@ -2150,7 +2150,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.messagesViewController = self;
         }
         
-        // NSLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)cell));
+        // DLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)cell));
         
     } else if([item isKindOfClass:[MessageTableItemPhoto class]]) {
         static NSString *const kRowIdentifier = @"photo";
@@ -2244,7 +2244,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     double time = ABS([start timeIntervalSinceNow]);
     if(time > 0.005) {
-        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
+        DLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
     }
     
     return cell;

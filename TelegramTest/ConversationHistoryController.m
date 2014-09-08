@@ -246,7 +246,7 @@
     if(max > (cache.count - self.position) )
         max = (int)cache.count - self.position;
         
-    NSLog(@"count:%d ^ range: %@",(int)cache.count,NSStringFromRange(NSMakeRange(self.position, max)));
+    DLog(@"count:%d ^ range: %@",(int)cache.count,NSStringFromRange(NSMakeRange(self.position, max)));
     
     NSArray *result = @[];
     if(cache.count > self.position && cache.count >= (self.position+max)) {

@@ -166,7 +166,7 @@
     NSObject *object = item.dialog;
     
 //    if(object == nil) {
-//        NSLog(@"log");
+//        DLog(@"log");
 //    }
     
     if(item.type == SearchItemMessage) {
@@ -181,7 +181,7 @@
         }
     }
  
-//    NSLog(@"hashStr %@", hashStr);
+//    DLog(@"hashStr %@", hashStr);
 
     return [hashStr hash];
 }

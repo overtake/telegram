@@ -161,7 +161,7 @@ static void BTRViewCommonInit(BTRView *self) {
 //	[super drawRect:dirtyRect];
 //	
 //	if (self.drawRectBlock != nil) {
-//		NSLog(@"%s",__PRETTY_FUNCTION__);
+//		DLog(@"%s",__PRETTY_FUNCTION__);
 //		CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 //		self.drawRectBlock(self, ctx);
 //	}

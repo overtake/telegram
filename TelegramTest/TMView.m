@@ -50,7 +50,7 @@
     
 //    [HackUtils printMethods:self.superview];
     
-//    NSLog(@"window %@", self.superview);
+//    DLog(@"window %@", self.superview);
 
 }
 

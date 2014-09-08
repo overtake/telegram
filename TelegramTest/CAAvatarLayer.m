@@ -161,11 +161,11 @@ typedef enum {
 - (void) drawInContext:(CGContextRef)ctx {
     
     
-    NSLog(@"drow");
+    DLog(@"drow");
 }
 
 - (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
-    NSLog(@"draw");
+    DLog(@"draw");
 }
 
 @end

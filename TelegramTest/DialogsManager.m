@@ -168,7 +168,7 @@
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
                 
-                NSLog(@"top message: %d",dialog.top_message);
+                DLog(@"top message: %d",dialog.top_message);
                 
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
@@ -507,7 +507,7 @@
             
             
             if(current.peer.user_id == 431401) {
-                NSLog(@"log");
+                DLog(@"log");
             }
             
             

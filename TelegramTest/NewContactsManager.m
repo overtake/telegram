@@ -129,7 +129,7 @@
                 
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
-                NSLog(@"error import %@", error.error_msg);
+                DLog(@"error import %@", error.error_msg);
                 if(callback)
                     callback();
             } timeout:10];

@@ -214,7 +214,7 @@ CGImageRef CGImageCreateBlurredImage(CGImageRef inImage, NSUInteger blurRadius)
     size_t height = CGImageGetHeight(inImage);
     size_t bytesPerRow = CGImageGetBytesPerRow(inImage);
     
-    //    NSLog(@"width %zu", width);
+    //    DLog(@"width %zu", width);
     
     CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inImage);
     CFDataRef dataRef = CGDataProviderCopyData(CGImageGetDataProvider(inImage));
@@ -428,7 +428,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if (from.width > max) {
         scale = max/from.width;
         if(!scale) {
-            NSLog(@"");
+            DLog(@"");
         }
         from.width = ceil(from.width * scale);
         from.height = ceil(from.height * scale);
@@ -437,7 +437,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(from.height > max) {
         scale = max/from.height;
         if(!scale) {
-            NSLog(@"");
+            DLog(@"");
         }
         from.width = ceil(from.width * scale);
         from.height = ceil(from.height * scale);
@@ -446,7 +446,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(from.width < min) {
         scale = min / from.width;
         if(!scale) {
-            NSLog(@"");
+            DLog(@"");
         }
         from.width = ceil(from.width * scale);
         from.height = ceil(from.height * scale);
@@ -455,7 +455,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(from.height < min) {
         scale = min / from.height;
         if(!scale) {
-            NSLog(@"");
+            DLog(@"");
         }
         from.width = ceil(from.width * scale);
         from.height = ceil(from.height * scale);
@@ -480,7 +480,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     [sourceImage setScalesWhenResized:YES];
     
     if (![sourceImage isValid]) {
-        NSLog(@"Invalid Image");
+        DLog(@"Invalid Image");
     } else {
 
         NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];

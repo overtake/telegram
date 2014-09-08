@@ -121,7 +121,7 @@ NSString *YDBExtractFileNameWithoutExtension(const char *filePath);
 // Logging uses plain old NSLog. (slower)
 
 #define YDBLogMaybe(flg, frmt, ...) \
-    do{ if(ydbLogLevel & flg) NSLog((@"%@: " frmt), THIS_FILE, ##__VA_ARGS__); } while(0)
+    do{ if(ydbLogLevel & flg) DLog((@"%@: " frmt), THIS_FILE, ##__VA_ARGS__); } while(0)
 
 #define YDBLogError(frmt, ...)    YDBLogMaybe(YDB_LOG_FLAG_ERROR,   frmt, ##__VA_ARGS__)
 #define YDBLogWarn(frmt, ...)     YDBLogMaybe(YDB_LOG_FLAG_WARN,    frmt, ##__VA_ARGS__)

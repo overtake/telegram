@@ -108,7 +108,7 @@ Telegram *TelegramInstance() {
         [self.onlineRequest cancelRequest];
         self.onlineRequest = [RPCRequest sendRequest:[TLAPI_account_updateStatus createWithOffline:YES] successHandler:^(RPCRequest *request, id response) {
             _isOnline = NO;
-            NSLog(@"account is offline success");
+            DLog(@"account is offline success");
         } errorHandler:nil];
     } else {
         if(!self.accountOfflineStatusTimer) {
@@ -146,7 +146,7 @@ Telegram *TelegramInstance() {
         self.onlineRequest = [RPCRequest sendRequest:[TLAPI_account_updateStatus createWithOffline:NO] successHandler:^(RPCRequest *request, id response) {
             self.isOnline = YES;
             
-            NSLog(@"account is online");
+            DLog(@"account is online");
         } errorHandler:nil];
     }
 }

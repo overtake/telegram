@@ -85,12 +85,12 @@
     NSString *searchQuery = [textField stringValue];
     [self loadImagesByQuery:searchQuery completeHandler:^(BOOL result, NSArray *results) {
         if(!result || !results) {
-            NSLog(@"error loaging");
+            DLog(@"error loaging");
             return;
         }
         
         if(results.count == 0) {
-            NSLog(@"count is 0");
+            DLog(@"count is 0");
             return;
         }
         
@@ -177,7 +177,7 @@
 	item.selectionLayout = self.selectionLayout;
     
     
-    NSLog(@"frame %@", NSStringFromRect(item.frame));
+    DLog(@"frame %@", NSStringFromRect(item.frame));
 //
 //	NSDictionary *contentDict = [self.items objectAtIndex:index];
 //	item.itemTitle = [contentDict objectForKey:kContentTitleKey]; // [NSString stringWithFormat:@"Item: %lu", index];
@@ -195,23 +195,23 @@
 #pragma mark - CNGridView Delegate
 
 - (void)gridView:(CNGridView *)gridView didClickItemAtIndex:(NSUInteger)index inSection:(NSUInteger)section {
-	NSLog(@"didClickItemAtIndex: %li", index);
+	DLog(@"didClickItemAtIndex: %li", index);
 }
 
 - (void)gridView:(CNGridView *)gridView didDoubleClickItemAtIndex:(NSUInteger)index inSection:(NSUInteger)section {
-	NSLog(@"didDoubleClickItemAtIndex: %li", index);
+	DLog(@"didDoubleClickItemAtIndex: %li", index);
 }
 
 - (void)gridView:(CNGridView *)gridView didActivateContextMenuWithIndexes:(NSIndexSet *)indexSet inSection:(NSUInteger)section {
-	NSLog(@"rightMouseButtonClickedOnItemAtIndex: %@", indexSet);
+	DLog(@"rightMouseButtonClickedOnItemAtIndex: %@", indexSet);
 }
 
 - (void)gridView:(CNGridView *)gridView didSelectItemAtIndex:(NSUInteger)index inSection:(NSUInteger)section {
-	NSLog(@"didSelectItemAtIndex: %li", index);
+	DLog(@"didSelectItemAtIndex: %li", index);
 }
 
 - (void)gridView:(CNGridView *)gridView didDeselectItemAtIndex:(NSUInteger)index inSection:(NSUInteger)section {
-	NSLog(@"didDeselectItemAtIndex: %li", index);
+	DLog(@"didDeselectItemAtIndex: %li", index);
 }
 
 

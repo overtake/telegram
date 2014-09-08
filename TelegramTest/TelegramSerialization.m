@@ -277,7 +277,7 @@
     initConnection.app_version = appVersion;
     initConnection.lang_code = langCode;
     initConnection.query = query;
-    NSLog(@"initConnectionClass = %@",NSStringFromClass([query class]));
+    DLog(@"initConnectionClass = %@",NSStringFromClass([query class]));
     return initConnection;
 }
 

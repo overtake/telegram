@@ -465,7 +465,7 @@ static TMMediaController* currentController;
 }
 
 -(void)nextItem {
-    NSLog(@"nextItem");
+    DLog(@"nextItem");
     if(self->items.count > 0) {
         NSUInteger index = [self->items indexOfObject:[self currentItem]];
         
@@ -485,7 +485,7 @@ static TMMediaController* currentController;
 }
 
 -(void)prevItem {
-    NSLog(@"prevItem");
+    DLog(@"prevItem");
     if(self->items.count > 0) {
         NSUInteger index = [self->items indexOfObject:[self currentItem]];
         
@@ -815,7 +815,7 @@ static TMMediaController* currentController;
     
     return NSZeroRect;
     
-//    NSLog(@"log");
+//    DLog(@"log");
     
 //    return viewFrameInWindowCoords;
 //    float documentOffset = controller.table.scrollView.documentOffset.y;
@@ -885,7 +885,7 @@ static TMMediaController* currentController;
             if (result == NSFileHandlingPanelOKButton) {
                 NSURL *file = [panel URL];
                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:item.url.path] ) {
-//                    NSLog(@"file %@", file);
+//                    DLog(@"file %@", file);
                     [[NSFileManager defaultManager] copyItemAtURL:item.url toURL:file error:nil];
                 }
             } else if(result == NSFileHandlingPanelCancelButton) {

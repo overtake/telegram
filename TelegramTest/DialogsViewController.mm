@@ -184,7 +184,7 @@
 
 - (void)notificationContactsReload:(NSNotification *)notify {
     
-    NSLog(@"notification reload");
+    DLog(@"notification reload");
 }
 
 - (void) notificationDialogRemove:(NSNotification *)notify {
@@ -196,7 +196,7 @@
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
     
-    NSLog(@"reload dialogs");
+    DLog(@"reload dialogs");
     
     [self.tableView removeAllItems:NO];
     NSArray *current = [[DialogsManager sharedManager] all];

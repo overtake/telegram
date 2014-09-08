@@ -35,7 +35,7 @@ static int workerCount = 0;
     if (self != nil)
     {
         workerCount++;
-        NSLog(@"[TGNetworkWorker#%x/%d start (%d)]", (int)self, (int)datacenterId, workerCount);
+        DLog(@"[TGNetworkWorker#%x/%d start (%d)]", (int)self, (int)datacenterId, workerCount);
 
         _context = context;
         _datacenterId = datacenterId;
@@ -56,7 +56,7 @@ static int workerCount = 0;
 - (void)dealloc
 {
     workerCount--;
-    NSLog(@"[TGNetworkWorker#%x stop (%d)]", (int)self, workerCount);
+    DLog(@"[TGNetworkWorker#%x stop (%d)]", (int)self, workerCount);
     
     if (_timeoutTimer != nil)
     {

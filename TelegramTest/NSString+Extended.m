@@ -110,7 +110,7 @@ static NSTextField *testTextField() {
 //    // log any errors encountered while parsing
 //    //NSError * error = nil;
 //    //if((error = [parser parserError])) {
-//    //    NSLog(@"This is a warning only. There was an error parsing the string to strip HTML. This error may be because the string did not contain valid XML, however the result will likely have been decoded correctly anyway.: %@", error);
+//    //    DLog(@"This is a warning only. There was an error parsing the string to strip HTML. This error may be because the string did not contain valid XML, however the result will likely have been decoded correctly anyway.: %@", error);
 //    //}
 //    
 //    // any chars found while parsing are the stripped content

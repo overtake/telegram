@@ -100,9 +100,9 @@
 
 - (void) drawInRect:(NSRect)dstSpacePortionRect fromRect:(NSRect)srcSpacePortionRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints {
     
-//    NSLog(@"dstSpacePortionRect rect %@", NSStringFromRect(dstSpacePortionRect));
+//    DLog(@"dstSpacePortionRect rect %@", NSStringFromRect(dstSpacePortionRect));
     
-    //    NSLog(@"draw");
+    //    DLog(@"draw");
     
     //    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     //
@@ -117,7 +117,7 @@
     self.cacheImage = [self.cache objectForKey:key];
     
     if(self.cacheImage == nil) {
-        //        NSLog(@"new image");
+        //        DLog(@"new image");
         //        self.cacheSize = dstSpacePortionRect.size;
         //        self.cacheScale = scale;
         self.cacheImage =  [[NSBitmapImageRep alloc]

@@ -177,7 +177,7 @@
             }
         }
         
-        NSLog(@"need to load full chats%@", needToLoad);
+        DLog(@"need to load full chats%@", needToLoad);
         [self loadFullChats:needToLoad];
     }];
 }
@@ -225,7 +225,7 @@
        
        
         
-        NSLog(@"fullchat loaded");
+        DLog(@"fullchat loaded");
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);

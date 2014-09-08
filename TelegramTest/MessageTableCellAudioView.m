@@ -143,7 +143,7 @@ static TGAudioPlayer *player;
     
 //    [self.stateTextField setTextColor:[NSColor redColor]];
 //    [self.stateTextField setBackgroundColor:[NSColor redColor]];
-//    NSLog(@"state %@", string);
+//    DLog(@"state %@", string);
 }
 
 - (void)cancelDownload {
@@ -187,7 +187,7 @@ static TGAudioPlayer *player;
         
         [self.durationView setStringValue:[NSString stringWithFormat:@"%@ / %@", [NSString durationTransformedValue:floor(self.currentTime)], self.item.duration]];
         
-        //NSLog(@"progress = %f, current: %f, duration:%d",progress,[player currentPositionSync:YES],self.item.message.media.audio.duration);
+        //DLog(@"progress = %f, current: %f, duration:%d",progress,[player currentPositionSync:YES],self.item.message.media.audio.duration);
         NSRect progressRect = NSMakeRect(rect.origin.x, rect.origin.y, progress, rect.size.height);
         
         [NSColorFromRGB(0x44a2d6) set];
@@ -256,7 +256,7 @@ static TGAudioPlayer *player;
     
     self.currentTime =  percent * [player duration];
     
-     NSLog(@"%f, percent:%f",self.currentTime,percent );
+     DLog(@"%f, percent:%f",self.currentTime,percent );
     
     [self play:self.currentTime];
     

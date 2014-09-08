@@ -22,7 +22,7 @@
             if(pos != NSNotFound && pos != -1) {
                 NSTableRowView *cellView = [table rowViewAtRow:pos makeIfNecessary:NO];
                 if(cellView && cellView.subviews.count) {
-                    NSLog(@"find row");
+                    DLog(@"find row");
                     self.rowDelegate = [cellView.subviews objectAtIndex:0];
                 }
             }

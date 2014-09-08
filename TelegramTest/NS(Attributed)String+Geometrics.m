@@ -135,7 +135,7 @@ static NSTextField* testTextField() {
 	NSSize answer = NSZeroSize ;
 	
 	if (font == nil) {
-		NSLog(@"[%@ %@]: Internal Error 561-3810: Nil font", [self class], NSStringFromSelector(_cmd)) ;
+		DLog(@"[%@ %@]: Internal Error 561-3810: Nil font", [self class], NSStringFromSelector(_cmd)) ;
 	}
 	else {
 		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:

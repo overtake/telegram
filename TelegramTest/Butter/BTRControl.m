@@ -210,7 +210,7 @@ static void BTRControlCommonInit(BTRControl *self) {
 }
 
 - (id)currentValueForControlStateKey:(NSString *)key {
-//    NSLog(@"state %d %d", self.state, self.highlighted);
+//    DLog(@"state %d %d", self.state, self.highlighted);
 	id value = [[self contentForControlState:self.state] valueForKey:key];
 	if (!value || value == NSNull.null) {
 		value = [[self contentForControlState:BTRControlStateNormal] valueForKey:key];

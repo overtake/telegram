@@ -11,7 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "TGTimer.h"
 #import "HackUtils.h"
-
+#include "opusenc.h"
 typedef enum {
     TMAudioRecorderDefault,
     TMAudioRecorderRecord,
@@ -118,7 +118,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     if(self.recorder.currentTime < 0.5)
         send = NO;
     
-    NSLog(@"audio stop. Need send %@", send ? @"YES" : @"NO");
+    DLog(@"audio stop. Need send %@", send ? @"YES" : @"NO");
     [self.recorder stop];
     
     if(!send) {
@@ -127,18 +127,40 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     }
     
     [ASQueue dispatchOnStageQueue:^{
-        NSString *opusPath = [self.filePath stringByAppendingString:@".mp3"];
         
-        NSTask *task = [[NSTask alloc] init];
-        [task setLaunchPath: self.opusEncoderPath];
-        [task setArguments: @[self.filePath, opusPath, @"--downmix-mono"]];
+       	
+        NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
         
-        NSPipe *pipe = [NSPipe pipe];
-        [task setStandardOutput: pipe];
+        char *c_op = strdup([opusPath UTF8String]);
+        char *c_fp = strdup([self.filePath UTF8String]);
         
-        NSFileHandle *file = [pipe fileHandleForReading];
-        [task launch];
-        [file readDataToEndOfFile];
+        char *argv[] = {"opusenc",c_fp,c_op,"--downmix-mono"};
+
+        
+        
+        
+      // char myntcs[] = "some text";
+        
+        
+//        NSTask *task = [[NSTask alloc] init];
+//        [task setLaunchPath: self.opusEncoderPath];
+//        [task setArguments: @[self.filePath, opusPath, @"--downmix-mono"]];
+//        
+     //   NSPipe *pipe = [NSPipe pipe];
+      //  [task setStandardOutput: pipe];
+        
+      //  NSFileHandle *file = [pipe fileHandleForReading];
+        
+     //   const char *cfilename= [[self.filePath stringByAppendingFormat:@" %@ %@",opusPath,@"--downmix-mono"] UTF8String];
+        
+      //  const char *argv[3] = { [self.filePath cStringUsingEncoding:NSUTF8StringEncoding], [opusPath cStringUsingEncoding:NSUTF8StringEncoding], "--downmix-mono" };
+        
+        opusEncoder(3, argv);
+        
+       // [task launch];
+        
+        
+       // [file readDataToEndOfFile];
         
         [self removeFile];
         

@@ -156,7 +156,7 @@
     self.lastMessage = [[MessagesManager sharedManager] find:self.dialog.top_message];
     
     if(!self.lastMessage && self.dialog.top_message != -1) {
-        NSLog(@"no message %@", self.dialog);
+        DLog(@"no message %@", self.dialog);
     }
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];

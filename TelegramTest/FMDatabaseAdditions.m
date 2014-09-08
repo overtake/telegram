@@ -155,7 +155,7 @@ return ret;
 - (void)setApplicationIDString:(NSString*)s {
     
     if ([s length] != 4) {
-        NSLog(@"setApplicationIDString: string passed is not exactly 4 chars long. (was %ld)", [s length]);
+        DLog(@"setApplicationIDString: string passed is not exactly 4 chars long. (was %ld)", [s length]);
     }
     
     [self setApplicationID:NSHFSTypeCodeFromFileType([NSString stringWithFormat:@"'%@'", s])];
@@ -186,8 +186,8 @@ return ret;
             usleep(20);
             
             if (_busyRetryTimeout && (numberOfRetries++ > _busyRetryTimeout)) {
-                NSLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
-                NSLog(@"Database busy");
+                DLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
+                DLog(@"Database busy");
             }          
         } 
         else if (rc != SQLITE_OK) {

@@ -63,7 +63,7 @@
 }
 
 - (void)notificationFullScreen {
-    NSLog(@"log");
+    DLog(@"log");
     [self reloadData];
 }
 
@@ -162,7 +162,7 @@
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
     
-    NSLog(@"test");
+    DLog(@"test");
 }
 
 

@@ -106,7 +106,6 @@
 
 
 
-
 @end
 
 //***************************************************************************
@@ -419,6 +418,10 @@
 	}
 }
 
+-(void)keyDown:(NSEvent *)theEvent {
+    [super keyDown:theEvent];
+}
+
 #pragma mark -
 #pragma mark Closing
 
@@ -430,6 +433,9 @@
 	if (self.willCloseBlock != nil) self.willCloseBlock(self);
 	
 	void (^windowTeardown)(void) = ^{
+        
+        
+        
         [self.shadowWindow.parentWindow removeChildWindow:self.shadowWindow];
         [self.shadowWindow close];
         

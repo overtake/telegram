@@ -143,7 +143,7 @@
     self->_rootViewController = rootViewController;
     [self->_rootViewController viewWillAppear:NO];
     
-    NSLog(@"%@",NSStringFromRect(self->_rootViewController.view.frame));
+    DLog(@"%@",NSStringFromRect(self->_rootViewController.view.frame));
     
     self->_rootViewController.view.frame = NSMakeRect(self->_rootViewController.view.frame.origin.x, 0, self->_rootViewController.view.frame.size.width, self->_rootViewController.view.frame.size.height);
     

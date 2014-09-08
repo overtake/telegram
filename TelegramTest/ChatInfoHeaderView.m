@@ -233,7 +233,7 @@
     
     self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     if(!self.fullChat) {
-        NSLog(@"full chat is not loading");
+        DLog(@"full chat is not loading");
         return;
     }
     

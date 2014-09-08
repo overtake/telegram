@@ -274,7 +274,7 @@
 
 - (void)notificationContactsReload:(NSNotification *)notify {
     
-    NSLog(@"notification reload");
+    DLog(@"notification reload");
 }
 
 

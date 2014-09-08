@@ -306,7 +306,7 @@
     TL_fileLocation *location = [TL_fileLocation createWithDc_id:[file dc_id] volume_id:[file n_id] local_id:-1 secret:[file access_hash]];
     
     if(!media.key || !media.iv) {
-        NSLog(@"drop encrypted media class ====== %@ ======",NSStringFromClass([media class]));
+        DLog(@"drop encrypted media class ====== %@ ======",NSStringFromClass([media class]));
         return [TL_messageMediaEmpty create];
     }
     

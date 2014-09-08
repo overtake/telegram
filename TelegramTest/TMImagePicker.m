@@ -114,7 +114,7 @@ static NSSize webViewSize() {
 //    });
 //    self.outputImage
     
-//    NSLog(@"log %@", self.outputImage);
+//    DLog(@"log %@", self.outputImage);
 
 }
 
@@ -194,7 +194,7 @@ static NSSize webViewSize() {
 //        NSView *view = ((NSView *)[((NSView *)[self.rootView.subviews objectAtIndex:0]).subviews objectAtIndex:0]) ;
 //        NSScrollView *scrollView = [view.subviews objectAtIndex:3];
 //        NSView *lol = scrollView.documentView;
-//        NSLog(@"log");
+//        DLog(@"log");
     }
 
     if(self.lastSelection != self.leftTableView.selectedRow)

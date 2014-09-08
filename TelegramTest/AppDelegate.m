@@ -82,7 +82,7 @@
         
         if(range.location > 12) {
             NSString *method = [absoluteString substringWithRange:NSMakeRange(11, range.location-11)];
-            NSLog(@"method %@", method);
+            DLog(@"method %@", method);
             
             if([method isEqualToString:@"msg"]) {
                 
@@ -284,10 +284,12 @@
         
         if(result.window != self.mainWindow) {
             
-            if(incomingEvent.keyCode == 53) {
+            if(incomingEvent.keyCode == 53 && ! [result.window respondsToSelector:@selector(popover)]) {
                 [result.window close];
+                
+                 return result;
             }
-            return result;
+           
         }
         
         if([Telegram rightViewController].navigationViewController.isLocked)

@@ -188,13 +188,13 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
         [_cachedImageRep setSize:rect.size];
         
         if (!_cachedImageRep){
-            NSLog(@"Error: failed to create NSBitmapImageRep from rep: %@", [[self representations] lastObject]);
+            DLog(@"Error: failed to create NSBitmapImageRep from rep: %@", [[self representations] lastObject]);
             return;
         }
         
         NSGraphicsContext *newContext = [NSGraphicsContext graphicsContextWithBitmapImageRep:_cachedImageRep];
         if (!newContext){
-            NSLog(@"Error: failed to create NSGraphicsContext from rep: %@", _cachedImageRep);
+            DLog(@"Error: failed to create NSGraphicsContext from rep: %@", _cachedImageRep);
             arc_release_nil(_cachedImageRep);
             return;
         }
@@ -274,7 +274,7 @@ NSImage* RHImageByReferencingRectOfExistingImage(NSImage *image, NSRect rect){
             
             CGImageRef cgImage = CGImageCreateWithImageInRect(rep.CGImage, captureRect);
             if (!cgImage){
-                NSLog(@"RHImageByReferencingRectOfExistingImage: Error: Failed to create CGImage with CGImageCreateWithImageInRect() for imageRep:%@, rect:%@.", rep, NSStringFromRect(NSRectFromCGRect(captureRect)));
+                DLog(@"RHImageByReferencingRectOfExistingImage: Error: Failed to create CGImage with CGImageCreateWithImageInRect() for imageRep:%@, rect:%@.", rep, NSStringFromRect(NSRectFromCGRect(captureRect)));
                 continue;
             }
             

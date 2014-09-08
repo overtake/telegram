@@ -18,7 +18,7 @@
     self = [super init];
     
     if(img == NULL) {
-        NSLog(@"Unable to load image named: %@", img);
+        DLog(@"Unable to load image named: %@", img);
         return NULL;
     }
     
@@ -56,7 +56,7 @@
                          [rep bitmapData]);
         }
         else {
-            NSLog(@"-textureFromView: Unsupported bitmap data format: isPlanar:%d, samplesPerPixel:%ld, bitsPerPixel:%ld, bytesPerRow:%ld, bytesPerPlane:%ld",
+            DLog(@"-textureFromView: Unsupported bitmap data format: isPlanar:%d, samplesPerPixel:%ld, bitsPerPixel:%ld, bytesPerRow:%ld, bytesPerPlane:%ld",
                   [rep isPlanar],
                   (long)[rep samplesPerPixel],
                   (long)

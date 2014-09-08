@@ -18,7 +18,7 @@
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
-    NSLog(@"InvocationLogger: %@", NSStringFromSelector(selector));
+    DLog(@"InvocationLogger: %@", NSStringFromSelector(selector));
     return [_target methodSignatureForSelector:selector];
 }
 

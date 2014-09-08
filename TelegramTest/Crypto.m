@@ -106,7 +106,7 @@
     
     BN_mod_exp(rsaData, rsaData, e, n, ctx);
     
-//    NSLog(@"ros %llu %d %d %d %d", *n->d, n->dmax, n->flags, n->neg, n->top);
+//    DLog(@"ros %llu %d %d %d %d", *n->d, n->dmax, n->flags, n->neg, n->top);
 
     
     BN_CTX_free(ctx);
@@ -124,7 +124,7 @@
 //    rsaData->neg = 0;
 //    rsaData->flags = 0;
     
-//    NSLog(@"ros %llu %d %d %d %d", *rsaData->d, rsaData->dmax, rsaData->flags, rsaData->neg, rsaData->top);
+//    DLog(@"ros %llu %d %d %d %d", *rsaData->d, rsaData->dmax, rsaData->flags, rsaData->neg, rsaData->top);
 
     return [self getBytes:rsaData];
 }

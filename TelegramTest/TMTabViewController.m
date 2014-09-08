@@ -161,7 +161,7 @@
         
         TMTextField *field = [TMTextField defaultTextField];
         
-        [field setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:12]];
+        [field setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         
         [field setAlignment:NSCenterTextAlignment];
         [field setStringValue:obj.title];

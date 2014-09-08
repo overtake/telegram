@@ -23,7 +23,7 @@
     
     for (NSView *viewC in view.subviews) {
         
-//        NSLog(@"viewC.className %@ %@", viewC.className, className);
+//        DLog(@"viewC.className %@ %@", viewC.className, className);
         
         if([viewC.className isEqualToString:className]) {
             [array addObject:viewC];
@@ -46,7 +46,7 @@
         for(int i = 0; i < j; i++) {
             lol = [lol stringByAppendingString:@"  "];
         }
-        NSLog(@"%@ %@", lol, NSStringFromClass([c class]));
+        DLog(@"%@ %@", lol, NSStringFromClass([c class]));
         if([c respondsToSelector:@selector(subviews)]) {
             [self printViews:c j:j + 1];
         }
@@ -61,7 +61,7 @@
         Method *methodList = class_copyMethodList(currentClass, &methodCount);
         unsigned int i = 0;
         for (; i < methodCount; i++) {
-            NSLog(@"%@ - %@", [NSString stringWithCString:class_getName(currentClass) encoding:NSUTF8StringEncoding], [NSString stringWithCString:sel_getName(method_getName(methodList[i])) encoding:NSUTF8StringEncoding]);
+            DLog(@"%@ - %@", [NSString stringWithCString:class_getName(currentClass) encoding:NSUTF8StringEncoding], [NSString stringWithCString:sel_getName(method_getName(methodList[i])) encoding:NSUTF8StringEncoding]);
         }
         
         free(methodList);

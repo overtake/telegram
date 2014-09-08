@@ -26,7 +26,7 @@
  * Step 3:
  * Replace your NSLog statements with DDLog statements according to the severity of the message.
  * 
- * NSLog(@"Fatal error, no dohickey found!"); -> DDLogError(@"Fatal error, no dohickey found!");
+ * DLog(@"Fatal error, no dohickey found!"); -> DDLogError(@"Fatal error, no dohickey found!");
  * 
  * DDLog works exactly the same as NSLog.
  * This means you can pass it multiple variables just like NSLog.

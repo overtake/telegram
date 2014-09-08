@@ -79,7 +79,7 @@
 - (void) boundsDidChange:(NSNotification *)notification {
     if(self.lastWidth != self.bounds.size.width) {
         self.lastWidth = self.bounds.size.width;
-       // NSLog(@"log change frame %@ %@", NSStringFromRect(self.bounds), self);
+       // DLog(@"log change frame %@ %@", NSStringFromRect(self.bounds), self);
 
     }
 }

@@ -401,7 +401,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
                 alert(NSLocalizedString(@"Settings.CantUpdateFolder", nil), NSLocalizedString(@"Settings.ChooseAnotherFolder", nil));
             }
             
-            NSLog(@"%@",result);
+            DLog(@"%@",result);
             
         } forWindow:self.window];
     }

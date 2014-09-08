@@ -44,7 +44,7 @@
 
 -(NSPredicate *)predicateForPeer {
 //    int peer_id = ;
-//    NSLog(@"")
+//    DLog(@"")
 //    int a = 1;
     NSPredicate* pred = [NSPredicate predicateWithFormat:@"peer.peer_id == %d",self.peer.peer_id];
     return pred;

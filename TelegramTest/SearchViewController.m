@@ -408,7 +408,7 @@ static int insertCount = 3;
         [self showMessagesResults:params];
     }
     
-    NSLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
+    DLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
 
 }
 
@@ -500,7 +500,7 @@ static int insertCount = 3;
     [self.tableView insert:insertMessagesArray startIndex:self.tableView.count tableRedraw:YES];
     
     
-    NSLog(@"count %lu", self.tableView.count);
+    DLog(@"count %lu", self.tableView.count);
     
 }
 

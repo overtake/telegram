@@ -55,7 +55,7 @@
 #else
             if (![_db open]) {
 #endif
-                NSLog(@"Could not create database queue for path %@", aPath);
+                DLog(@"Could not create database queue for path %@", aPath);
                 FMDBRelease(self);
                 return 0x00;
             }
@@ -111,7 +111,7 @@
 #else
                 if (![db open])
 #endif
-                    NSLog(@"FMDatabaseQueue could not reopen database for path %@", _path);
+                    DLog(@"FMDatabaseQueue could not reopen database for path %@", _path);
                 FMDBRelease(_db);
                 _db  = 0x00;
                 return 0x00;
@@ -140,16 +140,16 @@
 
         FMDBRetain(self);
          dispatch_async(_queue, ^() {
-//                NSLog(@"DB[#%lu]: %@", (unsigned long)hash, string);
+//                DLog(@"DB[#%lu]: %@", (unsigned long)hash, string);
 
                 FMDatabase *db = [self database];
                 block(db);
                 
                 if ([db hasOpenResultSets]) {
-                    NSLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
+                    DLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
                 }
                 
-//                NSLog(@"DB[#%lu] end", hash);
+//                DLog(@"DB[#%lu] end", hash);
             });
     
         FMDBRelease(self);
@@ -163,7 +163,7 @@
             block(db);
             
             if ([db hasOpenResultSets]) {
-                NSLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
+                DLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
             }
             
         });

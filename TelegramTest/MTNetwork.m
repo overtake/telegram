@@ -122,7 +122,7 @@ static int MAX_WORKER_POLL = 5;
 
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
-    NSLog(@"start init");
+    DLog(@"start init");
     
     [ASQueue dispatchOnStageQueue:^{
         [_mtProto stop];
@@ -139,7 +139,7 @@ static int MAX_WORKER_POLL = 5;
     }];
     
     
-    NSLog(@"end init");
+    DLog(@"end init");
 }
 
 
@@ -303,14 +303,14 @@ static int MAX_WORKER_POLL = 5;
 }
 
 - (void)contextDatacenterAddressSetUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId addressSet:(MTDatacenterAddressSet *)addressSet {
-    NSLog(@"");
+    DLog(@"");
     
 }
 - (void)contextDatacenterAuthInfoUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authInfo:(MTDatacenterAuthInfo *)authInfo {
     
 }
 - (void)contextDatacenterAuthTokenUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authToken:(id)authToken {
-    NSLog(@"");
+    DLog(@"");
 }
 
 @end

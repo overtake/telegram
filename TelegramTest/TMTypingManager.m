@@ -64,7 +64,7 @@
         
         id object = [notify.userInfo objectForKey:KEY_SHORT_UPDATE];
         
-        //    NSLog(@"typing object %@", object);
+        //    DLog(@"typing object %@", object);
         
         if([object isKindOfClass:[TL_updateChatUserTyping class]]) {
             TL_updateChatUserTyping *update = (TL_updateChatUserTyping *)object;
@@ -83,7 +83,7 @@
         }
         
         if(dialog) {
-            //        NSLog(@"typing object2 %@", object);
+            //        DLog(@"typing object2 %@", object);
             
             TMTypingObject *object = [self typeObjectForDialog:dialog];
             [object addMember:user_id];

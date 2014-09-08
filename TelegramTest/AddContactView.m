@@ -219,7 +219,7 @@
     
     
     if(obj.object == self.phoneNumber) {
-        NSLog(@"%@",self.phoneNumber.stringValue);
+        DLog(@"%@",self.phoneNumber.stringValue);
         
         
         NSString *inputed = self.phoneNumber.stringValue;

@@ -68,7 +68,7 @@ static CALAyerAnimationInstance *instance() {
     switch (type) {
         case CALayerOpacityAnimation: {
             view.layer.opacity = [anim.toValue floatValue];
-//            NSLog(@"log %f", [anim.toValue floatValue]);
+//            DLog(@"log %f", [anim.toValue floatValue]);
         }
             break;
             

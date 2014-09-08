@@ -28,7 +28,7 @@
 - (void) mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
     
-//    NSLog(@"theEvent %@", theEvent);
+//    DLog(@"theEvent %@", theEvent);
     
     if(!self.selectedRange.length) {
         if(self.isSelecedRange) {
@@ -42,7 +42,7 @@
         self.isSelecedRange = YES;
     }
     
-    //    NSLog(@"mouseDown");
+    //    DLog(@"mouseDown");
 }
 
 //- (void) setFrameOrigin:(NSPoint)newOrigin {

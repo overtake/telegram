@@ -386,7 +386,7 @@
         
         //        [FileUtils showPanelWithTypes:[NSArray arrayWithObjects:@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi", nil] completionHandler:^(NSString *result) {
         //
-        //            NSLog(@"result %@", result);
+        //            DLog(@"result %@", result);
         //
         //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.dialog];
         //        }];
@@ -716,9 +716,9 @@
     height += 24;
 
     
-//    NSLog(@"height %d", height);
+//    DLog(@"height %d", height);
     height = height % 2 == 1 ? height + 1 : height;
-//    NSLog(@"height %d", height);
+//    DLog(@"height %d", height);
 
     
     if(self.stateBottom == MessagesBottomViewNormalState) {

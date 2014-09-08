@@ -62,7 +62,7 @@
     [para setMaximumLineHeight:spacing];
     [self.nameAttritutedString addAttribute:NSParagraphStyleAttributeName value:para range:rangeHeader];
 
-//    NSLog(@"[TMInAppLinks userProfile:self.user.n_id] %@", [TMInAppLinks userProfile:self.user.n_id]);
+//    DLog(@"[TMInAppLinks userProfile:self.user.n_id] %@", [TMInAppLinks userProfile:self.user.n_id]);
     
 //    NSURL *url = [NSURL URLWithString:];
     

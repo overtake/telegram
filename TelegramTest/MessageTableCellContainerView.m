@@ -451,7 +451,7 @@ static BOOL dragAction = NO;
 
 - (void)setItem:(MessageTableItem *)item {
     [super setItem:item];
-   // NSLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)self));
+   // DLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)self));
     float offsetContainerView;
     
     if(item.isForwadedMessage) {

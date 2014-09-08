@@ -43,7 +43,7 @@ static int offsetEditable = 30;
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
         [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
-        [[self.titleTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
+        [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
@@ -95,7 +95,7 @@ static int offsetEditable = 30;
         [self.titleTextField sizeToFit];
         NSSize size = self.titleTextField.frame.size;
         
-        int maxTitleSize = 200 ;
+        int maxTitleSize = self.frame.size.width - 69;
         if(size.width > maxTitleSize)
             size.width = maxTitleSize;
         

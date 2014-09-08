@@ -373,7 +373,7 @@
             
             NSString *fcopy = fc;
             
-            NSLog(@"format: %@, f:%@",xFormat,fcopy);
+            DLog(@"format: %@, f:%@",xFormat,fcopy);
             
             for (int i = 0; i < xFormat.length; i++) {
                 unichar xc = [xFormat characterAtIndex:i];
@@ -449,7 +449,7 @@
             
             NSNumber *kern = @((xsize.width-fsize.width)/xFormat.length);
             
-            NSLog(@"%@",kern);
+            DLog(@"%@",kern);
             
             [attr addAttribute:kCTKernAttributeName value:kern range:NSMakeRange(0, format.length)];
             

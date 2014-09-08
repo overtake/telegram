@@ -313,6 +313,14 @@
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
 		C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47F18C0D0E800726C91 /* TGUpdateState.m */; };
 		C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C48218C0D38600726C91 /* TGUpdateContainer.m */; };
+		C248F3BF19BE03F600BF658E /* opusenc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3BD19BE03F600BF658E /* opusenc.c */; };
+		C248F3CF19BE046C00BF658E /* diag_range.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C719BE046C00BF658E /* diag_range.c */; };
+		C248F3D019BE046C00BF658E /* opus_header.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C919BE046C00BF658E /* opus_header.c */; };
+		C248F3D119BE046C00BF658E /* picture.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3CB19BE046C00BF658E /* picture.c */; };
+		C248F3D219BE046C00BF658E /* wav_io.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3CD19BE046C00BF658E /* wav_io.c */; };
+		C248F3D719BE070D00BF658E /* audio-in.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3D619BE070D00BF658E /* audio-in.c */; };
+		C248F3E319BE08A800BF658E /* flac.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3DF19BE08A800BF658E /* flac.c */; };
+		C248F3E419BE08A800BF658E /* lpc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3E119BE08A800BF658E /* lpc.c */; };
 		C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */; };
 		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
@@ -334,8 +342,6 @@
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
-		C25F91E0197C45A5006868F3 /* opusenc_telegram in Resources */ = {isa = PBXBuildFile; fileRef = C25F91DF197C45A5006868F3 /* opusenc_telegram */; };
-		C25F91E2197C45B7006868F3 /* opusenc_telegram in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C25F91E1197C45B7006868F3 /* opusenc_telegram */; };
 		C25F91F0197D374F006868F3 /* TimeObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91EF197D374F006868F3 /* TimeObserver.m */; };
 		C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */; };
 		C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */; };
@@ -577,7 +583,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C25F91E2197C45B7006868F3 /* opusenc_telegram in Copy Files (6 items) */,
 				C20B228A18E97280007BCCD6 /* libopus.a in Copy Files (6 items) */,
 				0A697EA51917DDB9003469CB /* pop.framework in Copy Files (6 items) */,
 				CE0AC51E18BE97430031658A /* MTProtoKit.framework in Copy Files (6 items) */,
@@ -1196,6 +1201,26 @@
 		C247C47F18C0D0E800726C91 /* TGUpdateState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateState.m; sourceTree = "<group>"; };
 		C247C48118C0D38600726C91 /* TGUpdateContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateContainer.h; sourceTree = "<group>"; };
 		C247C48218C0D38600726C91 /* TGUpdateContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateContainer.m; sourceTree = "<group>"; };
+		C248F3BD19BE03F600BF658E /* opusenc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = opusenc.c; path = ../../../TelegramTest/OpusKit/opusenc.c; sourceTree = "<group>"; };
+		C248F3BE19BE03F600BF658E /* opusenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = opusenc.h; path = ../../../TelegramTest/OpusKit/opusenc.h; sourceTree = "<group>"; };
+		C248F3C719BE046C00BF658E /* diag_range.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diag_range.c; sourceTree = "<group>"; };
+		C248F3C819BE046C00BF658E /* diag_range.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = diag_range.h; sourceTree = "<group>"; };
+		C248F3C919BE046C00BF658E /* opus_header.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = opus_header.c; sourceTree = "<group>"; };
+		C248F3CA19BE046C00BF658E /* opus_header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_header.h; sourceTree = "<group>"; };
+		C248F3CB19BE046C00BF658E /* picture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = picture.c; sourceTree = "<group>"; };
+		C248F3CC19BE046C00BF658E /* picture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picture.h; sourceTree = "<group>"; };
+		C248F3CD19BE046C00BF658E /* wav_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wav_io.c; sourceTree = "<group>"; };
+		C248F3CE19BE046C00BF658E /* wav_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wav_io.h; sourceTree = "<group>"; };
+		C248F3D319BE04C900BF658E /* cpusupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpusupport.h; sourceTree = "<group>"; };
+		C248F3D619BE070D00BF658E /* audio-in.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "audio-in.c"; path = "../audio-in.c"; sourceTree = "<group>"; };
+		C248F3D819BE074000BF658E /* resample_sse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resample_sse.h; path = ../resample_sse.h; sourceTree = "<group>"; };
+		C248F3DB19BE074000BF658E /* stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stack_alloc.h; path = ../stack_alloc.h; sourceTree = "<group>"; };
+		C248F3DD19BE081200BF658E /* arch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = arch.h; path = ../arch.h; sourceTree = "<group>"; };
+		C248F3DE19BE087900BF658E /* os_support.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = os_support.h; path = ../os_support.h; sourceTree = "<group>"; };
+		C248F3DF19BE08A800BF658E /* flac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = flac.c; path = ../flac.c; sourceTree = "<group>"; };
+		C248F3E019BE08A800BF658E /* flac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = flac.h; path = ../flac.h; sourceTree = "<group>"; };
+		C248F3E119BE08A800BF658E /* lpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lpc.c; path = ../lpc.c; sourceTree = "<group>"; };
+		C248F3E219BE08A800BF658E /* lpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpc.h; path = ../lpc.h; sourceTree = "<group>"; };
 		C24BCB71186A2711000902BE /* NSNumber+NumberFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+NumberFormatter.h"; sourceTree = "<group>"; };
 		C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+NumberFormatter.m"; sourceTree = "<group>"; };
 		C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluredPhotoImageView.h; sourceTree = "<group>"; };
@@ -1239,8 +1264,6 @@
 		C25F91B81977EB17006868F3 /* TGImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageObject.m; sourceTree = "<group>"; };
 		C25F91C2197858BF006868F3 /* LocationSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSenderItem.h; sourceTree = "<group>"; };
 		C25F91C3197858BF006868F3 /* LocationSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSenderItem.m; sourceTree = "<group>"; };
-		C25F91DF197C45A5006868F3 /* opusenc_telegram */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = opusenc_telegram; sourceTree = "<group>"; };
-		C25F91E1197C45B7006868F3 /* opusenc_telegram */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = opusenc_telegram; sourceTree = "<group>"; };
 		C25F91EE197D374F006868F3 /* TimeObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeObserver.h; sourceTree = "<group>"; };
 		C25F91EF197D374F006868F3 /* TimeObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeObserver.m; sourceTree = "<group>"; };
 		C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "phone-x-format.txt"; sourceTree = "<group>"; };
@@ -2848,6 +2871,26 @@
 		C2A5BFA118DC80620021BE68 /* opus */ = {
 			isa = PBXGroup;
 			children = (
+				C248F3DF19BE08A800BF658E /* flac.c */,
+				C248F3E019BE08A800BF658E /* flac.h */,
+				C248F3E119BE08A800BF658E /* lpc.c */,
+				C248F3E219BE08A800BF658E /* lpc.h */,
+				C248F3DE19BE087900BF658E /* os_support.h */,
+				C248F3DD19BE081200BF658E /* arch.h */,
+				C248F3D819BE074000BF658E /* resample_sse.h */,
+				C248F3DB19BE074000BF658E /* stack_alloc.h */,
+				C248F3D619BE070D00BF658E /* audio-in.c */,
+				C248F3BD19BE03F600BF658E /* opusenc.c */,
+				C248F3BE19BE03F600BF658E /* opusenc.h */,
+				C248F3D319BE04C900BF658E /* cpusupport.h */,
+				C248F3C719BE046C00BF658E /* diag_range.c */,
+				C248F3C819BE046C00BF658E /* diag_range.h */,
+				C248F3C919BE046C00BF658E /* opus_header.c */,
+				C248F3CA19BE046C00BF658E /* opus_header.h */,
+				C248F3CB19BE046C00BF658E /* picture.c */,
+				C248F3CC19BE046C00BF658E /* picture.h */,
+				C248F3CD19BE046C00BF658E /* wav_io.c */,
+				C248F3CE19BE046C00BF658E /* wav_io.h */,
 				C2A5BFA218DC80620021BE68 /* opus.h */,
 				C2A5BFA318DC80620021BE68 /* opus_defines.h */,
 				C2A5BFA418DC80620021BE68 /* opus_multistream.h */,
@@ -3105,7 +3148,6 @@
 		CEB09E4F17DAFC240055F150 = {
 			isa = PBXGroup;
 			children = (
-				C25F91E1197C45B7006868F3 /* opusenc_telegram */,
 				CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
 				CEAE5D57181ECDE900C17645 /* sql */,
@@ -3129,7 +3171,6 @@
 			isa = PBXGroup;
 			children = (
 				C293694919811BB700DD9680 /* MapKit.framework */,
-				C25F91DF197C45A5006868F3 /* opusenc_telegram */,
 				0AB8F2BA1948BCF30074E4E7 /* AVFoundation.framework */,
 				0A7C78FC1947E147001617DB /* GLKit.framework */,
 				0A7C78FA1947E134001617DB /* OpenGL.framework */,
@@ -3835,7 +3876,6 @@
 				C2A5C00818E17C630021BE68 /* SettingsWindowController.xib in Resources */,
 				CE46A2551854B68F00D6EF14 /* Localizable.strings in Resources */,
 				0A9EDC621897BA0E0037E1BC /* Rebel-Info.plist in Resources */,
-				C25F91E0197C45A5006868F3 /* opusenc_telegram in Resources */,
 				C2ADB452191BB93000305CC8 /* TMCollectionViewController.xib in Resources */,
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
@@ -3876,6 +3916,7 @@
 				CEAE5CCA1818811000C17645 /* NSDate-Utilities.m in Sources */,
 				C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */,
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
+				C248F3BF19BE03F600BF658E /* opusenc.c in Sources */,
 				0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */,
 				C20B228918E971D0007BCCD6 /* framing.c in Sources */,
@@ -3907,6 +3948,7 @@
 				CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */,
 				CEDAEB521881AF85006189A2 /* YapDatabaseFilteredViewTransaction.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
+				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
 				CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */,
 				0A67588B18928F1A00F4487D /* TMGrowingTextView.m in Sources */,
@@ -3914,6 +3956,7 @@
 				CEAE5D68181ECDF100C17645 /* FMResultSet.m in Sources */,
 				C2FA78E61923CB6A001A9D1B /* VideoHistoryFilter.m in Sources */,
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
+				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
@@ -3936,6 +3979,7 @@
 				0A241AA618AB60BA00C32F45 /* TMGLGif.m in Sources */,
 				C21D484C19AF64A5000F06E1 /* ComposeAction.m in Sources */,
 				0A6D098F19535E8500A9AC64 /* NSImageViewCategory.m in Sources */,
+				C248F3D119BE046C00BF658E /* picture.c in Sources */,
 				0A6758F2189672F600F4487D /* TMFastQueue.mm in Sources */,
 				0ABC223118EE88DA00243F82 /* MessageTableCellGifView.m in Sources */,
 				0A6D099719535E8500A9AC64 /* TGContactCategory.m in Sources */,
@@ -3969,6 +4013,7 @@
 				0AB43BA818D4D60B00FB805A /* MesssageInputGrowingTextView.m in Sources */,
 				CEAE5D70181EF07C00C17645 /* TGMessage+Extensions.m in Sources */,
 				CEDAEB681881AF85006189A2 /* YapDatabaseConnectionState.m in Sources */,
+				C248F3E419BE08A800BF658E /* lpc.c in Sources */,
 				C2A5BFF318E02BAB0021BE68 /* TGAudioPlayer.m in Sources */,
 				C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */,
 				0A9EDC5F1897BA0E0037E1BC /* RBLTableView.m in Sources */,
@@ -4086,6 +4131,7 @@
 				0A9EDC541897BA0E0037E1BC /* NSView+RBLAnimationAdditions.m in Sources */,
 				0A6D099819535E8500A9AC64 /* TGEncryptedChatCategory.m in Sources */,
 				C233FB2E18B61415008C9A96 /* NewConversationRowItem.m in Sources */,
+				C248F3D019BE046C00BF658E /* opus_header.c in Sources */,
 				C2A5BFFD18E03D150021BE68 /* MessageTableCellAudioView.m in Sources */,
 				0A5F0FFE18DC300A00CCFA60 /* ChatParticipantRowView.m in Sources */,
 				C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */,
@@ -4188,6 +4234,7 @@
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
 				0A59068718AA32C8002ED7BA /* BTRControlAction.m in Sources */,
+				C248F3D719BE070D00BF658E /* audio-in.c in Sources */,
 				0A0B09BC18B1823700F3FE1B /* TMImageUtils.m in Sources */,
 				C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */,
 				0A241AA018AB2F5900C32F45 /* MessageTableCellPhotoView.m in Sources */,
@@ -4260,6 +4307,7 @@
 				0AA7E1DF18CDB6C00064EFC7 /* TMPopover.m in Sources */,
 				C20D188B193CBC230095A906 /* AudioSenderItem.m in Sources */,
 				C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */,
+				C248F3CF19BE046C00BF658E /* diag_range.c in Sources */,
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
 				CEDAEB621881AF85006189A2 /* YapDatabaseViewRangeOptions.m in Sources */,
 				CEDAEB611881AF85006189A2 /* YapDatabaseViewMappings.m in Sources */,
