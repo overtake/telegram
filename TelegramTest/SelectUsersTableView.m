@@ -205,7 +205,7 @@
 
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
-    return row == 0 ? self.searchView : [self cacheViewForClass:[SelectUserRowView class] identifier:@"SelectUserRowView"];
+    return row == 0 ? self.searchView : [self cacheViewForClass:[SelectUserRowView class] identifier:@"SelectUserRowView" withSize:NSMakeSize(NSWidth(self.frame), 50)];
 }
 
 -(void)searchFieldTextChange:(NSString *)searchString {
