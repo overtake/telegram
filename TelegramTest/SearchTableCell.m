@@ -28,7 +28,8 @@
     self = [super initWithFrame:frameRect];
     if(self) {
         
-       
+        self.wantsLayer = YES;
+        
     self.titleTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(66, 33, 200, 20)];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setEditable:NO];
@@ -161,14 +162,18 @@
     
     
     if(self.isSelected) {
-        [NSColorFromRGB(0x6190c1) set];
+        [BLUE_COLOR_SELECT set];
         NSRectFill(self.bounds);
     } else if(self.isHover) {
-        [NSColorFromRGB(0xfafafa) set];
-        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+      //  [NSColorFromRGB(0xfafafa) set];
+      //  NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
     } else {
         [NSColorFromRGB(0xffffff) set];
         NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+        
+//        [NSColorFromRGB(0xcccccc) set];
+//        
+//        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
     }
     
 }

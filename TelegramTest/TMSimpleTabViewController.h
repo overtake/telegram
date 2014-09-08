@@ -13,6 +13,8 @@
 @property (nonatomic, strong) TMViewController *currentController;
 
 
+- (void)showControllerByIndex:(NSUInteger)index;
+
 - (void)showController:(TMViewController *)viewController;
 - (void)removeController:(TMViewController *)viewController;
 - (void)addController:(TMViewController *)viewController;

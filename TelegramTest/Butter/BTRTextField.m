@@ -481,6 +481,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	return [super becomeFirstResponder];
 }
 
+
 - (void)textDidEndEditing:(NSNotification *)notification {
 	//[self.layer addAnimation:[self shadowOpacityAnimation] forKey:nil];
 	//self.layer.shadowOpacity = 0.f;

@@ -27,10 +27,11 @@
         [self setFrameOrigin:NSMakePoint(0, 1)];
         
         [self setTextColor:BLUE_UI_COLOR forState:TMButtonNormalState];
-        [self setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];
-        [self setTextColor:NSColorFromRGB(0x2e618c) forState:TMButtonPressedState];
-        
+      //  [self setTextColor:BLUE_COLOR_SELECT forState:TMButtonNormalHoverState];
+       // [self setTextColor:NSColorFromRGB(0x2e618c) forState:TMButtonPressedState];
         [self setStringValue:string];
+        
+        self.acceptCursor = NO;
     }
     return self;
 }

@@ -14,7 +14,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
+        [self setEditable:YES];
     }
     return self;
 }

@@ -19,7 +19,7 @@
     
     self.autoSaver = [TGWindowArchiver find:NSStringFromClass(self.class)];
 
-    
+    [self setAcceptEvents:YES];
     
     [super initialize:self.autoSaver];
     

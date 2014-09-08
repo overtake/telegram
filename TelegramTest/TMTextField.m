@@ -50,6 +50,7 @@
 
 @interface TMTextField()
 @property (nonatomic) BOOL isInitialize;
+@property (nonatomic,strong) PlaceholderTextView *reservedPlaceholder;
 @end
 
 @implementation TMTextField
@@ -99,28 +100,40 @@
 
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString {
     self->_placeholderAttributedString = placeholderAttributedString;
+    
+    self.placeholderView.placeholderAttributedString = placeholderAttributedString;
+}
+
+-(void)setPlaceholderPoint:(NSPoint)placeholderPoint {
+    self->_placeholderPoint = placeholderPoint;
+    
+    self.placeholderView.placeholderPoint = placeholderPoint;
 }
 
 - (PlaceholderTextView *)placeholderView:(id)sender {
-    static PlaceholderTextView *textView;
     if(sender) {
-        textView = sender;
+        self.reservedPlaceholder = sender;
     }
-    return textView;
+    return self.reservedPlaceholder;
 }
 
 
 - (BOOL)becomeFirstResponder {
     BOOL result = [super becomeFirstResponder];
     
-    if(!self.placeholderView || self.placeholderView.superview != self.textView) {
+    if(self.placeHolderOnSelf)
+        return result;
+    
+    
+    if((!self.placeholderView || self.placeholderView.superview != self.textView)) {
         NSTextView *textView = self.textView;
         if(textView) {
-             [self placeholderView:[[PlaceholderTextView alloc] initWithFrame:self.bounds]];
+            [self placeholderView:[[PlaceholderTextView alloc] initWithFrame:self.bounds]];
             self.placeholderView.placeholderAttributedString = self.placeholderAttributedString;
             [textView addSubview:self.placeholderView];
         }
     }
+    
     
     self.placeholderView.placeholderAttributedString = self.placeholderAttributedString;
     self.placeholderView.placeholderPoint = self.placeholderPoint;

@@ -67,7 +67,7 @@
 
         self.playButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_GIFPlay().size.width, image_GIFPlay().size.height)];
         [self.playButton setBackgroundImage:image_GIFPlay() forControlState:BTRControlStateNormal];
-        [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+       // [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [self.playButton addBlock:^(BTRControlEvents events) {
             block();
         } forControlEvents:BTRControlEventLeftClick];

@@ -10,7 +10,7 @@
 #import "DialogTableItem.h"
 #import "DialogSwipeTableControll.h"
 
-#define DIALOG_SELECT_COLOR NSColorFromRGB(0x4f86bf)
+#define DIALOG_SELECT_COLOR NSColorFromRGB(0x5085bd) //
 #define DIALOG_CELL_HEIGHT 66
 
 typedef enum {

@@ -28,11 +28,14 @@
 
 @property (nonatomic,assign) NSSize textOffset;
 
+@property (nonatomic,assign) BOOL placeHolderOnSelf;
+
 @property (nonatomic,strong) id <TMTextFieldDelegate> fieldDelegate;
 
 + (id)defaultTextField;
 + (id)loginPlaceholderTextField;
 - (PlaceholderTextView *)placeholderView;
+- (PlaceholderTextView *)placeholderView:(id)sender;
 
 -(void)showEmoji;
 

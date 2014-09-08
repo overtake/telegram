@@ -49,6 +49,7 @@
         self.firstName.fieldXInset = 7.0f;
         self.firstName.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
         [self.firstName setDrawsFocusRing:NO];
+    
         
         
         
@@ -68,6 +69,8 @@
         self.phoneNumber.placeholderTitle = NSLocalizedString(@"AddContact.PhoneNumberPlaceholder", nil);
         self.phoneNumber.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
         [self.phoneNumber setDrawsFocusRing:NO];
+        
+        
         
         
         self.phoneNumber.delegate = self;
@@ -92,7 +95,7 @@
         
         
         dispatch_block_t separatorDraw = ^ {
-            [NSColorFromRGB(0xe4e4e4) set];
+            [GRAY_BORDER_COLOR set];
             NSRectFill(NSMakeRect(0, 46, frame.size.width, 1));
         };
         
@@ -170,7 +173,7 @@
             } else {
                 alert(NSLocalizedString(@"AddContact.NotRegistredTitle",nil), NSLocalizedString(@"AddContact.NotRegistredDescription",nil));
             }
-            [self.controller.popover close];
+            [self.controller close];
             
         }];
     } else {
@@ -182,6 +185,25 @@
       
     }
  
+}
+
+-(void)clear {
+    [self.firstName setActiveFieldColor:ActiveStartingColor];
+    [self.firstName setInactiveFieldColor:InactiveStartingColor];
+    
+    [self.lastName setActiveFieldColor:ActiveStartingColor];
+    [self.lastName setInactiveFieldColor:InactiveStartingColor];
+    
+    [self.phoneNumber setActiveFieldColor:ActiveStartingColor];
+    [self.phoneNumber setInactiveFieldColor:InactiveStartingColor];
+    
+    self.firstName.stringValue = self.lastName.stringValue = self.phoneNumber.stringValue = @"";
+    
+    self.user.first_name = self.firstName.stringValue;
+    self.user.last_name = self.lastName.stringValue;
+    
+    [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.user}];
+
 }
 
 -(BOOL)becomeFirstResponder {

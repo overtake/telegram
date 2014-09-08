@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "actions_active.png"
+      "filename" : "AddContact.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "actions_active@2x.png"
+      "filename" : "AddContact@2x.png"
     }
   ],
   "info" : {

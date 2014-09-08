@@ -23,7 +23,7 @@
         
         [self addTarget:self action:@selector(clickHandler) forControlEvents:BTRControlEventLeftClick];
         
-        [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+      //  [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         
         [self setMessagesCount:32];
     }
@@ -91,7 +91,7 @@
     CGContextAddPath(context, pathRef);
     
     NSColor *fillColor = self.isHover ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0xfdfdfd);
-    NSColor *strokeColor = NSColorFromRGB(0xe4e4e4);
+    NSColor *strokeColor = GRAY_BORDER_COLOR;
     
     CGContextSetRGBFillColor(context, fillColor.redComponent, fillColor.greenComponent, fillColor.blueComponent, self.isHover ?  1.f : 0.96f);
     CGContextAddPath(context, pathRef);

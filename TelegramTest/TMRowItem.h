@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 @protocol TMRowItemDelegate <NSObject>
 
 - (void) redrawRow;

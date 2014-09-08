@@ -38,7 +38,7 @@
         
         self.cancelView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 12, 12)];
         
-        [self.cancelView setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+      //  [self.cancelView setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         
         
         

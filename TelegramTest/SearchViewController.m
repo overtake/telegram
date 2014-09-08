@@ -43,6 +43,9 @@ typedef enum {
 @property (atomic) BOOL isRemoteLoaded;
 @property (atomic) BOOL isLoading;
 @property (atomic) BOOL isFinishLoading;
+
+
+@property (atomic) BOOL isNeedRemoteLoad;
 @end
 
 @implementation SearchParams
@@ -383,12 +386,13 @@ static int insertCount = 3;
     
     
     //MessagesLoader
-    if(isNeedSeparator) {
+    if(isNeedSeparator && params.isNeedRemoteLoad) {
         [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
         [self.messagesSeparator setItemCount:-1];
         isOneSearchResult = NO;
     }
-    [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+    if(params.isNeedRemoteLoad)
+        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
 
     [self.tableView reloadData];
     
@@ -540,6 +544,8 @@ static int insertCount = 3;
             NSMutableArray *dialogs = [NSMutableArray array];
             NSMutableArray *dialogsNeedCheck = [NSMutableArray array];
 
+            
+            
             //Chats
             NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@))", searchString, transform, transformReverse]];
         
@@ -570,56 +576,89 @@ static int insertCount = 3;
                     [dialogsNeedCheck addObject:@(user.n_id)];
             }
             
-            [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
-                
-                
-                [ASQueue dispatchOnStageQueue:^{
-                    [[DialogsManager sharedManager] add:dialogsDB];
-                    [[MessagesManager sharedManager] add:messagesDB];
+            if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
+                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
                     
-                    [dialogs addObjectsFromArray:dialogsDB];
                     
-                    NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
-                        if(dialog1.last_message_date > dialog2.last_message_date) {
-                            return NSOrderedAscending;
-                        } else {
-                            return NSOrderedDescending;
+                    [ASQueue dispatchOnStageQueue:^{
+                        [[DialogsManager sharedManager] add:dialogsDB];
+                        [[MessagesManager sharedManager] add:messagesDB];
+                        
+                        [dialogs addObjectsFromArray:dialogsDB];
+                        
+                        NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
+                            if(dialog1.last_message_date > dialog2.last_message_date) {
+                                return NSOrderedAscending;
+                            } else {
+                                return NSOrderedDescending;
+                            }
+                        }];
+                        
+                        
+                        NSMutableArray *cachePeers = [NSMutableArray array];
+                        
+                        searchParams.dialogs = [NSMutableArray array];
+                        for(TL_conversation *dialog in insertedDialogs) {
+                            
+                            [cachePeers addObject:@(dialog.peer.peer_id)];
+                            
+                            [searchParams.dialogs addObject:[[DialogTableItem alloc] initWithDialogItem:dialog selectString:searchParams.searchString]];
                         }
+                        
+                        searchParams.users = [NSMutableArray array];
+                        searchParams.contacts = [NSMutableArray array];
+                        
+                        if((self.type & SearchTypeContacts) == SearchTypeContacts) {
+                            for(TGUser *user in searchUsers) {
+                                if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
+                                    id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
+                                    [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
+                                }
+                            }
+                        }
+                        
+                        
+                        
+                        [[ASQueue mainQueue] dispatchOnQueue:^{
+                            searchParams.isStorageLoaded = YES;
+                            
+                            [self showSearchResults:searchParams];
+                        }];
+                        
                     }];
-                    
-                    
-                    NSMutableArray *cachePeers = [NSMutableArray array];
-                    
-                    searchParams.dialogs = [NSMutableArray array];
-                    for(TL_conversation *dialog in insertedDialogs) {
-                        
-                        [cachePeers addObject:@(dialog.peer.peer_id)];
-                        
-                        [searchParams.dialogs addObject:[[DialogTableItem alloc] initWithDialogItem:dialog selectString:searchParams.searchString]];
-                    }
+                }];
+            } else {
+                if((self.type & SearchTypeContacts) == SearchTypeContacts) {
                     
                     searchParams.users = [NSMutableArray array];
                     searchParams.contacts = [NSMutableArray array];
                     
                     for(TGUser *user in searchUsers) {
-                        if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
-                            id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
-                            [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
-                        }
+                        id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
+                        
+                        [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
                     }
                     
+                   
                     
                     [[ASQueue mainQueue] dispatchOnQueue:^{
-                        searchParams.isStorageLoaded = YES;
-                        
                         [self showSearchResults:searchParams];
                     }];
-
-                }];
-            }];
+                    
+                }
+                
+            }
+            
+            
         }];
         
-        [self remoteSearch:searchParams];
+        searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
+        
+        if((self.type & SearchTypeMessages) == SearchTypeMessages) {
+             [self remoteSearch:searchParams];
+        }
+        
+       
     });
 }
 

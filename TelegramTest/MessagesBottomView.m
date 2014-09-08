@@ -62,6 +62,8 @@
     if(self) {
         [self setWantsLayer:YES];
         
+        self.layer.backgroundColor = NSColorFromRGB(0xfafafa).CGColor;
+        
       //  self.layer = [[TMLayer alloc] initWithLayer:self.layer];
         
         
@@ -136,7 +138,7 @@
     [self.actionsView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 //    [self.actionsView setBackgroundColor:NSColorFromRGB(0xfafafa)];
 //    [self.actionsView setBorder:TMViewBorderTop];
-//    [self.actionsView setBorderColor:NSColorFromRGB(0xe4e4e4)];
+//    [self.actionsView setBorderColor:GRAY_BORDER_COLOR];
     
     self.deleteButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil)];
     [self.deleteButton setFrameOrigin:NSMakePoint(30, roundf((self.bounds.size.height - self.deleteButton.bounds.size.height) / 2) )];
@@ -222,11 +224,11 @@
     [self.normalView setWantsLayer:YES];
     
     
-    [self.normalView setBackgroundColor:NSColorFromRGB(0xfafafa)];
+  //  [self.normalView setBackgroundColor:NSColorFromRGB(0xfafafa)];
     [self.normalView setAutoresizesSubviews:YES];
     [self.normalView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 //    [self.normalView setBorder:TMViewBorderTop];
-//    [self.normalView setBorderColor:NSColorFromRGB(0xe4e4e4)];
+//    [self.normalView setBorderColor:GRAY_BORDER_COLOR];
     
     
     self.inputMessageTextField = [[MesssageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 20, 10)];
@@ -330,14 +332,14 @@
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected | BTRControlStateHover];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected];
-    [self.smileButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+  //  [self.smileButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
     
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
     [self.normalView addSubview:self.smileButton];
     
-    
+    //self.normalView.backgroundColor = NSColorFromRGB(0x000000)
     
     return self.normalView;
 }
@@ -809,7 +811,7 @@
     [super drawRect:dirtyRect];
     
     
-    [NSColorFromRGB(0xe4e4e4) set];
+    [GRAY_BORDER_COLOR set];
     NSRectFill(NSMakeRect(0, self.bounds.size.height - 1, self.bounds.size.width, 1));
 }
 

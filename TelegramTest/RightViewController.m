@@ -17,7 +17,9 @@
 #import "TMMediaUserPictureController.h"
 #import "TMCollectionPageController.h"
 #import "TMAudioRecorder.h"
-
+#import "TMProgressModalView.h"
+#import "ComposeBroadcastListViewController.h"
+#import "ContactsViewController.h"
 @implementation TMView (Dragging)
 
 
@@ -70,7 +72,6 @@
 @property (nonatomic, strong) TMViewController *noDialogsSelectedViewController;
 @property (nonatomic, strong) TMView *modalView;
 @property (nonatomic, strong) id modalObject;
-//@property (nonatomic, strong) TMNavigationController *navigationView;
 
 @end
 
@@ -123,11 +124,17 @@
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
     self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
     
+    self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
+    self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
+    self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:self.view.bounds];
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
     [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
     [self.navigationViewController pushViewController:self.collectionViewController animated:NO];
+    [self.navigationViewController pushViewController:self.composePickerViewController animated:NO];
+    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:NO];
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:NO];
     [self.navigationViewController clear];
 
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
@@ -369,6 +376,8 @@
     return view;
 }
 
+
+
 - (void)dealloc {
     [Notification removeObserver:self];
 }
@@ -403,7 +412,7 @@
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:self.navigationViewController.currentController == self.userInfoViewController];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[DialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]]];
     }
 
     return YES;
@@ -452,6 +461,44 @@
     [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:YES];
 }
 
+- (void)showComposeWithAction:(ComposeAction *)composeAction {
+    if(self.navigationViewController.currentController == self.composePickerViewController && self.composePickerViewController.action == composeAction)
+        return;
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.composePickerViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composePickerViewController animated:YES];
+
+}
+
+- (void)showComposeCreateChat:(ComposeAction *)composeAction {
+    if(self.navigationViewController.currentController == self.composeChatCreateViewController && self.composeChatCreateViewController.action == composeAction)
+        return;
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.composeChatCreateViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:YES];
+
+}
+
+
+-(void)showComposeBroadcastList:(ComposeAction *)composeAction {
+    if(self.navigationViewController.currentController == self.composeBroadcastListViewController && self.composeBroadcastListViewController.action == composeAction)
+        return;
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.composeBroadcastListViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];
+
+}
 
 - (void)showChatInfoPage:(TGChat *)chat {
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)

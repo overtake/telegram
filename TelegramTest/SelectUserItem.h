@@ -17,6 +17,14 @@
 @property (nonatomic) NSPoint lastSeenPoint;
 @property (nonatomic) NSPoint titlePoint;
 @property (nonatomic) NSPoint avatarPoint;
+
+
+@property (nonatomic) NSUInteger rightBorderMargin;
+
+@property (nonatomic) NSPoint noSelectLastSeenPoint;
+@property (nonatomic) NSPoint noSelectTitlePoint;
+@property (nonatomic) NSPoint noSelectAvatarPoint;
+
 @property (nonatomic, strong) TGContact *contact;
 
 @property (nonatomic) BOOL isSelected;

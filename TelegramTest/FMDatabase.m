@@ -743,6 +743,8 @@
     va_list args;
     va_start(args, sql);
     
+    NSLog(@"%@",sql);
+    
     id result = [self executeQuery:sql withArgumentsInArray:nil orDictionary:nil orVAList:args];
     
     va_end(args);
@@ -1009,6 +1011,8 @@
 - (BOOL)executeUpdate:(NSString*)sql, ... {
     va_list args;
     va_start(args, sql);
+    
+     NSLog(@"%@",sql);
     
     BOOL result = [self executeUpdate:sql error:nil withArgumentsInArray:nil orDictionary:nil orVAList:args];
     

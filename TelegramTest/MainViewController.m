@@ -88,7 +88,7 @@
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return  [self.leftViewController isSearchActive] ? 200 : 70;
+    return  ![self.leftViewController canMinimisize] ? 200 : 70;
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
@@ -103,12 +103,8 @@
 -(void)splitViewDidResizeSubviews:(NSNotification *)notification {
     LeftViewController *controller = [Telegram leftViewController];
     
-    if(NSWidth(controller.view.frame) == 70)
-    {
-        [controller.buttonContainer setFrameOrigin:NSMakePoint(15, NSMinY(controller.buttonContainer.frame))];
-    } else if(NSWidth(controller.view.frame) == 200) {
-        [controller.buttonContainer setFrameOrigin:NSMakePoint(controller.searchTextField.frame.origin.y + controller.searchTextField.frame.size.width+11, NSMinY(controller.buttonContainer.frame))];
-    }
+    [controller updateSize];
+    
 }
 
 //- (void)showLoginViewController:(BOOL)isShow {

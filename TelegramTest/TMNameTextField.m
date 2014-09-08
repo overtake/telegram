@@ -46,6 +46,8 @@
     self.encryptedSelector = @selector(dialogTitleEncrypted);
 }
 
+
+
 - (void)dealloc {
     [Notification removeObserver:self];
 }
@@ -141,6 +143,8 @@
 }
 
 - (void)setAttributedStringValue:(NSMutableAttributedString *)obj {
+    
+    
     if([obj isKindOfClass:[NSMutableAttributedString class]]) {
         [obj setSelected:self.selected];
     }

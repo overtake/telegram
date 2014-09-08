@@ -13,6 +13,17 @@
 
 @interface SearchViewController : TMViewController<TMTableViewDelegate>
 
+
+typedef enum {
+    SearchTypeContacts = 1 << 1,
+    SearchTypeDialogs = 1 << 3,
+    SearchTypeMessages = 1 << 4
+    
+} SearchType;
+
+@property (nonatomic,assign) int type;
+
+
 - (void) searchByString:(NSString*)searchString;
 
 @end

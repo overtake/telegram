@@ -86,7 +86,7 @@
     [[NSCursor arrowCursor] set];
     
     if(self.isHover) {
-        [self.gradientLayer setColors:@[(id)NSColorFromRGB(0x3697cd).CGColor, (id)NSColorFromRGB(0x48a6dc).CGColor]];
+        [self.gradientLayer setColors:@[(id)BLUE_COLOR_SELECT.CGColor, (id)BLUE_COLOR_SELECT.CGColor]];
         [self.textLayer setTextColor:[NSColor whiteColor]];
         self.imageLayer.contents = self.item.highlightedImage;
     } else {

@@ -27,6 +27,7 @@ DYNAMIC_PROPERTY(DType);
     [self setDType:[NSNumber numberWithInt:type]];
 }
 
+
 - (TGChatType)rebuildType {
     int type;
     
@@ -50,7 +51,7 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
     [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
     
-    [dialogTitleAttributedString appendString:self.title withColor:NSColorFromRGB(0x333333)];
+    [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:14] forRange:dialogTitleAttributedString.range];
     
@@ -64,7 +65,7 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
 - (NSAttributedString *) titleForMessage {
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
-    [dialogTitleAttributedString appendString:self.title withColor:NSColorFromRGB(0x222222)];
+    [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x222222)];
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
@@ -76,8 +77,12 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
     return [self getTITLEFORMESSAGE];
 }
 
+-(NSString *)cropTitle {
+    return self.title.length > 50 ? [self.title substringToIndex:50] : self.title;
+}
+
 - (NSAttributedString *)titleForChatInfo {
-    return [[NSAttributedString alloc] initWithString:self.title];
+    return [[NSAttributedString alloc] initWithString:self.cropTitle];
 }
 
 - (NSAttributedString *)statusAttributedString {
@@ -114,7 +119,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
         int online = [[FullChatManager sharedManager] getOnlineCount:self.n_id];
         if(online > 0) {
             [str appendString:@", " withColor:NSColorFromRGB(0x9b9b9b)];
-            [str appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:BLUE_UI_COLOR];
+            [str appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
         }
         
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
@@ -131,7 +136,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     int online = [[FullChatManager sharedManager] getOnlineCount:self.n_id];
     if(online > 0) {
         [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
-        [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:BLUE_UI_COLOR];
+        [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
     }
     
     

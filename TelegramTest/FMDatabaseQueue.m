@@ -139,8 +139,7 @@
 //        }
 
         FMDBRetain(self);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            dispatch_sync(_queue, ^() {
+         dispatch_async(_queue, ^() {
 //                NSLog(@"DB[#%lu]: %@", (unsigned long)hash, string);
 
                 FMDatabase *db = [self database];
@@ -152,7 +151,6 @@
                 
 //                NSLog(@"DB[#%lu] end", hash);
             });
-        });
     
         FMDBRelease(self);
     }

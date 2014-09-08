@@ -169,11 +169,23 @@ static TMTableView *tableStatic;
     
     [self removeTrackingArea:self.trackingArea];
     
-    NSUInteger options = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways | NSTrackingMouseMoved);
+    static const NSUInteger options = (NSTrackingMouseEnteredAndExited | NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseMoved);
     self.trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
                                                      options:options
                                                        owner:self userInfo:nil];
     [self addTrackingArea:self.trackingArea];
+}
+
+-(void)setFrameOrigin:(NSPoint)newOrigin {
+    [super setFrameOrigin:newOrigin];
+    
+    [self updateTrackingAreas];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self updateTrackingAreas];
 }
 
 - (void)checkHover {
@@ -302,6 +314,11 @@ static TMTableView *tableStatic;
 }
 
 - (BOOL)removeItem:(TMRowItem *)item {
+    return [self removeItem:item tableRedraw:YES];
+}
+
+
+- (BOOL)removeItem:(TMRowItem *)item  tableRedraw:(BOOL)tableRedraw {
     TMRowItem *itemInList = (TMRowItem *)[self itemByHash:item.hash];
     if(itemInList) {
         NSUInteger pos = [self positionOfItem:itemInList];
@@ -310,11 +327,15 @@ static TMTableView *tableStatic;
             [self.list removeObjectAtIndex:pos];
             itemInList.table = nil;
             
-            [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:pos] withAnimation:self.defaultAnimation];
+            if(tableRedraw) {
+                [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:pos] withAnimation:self.defaultAnimation];
+            }
+            
         }
     }
     return NO;
 }
+
 
 - (BOOL)removeAllItems:(BOOL)tableRedraw {
     NSUInteger count = self.list.count;
@@ -330,6 +351,7 @@ static TMTableView *tableStatic;
     
     return YES;
 }
+
 
 - (void)redrawAll {
     for (TMRowItem *item in self.list) {

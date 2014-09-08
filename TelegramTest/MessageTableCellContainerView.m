@@ -89,7 +89,7 @@ static NSImage* image_broadcast() {
         [self.circleLayer setFrame:CGRectMake(0, 4, 0, 0)];
         [self.circleLayer setContentsScale:self.layer.contentsScale];
         [self.circleLayer setRadius:8];
-        [self.circleLayer setFillColor:NSColorFromRGB(0x60b8ea)];
+        [self.circleLayer setFillColor:NSColorFromRGB(0x41a2f7)];
         [self.circleLayer setNeedsDisplay];
         [self.rightView.layer addSublayer:self.circleLayer];
         
@@ -153,7 +153,7 @@ static NSImage* image_broadcast() {
         
         self.fwdContainer = [[TMView alloc] initWithFrame:NSZeroRect];
         [self.fwdContainer setDrawBlock:^{
-            [NSColorFromRGB(0xe4e4e4) set];
+            [GRAY_BORDER_COLOR set];
             
             float offset = weakSelf.item.isHeaderMessage ? 26 : 0;
             

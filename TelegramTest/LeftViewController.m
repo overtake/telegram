@@ -10,8 +10,13 @@
 #import "SearchViewController.h"
 #import "NewConversationViewController.h"
 #import "RBLPopover.h"
+#import "TMTabViewController.h"
+#import "AccountSettingsViewController.h"
+#import "ContactsViewController.h"
 @interface LeftView : NSView
 @property (assign) NSPoint initialLocation;
+
+@property (nonatomic,strong) void (^willResize)(NSSize newSize);
 @end
 
 @implementation LeftView
@@ -24,8 +29,12 @@
 }
 
 -(void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
     
+    if(self.willResize)
+        self.willResize(newSize);
+    
+    [super setFrameSize:newSize];
+
 }
 
 //- (void)mouseDragged:(NSEvent *)theEvent
@@ -55,126 +64,117 @@
 
 @end
 
-@interface LeftViewController ()
+@interface LeftViewController ()<TMTabViewDelegate>
 
 @property (nonatomic, strong) DialogsViewController *dialogsViewController;
 @property (nonatomic, strong) SearchViewController *searchViewController;
+@property (nonatomic, strong) AccountSettingsViewController *settingsViewController;
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSimpleTabViewController *tabViewController;
-
-
-
+@property (nonatomic, strong) TMTabViewController *tabController;
+@property (nonatomic, strong) ContactsViewController *contactsViewController;
 
 @end
 
 @implementation LeftViewController
 
 
+static const int bottomOffset = 58;
+
 - (void)loadView {
     [super loadView];
     
-    weakify();
+    LeftView *view = [[LeftView alloc] initWithFrame:self.view.bounds];
     
-    self.view = [[LeftView alloc] initWithFrame:self.view.bounds];
+    self.view = view;
     
-    static const int topOffset = 50;
+    
+    
+
+    
+    self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
+    
+    [self.tabController setTopBorderColor:GRAY_BORDER_COLOR];
+    
+    [self.tabController setAutoresizesSubviews:YES];
+    [self.tabController setAutoresizingMask:NSViewWidthSizable];
+    
+    self.tabController.delegate = self;
+    
+    TMTabItem *contactsTab = [[TMTabItem alloc] initWithTitle:@"Contacts" image:[NSImage imageNamed:@"TabIconContacts"] selectedImage:[NSImage imageNamed:@"TabIconContacts_Highlighted"]];
+    
+    TMTabItem *chatsTab = [[TMTabItem alloc] initWithTitle:@"Chats" image:[NSImage imageNamed:@"TabIconMessages"] selectedImage:[NSImage imageNamed:@"TabIconMessages_Highlighted"]];
+    
+    TMTabItem *settingsTab = [[TMTabItem alloc] initWithTitle:@"Settings" image:[NSImage imageNamed:@"TabIconSettings"] selectedImage:[NSImage imageNamed:@"TabIconSettings_Highlighted"]];
+    
+    
+    contactsTab.textColor = chatsTab.textColor = settingsTab.textColor = NSColorFromRGB(0x000000);
+    contactsTab.selectedTextColor = chatsTab.selectedTextColor = settingsTab.selectedTextColor = BLUE_COLOR_SELECT;
+    
+    
+    [self.tabController addTab:contactsTab];
+    [self.tabController addTab:chatsTab];
+    [self.tabController addTab:settingsTab];
+    
+    [self.tabController setBackgroundColor:NSColorFromRGB(0xfafafa)];
+    
+    
+    [self.view addSubview:self.tabController];
     
     
     [self.view.window setMovableByWindowBackground:YES];
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable];
     
-    self.tabViewController = [[TMSimpleTabViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topOffset)];
+    
+    NSRect controllerRect = NSMakeRect(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - bottomOffset);
+    
+    self.tabViewController = [[TMSimpleTabViewController alloc] initWithFrame:NSMakeRect(0, bottomOffset, self.view.bounds.size.width, self.view.bounds.size.height - bottomOffset)];
     [self.view addSubview:self.tabViewController.view];
     
-    self.dialogsViewController = [[DialogsViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topOffset)];
-    [self.tabViewController showController:self.dialogsViewController];
-    
-    self.searchViewController = [[SearchViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - topOffset)];
-    [self.tabViewController addController:self.searchViewController];
-
-    
-    TMView *topView = [[TMView alloc] initWithFrame:NSMakeRect(0, self.view.bounds.size.height - topOffset, self.view.bounds.size.width - DIALOG_BORDER_WIDTH, topOffset)];
-    [topView setBackgroundColor:[NSColor whiteColor]];
-
-
-    [topView setAutoresizesSubviews:YES];
-    [topView setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
-    [self.view addSubview:topView];
-    
-    
-    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 9, 205, 32)];
-    
-    [self.searchTextField setFrameSize:NSMakeSize(self.view.bounds.size.width-70, 32)];
-    
-    
-    self.searchTextField.delegate = self;
-    [self.searchTextField setAutoresizingMask:NSViewWidthSizable];
-    [topView addSubview:self.searchTextField];
-    
-    int buttonX = self.view.frame.size.width == 70 ? 15 : (self.searchTextField.frame.origin.y + self.searchTextField.frame.size.width+11);
-    
-    
-    self.buttonContainer = [[NSView alloc] initWithFrame:NSMakeRect(buttonX, 9, 38, 30)];
-    
-    self.buttonContainer.wantsLayer = YES;
-    
-    self.buttonContainer.layer.cornerRadius = 4;
-    self.buttonContainer.layer.backgroundColor = NSColorFromRGB(0xf4f4f4).CGColor;
-    
-    [self.buttonContainer setAutoresizingMask:NSViewMinXMargin];
-    
-    self.topButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
-    [self.topButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
-    [self.topButton setBackgroundImage:image_compose() forControlState:BTRControlStateNormal];
-    [self.topButton setFrameSize:image_composeActive().size];
-    
-
-    [self.topButton setCenterByView:self.buttonContainer];
-    
-    [self.buttonContainer addSubview:self.topButton];
-    
-    
-    [topView addSubview:self.buttonContainer];
-    
-
-    [self.topButton addBlock:^(BTRControlEvents events) {
-        [strongSelf onWriteMessageButtonClick];
-    } forControlEvents:BTRControlEventClick];
-    
-    
-    
-    [self.topButton addBlock:^(BTRControlEvents events) {
-        
-        strongSelf.buttonContainer.layer.backgroundColor = NSColorFromRGB(0x6E91BF).CGColor;
-        
-        [strongSelf.topButton setBackgroundImage:image_composeActive() forControlState:BTRControlStateNormal];
-        
-    } forControlEvents:BTRControlEventMouseDownInside];
-    
-    [self.topButton addBlock:^(BTRControlEvents events) {
-        
-        strongSelf.buttonContainer.layer.backgroundColor = NSColorFromRGB(0xf4f4f4).CGColor;
-        
-        [strongSelf.topButton setBackgroundImage:image_compose() forControlState:BTRControlStateNormal];
-        
-    } forControlEvents:BTRControlEventMouseUpInside];
-    
-    [self.topButton addBlock:^(BTRControlEvents events) {
-        
-        strongSelf.buttonContainer.layer.backgroundColor = NSColorFromRGB(0xf4f4f4).CGColor;
-        [strongSelf.topButton setBackgroundImage:image_compose() forControlState:BTRControlStateNormal];
-        
-    } forControlEvents:BTRControlEventMouseUpOutside];
-
    
+   //   [self.tabViewController addController:self.searchViewController];
     
-
+    self.contactsViewController = [[ContactsViewController alloc] initWithFrame:controllerRect];
+    [self.tabViewController addController:self.contactsViewController];
+    
+    
+    self.dialogsViewController = [[DialogsViewController alloc] initWithFrame:controllerRect];
+    [self.tabViewController addController:self.dialogsViewController];
+    
+    
+    self.settingsViewController = [[AccountSettingsViewController alloc] initWithFrame:controllerRect];
+    [self.tabViewController addController:self.settingsViewController];
+    
+    self.tabController.selectedIndex = 1;
+    
     [self.view.window makeFirstResponder:nil];
+    
+    [self updateSize];
+
+}
+
+-(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
+    [self.tabViewController showControllerByIndex:index];
 }
 
 
+-(void)updateSize {
+    
+    BOOL min = NSWidth(self.view.frame) == 70;
+    
+    [self.tabController setHidden:min];
+    
+  
+    
+    
+    [self.tabViewController.view setFrame:NSMakeRect(0,min ? 0 : bottomOffset,NSWidth(self.view.frame), min ? NSHeight(self.view.frame) : (NSHeight(self.view.frame) - bottomOffset))];
+}
 
+
+-(BOOL)canMinimisize {
+    return self.tabController.selectedIndex == 1 && !self.dialogsViewController.isSearchActive;
+}
 
 - (BOOL)isSearchActive {
     return self.tabViewController.currentController == self.searchViewController;
@@ -255,6 +255,8 @@
 
 - (void) searchFieldBlur {}
 - (void) searchFieldFocus {}
+
+
 - (void) searchFieldTextChange:(NSString *)searchString {
     
     BOOL hidden = searchString.length > 0 ? YES : NO;
@@ -262,4 +264,7 @@
     [self.tabViewController showController:hidden ? self.searchViewController : self.dialogsViewController];    
     [self.searchViewController searchByString:searchString ? searchString : @""];
 }
+
+
 @end
+

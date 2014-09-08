@@ -9,8 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface TMTextView : NSTextView
-
+@property (nonatomic,strong) NSColor *placeholderColor;
 @property (nonatomic, strong) NSString *placeholderStr;
 @property (nonatomic) NSPoint placeholderPoint;
-
+@property (nonatomic,assign) BOOL singleLineMode;
 @end

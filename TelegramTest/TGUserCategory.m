@@ -119,7 +119,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     } else if(self.type == TGUserTypeForeign || self.type == TGUserTypeDeleted || self.type == TGUserTypeEmpty) {
         colorByNameOrPhone = BLUE_UI_COLOR;
     } else if(self.type == TGUserTypeSelf) {
-        colorByNameOrPhone = NSColorFromRGB(0xbe509e);
+        colorByNameOrPhone = BLUE_UI_COLOR;
     } else {
         colorByNameOrPhone = NSColorFromRGB(0x333333);
     }
@@ -130,7 +130,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [dialogTitleAttributedString appendString:fullName withColor:colorByNameOrPhone];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
-    [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffd) forColor:NSColorFromRGB(0xbe509e)];
+    [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffd) forColor:BLUE_UI_COLOR];
 
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:14] forRange:dialogTitleAttributedString.range];
     [self setDIALOGTITLE:dialogTitleAttributedString];

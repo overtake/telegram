@@ -14,12 +14,19 @@
 #import "TGWindowArchiver.h"
 @interface LeftViewController : TMViewController<TMSearchTextFieldDelegate>
 
+
+
 @property (nonatomic,strong) TGWindowArchiver *archiver;
 @property (nonatomic,strong) NSView *buttonContainer;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
 - (BOOL)isSearchActive;
 
 -(NSResponder *)firstResponder;
+
+-(void)onWriteMessageButtonClick;
+
+-(void)updateSize;
+-(BOOL)canMinimisize;
 
 - (void)showNewConversationPopover:(NewConversationAction)action;
 - (void)showNewConversationPopover:(NewConversationAction)action toButton:(id)button;

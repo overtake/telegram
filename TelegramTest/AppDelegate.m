@@ -333,7 +333,7 @@
                 return incomingEvent;
             }
             
-           
+            
             
             [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
             
@@ -378,7 +378,7 @@
                 return [[NSEvent alloc] init];
             }
         } else if(![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) {
-            if(incomingEvent.modifierFlags == 256) {
+            if(incomingEvent.modifierFlags == 256 && [Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].messagesViewController) {
                 [[[Telegram rightViewController] messagesViewController] becomeFirstResponder];
             }
         }
@@ -403,14 +403,48 @@
         NSEvent *result = incomingEvent;
 
         if(result.window != [TMMediaController controller].panel) {
+            
+            if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
+                if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
+                    if([result.window.contentView hitTest:[result locationInWindow]]) {
+                        result = nil;
+                    }
+                     
+                }
+                
+            }
+            
             return result;
+            
         }
      
-        if(result.clickCount > 1)
+        if(( result.type == NSLeftMouseDown || result.type == NSLeftMouseUp) && result.clickCount > 1)
             return [NSEvent mouseEventWithType:result.type location:result.locationInWindow modifierFlags:result.modifierFlags timestamp:result.timestamp windowNumber:result.windowNumber context:result.context eventNumber:result.eventNumber clickCount:1 pressure:result.pressure];
         return result;
     };
-    [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDownMask | NSLeftMouseUpMask) handler:block2];
+    
+    
+   
+    
+//    
+//    [NSEvent addLocalMonitorForEventsMatchingMask:( NSLeftMouseDownMask |
+//                                                   NSLeftMouseUpMask   |
+//                                                   NSRightMouseDownMask |
+//                                                   NSRightMouseUpMask |
+//                                                   NSMouseMovedMask |
+//                                                   NSLeftMouseDraggedMask  |
+//                                                   NSRightMouseDraggedMask |
+//                                                   NSMouseEnteredMask |
+//                                                   NSMouseExitedMask  |
+//                                                   NSCursorUpdateMask |
+//                                                   NSScrollWheelMask  |
+//                                                   NSTabletPointMask  |
+//                                                   NSOtherMouseDownMask  |
+//                                                   NSOtherMouseUpMask   |
+//                                                   NSOtherMouseDraggedMask ) handler:block2];
+//    
+    
+    [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDownMask | NSLeftMouseUpMask | NSMouseEnteredMask | NSMouseMovedMask | NSCursorUpdateMask) handler:block2];
 }
 
 

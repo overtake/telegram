@@ -34,6 +34,8 @@ static int offsetEditable = 30;
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
         [self addSubview:self.avatarImageView];
+        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:16]];
+        [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
         self.titleTextField = [[TMTextField alloc] init];
@@ -45,6 +47,8 @@ static int offsetEditable = 30;
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
+       // [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
+        
         self.lastSeenTextField = [[TMTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
@@ -55,16 +59,17 @@ static int offsetEditable = 30;
         [self addSubview:self.lastSeenTextField];
         
         
-        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.bounds.size.width - image_checked().size.width - 6, roundf((60 - image_checked().size.height )/ 2), image_checked().size.width, image_checked().size.height)];
-        [self.selectButton setAutoresizingMask:NSViewMinXMargin];
+        
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - composeCheckActiveImage().size.height )/ 2), composeCheckActiveImage().size.width, composeCheckActiveImage().size.height)];
+       // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
         [self.selectButton setHidden:NO];
         
         weakify();
         
-        [self.selectButton setBackgroundImage:image_unchecked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHighlighted];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateSelected];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateSelected];
         self.selectButton.layer.opacity = 0;
         [self.selectButton addBlock:^(BTRControlEvents events) {
             [strongSelf mouseDown:[NSApp currentEvent]];
@@ -106,12 +111,11 @@ static int offsetEditable = 30;
     [self.titleTextField setFrameSize:[self rowItem].titleSize];
     [self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
     
-    [self.titleTextField  setFrameOrigin:[self rowItem].titlePoint];
-    [self.lastSeenTextField setFrameOrigin:[self rowItem].lastSeenPoint];
+    
+    [self.titleTextField  setFrameOrigin:self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint];
+    [self.lastSeenTextField setFrameOrigin:self.isEditable ? [self rowItem].lastSeenPoint : [self rowItem].noSelectLastSeenPoint];
         
-    [self.avatarImageView setFrameOrigin:[self rowItem].avatarPoint];
-    
-    
+    [self.avatarImageView setFrameOrigin:self.isEditable ? [self rowItem].avatarPoint : [self rowItem].noSelectAvatarPoint];
     
     
     [self.avatarImageView setUser:[self rowItem].contact.user];
@@ -123,7 +127,7 @@ static int offsetEditable = 30;
 
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    if(((SelectUsersTableView *)[self rowItem].table).canSelectItem) {
+    if(((SelectUsersTableView *)[self rowItem].table).canSelectItem || [self rowItem].isSelected) {
         [self rowItem].isSelected = ![self rowItem].isSelected;
         if(!self.isEditable) {
             [super mouseDown:theEvent];
@@ -132,16 +136,15 @@ static int offsetEditable = 30;
         
         [self setSelected:[self rowItem].isSelected animation:YES];
         
-        if(((SelectUsersTableView *)[self rowItem].table).multipleCallback) {
-            ((SelectUsersTableView *)[self rowItem].table).multipleCallback (((SelectUsersTableView *)[self rowItem].table).selectedItems);
-        }
+        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        
     }
     
 }
 
 
 - (BOOL)isEditable {
-    return [[self rowItem].table selectType] == SelectUsersTypeMultiple;
+    return [[self rowItem].table selectLimit] > 0;
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
@@ -207,6 +210,13 @@ static int offsetEditable = 30;
     [self setSelected:isSelected animation:NO];
 }
 
+NSImage *composeCheckImage() {
+    return [NSImage imageNamed:@"ComposeCheck"];
+}
+
+NSImage *composeCheckActiveImage() {
+    return [NSImage imageNamed:@"ComposeCheckActive"];
+}
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
     
@@ -216,21 +226,21 @@ static int offsetEditable = 30;
     if(self.selectButton.layer.anchorPoint.x != 0.5) {
         CGPoint point = self.selectButton.layer.position;
         
-        point.x += roundf(image_checked().size.width / 2);
-        point.y += roundf(image_checked().size.height / 2);
+        point.x += roundf(composeCheckActiveImage().size.width / 2);
+        point.y += roundf(composeCheckActiveImage().size.height / 2);
         
         self.selectButton.layer.position = point;
         self.selectButton.layer.anchorPoint = CGPointMake(0.5, 0.5);
     }
     
     if(self.selectButton.isSelected) {
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateHighlighted];
     } else {
-        [self.selectButton setBackgroundImage:image_unchecked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHighlighted];
     }
     
     if(animation) {
@@ -264,8 +274,16 @@ static int offsetEditable = 30;
 - (void)drawRect:(NSRect)dirtyRect
 {
 	[super drawRect:dirtyRect];
+    
+    NSPoint point = self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint;
 	
-    // Drawing code here.
+    [LIGHT_GRAY_BORDER_COLOR setFill];
+    
+    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - [self rowItem].rightBorderMargin, 1));
+//    
+//    [NSColorFromRGB(arc4random() % 16000000) setFill];
+//    
+//    NSRectFill(self.frame);
 }
 
 

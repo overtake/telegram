@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TMElements.h"
-
-@interface DialogsViewController : TMViewController<TMTableViewDelegate>
+#import "StandartViewController.h"
+@interface DialogsViewController : StandartViewController<TMTableViewDelegate>
 + (void)showPopupMenuForDialog:(TL_conversation *)dialog withEvent:(NSEvent *)theEvent forView:(NSView *)view;
 @end

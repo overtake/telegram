@@ -13,6 +13,10 @@
 #import "TMCollectionPageController.h"
 #import "HistoryFilter.h"
 #import "BroadcastInfoViewController.h"
+#import "ComposeAction.h"
+#import "ComposePickerViewController.h"
+#import "ComposeChatCreateViewController.h"
+#import "ComposeBroadcastListViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -20,6 +24,9 @@
 @property (nonatomic, strong) ChatInfoViewController *chatInfoViewController;
 @property (nonatomic, strong) BroadcastInfoViewController *broadcastInfoViewController;
 @property (nonatomic, strong) TMCollectionPageController *collectionViewController;
+@property (nonatomic, strong) ComposePickerViewController *composePickerViewController;
+@property (nonatomic, strong) ComposeChatCreateViewController *composeChatCreateViewController;
+@property (nonatomic, strong) ComposeBroadcastListViewController *composeBroadcastListViewController;
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
 - (BOOL)isActiveDialog;
@@ -34,6 +41,11 @@
 - (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)filter sender:(id)sender;
 
 
+- (void)showComposeWithAction:(ComposeAction *)composeAction filter:(NSArray *)filter;
+
+- (void)showComposeWithAction:(ComposeAction *)composeAction;
+- (void)showComposeCreateChat:(ComposeAction *)composeAction;
+-(void)showComposeBroadcastList:(ComposeAction *)composeAction;
 - (void)showUserInfoPage:(TGUser *)user conversation:(TL_conversation *)conversation;
 - (void)showUserInfoPage:(TGUser *)user;
 - (void)showCollectionPage:(TL_conversation *)conversation;

@@ -253,9 +253,9 @@
     [super cursorUpdate:event];
     
     if(self.tapBlock) {
-        NSCursor *cursor = [NSCursor pointingHandCursor];
-        [cursor setOnMouseEntered:YES];
-        [cursor set];
+       // NSCursor *cursor = [NSCursor pointingHandCursor];
+      //  [cursor setOnMouseEntered:YES];
+       // [cursor set];
     }
 }
 

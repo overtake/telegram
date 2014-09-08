@@ -145,7 +145,8 @@
 -(void)getStatuses {
     [RPCRequest sendRequest:[TLAPI_contacts_getStatuses create] successHandler:^(RPCRequest *request, id response) {
         for (TGContactStatus *status in response) {
-            TGUserStatus *userStatus = [TL_userStatusOnline createWithExpires:status.expires];
+            
+            TGUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
             
             [[UsersManager sharedManager] setUserStatus:userStatus forUid:status.user_id];            
         }

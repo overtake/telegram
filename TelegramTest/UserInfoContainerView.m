@@ -131,7 +131,10 @@
         [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 0)];
         [self addSubview:self.sharedMediaButton];
         
+        
+        
         self.startSecretChatButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.StartSecretChat", nil) tapBlock:^{
+            
             [weakSelf.startSecretChatButton setLocked:YES];
             [MessageSender startEncryptedChat:weakSelf.user callback:^ {
                 [weakSelf.startSecretChatButton setLocked:NO];

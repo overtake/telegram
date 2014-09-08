@@ -320,7 +320,7 @@ static void BTRControlCommonInit(BTRControl *self) {
 	}
 	
 	// TODO: Figure out correct tracking to implement mouse drag
-	NSUInteger options = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways | NSTrackingInVisibleRect | NSTrackingEnabledDuringMouseDrag);
+	NSUInteger options = (NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect | NSTrackingEnabledDuringMouseDrag);
 	self.trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
 													 options:options
 													   owner:self userInfo:nil];

@@ -32,13 +32,14 @@ typedef struct
     int bottom;
 } TGTwoColors;
 
+
 static const TGTwoColors colors[] = {
-    { .top = 0xfc7791, .bottom = 0xff8059 },
-    { .top = 0xff9e59, .bottom = 0xffbf40 },
-    { .top = 0x52b8b5, .bottom = 0x65d795 },
-    { .top = 0x62b0f5, .bottom = 0x66dfe3 },
-    { .top = 0x7a8ff5, .bottom = 0x85bff2 },
-    { .top = 0x9a8ec4, .bottom = 0xc994d9 },
+    { .top = 0xff516a, .bottom = 0xff885e },
+    { .top = 0xffa85c, .bottom = 0xffcd6a },
+    { .top = 0x54cb68, .bottom = 0xa0de7e },
+    { .top = 0x2a9ef1, .bottom = 0x72d5fd },
+    { .top = 0x6c65f9, .bottom = 0x84b2fd },
+    { .top = 0xd575ea, .bottom = 0xe0a8f1 },
 };
 
 @interface TMAvatarImageView()
@@ -380,9 +381,14 @@ static CAAnimation *ani2() {
             }
             
         } else if(self.type == TMAvatarTypeChat) {
-            self->_text = [NSString stringWithFormat:@"%C", (unichar)(self.chat.title.length > 0 ? [self.chat.title characterAtIndex:0] : 0)];
+            self->_text = [NSString stringWithFormat:@"%C", (unichar)(self.chat.title.length > 0 ? [self.chat.title characterAtIndex:0] : self.chat.n_id)];
         } else if(self.type == TMAvatarTypeBroadcast) {
-            self->_text = [NSString stringWithFormat:@"%C", (unichar)(self.broadcast.title.length > 0 ? [self.broadcast.title characterAtIndex:0] : 0)];
+            if(self.broadcast.title.length > 0 ) {
+                self->_text = [NSString stringWithFormat:@"%C", (unichar)([self.broadcast.title characterAtIndex:0])];
+            } else {
+                self->_text = [NSString stringWithFormat:@"%d",self.broadcast.n_id];
+            }
+            
         }
         self.currentHash = [self.text hash];
     }
@@ -519,6 +525,8 @@ static CAAnimation *ani2() {
         
     } else {
         
+        
+        
         int uid = self.type == TMAvatarTypeChat ? self.chat.n_id : (self.type == TMAvatarTypeBroadcast ? self.broadcast.n_id : self.user.n_id);
         
         __block int colorMask = 0;// = colorId != -1 ? (colorId) % 6 : -1;
@@ -594,8 +602,8 @@ static CAAnimation *ani2() {
         
         
         CGColorRef colors[2] = {
-            CGColorRetain(NSColorFromRGB(twoColors.top).CGColor),
-            CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor)
+            CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor),
+            CGColorRetain(NSColorFromRGB(twoColors.top).CGColor)
         };
         
         CFArrayRef colorsArray = CFArrayCreate(kCFAllocatorDefault, (const void **)&colors, 2, NULL);

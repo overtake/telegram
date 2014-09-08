@@ -9,6 +9,8 @@
 #import "BroadcastInfoHeaderView.h"
 #import "PhotoHistoryFilter.h"
 #import "SelectUserItem.h"
+#import "ComposeActionAddBroadcastMembersBehavior.h"
+#import "ComposeAction.h"
 @implementation BroadcastInfoHeaderView
 
 - (id)initWithFrame:(NSRect)frame
@@ -39,7 +41,9 @@
                 [filter addObject:participant];
             }
             
-            [[Telegram leftViewController] showNewConversationPopover:NewConversationActionChoosePeople filter:filter target:strongSelf selector:@selector(didChoosedUsers:) toButton:strongSelf.addMembersButton title:NSLocalizedString(@"Group.AddMembers", nil)];
+            if(strongSelf.controller.broadcast.participants.count < MAX_BROADCAST_USERS) {
+                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddBroadcastMembersBehavior class] filter:filter object:strongSelf.controller.broadcast]];
+            }
         }];
         
         
@@ -56,33 +60,12 @@
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 72)];
         
         [self.notificationView setHidden:YES];
+        
 
     }
     return self;
 }
 
--(void)didChoosedUsers:(NSArray *)users {
-    
-    NSMutableArray *ids = [[NSMutableArray alloc] init];
-    
-    [users enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-        [ids addObject:@(obj.contact.user_id)];
-    }];
-    
-    if((self.controller.broadcast.participants.count + ids.count) > MAX_BROADCAST_USERS) {
-        ids = [[ids subarrayWithRange:NSMakeRange(0, MAX_BROADCAST_USERS - self.controller.broadcast.participants.count )] mutableCopy];
-    }
-    
-   
-    
-    [self.controller.broadcast addParticipants:ids];
-    
-    [Notification perform:BROADCAST_STATUS data:@{KEY_CHAT_ID:@(self.controller.broadcast.n_id)}];
-    
-    [[[BroadcastManager sharedManager] broadcastMembersCheckerById:self.controller.broadcast.n_id] reloadParticipants];
-    
-    [self.controller reloadParticipants];
-}
 
 - (void)drawRect:(NSRect)dirtyRect
 {

@@ -17,7 +17,7 @@
 #import "TMMediaUserPictureController.h"
 #import "PhotoHistoryFilter.h"
 #import "TMSharedMediaButton.h"
-
+#import "ComposeActionAddGroupMembersBehavior.h"
 
 @implementation LineView
 
@@ -106,7 +106,10 @@
                 [filter addObject:@(participant.user_id)];
             }
             
-            [[Telegram leftViewController] showNewConversationPopover:NewConversationActionChoosePeople filter:filter target:self selector:@selector(didChoosedUsers:) toButton:self.addMembersButton title:NSLocalizedString(@"Group.AddMembers", nil)];
+            
+            if(self.fullChat.participants.participants.count < MAX_CHAT_USERS)
+                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.fullChat]];
+            
             
         }];
         
@@ -162,30 +165,6 @@
     [self.controller save];
 }
 
--(void)didChoosedUsers:(NSArray *)list {
-    [self addMembersToChat:[list mutableCopy] toChatId:self.fullChat.n_id];
-}
-
--(void)addMembersToChat:(NSMutableArray *)members toChatId:(int)chatId {
-    
-    SelectUserItem *item = members[0];
-    
-    [members removeObjectAtIndex:0];
-    
-    [MessageSender sendStatedMessage:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:item.contact.user.inputUser fwd_limit:50] successHandler:^(RPCRequest *request, id response) {
-        
-        
-        if(self.fullChat) {
-            [self.fullChat.participants.participants addObject:[TL_chatParticipant createWithUser_id:item.contact.user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
-            
-        }
-        
-        if(members.count > 0) {
-            [self addMembersToChat:members toChatId:chatId];
-        }
-        
-    } errorHandler:nil];
-}
 
 
 - (void)setType:(ChatInfoViewControllerType)type {

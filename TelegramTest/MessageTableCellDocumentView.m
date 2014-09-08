@@ -347,7 +347,7 @@ static NSImage *attachBackgroundThumb() {
         case DocumentStateDownloaded:
             [self.attachButton setImage:self.item.isHasThumb ? nil : image_MessageFile() forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:NO];
-            [self.thumbView setImage:self.thumbView.image];
+            self.thumbView.object = self.item.thumbObject;
             break;
             
         case DocumentStateDownloading:

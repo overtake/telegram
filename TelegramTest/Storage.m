@@ -104,7 +104,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t68"; // 61
+    NSString *dbName = @"t70"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -180,7 +180,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"create table if not exists files (hash string PRIMARY KEY, serialized blob)"];
         
         
-        [db executeUpdate:@"create table if not exists broadcasts (n_id integer PRIMARY KEY, serialized blob, title string)"];
+        [db executeUpdate:@"create table if not exists broadcasts (n_id integer PRIMARY KEY, serialized blob, title string, date integer)"];
 
         
         [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
@@ -234,11 +234,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
     
+        [db beginTransaction];
         FMResultSet *result = [db executeQuery:@"select * from update_state limit 1"];
         
         if([result next]) {
             state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"]];
         }
+        
+        [db commit];
         
         [result close];
         
@@ -360,8 +363,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
      __block NSMutableArray *messages = [[NSMutableArray alloc] init];
     
+    
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
-        
         
 
         int currentDate = maxDate;
@@ -1574,7 +1577,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertBroadcast:(TL_broadcast *)broadcast {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into broadcasts (n_id, serialized, title) values (?,?,?)",@(broadcast.n_id),[[TLClassStore sharedManager] serialize:broadcast],broadcast.title];
+        [db executeUpdate:@"insert or replace into broadcasts (n_id, serialized, title,date) values (?,?,?,?)",@(broadcast.n_id),[[TLClassStore sharedManager] serialize:broadcast],broadcast.title,@(broadcast.date)];
     }];
 }
 
@@ -1590,7 +1593,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        FMResultSet *result = [db executeQuery:@"select * from broadcasts"];
+        FMResultSet *result = [db executeQuery:@"select * from broadcasts where 1=1 order by date"];
         while ([result next]) {
             TL_broadcast *broadcast = [[TLClassStore sharedManager] deserialize:[result dataForColumn:@"serialized"]];
             

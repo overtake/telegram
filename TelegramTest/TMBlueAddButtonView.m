@@ -52,7 +52,7 @@
         
         [self.containerView addSubview:self.addImageView];
         
-        [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
+      //  [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
         
         [self addTarget:self action:@selector(didNeedAddContact) forControlEvents:BTRControlEventClick];
         

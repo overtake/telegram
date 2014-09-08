@@ -129,7 +129,7 @@
 //        
 //        weak();
 //        [self.controlView setDrawBlock:^ {
-//           [NSColorFromRGB(0xe4e4e4) set];
+//           [GRAY_BORDER_COLOR set];
 //            NSRectFill(NSMakeRect(0, NSHeight(weakSelf.controlView.frame)-1, NSWidth(weakSelf.controlView.frame), 1));
 //        }];
 //        

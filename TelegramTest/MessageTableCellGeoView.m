@@ -59,7 +59,7 @@
         [button setFrameSize:image_MessageMapPin().size];
         [button setCenterByView:self.geoImageView];
         [button setBackgroundImage:image_MessageMapPin() forControlState:BTRControlStateNormal];
-        [button setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+        //[button setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [button addBlock:^(BTRControlEvents events) {
             block();
         } forControlEvents:BTRControlEventClick];

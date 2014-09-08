@@ -77,6 +77,7 @@
 - (void) cancelSelection:(NSObject*)object;
 
 - (BOOL) removeItem:(TMRowItem *)item;
+- (BOOL)removeItem:(TMRowItem *)item  tableRedraw:(BOOL)tableRedraw;
 - (BOOL) removeAllItems:(BOOL)tableRedraw;
 - (void) redrawAll;
 - (NSUInteger) count;

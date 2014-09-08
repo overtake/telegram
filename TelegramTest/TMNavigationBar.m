@@ -202,7 +202,7 @@
     [NSColorFromRGB(0xfdfdfd) set];
     NSRectFill(dirtyRect);
 
-    [NSColorFromRGB(0xe4e4e4) set];
+    [GRAY_BORDER_COLOR set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));
 }
 

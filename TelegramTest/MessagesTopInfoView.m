@@ -273,7 +273,7 @@ static NSMutableDictionary *cache;
 {
     [super drawRect:dirtyRect];
     
-    [NSColorFromRGB(0xe4e4e4) set];
+    [GRAY_BORDER_COLOR set];
     
     NSRectFill(NSMakeRect(0, 0, self.frame.size.width, 1));
     

@@ -7,7 +7,9 @@
 //
 
 #import "TMView.h"
-
+#import "AddContactViewController.h"
 @interface AddContactView : TMView<NSTextFieldDelegate>
-@property (nonatomic,strong) NewConversationViewController *controller;
+@property (nonatomic,strong) AddContactViewController *controller;
+
+-(void)clear;
 @end

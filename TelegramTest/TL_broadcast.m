@@ -10,12 +10,13 @@
 
 @implementation TL_broadcast
 
-+(TL_broadcast *)createWithN_id:(int)n_id participants:(NSArray *)participants title:(NSString *)title {
++(TL_broadcast *)createWithN_id:(int)n_id participants:(NSArray *)participants title:(NSString *)title date:(int)date {
     TL_broadcast *broadcast = [[TL_broadcast alloc] init];
     
     broadcast.n_id = n_id;
     broadcast.participants = [participants mutableCopy];
     broadcast.title = title;
+    broadcast.date = date;
     
     return broadcast;
 }
@@ -61,11 +62,6 @@
     return [NSString stringWithFormat:self.participants.count > 1 ? NSLocalizedString(@"Broadcast.participantsTitle", nil) : NSLocalizedString(@"Broadcast.participantTitle", nil),self.participants.count];
 }
 
--(void)setTitle:(NSString *)title {
-    
-    self->_title = title;
-}
-
 
 - (void)serialize:(SerializedData *)stream {
 	[stream writeInt:self.n_id];
@@ -79,6 +75,7 @@
 		}
 	}
 	[stream writeString:self.title];
+    [stream writeInt:self.date];
 }
 - (void)unserialize:(SerializedData *)stream {
 	self.n_id = [stream readInt];
@@ -94,6 +91,8 @@
 	}
 	
     self.title = [stream readString];
+    
+    self.date = [stream readInt];
 }
 
 
@@ -185,9 +184,25 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return instance;
 }
 
+-(void)setTitle:(NSString *)title {
+    if(title.length > 50)
+        title = [title substringToIndex:50];
+    
+    self->_title = title;
+}
+
 
 -(TL_conversation *)conversation {
-    return [[DialogsManager sharedManager]find:self.n_id];
+    
+    TL_conversation *conversation = [[DialogsManager sharedManager]find:self.n_id];
+    
+    if(!conversation) {
+        conversation = [[Storage manager] selectConversation:[TL_peerBroadcast createWithChat_id:self.n_id]];
+        
+        [[DialogsManager sharedManager] add:@[conversation]];
+    }
+    
+    return conversation;
 }
 
 - (NSAttributedString *)statusForMessagesHeaderView {

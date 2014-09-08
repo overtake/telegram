@@ -23,6 +23,7 @@
 #import <POP/POP.h>
 #import <QuartzCore/QuartzCore.h>
 #import "ConnectionStatusViewControllerView.h"
+#import "HackUtils.h"
 #define kDefaultAnimationDuration 0.1
 #define kSlowAnimationMultiplier 4
 #define kDefaultTimingFunction [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]
@@ -212,6 +213,16 @@ static const int navigationOffset = 50;
     }
     
     __block TMViewController *oldViewController = self.currentController;
+    
+    
+    NSArray *f = [HackUtils findElementsByClass:@"TMSearchTextField" inView:oldViewController.view];
+    
+    if(f.count > 0) {
+        [f enumerateObjectsUsingBlock:^(TMSearchTextField *obj, NSUInteger idx, BOOL *stop) {
+            [obj endEditing];
+        }];
+    }
+    
     
     __block TMView *oldView = oldViewController.view;
     __block TMView *newView = newViewController.view;

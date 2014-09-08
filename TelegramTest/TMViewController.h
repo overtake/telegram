@@ -38,4 +38,8 @@
 
 - (void)rightButtonAction;
 
+
+-(void)showModalProgress;
+-(void)hideModalProgress;
+
 @end

@@ -10,8 +10,12 @@
 #import "_TMSearchTextField.h"
 
 @protocol TMSearchTextFieldDelegate <NSTextFieldDelegate>
+
+@optional
 - (void) searchFieldFocus;
 - (void) searchFieldBlur;
+
+@required
 - (void) searchFieldTextChange:(NSString*)searchString;
 @end
 
@@ -21,5 +25,7 @@
 @property (nonatomic, strong) id<TMSearchTextFieldDelegate> delegate;
 
 - (void)setStringValue:(NSString *)value;
+
+- (bool)endEditing;
 
 @end

@@ -70,7 +70,7 @@
     self.isMuted = self.dialog.isMute;
     
     self.writeAttributedString = [[NSMutableAttributedString alloc] init];
-    [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
+    [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x9b9b9b)];
     [self notificationChangeMessage:nil];
     return self;
 }
@@ -133,7 +133,7 @@
             string = NSLocalizedString(@"Typing.Typing", nil);
         }
         
-        [self.writeAttributedString appendString:string withColor:NSColorFromRGB(0x333333)];
+        [self.writeAttributedString appendString:string withColor:NSColorFromRGB(0x9b9b9b)];
         self.isTyping = YES;
     } else {
         self.isTyping = NO;

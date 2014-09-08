@@ -11,7 +11,7 @@
 @implementation TGChatFull (Category)
 
 DYNAMIC_PROPERTY(LASTUPDATETIME);
-DYNAMIC_PROPERTY(CONVERSATION);
+DYNAMIC_PROPERTY(Conversation);
 
 - (int)lastUpdateTime {
     return [[self getLASTUPDATETIME] intValue];
@@ -25,10 +25,10 @@ DYNAMIC_PROPERTY(CONVERSATION);
 
 - (TL_conversation *)conversation {
     
-    if(![self getCONVERSATION]) {
-        [self setCONVERSATION:[[DialogsManager sharedManager]find:self.n_id]];
+    if(![self getConversation]) {
+        [self setConversation:[[DialogsManager sharedManager]findByChatId:self.n_id]];
     }
-    return [self getCONVERSATION];
+    return [self getConversation];
 }
 
 @end

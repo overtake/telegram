@@ -8,8 +8,53 @@
 
 #import "SelectUsersTableView.h"
 #import "NSString+Extended.h"
-@interface SelectUsersTableView ()
+#import "TMSearchTextField.h"
+
+
+@interface SelectUsersSearchItem : TMRowItem
+
+@end
+
+@implementation SelectUsersSearchItem
+
+-(NSUInteger)hash {
+    return -1;
+}
+
+@end
+
+@interface SelectUsersSearchView : TMRowView
+@property (nonatomic,strong) TMSearchTextField *searchField;
+@end
+
+@implementation SelectUsersSearchView
+
+-(id)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        
+        self.searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 10, NSWidth(frameRect) - 20, 30)];
+        
+        self.searchField.autoresizingMask = NSViewWidthSizable ;
+        
+        [self addSubview:self.searchField];
+        
+    }
+    
+    return self;
+}
+
+-(void)redrawRow {
+    self.searchField.delegate = self.rowItem.table;
+}
+
+
+
+@end
+
+@interface SelectUsersTableView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) NSMutableArray *items;
+@property (nonatomic,strong) SelectUsersSearchView *searchView;
+@property (nonatomic,strong) SelectUsersSearchItem *searchItem;
 @end
 
 @implementation SelectUsersTableView
@@ -18,11 +63,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        _selectType = SelectUsersTypeSingle;
-        _selectLimit = MAX_CHAT_USERS;
-        
-        
+        _selectLimit = 1;
     }
     return self;
 }
@@ -39,6 +80,10 @@
         if(exc.count == 0)
             [items addObject:[[SelectUserItem alloc] initWithObject:obj]];
     }];
+    
+    
+    [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
+    
     
     [items sortUsingComparator:^NSComparisonResult(SelectUserItem* obj1, SelectUserItem* obj2) {
         int first = obj1.contact.user.lastSeenTime;
@@ -60,24 +105,33 @@
     [self removeAllItems:NO];
     
     self.items = items;
-    [self insert:self.items startIndex:0 tableRedraw:NO];
-    [self reloadData];
     
+    self.searchItem = [[SelectUsersSearchItem alloc] init];
+    
+    self.searchView = [[SelectUsersSearchView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
+    
+    [self insert:self.searchItem atIndex:0 tableRedraw:NO];
+    
+    [self insert:self.items startIndex:1 tableRedraw:NO];
+    [self reloadData];
     
 }
 
 
-- (void)setSelectType:(SelectUsersType)selectType {
-    self->_selectType = selectType;
+
+- (void)setSelectLimit:(NSUInteger)selectLimit {
+    self->_selectLimit = selectLimit;
     NSUInteger count = self.count;
     
-    for (SelectUserItem *item in self.list) {
+    NSArray *copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
+    
+    for (SelectUserItem *item in copy) {
         item.isSelected = NO;
     }
     
     [self cancelSelection];
     
-    for(int i = 0; i < count; i++) {
+    for(int i = 1; i < count; i++) {
         SelectUserRowView *cell = (SelectUserRowView *)[self viewAtColumn:0 row:i makeIfNecessary:NO];;
         [cell needUpdateSelectType];
     }
@@ -89,7 +143,7 @@
     
     for (NSNumber *exception in exceptions) {
     
-        NSArray *copy = [self.list copy];
+        NSArray *copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
         
         [copy enumerateObjectsUsingBlock:^(SelectUserItem * obj, NSUInteger idx, BOOL *stop) {
             if(obj.contact.user_id == [exception intValue]) {
@@ -102,14 +156,19 @@
 }
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(SelectUserItem *) item {
-    return self.selectType == SelectUsersTypeSingle;
+    return self.selectLimit == 0;
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(SelectUserItem *)item {
-    if(self.singleCallback != nil) {
-        self.singleCallback(item.contact);
+    
+    [self.selectDelegate selectTableDidChangedItem:item];
+    
+    if(self.multipleCallback != nil) {
+        self.multipleCallback(@[item.contact]);
     }
+    
 }
+
 
 -(BOOL)isSelectable:(NSInteger)row item:(TMRowItem *)item {
     return YES;
@@ -126,7 +185,7 @@
 
 
 -(BOOL)canSelectItem {
-    return self.selectLimit > self.selectedItems.count;
+    return self.selectLimit > self.selectedItems.count || self.selectLimit == 0;
 }
 
 -(NSArray *)selectedItems {
@@ -141,12 +200,16 @@
 }
 
 - (CGFloat) rowHeight:(NSUInteger)row item:(TMRowItem *)item {
-    return 60;
+    return row == 0 ? 50 : 50;
 }
 
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
-    return [self cacheViewForClass:[SelectUserRowView class] identifier:@"SelectUserRowView"];
+    return row == 0 ? self.searchView : [self cacheViewForClass:[SelectUserRowView class] identifier:@"SelectUserRowView"];
+}
+
+-(void)searchFieldTextChange:(NSString *)searchString {
+    [self search:searchString];
 }
 
 - (void)search:(NSString *)searchString {
@@ -171,14 +234,33 @@
     }
     
     
-    [self removeAllItems:NO];
+    NSRange range = NSMakeRange(1, self.list.count-1);
     
-    [self insert:sorted startIndex:0 tableRedraw:NO];
+    NSArray *list = [self.list subarrayWithRange:range];
     
-    [self reloadData];
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeItem:obj tableRedraw:NO];
+    }];
+    
+    [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
+    
+    
+    [self insert:sorted startIndex:1 tableRedraw:YES];
+    
+    
+   
 
 }
 
+-(void)keyDown:(NSEvent *)theEvent {
+     [self.searchView.searchField becomeFirstResponder];
+    
+    [self.searchView.searchField keyDown:theEvent];
+}
+
+-(BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *)item {
+    return NO;
+}
 
 
 - (void)drawRect:(NSRect)dirtyRect

@@ -122,7 +122,9 @@
     }
 }
 
-
+- (BOOL)canSelectItem {
+    return YES;
+}
 
 - (void)drawRect:(NSRect)dirtyRect
 {

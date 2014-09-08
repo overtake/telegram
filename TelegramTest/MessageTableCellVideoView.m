@@ -66,7 +66,7 @@
         
         self.playButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_VideoPlay().size.width, image_VideoPlay().size.height)];
         [self.playButton setBackgroundImage:image_VideoPlay() forControlState:BTRControlStateNormal];
-        [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+      //  [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         
         [self.playButton addBlock:^(BTRControlEvents events) {
             if(![weakSelf.item isset]) {

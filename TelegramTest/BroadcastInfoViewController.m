@@ -94,6 +94,7 @@
     [self.tableView addItem:self.bottomItem tableRedraw:NO];
     [self buildFirstItem];
     [self.tableView reloadData];
+    
 }
 
 

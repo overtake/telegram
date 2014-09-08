@@ -22,9 +22,17 @@
 	[super drawRect:dirtyRect];
 	
     if(!self.string.length && self.placeholderStr) {
-        [self.placeholderStr drawAtPoint:self.placeholderPoint withAttributes:@{NSForegroundColorAttributeName: [NSColor redColor], NSFontAttributeName: self.font}];
+        [self.placeholderStr drawAtPoint:self.placeholderPoint withAttributes:@{NSForegroundColorAttributeName: self.placeholderColor ? self.placeholderColor : self.textColor, NSFontAttributeName: self.font}];
     }
 }
+
+-(void)insertNewline:(id)sender {
+    if(self.singleLineMode)
+        return;
+    
+    [super insertNewline:sender];
+}
+
 
 -(BOOL)becomeFirstResponder {
     return [super becomeFirstResponder];

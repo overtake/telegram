@@ -178,15 +178,15 @@
     
 //    NSLog(@"isAC %d", isActiveInAttachedSheed);
     
-	if (self.window.isKeyWindow && NSPointInRect(mouseLocation, self.bounds) && !isActiveInAttachedSheed) {
-        self.backgroundColor = NSColorFromRGB(0xfafafa);
-        [self.backgroundColor set];
-        NSRectFill(NSMakeRect(0, 1, self.bounds.size.width, self.bounds.size.height-1));
-        [[NSCursor pointingHandCursor] set];
-	} else {
-        self.backgroundColor = nil;
-        [[NSCursor arrowCursor] set];
-	}
+//	if (self.window.isKeyWindow && NSPointInRect(mouseLocation, self.bounds) && !isActiveInAttachedSheed) {//cursoroff
+//        self.backgroundColor = NSColorFromRGB(0xfafafa);
+//        [self.backgroundColor set];
+//        NSRectFill(NSMakeRect(0, 1, self.bounds.size.width, self.bounds.size.height-1));
+//        [[NSCursor pointingHandCursor] set];
+//	} else {
+//        self.backgroundColor = nil;
+//        [[NSCursor arrowCursor] set];
+//	}
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -194,7 +194,7 @@
 
     [super drawRect:dirtyRect];
 
-    [NSColorFromRGB(0xe6e6e6) set];
+    [LIGHT_GRAY_BORDER_COLOR set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));
     
     

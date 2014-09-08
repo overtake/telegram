@@ -55,7 +55,7 @@ static TGAudioPlayer *player;
         [self.playerButton setFrameSize:image_VoiceMessagePlay().size];
         [self.playerButton setOpacityHover:YES];
         [self.playerButton setBackgroundImage:image_VoiceMessagePlay() forControlState:BTRControlStateNormal];
-        [self.playerButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+    //    [self.playerButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
             if(weakSelf.item.messageSender) {
@@ -165,7 +165,7 @@ static TGAudioPlayer *player;
 	[super drawRect:dirtyRect];
     
     NSRect rect = [self progressRect];
-    [NSColorFromRGB(0xe4e4e4) set];
+    [GRAY_BORDER_COLOR set];
     NSRectFill(rect) ;
     [NSBezierPath fillRect:rect];
     
@@ -184,8 +184,6 @@ static TGAudioPlayer *player;
     
     if((self.item.state == AudioStatePlaying || self.item.state == AudioStatePaused) && player) {
          float progress = MAX( MIN(self.currentTime / duration * [self progressWidth], [self progressWidth]), 0);
-        
-        NSLog(@"duration:%f, progress%fб currenttime:%f",duration,progress,self.currentTime);
         
         [self.durationView setStringValue:[NSString stringWithFormat:@"%@ / %@", [NSString durationTransformedValue:floor(self.currentTime)], self.item.duration]];
         

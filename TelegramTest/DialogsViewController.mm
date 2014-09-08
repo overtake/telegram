@@ -13,7 +13,7 @@
 #import "FakeDialog.h"
 #import "Telegram.h"
 #import "DialogTableObject.h"
-
+#import "ImageUtils.h"
 #import "TMElements.h"
 #import "DialogTableItem.h"
 #import "DialogTableItemView.h"
@@ -28,12 +28,12 @@
 #import "DialogsHistoryController.h"
 
 #import "DialogTableView.h"
+#import "SearchViewController.h"
 
-
-
-@interface DialogsViewController ()
-@property (nonatomic,strong) DialogsHistoryController *historyController;
+@interface DialogsViewController ()<TMSearchTextFieldDelegate>
+@property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
+@property (nonatomic, strong) TL_conversation *selectedConversation;
 @end
 
 @implementation DialogsViewController
@@ -41,14 +41,25 @@
 - (void)loadView {
     [super loadView];
     
-    self.historyController = [DialogsHistoryController sharedController];
-    [self.view setAutoresizesSubviews:YES];
-    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    int topOffset = 50;
     
-    self.tableView = [[DialogTableView alloc] initWithFrame:self.view.bounds];
+    //self.firstItem = [[DialogFirstItem alloc] init];
+    
+   // self.dialogFirstView = [[DialogTableFirstView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 25)];
+    
+    self.historyController = [DialogsHistoryController sharedController];
+    
+    self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts;
+   
+    NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset);
+    
+    self.tableView = [[DialogTableView alloc] initWithFrame:tableRect];
     self.tableView.tm_delegate = self;
 
     [self.view addSubview:self.tableView.containerView];
+    
+    self.mainView = self.tableView.containerView;
+
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
@@ -60,6 +71,7 @@
     [Notification addObserver:self selector:@selector(notificationDialogChangePosition:) name:DIALOG_MOVE_POSITION];
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
+    
 }
 
 - (void)addScrollEvent {
@@ -98,10 +110,7 @@
         
         offset = (int) filtred.count;
     }
-   
-    
-    
-    
+     
     [self.historyController next:offset limit:limit callback:^(NSArray *result) {
         
         [self insertAll:result];
@@ -132,6 +141,16 @@
     [self.tableView insert:dialogs startIndex:self.tableView.list.count tableRedraw:YES];
     
     self.tableView.defaultAnimation = animation;
+    
+    
+    if([(DialogTableItem *)self.tableView.selectedItem dialog] != self.selectedConversation) {
+        NSUInteger hash = [DialogTableItem hash:self.selectedConversation];
+        if([self.tableView itemByHash:hash]) {
+            [self.tableView cancelSelection];
+            [self.tableView setSelectedByHash:hash];
+        }
+       
+    }
 }
 - (void)dealloc {
     [Notification removeObserver:self];
@@ -151,11 +170,13 @@
 //Notifications
 - (void)notificationDialogSelectionChanged:(NSNotification *)notify {
     if([notify.userInfo objectForKey:@"sender"] != self) {
-        TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
+        TL_conversation *conversation = [notify.userInfo objectForKey:KEY_DIALOG];
+        
         [self.tableView cancelSelection];
 
-        if(![dialog isKindOfClass:NSNull.class]) {
-            NSUInteger hash = [DialogTableItem hash:dialog];
+        if(![conversation isKindOfClass:NSNull.class]) {
+            self.selectedConversation = conversation;
+            NSUInteger hash = [DialogTableItem hash:self.selectedConversation];
             [self.tableView setSelectedByHash:hash];
         }
     }
@@ -195,6 +216,8 @@
     } synchronous:YES];
     
     
+   // [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
+    
     [self.tableView insert:dialogs startIndex:0 tableRedraw:NO];
     [self.tableView beginUpdates];
     [self.tableView reloadData];
@@ -217,7 +240,7 @@
     
     if(position == 0 && dialog.top_message > TGMINFAKEID) {
         [self.tableView scrollToBeginningOfDocument:self];
-    }
+    } 
     
     if(position != 0 && position >= self.tableView.count)
         position = (int) self.tableView.count-1;
@@ -259,7 +282,6 @@
     } else if([item isKindOfClass:[SearchItem class]]) {
         return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"searchItem"];
     }
-
     
     return nil;
 }
@@ -409,9 +431,5 @@
     
     [TMTableView setCurrent:self.tableView];
 }
-
-// TABLE END
-
-//Work with list en
 
 @end

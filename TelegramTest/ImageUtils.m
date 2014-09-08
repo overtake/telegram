@@ -107,6 +107,8 @@ CACHE_IMAGE(VoiceMicHighlighted2)
 CACHE_IMAGE(TelegramNotifications)
 
 
+
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

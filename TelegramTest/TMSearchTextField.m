@@ -193,6 +193,25 @@ const static int textFieldXOffset = 30;
     return [self.textField becomeFirstResponder];
 }
 
+
+
+
+- (bool)endEditing;
+{
+    bool success;
+    id responder = [[NSApp mainWindow] firstResponder];
+    
+    
+    if ( (responder != nil) && [responder isKindOfClass:[NSTextView class]] && [(NSTextView*)responder isFieldEditor] )
+        responder = ( [[responder delegate] isKindOfClass:[NSResponder class]] ) ? [responder delegate] : nil;
+    
+    success = [[NSApp mainWindow] makeFirstResponder:nil];
+    
+    
+    return success;
+}
+
+
 - (void)setFrameSize:(NSSize)newSize {
     
     [super setFrameSize:newSize];
@@ -212,10 +231,10 @@ static float duration = 0.1;
     [self.containerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - [self containerWidth]) / 2), 0)];
     [super viewDidMoveToSuperview];
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+   // dispatch_async(dispatch_get_main_queue(), ^{
         [self.containerView setFrameOrigin:NSMakePoint(0, 0)];
         [self centerPosition:NO];
-    });
+   // });
 }
 
 - (void)leftPosition:(BOOL)animation {

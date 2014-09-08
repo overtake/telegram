@@ -71,7 +71,7 @@ static NSDictionary *attributes() {
     [[NSColor whiteColor] setStroke];
     [path stroke];
     
-    [NSColorFromRGB(0x60b8ea) setFill];
+    [NSColorFromRGB(0x6ac065) setFill];
     [path fill];
 
     [[NSColor whiteColor] set];
@@ -158,7 +158,7 @@ static NSDictionary *attributes() {
         [self.controll setDrawBlock:^{
             NSColor *color = nil;
             if(!strongSelf.isSelected) {
-                color = strongSelf.isHover ? NSColorFromRGB(0xfafafa) : [NSColor whiteColor];
+                color = [NSColor whiteColor]; //strongSelf.isHover ? NSColorFromRGB(0xfafafa) : [NSColor whiteColor];
                 [color set];
                 NSRectFill(NSMakeRect(0, 0, strongSelf.bounds.size.width - DIALOG_BORDER_WIDTH, strongSelf.bounds.size.height));
             } else {
@@ -170,8 +170,7 @@ static NSDictionary *attributes() {
         }];
         [self.controll.containerView setDrawBlock:^{
             
-            if(NSWidth(strongSelf.frame) <= 72)
-                return;
+           
             
             if([strongSelf rowItem].isOut) {
                 
@@ -185,7 +184,7 @@ static NSDictionary *attributes() {
                             if(strongSelf.isSelected) {
                                 [NSColorFromRGB(0xc1d6e5) setFill];
                             } else {
-                                [NSColorFromRGB(0x60b8ea) setFill];
+                                [NSColorFromRGB(0x41a2f7) setFill];
                             }
                             
                             [circlePath fill];
@@ -365,7 +364,7 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
 
     } else {
-        [NSColorFromRGB(0x60b8ea) set];
+        [NSColorFromRGB(0x6ac065) set];
     }
     [path fill];
     [path closePath];
@@ -481,7 +480,7 @@ static int unreadOffsetRight = 13;
             [[item.writeAttributedString mutableString] setString:[string substringToIndex:string.length - 3]];
         }
         
-        [item.writeAttributedString appendString:@"." withColor:self.isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x333333)];
+        [item.writeAttributedString appendString:@"." withColor:self.isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x9b9b9b)];
         [item.writeAttributedString setSelected:self.isSelected];
         [self.messageTextField setAttributedStringValue:item.writeAttributedString];
         

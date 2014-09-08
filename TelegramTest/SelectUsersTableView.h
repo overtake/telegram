@@ -9,18 +9,21 @@
 #import "TMTableView.h"
 #import "SelectUserRowView.h"
 #import "SelectUserItem.h"
+
+@protocol SelectTableDelegate <NSObject>
+
+@required
+-(void)selectTableDidChangedItem:(SelectUserItem *)item;
+
+@end
+
 @interface SelectUsersTableView : TMTableView<TMTableViewDelegate>
 
-typedef enum {
-    SelectUsersTypeSingle = 1 << 1,
-    SelectUsersTypeMultiple = 1 << 2
-} SelectUsersType;
-
-@property (nonatomic,assign) SelectUsersType selectType;
 
 @property (nonatomic,strong) NSArray *exceptions;
 
-@property (nonatomic,copy) void (^singleCallback)(TGContact *contact);
+@property (nonatomic,strong) id <SelectTableDelegate> selectDelegate;
+
 @property (nonatomic,copy) void (^multipleCallback)(NSArray *contacts);
 
 

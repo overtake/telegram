@@ -8,8 +8,10 @@
 
 #import "TMViewController.h"
 #import "TMView.h"
-
+#import "TMProgressModalView.h"
+#import "HackUtils.h"
 @interface TMViewController ()
+@property (nonatomic,strong) TMProgressModalView *progressView;
 @end
 
 @implementation TMViewController
@@ -89,6 +91,60 @@
         [[Telegram rightViewController] navigationGoBack];
     }
 }
+
+
+-(void)showModalProgress {
+    
+    if(!self.view)
+        return;
+    
+    if(!self.progressView) {
+        self.progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        
+        self.progressView.layer.opacity = 0;
+        
+        [self.progressView setCenterByView:self.view.window.contentView];
+        
+        [self.view.window.contentView addSubview:self.progressView];
+    }
+    
+    [(MainWindow *)self.view.window setAcceptEvents:NO];
+    
+    POPBasicAnimation *anim = [self popAnimationForProgress:self.progressView.layer.opacity to:0.8];
+    
+    [self.progressView.layer pop_addAnimation:anim forKey:@"fade"];
+    
+}
+
+-(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to {
+    POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    anim.fromValue = @(from);
+    anim.toValue = @(to);
+    anim.duration = 0.2;
+    anim.removedOnCompletion = YES;
+    
+    return anim;
+}
+
+
+-(void)hideModalProgress {
+    
+    self.progressView.layer.opacity = 0.8;
+    
+    [(MainWindow *)self.view.window setAcceptEvents:YES];
+    
+    POPBasicAnimation *anim = [self popAnimationForProgress:self.progressView.layer.opacity to:0];
+    
+    [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
+        [self.progressView removeFromSuperview];
+        self.progressView = nil;
+    }];
+    
+    [self.progressView.layer pop_addAnimation:anim forKey:@"fade"];
+
+}
+
 
 - (void)loadView {
 //    [super loadView];

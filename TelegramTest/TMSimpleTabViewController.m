@@ -67,6 +67,14 @@
     [self.controllers removeObject:viewController];
 }
 
+- (void)showControllerByIndex:(NSUInteger)index {
+    
+    if( index >= self.controllers.count )
+        return;
+    
+    [self showController:self.controllers[index]];
+}
+
 - (void)showController:(TMViewController *)viewController {
     
     if(self.currentController == viewController)

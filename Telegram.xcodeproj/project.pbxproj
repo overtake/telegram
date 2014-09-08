@@ -265,6 +265,18 @@
 		C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B4E18D8410700253A7A /* ShareContactSenterItem.m */; };
 		C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5218D8991D00253A7A /* SecretSenderItem.m */; };
 		C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5B18D8A32800253A7A /* FileSecretSenderItem.m */; };
+		C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482119ABC891000F06E1 /* TMTabViewController.m */; };
+		C21D482A19AC78BB000F06E1 /* TMTabItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482919AC78BB000F06E1 /* TMTabItem.m */; };
+		C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482D19ACB7CD000F06E1 /* AccountSettingsViewController.m */; };
+		C21D483219ACC436000F06E1 /* ContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D483119ACC436000F06E1 /* ContactsViewController.m */; };
+		C21D483519ADD1E3000F06E1 /* StandartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D483419ADD1E3000F06E1 /* StandartViewController.m */; };
+		C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D484819AF3C53000F06E1 /* ComposePickerViewController.m */; };
+		C21D484C19AF64A5000F06E1 /* ComposeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D484B19AF64A5000F06E1 /* ComposeAction.m */; };
+		C21D485019AF9FE8000F06E1 /* ComposeActionBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D484F19AF9FE8000F06E1 /* ComposeActionBehavior.m */; };
+		C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D485219AFA131000F06E1 /* ComposeActionGroupBehavior.m */; };
+		C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D485519B07A21000F06E1 /* ComposeActionSecretChatBehavior.m */; };
+		C21D486219B08E64000F06E1 /* TMTokenCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D485F19B08E64000F06E1 /* TMTokenCell.m */; };
+		C21D486319B08E64000F06E1 /* TMTokenField.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D486119B08E64000F06E1 /* TMTokenField.m */; };
 		C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21DD98518D0786700F6B822 /* TMPreviewDocumentItem.m */; };
 		C2200B5618EC8A2700F28803 /* sent.caf in Resources */ = {isa = PBXBuildFile; fileRef = C2200B5518EC8A2700F28803 /* sent.caf */; };
 		C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2200B5E18EDD1E200F28803 /* AboutViewControllerWindowController.m */; };
@@ -332,6 +344,16 @@
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
+		C271523F19B0936C00841C8A /* TokenItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C271523E19B0936C00841C8A /* TokenItem.m */; };
+		C271524A19B0D8C700841C8A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C271524919B0D8C700841C8A /* Images.xcassets */; };
+		C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271524C19B4893400841C8A /* ComposeChatCreateViewController.m */; };
+		C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525019B5C8AC00841C8A /* TMProgressModalView.m */; };
+		C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525319B61E5700841C8A /* ComposeActionBroadcastBehavior.m */; };
+		C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525619B6344100841C8A /* ComposeBroadcastListViewController.m */; };
+		C271525A19B637D200841C8A /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525919B637D200841C8A /* ComposeViewController.m */; };
+		C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525D19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m */; };
+		C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */; };
+		C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526319B9ECCA00841C8A /* AddContactViewController.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
@@ -449,7 +471,6 @@
 		CEB0D72418E3770D00457D08 /* TMWindowTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB0D72318E3770D00457D08 /* TMWindowTitleView.m */; };
 		CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB26160180C91F900378932 /* RpcErrorParser.m */; };
 		CEB26165180C928A00378932 /* RpcError.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB26164180C928A00378932 /* RpcError.m */; };
-		CEB26178180ECD3F00378932 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEB26177180ECD3F00378932 /* Images.xcassets */; };
 		CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = CEB7ADE418128581005CB6A1 /* DownloadQueue.mm */; };
 		CEB7ADF11812E31F005CB6A1 /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB7ADF01812E31F005CB6A1 /* ImageCache.m */; };
 		CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB7AE04181419E5005CB6A1 /* QuartzCore.framework */; };
@@ -1080,6 +1101,30 @@
 		C21C7B5218D8991D00253A7A /* SecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretSenderItem.m; sourceTree = "<group>"; };
 		C21C7B5A18D8A32800253A7A /* FileSecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSecretSenderItem.h; sourceTree = "<group>"; };
 		C21C7B5B18D8A32800253A7A /* FileSecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSecretSenderItem.m; sourceTree = "<group>"; };
+		C21D482019ABC891000F06E1 /* TMTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTabViewController.h; sourceTree = "<group>"; };
+		C21D482119ABC891000F06E1 /* TMTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTabViewController.m; sourceTree = "<group>"; };
+		C21D482819AC78BB000F06E1 /* TMTabItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTabItem.h; sourceTree = "<group>"; };
+		C21D482919AC78BB000F06E1 /* TMTabItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTabItem.m; sourceTree = "<group>"; };
+		C21D482C19ACB7CD000F06E1 /* AccountSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountSettingsViewController.h; sourceTree = "<group>"; };
+		C21D482D19ACB7CD000F06E1 /* AccountSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountSettingsViewController.m; sourceTree = "<group>"; };
+		C21D483019ACC436000F06E1 /* ContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsViewController.h; sourceTree = "<group>"; };
+		C21D483119ACC436000F06E1 /* ContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsViewController.m; sourceTree = "<group>"; };
+		C21D483319ADD1E3000F06E1 /* StandartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandartViewController.h; sourceTree = "<group>"; };
+		C21D483419ADD1E3000F06E1 /* StandartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandartViewController.m; sourceTree = "<group>"; };
+		C21D484719AF3C53000F06E1 /* ComposePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposePickerViewController.h; sourceTree = "<group>"; };
+		C21D484819AF3C53000F06E1 /* ComposePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposePickerViewController.m; sourceTree = "<group>"; };
+		C21D484A19AF64A5000F06E1 /* ComposeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeAction.h; sourceTree = "<group>"; };
+		C21D484B19AF64A5000F06E1 /* ComposeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeAction.m; sourceTree = "<group>"; };
+		C21D484E19AF9FE8000F06E1 /* ComposeActionBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBehavior.h; sourceTree = "<group>"; };
+		C21D484F19AF9FE8000F06E1 /* ComposeActionBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBehavior.m; sourceTree = "<group>"; };
+		C21D485119AFA131000F06E1 /* ComposeActionGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionGroupBehavior.h; sourceTree = "<group>"; };
+		C21D485219AFA131000F06E1 /* ComposeActionGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionGroupBehavior.m; sourceTree = "<group>"; };
+		C21D485419B07A21000F06E1 /* ComposeActionSecretChatBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionSecretChatBehavior.h; sourceTree = "<group>"; };
+		C21D485519B07A21000F06E1 /* ComposeActionSecretChatBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionSecretChatBehavior.m; sourceTree = "<group>"; };
+		C21D485E19B08E64000F06E1 /* TMTokenCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTokenCell.h; sourceTree = "<group>"; };
+		C21D485F19B08E64000F06E1 /* TMTokenCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTokenCell.m; sourceTree = "<group>"; };
+		C21D486019B08E64000F06E1 /* TMTokenField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTokenField.h; sourceTree = "<group>"; };
+		C21D486119B08E64000F06E1 /* TMTokenField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTokenField.m; sourceTree = "<group>"; };
 		C21DD98418D0786700F6B822 /* TMPreviewDocumentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewDocumentItem.h; sourceTree = "<group>"; };
 		C21DD98518D0786700F6B822 /* TMPreviewDocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewDocumentItem.m; sourceTree = "<group>"; };
 		C2200B5518EC8A2700F28803 /* sent.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sent.caf; sourceTree = "<group>"; };
@@ -1209,6 +1254,25 @@
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		C270C5AF18A13F9F005D80E0 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
 		C270C5B118A13FB9005D80E0 /* mime-types.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mime-types.txt"; sourceTree = "<group>"; };
+		C271523D19B0936C00841C8A /* TokenItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenItem.h; sourceTree = "<group>"; };
+		C271523E19B0936C00841C8A /* TokenItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TokenItem.m; sourceTree = "<group>"; };
+		C271524919B0D8C700841C8A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C271524B19B4893400841C8A /* ComposeChatCreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChatCreateViewController.h; sourceTree = "<group>"; };
+		C271524C19B4893400841C8A /* ComposeChatCreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChatCreateViewController.m; sourceTree = "<group>"; };
+		C271524F19B5C8AC00841C8A /* TMProgressModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMProgressModalView.h; sourceTree = "<group>"; };
+		C271525019B5C8AC00841C8A /* TMProgressModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMProgressModalView.m; sourceTree = "<group>"; };
+		C271525219B61E5700841C8A /* ComposeActionBroadcastBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBroadcastBehavior.h; sourceTree = "<group>"; };
+		C271525319B61E5700841C8A /* ComposeActionBroadcastBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBroadcastBehavior.m; sourceTree = "<group>"; };
+		C271525519B6344100841C8A /* ComposeBroadcastListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeBroadcastListViewController.h; sourceTree = "<group>"; };
+		C271525619B6344100841C8A /* ComposeBroadcastListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeBroadcastListViewController.m; sourceTree = "<group>"; };
+		C271525819B637D200841C8A /* ComposeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeViewController.h; sourceTree = "<group>"; };
+		C271525919B637D200841C8A /* ComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeViewController.m; sourceTree = "<group>"; };
+		C271525C19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddGroupMembersBehavior.h; sourceTree = "<group>"; };
+		C271525D19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddGroupMembersBehavior.m; sourceTree = "<group>"; };
+		C271525F19B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddBroadcastMembersBehavior.h; sourceTree = "<group>"; };
+		C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddBroadcastMembersBehavior.m; sourceTree = "<group>"; };
+		C271526219B9ECCA00841C8A /* AddContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactViewController.h; sourceTree = "<group>"; };
+		C271526319B9ECCA00841C8A /* AddContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactViewController.m; sourceTree = "<group>"; };
 		C276C7D1195C6C1B0037C4D7 /* ITProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITProgressIndicator.h; sourceTree = "<group>"; };
 		C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITProgressIndicator.m; sourceTree = "<group>"; };
 		C277E2A118AAA69B00FFCA35 /* MessagesDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessagesDelegate.h; sourceTree = "<group>"; };
@@ -1445,7 +1509,6 @@
 		CEB26160180C91F900378932 /* RpcErrorParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RpcErrorParser.m; sourceTree = "<group>"; };
 		CEB26163180C928A00378932 /* RpcError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RpcError.h; sourceTree = "<group>"; };
 		CEB26164180C928A00378932 /* RpcError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RpcError.m; sourceTree = "<group>"; };
-		CEB26177180ECD3F00378932 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CEB26192180F3FB500378932 /* ContentDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentDelegate.h; sourceTree = "<group>"; };
 		CEB2619C1810F12A00378932 /* DialogDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DialogDelegate.h; sourceTree = "<group>"; };
 		CEB7ADE318128581005CB6A1 /* DownloadQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadQueue.h; sourceTree = "<group>"; };
@@ -1665,6 +1728,7 @@
 		0A2F5AD5181A8FAC005045A5 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				C21D482719AC78A2000F06E1 /* tabs */,
 				0A62CC92181F1ADD0098720C /* LeftViewController.h */,
 				0A62CC93181F1ADD0098720C /* LeftViewController.m */,
 				0A62CC97181F24270098720C /* RightViewController.h */,
@@ -1675,6 +1739,8 @@
 				0AB6A51218285D890015920A /* TelegramPopover.m */,
 				0A073FD818C0D01100BAA928 /* NotSelectedDialogsViewController.h */,
 				0A073FD918C0D01100BAA928 /* NotSelectedDialogsViewController.m */,
+				C21D483319ADD1E3000F06E1 /* StandartViewController.h */,
+				C21D483419ADD1E3000F06E1 /* StandartViewController.m */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -2186,6 +2252,7 @@
 		0AC7F472185DA85300F90558 /* elements */ = {
 			isa = PBXGroup;
 			children = (
+				C271523819B092C200841C8A /* token */,
 				0A7C78C419476FFB001617DB /* Menu */,
 				0A697E801914F4F3003469CB /* Layers */,
 				0AD35DC418698CDB007BA752 /* _TMSearchTextField.h */,
@@ -2428,6 +2495,66 @@
 			name = secret;
 			sourceTree = "<group>";
 		};
+		C21D482719AC78A2000F06E1 /* tabs */ = {
+			isa = PBXGroup;
+			children = (
+				C21D482019ABC891000F06E1 /* TMTabViewController.h */,
+				C21D482119ABC891000F06E1 /* TMTabViewController.m */,
+				C21D482819AC78BB000F06E1 /* TMTabItem.h */,
+				C21D482919AC78BB000F06E1 /* TMTabItem.m */,
+			);
+			name = tabs;
+			sourceTree = "<group>";
+		};
+		C21D482B19ACB7A6000F06E1 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				C21D482C19ACB7CD000F06E1 /* AccountSettingsViewController.h */,
+				C21D482D19ACB7CD000F06E1 /* AccountSettingsViewController.m */,
+			);
+			name = settings;
+			sourceTree = "<group>";
+		};
+		C21D482F19ACC41E000F06E1 /* contacts */ = {
+			isa = PBXGroup;
+			children = (
+				C21D483019ACC436000F06E1 /* ContactsViewController.h */,
+				C21D483119ACC436000F06E1 /* ContactsViewController.m */,
+			);
+			name = contacts;
+			sourceTree = "<group>";
+		};
+		C21D484619AF3C0E000F06E1 /* compose */ = {
+			isa = PBXGroup;
+			children = (
+				C271525B19B6398500841C8A /* ui */,
+				C271524E19B4CBAE00841C8A /* help */,
+				C21D484D19AF9FBB000F06E1 /* behavior */,
+				C21D484A19AF64A5000F06E1 /* ComposeAction.h */,
+				C21D484B19AF64A5000F06E1 /* ComposeAction.m */,
+			);
+			name = compose;
+			sourceTree = "<group>";
+		};
+		C21D484D19AF9FBB000F06E1 /* behavior */ = {
+			isa = PBXGroup;
+			children = (
+				C21D484E19AF9FE8000F06E1 /* ComposeActionBehavior.h */,
+				C21D484F19AF9FE8000F06E1 /* ComposeActionBehavior.m */,
+				C21D485119AFA131000F06E1 /* ComposeActionGroupBehavior.h */,
+				C21D485219AFA131000F06E1 /* ComposeActionGroupBehavior.m */,
+				C21D485419B07A21000F06E1 /* ComposeActionSecretChatBehavior.h */,
+				C21D485519B07A21000F06E1 /* ComposeActionSecretChatBehavior.m */,
+				C271525219B61E5700841C8A /* ComposeActionBroadcastBehavior.h */,
+				C271525319B61E5700841C8A /* ComposeActionBroadcastBehavior.m */,
+				C271525C19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.h */,
+				C271525D19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m */,
+				C271525F19B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.h */,
+				C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */,
+			);
+			name = behavior;
+			sourceTree = "<group>";
+		};
 		C2200B5C18EDD1CE00F28803 /* about */ = {
 			isa = PBXGroup;
 			children = (
@@ -2470,6 +2597,8 @@
 				C2201A05192E488D00C0E441 /* AddContactView.m */,
 				C2201A08192E4AAA00C0E441 /* TMBlueInputTextField.h */,
 				C2201A09192E4AAA00C0E441 /* TMBlueInputTextField.m */,
+				C271526219B9ECCA00841C8A /* AddContactViewController.h */,
+				C271526319B9ECCA00841C8A /* AddContactViewController.m */,
 			);
 			name = addcontact;
 			sourceTree = "<group>";
@@ -2627,6 +2756,43 @@
 				C28261E8199291EF004AC73E /* TL_broadcast.m */,
 			);
 			name = constructors;
+			sourceTree = "<group>";
+		};
+		C271523819B092C200841C8A /* token */ = {
+			isa = PBXGroup;
+			children = (
+				C21D485E19B08E64000F06E1 /* TMTokenCell.h */,
+				C21D485F19B08E64000F06E1 /* TMTokenCell.m */,
+				C21D486019B08E64000F06E1 /* TMTokenField.h */,
+				C21D486119B08E64000F06E1 /* TMTokenField.m */,
+				C271523D19B0936C00841C8A /* TokenItem.h */,
+				C271523E19B0936C00841C8A /* TokenItem.m */,
+			);
+			name = token;
+			sourceTree = "<group>";
+		};
+		C271524E19B4CBAE00841C8A /* help */ = {
+			isa = PBXGroup;
+			children = (
+				C271524F19B5C8AC00841C8A /* TMProgressModalView.h */,
+				C271525019B5C8AC00841C8A /* TMProgressModalView.m */,
+			);
+			name = help;
+			sourceTree = "<group>";
+		};
+		C271525B19B6398500841C8A /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				C21D484719AF3C53000F06E1 /* ComposePickerViewController.h */,
+				C21D484819AF3C53000F06E1 /* ComposePickerViewController.m */,
+				C271524B19B4893400841C8A /* ComposeChatCreateViewController.h */,
+				C271524C19B4893400841C8A /* ComposeChatCreateViewController.m */,
+				C271525519B6344100841C8A /* ComposeBroadcastListViewController.h */,
+				C271525619B6344100841C8A /* ComposeBroadcastListViewController.m */,
+				C271525819B637D200841C8A /* ComposeViewController.h */,
+				C271525919B637D200841C8A /* ComposeViewController.m */,
+			);
+			name = ui;
 			sourceTree = "<group>";
 		};
 		C281C1711917D953007B160F /* dragging */ = {
@@ -3041,9 +3207,9 @@
 				CEB0A25217DB09C60055F150 /* protocol */,
 				CEB09E6D17DAFC250055F150 /* AppDelegate.h */,
 				CEB09E6E17DAFC250055F150 /* AppDelegate.m */,
+				C271524919B0D8C700841C8A /* Images.xcassets */,
 				0A241AA718AB626000C32F45 /* resources */,
 				C20D18EE1948A3F70095A906 /* NewMainMenu.xib */,
-				CEB26177180ECD3F00378932 /* Images.xcassets */,
 				CEB09E6217DAFC250055F150 /* Supporting Files */,
 				0A62CC88181EFC1C0098720C /* Telegram.h */,
 				0A62CC89181EFC1C0098720C /* Telegram.m */,
@@ -3122,6 +3288,9 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C21D484619AF3C0E000F06E1 /* compose */,
+				C21D482F19ACC41E000F06E1 /* contacts */,
+				C21D482B19ACB7A6000F06E1 /* settings */,
 				C2531F6F1965DE4200F7D7A2 /* system */,
 				C23298D818CF6180000826E5 /* qlmedia */,
 				0A2F5AD5181A8FAC005045A5 /* controllers */,
@@ -3657,6 +3826,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEC22DEF18273CB1008817D0 /* PhoneFormats.dat in Resources */,
+				C271524A19B0D8C700841C8A /* Images.xcassets in Resources */,
 				C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */,
 				CEDAEB911881AFA6006189A2 /* README.txt in Resources */,
 				C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */,
@@ -3669,7 +3839,6 @@
 				C2ADB452191BB93000305CC8 /* TMCollectionViewController.xib in Resources */,
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
-				CEB26178180ECD3F00378932 /* Images.xcassets in Resources */,
 				0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */,
 				CEDAEB921881AFA6006189A2 /* LICENSE.txt in Resources */,
 				CEDAEB701881AF85006189A2 /* LICENSE.txt in Resources */,
@@ -3689,6 +3858,7 @@
 				0A6758E31895505C00F4487D /* MessageTableItem.m in Sources */,
 				0A59067C18AA32C8002ED7BA /* BTRImageView.m in Sources */,
 				CEB09E6817DAFC250055F150 /* main.m in Sources */,
+				C271523F19B0936C00841C8A /* TokenItem.m in Sources */,
 				CEDAEB511881AF85006189A2 /* YapDatabaseFilteredViewConnection.m in Sources */,
 				0A59068218AA32C8002ED7BA /* BTRView.m in Sources */,
 				CEDAEB501881AF85006189A2 /* YapDatabaseFilteredView.m in Sources */,
@@ -3716,6 +3886,7 @@
 				0A6758E61895507200F4487D /* MessageTableItemText.m in Sources */,
 				C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */,
 				C2A5C00718E17C630021BE68 /* SettingsWindowController.m in Sources */,
+				C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */,
 				0ABC223918F2D65900243F82 /* TLAPIAdd.m in Sources */,
 				CEB09E6F17DAFC250055F150 /* AppDelegate.m in Sources */,
 				0A59068018AA32C8002ED7BA /* BTRSecureTextField.m in Sources */,
@@ -3744,6 +3915,7 @@
 				C2FA78E61923CB6A001A9D1B /* VideoHistoryFilter.m in Sources */,
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
+				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
 				CEDAEB8F1881AFA6006189A2 /* ContextFilterLogFormatter.m in Sources */,
@@ -3756,17 +3928,20 @@
 				CE0AC51D18BE0EE70031658A /* TL_destructMessage.m in Sources */,
 				0A9EDC571897BA0E0037E1BC /* RBLExpandingContainerView.m in Sources */,
 				CEDAEB5E1881AF85006189A2 /* YapDatabaseViewPage.mm in Sources */,
+				C271525A19B637D200841C8A /* ComposeViewController.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TGPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
 				C2227759190E7309002AA0F6 /* TMTaskRequest.m in Sources */,
 				0A241AA618AB60BA00C32F45 /* TMGLGif.m in Sources */,
+				C21D484C19AF64A5000F06E1 /* ComposeAction.m in Sources */,
 				0A6D098F19535E8500A9AC64 /* NSImageViewCategory.m in Sources */,
 				0A6758F2189672F600F4487D /* TMFastQueue.mm in Sources */,
 				0ABC223118EE88DA00243F82 /* MessageTableCellGifView.m in Sources */,
 				0A6D099719535E8500A9AC64 /* TGContactCategory.m in Sources */,
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
+				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
@@ -3779,9 +3954,11 @@
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
+				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
 				0ACF9E3F19235FED001F9E1E /* SearchLoadMoreCell.m in Sources */,
+				C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */,
 				CEAE5D18181BF9D300C17645 /* RPCRequest.m in Sources */,
 				0A6E13D218A8F3CB004D1BC7 /* NewContactsManager.m in Sources */,
 				C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */,
@@ -3862,12 +4039,15 @@
 				0AEE20851821352D00F348F2 /* MessagesTableView.m in Sources */,
 				0A241AAE18ACD39700C32F45 /* MessageTableCellVideoView.m in Sources */,
 				0ACDB14118D09CC0009FE910 /* LoginButtonAndErrorView.m in Sources */,
+				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
+				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
 				C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */,
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,
 				CEDAEB751881AF85006189A2 /* YapDatabaseConnection.m in Sources */,
 				0A5F0FFB18DC2FF900CCFA60 /* ChatParticipantItem.m in Sources */,
+				C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */,
 				CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
@@ -3888,6 +4068,8 @@
 				CEC8B88A1832108A00283E53 /* Reachability.m in Sources */,
 				C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */,
 				0A59067918AA32C8002ED7BA /* BTRClipView.m in Sources */,
+				C21D486219B08E64000F06E1 /* TMTokenCell.m in Sources */,
+				C21D482A19AC78BB000F06E1 /* TMTabItem.m in Sources */,
 				0A6D09A219535EED00A9AC64 /* TGUserStatusCategory.m in Sources */,
 				0A46151118E87A7800899641 /* BlockedUsersManager.m in Sources */,
 				CEDAEB6B1881AF85006189A2 /* YapDatabaseManager.m in Sources */,
@@ -3906,6 +4088,7 @@
 				C233FB2E18B61415008C9A96 /* NewConversationRowItem.m in Sources */,
 				C2A5BFFD18E03D150021BE68 /* MessageTableCellAudioView.m in Sources */,
 				0A5F0FFE18DC300A00CCFA60 /* ChatParticipantRowView.m in Sources */,
+				C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */,
 				0A9EDC5B1897BA0E0037E1BC /* RBLScrollView.m in Sources */,
 				0A241A9418AAEF2900C32F45 /* TMTextField.m in Sources */,
 				CEAE5D29181D7A7900C17645 /* TGDialog+Extensions.m in Sources */,
@@ -3939,6 +4122,7 @@
 				C2201A0D1934E6D600C0E441 /* DownloadPart.m in Sources */,
 				CECBC1691800D5E000AD98E6 /* NSMutableData+Extension.m in Sources */,
 				C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */,
+				C21D485019AF9FE8000F06E1 /* ComposeActionBehavior.m in Sources */,
 				0AE9B4C819268431001E88DA /* MediaImageView.m in Sources */,
 				CEC22DFD1828F906008817D0 /* NSViewFlipper.m in Sources */,
 				0A4A1A2E18A2AB5600D756CD /* YapDataBaseDictionary.m in Sources */,
@@ -3963,6 +4147,7 @@
 				CEDAEB5C1881AF85006189A2 /* YapDatabaseSecondaryIndexSetup.m in Sources */,
 				0AAAE57218C78E4400A2F9F1 /* UserInfoPhoneView.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
+				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C256E90E18D20701008FFA04 /* DownloadVideoItem.m in Sources */,
 				0A4A1A1F189FFAE400D756CD /* MessageTableItemTyping.m in Sources */,
@@ -3972,6 +4157,7 @@
 				0AF4F49E189AA378004BA4DF /* TMTypingObject.m in Sources */,
 				0AB43BB018D84FA200FB805A /* TMImagesSearchController.m in Sources */,
 				C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */,
+				C21D483219ACC436000F06E1 /* ContactsViewController.m in Sources */,
 				C2AA4F0A18A8ED5500E20C68 /* TGTimer.m in Sources */,
 				0ABACDA8181ADB1E00EF43DB /* SerializedData.m in Sources */,
 				CE4CC6EA1829B4DF00B532CC /* WhiteTitleButton.m in Sources */,
@@ -3987,6 +4173,7 @@
 				0ABB7090181D5F1300D1F12D /* TLApiObject.m in Sources */,
 				C21C7B3218D737BD00253A7A /* ImageSenderItem.m in Sources */,
 				CEDAEB6A1881AF85006189A2 /* YapDatabaseLogging.m in Sources */,
+				C21D486319B08E64000F06E1 /* TMTokenField.m in Sources */,
 				CEDAEB671881AF85006189A2 /* YapCache.m in Sources */,
 				0AA014601831140D00901B7A /* NSTextView+AutomaticLinkDetection.m in Sources */,
 				0A7517CC193A04590088C806 /* DialogSwipeTableControll.m in Sources */,
@@ -4057,12 +4244,14 @@
 				0A56FF1418D0BBCC00FE63CF /* LoginSMSCodeView.m in Sources */,
 				0AA3F3A518BD2D0800D383F1 /* UserInfoContainerView.m in Sources */,
 				0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */,
+				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,
 				CEDAEB721881AF85006189A2 /* YapDatabaseQuery.m in Sources */,
 				CEDAEB581881AF85006189A2 /* YapDatabaseExtensionConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
 				0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */,
 				0AB8501818757E31001A796C /* SearchItem.m in Sources */,
 				0A9EDC5A1897BA0E0037E1BC /* RBLResizableImage.m in Sources */,
+				C21D483519ADD1E3000F06E1 /* StandartViewController.m in Sources */,
 				C2AA4F1B18A90CEA00E20C68 /* ConversationHistoryController.m in Sources */,
 				0A697E831914F505003469CB /* TMTextLayer.m in Sources */,
 				0A6D098719535E8500A9AC64 /* CALayerCategory.m in Sources */,
@@ -4101,6 +4290,7 @@
 				C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */,
 				C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */,
 				CEAE5CD0181B0D7600C17645 /* ImageUtils.m in Sources */,
+				C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */,
 				CEA589431815704E00462DF0 /* SharedManager.m in Sources */,
 				0AA7E1D318CD392A0064EFC7 /* UIImageView+AFNetworking.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,

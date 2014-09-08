@@ -119,4 +119,8 @@
 #define CA_DEBUG_TRANSACTIONS 1
 
 
+#define BLUE_COLOR_SELECT NSColorFromRGB(0x5085bd)
+
+#define GRAY_BORDER_COLOR NSColorFromRGB(0xe4e4e4)
+#define LIGHT_GRAY_BORDER_COLOR NSColorFromRGB(0xededed)
 #endif

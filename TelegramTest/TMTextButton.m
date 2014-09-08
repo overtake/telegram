@@ -83,11 +83,11 @@
 }
 
 - (void) cursorUpdate:(NSEvent *)event {
-    if([self.window.contentView hitTest:event.locationInWindow] == self && !self.disable) {
-        NSCursor *cursor = [NSCursor pointingHandCursor];
-        [cursor setOnMouseEntered:YES];
-        [cursor set];
-    }
+//    if([self.window.contentView hitTest:event.locationInWindow] == self && !self.disable) { //cursoroff
+//        NSCursor *cursor = [NSCursor pointingHandCursor];
+//        [cursor setOnMouseEntered:YES];
+//        [cursor set];
+//    }
 }
 
 - (void)setDisable:(BOOL)disable {

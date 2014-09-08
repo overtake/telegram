@@ -214,6 +214,8 @@
 }
 
 - (void)setUserStatus:(TGUserStatus *)status forUid:(int)uid {
+    int i = 0;
+    
     [ASQueue dispatchOnStageQueue:^{
         TGUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {

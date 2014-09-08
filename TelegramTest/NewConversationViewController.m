@@ -140,7 +140,9 @@
     [self.tableView ready];
     
     weakify();
-    [self.tableView setSingleCallback:^(TGContact *contact) {
+    [self.tableView setMultipleCallback:^(NSArray *contacts) {
+        
+        TGContact *contact = contacts[0];
         if(strongSelf.currentAction == NewConversationActionCreateSecretChat) {
             [MessageSender startEncryptedChat:contact.user callback:^{
                 
@@ -507,7 +509,7 @@
             [participants addObject:@(obj.contact.user_id)];
         }];
         
-        TL_broadcast *broadcast = [TL_broadcast createWithN_id:arc4random() participants:participants title:@""];
+        TL_broadcast *broadcast = [TL_broadcast createWithN_id:arc4random() participants:participants title:@"" date:[[MTNetwork instance] getTime]];
         
         TL_conversation *conversation = [TL_conversation createWithPeer:[TL_peerBroadcast createWithChat_id:broadcast.n_id] top_message:0 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:0 last_marked_date:[[MTNetwork instance] getTime]];
         
@@ -699,7 +701,7 @@
     __block TMView *strong = bottomView;
     
     [bottomView setDrawBlock:^ {
-        [NSColorFromRGB(0xe4e4e4) set];
+        [GRAY_BORDER_COLOR set];
         NSRectFill(NSMakeRect(0, strong.frame.size.height-1, strong.frame.size.width, 1));
     }];
     
@@ -923,7 +925,7 @@
 //    [self.bottomViewForGroupChat setHidden:currentAction != NewConversationActionCreateGroup];
     [self.addMembersBottomView setHidden:currentAction != NewConversationActionChoosePeople];
     
-    self.tableView.selectType = (currentAction == NewConversationActionCreateBroadcast) || (currentAction == NewConversationActionCreateGroup) ||  (currentAction == NewConversationActionChoosePeople) ? SelectUsersTypeMultiple : SelectUsersTypeSingle;
+  //  self.tableView.selectType = (currentAction == NewConversationActionCreateBroadcast) || (currentAction == NewConversationActionCreateGroup) ||  (currentAction == NewConversationActionChoosePeople) ? SelectUsersTypeMultiple : SelectUsersTypeSingle;
 }
 
 @end
