@@ -89,9 +89,6 @@ static const int bottomOffset = 58;
     self.view = view;
     
     
-    
-
-    
     self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
     
     [self.tabController setTopBorderColor:GRAY_BORDER_COLOR];
