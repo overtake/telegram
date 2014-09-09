@@ -7,7 +7,7 @@
 //
 
 #import "TMTabViewController.h"
-
+#import "NSNumber+NumberFormatter.h"
 @interface ChatTabView : TMView
 
 @property (nonatomic, strong) NSString *unreadCount;
@@ -292,8 +292,13 @@ static NSDictionary *attributes() {
 
 - (void)setUnreadCount:(int)count {
     [self.chatTabView setHidden:count == 0];
+    NSString *text;
+    if(count < 1000)
+        text = [NSString stringWithFormat:@"%d", count];
+    else
+        text = [[NSNumber numberWithInt:count] prettyNumber];
     
-    [self.chatTabView setUnreadCount:[NSString stringWithFormat:@"%d",count]];
+    [self.chatTabView setUnreadCount:text];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
