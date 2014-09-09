@@ -127,7 +127,7 @@
         EncryptedParams *params = conversation.encryptedChat.encryptedParams;
         
         if(params.state == EncryptedDiscarted) {
-           
+            
             [messageText appendString:NSLocalizedString(@"MessageAction.Secret.CancelledSecretChat",nil) withColor:NSColorFromRGB(0x9b9b9b)];
             
             
@@ -160,7 +160,7 @@
         TGUser *userSecond = nil;
         TGUser *userLast;
         NSString *chatUserNameString;
-       
+        
         
         
         if(message.dialog.type == DialogTypeChat && !message.action ) {
@@ -182,9 +182,9 @@
             isAction = YES;
             if(!userLast)
                 userLast = [[UsersManager sharedManager] find:message.from_id];
-           // if(userLast == [UsersManager currentUser])
-              //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
-          //  else
+            // if(userLast == [UsersManager currentUser])
+            //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
+            //  else
             if(message.dialog.type != DialogTypeSecretChat)
                 chatUserNameString = userLast ? userLast.dialogFullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
             
@@ -256,7 +256,7 @@
     
     
     [messageText endEditing];
-
+    
     return messageText;
 }
 
@@ -294,7 +294,7 @@
         
     } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         
-         actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat",nil), action.title];
+        actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat",nil), action.title];
         
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         
@@ -311,20 +311,20 @@
     static float size = 11.5;
     
     NSRange start;
-  //  if(user != [UsersManager currentUser]) {
-        start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
-        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
-//    } else {
-//        start = [attributedString appendString:NSLocalizedString(@"Profile.You", nil) withColor:NSColorFromRGB(0xaeaeae)];
-//        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-//        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
-//    }
+    //  if(user != [UsersManager currentUser]) {
+    start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
+    [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
+    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+    //    } else {
+    //        start = [attributedString appendString:NSLocalizedString(@"Profile.You", nil) withColor:NSColorFromRGB(0xaeaeae)];
+    //        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
+    //        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
+    //    }
     
-
+    
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
     [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:size] forRange:start];
-
+    
     if(user2) {
         start = [attributedString appendString:[user2 fullName] withColor:LINK_COLOR];
         [attributedString setLink:[TMInAppLinks userProfile:user2.n_id] forRange:start];
@@ -336,7 +336,7 @@
         [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
     }
     
-//    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
+    //    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
     
     return attributedString;
 }
@@ -353,20 +353,42 @@
 
 
 + (NSColor *) colorForUserId:(int)uid {
-    int color = abs(uid) % 8;
-    switch (color) {
-        case 7: return [NSColor colorWithDeviceRed:(222.0/255.0) green:(63.0/255.0) blue:(17.0/255.0) alpha:1];
-        case 6: return [NSColor colorWithDeviceRed:(65.0/255.0) green:(166.0/255.0) blue:(200.0/255.0) alpha:1];
-        case 5: return [NSColor colorWithDeviceRed:(243.0/255.0) green:(45.0/255.0) blue:(107.0/255.0) alpha:1];
-        case 4: return [NSColor colorWithDeviceRed:(160.0/255.0) green:(84.0/255.0) blue:(254.0/255.0) alpha:1];
-        case 3: return [NSColor colorWithDeviceRed:(68.0/255.0) green:(146.0/255.0) blue:(233.0/255.0) alpha:1];
-        case 2: return [NSColor colorWithDeviceRed:(246.0/255.0) green:(198.0/255.0) blue:0.f alpha:1];
-        case 1: return [NSColor colorWithDeviceRed:(74/255.0) green:(188.0/255.0) blue:(14.0/255.0) alpha:1];
-        case 0: return [NSColor colorWithDeviceRed:(237.0/255.0) green:(101.0/255.0) blue:(12.0/255.0) alpha:1];
-        default:
-            break;
+    //e76568 - e88f4e - 49ae5a - 3991c7 - 606ce5 - a663d0
+    
+    static NSMutableDictionary *cacheColorIds;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cacheColorIds = [[NSMutableDictionary alloc] init];
+    });
+    
+    
+    int colorMask;
+    
+    if(cacheColorIds[@(uid)]) {
+        colorMask = [cacheColorIds[@(uid)] intValue];
+    } else {
+        const int numColors = 8;
+        
+        if(uid != -1) {
+            char buf[16];
+            snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
+            unsigned char digest[CC_MD5_DIGEST_LENGTH];
+            CC_MD5(buf, (unsigned) strlen(buf), digest);
+            colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
+        } else {
+            colorMask = -1;
+        }
+        
+        cacheColorIds[@(uid)] = @(colorMask);
     }
-    return [NSColor blackColor];
+    
+    
+    static const int colors[] = {0xe76568,0xe88f4e,0x49ae5a,0x3991c7,0x606ce5,0xa663d0};
+    
+    int color = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
+    
+    return  NSColorFromRGB(color);
 }
 
 + (NSString *) mediaMessage:(TGMessage *)message {
@@ -385,7 +407,7 @@
     } else {
         return NSLocalizedString(@"ChatMedia.Unsupported", nil);
     }
-  
+    
 }
 
 
