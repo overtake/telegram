@@ -353,6 +353,8 @@ typedef enum {
     
     self.securitySettings.textButton.textColor = self.chatSettings.textButton.textColor = self.blockedUsers.textButton.textColor = DARK_BLACK;
     
+    [container setAutoresizingMask:NSViewWidthSizable];
+    
     return container;
 }
 
@@ -417,6 +419,8 @@ typedef enum {
     
     [self.firstNameView.textView setFrameOrigin:NSMakePoint(0, 0)];
     [self.lastNameView.textView setFrameOrigin:NSMakePoint(0, 0)];
+    
+    [container setAutoresizingMask:NSViewWidthSizable];
    
     return container;
 }
