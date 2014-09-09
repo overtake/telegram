@@ -31,13 +31,13 @@
         
         self.firstNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
         [self.firstNameView setFrameOrigin:NSMakePoint(170, offsetY)];
-        [self.firstNameView setFrameSize:NSMakeSize(width, 0)];
+        [self.firstNameView setFrameSize:NSMakeSize(width, 42)];
    
         [self addSubview:self.firstNameView];
 
         self.lastNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
         [self.lastNameView setFrameOrigin:NSMakePoint(170, offsetY - self.firstNameView.bounds.size.height)];
-        [self.lastNameView setFrameSize:NSMakeSize(width, 0)];
+        [self.lastNameView setFrameSize:NSMakeSize(width, 42)];
         [self addSubview:self.lastNameView];
         
 //        [self.firstNameView setNextResponder:self.lastNameView];

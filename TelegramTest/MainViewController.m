@@ -64,6 +64,8 @@
     
     self.settingsWindowController = [[SettingsWindowController alloc] initWithWindowNibName:@"SettingsWindowController"];
     
+    [self.settingsWindowController.window orderOut:nil];
+    
     self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(280, 0, self.view.bounds.size.width - 280, self.view.bounds.size.height)];
     [self.rightViewController viewWillAppear:NO];
     [self.view addSubview:self.rightViewController.view];

@@ -14,6 +14,7 @@
 
 
 @property (nonatomic,strong) NSView *currentRightController;
+@property (nonatomic,strong) dispatch_block_t tapBlock;
 @end
 
 @implementation UserInfoShortButtonView
@@ -27,9 +28,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.textButton = [TMTextButton standartUserProfileButtonWithTitle:name];
-        self.textButton.tapBlock = block;
+        self.tapBlock = block;
         [self.textButton sizeToFit];
         [self.textButton setFrameOrigin:NSMakePoint(10, 12)];
+        [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textButton];
         
@@ -125,15 +127,28 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    if(self.textButton.tapBlock && !self.locked) {
-        self.textButton.tapBlock();
+    
+    self.backgroundColor = NSColorFromRGB(0xfafafa);
+   
+    [self setNeedsDisplay:YES];
+    if(self.tapBlock && !self.locked) {
+        self.tapBlock();
     }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.backgroundColor = NSColorFromRGB(0xffffff);
+        [self setNeedsDisplay:YES];
+    });
+    
+  
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    
+    self.backgroundColor = NSColorFromRGB(0xffffff);
+    [self setNeedsDisplay:YES];
     [super mouseUp:theEvent];
     
-    
+  
 }
 
 - (void)removeFromSuperviewWithoutNeedingDisplay {
@@ -189,6 +204,8 @@
 //	}
 }
 
+
+
 - (void)drawRect:(NSRect)dirtyRect {
     [self changeBackground];
 
@@ -196,6 +213,12 @@
 
     [LIGHT_GRAY_BORDER_COLOR set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));
+    
+    if(self.backgroundColor) {
+        [self.backgroundColor set];
+        NSRectFill(NSMakeRect(0, 1, self.bounds.size.width, self.bounds.size.height-1));
+    }
+  
     
     
     

@@ -223,9 +223,11 @@ static NSDictionary *attributes() {
         TMTextField *field = [TMTextField defaultTextField];
         
         [field setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-        
+        [field setTextColor:obj.textColor];
         [field setAlignment:NSCenterTextAlignment];
         [field setStringValue:obj.title];
+        
+        
         
         [field sizeToFit];
         
@@ -251,6 +253,7 @@ static NSDictionary *attributes() {
         [field setCenterByView:container];
         
         [field setFrameOrigin:NSMakePoint(field.frame.origin.x, minY)];
+        
         
         [container setCenterByView:view];
         

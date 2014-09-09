@@ -97,8 +97,11 @@
             previewObject.reservedObject = strongSelf.avatarImageView;
             
             TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
-            if(picture)
-                [[TMMediaUserPictureController controller] show:picture];
+            if(picture) {
+                [[TMMediaUserPictureController controller] prepare:strongSelf.user completionHandler:^{
+                    [[TMMediaUserPictureController controller] show:picture];
+                }];
+            }
         }];
         
          [_avatarImageView setSourceType:ChatAvatarSourceUser];

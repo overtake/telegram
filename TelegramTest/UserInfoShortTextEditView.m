@@ -31,7 +31,6 @@
 }
 
 - (void)setFrameSize:(NSSize)newSize {
-    newSize.height = 42;
     [super setFrameSize:newSize];
 }
 

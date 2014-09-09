@@ -108,7 +108,7 @@ static const int bottomOffset = 58;
     TMTabItem *settingsTab = [[TMTabItem alloc] initWithTitle:@"Settings" image:[NSImage imageNamed:@"TabIconSettings"] selectedImage:[NSImage imageNamed:@"TabIconSettings_Highlighted"]];
     
     
-    contactsTab.textColor = chatsTab.textColor = settingsTab.textColor = NSColorFromRGB(0x000000);
+    contactsTab.textColor = chatsTab.textColor = settingsTab.textColor = NSColorFromRGB(0x888888);
     contactsTab.selectedTextColor = chatsTab.selectedTextColor = settingsTab.selectedTextColor = BLUE_COLOR_SELECT;
     
     

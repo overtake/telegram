@@ -149,10 +149,10 @@
 
 - (BOOL) isNeedUpdateBottom {
     BOOL result = NO;
-    if(self.lastScrollBottom < (int)[self documentOffset].y) {
+    if(self.lastScrollBottom < (int)[self documentOffset].y ) {
         result = ([self documentSize].height-[self documentOffset].y) < 1000; // эт бред если что
     }
-    self.lastScrollBottom = [self documentOffset].y;
+    self.lastScrollBottom = [self documentOffset].y > 0 ? [self documentOffset].y : 0;
     return  result;
 }
 

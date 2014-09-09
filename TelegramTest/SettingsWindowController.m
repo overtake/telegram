@@ -96,6 +96,7 @@
 
 - (void)windowDidLoad
 {
+    
  
     [self.open_links_in_background setTitle:NSLocalizedString(@"Settings.OpenLinksBackground", nil)];
     
@@ -182,11 +183,15 @@
     
     
     [self updateUI];
+    
+    [self updateAction];
 
-    [self chatSettingAction:nil];
+    
     
     [self.tool_bar setSelectedItemIdentifier:@"general"];
 
+    
+    // [self.window.contentView setHidden:NO];
     
     [super windowDidLoad];
     
@@ -262,7 +267,33 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 
 }
 
+-(void)showWindowWithAction:(SettingsWindowAction)action {
+    
+     self.action = action;
+    
+    [self updateAction];
+    
+    [self showWindow:self];
+    
+   
+    
+    [self updateAction];
 
+}
+
+-(void)updateAction {
+    if(self.action == SettingsWindowActionChatSettings) {
+        [self chatSettingAction:nil];
+    } else if(self.action == SettingsWindowActionSecuritySettings) {
+        [self securityAction:nil];
+        
+        [self.tabView selectTabViewItemAtIndex:0];
+    } else {
+        [self securityAction:nil];
+        
+        [self.tabView selectTabViewItemAtIndex:1];
+    }
+}
 
 -(void)showWindow:(id)sender {
     [super showWindow:sender];

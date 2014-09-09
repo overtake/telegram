@@ -239,6 +239,19 @@
 
 
 -(void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
+    
+    firstName = firstName.length > 30 ? [firstName substringToIndex:30] : firstName;
+    
+    lastName = lastName.length > 30 ? [lastName substringToIndex:30] : lastName;
+    
+    self.userSelf.first_name = firstName;
+    self.userSelf.last_name = lastName;
+    
+    [self.userSelf rebuildNames];
+    
+    [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+    
+    
     [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFirst_name:firstName last_name:lastName] successHandler:^(RPCRequest *request, TGUser *response) {
         
         if(response.type == TGUserTypeSelf) {

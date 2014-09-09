@@ -237,7 +237,7 @@
         return;
     }
     
-    [[TMMediaUserPictureController controller] removeAllObjects];
+    [[TMMediaUserPictureController controller] prepare:nil completionHandler:nil];
     
     [self.avatarImageView setChat:chat];
     [self.avatarImageView rebuild];

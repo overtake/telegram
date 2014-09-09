@@ -32,7 +32,7 @@
     [self.view addSubview:containerView];
 
     
-    NSImage *noDialogsImage = image_noDialogs();
+    NSImage *noDialogsImage = [NSImage imageNamed:@"StartPlane"];
     NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, noDialogsImage.size.width, noDialogsImage.size.height)];
     [imageView setWantsLayer:YES];
     imageView.image = noDialogsImage;
@@ -46,7 +46,7 @@
     NSMutableParagraphStyle *mutParaStyle=[[NSMutableParagraphStyle alloc] init];
     [mutParaStyle setAlignment:NSCenterTextAlignment];
     [mutParaStyle setLineSpacing:3];
-    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: BLUE_UI_COLOR, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSParagraphStyleAttributeName: mutParaStyle}]];
+    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSParagraphStyleAttributeName: mutParaStyle}]];
     [textField sizeToFit];
     [imageView setFrameOrigin:NSMakePoint(roundf((textField.frame.size.width - imageView.frame.size.width) / 2), textField.frame.size.height + 20)];
     
@@ -55,7 +55,7 @@
     
     [containerView setFrameSize:NSMakeSize(textField.frame.size.width, textField.frame.size.height + imageView.frame.size.height + imageView.frame.origin.y - textField.frame.size.height)];
     [containerView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinYMargin];
-    [containerView setFrameOrigin:NSMakePoint(roundf((self.view.bounds.size.width - containerView.frame.size.width) / 2), roundf((self.view.bounds.size.height - containerView.frame.size.height) / 2))];
+    [containerView setFrameOrigin:NSMakePoint(roundf((self.view.bounds.size.width - containerView.frame.size.width) / 2), roundf((self.view.bounds.size.height - containerView.frame.size.height) / 2) + 30)];
     [self.view setAutoresizesSubviews:YES];
 
     

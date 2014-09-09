@@ -153,7 +153,7 @@ typedef enum {
   //  [self.tableView setBackgroundColor:[NSColor redColor]];
     [self.view addSubview:self.tableView.containerView];
     
-    [self.tableView setBackgroundColor:[NSColor whiteColor]];
+    
     
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     
@@ -409,7 +409,7 @@ static int insertCount = 3;
     if(params.isRemoteLoaded) {
         [self showMessagesResults:params];
     } else {
-        [self.noResultsView setHidden:self.tableView.count > 0];
+        
         [self.tableView.containerView setHidden:self.tableView.count == 0];
     }
     
@@ -481,7 +481,6 @@ static int insertCount = 3;
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.tableView.containerView setHidden:self.tableView.count == 0];
-        [self.noResultsView setHidden:self.tableView.count > 0];
         [CATransaction commit];
         return;
     }
@@ -489,7 +488,6 @@ static int insertCount = 3;
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     [self.tableView.containerView setHidden:NO];
-    [self.noResultsView setHidden:YES];
     [CATransaction commit];
     
     if(params.messages_offset <= 50) {
@@ -514,13 +512,14 @@ static int insertCount = 3;
 - (void)searchByString:(NSString *)searchString {
     
     [self.tableView.containerView setHidden:NO];
-    [self.noResultsView setHidden:YES];
+    
     if(searchString.length == 0) {
         self.searchParams = nil;
         
     
         [self.tableView removeAllItems:YES];
         [self.tableView addItem:[[SearchLoaderItem alloc] init] tableRedraw:YES];
+//        [self.tableView reloadData];
         return;
     }
 
