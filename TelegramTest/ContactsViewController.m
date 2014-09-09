@@ -290,7 +290,7 @@
 - (NSView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     
     if([item isKindOfClass:[ContactUserItem class]]) {
-        return [self.tableView cacheViewForClass:[ContactUserView class] identifier:@"contactItem"];
+        return [self.tableView cacheViewForClass:[ContactUserView class] identifier:@"contactItem" withSize:NSMakeSize(NSWidth(self.tableView.frame), 50)];
     }else if([item isKindOfClass:[ContactFirstItem class]]) {
         return [self.tableView cacheViewForClass:[ContactFirstView class] identifier:@"firstContactItem"];
     }
