@@ -173,7 +173,7 @@ typedef enum {
 
     
     
-    [self.editView setFrameOrigin:NSMakePoint(0, currentY-46)];
+    [self.editView setFrameOrigin:NSMakePoint(0, currentY-52)];
     
     self.editView.layer.opacity = 0;
     [self.editView setHidden:YES];

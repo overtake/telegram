@@ -233,6 +233,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.state">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString
