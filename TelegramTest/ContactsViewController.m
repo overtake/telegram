@@ -113,6 +113,7 @@
 @interface ContactUserView : SelectUserRowView
 
 -(ContactUserItem *)rowItem;
+@property (nonatomic,strong) NSColor *color;
 @end
 
 
@@ -129,6 +130,24 @@
 }
 
 
+-(NSColor *)color
+{
+    return _color != nil ? _color : NSColorFromRGB(0xffffff);
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    self.color = NSColorFromRGB(0xfafafa);
+    
+    [self setNeedsDisplay:YES];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.color = NSColorFromRGB(0xffffff);
+        [self setNeedsDisplay:YES];
+    });
+}
+
 -(ContactUserItem *)rowItem {
     return (ContactUserItem *) [super rowItem];
 }
@@ -141,18 +160,8 @@
     
     NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - [self rowItem].rightBorderMargin, 1));
 
-    
-    if(self.isSelected) {
-      //  [BLUE_COLOR_SELECT set];
-      //  NSRectFill(self.bounds);
-    } else if(self.isHover) {
-        //  [NSColorFromRGB(0xfafafa) set];
-        //  NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
-    } else {
-        [NSColorFromRGB(0xffffff) set];
-        NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
-        
-    }
+    [self.color set];
+    NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
     
 }
 
