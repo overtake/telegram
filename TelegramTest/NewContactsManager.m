@@ -52,6 +52,9 @@
     INIT_HASH_CHEKER();
     [[Storage manager] contacts:^(NSArray *contacts) {
         
+        
+        
+        
         [ASQueue dispatchOnStageQueue:^{
             HASH_CHECK();
             [self->list addObjectsFromArray:contacts];

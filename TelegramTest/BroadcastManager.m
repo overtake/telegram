@@ -131,7 +131,7 @@
 
 
 -(void)save:(id)object {
-     [[Storage manager] insertBroadcast:object];
+    // [[Storage manager] insertBroadcast:object];
 }
 
 - (int)getOnlineCount:(int)broadcast_id {

@@ -86,7 +86,7 @@
     [conversation save];
     
     [[BroadcastManager sharedManager] add:@[broadcast]];
-    
+    [[Storage manager] insertBroadcast:broadcast];
     int fakeId = [MessageSender getFakeMessageId];
     
     

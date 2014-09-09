@@ -520,6 +520,7 @@
     self.mainWindow = mainWindow;
     
     
+    
     [[Storage manager] users:^(NSArray *result) {
         [[UsersManager sharedManager] addFromDB:result];
         [[BroadcastManager sharedManager] loadBroadcastList:^{

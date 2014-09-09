@@ -81,10 +81,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
             
-            _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
-            _updateService = [[TGUpdateMessageService alloc] init];
-            
-            
             [self initConnectionWithId:_masterDatacenter];
         }];
         

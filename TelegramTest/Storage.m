@@ -932,12 +932,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)users:(void (^)(NSArray *))completeHandler {
     
+    
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
+        
         NSMutableArray *users = [[NSMutableArray alloc] init];
         
-        
+            
         FMResultSet *result = [db executeQuery:@"select * from users"];
+        
+        
         while ([result next]) {
             NSDictionary *row = [result resultDictionary];
             TGUserType type = [[row objectForKey:@"type"] intValue];
@@ -1002,8 +1006,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             [users addObject:user];
         }
-        
-        
         
         [result close];
         
@@ -1257,9 +1259,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 -(void)unreadCount:(void (^)(int count))completeHandler {
+    
     [queue inDatabase:^(FMDatabase *db) {
+        
         FMResultSet *result = [db executeQuery:@"select sum(unread_count) AS unread_count from dialogs"];
        
+        
         int unread_count  = -1;
         while ([result next]) {
             unread_count = [result intForColumn:@"unread_count"];

@@ -198,7 +198,7 @@
   //  [self.tableView insert:@[self.broadcastItem,self.secretChatItem] startIndex:self.tableView.list.count tableRedraw:YES];
     
     
-    NSArray *all = [[NewContactsManager sharedManager] all];
+    
     
     self.firstItem = [[ContactFirstItem alloc] init];
     
@@ -206,6 +206,16 @@
     
     [self.tableView insert:self.firstItem atIndex:0 tableRedraw:YES];
     
+    
+    [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
+
+}
+
+
+-(void)contactsLoaded:(NSNotification *)notify {
+    
+    
+    NSArray *all = [[NewContactsManager sharedManager] all];
     
     all = [all sortedArrayUsingComparator:^NSComparisonResult(TL_contact* obj1, TL_contact* obj2) {
         int first = obj1.user.lastSeenTime;
@@ -221,7 +231,6 @@
         
     }];
     
-    
 
     
     if(all.count > 100) {
@@ -233,10 +242,7 @@
     } else {
         [self insertAll:all];
     }
-    
-   
 }
-
 
 -(void)insertAll:(NSArray *)all {
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
