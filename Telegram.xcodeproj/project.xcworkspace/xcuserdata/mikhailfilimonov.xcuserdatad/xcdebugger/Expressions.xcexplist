@@ -145,6 +145,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.currentController">
+            </PersistentString>
+            <PersistentString
+               value = "self.currentController.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke308:AppDelegate.m">
       </ContextState>
       <ContextState

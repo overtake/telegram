@@ -146,7 +146,7 @@ static const int bottomOffset = 58;
     self.settingsViewController = [[AccountSettingsViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.settingsViewController];
     
-    self.settingsViewController.view = view;
+    self.contactsViewController.view = self.contactsViewController.view;
     
     self.tabController.selectedIndex = 1;
     
