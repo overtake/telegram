@@ -19,7 +19,10 @@
 @protocol NSUserNotificationCenterDelegate <NSObject>
 @end
 
+
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSApplicationDelegate,NSWindowDelegate, NSUserNotificationCenterDelegate, BITHockeyManagerDelegate>
+
+
 
 @property (nonatomic, strong) IBOutlet  Telegram *telegram;
 @property (nonatomic, strong) MainWindow *mainWindow;
