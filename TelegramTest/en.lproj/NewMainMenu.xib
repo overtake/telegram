@@ -46,14 +46,14 @@
                                     <action selector="askQuestion:" target="QPE-Oq-DBa" id="OaG-hR-V3f"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Check for Updates..." id="VxH-Ao-S0R" userLabel="Menu Item - Check update">
+                            <menuItem isSeparatorItem="YES" id="M0l-bh-XxW">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Check for Updates..." tag="1000" id="VxH-Ao-S0R" userLabel="Menu Item - Check update">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="checkForUpdates:" target="Bzi-s3-u6d" id="sxQ-GB-wZ1"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="M0l-bh-XxW">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Services" id="131">
                                 <menu key="submenu" title="Services" systemMenu="services" id="130"/>

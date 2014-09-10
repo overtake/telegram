@@ -31,16 +31,16 @@
 
 -(void)awakeFromNib {
     
-#ifdef TGDEBUG
     
-#else
+#ifndef TGDEBUG
     
     NSMenu *menu = [NSApp mainMenu];
     NSMenuItem *main = [menu itemAtIndex:0];
     
-    [main.submenu removeItemAtIndex:6];
+    [main.submenu removeItem:[main.submenu itemWithTag:1000]];
     
 #endif
+    
     
 }
 
