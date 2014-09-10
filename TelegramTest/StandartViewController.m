@@ -123,11 +123,11 @@
    
     if(!self.menuPopover.isShown) {
         NSRect rect = self.topButton.bounds;
-        weak();
+        weakify();
         
         
         [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
-            [weakSelf.topButton setSelected:NO];
+            [strongSelf.topButton setSelected:NO];
         }];
         [self.menuPopover showRelativeToRect:rect ofView:self.topButton preferredEdge:CGRectMinYEdge];
     }
