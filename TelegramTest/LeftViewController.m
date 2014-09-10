@@ -98,11 +98,11 @@ static const int bottomOffset = 58;
     
     self.tabController.delegate = self;
     
-    TMTabItem *contactsTab = [[TMTabItem alloc] initWithTitle:@"Contacts" image:[NSImage imageNamed:@"TabIconContacts"] selectedImage:[NSImage imageNamed:@"TabIconContacts_Highlighted"]];
+    TMTabItem *contactsTab = [[TMTabItem alloc] initWithTitle:NSLocalizedString(@"Tab.Contacts",nil) image:[NSImage imageNamed:@"TabIconContacts"] selectedImage:[NSImage imageNamed:@"TabIconContacts_Highlighted"]];
     
-    TMTabItem *chatsTab = [[TMTabItem alloc] initWithTitle:@"Chats" image:[NSImage imageNamed:@"TabIconMessages"] selectedImage:[NSImage imageNamed:@"TabIconMessages_Highlighted"]];
+    TMTabItem *chatsTab = [[TMTabItem alloc] initWithTitle:NSLocalizedString(@"Tab.Chats",nil) image:[NSImage imageNamed:@"TabIconMessages"] selectedImage:[NSImage imageNamed:@"TabIconMessages_Highlighted"]];
     
-    TMTabItem *settingsTab = [[TMTabItem alloc] initWithTitle:@"Settings" image:[NSImage imageNamed:@"TabIconSettings"] selectedImage:[NSImage imageNamed:@"TabIconSettings_Highlighted"]];
+    TMTabItem *settingsTab = [[TMTabItem alloc] initWithTitle:NSLocalizedString(@"Tab.Settings",nil) image:[NSImage imageNamed:@"TabIconSettings"] selectedImage:[NSImage imageNamed:@"TabIconSettings_Highlighted"]];
     
     
     contactsTab.textColor = chatsTab.textColor = settingsTab.textColor = NSColorFromRGB(0x888888);
