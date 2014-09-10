@@ -76,7 +76,7 @@
     NSRange range = [self.tableView rowsInRect:NSMakeRect(point.x, point.y, 1, 1)];
     
     
-   
+    
     
     //    DLog(@"");
     self.startDragPoint = theEvent.locationInWindow;
@@ -84,9 +84,9 @@
     
     self.isClossed = [self checkIsSwipe];
     
-   // if(self.tableView.selectedItem != self.tableView.list[range.location]) {
+    if(self.tableView.selectedItem != self.tableView.list[range.location] || [Telegram rightViewController].navigationViewController.currentController != [Telegram rightViewController].messagesViewController) {
         [self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:range.location] byExtendingSelection:NO];
-    //}
+    }
     
 }
 
@@ -94,7 +94,7 @@
 
 - (void)mouseUp:(NSEvent *)theEvent {
     if(!self.itemView.isSwipePanelActive) {
-      //  [super mouseUp:theEvent];
+        //  [super mouseUp:theEvent];
         return;
     }
     
@@ -105,7 +105,7 @@
                 [view hideButton];
                 self.tableView.swipeView = nil;
             } else {
-              //  [super mouseDown:theEvent];
+                //  [super mouseDown:theEvent];
                 [self hideButton];
             }
         }
