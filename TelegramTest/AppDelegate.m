@@ -202,6 +202,8 @@
 - (void)showMainApplicationWindowForCrashManager:(BITCrashManager *)crashManager {
     
     
+    
+    
     [self initializeApplication];
     
     
@@ -522,6 +524,7 @@
                 [[BlockedUsersManager sharedManager] remoteLoad];
                 
               //  [SettingsArchiver notifyOfLaunch];
+                
                 
             }];
         }];

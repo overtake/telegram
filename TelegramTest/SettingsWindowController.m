@@ -94,7 +94,9 @@
     return self;
 }
 
-- (void)windowDidLoad
+
+
+- (void)awakeFromNib
 {
     
  
@@ -269,13 +271,11 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 
 -(void)showWindowWithAction:(SettingsWindowAction)action {
     
-     self.action = action;
+    self.action = action;
     
     [self updateAction];
     
     [self showWindow:self];
-    
-   
     
     [self updateAction];
 

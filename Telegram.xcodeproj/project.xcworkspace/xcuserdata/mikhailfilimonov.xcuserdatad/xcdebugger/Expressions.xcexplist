@@ -301,6 +301,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.window.contentView ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
       </ContextState>
       <ContextState
