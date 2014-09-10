@@ -84,7 +84,7 @@
     
     self.isClossed = [self checkIsSwipe];
     
-    if(self.tableView.selectedItem != self.tableView.list[range.location] || [Telegram rightViewController].navigationViewController.currentController != [Telegram rightViewController].messagesViewController) {
+    if(self.tableView.selectedItem != self.tableView.list[range.location] || [Telegram rightViewController].navigationViewController.currentController != [Telegram rightViewController].messagesViewController || [Telegram rightViewController].isModalViewActive) {
         [self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:range.location] byExtendingSelection:NO];
     }
     
