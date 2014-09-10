@@ -126,29 +126,6 @@
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-   
-   
-   
-    
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-    
-    NSString *oldDirectory = [[applicationSupportPath stringByAppendingPathComponent:@"Messenger for Telegram"] stringByAppendingPathComponent:@"mtkeychain"];
-    
-    NSFileManager *manager = [NSFileManager defaultManager];
-    
-    BOOL isDir;
-    
-    if([manager fileExistsAtPath:oldDirectory isDirectory:&isDir]) {
-        
-        
-        NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-        NSString *newDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
-        
-        [manager moveItemAtPath:oldDirectory toPath:newDirectory error:nil];
-        
-        [manager removeItemAtPath:oldDirectory error:nil];
-    }
-    
     
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
