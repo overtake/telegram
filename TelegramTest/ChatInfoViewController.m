@@ -94,11 +94,11 @@
         
         
         
-        TMTextButton *exitButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Conversation.DeleteAndExit", nil)];
+        TMTextButton *exitButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:[self isKindOfClass:[BroadcastInfoViewController class]] ? NSLocalizedString(@"Delete", nil) : NSLocalizedString(@"Conversation.DeleteAndExit", nil)];
         
         
         [exitButton setTapBlock:^{
-            [[[Telegram rightViewController] messagesViewController] deleteDialog:self.chat.dialog];
+            [[[Telegram rightViewController] messagesViewController] deleteDialog:[self isKindOfClass:[BroadcastInfoViewController class]] ? ((BroadcastInfoViewController *)self).broadcast.conversation : self.chat.dialog];
         }];
         
         

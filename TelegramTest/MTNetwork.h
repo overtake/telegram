@@ -26,4 +26,6 @@
 
 - (TGUpdateMessageService *)updateService;
 
+-(void)startNetwork;
+
 @end

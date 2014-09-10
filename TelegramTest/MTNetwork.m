@@ -81,7 +81,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
             
-            [self initConnectionWithId:_masterDatacenter];
+
         }];
         
     }
@@ -90,6 +90,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 - (TGUpdateMessageService *)updateService {
     return _updateService;
+}
+
+-(void)startNetwork {
+    [self initConnectionWithId:_masterDatacenter];
 }
 
 static int MAX_WORKER_POLL = 5;
@@ -157,7 +161,7 @@ static int MAX_WORKER_POLL = 5;
 }
 
 -(int)currentDatacenter {
-    return (int)_mtProto.datacenterId;
+    return (int)_masterDatacenter;
 }
 
 -(void)setDatacenter:(int)dc_id {
@@ -278,7 +282,7 @@ static int MAX_WORKER_POLL = 5;
     
     [ASQueue dispatchOnStageQueue:^{
      
-        success = [[_context authTokenForDatacenterWithId:_mtProto.datacenterId] intValue] > 0;
+        success = [[_context authTokenForDatacenterWithId:_masterDatacenter] intValue] > 0;
     
     } synchronous:YES];
    

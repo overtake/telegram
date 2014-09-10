@@ -489,7 +489,7 @@
         if(result.count != 0) {
             [TMTaskRequest executeAll];
             
-            [MTNetwork instance];
+            
             
             [[NewContactsManager sharedManager] fullReload];
             [[FullChatManager sharedManager] loadStored];
@@ -499,6 +499,8 @@
             
             [SelfDestructionController initialize];
             [TMTypingManager sharedManager];
+            
+            [[MTNetwork instance] startNetwork];
             
             
         } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
