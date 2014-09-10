@@ -29,6 +29,21 @@
     return self;
 }
 
+-(void)awakeFromNib {
+    
+#ifdef TGDEBUG
+    
+#else
+    
+    NSMenu *menu = [NSApp mainMenu];
+    NSMenuItem *main = [menu itemAtIndex:0];
+    
+    [main.submenu removeItemAtIndex:6];
+    
+#endif
+    
+}
+
 - (void)controller:(TMViewController *)controller performSelector:(SEL)aSelector withObject:(id)anArgument {
     IMP imp = [controller methodForSelector:aSelector];
     if(imp) {
@@ -146,6 +161,8 @@
             return YES;
         } else if(menuItem.action == @selector(askQuestion:)) {
             return YES;
+        } else if(menuItem.action == @selector(checkForUpdates:)) {
+            return YES;
         }
     }
     
@@ -155,6 +172,10 @@
     BOOL isRespondToSelector = [self.viewController respondsToSelector:menuItem.action];
     return isRespondToSelector;
 }
+
+
+
+
 - (IBAction)aboutAction:(id)sender {
     
     if(!self.aboutViewController) {

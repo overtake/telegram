@@ -262,7 +262,13 @@
    
 }
 
+
+
 - (void)initializeUpdater {
+    
+    
+#ifdef TGDEBUG
+    
     [self.updater setAutomaticallyChecksForUpdates:YES];
     [self.updater setAutomaticallyDownloadsUpdates:NO];
     
@@ -276,6 +282,10 @@
     
     [NSTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(checkUpdates) userInfo:nil repeats:YES];
     [self.updater checkForUpdatesInBackground];
+    
+    
+#endif
+    
 }
 
 - (void)initializeKeyDownHandler {
