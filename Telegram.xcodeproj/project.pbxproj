@@ -308,9 +308,9 @@
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
 		C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47F18C0D0E800726C91 /* TGUpdateState.m */; };
 		C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C48218C0D38600726C91 /* TGUpdateContainer.m */; };
-		C248440E19C07D82005635EB /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AF4F4A4189B06DC004BA4DF /* HockeySDK.framework */; };
 		C248440F19C07D8A005635EB /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
-		C248441019C07D98005635EB /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF4F4A4189B06DC004BA4DF /* HockeySDK.framework */; };
+		C24845AC19C1C8E5005635EB /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C24845AA19C1C8E5005635EB /* HockeySDK.framework */; };
+		C24845C019C1CB97005635EB /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C24845AA19C1C8E5005635EB /* HockeySDK.framework */; };
 		C248F3BF19BE03F600BF658E /* opusenc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3BD19BE03F600BF658E /* opusenc.c */; };
 		C248F3CF19BE046C00BF658E /* diag_range.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C719BE046C00BF658E /* diag_range.c */; };
 		C248F3D019BE046C00BF658E /* opus_header.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C919BE046C00BF658E /* opus_header.c */; };
@@ -582,9 +582,9 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C248440F19C07D8A005635EB /* Sparkle.framework in Copy Files (6 items) */,
-				C248440E19C07D82005635EB /* HockeySDK.framework in Copy Files (6 items) */,
 				C20B228A18E97280007BCCD6 /* libopus.a in Copy Files (6 items) */,
 				0A697EA51917DDB9003469CB /* pop.framework in Copy Files (6 items) */,
+				C24845C019C1CB97005635EB /* HockeySDK.framework in Copy Files (6 items) */,
 				CE0AC51E18BE97430031658A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -1039,7 +1039,6 @@
 		0AF4F49D189AA378004BA4DF /* TMTypingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTypingObject.m; sourceTree = "<group>"; };
 		0AF4F4A0189ABDCC004BA4DF /* MessageTypingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTypingView.h; sourceTree = "<group>"; };
 		0AF4F4A1189ABDCC004BA4DF /* MessageTypingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTypingView.m; sourceTree = "<group>"; };
-		0AF4F4A4189B06DC004BA4DF /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		0AF4F4A8189D5C72004BA4DF /* MessageTableItemServiceMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemServiceMessage.h; sourceTree = "<group>"; };
 		0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemServiceMessage.m; sourceTree = "<group>"; };
 		0AF4F4AB189D5CD5004BA4DF /* MessageTableCellServiceMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellServiceMessage.h; sourceTree = "<group>"; };
@@ -1196,6 +1195,7 @@
 		C247C47F18C0D0E800726C91 /* TGUpdateState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateState.m; sourceTree = "<group>"; };
 		C247C48118C0D38600726C91 /* TGUpdateContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateContainer.h; sourceTree = "<group>"; };
 		C247C48218C0D38600726C91 /* TGUpdateContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateContainer.m; sourceTree = "<group>"; };
+		C24845AA19C1C8E5005635EB /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C248F3BD19BE03F600BF658E /* opusenc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = opusenc.c; path = ../../../TelegramTest/OpusKit/opusenc.c; sourceTree = "<group>"; };
 		C248F3BE19BE03F600BF658E /* opusenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = opusenc.h; path = ../../../TelegramTest/OpusKit/opusenc.h; sourceTree = "<group>"; };
 		C248F3C719BE046C00BF658E /* diag_range.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diag_range.c; sourceTree = "<group>"; };
@@ -1697,9 +1697,9 @@
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
 				0A697EA41917DDB6003469CB /* pop.framework in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
+				C24845AC19C1C8E5005635EB /* HockeySDK.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
-				C248441019C07D98005635EB /* HockeySDK.framework in Frameworks */,
 				0AA0146C1832A2C500901B7A /* Sparkle.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 			);
@@ -3181,7 +3181,6 @@
 				0A241A8918AACC8B00C32F45 /* OpenGL.framework */,
 				C2AA4F1118A8EE7100E20C68 /* libc++.1.dylib */,
 				C2AA4F0F18A8EE4900E20C68 /* libc++.dylib */,
-				0AF4F4A4189B06DC004BA4DF /* HockeySDK.framework */,
 				C2C725D3185CB38A00094EC7 /* libstdc++.dylib */,
 				C291C7AF18369B0F00ABBB50 /* QTKit.framework */,
 				0AA0146B1832A2C500901B7A /* Sparkle.framework */,
@@ -3250,6 +3249,7 @@
 		CEB09E6217DAFC250055F150 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C24845AA19C1C8E5005635EB /* HockeySDK.framework */,
 				C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */,
 				C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */,
 				C2200B5518EC8A2700F28803 /* sent.caf */,
@@ -3799,6 +3799,12 @@
 				ru,
 				es,
 				de,
+				fi,
+				fr,
+				it,
+				ja,
+				nb,
+				sv,
 			);
 			mainGroup = CEB09E4F17DAFC240055F150;
 			productRefGroup = CEB09E5917DAFC250055F150 /* Products */;
@@ -4480,9 +4486,13 @@
 					"$(PROJECT_DIR)",
 					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
 					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/current\\ telegram/telegram-p-edition",
+					/Users/mikhailfilimonov/Documents/current,
+					"telegram/telegram-p-edition",
 					"/Users/user/Dropbox/telegram-pro",
 					/Users/mikhailfilimonov/Documents/new_normal,
+					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
+					"$(PROJECT_DIR)/TelegramTest",
+					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
@@ -4527,9 +4537,13 @@
 					"$(PROJECT_DIR)",
 					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
 					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/current\\ telegram/telegram-p-edition",
+					/Users/mikhailfilimonov/Documents/current,
+					"telegram/telegram-p-edition",
 					"/Users/user/Dropbox/telegram-pro",
 					/Users/mikhailfilimonov/Documents/new_normal,
+					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
+					"$(PROJECT_DIR)/TelegramTest",
+					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
@@ -4548,7 +4562,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "468bb6c1-1bb6-48fa-b50d-c5dcb1002178";
 				SDKROOT = macosx10.9;
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;

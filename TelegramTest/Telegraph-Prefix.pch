@@ -77,7 +77,7 @@
 #define DYNAMIC_PROPERTY(Name) static char k##Name; - (id) get##Name { return objc_getAssociatedObject(self, &k##Name);}; - (void) set##Name:(id)object { objc_setAssociatedObject(self, &k##Name, object, OBJC_ASSOCIATION_RETAIN); }
 
 
-#define TGDEBUG
+//#define TGDEBUG // UNDEF IN RELEASE
 
 
 #define ICON_SIZE 48.0f
