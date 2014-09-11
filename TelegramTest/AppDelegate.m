@@ -12,7 +12,13 @@
 #import "TGDialog+Extensions.h"
 //#import "AFnetworkActivityIndicatorManager.h"
 #import "SSKeychain.h"
+
+#ifdef TGDEBUG
+
 #import <Sparkle/Sparkle.h>
+
+#endif
+
 #import "ImageStorage.h"
 #import "FileUtils.h"
 #import "MTNetwork.h"
@@ -44,7 +50,11 @@
 
 @interface AppDelegate ()
 
+
+#ifdef TGDEBUG
 @property (weak) IBOutlet SUUpdater *updater;
+#endif
+
 @property (nonatomic,strong) SettingsWindowController *settingsWindow;
 
 @end
@@ -141,7 +151,7 @@
 }
 
 -(void)beginPreviewPanelControl:(QLPreviewPanel *)panel {
-  //  panel.currentPreviewItemIndex = [[TMMediaController getCurrentController] currentItemPosition];
+    //  panel.currentPreviewItemIndex = [[TMMediaController getCurrentController] currentItemPosition];
     panel.delegate = [TMMediaController getCurrentController];
     panel.dataSource = [TMMediaController getCurrentController];
     panel.currentPreviewItemIndex  = [TMMediaController getCurrentController].currentItemPosition;
@@ -160,7 +170,7 @@
 -(void)endPreviewPanelControl:(QLPreviewPanel *)panel {
     panel.delegate = nil;
     panel.dataSource = nil;
-   // [[TMPreviewController controller] removeAllObjects];
+    // [[TMPreviewController controller] removeAllObjects];
     // [panel updateController];
 }
 
@@ -175,7 +185,7 @@
         return;
     }
     
-     [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
     
     
     
@@ -185,13 +195,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[Telegram rightViewController].messagesViewController sendMessage:userResponse];
         });
-
+        
         return;
     }
     
-   
-}
     
+}
+
 - (void)initializeApplication {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSThread currentThread] setName:@"Real Main Thread"];
@@ -226,19 +236,19 @@
     }
     
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSImageView *imageView = [[NSImageView alloc] init];
-//        imageView.frame = NSMakeRect(0, 0, image.size.width, image.size.height);
-//        imageView.alphaValue = 0.5;
-//        imageView.image = image;
-//    
-//        imageView.wantsLayer = YES;
-//        NSWindow *window = self.mainWindow;
-//        [window setFrame:NSMakeRect(0, 0, image.size.width, image.size.height) display:YES];
-//        [window.contentView addSubview:imageView];
-//    });
+    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    //        NSImageView *imageView = [[NSImageView alloc] init];
+    //        imageView.frame = NSMakeRect(0, 0, image.size.width, image.size.height);
+    //        imageView.alphaValue = 0.5;
+    //        imageView.image = image;
+    //
+    //        imageView.wantsLayer = YES;
+    //        NSWindow *window = self.mainWindow;
+    //        [window setFrame:NSMakeRect(0, 0, image.size.width, image.size.height) display:YES];
+    //        [window.contentView addSubview:imageView];
+    //    });
     
-   
+    
 }
 
 
@@ -276,9 +286,9 @@
             if(incomingEvent.keyCode == 53 && ! [result.window respondsToSelector:@selector(popover)]) {
                 [result.window close];
                 
-                 return result;
+                return result;
             }
-           
+            
         }
         
         if([Telegram rightViewController].navigationViewController.isLocked)
@@ -373,7 +383,7 @@
                 [[[Telegram rightViewController] messagesViewController] becomeFirstResponder];
             }
         }
-
+        
         if(((result.modifierFlags & 1310720) == 1310720) && result.keyCode == 49) {
             NSTextView *textView = responder;
             if([responder isKindOfClass:[NSTextView class]] && ![textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
@@ -392,7 +402,7 @@
     ///MOuse
     id block2 = ^(NSEvent *incomingEvent) {
         NSEvent *result = incomingEvent;
-
+        
         if(result.window != [TMMediaController controller].panel) {
             
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
@@ -400,7 +410,7 @@
                     if([result.window.contentView hitTest:[result locationInWindow]]) {
                         result = nil;
                     }
-                     
+                    
                 }
                 
             }
@@ -408,32 +418,32 @@
             return result;
             
         }
-     
+        
         if(( result.type == NSLeftMouseDown || result.type == NSLeftMouseUp) && result.clickCount > 1)
             return [NSEvent mouseEventWithType:result.type location:result.locationInWindow modifierFlags:result.modifierFlags timestamp:result.timestamp windowNumber:result.windowNumber context:result.context eventNumber:result.eventNumber clickCount:1 pressure:result.pressure];
         return result;
     };
     
     
-   
     
-//    
-//    [NSEvent addLocalMonitorForEventsMatchingMask:( NSLeftMouseDownMask |
-//                                                   NSLeftMouseUpMask   |
-//                                                   NSRightMouseDownMask |
-//                                                   NSRightMouseUpMask |
-//                                                   NSMouseMovedMask |
-//                                                   NSLeftMouseDraggedMask  |
-//                                                   NSRightMouseDraggedMask |
-//                                                   NSMouseEnteredMask |
-//                                                   NSMouseExitedMask  |
-//                                                   NSCursorUpdateMask |
-//                                                   NSScrollWheelMask  |
-//                                                   NSTabletPointMask  |
-//                                                   NSOtherMouseDownMask  |
-//                                                   NSOtherMouseUpMask   |
-//                                                   NSOtherMouseDraggedMask ) handler:block2];
-//    
+    
+    //
+    //    [NSEvent addLocalMonitorForEventsMatchingMask:( NSLeftMouseDownMask |
+    //                                                   NSLeftMouseUpMask   |
+    //                                                   NSRightMouseDownMask |
+    //                                                   NSRightMouseUpMask |
+    //                                                   NSMouseMovedMask |
+    //                                                   NSLeftMouseDraggedMask  |
+    //                                                   NSRightMouseDraggedMask |
+    //                                                   NSMouseEnteredMask |
+    //                                                   NSMouseExitedMask  |
+    //                                                   NSCursorUpdateMask |
+    //                                                   NSScrollWheelMask  |
+    //                                                   NSTabletPointMask  |
+    //                                                   NSOtherMouseDownMask  |
+    //                                                   NSOtherMouseUpMask   |
+    //                                                   NSOtherMouseDraggedMask ) handler:block2];
+    //
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDownMask | NSLeftMouseUpMask | NSMouseEnteredMask | NSMouseMovedMask | NSCursorUpdateMask) handler:block2];
 }
@@ -451,7 +461,7 @@
 
 
 -(void)initializeSounds {
-   // playSentMessage(NO);
+    // playSentMessage(NO);
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
@@ -466,7 +476,7 @@
         [[Telegram sharedInstance] setIsWindowActive:NO];
         [[Telegram sharedInstance] setAccountOffline:NO];
     }
-   
+    
 }
 
 -(void)initConversations {
@@ -501,13 +511,13 @@
 }
 
 - (void)initializeMainWindow {
- 
+    
     MainWindow *mainWindow = [[MainWindow alloc] init];
     [mainWindow makeKeyAndOrderFront:nil];
     
     [self releaseWindows];
     [self initializeSounds];
-
+    
     self.mainWindow = mainWindow;
     
     
@@ -523,7 +533,7 @@
                 
                 [[BlockedUsersManager sharedManager] remoteLoad];
                 
-              //  [SettingsArchiver notifyOfLaunch];
+                //  [SettingsArchiver notifyOfLaunch];
                 
                 
             }];
@@ -594,7 +604,7 @@
     } else {
         block();
     }
-   
+    
 }
 
 //DCAudioFileRecorder		*gAudioFileRecorder = NULL;
@@ -604,7 +614,9 @@
 
 
 - (void) checkUpdates {
+#ifdef TGDEBUG
     [self.updater checkForUpdatesInBackground];
+#endif
 }
 
 
@@ -614,16 +626,16 @@
 
 - (IBAction)updateProfilePhoto:(id)sender {
     
-//    TMImagePicker *pictureTaker = [TMImagePicker sharedInstance];
-//    [pictureTaker setType:TMImagePickerWebSearchDefaultSelection];
+    //    TMImagePicker *pictureTaker = [TMImagePicker sharedInstance];
+    //    [pictureTaker setType:TMImagePickerWebSearchDefaultSelection];
     IKPictureTaker *pictureTaker = [IKPictureTaker pictureTaker];
     [pictureTaker setValue:[NSNumber numberWithBool:YES] forKey:IKPictureTakerShowEffectsKey];
 	[pictureTaker setValue:[NSValue valueWithSize:NSMakeSize(640, 640)] forKey:IKPictureTakerOutputImageMaxSizeKey];
     [pictureTaker beginPictureTakerSheetForWindow:self.mainWindow withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
     
-//    [pictureTaker setValue:[NSNumber numberWithBool:YES] forKey:IKPictureTakerShowEffectsKey];
-//	[pictureTaker setValue:[NSValue valueWithSize:NSMakeSize(640, 640)] forKey:IKPictureTakerOutputImageMaxSizeKey];
-//    [pictureTaker beginPictureTakerSheetForWindow:self.mainWindow withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
+    //    [pictureTaker setValue:[NSNumber numberWithBool:YES] forKey:IKPictureTakerShowEffectsKey];
+    //	[pictureTaker setValue:[NSValue valueWithSize:NSMakeSize(640, 640)] forKey:IKPictureTakerOutputImageMaxSizeKey];
+    //    [pictureTaker beginPictureTakerSheetForWindow:self.mainWindow withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
 }
 
 - (void) pictureTakerValidated:(IKPictureTaker*) pictureTaker code:(int) returnCode contextInfo:(void*) ctxInf {
@@ -645,10 +657,10 @@
 
 
 - (void)setConnectionStatus:(NSString *)status {
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.mainWindow setTitle:status ];
-//        [self.loginWindow setTitle:status];
-//    });
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        [self.mainWindow setTitle:status ];
+    //        [self.loginWindow setTitle:status];
+    //    });
 }
 
 - (NSURL *)applicationFilesDirectory {
@@ -656,5 +668,5 @@
     NSURL *appSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
     return [appSupportURL URLByAppendingPathComponent:BUNDLE_IDENTIFIER];
 }
-    
+
 @end
