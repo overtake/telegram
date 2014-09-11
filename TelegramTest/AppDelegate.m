@@ -485,6 +485,9 @@
     
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
+        
+        [[MTNetwork instance] startNetwork];
+        
         if(result.count != 0) {
             [TMTaskRequest executeAll];
             
@@ -499,7 +502,7 @@
             [SelfDestructionController initialize];
             [TMTypingManager sharedManager];
             
-            [[MTNetwork instance] startNetwork];
+           
             
             
         } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
@@ -598,7 +601,9 @@
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             if(error.error_code == 502) {
-                alert(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.CheckConnection", nil));
+                confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
+                    [self logoutWithForce:YES];
+                });
             }
         } timeout:5];
     } else {
