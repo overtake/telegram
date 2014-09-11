@@ -47,14 +47,15 @@ static int offsetEditable = 30;
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
-        [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
+        [self.titleTextField setDrawsBackground:YES];
+        
         
         self.lastSeenTextField = [[TMTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
         [self.lastSeenTextField setBackgroundColor:[NSColor clearColor]];
         [self.lastSeenTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-        [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
+        [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.lastSeenTextField];
         
@@ -86,33 +87,31 @@ static int offsetEditable = 30;
     
     [super redrawRow];
     
-    
-    
     [self.titleTextField setAttributedStringValue:[self rowItem].title];
     [self.lastSeenTextField setAttributedStringValue:[self rowItem].lastSeen];
     
-    if([self rowItem].titleSize.width == 0) {
-        [self.titleTextField sizeToFit];
-        NSSize size = self.titleTextField.frame.size;
-        
-        int maxTitleSize = self.frame.size.width - 69;
-        if(size.width > maxTitleSize)
-            size.width = maxTitleSize;
-        
-        [self rowItem].titleSize = size;
-    }
+//    
+//    if([self rowItem].titleSize.width == 0) {
+//        [self.titleTextField sizeToFit];
+//        NSSize size = self.titleTextField.frame.size;
+//        
+//        int maxTitleSize = self.frame.size.width - 69;
+//        if(size.width > maxTitleSize)
+//            size.width = maxTitleSize;
+//        
+//        [self rowItem].titleSize = size;
+//        
+//    }
+    
+    [self.titleTextField sizeToFit];
+    
+    [self.lastSeenTextField sizeToFit];
+    
+  //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
+    //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
     
     
-    [self setEditable:[self isEditable] animation:NO];
-    [self setSelected:[self rowItem].isSelected animation:NO];
-    
-    
-    
-    [self.titleTextField setFrameSize:[self rowItem].titleSize];
-    [self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
-    
-    
-    [self.titleTextField  setFrameOrigin:self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint];
+    [self.titleTextField setFrameOrigin:self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint];
     [self.lastSeenTextField setFrameOrigin:self.isEditable ? [self rowItem].lastSeenPoint : [self rowItem].noSelectLastSeenPoint];
         
     [self.avatarImageView setFrameOrigin:self.isEditable ? [self rowItem].avatarPoint : [self rowItem].noSelectAvatarPoint];
@@ -123,7 +122,13 @@ static int offsetEditable = 30;
     
 }
 
-
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.titleTextField setFrameSize:NSMakeSize(newSize.width - self.titleTextField.frame.origin.x - 14, self.titleTextField.frame.size.height)];
+    
+     [self.lastSeenTextField setFrameSize:NSMakeSize(newSize.width - self.lastSeenTextField.frame.origin.x - 14, self.lastSeenTextField.frame.size.height)];
+}
 
 
 - (void)mouseDown:(NSEvent *)theEvent {
