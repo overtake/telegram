@@ -1244,9 +1244,9 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         //Можно попробовать впихнуть в выше, если будет лагать
-        NSInteger row = 0;
-        MessageTableItem *backItem = nil;
-        for (MessageTableItem *item in self.messages) {
+        __block NSInteger row = 0;
+        __block MessageTableItem *backItem = nil;
+        [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL *stop) {
             BOOL isHeaderMessage = item.isHeaderMessage;
             [self isHeaderMessage:item prevItem:backItem];
             if(item.isHeaderMessage != isHeaderMessage) {
@@ -1256,7 +1256,8 @@ static NSTextAttachment *headerMediaIcon() {
             }
             backItem = item;
             row++;
-        }
+        }];
+        
         
         [self didUpdateTable];
         
