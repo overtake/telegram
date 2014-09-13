@@ -1717,7 +1717,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         current.isSelected = NO;
         [self isHeaderMessage:current prevItem:backItem];
-       // [current makeSizeByWidth:self.table.containerSize.width];
+        [current makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
     }
     
