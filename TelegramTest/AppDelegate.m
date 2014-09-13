@@ -485,13 +485,11 @@
     
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
-        
         [[MTNetwork instance] startNetwork];
         
         if(result.count != 0) {
+            
             [TMTaskRequest executeAll];
-            
-            
             
             [[NewContactsManager sharedManager] fullReload];
             [[FullChatManager sharedManager] loadStored];
@@ -502,13 +500,9 @@
             [SelfDestructionController initialize];
             [TMTypingManager sharedManager];
             
-           
-            
-            
         } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
             [self initConversations];
         }
-        
         
     } usersCallback:nil];
 }

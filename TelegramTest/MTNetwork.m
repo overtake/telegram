@@ -93,7 +93,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(void)startNetwork {
-    [self initConnectionWithId:_masterDatacenter];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+         [self initConnectionWithId:_masterDatacenter];
+    });
 }
 
 static int MAX_WORKER_POLL = 5;

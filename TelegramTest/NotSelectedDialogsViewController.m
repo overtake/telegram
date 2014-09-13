@@ -31,7 +31,7 @@
     NSView *containerView = [[NSView alloc] init];
     [self.view addSubview:containerView];
 
-    
+        
     NSImage *noDialogsImage = [NSImage imageNamed:@"StartPlane"];
     NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, noDialogsImage.size.width, noDialogsImage.size.height)];
     [imageView setWantsLayer:YES];
