@@ -259,7 +259,7 @@
 #ifdef TGDEBUG
     
     [self.updater setAutomaticallyChecksForUpdates:YES];
-    [self.updater setAutomaticallyDownloadsUpdates:NO];
+  //  [self.updater setAutomaticallyDownloadsUpdates:NO];
     
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSArray *languages = [defs objectForKey:@"AppleLanguages"];
