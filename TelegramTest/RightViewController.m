@@ -460,7 +460,7 @@
 }
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction {
-    if(self.navigationViewController.currentController == self.composePickerViewController && self.composePickerViewController.action == composeAction)
+    if(self.composePickerViewController.action == composeAction)
         return;
     
     

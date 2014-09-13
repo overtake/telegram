@@ -49,6 +49,28 @@
 }
 
 
+-(void)setAction:(ComposeAction *)action animated:(BOOL)animated {
+    [super setAction:action];
+    
+    self.tableView.selectLimit = self.action.behavior.limit;
+    self.action.behavior.delegate = self;
+    
+    [self.tableView scrollToBeginningOfDocument:self];
+    
+    
+    [self.tableView.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(idx == 0)
+            return;
+        
+        SelectUserRowView *view = [self.tableView viewAtColumn:0 row:idx makeIfNecessary:NO];
+        
+        [view needUpdateSelectType];
+    }];
+    
+    [self viewWillAppear:YES];
+}
+
 -(void)behaviorDidEndRequest:(id)response {
     [self hideModalProgress];
     

@@ -99,6 +99,8 @@ static int offsetEditable = 30;
   //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
     //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
     
+    [self.selectButton setFrameOrigin:[self selectOrigin]];
+    
     
     [self.titleTextField setFrameOrigin:self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint];
     [self.lastSeenTextField setFrameOrigin:self.isEditable ? [self rowItem].lastSeenPoint : [self rowItem].noSelectLastSeenPoint];
@@ -109,6 +111,10 @@ static int offsetEditable = 30;
     [self.avatarImageView setUser:[self rowItem].contact.user];
     [self setNeedsDisplay:YES];
     
+}
+
+-(NSPoint)selectOrigin {
+    return NSMakePoint([self isEditable] ? 20 : 0, NSMinY(self.selectButton.frame));
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -143,7 +149,7 @@ static int offsetEditable = 30;
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
     
-    animation = NO;
+   // animation = NO;
     static float duration = 0.1f;
     
     
@@ -160,10 +166,6 @@ static int offsetEditable = 30;
     }
     
     
-    float from = self.selectButton.layer.frame.origin.x;
-    float to = self.selectButton.layer.frame.origin.x + (editable ? -offsetEditable : offsetEditable);
-    
-    
     int oldOpacity = self.selectButton.layer.opacity;
     
     [self.selectButton.layer setOpacity:editable ? 0 : 1];
@@ -171,14 +173,16 @@ static int offsetEditable = 30;
     [self.selectButton setHidden:oldOpacity == 0 && !editable];
     
     
+    
     POPBasicAnimation *position = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
     position.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    position.fromValue = @(from);
-    position.toValue = @(to);
+    position.toValue = @(editable ? 20 : 0);
     position.duration = duration;
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-       
+        [self.selectButton setFrameOrigin:[self selectOrigin]];
     }];
+    
+    
     [self.selectButton.layer pop_addAnimation:position forKey:@"slide"];
     
     POPBasicAnimation *opacityAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -191,7 +195,7 @@ static int offsetEditable = 30;
             [self.selectButton setHidden:!editable];
         }
     }];
-    [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"slide"];
+    [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
     
 }
 

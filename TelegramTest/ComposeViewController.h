@@ -17,4 +17,6 @@
 
 @property (nonatomic,strong) ComposeAction *action;
 
+-(void)setAction:(ComposeAction *)action animated:(BOOL)animated;
+
 @end
