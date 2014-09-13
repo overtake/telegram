@@ -82,8 +82,8 @@
 @end
 
 
-@interface CreateChatHeaderView : TMRowView
-@property (nonatomic,strong) ChatNameTextField *textView;
+@interface CreateChatHeaderView : TMRowView <NSTextFieldDelegate>
+@property (nonatomic,strong) TMTextField *textView;
 @property (nonatomic,strong) TGChat *chat;
 @property (nonatomic,strong) TMTextField *nameField;
 
@@ -121,7 +121,7 @@
         [self addSubview:container];
         
         
-        self.textView = [[ChatNameTextField alloc] initWithFrame:NSMakeRect(90, 45, NSWidth(frameRect) - 110, 23)];
+        self.textView = [[TMTextField alloc] initWithFrame:NSMakeRect(90, 45, NSWidth(frameRect) - 110, 23)];
         
         
         [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
@@ -131,12 +131,9 @@
         [self.textView setFocusRingType:NSFocusRingTypeNone];
         [self.textView setTextOffset:NSMakeSize(0, 5)];
         
-       
+        self.textView.delegate = self;
         
-        
-//        [self.textView setPlaceholderColor:DARK_GRAY];
-//        
-//        [self.textView setPlaceholderPoint:NSMakePoint(4, -4)];
+
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
         
@@ -145,7 +142,7 @@
         [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:16] forRange:str.range];
         
 //        
-        [self.textView setPlaceholderAttributedString:str];
+        [self.textView.cell setPlaceholderAttributedString:str];
         [self.textView setPlaceholderPoint:NSMakePoint(2, 0)];
         
         
@@ -154,12 +151,12 @@
         [self.textView becomeFirstResponder];
         
         
-        weakify();
-        [self.textView setDidChangedValue:^{
-            
-            [strongSelf setName:nil];
-            
-        }];
+//        weakify();
+//        [self.textView setDidChangedValue:^{
+//            
+//            [strongSelf setName:nil];
+//            
+//        }];
         
         
         [self setName:self.textView.stringValue];
@@ -185,10 +182,15 @@
     return self;
 }
 
+
+-(void)controlTextDidChange:(NSNotification *)obj {
+    [self setName:self.textView.stringValue];
+}
+
 -(void)setName:(NSString *)name {
     self.chat.title = self.textView.stringValue;
    
-    NSString *holder = self.textView.stringValue.length > 0 ? [self.textView.stringValue substringToIndex:1] : [self.textView.placeholderAttributedString.string substringToIndex:1];
+    NSString *holder = self.textView.stringValue.length > 0 ? [self.textView.stringValue substringToIndex:1] : [[self.textView.cell placeholderAttributedString].string substringToIndex:1];
     [self.nameField setStringValue:holder];
     [self.nameField sizeToFit];
     

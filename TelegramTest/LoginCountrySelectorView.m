@@ -37,12 +37,16 @@
         
         NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:@"+" attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
         [self.countryCodeTextField.cell setPlaceholderAttributedString:placeHolder];
-        [self.countryCodeTextField setPlaceholderAttributedString:placeHolder];
+      //  [self.countryCodeTextField setPlaceholderAttributedString:placeHolder];
         [self.countryCodeTextField setPlaceholderPoint:NSMakePoint(2, 0)];
         
         self.countryCodeTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
         self.countryCodeTextField.focusRingType = NSFocusRingTypeNone;
         [self.countryCodeTextField setBordered:NO];
+        
+       // [self.countryCodeTextField setDrawsBackground:YES];
+       // [self.countryCodeTextField setBackgroundColor:[NSColor redColor]];
+        
         [self addSubview:self.countryCodeTextField];
         
         self.numberTextField = [[TMTextField alloc] init];

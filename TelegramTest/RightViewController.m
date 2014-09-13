@@ -302,8 +302,6 @@
 }
 
 
-
-
 - (void)showShareContactModalView:(TGUser *)user {
     [self hideModalView:YES animation:NO];
     
@@ -493,7 +491,6 @@
     
     
     [self hideModalView:YES animation:NO];
-    
     
     [self.composeBroadcastListViewController setAction:composeAction];
     [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];

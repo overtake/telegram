@@ -14,7 +14,11 @@
 @implementation NSView (Category)
 
 - (void)setCenterByView:(NSView *)view {
-    [self setFrameOrigin:NSMakePoint(roundf((view.bounds.size.width - self.bounds.size.width) / 2), roundf((view.bounds.size.height - self.bounds.size.height) / 2))];
+    
+    float x = (view.bounds.size.width - self.bounds.size.width) / 2;
+    float y = (view.bounds.size.height - self.bounds.size.height) / 2;
+    
+    [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
 }
 
 - (CGPoint)center {

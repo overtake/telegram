@@ -275,9 +275,7 @@ static NSDictionary *attributes() {
             
             [self.chatTabView setCenterByView:view];
             
-            [self.chatTabView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-            
-            [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX(self.chatTabView.frame)+10, NSHeight(view.bounds) - NSHeight(self.chatTabView.frame) - 3)];
+            [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX([view.subviews[0] frame])+15, NSHeight(view.bounds) - NSHeight(self.chatTabView.frame) - 3)];
             
             [view addSubview:self.chatTabView];
         }
@@ -312,6 +310,10 @@ static NSDictionary *attributes() {
         NSView *child = obj.subviews[0];
         
         [child setCenterByView:obj];
+        
+        if(idx == 1) {
+            [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX(child.frame)+15, NSHeight(obj.bounds) - NSHeight(self.chatTabView.frame) - 3)];
+        }
         
     }];
 }

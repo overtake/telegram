@@ -97,7 +97,9 @@
     
     int width = 805;
     int height = 600;
-    [self setMinSize:NSMakeSize(width, height)];
+    
+    
+    [self setMinSize:NSMakeSize(width-85, height)];
     
     if(!archiver) {
        

@@ -47,7 +47,6 @@ static int offsetEditable = 30;
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
-        [self.titleTextField setDrawsBackground:YES];
         
         
         self.lastSeenTextField = [[TMTextField alloc] init];
@@ -63,18 +62,18 @@ static int offsetEditable = 30;
         
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - composeCheckActiveImage().size.height )/ 2), composeCheckActiveImage().size.width, composeCheckActiveImage().size.height)];
        // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
-        [self.selectButton setHidden:NO];
-        
+
         weakify();
         
         [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHover];
         [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHighlighted];
         [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateSelected];
-        self.selectButton.layer.opacity = 0;
         [self.selectButton addBlock:^(BTRControlEvents events) {
             [strongSelf mouseDown:[NSApp currentEvent]];
         } forControlEvents:BTRControlEventLeftClick];
+        
+        
         [self addSubview:self.selectButton];
 
         
@@ -89,23 +88,13 @@ static int offsetEditable = 30;
     
     [self.titleTextField setAttributedStringValue:[self rowItem].title];
     [self.lastSeenTextField setAttributedStringValue:[self rowItem].lastSeen];
-    
-//    
-//    if([self rowItem].titleSize.width == 0) {
-//        [self.titleTextField sizeToFit];
-//        NSSize size = self.titleTextField.frame.size;
-//        
-//        int maxTitleSize = self.frame.size.width - 69;
-//        if(size.width > maxTitleSize)
-//            size.width = maxTitleSize;
-//        
-//        [self rowItem].titleSize = size;
-//        
-//    }
+
     
     [self.titleTextField sizeToFit];
     
     [self.lastSeenTextField sizeToFit];
+    
+    [self.selectButton setHidden:![self isEditable]];
     
   //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
     //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
