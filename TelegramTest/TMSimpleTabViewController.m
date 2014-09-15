@@ -88,7 +88,7 @@
     
     self.currentController = viewController;
     [self.currentController.view setFrame:self.view.bounds];
-    [self.currentController viewWillAppear:NO];    
+    [self.currentController viewWillAppear:NO];
     [self.view addSubview:self.currentController.view];
     [self.currentController viewDidAppear:NO];
 }

@@ -23,7 +23,7 @@
         [self setAutoresizesSubviews:YES];
         [self setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
         
-     //   [self setWantsLayer:YES];
+        [self setWantsLayer:YES];
         [self setFrameOrigin:NSMakePoint(0, 1)];
         
         [self setTextColor:BLUE_UI_COLOR forState:TMButtonNormalState];

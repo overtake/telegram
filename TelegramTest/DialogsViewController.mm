@@ -45,6 +45,8 @@
     
     int topOffset = 50;
     
+    self.view.wantsLayer = YES;
+    
     //self.firstItem = [[DialogFirstItem alloc] init];
     
    // self.dialogFirstView = [[DialogTableFirstView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 25)];
@@ -274,9 +276,7 @@
    // [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
     
     [self.tableView insert:dialogs startIndex:0 tableRedraw:NO];
-    [self.tableView beginUpdates];
     [self.tableView reloadData];
-    [self.tableView endUpdates];
 }
 
 - (void)notificationDialogToTop:(NSNotification *)notify {

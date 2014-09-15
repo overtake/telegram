@@ -15,6 +15,8 @@
 @property (nonatomic,strong) TMTextField *field;
 @property (nonatomic,assign) int count;
 @property (nonatomic,strong) RPCRequest *request;
+@property (nonatomic,strong) TMView *container;
+@property (nonatomic,strong) NSImageView *imageView;
 @end
 @implementation TMSharedMediaButton
 
@@ -35,6 +37,24 @@ static NSMutableDictionary *cache;
         cache = [[NSMutableDictionary alloc] init];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     });
+}
+
+-(id)initWithFrame:(NSRect)frame withName:(NSString *)name andBlock:(dispatch_block_t)block {
+    if(self = [super initWithFrame:frame withName:name andBlock:block]) {
+        self.container = [[TMView alloc] initWithFrame:NSZeroRect];
+        
+        
+        self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_select().size.width, image_select().size.height)];
+        self.imageView .image = image_select();
+        [self.container addSubview:self.imageView];
+        
+        
+        self.field = [TMTextField defaultTextField];
+        [self.container addSubview:self.field];
+        
+    }
+    
+    return self;
 }
 
 
@@ -118,36 +138,36 @@ static NSMutableDictionary *cache;
 
 -(void)rebuild {
     
-   
-    static NSTextAttachment *attach;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        attach = [NSMutableAttributedString textAttachmentByImage:[image_select() imageWithInsets:NSEdgeInsetsMake(0, 10, 0, 7)]];
-    });
-    
-    
-    if(!self.field)
-         self.field = [TMTextField defaultTextField];
-    
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     NSString *str =  self.count > 0 ? [NSString stringWithFormat:@"%d",self.count] : NSLocalizedString(@"SharedMedia.None", nil);
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:16] forRange:string.range];
+    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:string.range];
     
-
+//
+//    [self.field setDrawsBackground:YES];
+//    
+//    [self.field setBackgroundColor:[NSColor redColor]];
     
-    [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.field setAttributedStringValue:string];
     
     [self.field sizeToFit];
     
-    [self.field setFrameSize:NSMakeSize(NSWidth(self.field.frame), NSHeight(self.field.frame))];
+    [self.container setFrameSize:NSMakeSize(NSWidth(self.field.frame) + 10 + NSWidth(self.imageView.frame), NSHeight(self.field.frame))];
     
-    self.rightContainer = self.field;
+  
+    [self.imageView setFrameOrigin:NSMakePoint(NSWidth(self.field.frame) + 10, 3)];
     
     
+    self.rightContainer = self.container;
+    
+ //   [self.rightContainer setFrameOrigin:NSMakePoint(NSMinX(self.rightContainer.frame), 12)];
+    
+}
+
+- (void)updateRightControllerFrame {
+    [self.rightContainer setFrame:NSMakeRect(roundf(self.frame.size.width - self.container.frame.size.width) + self.rightContainerOffset.x, 12,NSWidth(self.container.frame), NSHeight(self.container.frame))];
 }
 
 

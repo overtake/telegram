@@ -232,8 +232,7 @@ typedef enum {
     self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     self.scrollView.documentView = self;
     [self.scrollView setDrawsBackground:YES];
-    //    [self.scrollView setBackgroundColor:[NSColor redColor]];
-    [self.scrollView setFrame:NSMakeRect(9, 0, self.bounds.size.width - 9, self.bounds.size.height - 2)];
+    [self.scrollView setFrame:NSMakeRect(9, 0, self.bounds.size.width - 40, self.bounds.size.height - 2)];
     [self.containerView addSubview:self.scrollView];
     
     

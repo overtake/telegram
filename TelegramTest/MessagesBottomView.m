@@ -231,10 +231,10 @@
 //    [self.normalView setBorderColor:GRAY_BORDER_COLOR];
     
     
-    self.inputMessageTextField = [[MesssageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 20, 10)];
+    self.inputMessageTextField = [[MesssageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
     [self.inputMessageTextField setEditable:YES];
     [self.inputMessageTextField setRichText:NO];
-    [self.inputMessageTextField.scrollView setFrameSize:NSMakeSize(100-30,100-10)];
+ //   [self.inputMessageTextField.scrollView setFrameSize:NSMakeSize(100-30,100-10)];
 
     
     self.attachButton = [[BTRButton alloc] initWithFrame:NSMakeRect(16, 11, image_BottomAttach().size.width, image_BottomAttach().size.height)];

@@ -78,7 +78,7 @@
 }
 
 - (void)updateRightControllerFrame {
-      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + +_rightContainerOffset.x, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + +_rightContainerOffset.y, _currentRightController.frame.size.width, _currentRightController.frame.size.height);
+      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + _rightContainerOffset.x, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + +_rightContainerOffset.y, _currentRightController.frame.size.width, _currentRightController.frame.size.height);
 }
 
 -(void)setLocked:(BOOL)locked {

@@ -35,6 +35,7 @@
     self.styleMask |= NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask;
     
     self.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
+    
 
 }
 

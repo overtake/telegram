@@ -140,7 +140,6 @@
 		0AA0145E1831140D00901B7A /* NSAttributedString+Hyperlink.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA014591831140D00901B7A /* NSAttributedString+Hyperlink.m */; };
 		0AA0145F1831140D00901B7A /* NSString+FindURLs.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0145B1831140D00901B7A /* NSString+FindURLs.m */; };
 		0AA014601831140D00901B7A /* NSTextView+AutomaticLinkDetection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0145D1831140D00901B7A /* NSTextView+AutomaticLinkDetection.m */; };
-		0AA0146C1832A2C500901B7A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
 		0AA0A98418B140FF00836E83 /* CAAvatarLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0A98318B140FF00836E83 /* CAAvatarLayer.m */; };
 		0AA0A98718B160CF00836E83 /* TMAvatarImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0A98618B160CF00836E83 /* TMAvatarImageView.m */; };
 		0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0AA17C03183D825E004CE1A1 /* dsa_pub.pem */; };
@@ -310,7 +309,6 @@
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
 		C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47F18C0D0E800726C91 /* TGUpdateState.m */; };
 		C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C48218C0D38600726C91 /* TGUpdateContainer.m */; };
-		C248440F19C07D8A005635EB /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
 		C248F3BF19BE03F600BF658E /* opusenc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3BD19BE03F600BF658E /* opusenc.c */; };
 		C248F3CF19BE046C00BF658E /* diag_range.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C719BE046C00BF658E /* diag_range.c */; };
 		C248F3D019BE046C00BF658E /* opus_header.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3C919BE046C00BF658E /* opus_header.c */; };
@@ -360,6 +358,8 @@
 		C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526319B9ECCA00841C8A /* AddContactViewController.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
+		C27BEB6919C74169008DA3EE /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
+		C27BEB6E19C74179008DA3EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
 		C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C1771917D9C2007B160F /* DraggingControllerView.m */; };
 		C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17A1917D9D9007B160F /* DraggingItemView.m */; };
@@ -581,8 +581,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C27BEB6919C74169008DA3EE /* Sparkle.framework in Copy Files (6 items) */,
 				C2082B7419C1E1D9000005E2 /* HockeySDK.framework in Copy Files (6 items) */,
-				C248440F19C07D8A005635EB /* Sparkle.framework in Copy Files (6 items) */,
 				C20B228A18E97280007BCCD6 /* libopus.a in Copy Files (6 items) */,
 				0A697EA51917DDB9003469CB /* pop.framework in Copy Files (6 items) */,
 				CE0AC51E18BE97430031658A /* MTProtoKit.framework in Copy Files (6 items) */,
@@ -1700,7 +1700,7 @@
 				C2082B7319C1E1C4000005E2 /* HockeySDK.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
-				0AA0146C1832A2C500901B7A /* Sparkle.framework in Frameworks */,
+				C27BEB6E19C74179008DA3EE /* Sparkle.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -56,6 +56,7 @@
     [button setStringValue:title];
     [button setFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
     [button setTextColor:BLUE_UI_COLOR];
+    [button setWantsLayer:YES];
     [button sizeToFit];
     return button;
 }
@@ -65,7 +66,7 @@
     [button setStringValue:title];
     [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     [button setTextColor:BLUE_UI_COLOR];
-  //  [button setWantsLayer:YES];
+    [button setWantsLayer:YES];
     [button sizeToFit];
     [button setFrameOrigin:NSMakePoint(0, 1)];
     return button;
@@ -74,10 +75,11 @@
 + (instancetype)standartMessageNavigationButtonWithTitle:(NSString *)title {
     TMTextButton *button = [[TMTextButton alloc] init];
     [button setStringValue:title];
-    [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     [button setTextColor:BLUE_UI_COLOR];
+    [button setWantsLayer:YES];
     [button sizeToFit];
-    //[button setWantsLayer:YES];
+    [button setFrameOrigin:NSMakePoint(0, 1)];
     
     return button;
 }

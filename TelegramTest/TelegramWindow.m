@@ -99,7 +99,7 @@
     int height = 600;
     
     
-    [self setMinSize:NSMakeSize(width-85, height)];
+    [self setMinSize:NSMakeSize(width-70, height)];
     
     if(!archiver) {
        
@@ -118,6 +118,8 @@
     
    
     [self setFrame:rect display:NO];
+    
+    [self.contentView setWantsLayer:YES];
     
 }
 
