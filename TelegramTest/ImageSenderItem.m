@@ -36,8 +36,10 @@
         NSSize maxSize = strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
         
         
-        self.image = [ImageUtils imageResize:image newSize:NSMakeSize(MAX(25,realSize.width), MAX(25,realSize.height))];
+        self.image = [ImageUtils imageResize:image newSize:NSMakeSize(MAX(50,realSize.width), MAX(50,realSize.height))];
         
+        
+        NSLog(@"%@",NSStringFromSize(self.image.size));
         if(realSize.width > MIN_IMG_SIZE.width && realSize.height > MIN_IMG_SIZE.height && maxSize.width == MIN_IMG_SIZE.width && maxSize.height == MIN_IMG_SIZE.height) {
             
             int difference = roundf( (realSize.width - maxSize.width) /2);
