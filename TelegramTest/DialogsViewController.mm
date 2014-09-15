@@ -29,6 +29,8 @@
 
 #import "DialogTableView.h"
 #import "SearchViewController.h"
+#import "TMTaskRequest.h"
+#import "SelfDestructionController.h"
 
 @interface DialogsViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) DialogsHistoryController *historyController;
@@ -72,6 +74,59 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
+    
+    [[Storage manager] users:^(NSArray *result) {
+        
+        [[UsersManager sharedManager] addFromDB:result];
+    
+        [[BroadcastManager sharedManager] loadBroadcastList:^{
+        
+            [[Storage manager] loadChats:^(NSArray *chats) {
+                [[ChatsManager sharedManager] add:chats];
+            
+                [self initConversations];
+            
+                [[BlockedUsersManager sharedManager] remoteLoad];
+            
+            }];
+        }];
+        
+    }];
+    
+    [[Storage manager] unreadCount:^(int count) {
+        [[MessagesManager sharedManager] setUnread_count:count];
+    }];
+    
+}
+
+
+-(void)initConversations {
+    
+    [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
+        
+        [[MTNetwork instance] startNetwork];
+        
+        if(result.count != 0) {
+            
+            [TMTaskRequest executeAll];
+            
+            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:result}];
+            [Notification perform:APP_RUN object:nil];
+            
+            [SelfDestructionController initialize];
+            [TMTypingManager sharedManager];
+            
+        
+            [[NewContactsManager sharedManager] fullReload];
+            [[FullChatManager sharedManager] loadStored];
+           
+            
+            
+        } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
+            [self initConversations];
+        }
+        
+    } usersCallback:nil];
 }
 
 - (void)addScrollEvent {

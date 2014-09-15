@@ -211,7 +211,7 @@
 
 - (void)showMainApplicationWindowForCrashManager:(BITCrashManager *)crashManager {
     
-    
+    NSLog(@"start");
     
     
     [self initializeApplication];
@@ -479,67 +479,18 @@
     
 }
 
--(void)initConversations {
-    
-    
-    
-    [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
-        
-        [[MTNetwork instance] startNetwork];
-        
-        if(result.count != 0) {
-            
-            [TMTaskRequest executeAll];
-            
-            [[NewContactsManager sharedManager] fullReload];
-            [[FullChatManager sharedManager] loadStored];
-            
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:result}];
-            [Notification perform:APP_RUN object:nil];
-            
-            [SelfDestructionController initialize];
-            [TMTypingManager sharedManager];
-            
-        } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
-            [self initConversations];
-        }
-        
-    } usersCallback:nil];
-}
 
 - (void)initializeMainWindow {
     
     MainWindow *mainWindow = [[MainWindow alloc] init];
     [mainWindow makeKeyAndOrderFront:nil];
     
+    
     [self releaseWindows];
     [self initializeSounds];
     
     self.mainWindow = mainWindow;
     
-    
-    
-    [[Storage manager] users:^(NSArray *result) {
-        [[UsersManager sharedManager] addFromDB:result];
-        [[BroadcastManager sharedManager] loadBroadcastList:^{
-            
-            [[Storage manager] loadChats:^(NSArray *chats) {
-                [[ChatsManager sharedManager] add:chats];
-                
-                [self initConversations];
-                
-                [[BlockedUsersManager sharedManager] remoteLoad];
-                
-                //  [SettingsArchiver notifyOfLaunch];
-                
-                
-            }];
-        }];
-        
-        [[Storage manager] unreadCount:^(int count) {
-            [[MessagesManager sharedManager] setUnread_count:count];
-        }];
-    }];
 }
 
 - (void)initializeLoginWindow {

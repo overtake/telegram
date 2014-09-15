@@ -150,6 +150,8 @@ static const int bottomOffset = 58;
     [self.view.window makeFirstResponder:nil];
     
     [self updateSize];
+    
+    
 
 }
 
