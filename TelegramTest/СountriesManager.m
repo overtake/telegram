@@ -148,7 +148,7 @@
     
     
     
-    NSString *phoneFormat = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"phone_numbers_for_OS_X.txt"]];
+    NSString *phoneFormat = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"phone-x-format.txt"]];
     NSArray *phoneFormatLines = [[[NSString alloc] initWithContentsOfFile:phoneFormat encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     
     
