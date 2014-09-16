@@ -473,7 +473,7 @@
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
     [outputStream open];
     [stream setOuput:outputStream];
-    [stream writeInt:0xb4418b64];
+    [stream writeInt:0xcf5f0987];
    
 
     [stream writeInt:constructor];
