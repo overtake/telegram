@@ -358,8 +358,6 @@
 		C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526319B9ECCA00841C8A /* AddContactViewController.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
-		C27BEB6919C74169008DA3EE /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
-		C27BEB6E19C74179008DA3EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
 		C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C1771917D9C2007B160F /* DraggingControllerView.m */; };
 		C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17A1917D9D9007B160F /* DraggingItemView.m */; };
@@ -403,6 +401,8 @@
 		C2ADB452191BB93000305CC8 /* TMCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */; };
 		C2ADB45B191BBA2500305CC8 /* MediaCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB45A191BBA2500305CC8 /* MediaCollectionItem.m */; };
 		C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB460191BD90F00305CC8 /* MediaCollectionItemView.m */; };
+		C2BB185A19C76DC5001513AE /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
+		C2BB185F19C76DCD001513AE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA0146B1832A2C500901B7A /* Sparkle.framework */; };
 		C2C725D4185CB38A00094EC7 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C725D3185CB38A00094EC7 /* libstdc++.dylib */; };
 		C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C725D91860E05200094EC7 /* EncryptedParams.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
@@ -581,7 +581,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C27BEB6919C74169008DA3EE /* Sparkle.framework in Copy Files (6 items) */,
+				C2BB185A19C76DC5001513AE /* Sparkle.framework in Copy Files (6 items) */,
 				C2082B7419C1E1D9000005E2 /* HockeySDK.framework in Copy Files (6 items) */,
 				C20B228A18E97280007BCCD6 /* libopus.a in Copy Files (6 items) */,
 				0A697EA51917DDB9003469CB /* pop.framework in Copy Files (6 items) */,
@@ -1699,8 +1699,8 @@
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				C2082B7319C1E1C4000005E2 /* HockeySDK.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
+				C2BB185F19C76DCD001513AE /* Sparkle.framework in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
-				C27BEB6E19C74179008DA3EE /* Sparkle.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
