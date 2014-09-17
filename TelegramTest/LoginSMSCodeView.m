@@ -9,11 +9,10 @@
 #import "LoginSMSCodeView.h"
 #import "NewLoginViewController.h"
 
-@interface LoginSMSCodeView()
+@interface LoginSMSCodeView()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMTextField *smsCodeTextField;
-@property (nonatomic, strong) TMTextField *callTextField;
+@property (nonatomic, strong) TMHyperlinkTextField *callTextField;
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic) int timeToCall;
 @property (nonatomic, strong) NSString *oldValue;
 @end
 
@@ -23,7 +22,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120, 45, self.bounds.size.width, 20)];
+        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120, 20, self.bounds.size.width, 20)];
         self.smsCodeTextField.drawsBackground = NO;
         self.smsCodeTextField.delegate = self;
         [self.smsCodeTextField setPlaceholderPoint:NSMakePoint(2, 1)];
@@ -33,7 +32,7 @@
         [self addSubview:self.smsCodeTextField];
         
         
-        self.callTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120, 0, self.bounds.size.width, 0)];
+        self.callTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(120, 60, self.bounds.size.width - 120, 55)];
         [self.callTextField setBordered:NO];
         self.callTextField.wantsLayer = YES;
         [self.callTextField setEditable:NO];
@@ -41,8 +40,28 @@
         [self.callTextField setTextColor:NSColorFromRGB(0xaeaeae)];
         [self.callTextField setFont:[NSFont fontWithName:@"Helvetica" size:13]];
         [self addSubview:self.callTextField];
+        
+        [self.callTextField setHardXOffset:44];
+        
+        [self.callTextField setUrl_delegate:self];
+        
+//        [self.callTextField setDrawsBackground:YES];
+//        [self.callTextField setBackgroundColor:[NSColor blueColor]];
+//        
+//        
+//        self.backgroundColor = [NSColor redColor];
     }
     return self;
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.callTextField setFrameSize:NSMakeSize(self.bounds.size.width - 120, NSHeight(self.bounds) - 61)];
+}
+
+-(BOOL)isFlipped {
+    return YES;
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {
@@ -101,7 +120,7 @@
     [super drawRect:dirtyRect];
     
     [NSColorFromRGB(0xe6e6e6) set];
-    NSRectFill(NSMakeRect(self.bounds.size.width - 322, 32, 322, 1));
+    NSRectFill(NSMakeRect(self.bounds.size.width - 322, 49, 322, 1));
 }
 
 - (NSString *)code {
@@ -149,6 +168,32 @@
     }
 }
 
+
+- (void) textField:(id)textField handleURLClick:(NSString *)url {
+    [self.loginController sendSmsCode];
+}
+
+-(void)setIsAppCodeSent:(BOOL)isAppCodeSent {
+    self->_isAppCodeSent = isAppCodeSent;
+    
+    if(self.isAppCodeSent) {
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
+        
+        [str appendString:NSLocalizedString(@"Login.EnterCodeFromApp", nil) withColor:NSColorFromRGB(0xaeaeae)];
+        
+        [str appendString:@" "];
+        
+        NSRange range = [str appendString:NSLocalizedString(@"Login.SendSmsIfNotReceivedAppCode", nil) withColor:BLUE_UI_COLOR];
+        [str setLink:@"sendSms" forRange:range];
+        
+        //  [str appendString:@"\n\n"];
+        
+        //  [str appendString:[NSString stringWithFormat:NSLocalizedString(@"Login.willCallYou", nil), minutes, secStr] withColor:NSColorFromRGB(0xaeaeae)];
+        
+        self.callTextField.attributedStringValue = str;
+    }
+}
+
 - (BOOL)isValidCode {
     return self.code.length == 5;
 }
@@ -181,9 +226,10 @@
         int minutes = self.timeToCall / 60;
         int sec = self.timeToCall % 60;
         NSString *secStr = sec > 9 ? [NSString stringWithFormat:@"%d", sec] : [NSString stringWithFormat:@"0%d", sec];
+        
         self.callTextField.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Login.willCallYou", nil), minutes, secStr];
     }
-    [self.callTextField sizeToFit];
+    
 }
 
 - (void)changeCallTextFieldString:(NSString *)string {

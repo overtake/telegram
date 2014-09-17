@@ -318,7 +318,7 @@ typedef enum {
     
     [container addSubview:self.updatePhotoButton];
     
-     currentY+=80;
+     currentY+=42;
     
     
     

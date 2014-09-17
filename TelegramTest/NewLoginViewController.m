@@ -135,6 +135,8 @@
     }];
     
     [self.containerView addSubview:self.getSMSCodeView];
+    
+   // [self.containerView setBackgroundColor:[NSColor greenColor]];
 
     
     float offset = 109;
@@ -267,7 +269,19 @@
 //    [self.startMessagingView setButtonText:@"lah"];
     
     [self.getSMSCodeView performTextToBottomWithDuration:duration];
-    [self.SMSCodeView setFrameOrigin:NSMakePoint(self.countrySelectorView.frame.origin.x, self.countrySelectorView.frame.origin.y - 30)];
+    
+   
+    [self.SMSCodeView setFrameSize:NSMakeSize(NSWidth(self.SMSCodeView.frame), self.SMSCodeView.isAppCodeSent ? 140 : 80)];
+    
+   // [self.startMessagingView setBackgroundColor:[NSColor orangeColor]];
+    
+    [self.startMessagingView setFrameOrigin:NSMakePoint(NSMinX(self.startMessagingView.frame), self.SMSCodeView.isAppCodeSent ? 0 : 40)];
+    
+   /// [self.containerView setCenterByView:self.view];
+    
+    //[self.startMessagingView setFrameOrigin:NSMakePoint(NSMinX(self.startMessagingView.frame), NSMaxY(self.SMSCodeView.frame))];
+    
+    [self.SMSCodeView setFrameOrigin:NSMakePoint(self.countrySelectorView.frame.origin.x, self.countrySelectorView.frame.origin.y - self.SMSCodeView.frame.size.height + 50)];
     [self.SMSCodeView setHidden:NO];
     
     [self.SMSCodeView prepareForAnimation];
@@ -319,13 +333,25 @@
     self.isCodeExpired = NO;
     
     
-    [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:0 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
+
+    
+    [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:5 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
+        
+        
+        [self.SMSCodeView setIsAppCodeSent:[response isKindOfClass:[TL_sentAppCode class]]];
+            
+        self.SMSCodeView.timeToCall = response.send_call_timeout;
      
         self.phone_code_hash = response.phone_code_hash;
         self.isPhoneRegistered = response.phone_registered;
         
+        
         [self.getSMSCodeView loadingSuccess];
-        [self startTimer:response.send_call_timeout];
+        
+        if(!self.SMSCodeView.isAppCodeSent) {
+            [self startTimer:self.SMSCodeView.timeToCall];
+        }
+        
         [self performSMSCodeTextFieldShowAnimation];
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -341,6 +367,23 @@
             [self.countrySelectorView performBlocking:NO];
         }
     }];
+}
+
+-(void)sendSmsCode {
+    
+    self.SMSCodeView.isAppCodeSent = NO;
+    [self startTimer:self.SMSCodeView.timeToCall];
+    
+   [RPCRequest sendRequest:[TLAPI_auth_sendSms createWithPhoneNumber:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
+       
+       
+       if([response isKindOfClass:[TL_boolTrue class]])
+       {
+           
+       }
+   } errorHandler:^(RPCRequest *request, RpcError *error) {
+       
+   }];
 }
 
 - (void)startTimer:(int)time {

@@ -262,7 +262,7 @@ static int MAX_WORKER_POLL = 5;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            noAuthClasses = [[NSMutableArray alloc] initWithObjects:[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], nil];
+            noAuthClasses = [[NSMutableArray alloc] initWithObjects:[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], nil];
         });
         
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {

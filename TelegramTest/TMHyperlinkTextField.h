@@ -19,6 +19,7 @@
 @interface TMHyperlinkTextField : TMTextField
 
 @property (nonatomic,assign) float hardYOffset; // this is hard fix :D
+@property (nonatomic,assign) float hardXOffset; // this is hard fix :D
 
 @property (nonatomic, strong) id<TMHyperlinkTextFieldDelegate> url_delegate;
 

@@ -15,4 +15,6 @@
 - (void)signIn;
 - (void)performBackEditAnimation:(float)duration;
 
+-(void)sendSmsCode;
+
 @end

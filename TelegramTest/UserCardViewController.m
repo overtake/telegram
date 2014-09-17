@@ -122,7 +122,7 @@
     
     self.descTextField = [TMTextField defaultTextField];
     
-    [self.descTextField setStringValue:@"You can share this card with other Telegram users, so that they can contact you without knowing your phone number. Only available for OSX users at the moment, coming soon to other apps."];
+    [self.descTextField setStringValue:NSLocalizedString(@"UserCard.ExportDesc", nil)];
     
     [self.descTextField setFrame:NSMakeRect(10, 55, NSWidth(self.exportView.frame) - 20, 65)];
     [self.descTextField setAlignment:NSCenterTextAlignment];

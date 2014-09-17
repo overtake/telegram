@@ -146,6 +146,7 @@
 				NSRect cursorRect = NSIntersectionRect(textRect, superVisRect);
 				if ( NSIntersectsRect( textRect, superVisRect ) ) {
                     cursorRect.origin.y +=self.hardYOffset;
+                    cursorRect.origin.x +=self.hardXOffset;
 //                    cursorRect.size.height += 0;
                     [self addCursorRect:cursorRect cursor:pointingCursor];
 //                    DLog(@"clicable");
@@ -163,6 +164,7 @@
 	NSRect cellBounds = [[self cell] drawingRectForBounds:[self bounds]];
     
     mousePoint.y -= self.hardYOffset;
+    mousePoint.x -= self.hardXOffset;
 	if ( ([self.URLStorage length] > 0 ) && [self mouse:mousePoint inRect:cellBounds] ) {
 		id aVal = nil;
 		NSRange returnRange = { NSNotFound, 0 }, glyphRange = { NSNotFound, 0 };

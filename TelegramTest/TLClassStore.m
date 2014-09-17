@@ -355,6 +355,7 @@
 		[self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:0x809db6df]];
 		[self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:0x7d861a08]];
         [self.classes setObject:[TL_initConnection class] forKey:[NSNumber numberWithInt:1769565673]];
+        [self.classes setObject:[TL_sentAppCode class] forKey:[NSNumber numberWithInt:0xe325edcf]];
         
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:(int32_t)0xcb9f372d]];
         
