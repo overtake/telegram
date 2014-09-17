@@ -290,10 +290,14 @@
         
         if(result.window != self.mainWindow) {
             
-            if(incomingEvent.keyCode == 53 && ! [result.window respondsToSelector:@selector(popover)]) {
+            if(incomingEvent.keyCode == 53 && ![result.window respondsToSelector:@selector(popover)]) {
                 [result.window close];
                 
                 return result;
+            }
+            
+            if([result.window isKindOfClass:[QLPreviewPanel class]]) {
+                 return result;
             }
             
         }
