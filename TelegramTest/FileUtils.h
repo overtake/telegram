@@ -11,7 +11,9 @@
 @interface FileUtils : NSObject
 
 #define MIN_IMG_SIZE NSMakeSize(250,40)
-extern NSString *const TGImagePType; //удаление всей истории
+extern NSString *const TGImagePType;
+
+extern NSString *const TGImportCardPrefix;
 
 
 +(NSString*)mimetypefromExtension:(NSString *)extension;
@@ -44,10 +46,15 @@ NSArray *imageTypes();
 NSArray * soundsList();
 void playSentMessage(BOOL play);
 void open_link(NSString *link);
+void open_card(NSString *link);
 BOOL NSSizeNotZero(NSSize size);
 BOOL NSContainsSize(NSSize size1, NSSize size2);
 NSString *exportPath(long randomId,NSString *extension);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
+
+
+NSString *decodeCard(NSArray *card);
+NSArray *encodeCard(NSString *card);
 
 
 @end

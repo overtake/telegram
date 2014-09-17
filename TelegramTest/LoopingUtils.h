@@ -11,4 +11,7 @@
 @interface LoopingUtils : NSObject
 +(void)runOnMainQueueWithoutDeadlocking:(void (^)(void))block;
 +(void)runOnMainQueueAsync:(void (^)(void))block;
+
+
+void dispatch_after_seconds(float seconds, dispatch_block_t block);
 @end

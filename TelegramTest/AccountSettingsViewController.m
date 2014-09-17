@@ -12,7 +12,7 @@
 #import "TMMediaUserPictureController.h"
 #import "UserInfoShortButtonView.h"
 #import "UserInfoShortTextEditView.h"
-
+#import "UserCardViewController.h"
 @interface ExView : TMView
 
 @end
@@ -55,8 +55,20 @@
 @property (nonatomic,strong) UserInfoShortTextEditView *lastNameView;
 
 
+@property (nonatomic,strong) UserInfoShortButtonView *exportCard;
+@property (nonatomic,strong) UserInfoShortButtonView *importCard;
+
+
+
+@property (nonatomic,strong) UserCardViewController *userCardViewController;
+
+
 @property (nonatomic,strong) NSView *defaultView;
 @property (nonatomic,strong) NSView *editView;
+
+@property (nonatomic,strong) NSScrollView *scrollView;
+
+@property (nonatomic,strong) NSView *containerView;
 
 typedef enum {
     AccountSettingsStateNormal,
@@ -74,13 +86,15 @@ typedef enum {
     
     self.view = [[ExView alloc] initWithFrame:self.frameInit];
     
-    TMScrollView *scroll = [[TMScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frameInit) - DIALOG_BORDER_WIDTH, NSHeight(self.frameInit))];
+    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frameInit) - DIALOG_BORDER_WIDTH, NSHeight(self.frameInit))];
     
-    scroll.autoresizesSubviews = YES;
-    scroll.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-    [scroll setDrawsBackground:YES];
+    self.scrollView.autoresizesSubviews = YES;
+    self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    [self.scrollView setDrawsBackground:YES];
     
     self.view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    
+    self.userCardViewController = [[UserCardViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 150)];
     
     
     FlippedView *container = [[FlippedView alloc] initWithFrame:self.view.bounds];
@@ -89,7 +103,7 @@ typedef enum {
     
     [container setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable ];
     
-    [self.view addSubview:scroll];
+    [self.view addSubview:self.scrollView];
     
     self.avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
     [self.avatarImageView setCenterByView:self.view];
@@ -108,6 +122,8 @@ typedef enum {
     [self.nameTextField setUser:[UsersManager currentUser]];
     
     [container addSubview:self.nameTextField];
+    
+ //   [container setBackgroundColor:[NSColor blueColor]];
     
     
 //    
@@ -130,9 +146,6 @@ typedef enum {
 //    
 //    [container addSubview:self.numberTextField];
 //    
-    
-    
-    
     
     self.avatarImageView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
     
@@ -180,8 +193,9 @@ typedef enum {
     
     [container addSubview:self.editView];
   
+    self.containerView = container;
     
-    scroll.documentView = container;
+    self.scrollView.documentView = self.containerView;
     
 }
 
@@ -247,6 +261,11 @@ typedef enum {
     [self.firstNameView.textView setStringValue:[UsersManager currentUser].first_name];
     [self.lastNameView.textView setStringValue:[UsersManager currentUser].last_name];
     
+    
+    int height = defaultY + NSHeight(self.defaultView.frame);
+    
+    [self.scrollView.documentView setFrameSize:NSMakeSize(NSWidth(self.scrollView.frame), height)];
+    
 }
 
 
@@ -256,9 +275,11 @@ typedef enum {
     int currentY = 0;
     
     
-    FlippedView *container = [[FlippedView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frameInit), 248)];
+    FlippedView *container = [[FlippedView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frameInit), 500)];
     
+    container.wantsLayer = YES;
     
+   // container.backgroundColor = [NSColor redColor];
     
     self.updateProfileButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.EditProfile",nil) tapBlock:^{
         
@@ -285,9 +306,7 @@ typedef enum {
         [self.avatarImageView showUpdateChatPhotoBox];
     }];
     
-    container.wantsLayer = YES;
-    
-   // container.backgroundColor = [NSColor redColor];
+   
     
     
     [self.updatePhotoButton setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
@@ -299,10 +318,55 @@ typedef enum {
     
     [container addSubview:self.updatePhotoButton];
     
+     currentY+=80;
     
-     self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
+    
+    
+    self.exportCard = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ExportCard",nil) tapBlock:^{
+        
+        NSRect rect = self.exportCard.bounds;
+        
+        rect.origin.y-=10;
+
+        
+        [self.userCardViewController showWithType:UserCardViewTypeExport relativeRect:rect ofView:self.exportCard preferredEdge:CGRectMinYEdge];
+    
+    
+    }];
+    
+    [self.exportCard setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
+    
+    [self.exportCard.textButton setFrameSize:NSMakeSize(NSWidth(self.exportCard.frame), NSHeight(self.exportCard.textButton.frame))];
+    [self.exportCard.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.exportCard.textButton.frame))];
+    
+    
+    [container addSubview:self.exportCard];
+    
+    
+//    currentY+=42;
+//    
+//    
+//    self.importCard = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportCard",nil) tapBlock:^{
+//        
+//    }];
+//    
+//    container.wantsLayer = YES;
+//    
+//    
+//    
+//    [self.importCard setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
+//    
+//    [self.importCard.textButton setFrameSize:NSMakeSize(NSWidth(self.importCard.frame), NSHeight(self.importCard.textButton.frame))];
+//    [self.importCard.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.importCard.textButton.frame))];
+//    
+//    
+//    [container addSubview:self.importCard];
+    
+    
+    self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
         [[Telegram settingsWindowController] showWindowWithAction:SettingsWindowActionBlockedUsers];
     }];
+   
     
     currentY+=80;
     
@@ -355,6 +419,8 @@ typedef enum {
     
     [container setAutoresizingMask:NSViewWidthSizable];
     
+    [container setFrameSize:NSMakeSize(NSWidth(container.frame), currentY+50)];
+    
     return container;
 }
 
@@ -364,8 +430,6 @@ typedef enum {
     
     if(self.state == AccountSettingsStateEditable) {
         [[UsersManager sharedManager] updateAccount:self.firstNameView.textView.stringValue lastName:self.lastNameView.textView.stringValue completeHandler:^(TGUser *user) {
-            
-            
             
         } errorHandler:^(NSString *description) {
             

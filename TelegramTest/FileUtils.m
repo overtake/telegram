@@ -19,7 +19,9 @@
 @implementation FileUtils
 
 
-NSString *const TGImagePType = @"MESSAGE_DELETE_EVENT";
+NSString *const TGImagePType = @"TGImagePasteType";
+NSString *const TGImportCardPrefix = @"telegram://import?card=";
+
 
 -(id)init {
     if(self = [super init]) {
@@ -399,11 +401,68 @@ NSArray *imageTypes() {
     return @[@"png", @"tiff", @"jpeg", @"jpg"];
 }
 
+
+
+
+void open_card(NSString *link) {
+    
+    
+    NSArray *card = encodeCard(link);
+    
+    if(card) {
+        
+        [[Telegram rightViewController] showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_contactsImportCard createWithExportCard:card] successHandler:^(RPCRequest *request, id response) {
+            
+            [[Telegram rightViewController] hideModalProgress];
+            
+            dispatch_after_seconds(0.2,^ {
+                if(![response isKindOfClass:[TL_userEmpty class]]) {
+                    [[UsersManager sharedManager] add:@[response]];
+                    
+                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:[(TGUser *)response n_id]]];
+                } else {
+                    alert(NSLocalizedString(@"CardImport.ErrorTextUserNotExist", nil), NSLocalizedString(@"CardImport.ErrorDescUserNotExist", nil));
+                }
+            });
+            
+          
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+             [[Telegram rightViewController] hideModalProgress];
+            
+            dispatch_after_seconds(0.2, ^{
+                if(error.error_code == 400) {
+                    alert(NSLocalizedString(@"CardImport.ErrorTextUserNotExist", nil), NSLocalizedString(@"CardImport.ErrorDescUserNotExist", nil));
+                } else if(error.error_code == 502) {
+                    alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
+                }
+            });
+            
+          
+            
+        } timeout:4];
+    }
+    
+
+}
+
 void open_link(NSString *link) {
+    
+    
+    if([link hasPrefix:TGImportCardPrefix]) {
+        
+        open_card([link substringFromIndex:TGImportCardPrefix.length]);
+        
+        return;
+    }
     
     if(![link hasPrefix:@"http"]) {
         link = [@"http://" stringByAppendingString:link];
     }
+
+    
     
     NSURL *url = [NSURL URLWithString:link];
     if([SettingsArchiver checkMaskedSetting:OpenLinksInBackground]) {
@@ -449,6 +508,46 @@ NSString *exportPath(long randomId, NSString *extension) {
     
     
     return [NSString stringWithFormat:@"%@/%lu.%@",exportDirectory,randomId,extension];
+}
+
+
+NSString *decodeCard(NSArray *card) {
+    
+    __block NSString *c = @"";
+    
+    NSMutableArray *hex = [[NSMutableArray alloc] init];
+    
+    [card enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+        [hex insertObject:[NSString stringWithFormat:@"%x",[obj intValue]] atIndex:idx];
+    }];
+    
+    c = [hex componentsJoinedByString:@":"];
+    
+    return c;
+}
+
+
+NSArray *encodeCard(NSString *card) {
+    NSArray *hex = [card componentsSeparatedByString:@":"];
+    
+    if(hex.count >= 3 && hex.count <= 10) {
+        NSMutableArray *digit = [[NSMutableArray alloc] init];
+        [hex enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSScanner *scanner = [NSScanner scannerWithString:obj];
+            
+            int result = 0;
+
+            [scanner scanHexInt:&result];
+            
+            
+            [digit insertObject:@(result) atIndex:idx];
+        }];
+        
+        return digit;
+    }
+    
+    return nil;
 }
 
 @end

@@ -31,6 +31,8 @@
 @property (nonatomic, strong) NSColor *pressedTextColor;
 @property (nonatomic, strong) NSColor *pressedHoverTextColor;
 
+@property (nonatomic,strong) NSColor *disabledTextColor;
+
 @end
 
 @implementation TMButton
@@ -94,6 +96,9 @@
             
         case TMButtonPressedState:
             self.pressedTextColor = color;
+            break;
+        case TMButtonDisabledState:
+            self.disabledTextColor = color;
             break;
             
         default:
@@ -184,7 +189,7 @@
     
     if(self.disabled) {
         self.bgImage = self.normalBackground;
-        self.bgColor = self.normalTextColor;
+        self.bgColor = self.disabledTextColor ? self.disabledTextColor : self.normalTextColor;
     } else {
         if(self.isPressed) {
             self.bgImage = self.isHover && self.pressedHoverBackground ? self.pressedHoverBackground : self.pressedBackground;

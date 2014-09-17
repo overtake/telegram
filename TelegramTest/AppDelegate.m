@@ -77,6 +77,13 @@
     
     NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
     if(url) {
+        
+        if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
+            open_card([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
+            return;
+        }
+        
+        
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         NSString *absoluteString = [url absoluteString];
         NSRange range = [absoluteString rangeOfString:@"?"];

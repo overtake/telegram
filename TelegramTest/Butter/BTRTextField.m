@@ -189,6 +189,13 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	}
 }
 
+- (void)setPlaceholderAligment:(NSTextAlignment)placeholderAligment {
+	if (_placeholderAligment != placeholderAligment) {
+		_placeholderAligment = placeholderAligment;
+		[self resetPlaceholder];
+	}
+}
+
 - (void)setPlaceholderShadow:(NSShadow *)placeholderShadow{
 	if (_placeholderShadow != placeholderShadow) {
 		_placeholderShadow = placeholderShadow;
@@ -199,7 +206,9 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 
 - (void)resetPlaceholder {
 	if ([self.placeholderTitle length]) {
-		self.textFieldCell.placeholderAttributedString = [[NSAttributedString alloc] initWithString:self.placeholderTitle attributes:self.placeholderAttributes];
+        NSMutableAttributedString *holder = [[NSMutableAttributedString alloc] initWithString:self.placeholderTitle attributes:self.placeholderAttributes];
+        [holder setAlignment:self.placeholderAligment range:holder.range];
+		self.textFieldCell.placeholderAttributedString = holder;
 	}
 }
 

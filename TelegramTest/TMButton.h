@@ -12,7 +12,8 @@ typedef enum {
     TMButtonNormalState,
     TMButtonNormalHoverState,
     TMButtonPressedState,
-    TMButtonPressedHoverState
+    TMButtonPressedHoverState,
+    TMButtonDisabledState
 } TMButtonState;
 
 @interface TMButton : TMView

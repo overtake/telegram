@@ -37,6 +37,7 @@
 @property (nonatomic, strong) NSString *placeholderTitle;
 @property (nonatomic, strong) NSColor *placeholderTextColor;
 @property (nonatomic, strong) NSFont *placeholderFont;
+@property (nonatomic, assign) NSTextAlignment placeholderAligment;
 @property (nonatomic, strong) NSShadow *placeholderShadow;
 
 @property (nonatomic, strong) NSShadow *textShadow;

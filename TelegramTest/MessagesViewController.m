@@ -1858,6 +1858,8 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendMessage:message callback:nil];
 }
 
+
+
 - (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
     
     if(!self.dialog.canSendMessage)
@@ -1884,6 +1886,22 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         }
         
+        
+        if([message isEqualToString:@"exportcard"]) {
+            
+            
+            [RPCRequest sendRequest:[TLAPI_contactsExportCard create] successHandler:^(RPCRequest *request, id response) {
+                
+                NSString *c = decodeCard(response);
+               
+                NSLog(@"%@, %@",response,c);
+           
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
+            
+            return;
+        }
 
         
         static const NSInteger messagePartLimit = 4096;

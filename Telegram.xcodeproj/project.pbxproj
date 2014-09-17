@@ -306,6 +306,7 @@
 		C235364B19C88CFE0044978E /* pop.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364919C88CFA0044978E /* pop.framework */; };
 		C235364D19C88D620044978E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C235364E19C88D680044978E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C235365919C8B4320044978E /* UserCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C235365819C8B4320044978E /* UserCardViewController.m */; };
 		C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015819839A4B007AB338 /* TGTimerTarget.m */; };
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
@@ -1186,6 +1187,8 @@
 		C233FB3318B661B6008C9A96 /* TMCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCheckBox.m; sourceTree = "<group>"; };
 		C235364919C88CFA0044978E /* pop.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = pop.framework; sourceTree = "<group>"; };
 		C235364C19C88D620044978E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		C235365719C8B4320044978E /* UserCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardViewController.h; sourceTree = "<group>"; };
+		C235365819C8B4320044978E /* UserCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardViewController.m; sourceTree = "<group>"; };
 		C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationBlockDelegate.h; sourceTree = "<group>"; };
 		C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAnimationBlockDelegate.m; sourceTree = "<group>"; };
 		C247015719839A4B007AB338 /* TGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTimerTarget.h; sourceTree = "<group>"; };
@@ -2523,6 +2526,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C235365219C8B40F0044978E /* exportcrard */,
 				C21D482C19ACB7CD000F06E1 /* AccountSettingsViewController.h */,
 				C21D482D19ACB7CD000F06E1 /* AccountSettingsViewController.m */,
 			);
@@ -2665,6 +2669,15 @@
 				C233FB3018B61618008C9A96 /* NewConversationRowView.m */,
 			);
 			name = new_conversation;
+			sourceTree = "<group>";
+		};
+		C235365219C8B40F0044978E /* exportcrard */ = {
+			isa = PBXGroup;
+			children = (
+				C235365719C8B4320044978E /* UserCardViewController.h */,
+				C235365819C8B4320044978E /* UserCardViewController.m */,
+			);
+			name = exportcrard;
 			sourceTree = "<group>";
 		};
 		C247C47D18C0D0C000726C91 /* tgupdates */ = {
@@ -3940,6 +3953,7 @@
 				CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */,
 				CEDAEB521881AF85006189A2 /* YapDatabaseFilteredViewTransaction.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
+				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
 				CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */,
