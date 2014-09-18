@@ -16,7 +16,7 @@
 #ifdef TGDEBUG
 
 #import <Sparkle/Sparkle.h>
-
+#import "FFYDaemonController.h"
 #endif
 
 #import "ImageStorage.h"
@@ -218,7 +218,22 @@
 
 - (void)showMainApplicationWindowForCrashManager:(BITCrashManager *)crashManager {
     
-    NSLog(@"start");
+
+    NSString *keeper = [[NSBundle mainBundle] pathForResource:@"TGKeeper" ofType:@""];
+
+    FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+    
+    daemonController.launchPath = keeper;
+    
+    [daemonController setDaemonStartedCallback:^(NSNumber *pid) {
+        NSLog(@"started");
+    }];
+    
+    [daemonController setDaemonStoppedCallback:^ {
+        NSLog(@"stopped");
+    }];
+    
+    [daemonController start];
     
     
     [self initializeApplication];

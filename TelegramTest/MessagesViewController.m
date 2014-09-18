@@ -1472,13 +1472,6 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.dialog)
         return;
     
-    MessageTableItem *lastMessage = [self lastMessageItem];
-    
-    int max_id = lastMessage.message.n_id;
-    
-    if(self.dialog.type != DialogTypeSecretChat)
-        [RPCRequest sendRequest:[TLAPI_messages_receivedMessages createWithMax_id:max_id] successHandler:nil errorHandler:nil];
-    
     MessagesManager *manager = [MessagesManager sharedManager];
     
     manager.unread_count-=_dialog.unread_count;

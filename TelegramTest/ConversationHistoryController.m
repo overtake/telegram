@@ -124,6 +124,7 @@
 -(void)notificationReceiveMessage:(NSNotification *)notification {
     TGMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
     
+    
     if(!message) 
         return;
     

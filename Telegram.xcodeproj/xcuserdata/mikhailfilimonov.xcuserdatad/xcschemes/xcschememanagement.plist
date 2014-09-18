@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>TGKeeper.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>Telegram.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,6 +22,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>C235369719CB1A100044978E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>CEB09E5717DAFC250055F150</key>
 		<dict>
 			<key>primary</key>

@@ -307,6 +307,10 @@
 		C235364D19C88D620044978E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C235364E19C88D680044978E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C235365919C8B4320044978E /* UserCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C235365819C8B4320044978E /* UserCardViewController.m */; };
+		C235369A19CB1A100044978E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235369919CB1A100044978E /* Foundation.framework */; };
+		C235369D19CB1A100044978E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C235369C19CB1A100044978E /* main.m */; };
+		C23536A119CB1A100044978E /* TGKeeper.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C23536A019CB1A100044978E /* TGKeeper.1 */; };
+		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015819839A4B007AB338 /* TGTimerTarget.m */; };
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
@@ -589,6 +593,25 @@
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C235369619CB1A100044978E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				C23536A119CB1A100044978E /* TGKeeper.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		C23536A919CB1A5A0044978E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1189,6 +1212,13 @@
 		C235364C19C88D620044978E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		C235365719C8B4320044978E /* UserCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardViewController.h; sourceTree = "<group>"; };
 		C235365819C8B4320044978E /* UserCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardViewController.m; sourceTree = "<group>"; };
+		C235369819CB1A100044978E /* TGKeeper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TGKeeper; sourceTree = BUILT_PRODUCTS_DIR; };
+		C235369919CB1A100044978E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C235369C19CB1A100044978E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C235369F19CB1A100044978E /* TGKeeper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TGKeeper-Prefix.pch"; sourceTree = "<group>"; };
+		C23536A019CB1A100044978E /* TGKeeper.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TGKeeper.1; sourceTree = "<group>"; };
+		C23536A619CB1A430044978E /* FFYDaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFYDaemonController.h; sourceTree = "<group>"; };
+		C23536A719CB1A430044978E /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFYDaemonController.m; sourceTree = "<group>"; };
 		C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationBlockDelegate.h; sourceTree = "<group>"; };
 		C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAnimationBlockDelegate.m; sourceTree = "<group>"; };
 		C247015719839A4B007AB338 /* TGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTimerTarget.h; sourceTree = "<group>"; };
@@ -1672,6 +1702,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C235369519CB1A100044978E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C235369A19CB1A100044978E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEB09E5517DAFC250055F150 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2680,6 +2718,33 @@
 			name = exportcrard;
 			sourceTree = "<group>";
 		};
+		C235369B19CB1A100044978E /* TGKeeper */ = {
+			isa = PBXGroup;
+			children = (
+				C235369C19CB1A100044978E /* main.m */,
+				C23536A019CB1A100044978E /* TGKeeper.1 */,
+				C235369E19CB1A100044978E /* Supporting Files */,
+			);
+			path = TGKeeper;
+			sourceTree = "<group>";
+		};
+		C235369E19CB1A100044978E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C235369F19CB1A100044978E /* TGKeeper-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C23536A519CB1A3B0044978E /* daemon */ = {
+			isa = PBXGroup;
+			children = (
+				C23536A619CB1A430044978E /* FFYDaemonController.h */,
+				C23536A719CB1A430044978E /* FFYDaemonController.m */,
+			);
+			name = daemon;
+			sourceTree = "<group>";
+		};
 		C247C47D18C0D0C000726C91 /* tgupdates */ = {
 			isa = PBXGroup;
 			children = (
@@ -2956,6 +3021,7 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C23536A519CB1A3B0044978E /* daemon */,
 				C247015719839A4B007AB338 /* TGTimerTarget.h */,
 				C247015819839A4B007AB338 /* TGTimerTarget.m */,
 				C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */,
@@ -3158,6 +3224,7 @@
 				CEB09E6117DAFC250055F150 /* Telegram */,
 				CEDAEAEA1881AF84006189A2 /* YapDatabase */,
 				CEB0A14817DB03A90055F150 /* RunLoop */,
+				C235369B19CB1A100044978E /* TGKeeper */,
 				CEB09E5A17DAFC250055F150 /* Frameworks */,
 				CEB09E5917DAFC250055F150 /* Products */,
 			);
@@ -3167,6 +3234,7 @@
 			isa = PBXGroup;
 			children = (
 				CEB09E5817DAFC250055F150 /* Telegram.app */,
+				C235369819CB1A100044978E /* TGKeeper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3210,6 +3278,7 @@
 				CE05837F17FDB68C0029EFCB /* CoreFoundation.framework */,
 				CE05837D17FD80AD0029EFCB /* libz.dylib */,
 				CEB09E5B17DAFC250055F150 /* Cocoa.framework */,
+				C235369919CB1A100044978E /* Foundation.framework */,
 				CEB09E5D17DAFC250055F150 /* Other Frameworks */,
 				0AA7E1D118CD392A0064EFC7 /* UIImageView+AFNetworking.h */,
 				0AA7E1D218CD392A0064EFC7 /* UIImageView+AFNetworking.m */,
@@ -3753,6 +3822,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C235369719CB1A100044978E /* TGKeeper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C23536A219CB1A100044978E /* Build configuration list for PBXNativeTarget "TGKeeper" */;
+			buildPhases = (
+				C235369419CB1A100044978E /* Sources */,
+				C235369519CB1A100044978E /* Frameworks */,
+				C235369619CB1A100044978E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TGKeeper;
+			productName = TGKeeper;
+			productReference = C235369819CB1A100044978E /* TGKeeper */;
+			productType = "com.apple.product-type.tool";
+		};
 		CEB09E5717DAFC250055F150 /* Telegram */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Telegram" */;
@@ -3761,6 +3847,7 @@
 				CEB09E5517DAFC250055F150 /* Frameworks */,
 				CEB09E5617DAFC250055F150 /* Resources */,
 				0AB6A4FB1827DD4B0015920A /* Copy Files (6 items) */,
+				C23536A919CB1A5A0044978E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -3831,6 +3918,7 @@
 			projectRoot = "";
 			targets = (
 				CEB09E5717DAFC250055F150 /* Telegram */,
+				C235369719CB1A100044978E /* TGKeeper */,
 			);
 		};
 /* End PBXProject section */
@@ -3896,6 +3984,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C235369419CB1A100044978E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C235369D19CB1A100044978E /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEB09E5417DAFC250055F150 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4245,6 +4341,7 @@
 				C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */,
 				0A241AA018AB2F5900C32F45 /* MessageTableCellPhotoView.m in Sources */,
 				CEDAEB8E1881AFA6006189A2 /* DDTTYLogger.m in Sources */,
+				C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */,
 				0AB43BC518D8A4AC00FB805A /* CNGridViewItemLayout.m in Sources */,
 				0AB43BC718D8A4AC00FB805A /* NSView+CNGridView.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
@@ -4422,6 +4519,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C23536A319CB1A100044978E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TGKeeper/TGKeeper-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C23536A419CB1A100044978E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TGKeeper/TGKeeper-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		CEB09E7617DAFC250055F150 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4586,6 +4726,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C23536A219CB1A100044978E /* Build configuration list for PBXNativeTarget "TGKeeper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C23536A319CB1A100044978E /* Debug */,
+				C23536A419CB1A100044978E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Telegram" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

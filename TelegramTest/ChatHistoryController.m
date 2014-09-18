@@ -18,6 +18,7 @@
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "TGTimer.h"
 @interface ChatHistoryController ()
 
 @property (nonatomic,strong) MessagesViewController *controller;
@@ -41,7 +42,6 @@ static NSMutableArray *filters;
 
 -(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller {
     if(self = [self initWithConversation:conversation controller:controller historyFilter:[HistoryFilter class]]) {
-        
         
     }
     
@@ -80,13 +80,21 @@ static NSMutableArray *filters;
         [Notification addObserver:self selector:@selector(notificationFlushHistory:) name: MESSAGE_FLUSH_HISTORY];
         
         [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
+        
+        
+      //  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[[NSApp delegate] window]];
+
     }
     
     return self;
 }
 
 
-
+//-(void)windowBecomeNotification:(NSNotification *)notification {
+//    if([[[NSApp delegate] mainWindow] isKeyWindow]) {
+//        [self markAsReceived:0];
+//    }
+//}
 
 -(void)notificationReceiveMessages:(NSNotification *)notify {
     
@@ -94,21 +102,27 @@ static NSMutableArray *filters;
         NSArray *list = notify.object;
         
         NSMutableArray *accepted = [[NSMutableArray alloc] init];
+        NSMutableArray *ignored = [[NSMutableArray alloc] init];
         
         
-        [list enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            if(_conversation.peer.peer_id == obj.peer_id) {
+      //  if(list.count > 0) {
+        //    [self markAsReceived:[(TL_localMessage *)[list lastObject] n_id]];
+      //  }
+        
+        
+        list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
+        
+        [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            if(_conversation.peer.peer_id == obj.message.peer_id) {
                 [accepted addObject:obj];
+            } else {
+                [ignored addObject:obj];
             }
         }];
         
-        accepted = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:accepted] isLates:YES] mutableCopy];
-        
-        
-        
         
         if(accepted.count == 0) {
-            [self.delegate didAddIgnoredMessages:list];
+            [self.delegate didAddIgnoredMessages:ignored];
             return;
         }
         
@@ -130,9 +144,35 @@ static NSMutableArray *filters;
             [self.delegate receivedMessageList:accepted inRange:range itsSelf:NO];
         }];
         
+        
+        
     }];
     
 }
+
+
+//-(void)markAsReceived:(int)max_id {
+//    
+//    static TGTimer *timer;
+//    static int saved_max_id;
+//    
+//    if(saved_max_id < max_id)
+//        saved_max_id = max_id;
+//    else
+//        return;
+//    
+//    [timer invalidate];
+//    
+//    timer = [[TGTimer alloc] initWithTimeout:0.2 repeat:NO completion:^{
+//        
+//        if([[[NSApp delegate] mainWindow] isKeyWindow] && saved_max_id > 0) {
+//            [RPCRequest sendRequest:[TLAPI_messages_receivedMessages createWithMax_id:saved_max_id] successHandler:nil errorHandler:nil];
+//        }
+//    } queue:[ASQueue globalQueue].nativeQueue];
+//    
+//    [timer start];
+//    
+//}
 
 - (BOOL)isFiltredAccepted:(int)filterType {
     return  (self.filter.class == HistoryFilter.class || (filterType & [self.filter type]) > 0);
@@ -229,6 +269,8 @@ static NSMutableArray *filters;
     
     [ASQueue dispatchOnStageQueue:^{
         TGMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
+        
+       // [self markAsReceived:[message n_id]];
         
         if(!message)
             return;
@@ -941,7 +983,7 @@ static NSMutableArray *filters;
     
     self.filter.controller = nil;
     _filter = nil;
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [Notification removeObserver:self];
     
     self.delegate = nil;

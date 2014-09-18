@@ -4,11 +4,14 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
+
+
+#define TGDEBUG // UNDEF IN RELEASE
+
+
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
-#import <POP/POP.h>
-
 #import "ImageUtils.h"
-
+#import <POP/POP.h>
 
 #import "CMath.h"
 #import "SharedManager.h"
@@ -77,7 +80,6 @@
 #define DYNAMIC_PROPERTY(Name) static char k##Name; - (id) get##Name { return objc_getAssociatedObject(self, &k##Name);}; - (void) set##Name:(id)object { objc_setAssociatedObject(self, &k##Name, object, OBJC_ASSOCIATION_RETAIN); }
 
 
-#define TGDEBUG // UNDEF IN RELEASE
 
 
 #define ICON_SIZE 48.0f
