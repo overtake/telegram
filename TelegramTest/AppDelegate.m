@@ -219,22 +219,22 @@
 - (void)showMainApplicationWindowForCrashManager:(BITCrashManager *)crashManager {
     
 
-    NSString *keeper = [[NSBundle mainBundle] pathForResource:@"TGKeeper" ofType:@""];
-
-    FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-    
-    daemonController.launchPath = keeper;
-    
-    [daemonController setDaemonStartedCallback:^(NSNumber *pid) {
-        NSLog(@"started");
-    }];
-    
-    [daemonController setDaemonStoppedCallback:^ {
-        NSLog(@"stopped");
-    }];
-    
-    [daemonController start];
-    
+//    NSString *keeper = [[NSBundle mainBundle] pathForResource:@"TGKeeper" ofType:@""];
+//
+//    FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+//    
+//    daemonController.launchPath = keeper;
+//    
+//    [daemonController setDaemonStartedCallback:^(NSNumber *pid) {
+//        NSLog(@"started");
+//    }];
+//    
+//    [daemonController setDaemonStoppedCallback:^ {
+//        NSLog(@"stopped");
+//    }];
+//    
+//    [daemonController start];
+//    
     
     [self initializeApplication];
     

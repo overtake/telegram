@@ -17,6 +17,6 @@
 
 - (void)prepareForLoading;
 - (void)loadingSuccess;
-
+- (void)setHasImage:(BOOL)hasImage;
 - (void)performTextToBottomWithDuration:(float)positionDuration;
 @end

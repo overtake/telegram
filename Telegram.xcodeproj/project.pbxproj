@@ -311,6 +311,7 @@
 		C235369D19CB1A100044978E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C235369C19CB1A100044978E /* main.m */; };
 		C23536A119CB1A100044978E /* TGKeeper.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C23536A019CB1A100044978E /* TGKeeper.1 */; };
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015819839A4B007AB338 /* TGTimerTarget.m */; };
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
@@ -1219,6 +1220,8 @@
 		C23536A019CB1A100044978E /* TGKeeper.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TGKeeper.1; sourceTree = "<group>"; };
 		C23536A619CB1A430044978E /* FFYDaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFYDaemonController.h; sourceTree = "<group>"; };
 		C23536A719CB1A430044978E /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFYDaemonController.m; sourceTree = "<group>"; };
+		C23536AB19CC64330044978E /* LoginBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginBottomView.h; sourceTree = "<group>"; };
+		C23536AC19CC64330044978E /* LoginBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginBottomView.m; sourceTree = "<group>"; };
 		C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationBlockDelegate.h; sourceTree = "<group>"; };
 		C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAnimationBlockDelegate.m; sourceTree = "<group>"; };
 		C247015719839A4B007AB338 /* TGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTimerTarget.h; sourceTree = "<group>"; };
@@ -2415,6 +2418,8 @@
 				0ACDB14018D09CC0009FE910 /* LoginButtonAndErrorView.m */,
 				0A56FF1218D0BBCC00FE63CF /* LoginSMSCodeView.h */,
 				0A56FF1318D0BBCC00FE63CF /* LoginSMSCodeView.m */,
+				C23536AB19CC64330044978E /* LoginBottomView.h */,
+				C23536AC19CC64330044978E /* LoginBottomView.m */,
 			);
 			name = newLogin;
 			sourceTree = "<group>";
@@ -4245,6 +4250,7 @@
 				0A9EDC521897BA0E0037E1BC /* NSTextView+RBLAntialiasingAdditions.m in Sources */,
 				CEDAEB631881AF85006189A2 /* YapDatabaseView.m in Sources */,
 				CEB0A1E417DB03AA0055F150 /* AsyncUdpSocket.m in Sources */,
+				C23536AD19CC64330044978E /* LoginBottomView.m in Sources */,
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
 				CEDAEB5B1881AF85006189A2 /* YapDatabaseSecondaryIndexConnection.m in Sources */,

@@ -11,14 +11,9 @@
 
 @interface LoginSMSCodeView : TMView<NSTextFieldDelegate>
 
-
-@property (nonatomic,assign) BOOL isAppCodeSent;
-@property (nonatomic,assign) int timeToCall;
 - (void)performSlideDownWithDuration:(float)duration;
 - (void)performShake;
 
-- (void)startTimer:(int)timer;
-- (void)stopTimer;
 
 - (void)changeCallTextFieldString:(NSString *)string;
 - (NSString *)code;

@@ -13,7 +13,7 @@
 #import "LoginButtonAndErrorView.h"
 #import "LoginSMSCodeView.h"
 #import "RegistrationViewController.h"
-
+#import "LoginBottomView.h"
 
 @interface NewLoginViewController()
 
@@ -28,6 +28,8 @@
 @property (nonatomic, strong) TMTextField *SMSCodePlaceholder;
 @property (nonatomic, strong) TMTextField *numberPlaceholder;
 @property (nonatomic, strong) TMTextField *countryPlaceholder;
+
+@property (nonatomic,strong) LoginBottomView *bottomView;
 
 @property (nonatomic) BOOL isCodeExpired;
 
@@ -59,7 +61,7 @@
     [self.view addSubview:self.containerView];
     
     self.logoImageView = [[NSImageView alloc] init];
-    self.logoImageView.image = image_logo();
+    self.logoImageView.image = [NSImage imageNamed:@"TelegramIcon"];
     [self.logoImageView setFrameSize:self.logoImageView.image.size];
     [self.logoImageView setFrameOrigin:NSMakePoint(0, self.containerView.bounds.size.height - self.logoImageView.bounds.size.height)];
     [self.containerView addSubview:self.logoImageView];
@@ -80,8 +82,8 @@
     NSMutableAttributedString *applicationInfoAttributedString = [[NSMutableAttributedString alloc] init];
     [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Label", nil) withColor:NSColorFromRGB(0x9b9b9b)];
     [applicationInfoAttributedString appendString:@" "  withColor:NSColorFromRGB(0x9b9b9b)];
-    NSRange range = [applicationInfoAttributedString appendString:NSLocalizedString(@"Telegram Messenger", nil) withColor:BLUE_UI_COLOR];
-    [applicationInfoAttributedString setLink:@"telegram_site" forRange:range];
+  //  NSRange range = [applicationInfoAttributedString appendString:NSLocalizedString(@"Telegram Messenger", nil) withColor:BLUE_UI_COLOR];
+  //  [applicationInfoAttributedString setLink:@"telegram_site" forRange:range];
     
   //  [applicationInfoAttributedString appendString:@".\n"  withColor:NSColorFromRGB(0x9b9b9b)];
    // [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Description", nil) withColor:NSColorFromRGB(0x9b9b9b)];
@@ -118,16 +120,21 @@
     weakify();
     
     
-    self.startMessagingView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(120, 0, self.view.bounds.size.width - 110, 50)];
+    self.startMessagingView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(120, 12, self.view.bounds.size.width - 110, 50)];
 //    [self.startMessagingView setBackgroundColor:[NSColor redColor]];
     [self.containerView addSubview:self.startMessagingView];
     [self.startMessagingView.textButton setTapBlock:^{
         [strongSelf signIn];
     }];
+    
+    [self.startMessagingView setHasImage:YES];
+    
+    [self.startMessagingView setHidden:YES];
+    
     self.startMessagingView.textButton.layer.opacity = 0;
 
     
-    self.getSMSCodeView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(120, 20, self.view.bounds.size.width - 110, 100)];
+    self.getSMSCodeView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(120, 16, self.view.bounds.size.width - 110, 100)];
     //    [self.getSMSCodeView setBackgroundColor:[NSColor redColor]];
     [self.getSMSCodeView setButtonText:NSLocalizedString(@"Login.GetCode", nil)];
     [self.getSMSCodeView.textButton setTapBlock:^{
@@ -136,10 +143,10 @@
     
     [self.containerView addSubview:self.getSMSCodeView];
     
-   // [self.containerView setBackgroundColor:[NSColor greenColor]];
+ //   [self.containerView setBackgroundColor:[NSColor greenColor]];
 
     
-    float offset = 109;
+    float offset = 121;
     self.SMSCodePlaceholder = [TMTextField loginPlaceholderTextField];
     self.SMSCodePlaceholder.stringValue = NSLocalizedString(@"Login.SmsCode", nil);
     self.SMSCodePlaceholder.layer.opacity = 0;
@@ -153,7 +160,7 @@
     [self.containerView addSubview:view];
     
     
-    offset += 49;
+    offset += 55;
     self.numberPlaceholder = [TMTextField loginPlaceholderTextField];
     self.numberPlaceholder.stringValue = NSLocalizedString(@"Login.PhonePlaceholder", nil);
     [self.numberPlaceholder sizeToFit];
@@ -166,6 +173,15 @@
     [self.countryPlaceholder sizeToFit];
     [self.countryPlaceholder setFrameOrigin:NSMakePoint(self.containerView.bounds.size.width - self.countryPlaceholder.bounds.size.width - 330, offset)];
     [self.containerView addSubview:self.countryPlaceholder];
+    
+    
+    self.bottomView = [[LoginBottomView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 100)];
+    
+    self.bottomView.loginController = self;
+    
+    [self.bottomView setHidden:YES];
+    
+    [self.view addSubview:self.bottomView];
 }
 
 - (void)signIn {
@@ -185,11 +201,12 @@
     
 //    [self.startMessagingView showErrorWithText:nil];
     [self.startMessagingView prepareForLoading];
+    
     [self.SMSCodeView performBlocking:YES];
     
     [RPCRequest sendRequest:[TLAPI_auth_signIn createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash phone_code:self.SMSCodeView.code] successHandler:^(RPCRequest *request, id response) {
         
-        [self.SMSCodeView stopTimer];
+        [self.bottomView stopTimer];
         [[Telegram sharedInstance] onAuthSuccess];
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -198,7 +215,7 @@
         if([error.error_msg isEqualToString:@"PHONE_CODE_EXPIRED"]) {
             [self.startMessagingView showErrorWithText:NSLocalizedString(@"Login.ExpiredCode", nil)];
             [self.startMessagingView setButtonText:NSLocalizedString(@"Login.GetNewCode", nil)];
-            [self.SMSCodeView stopTimer];
+            [self.bottomView stopTimer];
             [self.startMessagingView loadingSuccess];
             self.isCodeExpired = YES;
             return;
@@ -215,7 +232,7 @@
         }
         
 //        [self.SMSCodeView performBlocking:NO];
-        [self.SMSCodeView stopTimer];
+        [self.bottomView stopTimer];
 
         
         RegistrationViewController *r = [[RegistrationViewController alloc] initWithFrame:self.view.bounds];
@@ -235,7 +252,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [self.countrySelectorView becomeFirstResponder];
     [self.SMSCodeView performBlocking:NO];
-    [self.SMSCodeView stopTimer];
+    [self.bottomView stopTimer];
     [self.startMessagingView loadingSuccess];
     
 }
@@ -271,11 +288,11 @@
     [self.getSMSCodeView performTextToBottomWithDuration:duration];
     
    
-    [self.SMSCodeView setFrameSize:NSMakeSize(NSWidth(self.SMSCodeView.frame), self.SMSCodeView.isAppCodeSent ? 140 : 80)];
+   // [self.bottomView setFrameSize:NSMakeSize(NSWidth(self.SMSCodeView.frame), self.bottomView.isAppCodeSent ? 140 : 80)];
     
    // [self.startMessagingView setBackgroundColor:[NSColor orangeColor]];
     
-    [self.startMessagingView setFrameOrigin:NSMakePoint(NSMinX(self.startMessagingView.frame), self.SMSCodeView.isAppCodeSent ? 0 : 40)];
+  //  [self.startMessagingView setFrameOrigin:NSMakePoint(NSMinX(self.startMessagingView.frame), self.SMSCodeView.isAppCodeSent ? 0 : 40)];
     
    /// [self.containerView setCenterByView:self.view];
     
@@ -321,10 +338,23 @@
     self.startMessagingView.textButton.layer.opacity = 0;
     [self.startMessagingView.textButton setHidden:NO];
     
+    
+    self.bottomView.layer.opacity = 0;
+    [self.bottomView setHidden:NO];
+    
     CABasicAnimation *animation = (CABasicAnimation *)[TMAnimations fadeWithDuration:duration * (6 / 13.0) fromValue:0.1 toValue:1];
     animation.beginTime = CACurrentMediaTime() + duration * (7 / 13.0);
     [self.startMessagingView.textButton setAnimation:animation forKey:@"opacity"];
+    
+    
+     [self.bottomView setAnimation:animation forKey:@"opacity"];
+    
     [CATransaction commit];
+    
+    
+   
+    
+    
 }
 
 - (void)getSMSCodeSendRequest {
@@ -338,9 +368,9 @@
     [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:5 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         
         
-        [self.SMSCodeView setIsAppCodeSent:[response isKindOfClass:[TL_sentAppCode class]]];
+        [self.bottomView setIsAppCodeSent:[response isKindOfClass:[TL_sentAppCode class]]];
             
-        self.SMSCodeView.timeToCall = response.send_call_timeout;
+        self.bottomView.timeToCall = response.send_call_timeout;
      
         self.phone_code_hash = response.phone_code_hash;
         self.isPhoneRegistered = response.phone_registered;
@@ -348,8 +378,8 @@
         
         [self.getSMSCodeView loadingSuccess];
         
-        if(!self.SMSCodeView.isAppCodeSent) {
-            [self startTimer:self.SMSCodeView.timeToCall];
+        if(!self.bottomView.isAppCodeSent) {
+            [self startTimer:self.bottomView.timeToCall];
         }
         
         [self performSMSCodeTextFieldShowAnimation];
@@ -371,8 +401,8 @@
 
 -(void)sendSmsCode {
     
-    self.SMSCodeView.isAppCodeSent = NO;
-    [self startTimer:self.SMSCodeView.timeToCall];
+    self.bottomView.isAppCodeSent = NO;
+    [self startTimer:self.bottomView.timeToCall];
     
    [RPCRequest sendRequest:[TLAPI_auth_sendSms createWithPhoneNumber:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
        
@@ -388,14 +418,14 @@
 
 - (void)startTimer:(int)time {
     
-    [self.SMSCodeView startTimer:time];
+    [self.bottomView startTimer:time];
 }
 
 
 - (void)performBackEditAnimation:(float)duration {
     [self.countrySelectorView performBlocking:NO];
     [self.countrySelectorView showEditButton:NO];
-    [self.SMSCodeView stopTimer];
+    [self.bottomView stopTimer];
     
     [self.getSMSCodeView loadingSuccess];
     
@@ -434,6 +464,9 @@
         [self.startMessagingView.errorTextField setHidden:YES];
         
         [self.startMessagingView.textButton setHidden:YES];
+        [self.startMessagingView setHidden:YES];
+        [self.bottomView setHidden:YES];
+        
         
         if(!IS_RETINA) {
             [self.getSMSCodeView.errorTextField setWantsLayer:NO];
@@ -475,6 +508,10 @@
     [self.getSMSCodeView.errorTextField.layer setOpacity:0];
     [self.getSMSCodeView setButtonText:self.getSMSCodeView.textButton.stringValue];
     [self.getSMSCodeView.textButton setAnimation:[TMAnimations fadeWithDuration:duration fromValue:0.3 toValue:1] forKey:@"opacity"];
+    [self.bottomView setAnimation:[TMAnimations fadeWithDuration:duration fromValue:1 toValue:0] forKey:@"opacity"];
+    
+  
+    
     [CATransaction commit];
 }
 

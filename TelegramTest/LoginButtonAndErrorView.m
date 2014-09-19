@@ -9,6 +9,8 @@
 #import "LoginButtonAndErrorView.h"
 
 @interface LoginButtonAndErrorView()
+@property (nonatomic,strong) NSImageView *nextImageView;
+@property (nonatomic,assign) BOOL hasImage;
 @end
 
 @implementation LoginButtonAndErrorView
@@ -32,8 +34,24 @@
         [self.textButton setWantsLayer:IS_RETINA];
         [self.textButton sizeToFit];
         [self addSubview: self.textButton];
+        
+        
+        NSImage *image = [NSImage imageNamed:@"login_next"];
+        
+        self.nextImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image.size.width, image.size.height)];
+        self.nextImageView.image = image;
+        [self addSubview:self.nextImageView];
+        self.nextImageView.wantsLayer = YES;
+        [self.nextImageView setHidden:YES];
+        
+      //  self.backgroundColor = [NSColor orangeColor];
     }
     return self;
+}
+
+-(void)setHasImage:(BOOL)hasImage {
+    self->_hasImage = hasImage;
+    [self.nextImageView setHidden:!hasImage];
 }
 
 - (void)setButtonText:(NSString *)string {
@@ -45,15 +63,19 @@
         errorOffset = self.errorTextField.bounds.size.height + 5;
     
     [self.textButton setFrameOrigin:NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - errorOffset)];
+    
+    [self.nextImageView setFrameOrigin:NSMakePoint(self.textButton.frame.origin.x + NSWidth(self.textButton.frame) + 7, self.bounds.size.height - self.textButton.bounds.size.height - errorOffset +2)];
 }
 
 - (void)prepareForLoading {
     [self.textButton setDisable:YES];
+    [self.nextImageView setHidden:YES];
 }
 
 - (void)loadingSuccess {
     [self.textButton setDisable:NO];
     [self.textButton setTextColor:BLUE_UI_COLOR];
+    [self setHasImage:self.hasImage];
 }
 
 - (void)showErrorWithText:(NSString *)text {
@@ -75,7 +97,7 @@
     
     BOOL fromOpacity, toOpacity;
 
-    NSPoint fromPoint, toPoint;
+    NSPoint fromPoint, toPoint, fromPointImage,toPointImage;
   
     [self prepareForAnimation];
     [self.errorTextField prepareForAnimation];
@@ -98,12 +120,21 @@
         toPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - self.errorTextField.bounds.size.height - offsetError);
         fromPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height);
         
+        
+        
+        toPointImage = NSMakePoint(self.textButton.frame.origin.x + NSWidth(self.textButton.frame) + 7, self.bounds.size.height - self.errorTextField.bounds.size.height - offsetError - 18);
+        fromPointImage = self.nextImageView.frame.origin;
+        
+        
     } else {
         fromOpacity = 1;
         toOpacity = 0;
         
         fromPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height - self.errorTextField.bounds.size.height - offsetError);
         toPoint = NSMakePoint(self.textButton.frame.origin.x, self.bounds.size.height - self.textButton.bounds.size.height);
+        
+        toPointImage = NSMakePoint(self.textButton.frame.origin.x + NSWidth(self.textButton.frame) + 7, self.bounds.size.height - self.errorTextField.bounds.size.height - offsetError - 13);
+        fromPointImage = self.nextImageView.frame.origin;
     }
     
     
@@ -112,6 +143,8 @@
     
     if(!NSEqualPoints(toPoint, self.textButton.frame.origin))
         [self.textButton setAnimation:[TMAnimations postionWithDuration:duration fromValue:fromPoint toValue:toPoint] forKey:@"position"];
+    
+    [self.nextImageView setAnimation:[TMAnimations postionWithDuration:duration fromValue:fromPointImage toValue:toPointImage] forKey:@"position"];
 
     [CATransaction commit];
 }
