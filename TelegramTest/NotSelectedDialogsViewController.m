@@ -32,11 +32,11 @@
     [self.view addSubview:containerView];
 
         
-    NSImage *noDialogsImage = [NSImage imageNamed:@"StartPlane"];
-    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, noDialogsImage.size.width, noDialogsImage.size.height)];
-    [imageView setWantsLayer:YES];
-    imageView.image = noDialogsImage;
-    [containerView addSubview:imageView];
+//    NSImage *noDialogsImage = [NSImage imageNamed:@"StartPlane"];
+//    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, noDialogsImage.size.width, noDialogsImage.size.height)];
+//    [imageView setWantsLayer:YES];
+//    imageView.image = noDialogsImage;
+//    [containerView addSubview:imageView];
 
     
     TMTextField *textField = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
@@ -48,17 +48,23 @@
     [mutParaStyle setLineSpacing:3];
     [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSParagraphStyleAttributeName: mutParaStyle}]];
     [textField sizeToFit];
-    [imageView setFrameOrigin:NSMakePoint(roundf((textField.frame.size.width - imageView.frame.size.width) / 2), textField.frame.size.height + 20)];
+ //   [imageView setFrameOrigin:NSMakePoint(roundf((textField.frame.size.width - imageView.frame.size.width) / 2), textField.frame.size.height + 20)];
     
 
     [containerView addSubview:textField];
     
-    [containerView setFrameSize:NSMakeSize(textField.frame.size.width, textField.frame.size.height + imageView.frame.size.height + imageView.frame.origin.y - textField.frame.size.height)];
+  //  [containerView setFrameSize:NSMakeSize(textField.frame.size.width, textField.frame.size.height + imageView.frame.size.height + imageView.frame.origin.y - textField.frame.size.height)];
     [containerView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinYMargin];
-    [containerView setFrameOrigin:NSMakePoint(roundf((self.view.bounds.size.width - containerView.frame.size.width) / 2), roundf((self.view.bounds.size.height - containerView.frame.size.height) / 2) + 30)];
+  //  [containerView setFrameOrigin:NSMakePoint(roundf((self.view.bounds.size.width - containerView.frame.size.width) / 2), roundf((self.view.bounds.size.height - containerView.frame.size.height) / 2) + 30)];
     [self.view setAutoresizesSubviews:YES];
-
     
+    
+
+    containerView.layer.backgroundColor =[NSColor redColor].CGColor;
+    
+    [containerView setFrameSize:textField.frame.size];
+    
+    [containerView setCenterByView:self.view];
     
 //    id object = [[NSClassFromString(@"IKImageCropView") alloc] init];
 //    BTRImage *image = [BTRImage animatedImage:@"5_14"];
