@@ -63,7 +63,7 @@
     self.logoImageView = [[NSImageView alloc] init];
     self.logoImageView.image = [NSImage imageNamed:@"TelegramIcon"];
     [self.logoImageView setFrameSize:self.logoImageView.image.size];
-    [self.logoImageView setFrameOrigin:NSMakePoint(0, self.containerView.bounds.size.height - self.logoImageView.bounds.size.height)];
+    [self.logoImageView setFrameOrigin:NSMakePoint(22, self.containerView.bounds.size.height - self.logoImageView.bounds.size.height)];
     [self.containerView addSubview:self.logoImageView];
     
     TMTextField *applicationNameTextField = [TMTextField defaultTextField];
