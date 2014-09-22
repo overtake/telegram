@@ -7,7 +7,7 @@
 
 
 #define TGDEBUG // UNDEF IN RELEASE
-
+//#define TGStable // DEF IN stable version
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import "ImageUtils.h"

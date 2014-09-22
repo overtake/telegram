@@ -283,6 +283,16 @@
     [self.updater setAutomaticallyChecksForUpdates:YES];
   //  [self.updater setAutomaticallyDownloadsUpdates:NO];
     
+    NSString *feedURL = @"https://rink.hockeyapp.net/api/2/apps/c55f5e74ae5d0ad254df29f71a1b5f0e";
+    
+    #ifdef TGStable
+    
+    feedURL = @"https://rink.hockeyapp.net/apps/d77af558b21e0878953100680b5ac66a";
+    
+    #endif
+    
+    [self.updater setFeedURL:[NSURL URLWithString:feedURL]];
+    
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSArray *languages = [defs objectForKey:@"AppleLanguages"];
     NSString *preferredLang = [languages objectAtIndex:0];
@@ -293,6 +303,8 @@
     
     [NSTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(checkUpdates) userInfo:nil repeats:YES];
     [self.updater checkForUpdatesInBackground];
+    
+    
     
     
 #endif
