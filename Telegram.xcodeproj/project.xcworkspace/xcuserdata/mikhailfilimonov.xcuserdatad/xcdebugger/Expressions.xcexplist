@@ -330,12 +330,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageView setObject:]:TGImageView.m">
          <PersistentStrings>
             <PersistentString
                value = "self.image">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">

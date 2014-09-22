@@ -112,7 +112,7 @@
     self.textField = [TMTextField defaultTextField];
     [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
     
-    [self.textField setSelectable:YES];
+ //   [self.textField setSelectable:YES];
     
     [self.textField setDrawsBackground:YES];
   //  [self.textField setBackgroundColor:[NSColor redColor]];
