@@ -287,7 +287,7 @@
     
     #ifdef TGStable
     
-    feedURL = @"https://rink.hockeyapp.net/apps/d77af558b21e0878953100680b5ac66a";
+    feedURL = @"https://rink.hockeyapp.net/api/2/apps/d77af558b21e0878953100680b5ac66a";
     
     #endif
     
