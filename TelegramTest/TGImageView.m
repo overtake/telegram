@@ -62,14 +62,16 @@
             }
         }
         
-        self.image = object.placeholder ? (BTRImage *)[self roundedImage:object.placeholder size:object.imageSize] : nil;
+        
+        self.image = object.placeholder ? [self roundedImage:object.placeholder size:object.imageSize] : nil;
+        
     } else {
         NSImage *image = [[ImageCache sharedManager] imageFromMemory:object.location];
         if(image) {
             self.image = (BTRImage *)image;
             return;
         }
-        self.image = object.placeholder ? (BTRImage *)[self roundedImage:object.placeholder size:object.imageSize] : nil;
+        self.image = object.placeholder ? object.placeholder : nil;
     }
     
     

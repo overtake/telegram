@@ -298,7 +298,7 @@ static const int navigationOffset = 50;
         
         [self.containerView addSubview:newView];
     
-        float duration = 0.2;
+        float duration = 0.3;
         
         [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
@@ -310,8 +310,8 @@ static const int navigationOffset = 50;
         
         switch (self.animationStyle) {
             case TMNavigationControllerStylePush: {
-                anim1To = -self.containerView.bounds.size.width;
-                anim2From = self.containerView.bounds.size.width;
+                anim1To = - self.containerView.bounds.size.width;
+                anim2From = self.containerView.bounds.size.width /3;
                 
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 
@@ -319,7 +319,7 @@ static const int navigationOffset = 50;
                 break;
             case TMNavigationControllerStylePop: {
                 anim1To = self.containerView.bounds.size.width;
-                anim2From = -self.containerView.bounds.size.width;
+                anim2From = - (self.containerView.bounds.size.width/3);
                 
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 
@@ -357,11 +357,20 @@ static const int navigationOffset = 50;
        
         
         
+        
         POPBasicAnimation *oldViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         oldViewAlpha.toValue = @(0.0);
-        oldViewAlpha.duration = duration/2;
+        oldViewAlpha.duration = duration;
         oldViewAlpha.timingFunction = timingFunction;
         [oldView.layer pop_addAnimation:oldViewAlpha forKey:@"opacity"];
+        
+        
+        POPBasicAnimation *newViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        newViewAlpha.toValue = @(1.0);
+        newViewAlpha.fromValue = @(0);
+        newViewAlpha.duration = duration;
+        newViewAlpha.timingFunction = timingFunction;
+        [newView.layer pop_addAnimation:newViewAlpha forKey:@"opacity"];
         
         
         POPBasicAnimation *newViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];

@@ -97,10 +97,10 @@ static NSImage* image_broadcast() {
         [self.selectButton setAutoresizingMask:NSViewMinXMargin];
         [self.selectButton setHidden:NO];
         
-        [self.selectButton setBackgroundImage:image_unchecked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHighlighted];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateSelected];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateSelected];
         
         
         
@@ -211,7 +211,13 @@ static NSImage* image_broadcast() {
     }
     return self;
 }
+NSImage *selectCheckImage() {
+    return [NSImage imageNamed:@"ComposeCheck"];
+}
 
+NSImage *selectCheckActiveImage() {
+    return [NSImage imageNamed:@"ComposeCheckActive"];
+}
 
 
 - (void)alertError {
@@ -298,13 +304,13 @@ static NSImage* image_broadcast() {
     }
     
     if(self.selectButton.isSelected) {
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_checked() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateHighlighted];
     } else {
-        [self.selectButton setBackgroundImage:image_unchecked() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:image_uncheckedHover() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHighlighted];
     }
     
     NSColor *color;

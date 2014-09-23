@@ -60,7 +60,7 @@
 
 - (void) setItem:(MessageTableItemPhoto *)item {
     [super setItem:item];
-    
+//    
     [self.imageView setFrameSize:item.blockSize];
     
     
