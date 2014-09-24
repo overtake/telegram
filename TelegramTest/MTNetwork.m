@@ -63,7 +63,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_context enumerateAddressSetsForDatacenters:^(NSInteger datacenterId, MTDatacenterAddressSet *addressSet, BOOL *stop) {
                 
-                if([addressSet.firstAddress.ip isEqualToString:@"32.210.235.12"]) {
+                if([addressSet.firstAddress.ip isEqualToString:@"31.210.235.12"]) {
                     
                     [_context updateAddressSetForDatacenterWithId:datacenterId addressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:@"149.154.167.90" port:addressSet.firstAddress.port]]]];
                     
