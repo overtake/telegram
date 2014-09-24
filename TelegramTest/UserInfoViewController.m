@@ -354,6 +354,9 @@
 }
 
 -(void)setUser:(TGUser *)user conversation:(TL_conversation *)conversation  {
+    
+    
+    
     self->_state = UserInfoViewControllerNormal;
     self->_user = user;
     self->_conversation = conversation;

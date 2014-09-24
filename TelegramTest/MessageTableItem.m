@@ -163,18 +163,6 @@
 + (id) messageItemFromObject:(TGMessage *)object {
     id objectReturn = nil;
 
-//    static NSCache *cache = nil;
-//    static dispatch_once_t predicate;
-//    dispatch_once( &predicate, ^{
-//        cache = [[NSCache alloc] init];
-//        [cache setTotalCostLimit:150000];
-//        [cache setCountLimit:1000];
-//    } );
-//    
-//    NSNumber *key = [NSNumber numberWithUnsignedInteger:object.hash];
-//    objectReturn = [cache objectForKey:key];
-//    if(objectReturn)
-//        return objectReturn;
     
     if(object.class == [TL_localMessage class] || object.class == [TL_localMessageForwarded class] || object.class == [TL_destructMessage class]) {
         TGMessage *message = object;
@@ -225,8 +213,6 @@
         objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:object ];
     }
     
-//    if(objectReturn)
-//        [cache setObject:objectReturn forKey:key];
     
     return objectReturn;
 }

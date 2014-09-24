@@ -42,6 +42,8 @@
     
     [self.tableView ready];
     
+   
+    
     self.tableView.selectLimit = self.action.behavior.limit;
     self.action.behavior.delegate = self;
     

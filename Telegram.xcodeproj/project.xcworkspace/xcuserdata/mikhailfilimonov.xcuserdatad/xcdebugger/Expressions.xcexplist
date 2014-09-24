@@ -338,6 +338,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageView setObject:]:TGImageView.m">
          <PersistentStrings>
             <PersistentString

@@ -61,6 +61,18 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_context setKeychain:[MTKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER]];
             
+            [_context enumerateAddressSetsForDatacenters:^(NSInteger datacenterId, MTDatacenterAddressSet *addressSet, BOOL *stop) {
+                
+                if([addressSet.firstAddress.ip isEqualToString:@"32.210.235.12"]) {
+                    
+                    [_context updateAddressSetForDatacenterWithId:datacenterId addressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:@"149.154.167.90" port:addressSet.firstAddress.port]]]];
+                    
+                    *stop = YES;
+                }
+                
+                
+            }];
+            
             
             [_context addChangeListener:self];
             
@@ -125,9 +137,9 @@ static int MAX_WORKER_POLL = 5;
 
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
-    DLog(@"start init");
     
     [ASQueue dispatchOnStageQueue:^{
+        
         [_mtProto stop];
         _mtProto = [[MTConnection alloc] initWithContext:_context datacenterId:dc_id];
         
@@ -141,8 +153,6 @@ static int MAX_WORKER_POLL = 5;
 
     }];
     
-    
-    DLog(@"end init");
 }
 
 

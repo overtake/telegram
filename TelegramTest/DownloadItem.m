@@ -86,8 +86,7 @@ static int futureUniqueKey = 0;
 
 -(void)cancel {
      self.downloadState = DownloadStateCanceled;
-    
-    [DownloadQueue removeItem:self];
+     [DownloadQueue removeItem:self];
     [self removeAllEvents];
    
 }
@@ -137,7 +136,13 @@ static int futureUniqueKey = 0;
                     default:
                         break;
                 }
+                
+                if(type == DownloadItemHandlerTypeCompletion)
+                    [self clear];
+                
             } synchronous:NO];
+            
+           
             
         }];
         
@@ -157,6 +162,11 @@ static int futureUniqueKey = 0;
         [self.events removeObject:event];
     }];
     
+}
+
+-(void)clear {
+    self.object = nil;
+    [self removeAllEvents];
 }
 
 -(void)removeAllEvents {

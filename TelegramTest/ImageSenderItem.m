@@ -191,6 +191,7 @@
     [self.uploadOperation ready:UploadImageType];
 }
 
+
 -(void)cancel {
     [self.uploadOperation cancel];
     [super cancel];

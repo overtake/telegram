@@ -68,37 +68,54 @@
     return self;
 }
 
+static NSCache *cacheItems;
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cacheItems = [[NSCache alloc] init];
+    });
+}
+
+
+
 -(void)ready {
     NSArray *contacts = [[NewContactsManager sharedManager] all];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [contacts enumerateObjectsUsingBlock:^(TGContact * obj, NSUInteger idx, BOOL *stop) {
+    contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN %@)",self.exceptions]];
+    
+    
+    [contacts enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
         
-        NSArray *exc = [self.exceptions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.intValue = %d",obj.user_id]];
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
         
-        if(exc.count == 0)
-            [items addObject:[[SelectUserItem alloc] initWithObject:obj]];
+        [items addObject:item];
+        
+        if(idx == 30)
+            *stop = YES;
     }];
     
     
     [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
     
+//    
+//    [items sortUsingComparator:^NSComparisonResult(SelectUserItem* obj1, SelectUserItem* obj2) {
+//        int first = obj1.contact.user.lastSeenTime;
+//        int second = obj2.contact.user.lastSeenTime;
+//        
+//        if ( first > second ) {
+//            return (NSComparisonResult)NSOrderedAscending;
+//        } else if ( first < second ) {
+//            return (NSComparisonResult)NSOrderedDescending;
+//        } else {
+//            return (NSComparisonResult)NSOrderedSame;
+//        }
+//        
+//    }];
     
-    [items sortUsingComparator:^NSComparisonResult(SelectUserItem* obj1, SelectUserItem* obj2) {
-        int first = obj1.contact.user.lastSeenTime;
-        int second = obj2.contact.user.lastSeenTime;
-        
-        if ( first > second ) {
-            return (NSComparisonResult)NSOrderedAscending;
-        } else if ( first < second ) {
-            return (NSComparisonResult)NSOrderedDescending;
-        } else {
-            return (NSComparisonResult)NSOrderedSame;
-        }
-        
-    }];
-    
+     NSLog(@"test4");
     
     self.tm_delegate = self;
     
@@ -113,11 +130,38 @@
     [self insert:self.searchItem atIndex:0 tableRedraw:NO];
     
     [self insert:self.items startIndex:1 tableRedraw:NO];
+    
+    
     [self reloadData];
+    
+    if(contacts.count > 30)
+        dispatch_after_seconds(0.3, ^{
+            [self insertOther:[contacts subarrayWithRange:NSMakeRange(30, contacts.count - 30)]];
+        });
     
 }
 
-
+-(void)insertOther:(NSArray *)other {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
+            
+             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+             [items addObject:item];
+            
+        }];
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            [self.items addObjectsFromArray:items];
+            [self insert:items startIndex:self.count tableRedraw:NO];
+            [self reloadData];
+        }];
+    }];
+    
+    
+}
 
 - (void)setSelectLimit:(NSUInteger)selectLimit {
     self->_selectLimit = selectLimit;

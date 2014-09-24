@@ -104,6 +104,5 @@ typedef enum {
 -(void)resetItem;
 -(TGInputFileLocation *)input;
 
-
 -(id)initWithObject:(id)object size:(int)size;
 @end

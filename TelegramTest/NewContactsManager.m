@@ -52,14 +52,16 @@
     INIT_HASH_CHEKER();
     [[Storage manager] contacts:^(NSArray *contacts) {
         
-        
-        
-        
         [ASQueue dispatchOnStageQueue:^{
             HASH_CHECK();
             [self->list addObjectsFromArray:contacts];
             for(TGContact *contact in contacts)
                 [self insertContact:contact insertToDB:NO];
+            
+            
+            [self->list sortUsingComparator:^NSComparisonResult(TGContact *obj1, TGContact *obj2) {
+                return [obj1.user.first_name compare:obj2.user.first_name options:NSWidthInsensitiveSearch];
+            }];
             
             [Notification perform:CONTACTS_MODIFIED data:@{KEY_CONTACTS : self->list}];
             
@@ -193,7 +195,7 @@
                 
                 [self->list addObjectsFromArray:result.contacts];
                 for(TGContact *contact in result.contacts)
-                    [self insertContact:contact insertToDB:NO];
+                    [self insertContact:contact insertToDB:YES];
                 
                 DLog(@"");
                 [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->keys}];

@@ -290,7 +290,7 @@ static const int navigationOffset = 50;
         
         _isLocked = YES;
         
-        [oldView.layer setOpacity:1];
+        [oldView.layer setOpacity:0.5];
         [newView.layer setOpacity:0];
         
         
@@ -311,7 +311,7 @@ static const int navigationOffset = 50;
         switch (self.animationStyle) {
             case TMNavigationControllerStylePush: {
                 anim1To = - self.containerView.bounds.size.width;
-                anim2From = self.containerView.bounds.size.width /3;
+                anim2From = roundf(self.containerView.bounds.size.width /3);
                 
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 
@@ -319,7 +319,7 @@ static const int navigationOffset = 50;
                 break;
             case TMNavigationControllerStylePop: {
                 anim1To = self.containerView.bounds.size.width;
-                anim2From = - (self.containerView.bounds.size.width/3);
+                anim2From = - roundf(self.containerView.bounds.size.width/3);
                 
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 
@@ -332,10 +332,18 @@ static const int navigationOffset = 50;
         __block dispatch_block_t block = ^{
           //  [oldView.layer setOpacity:1];
             [oldView setHidden:YES];
-            [newView setWantsLayer:NO];
+        //    [newView setWantsLayer:NO];
+            
+            [oldView setFrameOrigin:NSMakePoint(0, 0)];
+            [newView setFrameOrigin:NSMakePoint(0, 0)];
+            
+            [oldView removeFromSuperview];
             
             [oldViewController viewDidDisappear:NO];
             [newViewController viewDidAppear:NO];
+            
+            [oldView.layer removeAllAnimations];
+            [newView.layer removeAllAnimations];
             
             _isLocked = NO;
         };
@@ -351,6 +359,8 @@ static const int navigationOffset = 50;
             two--;
             if(two == 0)
                 block();
+            
+           
         }];
         [oldView.layer pop_addAnimation:oldViewPositionAnimation forKey:@"position"];
         
@@ -360,16 +370,18 @@ static const int navigationOffset = 50;
         
         POPBasicAnimation *oldViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         oldViewAlpha.toValue = @(0.0);
-        oldViewAlpha.duration = duration;
+        oldViewAlpha.fromValue = @(0.5);
+        oldViewAlpha.duration = duration/2;
         oldViewAlpha.timingFunction = timingFunction;
         [oldView.layer pop_addAnimation:oldViewAlpha forKey:@"opacity"];
         
         
         POPBasicAnimation *newViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         newViewAlpha.toValue = @(1.0);
-        newViewAlpha.fromValue = @(0);
+        newViewAlpha.fromValue = @(0.0);
         newViewAlpha.duration = duration;
         newViewAlpha.timingFunction = timingFunction;
+        
         [newView.layer pop_addAnimation:newViewAlpha forKey:@"opacity"];
         
         
@@ -385,10 +397,9 @@ static const int navigationOffset = 50;
         }];
         [newView.layer pop_addAnimation:newViewPositionAnimation forKey:@"position"];
         
-       
-        
     }
 }
+
 
 - (BOOL)enableShiftModifier {
     return YES;

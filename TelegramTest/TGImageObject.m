@@ -73,8 +73,6 @@
         NSImage *image = [[NSImage alloc] initWithData:item.result];
         
         [object.delegate didDownloadImage:image object:object];
-        
-        item.object = nil;
         object.downloadItem = nil;
         
     }];

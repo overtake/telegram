@@ -33,6 +33,7 @@
 
 
 
+
 -(TGInputFileLocation *)input {
     TL_fileLocation *location = self.object;
     if(self.isEncrypted)
