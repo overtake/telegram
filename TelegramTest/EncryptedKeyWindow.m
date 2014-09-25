@@ -51,68 +51,6 @@
     return self;
 }
 
-+ (void)showForChat:(TL_encryptedChat *)chat {
-    EncryptedKeyWindow *window = [self sharedManager];
-    
-    
-    EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
-    
-    NSData *hashData = [Crypto sha1:params.encrypt_key];
-    
-    
-    
-    window.imageView.image = TGIdenticonImage(hashData, CGSizeMake(264, 264));
-
-    
-    NSString *_userName = chat.peerUser.first_name;
-    
-    NSString *textFormat = NSLocalizedString(@"EncryptionKey.Description", nil);
-    
-    NSString *baseText = [[NSString alloc] initWithFormat:textFormat, _userName, _userName];
-    
-    
-    
-    
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"HelveticaNeue" size:14], NSFontAttributeName, nil];
-    
-    NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"HelveticaNeue-Medium" size:14], NSFontAttributeName, nil];
-    
-    NSDictionary *linkAtts = @{NSForegroundColorAttributeName: BLUE_UI_COLOR, NSLinkAttributeName:@"telegram.org"};
-    
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:baseText attributes:attrs];
-    
-    [attributedText setAttributes:subAttrs range:NSMakeRange([textFormat rangeOfString:@"%1$@"].location, _userName.length)];
-    
-    [attributedText setAttributes:subAttrs range:NSMakeRange([textFormat rangeOfString:@"%2$@"].location + (_userName.length - @"%1$@".length), _userName.length)];
-    
-    [attributedText setAttributes:linkAtts range:[baseText rangeOfString:@"telegram.org"]];
-    
-    [attributedText setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attributedText.length)];
-    
-   
-    
-    [window.textField setAttributedStringValue:attributedText];
-   
-    
-    NSSize size = [attributedText sizeForWidth:window.textField.frame.size.width height:FLT_MAX];
-    
-    NSRect frame = window.textField.frame;
-    
-    frame.size.height = size.height+40;
-    
-    frame.origin.y = roundf((window.frame.size.height-frame.size.height)/2);
-    
-    window.textField.frame = frame;
-    
-    
-    
-    [window makeKeyAndOrderFront:nil];
-    
-}
-
-- (void) textField:(id)textField handleURLClick:(NSString *)url {
-    open_link(url);
-}
 
 
 +(EncryptedKeyWindow *)sharedManager {

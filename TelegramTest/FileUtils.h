@@ -52,7 +52,7 @@ BOOL NSContainsSize(NSSize size1, NSSize size2);
 NSString *exportPath(long randomId,NSString *extension);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 BOOL NSStringIsValidEmail(NSString *checkString);
-
+BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
 

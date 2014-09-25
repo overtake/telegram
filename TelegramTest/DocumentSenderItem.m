@@ -182,8 +182,7 @@
             }
         }
 
-        
-       
+        [[NSFileManager defaultManager] removeItemAtPath:exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]) error:nil];
         
         TL_localMessage *message = strongSelf.message;
         message.n_id = msg.n_id;

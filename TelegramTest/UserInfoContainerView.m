@@ -150,7 +150,8 @@
         }];
         
         self.encryptedKeyButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShowEncryptedKey",nil) tapBlock:^{
-            [EncryptedKeyWindow showForChat:weakSelf.controller.conversation.encryptedChat];
+            [[Telegram rightViewController] showEncryptedKeyWindow:weakSelf.controller.conversation.encryptedChat];
+           // [EncryptedKeyWindow showForChat:weakSelf.controller.conversation.encryptedChat];
         }];
         
         
@@ -226,7 +227,7 @@
     static NSTextAttachment *attach;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 10, 0, 7)]];
+        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 3, 0, 5)]];
     });
     
     

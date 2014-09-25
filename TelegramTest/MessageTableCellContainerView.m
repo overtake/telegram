@@ -681,7 +681,7 @@ static int offsetEditable = 30;
 }
 
 - (void)deleteAndCancel:(MessageTableItem *)item {
-    if(item.messageSender.state != MessageSendingStateError)
+    if(item.messageSender.state != MessageSendingStateError && item.messageSender.state != MessageSendingStateCancelled)
         [item.messageSender cancel];
     
     item.messageSender = nil;
@@ -863,6 +863,10 @@ static int offsetEditable = 30;
         
         if(item.state == MessageSendingStateError) {
             [self checkState:item];
+        }
+        
+        if(item.state == MessageSendingStateCancelled) {
+            [self deleteAndCancel];
         }
     } else
         [self.item.messageSender removeEventListener:self];

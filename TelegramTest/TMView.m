@@ -35,6 +35,10 @@
     return self;
 }
 
+-(BOOL)isFlipped {
+    return _isFlipped;
+}
+
 - (void) initialize {
 //    self.borderColor = [NSColor clearColor];
 //    self.borderSize = 1;

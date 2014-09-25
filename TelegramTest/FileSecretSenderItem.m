@@ -254,6 +254,8 @@
                 [strongSelf.message media].document.dc_id = newLocation.dc_id;
                 [strongSelf.message media].document.n_id = newLocation.volume_id;
                 [strongSelf.message media].document.size = uploader.total_size;
+                
+                [[NSFileManager defaultManager] removeItemAtPath:exportPath(strongSelf.message.randomId,[strongSelf.message.media.document.file_name pathExtension]) error:nil];
             }
             
             if(strongSelf.uploadType == UploadAudioType) {

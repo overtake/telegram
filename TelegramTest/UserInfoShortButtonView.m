@@ -40,6 +40,10 @@
         [self.progress setHidden:YES];
         
         
+      //  self.textButton.drawsBackground = YES;
+      //  [self.textButton setBackgroundColor:[NSColor blueColor]];
+        
+        
         _rightContainer = [[TMView alloc] initWithFrame:NSZeroRect];
        
         
@@ -62,6 +66,7 @@
     
     [self updateRightControllerFrame];
 }
+
 
 
 -(void)setRightContainer:(NSView *)rightContainer {
@@ -165,6 +170,8 @@
     [super setFrameSize:newSize];
     
     [self setRightContainer:self.currentRightController];
+    
+     [self.textButton setFrameSize:NSMakeSize(newSize.width - NSWidth(self.rightContainer.frame) - 15, NSHeight(self.textButton.frame))];
 }
 
 

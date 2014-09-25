@@ -290,7 +290,7 @@ static const int navigationOffset = 50;
         
         _isLocked = YES;
         
-        [oldView.layer setOpacity:0.5];
+        [oldView.layer setOpacity:1];
         [newView.layer setOpacity:0];
         
         
@@ -328,8 +328,17 @@ static const int navigationOffset = 50;
             default:
                 break;
         }
+        
+        
+        __block int two = 2;
 
         __block dispatch_block_t block = ^{
+            
+            two--;
+            if(two > 0)
+                return;
+            
+            
           //  [oldView.layer setOpacity:1];
             [oldView setHidden:YES];
         //    [newView setWantsLayer:NO];
@@ -342,37 +351,29 @@ static const int navigationOffset = 50;
             [oldViewController viewDidDisappear:NO];
             [newViewController viewDidAppear:NO];
             
-            [oldView.layer removeAllAnimations];
-            [newView.layer removeAllAnimations];
             
             _isLocked = NO;
         };
         
-        __block int two = 2;
+     
         
         POPBasicAnimation *oldViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
         oldViewPositionAnimation.toValue = @(anim1To);
         oldViewPositionAnimation.duration = duration;
         oldViewPositionAnimation.delegate = self;
         oldViewPositionAnimation.timingFunction = timingFunction;
+        oldViewPositionAnimation.removedOnCompletion = YES;
         [oldViewPositionAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-            two--;
-            if(two == 0)
-                block();
-            
-           
+             block();
         }];
         [oldView.layer pop_addAnimation:oldViewPositionAnimation forKey:@"position"];
-        
-       
-        
-        
         
         POPBasicAnimation *oldViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         oldViewAlpha.toValue = @(0.0);
         oldViewAlpha.fromValue = @(0.5);
         oldViewAlpha.duration = duration/2;
         oldViewAlpha.timingFunction = timingFunction;
+        oldViewAlpha.removedOnCompletion = YES;
         [oldView.layer pop_addAnimation:oldViewAlpha forKey:@"opacity"];
         
         
@@ -381,7 +382,7 @@ static const int navigationOffset = 50;
         newViewAlpha.fromValue = @(0.0);
         newViewAlpha.duration = duration;
         newViewAlpha.timingFunction = timingFunction;
-        
+        newViewAlpha.removedOnCompletion = YES;
         [newView.layer pop_addAnimation:newViewAlpha forKey:@"opacity"];
         
         
@@ -390,10 +391,9 @@ static const int navigationOffset = 50;
         newViewPositionAnimation.toValue = @(0);
         newViewPositionAnimation.duration = duration;
         newViewPositionAnimation.timingFunction = timingFunction;
+        newViewPositionAnimation.removedOnCompletion = YES;
         [newViewPositionAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
-            two--;
-            if(two == 0)
-                block();
+            block();
         }];
         [newView.layer pop_addAnimation:newViewPositionAnimation forKey:@"position"];
         

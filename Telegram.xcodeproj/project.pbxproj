@@ -312,6 +312,7 @@
 		C23536A119CB1A100044978E /* TGKeeper.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C23536A019CB1A100044978E /* TGKeeper.1 */; };
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
+		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
 		C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015819839A4B007AB338 /* TGTimerTarget.m */; };
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
@@ -1222,6 +1223,8 @@
 		C23536A719CB1A430044978E /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFYDaemonController.m; sourceTree = "<group>"; };
 		C23536AB19CC64330044978E /* LoginBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginBottomView.h; sourceTree = "<group>"; };
 		C23536AC19CC64330044978E /* LoginBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginBottomView.m; sourceTree = "<group>"; };
+		C23536C419D453720044978E /* EncryptedKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedKeyViewController.h; sourceTree = "<group>"; };
+		C23536C519D453720044978E /* EncryptedKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedKeyViewController.m; sourceTree = "<group>"; };
 		C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationBlockDelegate.h; sourceTree = "<group>"; };
 		C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAnimationBlockDelegate.m; sourceTree = "<group>"; };
 		C247015719839A4B007AB338 /* TGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTimerTarget.h; sourceTree = "<group>"; };
@@ -2634,6 +2637,8 @@
 				C2200B7518F43B3300F28803 /* EncryptedKeyWindow.m */,
 				C2531F5B196572BA00F7D7A2 /* TMSharedMediaButton.h */,
 				C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */,
+				C23536C419D453720044978E /* EncryptedKeyViewController.h */,
+				C23536C519D453720044978E /* EncryptedKeyViewController.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -4124,6 +4129,7 @@
 				C2A5BFF318E02BAB0021BE68 /* TGAudioPlayer.m in Sources */,
 				C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */,
 				0A9EDC5F1897BA0E0037E1BC /* RBLTableView.m in Sources */,
+				C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */,
 				C2F3996F190FD1FC006B36F7 /* SGraphNode.m in Sources */,
 				0ABACDAE181AFE4B00EF43DB /* TLObject.m in Sources */,
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,

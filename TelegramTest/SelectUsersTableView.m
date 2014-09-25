@@ -93,7 +93,7 @@ static NSCache *cacheItems;
         
         [items addObject:item];
         
-        if(idx == 30)
+        if(items.count == 30)
             *stop = YES;
     }];
     
@@ -115,7 +115,6 @@ static NSCache *cacheItems;
 //        
 //    }];
     
-     NSLog(@"test4");
     
     self.tm_delegate = self;
     

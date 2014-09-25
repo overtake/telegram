@@ -494,6 +494,51 @@ void open_link(NSString *link) {
 }
 
 
+BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
+{
+    //Delete existing zip
+    if ( [[NSFileManager defaultManager] fileExistsAtPath:archivePath] ) {
+        [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+    }
+    
+    //Specify action
+    NSString *toolPath = @"/usr/bin/zip";
+    
+    //Get directory contents
+    NSArray *pathsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[directoryURL path] error:nil];
+    
+    //Add arguments
+    NSMutableArray *arguments = [[NSMutableArray alloc] init];
+    [arguments insertObject:@"-r" atIndex:0];
+    [arguments insertObject:archivePath atIndex:0];
+    for ( NSString *filePath in pathsArray ) {
+        [arguments addObject:filePath]; //Maybe this would even work by specifying relative paths with ./ or however that works, since we set the working directory before executing the command
+        //[arguments insertObject:@"-j" atIndex:0];
+    }
+    
+    //Switch to a relative directory for working.
+    NSString *currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[directoryURL path]];
+    //NSLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
+    
+    //Create
+    NSTask *task = [[NSTask alloc] init] ;
+    [task setLaunchPath:toolPath];
+    [task setArguments:arguments];
+    
+    //Run
+    [task launch];
+    [task waitUntilExit];
+    
+    //Restore normal path
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDirectory];
+    
+    //Update filesystem
+    [[NSWorkspace sharedWorkspace] noteFileSystemChanged:archivePath];
+    
+    return ([task terminationStatus] == 0);
+}
+
 BOOL NSSizeNotZero(NSSize size) {
     return size.width > 0 || size.height > 0;
 }

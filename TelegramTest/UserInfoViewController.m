@@ -297,7 +297,7 @@
 
 - (void) setState:(UserInfoViewControllerType)state {
     self->_state = state;
-    [self setRightNavigationBarView:[self generateRightHeaderButtons] animated:YES];
+ //   [self setRightNavigationBarView:[self generateRightHeaderButtons] animated:YES];
     
     [self.normalContainer.layer removeAllAnimations];
     [self.editContainer.layer removeAllAnimations];

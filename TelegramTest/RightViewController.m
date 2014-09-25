@@ -20,6 +20,7 @@
 #import "TMProgressModalView.h"
 #import "ComposeBroadcastListViewController.h"
 #import "ContactsViewController.h"
+
 @implementation TMView (Dragging)
 
 
@@ -127,6 +128,9 @@
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
     self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:self.view.bounds];
+    
+    
+    self.encryptedKeyViewController = [[EncryptedKeyViewController alloc] initWithFrame:self.view.bounds];
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
@@ -401,7 +405,12 @@
     [self hideModalView:YES animation:NO];
     
     if(self.messagesViewController.dialog == dialog && self.navigationViewController.currentController != self.messagesViewController) {
-        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
+      //  [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
+        
+        [self.navigationViewController.viewControllerStack removeAllObjects];
+        [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
+        [self.navigationViewController.viewControllerStack addObject:self.messagesViewController];
+        [self.navigationViewController.viewControllerStack addObject:self.navigationViewController.currentController];
         [self.navigationViewController goBackWithAnimation:YES];
     } else {
         
@@ -509,6 +518,17 @@
     
     [self.chatInfoViewController setChat:chat];
     [self.navigationViewController pushViewController:self.chatInfoViewController animated:YES];
+}
+
+- (void)showEncryptedKeyWindow:(TL_encryptedChat *)chat {
+    if(self.navigationViewController.currentController == self.encryptedKeyViewController)
+        return;
+    [self hideModalView:YES animation:NO];
+    
+    [self.encryptedKeyViewController showForChat:chat];
+    
+    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:YES];
+    
 }
 
 - (BOOL)isActiveDialog {

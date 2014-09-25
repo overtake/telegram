@@ -44,6 +44,9 @@
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -280,6 +283,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "file">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

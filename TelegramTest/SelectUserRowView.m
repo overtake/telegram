@@ -90,6 +90,8 @@ static int offsetEditable = 30;
     [self.lastSeenTextField setAttributedStringValue:[self rowItem].lastSeen];
 
     
+     [self setSelected:[[self rowItem] isSelected]];
+    
     [self.titleTextField sizeToFit];
     
     [self.lastSeenTextField sizeToFit];
