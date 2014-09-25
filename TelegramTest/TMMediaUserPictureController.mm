@@ -112,7 +112,7 @@
     
     _user = user;
     
-    if(![self initialized:_user.n_id]) {
+    if(![self initialized:_user.n_id] && _user) {
         
         [RPCRequest sendRequest:[TLAPI_photos_getUserPhotos createWithUser_id:_user.inputUser offset:1 max_id:0 limit:1000] successHandler:^(RPCRequest *request, TL_photos_photos *response) {
             

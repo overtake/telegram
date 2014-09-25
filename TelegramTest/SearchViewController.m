@@ -38,6 +38,7 @@ typedef enum {
 
 @property (nonatomic) int messages_offset;
 @property (nonatomic) int messages_count;
+@property (nonatomic) int local_messages_offset;
 
 @property (atomic) BOOL isStorageLoaded;
 @property (atomic) BOOL isRemoteLoaded;
@@ -172,7 +173,14 @@ typedef enum {
     if(![self.tableView.scrollView isNeedUpdateBottom] || self.searchParams.isLoading || self.searchParams.isFinishLoading)
         return;
     
-    [self remoteSearch:self.searchParams];
+    if(self.searchParams.isStorageLoaded)
+    {
+        [self remoteSearch:self.searchParams];
+    } else {
+        [self localSearch:self.searchParams];
+    }
+    
+   // ;
 }
 
 //table
@@ -451,8 +459,19 @@ static int insertCount = 3;
         if(!params.messages)
             params.messages = [NSMutableArray array];
         
-        for(TGMessage *message in response.messages)
-            [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
+        NSMutableArray *filterIds = [[NSMutableArray alloc] init];
+        
+        [params.messages enumerateObjectsUsingBlock:^(SearchItem *obj, NSUInteger idx, BOOL *stop) {
+            [filterIds addObject:@(obj.message.n_id)];
+        }];
+        
+        NSArray *filtred = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",filterIds]];
+        
+        for(TGMessage *message in filtred) {
+            
+              [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
+        }
+        
         
         params.isRemoteLoaded = YES;
         if(params.isStorageLoaded) {
@@ -474,7 +493,7 @@ static int insertCount = 3;
     [self.tableView setDefaultAnimation:NSTableViewAnimationEffectNone];
     [self.tableView removeItem:self.messagesLoaderItem];
     
-    if(!params.messages_count) {
+    if(!params.messages.count) {
         [self.tableView removeItem:self.messagesSeparator];
         [self.tableView removeItem:self.messagesLoadMoreItem];
         
@@ -506,6 +525,8 @@ static int insertCount = 3;
     
     
     DLog(@"count %lu", self.tableView.count);
+    
+    int i = 0;
     
 }
 
@@ -627,7 +648,7 @@ static int insertCount = 3;
                         
                         
                         [[ASQueue mainQueue] dispatchOnQueue:^{
-                            searchParams.isStorageLoaded = YES;
+                           // searchParams.isStorageLoaded = YES;
                             
                             [self showSearchResults:searchParams];
                         }];
@@ -657,16 +678,69 @@ static int insertCount = 3;
             }
             
             
+            
+            searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
+            
+            if((self.type & SearchTypeMessages) == SearchTypeMessages) {
+                
+                dispatch_after_seconds(0.1, ^{
+                    // [self remoteSearch:searchParams];
+                    [self localSearch:searchParams];
+                });
+            }
+            
+            
         }];
         
-        searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
-        
-        if((self.type & SearchTypeMessages) == SearchTypeMessages) {
-             [self remoteSearch:searchParams];
-        }
+      
         
        
     });
+}
+
+
+-(void)localSearch:(SearchParams *)params {
+    
+    
+    self.searchParams.isLoading = YES;
+    
+    [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.messages_offset completeHandler:^(NSInteger count, NSArray *messages) {
+        
+        if(self.searchParams != params)
+            return;
+        
+        [[MessagesManager sharedManager] add:messages];
+        
+        
+         self.searchParams.isLoading = NO;
+        
+        params.messages_offset += (int) count;
+        
+        
+        
+        
+        
+        if(!params.messages)
+            params.messages = [NSMutableArray array];
+        
+        for(TGMessage *message in messages)
+            [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
+        
+        [self showMessagesResults:params];
+        
+        
+        if(count < 50) {
+            params.isStorageLoaded = YES;
+            params.messages_offset = 0;
+            
+            [self remoteSearch:params];
+        }
+        
+    }];
+    
+  
+    
+  
 }
 
 - (void)viewDidAppear:(BOOL)animated {

@@ -735,7 +735,7 @@ static int offsetEditable = 30;
             [self.progressIndicator setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin];
             [self addSubview:self.progressIndicator];
             
-            self.progressIndicator.color = NSColorFromRGB(0xcfe9fb);
+            self.progressIndicator.color = NSColorFromRGB(0x808080);
             
             [self.progressIndicator setIndeterminate:YES];
         }
@@ -941,7 +941,7 @@ static int offsetEditable = 30;
                 if(self.actionState != MessageTableCellSending)
                     return;
                 
-                [self.progressIndicator setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53, self.item.viewSize.height - self.progressIndicator.bounds.size.height - (self.item.isHeaderMessage ? 30 : 6))];
+                [self.progressIndicator setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53, self.item.viewSize.height - self.progressIndicator.bounds.size.height - (self.item.isHeaderMessage ? 29 : 5))];
                 [self.progressIndicator setHidden:NO];
             });
             
