@@ -96,12 +96,23 @@
     SearchItem *item = [self rowItem];
     
     
-    
-    if(item.chat) {
-        [self.titleTextField setChat:item.chat];
-    } else {
-        [self.titleTextField setUser:item.user];
+    if(item.dialog.type == DialogTypeChat) {
+         [self.titleTextField setChat:item.chat];
     }
+    
+    if(item.dialog.type == DialogTypeUser) {
+         [self.titleTextField setUser:item.user];
+    }
+    
+    if(item.dialog.type == DialogTypeSecretChat) {
+        [self.titleTextField setUser:item.user isEncrypted:YES];
+    }
+    
+    if(item.dialog.type == DialogTypeBroadcast) {
+        [self.titleTextField setBroadcast:item.dialog.broadcast];
+    }
+    
+    
     [self.titleTextField sizeToFit];
     
     

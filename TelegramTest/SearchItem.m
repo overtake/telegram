@@ -102,7 +102,13 @@
         self.dialog = message.dialog;
         
         
+        
+        
         self.user = [[UsersManager sharedManager] find:self.message.from_id == [UsersManager currentUserId] ? self.message.to_id.user_id : self.message.from_id];
+        
+        if(self.dialog.type == DialogTypeSecretChat) {
+            self.user =  self.dialog.encryptedChat.peerUser;
+        }
 
         if(self.dialog.type == DialogTypeChat) {
             self.chat = self.dialog.chat;
@@ -110,6 +116,7 @@
         } else {
             [self.title appendString:self.user.fullName withColor:DARK_BLACK];
         }
+        
         
         [self.status appendString:message.message withColor:NSColorFromRGB(0x9b9b9b)];
         

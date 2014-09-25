@@ -717,7 +717,7 @@ static int insertCount = 3;
         params.messages_offset += (int) count;
         
         
-        
+        params.messages_count+=(int)count;
         
         
         if(!params.messages)
@@ -732,7 +732,7 @@ static int insertCount = 3;
         if(count < 50) {
             params.isStorageLoaded = YES;
             params.messages_offset = 0;
-            
+            params.messages_count = 0;
             [self remoteSearch:params];
         }
         

@@ -252,6 +252,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SearchItem initWithMessageItem:searchString:]:SearchItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+            <PersistentString
+               value = "self.user">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
          <PersistentStrings>
             <PersistentString
