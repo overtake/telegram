@@ -732,7 +732,8 @@ static int insertCount = 3;
         for(TGMessage *message in messages)
             [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
         
-        [self showMessagesResults:params];
+        if(params.messages.count > 0)
+            [self showMessagesResults:params];
         
         
         if(count < 50) {
