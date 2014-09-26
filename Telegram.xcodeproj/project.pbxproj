@@ -231,8 +231,10 @@
 		C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C202D96618E9D67A0060238B /* TMClickTextFieldView.m */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
 		C209322B1938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = C209322A1938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.m */; };
-		C20A7E4319D59D17008844F2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C20A7E4819D59D1A008844F2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C20A7E5219D5B674008844F2 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20A7E5319D5B678008844F2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20A7E5419D5B682008844F2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C20A7E5519D5B685008844F2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
@@ -411,8 +413,6 @@
 		C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2F19D58E490079046E /* Accelerate.framework */; };
 		C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E3319D58E580079046E /* libstdc++.dylib */; };
 		C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FA1947E134001617DB /* OpenGL.framework */; };
-		C2E73D9119D59C940034A63E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2E73D9219D59C9C0034A63E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
@@ -586,8 +586,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2E73D9219D59C9C0034A63E /* Sparkle.framework in Copy Files (6 items) */,
-				C2E73D9119D59C940034A63E /* HockeySDK.framework in Copy Files (6 items) */,
+				C20A7E5319D5B678008844F2 /* HockeySDK.framework in Copy Files (6 items) */,
+				C20A7E5219D5B674008844F2 /* Sparkle.framework in Copy Files (6 items) */,
 				C235364B19C88CFE0044978E /* pop.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
@@ -1352,7 +1352,6 @@
 		C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
 		C2936943197E6B5700DD9680 /* MessageTableHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableHeaderItem.h; sourceTree = "<group>"; };
 		C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableHeaderItem.m; sourceTree = "<group>"; };
-		C293694919811BB700DD9680 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C297FBA11832997B00714B3C /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
 		C297FBA21832997B00714B3C /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		C297FBA418329F3500714B3C /* TGDcAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDcAuth.h; sourceTree = "<group>"; };
@@ -1738,9 +1737,9 @@
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
+				C20A7E5519D5B685008844F2 /* Sparkle.framework in Frameworks */,
+				C20A7E5419D5B682008844F2 /* HockeySDK.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C20A7E4819D59D1A008844F2 /* HockeySDK.framework in Frameworks */,
-				C20A7E4319D59D17008844F2 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3253,7 +3252,6 @@
 				C235364C19C88D620044978E /* Sparkle.framework */,
 				C235364919C88CFA0044978E /* pop.framework */,
 				C2082B7219C1E1C4000005E2 /* HockeySDK.framework */,
-				C293694919811BB700DD9680 /* MapKit.framework */,
 				0AB8F2BA1948BCF30074E4E7 /* AVFoundation.framework */,
 				0A7C78FC1947E147001617DB /* GLKit.framework */,
 				0A7C78FA1947E134001617DB /* OpenGL.framework */,

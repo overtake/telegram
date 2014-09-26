@@ -35,6 +35,8 @@
 
     
     
+    
+    
     self.view.isFlipped = YES;
     
     
@@ -52,7 +54,7 @@
     self.textField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 264)];
     
     
-    [self.textField setFrameOrigin:NSMakePoint(NSMinX(self.textField.frame), NSHeight(self.view.frame) - NSHeight(self.imageView.frame) - 291)];
+    [self.textField setFrameOrigin:NSMakePoint(NSMinX(self.textField.frame), NSHeight(container.frame) - NSHeight(self.imageView.frame) - 291)];
     
     [self.textField setAlignment:NSCenterTextAlignment];
     
@@ -128,7 +130,7 @@
     
    // frame.origin.y = roundf((self.view.frame.size.height-frame.size.height)/2);
     
-    self.textField.frame = frame;
+   // self.textField.frame = frame;
     
     
 }
