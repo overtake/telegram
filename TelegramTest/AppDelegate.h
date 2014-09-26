@@ -9,7 +9,13 @@
 #import <Cocoa/Cocoa.h>
 #import "TGInitializer.h"
 #import "NSContactsPopover.h"
+
+#ifdef TGDEBUG
+
 #import <HockeySDK/HockeySDK.h>
+
+#endif
+
 #import "TelegramWindow.h"
 #import "LoginWindow.h"
 #import "MainWindow.h"
@@ -20,7 +26,7 @@
 @end
 
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSApplicationDelegate,NSWindowDelegate, NSUserNotificationCenterDelegate, BITHockeyManagerDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSApplicationDelegate,NSWindowDelegate, NSUserNotificationCenterDelegate>
 
 
 

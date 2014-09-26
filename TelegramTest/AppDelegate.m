@@ -144,6 +144,9 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+#ifdef TGDEBUG
+    
+    
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
@@ -151,6 +154,14 @@
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    
+#else 
+    
+    [self showMainApplicationWindowForCrashManager:nil];
+    
+#endif
+    
+    
 }
 
 -(BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel {
@@ -216,7 +227,7 @@
 }
 
 
-- (void)showMainApplicationWindowForCrashManager:(BITCrashManager *)crashManager {
+- (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
 
 //    NSString *keeper = [[NSBundle mainBundle] pathForResource:@"TGKeeper" ofType:@""];
