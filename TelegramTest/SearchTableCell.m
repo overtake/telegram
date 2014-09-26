@@ -113,6 +113,8 @@
     }
     
     
+    
+    
     [self.titleTextField sizeToFit];
     
     
@@ -132,11 +134,18 @@
         [self.dateTextField setHidden:YES];
     } else {
         
-        if(item.chat) {
+        if(item.dialog.type == DialogTypeChat) {
             [self.avatarImageView setChat:item.chat];
-        } else {
+        }
+        
+        if(item.dialog.type == DialogTypeUser || item.dialog.type == DialogTypeSecretChat) {
             [self.avatarImageView setUser:item.user];
         }
+        
+        if(item.dialog.type == DialogTypeBroadcast) {
+            [self.avatarImageView setBroadcast:item.dialog.broadcast];
+        }
+        
 
         
         [self.statusTextField setUser:nil];

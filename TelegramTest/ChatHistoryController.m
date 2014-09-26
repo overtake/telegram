@@ -539,9 +539,9 @@ static NSMutableArray *filters;
                 ChatHistoryState state;
                 
                 if(!next) {
-                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= _conversation.sync_message_id && _conversation.sync_message_id != 0) || _conversation.type == DialogTypeSecretChat) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= _conversation.sync_message_id && _conversation.sync_message_id != 0) || _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                 } else {
-                    state = self.filter.class == HistoryFilter.class || _conversation.type == DialogTypeSecretChat ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = self.filter.class == HistoryFilter.class || _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                 }
                 
                 [self setState:state next:next];

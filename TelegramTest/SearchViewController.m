@@ -38,7 +38,9 @@ typedef enum {
 
 @property (nonatomic) int messages_offset;
 @property (nonatomic) int messages_count;
-@property (nonatomic) int local_messages_offset;
+
+@property (nonatomic) int local_offset;
+@property (nonatomic) int remote_offset;
 
 @property (atomic) BOOL isStorageLoaded;
 @property (atomic) BOOL isRemoteLoaded;
@@ -431,7 +433,7 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.messages_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
         
         if(params != self.searchParams)
             return;
@@ -450,8 +452,8 @@ static int insertCount = 3;
         if(!params.messages_count)
             params.messages_count = response.n_count ? response.n_count : (int)response.messages.count;
         
-        params.messages_offset += (int)response.messages.count;
-        
+      
+        params.remote_offset += (int)response.messages.count;
         
         if(params.messages_offset == params.messages_count)
             params.isFinishLoading = YES;
@@ -471,6 +473,8 @@ static int insertCount = 3;
             
               [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
         }
+        
+        params.messages_offset += (int)filtred.count;
         
         
         params.isRemoteLoaded = YES;
@@ -704,7 +708,7 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.messages_offset completeHandler:^(NSInteger count, NSArray *messages) {
+    [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
         
         if(self.searchParams != params)
             return;
@@ -714,8 +718,10 @@ static int insertCount = 3;
         
          self.searchParams.isLoading = NO;
         
-        params.messages_offset += (int) count;
+        params.local_offset += (int) count;
         
+        
+        params.messages_offset+= (int)count;
         
         params.messages_count+=(int)count;
         
@@ -731,7 +737,6 @@ static int insertCount = 3;
         
         if(count < 50) {
             params.isStorageLoaded = YES;
-            params.messages_offset = 0;
             params.messages_count = 0;
             [self remoteSearch:params];
         }
