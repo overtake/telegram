@@ -3,13 +3,13 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
+         contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "[self rowItem].table">
+               value = "self.currentController">
             </PersistentString>
             <PersistentString
-               value = "((SelectUsersTableView *)[self rowItem].table).selectDelegate ">
+               value = "self.currentController.view">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -162,6 +162,9 @@
             </PersistentString>
             <PersistentString
                value = "image.size">
+            </PersistentString>
+            <PersistentString
+               value = "self.image">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -419,21 +422,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
+         contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type">
+               value = "[self rowItem].table">
+            </PersistentString>
+            <PersistentString
+               value = "((SelectUsersTableView *)[self rowItem].table).selectDelegate ">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
+         contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.currentController">
-            </PersistentString>
-            <PersistentString
-               value = "self.currentController.view">
+               value = "self.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
