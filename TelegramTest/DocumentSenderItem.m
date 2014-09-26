@@ -41,13 +41,15 @@
         
         self.thumbImage = previewImageForDocument(self.filePath);
         
+        long randomId = rand_long();
+        
         TGPhotoSize *size;
         if(self.thumbImage) {
             self.thumbData = [self.thumbImage TIFFRepresentation];
             
             NSSize realSize = strongsize(self.thumbImage.size, 90);
             
-            size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:realSize.width h:realSize.height bytes:self.thumbData];
+            size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:realSize.width h:realSize.height bytes:self.thumbData];
             
             [[ImageCache sharedManager] setImage:self.thumbImage forLocation:size.location];
             
@@ -55,7 +57,7 @@
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 user_id:UsersManager.currentUserId date:[[MTNetwork instance] getTime] file_name:[self.filePath lastPathComponent] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath]];
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 user_id:UsersManager.currentUserId date:[[MTNetwork instance] getTime] file_name:[self.filePath lastPathComponent] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath]];
         
         self.message = [MessageSender createOutMessage:@"" media:document dialog:dialog];
         

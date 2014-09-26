@@ -4745,6 +4745,7 @@
 				C23536A419CB1A100044978E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Telegram" */ = {
 			isa = XCConfigurationList;
