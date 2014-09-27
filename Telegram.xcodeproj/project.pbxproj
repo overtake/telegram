@@ -235,6 +235,9 @@
 		C20A7E5319D5B678008844F2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C20A7E5419D5B682008844F2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20A7E5519D5B685008844F2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */; };
+		C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5E19D7069C008844F2 /* TGActor.m */; };
+		C20A7E6219D706D0008844F2 /* ASActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E6119D706D0008844F2 /* ASActor.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
@@ -1074,6 +1077,12 @@
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
 		C20932291938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_inputMessagesFilterAudio.h; sourceTree = "<group>"; };
 		C209322A1938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_inputMessagesFilterAudio.m; sourceTree = "<group>"; };
+		C20A7E5A19D7064D008844F2 /* TGDatacenterWatchdogActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatacenterWatchdogActor.h; sourceTree = "<group>"; };
+		C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatacenterWatchdogActor.m; sourceTree = "<group>"; };
+		C20A7E5D19D7069C008844F2 /* TGActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGActor.h; sourceTree = "<group>"; };
+		C20A7E5E19D7069C008844F2 /* TGActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGActor.m; sourceTree = "<group>"; };
+		C20A7E6019D706D0008844F2 /* ASActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASActor.h; sourceTree = "<group>"; };
+		C20A7E6119D706D0008844F2 /* ASActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASActor.m; sourceTree = "<group>"; };
 		C20B228418E971D0007BCCD6 /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
 		C20B228518E971D0007BCCD6 /* framing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = framing.c; sourceTree = "<group>"; };
 		C20B228618E971D0007BCCD6 /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
@@ -3022,6 +3031,12 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C20A7E6019D706D0008844F2 /* ASActor.h */,
+				C20A7E6119D706D0008844F2 /* ASActor.m */,
+				C20A7E5D19D7069C008844F2 /* TGActor.h */,
+				C20A7E5E19D7069C008844F2 /* TGActor.m */,
+				C20A7E5A19D7064D008844F2 /* TGDatacenterWatchdogActor.h */,
+				C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */,
 				C23536A519CB1A3B0044978E /* daemon */,
 				C247015719839A4B007AB338 /* TGTimerTarget.h */,
 				C247015819839A4B007AB338 /* TGTimerTarget.m */,
@@ -4297,6 +4312,7 @@
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C256E90E18D20701008FFA04 /* DownloadVideoItem.m in Sources */,
 				0A4A1A1F189FFAE400D756CD /* MessageTableItemTyping.m in Sources */,
+				C20A7E6219D706D0008844F2 /* ASActor.m in Sources */,
 				0A9EDC4F1897BA0E0037E1BC /* NSFont+RBLFallbackAdditions.m in Sources */,
 				0A6D099319535E8500A9AC64 /* NSTextFieldCategory.m in Sources */,
 				0A6B6E331903FED1005291FE /* ITSwitch.m in Sources */,
@@ -4442,6 +4458,7 @@
 				C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */,
 				CEA589431815704E00462DF0 /* SharedManager.m in Sources */,
 				0AA7E1D318CD392A0064EFC7 /* UIImageView+AFNetworking.m in Sources */,
+				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,
 				0AC9FD431868DF5B00F7E95C /* TMNineImage.m in Sources */,
@@ -4458,6 +4475,7 @@
 				0A6758981894367E00F4487D /* TMStandartImages.m in Sources */,
 				C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */,
 				C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */,
+				C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */,
 				0A9EDC531897BA0E0037E1BC /* NSView+RBLAlignmentAdditions.m in Sources */,
 				C20B228818E971D0007BCCD6 /* bitwise.c in Sources */,
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,

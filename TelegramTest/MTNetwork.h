@@ -28,4 +28,6 @@
 
 -(void)startNetwork;
 
+-(MTContext *)context;
+
 @end

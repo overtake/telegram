@@ -9,6 +9,8 @@
 #import "RpcErrorParser.h"
 #import "DatacenterArchiver.h"
 #import <MTProtoKit/MTApiEnvironment.h>
+#import "TGDatacenterWatchdogActor.h"
+#import "TGTimer.h"
 @interface MTNetwork ()
 {
     MTContext *_context;
@@ -20,11 +22,18 @@
     NSUInteger _datacenterCount;
     NSUInteger _masterDatacenter;
     DatacenterArchiver *_datacenterArchived;
+    TGDatacenterWatchdogActor *_datacenterWatchdog;
+    TGTimer *_executeTimer;
 }
 
 @end
 
 @implementation MTNetwork
+
+
+-(MTContext *)context {
+    return _context;
+}
 
 + (MTNetwork *)instance
 {
@@ -61,17 +70,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_context setKeychain:[MTKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER]];
             
-            [_context enumerateAddressSetsForDatacenters:^(NSInteger datacenterId, MTDatacenterAddressSet *addressSet, BOOL *stop) {
-                
-                if([addressSet.firstAddress.ip isEqualToString:@"31.210.235.12"]) {
-                    
-                    [_context updateAddressSetForDatacenterWithId:datacenterId addressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:@"149.154.167.90" port:addressSet.firstAddress.port]]]];
-                    
-                    *stop = YES;
-                }
-                
-                
-            }];
+           
+            
             
             
             [_context addChangeListener:self];
@@ -92,6 +92,23 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             
             [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
+            
+            
+            _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+            
+            
+            void (^execute)() = ^{
+                [_datacenterWatchdog execute:nil];
+            };
+            
+            
+            execute();
+            
+            _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+                execute();
+            } queue:[ASQueue globalQueue].nativeQueue];
+            
+            [_executeTimer start];
             
 
         }];
