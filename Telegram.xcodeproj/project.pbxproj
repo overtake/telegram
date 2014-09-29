@@ -1023,6 +1023,8 @@
 		0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellServiceMessage.m; sourceTree = "<group>"; };
 		0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemGif.h; sourceTree = "<group>"; };
 		0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemGif.m; sourceTree = "<group>"; };
+		9D81C6FF19D71EF6007A52E5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9D81C70019D71EF6007A52E5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C2002D0119990F10002A1915 /* BroadcastInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoViewController.h; sourceTree = "<group>"; };
 		C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastInfoViewController.m; sourceTree = "<group>"; };
 		C2002D0419994D7A002A1915 /* BroadcastInfoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoHeaderView.h; sourceTree = "<group>"; };
@@ -3603,6 +3605,7 @@
 				ru,
 				es,
 				de,
+				it,
 			);
 			mainGroup = CEB09E4F17DAFC240055F150;
 			productRefGroup = CEB09E5917DAFC250055F150 /* Products */;
@@ -4149,6 +4152,7 @@
 			children = (
 				0A9EDC1A1897BA0E0037E1BC /* en */,
 				C2002D12199E9ADA002A1915 /* de */,
+				9D81C6FF19D71EF6007A52E5 /* it */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4171,6 +4175,7 @@
 				CE46A25B1854C09A00D6EF14 /* en */,
 				C20D18B11945BE890095A906 /* es */,
 				C2002D14199E9ADA002A1915 /* de */,
+				9D81C70019D71EF6007A52E5 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
