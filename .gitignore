@@ -1,3 +1,4 @@
-.DC_Store
-UserInterfaceState.xcuserstate
-*.xccheckout
+.DS_Store
+Application.h
+Telegram.xcodeproj/*
+!Telegram.xcodeproj/project.pbxproj
