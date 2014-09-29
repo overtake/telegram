@@ -541,7 +541,6 @@
 		CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB3D1881AF85006189A2 /* YapMemoryTable.m */; };
 		CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB3F1881AF85006189A2 /* YapNull.m */; };
 		CEDAEB6F1881AF85006189A2 /* YapTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB411881AF85006189A2 /* YapTouch.m */; };
-		CEDAEB701881AF85006189A2 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB421881AF85006189A2 /* LICENSE.txt */; };
 		CEDAEB711881AF85006189A2 /* YapCollectionKey.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB451881AF85006189A2 /* YapCollectionKey.m */; };
 		CEDAEB721881AF85006189A2 /* YapDatabaseQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB471881AF85006189A2 /* YapDatabaseQuery.m */; };
 		CEDAEB731881AF85006189A2 /* YapSet.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB491881AF85006189A2 /* YapSet.m */; };
@@ -556,7 +555,6 @@
 		CEDAEB8F1881AFA6006189A2 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB851881AFA6006189A2 /* ContextFilterLogFormatter.m */; };
 		CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB871881AFA6006189A2 /* DispatchQueueLogFormatter.m */; };
 		CEDAEB911881AFA6006189A2 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB881881AFA6006189A2 /* README.txt */; };
-		CEDAEB921881AFA6006189A2 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB891881AFA6006189A2 /* LICENSE.txt */; };
 		CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF5C02717FFFEFE006CEE27 /* NSData+Extensions.m */; };
 		CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8EB8917FCA81000740D66 /* NSString+NSStringHexToBytes.m */; };
 /* End PBXBuildFile section */
@@ -4033,8 +4031,6 @@
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
 				0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */,
-				CEDAEB921881AFA6006189A2 /* LICENSE.txt in Resources */,
-				CEDAEB701881AF85006189A2 /* LICENSE.txt in Resources */,
 				C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */,
 				C2200B6118EDD1E200F28803 /* AboutViewControllerWindowController.xib in Resources */,
 				0A59068318AA32C8002ED7BA /* Butter-Info.plist in Resources */,
