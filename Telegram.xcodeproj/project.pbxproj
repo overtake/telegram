@@ -4703,37 +4703,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/opus/lib,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
-					"$(PROJECT_DIR)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
@@ -4754,37 +4730,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/lib/opus,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
-					"$(PROJECT_DIR)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
