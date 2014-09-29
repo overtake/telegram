@@ -1073,6 +1073,7 @@
 		0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellServiceMessage.m; sourceTree = "<group>"; };
 		0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemGif.h; sourceTree = "<group>"; };
 		0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemGif.m; sourceTree = "<group>"; };
+		179AF7CA19D9F63000100871 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = SOURCE_ROOT; };
 		C2002D0119990F10002A1915 /* BroadcastInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoViewController.h; sourceTree = "<group>"; };
 		C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastInfoViewController.m; sourceTree = "<group>"; };
 		C2002D0419994D7A002A1915 /* BroadcastInfoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoHeaderView.h; sourceTree = "<group>"; };
@@ -3372,6 +3373,7 @@
 				CEB260F4180C0EB300378932 /* ui */,
 				CEF8EB8617FCA7CF00740D66 /* utils */,
 				CEB0A25217DB09C60055F150 /* protocol */,
+				179AF7CA19D9F63000100871 /* Application.h */,
 				CEB09E6D17DAFC250055F150 /* AppDelegate.h */,
 				CEB09E6E17DAFC250055F150 /* AppDelegate.m */,
 				C271524919B0D8C700841C8A /* Images.xcassets */,
