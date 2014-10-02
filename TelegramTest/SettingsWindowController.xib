@@ -120,7 +120,7 @@
                                     <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="B2E-J8-GiB">
                                         <rect key="frame" x="237" y="44" width="298" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Logs out all devices expect for the current one" id="0pP-3M-fyL">
+                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Logs out all devices except for the current one" id="0pP-3M-fyL">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" white="0.54790145990000005" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
