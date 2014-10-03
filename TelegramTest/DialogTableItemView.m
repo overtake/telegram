@@ -47,7 +47,7 @@ static NSDictionary *attributes() {
     NSSize size = self.undreadSize;
     
     float width = MAX(22, size.width + 14);
-    [self setFrame:NSMakeRect(62 - width, 6, width, 22)];
+    [self setFrame:NSMakeRect(62 - width, 40, width, 22)];
     [self setNeedsDisplay:YES];
 }
 
@@ -71,7 +71,8 @@ static NSDictionary *attributes() {
     [[NSColor whiteColor] setStroke];
     [path stroke];
     
-    [NSColorFromRGB(0x60b8ea) setFill];
+//    [NSColorFromRGB(0x60b8ea) setFill];
+    [NSColorFromRGB(0xf73B39) setFill];
     [path fill];
 
     [[NSColor whiteColor] set];
@@ -365,7 +366,8 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
 
     } else {
-        [NSColorFromRGB(0x60b8ea) set];
+//        [NSColorFromRGB(0x60b8ea) set];
+        [NSColorFromRGB(0xf73B39) set];
     }
     [path fill];
     [path closePath];
@@ -408,7 +410,7 @@ static int unreadOffsetRight = 13;
 - (void)redrawRow {
     [super redrawRow];
 
-//    [self.shortUnreadCount draw];
+    self.shortUnreadCount.unreadCount = [self rowItem].unreadTextCount;
     
     DialogTableItem *item = [self rowItem];
     
