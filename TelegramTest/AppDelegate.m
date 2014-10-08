@@ -347,6 +347,21 @@
         
         
         id responder = self.mainWindow.firstResponder;
+                
+        if(incomingEvent.keyCode == 48) {
+            
+            int keyCode = incomingEvent.keyCode;
+            
+            if(incomingEvent.modifierFlags == 262401)
+                keyCode = 125;
+            if(incomingEvent.modifierFlags == 393475)
+                keyCode = 126;
+            
+             incomingEvent = [NSEvent keyEventWithType:incomingEvent.type location:incomingEvent.locationInWindow modifierFlags:incomingEvent.modifierFlags timestamp:incomingEvent.timestamp windowNumber:incomingEvent.windowNumber context:incomingEvent.context characters:incomingEvent.characters charactersIgnoringModifiers:incomingEvent.charactersIgnoringModifiers isARepeat:incomingEvent.isARepeat keyCode:keyCode];
+            
+        }
+        
+       
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
             BOOL result = YES;

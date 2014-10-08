@@ -269,6 +269,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[DialogsManager updateReadList:]_block_invoke_2:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.dialog.last_marked_message">
+            </PersistentString>
+            <PersistentString
+               value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
       </ContextState>
       <ContextState

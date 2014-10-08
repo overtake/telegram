@@ -55,6 +55,8 @@
     self->_last_real_message_date = last_message_date;
 }
 
+
+
 -(BOOL)canSendMessage {
     if(self.type == DialogTypeSecretChat) {
         return self.encryptedChat.encryptedParams.state == EncryptedAllowed;

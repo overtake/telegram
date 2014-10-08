@@ -354,6 +354,7 @@
     dialog.top_message = message.n_id;
     if(message.n_out) {
         dialog.last_marked_message = message.n_id;
+        dialog.last_marked_date = message.date;
     }
     if(dialog.last_marked_message == 0) {
         dialog.last_marked_message = dialog.top_message;
