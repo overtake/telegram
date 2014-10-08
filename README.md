@@ -31,3 +31,5 @@ Documentation for MTproto protocol is available here: http://core.telegram.org/m
 #define BUNDLE_IDENTIFIER @"ru.keepcoder.Telegram"  // bundle name
 #endif
 ```
+
+Code avaiable on GPLV2 license
