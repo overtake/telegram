@@ -45,7 +45,7 @@
         [self.imageView setBlurRadius:60];
         [self.containerView addSubview:self.imageView];
         [self setProgressToView:self.imageView];
-        
+        self.imageView.cornerRadius = 4;
         
         weak();
         
@@ -225,7 +225,7 @@
         [context setDuration:0.1];
         [[self.playButton animator] setAlphaValue:playAlpha];
     } completionHandler:^{
-        [[self.playButton animator] setHidden:playAlpha == 0.0f];
+        [[self.playButton animator] setHidden:playAlpha == 0.0f || self.animatedPlayer.isPlaying];
     }];
     
 }

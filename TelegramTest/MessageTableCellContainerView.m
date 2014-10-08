@@ -827,9 +827,8 @@ static int offsetEditable = 30;
         
     [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
         [weakSelf.item doAfterDownload];
-        [weakSelf doAfterDownload];
         [weakSelf updateCellState];
-            
+        [weakSelf doAfterDownload];
         weakSelf.item.downloadItem = nil;
     }];
         
