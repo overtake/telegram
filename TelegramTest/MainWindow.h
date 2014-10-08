@@ -11,5 +11,4 @@
 @interface MainWindow : TelegramWindow
 
 @property (nonatomic,assign,getter = isAcceptEvents) BOOL acceptEvents;
--(void)updateWindowMinSize;
 @end
