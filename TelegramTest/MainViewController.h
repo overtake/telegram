@@ -17,4 +17,6 @@
 @property (nonatomic, strong) LeftViewController *leftViewController;
 @property (nonatomic, strong) RightViewController *rightViewController;
 
+
+-(void)updateWindowMinSize;
 @end

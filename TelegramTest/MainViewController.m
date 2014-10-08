@@ -70,6 +70,8 @@
     [self.rightViewController viewDidAppear:NO];
     
     [((NSSplitView *)self.view) adjustSubviews];
+    
+   // [self updateWindowMinSize];
 }
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
@@ -105,6 +107,24 @@
     
     [controller updateSize];
     
+    [self updateWindowMinSize];
+    
+}
+
+
+
+-(void)splitViewWillResizeSubviews:(NSNotification *)notification {
+     [self updateWindowMinSize];
+}
+
+-(void)updateWindowMinSize {
+    MainWindow *window = (MainWindow *)self.view.window;
+    
+    [window setMinSize:NSMakeSize(435 + [Telegram leftViewController].view.frame.size.width, 600)];
+    
+    if(window.minSize.width > window.frame.size.width) {
+        [window setFrame:NSMakeRect(NSMinX(self.view.window.frame), NSMinY(self.view.window.frame), window.minSize.width, NSHeight(window.frame)) display:YES];
+    }
 }
 
 //- (void)showLoginViewController:(BOOL)isShow {

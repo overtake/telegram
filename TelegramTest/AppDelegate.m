@@ -524,6 +524,7 @@
 - (void)initializeMainWindow {
     
     MainWindow *mainWindow = [[MainWindow alloc] init];
+    
     [mainWindow makeKeyAndOrderFront:nil];
     
     
@@ -531,6 +532,9 @@
     [self initializeSounds];
     
     self.mainWindow = mainWindow;
+    
+    
+    [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
     
 }
 

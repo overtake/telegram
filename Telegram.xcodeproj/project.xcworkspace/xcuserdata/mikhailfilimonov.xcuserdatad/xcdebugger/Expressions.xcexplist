@@ -14,6 +14,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
       </ContextState>
       <ContextState
@@ -147,6 +150,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.minSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__36+[SelectTextManager enumerateItems:]_block_invoke_2:SelectTextManager.m">
          <PersistentStrings>
             <PersistentString
@@ -272,6 +283,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellGifView setItem:]:MessageTableCellGifView.m">
+      </ContextState>
+      <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
       </ContextState>
       <ContextState
@@ -312,6 +326,14 @@
          <PersistentStrings>
             <PersistentString
                value = "[appUrl path]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController updateWindowMinSize]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -389,6 +411,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
          <PersistentStrings>
             <PersistentString
@@ -447,6 +472,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.historyController.prevState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController loadView]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
