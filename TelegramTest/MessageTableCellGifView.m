@@ -45,7 +45,7 @@
         [self.imageView setBlurRadius:60];
         [self.containerView addSubview:self.imageView];
         [self setProgressToView:self.imageView];
-        self.imageView.cornerRadius = 4;
+        
         
         weak();
         
