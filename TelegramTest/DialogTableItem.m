@@ -94,9 +94,8 @@
 }
 
 - (void)notificationTyping:(NSNotification *)notify {
-    NSArray *array2 = [notify.userInfo objectForKey:@"users"];
+    NSArray *array = [[notify.userInfo objectForKey:@"users"] mutableCopy];
 
-    NSMutableArray *array = [[NSMutableArray alloc] initWithArray:array2];
     
     if(array.count) {
         [[self.writeAttributedString mutableString] setString:@""];
@@ -132,7 +131,6 @@
         } else {
             string = NSLocalizedString(@"Typing.Typing", nil);
         }
-        
         [self.writeAttributedString appendString:string withColor:NSColorFromRGB(0x9b9b9b)];
         self.isTyping = YES;
     } else {

@@ -8,7 +8,17 @@
 
 #import "MessageTableCellContainerView.h"
 #import "MessageTableItemText.h"
-
+#import "TGMultipleSelectTextView.h"
 @interface MessageTableCellTextView : MessageTableCellContainerView
 
+
+@property (nonatomic, strong,readonly) TGMultipleSelectTextView *textView;
+
+-(void)selectSearchTextInRange:(NSRange)range;
+
+-(void)cancelSelectSearchText;
+
+-(void)_mouseDragged:(NSEvent *)theEvent;
+-(void)_setStartSelectPosition:(NSPoint)position;
+-(void)_setCurrentSelectPosition:(NSPoint)position;
 @end

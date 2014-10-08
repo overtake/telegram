@@ -8,64 +8,16 @@
 
 #import "MessageTableCellTextView.h"
 #import "MessageTableItemText.h"
-
+#import "TGTimerTarget.h"
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
 @property (nonatomic) BOOL linkClicked;
 @end
 
-@implementation TestTextView
-
-
-- (void) clickedOnLink:(id)link atIndex:(NSUInteger)charIndex {
-    
-    open_link(link);
-  //  [super clickedOnLink:link atIndex:charIndex];
-    self.linkClicked = YES;
-}
-
-- (void) mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    
-//    DLog(@"theEvent %@", theEvent);
-    
-    if(!self.selectedRange.length) {
-        if(self.isSelecedRange) {
-            self.isSelecedRange = NO;
-        } else {
-            if(!self.linkClicked)
-                [self.superview mouseDown:theEvent];
-            self.linkClicked = NO;
-        }
-    } else {
-        self.isSelecedRange = YES;
-    }
-    
-    //    DLog(@"mouseDown");
-}
-
-//- (void) setFrameOrigin:(NSPoint)newOrigin {
-//    NSString *be = NSStringFromRect(self.frame);
-//    [super setFrameOrigin:newOrigin];
-//    DLog(@"[%@] be %@ stelo %@, text %@", self.rand, be, NSStringFromRect(self.frame), self.string);
-//}
-////
-//- (void) setFrame:(NSRect)frameRect {
-//    [self setFrameOrigin:frameRect.origin];
-//    [self setFrameSize:frameRect.size];
-//    //    NSString *be = NSStringFromRect(self.frame);
-////    [super setFrame:frameRect];
-//////    DLog(@"")
-////    DLog(@"[%@] be %@ stelo %@", self.rand, be, NSStringFromRect(self.frame));
-//
-//}
-
-@end
 
 @interface MessageTableCellTextView() <TMHyperlinkTextFieldDelegate>
-@property (nonatomic, strong) TestTextView *textView;
-@property (nonatomic, strong) TMHyperlinkTextField *textField;
+@property (nonatomic,strong) NSTimer *bgTimer;
 @end
 
 @implementation MessageTableCellTextView
@@ -74,31 +26,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.textField = [TMHyperlinkTextField defaultTextField];
         
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
-        
-        [self.textField setFrameOrigin:NSMakePoint(-2, 0)];
-        
-       [self.textField setAllowsEditingTextAttributes: YES];
-       // [self.textField setImportsGraphics:YES];
-        
-//        [self.textField setDrawsBackground:YES];
-//        
-//        [self.textField setBackgroundColor:NSColorFromRGB(0xcccccc)];
+        _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
+        [self.containerView addSubview:self.textView];
         
         
-        [self.containerView addSubview:self.textField];
-        
-        self.textField.url_delegate = self;
-        
-//        self.textView = [[TestTextView alloc] initWithFrame:NSMakeRect(-5, 2, 0, 0)];
-//        [self.textView setEditable:NO];
-//        [self.textView setLinkTextAttributes:@{NSForegroundColorAttributeName: LINK_COLOR}];
-//        [self.textView setBackgroundColor:[NSColor clearColor]];
-//        self.textView.rand = [NSString randStringWithLength:10];
-//        [self.textView setTextContainerInset:NSMakeSize(0, 0)];
-        //[self.containerView addSubview:self.textView];
     }
     return self;
 }
@@ -107,40 +39,114 @@
     open_link(url);
 }
 
+-(void)selectSearchTextInRange:(NSRange)range {
+    
+    [self.textView setSelectionRange:range];
+    
+  //  [self.textField becomeFirstResponder];
+    
+}
+
+
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
     [super setEditable:editable animation:animation];
-    
-    [self.textField setSelectable:!editable];
-    
-//    [self.textView setSelectedRange:NSMakeRange(0, 0)];
-//    [self.textView setSelectable:!editable];
+    [self.textView setEditable:!editable];
 }
 
 - (void) setItem:(MessageTableItemText *)item {
+    
     [super setItem:item];
     
+    [self.textView setFrameSize:NSMakeSize(item.blockSize.width , item.blockSize.height)];
+    [self.textView setAttributedString:item.textAttributed];
     
-   
+    [self.textView setItem:item];
     
-    self.textField.attributedStringValue = item.textAttributed;
-    [self.textField setFrameSize:NSMakeSize(item.blockSize.width, item.blockSize.height+2)];
+    [self.textView setSelectionRange:[SelectTextManager rangeForItem:item]];
     
-    
-     [self.textField.textView setSelectedTextAttributes:item.textAttributes];
-  
-    //self.textField.selectedTextAttributes = item.textAttributes;
-    
-//    NSTextStorage *textStorage = [self.textView textStorage];
-//    [textStorage setAttributedString:item.textAttributed];
-//    
-//    [self.textView setFrameSize:item.blockSize];
-//    [self.textView setNeedsDisplay:YES];
+    [self.textView addMarks:item.mark.marks];
+
 }
 
 
+-(void)_mouseDragged:(NSEvent *)theEvent {
+    [self.textView _parentMouseDragged:theEvent];
+}
+
+-(void)_setStartSelectPosition:(NSPoint)position {
+     self.textView->startSelectPosition = position;
+    [self.textView setNeedsDisplay:YES];
+}
+-(void)_setCurrentSelectPosition:(NSPoint)position {
+     self.textView->currentSelectPosition = position;
+     [self.textView setNeedsDisplay:YES];
+}
+
+-(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+    
+    if(self.isSelected == selected)
+        return;
+    
+    [super setSelected:selected animation:animation];
+    
+//    if(animation) {
+//        NSColor *color = selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
+//        NSColor *oldColor = !selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
+//        
+//        
+//        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
+//        animation.fromValue = (__bridge id)(oldColor.CGColor);
+//        animation.toValue = (__bridge id)(color.CGColor);
+//        
+//        animation.removedOnCompletion = YES;
+//        
+//        animation.delegate = self;
+//        
+//        
+//        
+//        [self.bgTimer invalidate];
+//        
+//        self.bgTimer = [TGTimerTarget scheduledMainThreadTimerWithTarget:self action:@selector(_colorAnimationEvent) interval:0.05 repeat:true];
+//        
+//        [[NSRunLoop mainRunLoop] addTimer:self.bgTimer forMode:NSRunLoopCommonModes];
+//        
+//        [self.textView.layer pop_addAnimation:animation forKey:@"backgroundColor"];
+//        
+//        
+//    } else {
+//        [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
+//    }
+//    
+//    
+     [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
+}
+
+-(void)_colorAnimationEvent {
+    CALayer *currentLayer = (CALayer *)[self.textView.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    self.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [self.textView setNeedsDisplay:YES];
+}
+
+- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)finished {
+    if(finished) {
+        [self.bgTimer invalidate];
+        self.bgTimer = nil;
+    }
+    
+    [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
+}
 
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+    
+    
+  //  CFAttributedStringRef attrString =
+    
+   
+    
 }
 
 @end

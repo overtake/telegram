@@ -51,6 +51,8 @@
     } else {
         self.messagesCountAttributedString = nil;
     }
+    
+    [self setNeedsDisplay:YES];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -144,7 +146,7 @@
     
     
     [self setFrameSize:size];
-    [self setNeedsDisplay:YES];
+  //  [self setNeedsDisplay:YES];
 //    [self.layer setNeedsLayout];
 //    [self.layer needsDisplay];
 }

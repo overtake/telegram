@@ -274,6 +274,8 @@
 }
 
 
+
+
 - (BOOL)isCommandEnterEvent:(NSEvent *)e {
     NSUInteger flags = (e.modifierFlags & NSDeviceIndependentModifierFlagsMask);
     BOOL isCommand = (flags & NSCommandKeyMask) == NSCommandKeyMask;

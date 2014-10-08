@@ -14,6 +14,14 @@
 #import "MesssageInputGrowingTextView.h"
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
+#import "TGCTextMark.h"
+@interface SearchSelectItem : NSObject
+@property (nonatomic,assign) BOOL isCurrent;
+@property (nonatomic,strong) MessageTableItem *item;
+@property (nonatomic,strong,readonly) NSMutableArray *marks;
+@end
+
+
 @class MessageTableItem;
 
 @interface MessagesViewController : TMViewController<NSTableViewDataSource, NSTableViewDelegate,NSTextFieldDelegate, NSTextViewDelegate,MessagesDelegate>
@@ -100,4 +108,10 @@ typedef enum {
 
 - (void)showConnectionController:(BOOL)animated;
 - (void)hideConnectionController:(BOOL)animated;
+
+-(void)showSearchBox;
+
+
+-(NSArray *)messageList;
+
 @end

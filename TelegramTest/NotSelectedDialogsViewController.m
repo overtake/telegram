@@ -9,7 +9,7 @@
 #import "NotSelectedDialogsViewController.h"
 #import "TMGifImageView.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "TGCTextView.h"
 @interface NotSelectedDialogsViewController()
 @end
 
@@ -37,6 +37,18 @@
 //    [imageView setWantsLayer:YES];
 //    imageView.image = noDialogsImage;
 //    [containerView addSubview:imageView];
+    
+    
+//    TGCTextView *test = [[TGCTextView alloc] initWithFrame:NSMakeRect(30, 50, 150, 100)];
+//    
+//    test.autoresizingMask = NSViewWidthSizable;
+//    
+//    NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"трочку о том, что надо проверять длину ключа при создании секретного чата, и если она вышла <256 байт, добивать нулями сверху, чтобы было 256. Иначе могут не сойтись картинки. Но это, конечно же, все кроме меня знают.. (If key length < 256 bytes, add several leading bytes, equal to zero, as padding — so that the key is exactly 256 bytes long.)Правда, что во всех клиентах так делают?" attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14]}];
+//    
+//    [test setAttributedString:str];
+//    
+    
+//    [self.view addSubview:test];
 
     
     TMTextField *textField = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];

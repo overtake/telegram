@@ -42,6 +42,8 @@
 #import "EmojiViewController.h"
 #import "RBLPopover.h"
 #import "NSTextView+EmojiExtension.h"
+
+
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -443,6 +445,16 @@
             return [[NSEvent alloc]init];
         }
         
+        if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 3) {
+            
+            if([Telegram rightViewController].navigationViewController.currentController == [[Telegram rightViewController] messagesViewController]) {
+                [[[Telegram rightViewController] messagesViewController] showSearchBox];
+            }
+            
+             return [[NSEvent alloc]init];
+            
+        }
+        
         return result;
     };
     
@@ -473,26 +485,6 @@
         return result;
     };
     
-    
-    
-    
-    //
-    //    [NSEvent addLocalMonitorForEventsMatchingMask:( NSLeftMouseDownMask |
-    //                                                   NSLeftMouseUpMask   |
-    //                                                   NSRightMouseDownMask |
-    //                                                   NSRightMouseUpMask |
-    //                                                   NSMouseMovedMask |
-    //                                                   NSLeftMouseDraggedMask  |
-    //                                                   NSRightMouseDraggedMask |
-    //                                                   NSMouseEnteredMask |
-    //                                                   NSMouseExitedMask  |
-    //                                                   NSCursorUpdateMask |
-    //                                                   NSScrollWheelMask  |
-    //                                                   NSTabletPointMask  |
-    //                                                   NSOtherMouseDownMask  |
-    //                                                   NSOtherMouseUpMask   |
-    //                                                   NSOtherMouseDraggedMask ) handler:block2];
-    //
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDownMask | NSLeftMouseUpMask | NSMouseEnteredMask | NSMouseMovedMask | NSCursorUpdateMask) handler:block2];
 }

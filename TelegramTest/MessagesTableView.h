@@ -18,4 +18,6 @@
 
 @property (nonatomic,assign) float fakeHeight;
 
+- (void)clearSelection;
+
 @end

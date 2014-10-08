@@ -59,10 +59,33 @@
 #import "TMAudioRecorder.h"
 #import "MessagesTopInfoView.h"
 #import "HackUtils.h"
+#import "SearchMessagesView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
 
+
+
+
+
+@implementation SearchSelectItem
+
+-(id)init {
+    if(self = [super init]) {
+        _marks = [[NSMutableArray alloc] init];
+    }
+    
+    return self;
+}
+
+
+-(void)clear {
+    ((MessageTableItemText *)self.item).mark = nil;
+    [self.marks removeAllObjects];
+    _marks = nil;
+}
+
+@end
 
 @interface MessagesViewController () {
     __block SMDelayedBlockHandle _delayedBlockHandle;
@@ -113,6 +136,11 @@
 @property (nonatomic,strong) MessagesTopInfoView *topInfoView;
 
 @property (nonatomic,assign) int ignoredCount;
+
+@property (nonatomic,strong) SearchMessagesView *searchMessagesView;
+
+
+@property (nonatomic,strong) NSMutableArray *searchItems;
 
 @end
 
@@ -181,6 +209,10 @@
 }
 
 
+-(NSArray *)messageList {
+    return [self.messages copy];
+}
+
 
 - (void)loadView {
     [super loadView];
@@ -244,6 +276,8 @@
     }];
     
     self.normalNavigationCenterView = [[MessageTableNavigationTitleView alloc] initWithFrame:NSZeroRect];
+    
+    
     [self.normalNavigationCenterView setTapBlock:^{
         switch (strongSelf.dialog.type) {
             case DialogTypeChat:
@@ -329,10 +363,204 @@
     [self.view addSubview:self.connectionController];
     
     
+    
+    self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.view.frame), 40)];
+    [self.searchMessagesView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable];
+    
+    self.searchMessagesView.controller = self;
+    
+    [self.view addSubview:self.searchMessagesView];
+    
+    self.searchItems = [[NSMutableArray alloc] init];
+    
+    
     self.historyController = [[ChatHistoryController alloc] initWithConversation:nil controller:self];
+    
+     [self.searchMessagesView setHidden:YES];
     
 }
 
+
+-(void)showSearchBox {
+    
+    if(!self.searchMessagesView.isHidden) {
+        [self.searchMessagesView becomeFirstResponder];
+        return;
+    }
+    
+    
+    
+    __block int currentId = 0;
+    
+    
+    dispatch_block_t clearItems = ^ {
+        [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            [obj clear];
+            
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            
+        }];
+        
+        
+        [self.searchItems removeAllObjects];
+        currentId = -1;
+    };
+    
+    dispatch_block_t next = ^ {
+        if(self.searchItems.count > 0) {
+            
+            SearchSelectItem *searchItem = self.searchItems[currentId];
+            
+            [self.table clearSelection];
+            
+            NSUInteger row = [self.messages indexOfObject:searchItem.item];
+            
+            id cell = [self.table rowViewAtRow:row makeIfNecessary:NO];
+            
+            NSRect rowRect = [self.table rectOfRow:row];
+            
+            [self.table.scrollView scrollToPoint:rowRect.origin animation:NO];
+            
+            MessageTableCellTextView *container = [[cell subviews] objectAtIndex:0];
+            
+            [self scrollToRect:rowRect isCenter:YES];
+            
+            
+        }
+    };
+    
+    [self.searchMessagesView showSearchBox:^(NSString *search) {
+        
+        clearItems();
+        
+       [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+           
+           if([obj isKindOfClass:[MessageTableItemText class]]) {
+               
+               SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
+               
+               searchItem.item = obj;
+
+               
+               NSRange range = [obj.message.message rangeOfString:search options:NSCaseInsensitiveSearch];
+               while(range.location != NSNotFound)
+               {
+                   TGCTextMark *mark = [[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO];
+                   
+                   [searchItem.marks addObject:mark];
+                   
+                   ((MessageTableItemText *)obj).mark = searchItem;
+                   
+                   [self.searchItems addObject:searchItem];
+                   
+                   [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                   
+                   
+                   range = [obj.message.message  rangeOfString:search options:NSCaseInsensitiveSearch range:NSMakeRange(range.location + 1, [obj.message.message length] - range.location - 1)];
+               }
+               
+            }
+            
+        }];
+        
+        if(self.searchItems.count > 0) {
+            currentId++;
+            next();
+        }
+        
+        
+        
+    } next:^ {
+        
+        currentId++;
+        
+        if(currentId >= self.searchItems.count)
+            currentId = 0;
+        
+        next();
+        
+        
+        
+    } prevCallback:^{
+        
+        currentId--;
+        
+        if(currentId < 0)
+            currentId = (int) self.searchItems.count - 1;
+        
+        next();
+        
+       
+
+    
+    } closeCallback:^{
+        
+        [self hideSearchBox:YES];
+        
+    }];
+    
+ //   [self hideConnectionController:YES];
+ //   [self hideTopInfoView:YES];
+    
+    [self.searchMessagesView setHidden:NO];
+    
+
+    NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 40);
+    NSPoint newPoint = NSMakePoint(0,self.view.frame.size.height-40);
+    
+    [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
+        [context setDuration:0.3];
+        [[self.searchMessagesView animator] setFrameOrigin:newPoint];
+        [[self.table.scrollView animator] setFrameSize:newSize];
+        [self.searchMessagesView setNeedsDisplay:YES];
+        
+    } completionHandler:^{
+        [self.searchMessagesView becomeFirstResponder];
+    }];
+    
+}
+
+-(void)hideSearchBox:(BOOL)animated {
+    
+    
+    if(self.searchMessagesView.isHidden)
+        return;
+    
+    
+    [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj clear];
+        
+        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        
+    }];
+    
+    
+    [self.searchItems removeAllObjects];
+
+    
+    NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
+    NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
+    
+    if(animated) {
+        [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
+            [context setDuration:0.3];
+            [[self.searchMessagesView animator] setFrameOrigin:newPoint];
+            [[self.table.scrollView animator] setFrameSize:newSize];
+            [self.searchMessagesView setNeedsDisplay:YES];
+            
+        } completionHandler:^{
+            [self.searchMessagesView setHidden:YES];
+            [self.searchMessagesView resignFirstResponder];
+        }];
+    } else {
+        [self.searchMessagesView setFrameOrigin:newPoint];
+        [self.table.scrollView setFrameSize:newSize];
+        [self.searchMessagesView setNeedsDisplay:YES];
+        [self.searchMessagesView setHidden:YES];
+    }
+}
 
 
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated {
@@ -674,7 +902,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [self.table.scrollView setHasVerticalScroller:NO];
+   [self.table.scrollView setHasVerticalScroller:NO];
 }
 
 
@@ -1238,7 +1466,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.messages removeObjectAtIndex:row];
                 [self.selectedMessages removeObject:message];
                 
-                [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectGap];
+                [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
                 [message clean];
             }
         }
@@ -1349,6 +1577,8 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
+    
+    [self hideSearchBox:NO];
     
     if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [self.dialog.peer peer_id] != [dialog.peer peer_id])) {
         
@@ -1602,23 +1832,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSUInteger index = [self indexOfObject:item];
                 NSRect rect = [self.table rectOfRow:index];
                 
-                
-                if(message_id != 0) {
-                    rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
-                }
-                
-                if(self.table.scrollView.documentSize.height > NSHeight(self.table.containerView.frame))
-                    rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
-                
-                if(rect.origin.y < 0)
-                    rect.origin.y = 0;
-                
-                
-                
-                
-                
-                [self.table.scrollView scrollToPoint:rect.origin animation:NO];
-                
+                [self scrollToRect:rect isCenter:message_id != 0];
                 //bug fix
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1660,6 +1874,22 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
     }];
+}
+
+-(void)scrollToRect:(NSRect)rect isCenter:(BOOL)isCenter {
+    
+    if(isCenter) {
+        rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+    }
+    
+    if(self.table.scrollView.documentSize.height > NSHeight(self.table.containerView.frame))
+        rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
+    
+    if(rect.origin.y < 0)
+        rect.origin.y = 0;
+    
+    [self.table.scrollView scrollToPoint:rect.origin animation:NO];
+    
 }
 
 
@@ -2137,6 +2367,16 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    
+    
+    
+//    NSDate *methodStart = [NSDate date];
+//    
+//    /* ... Do whatever you need to do ... */
+//    
+//    NSDate *methodFinish = [NSDate date];
+//    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+//    NSLog(@"executionTime = %f", executionTime);
     
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;

@@ -14,6 +14,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
+      </ContextState>
+      <ContextState
          contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -45,6 +48,25 @@
       </ContextState>
       <ContextState
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MainWindow validateUserInterfaceItem:]:MainWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "anItem.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMGrowingTextView validateUserInterfaceItem:]:TMGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[anItem action];">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
       </ContextState>
       <ContextState
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
@@ -103,6 +125,12 @@
          contextName = "-[ReadHistroryTask loop:]:ReadHistroryTask.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString
@@ -115,6 +143,22 @@
          <PersistentStrings>
             <PersistentString
                value = "self.tabViewController.currentController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36+[SelectTextManager enumerateItems:]_block_invoke_2:SelectTextManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.marks">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -172,6 +216,9 @@
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "-[MainWindow sendEvent:]:MainWindow.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController windowBecomeNotification:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -200,6 +247,17 @@
          contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGCTextView setSelectionRange:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.marks">
+            </PersistentString>
+            <PersistentString
+               value = "self.realMark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
       </ContextState>
       <ContextState
@@ -215,6 +273,17 @@
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "next">
+            </PersistentString>
+            <PersistentString
+               value = "prev">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SelectUsersTableView search:]:SelectUsersTableView.m">
@@ -266,6 +335,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesTableView mouseDragged:]:MessagesTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
          <PersistentStrings>
             <PersistentString
@@ -282,6 +359,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "frameRect">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
@@ -291,6 +376,9 @@
                value = "self.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
       </ContextState>
       <ContextState
          contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
@@ -305,6 +393,14 @@
          <PersistentStrings>
             <PersistentString
                value = "file">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "menuItem.action">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -337,6 +433,14 @@
       </ContextState>
       <ContextState
          contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[SelectTextManager enumerateItemsWithOptions:usingBlock:]:SelectTextManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
@@ -390,6 +494,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__24-[TGCTextView drawRect:]_block_invoke:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "mark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -422,6 +534,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
@@ -429,14 +549,6 @@
             </PersistentString>
             <PersistentString
                value = "((SelectUsersTableView *)[self rowItem].table).selectDelegate ">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

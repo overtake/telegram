@@ -33,12 +33,7 @@
     NSRange range = [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
     [self.textAttributed detectAndAddLinks];
-    
-    
-    
-    
-    
-    
+
  //   [self.textAttributed addAttribute:NSBackgroundColorAttributeName value:NSColorFromRGB(0xcfcfcf) range:self.textAttributed.range];
     
   //  [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:self.textAttributed.range];
@@ -93,7 +88,7 @@
     }
     
     
-    [self makeSizeByWidth:300];
+    [self makeSizeByWidth:280];
     
     return self;
 }
@@ -101,42 +96,59 @@
 - (BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    width -= self.dateSize.width;
+    width -= self.dateSize.width+10;
     
     if(self.isForwadedMessage) {
         width -= 50;
     }
 
     
-    float oldWidth = self.blockSize.width;
     
     
-    static NSMutableParagraphStyle *paragraphStyle = nil;
-    if(!paragraphStyle) {
-        paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        [paragraphStyle setLineSpacing:1];
-        [paragraphStyle setMinimumLineHeight:18];
-        [paragraphStyle setMaximumLineHeight:19];
-        
-    }
     
-    NSMutableAttributedString *copy = [self.textAttributed mutableCopy];
-    
-    [copy addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:copy.range];
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.textAttributed);
     
     
-    NSSize textSize = [copy sizeForWidth:width height:FLT_MAX];
-    textSize.width = ceil(textSize.width);
-    textSize.height = ceil(textSize.height);
     
-    NSSize roundSize = [copy sizeForWidth:width+5 height:FLT_MAX];
+    CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.textAttributed.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
     
-    if(roundSize.height < textSize.height)
-        textSize = roundSize;
+    textSize.width= width;
+    textSize.height = floor(textSize.height);
+   // textSize.height = 120;
     
-    if(textSize.width == oldWidth)
-        return NO;
-        
+    CFRelease(framesetter);
+    
+    
+//    
+//    float oldWidth = self.blockSize.width;
+//    
+//    
+//    static NSMutableParagraphStyle *paragraphStyle = nil;
+//    if(!paragraphStyle) {
+//        paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//        [paragraphStyle setLineSpacing:1];
+//        [paragraphStyle setMinimumLineHeight:18];
+//        [paragraphStyle setMaximumLineHeight:19];
+//        
+//    }
+//    
+//    NSMutableAttributedString *copy = [self.textAttributed mutableCopy];
+//    
+//    [copy addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:copy.range];
+//    
+//    
+//    NSSize textSize = [copy sizeForWidth:width height:FLT_MAX];
+//    textSize.width = ceil(textSize.width);
+//    textSize.height = ceil(textSize.height);
+//    
+//    NSSize roundSize = [copy sizeForWidth:width+5 height:FLT_MAX];
+//    
+//    if(roundSize.height < textSize.height)
+//        textSize = roundSize;
+//    
+//    if(textSize.width == oldWidth)
+//        return NO;
+    
     self.blockSize = textSize;
     return YES;
 }

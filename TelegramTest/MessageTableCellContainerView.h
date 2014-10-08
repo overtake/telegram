@@ -27,6 +27,9 @@ typedef enum {
 
 @interface MessageTableCellContainerView : MessageTableCell<SenderListener>
 
+@property (nonatomic,readonly) BOOL isSelected;
+@property (nonatomic,readonly) BOOL isEditable;
+
 @property (nonatomic, assign) CellState cellState;
 @property (nonatomic) MessageTableCellState actionState;
 @property (nonatomic, strong) TMView *containerView;

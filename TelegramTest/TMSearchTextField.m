@@ -86,6 +86,21 @@
         [self.searchDelegate searchFieldBlur];
     }
 }
+-(void)keyUp:(NSEvent *)theEvent {
+    [super keyUp:theEvent];
+    
+    if([self.searchDelegate respondsToSelector:@selector(searchFieldDidEnter)])
+    {
+        if([self isEnterEvent:theEvent])
+            [self.searchDelegate searchFieldDidEnter];
+    }
+}
+
+
+- (BOOL)isEnterEvent:(NSEvent *)e {// VK_RETURN
+    return ((e.keyCode == 0x24 || e.keyCode ==  0x4C));
+}
+
 
 
 -(void)keyDown:(NSEvent *)theEvent {
@@ -193,7 +208,9 @@ const static int textFieldXOffset = 30;
     return [self.textField becomeFirstResponder];
 }
 
-
+-(void)searchFieldDidEnter {
+    [self.delegate searchFieldDidEnter];
+}
 
 
 - (bool)endEditing;
@@ -348,6 +365,9 @@ static float duration = 0.1;
     [self.cancelButton setHidden:!self.textField.stringValue.length];
     [self.delegate searchFieldTextChange:self.textField.stringValue];
 }
+
+
+
 
 
 //- (void) setNeedsDisplay:(BOOL)flag {

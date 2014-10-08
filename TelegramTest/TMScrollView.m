@@ -164,36 +164,36 @@
     return self.contentView.documentRect.size;
 }
 
-- (void)scrollWheel:(NSEvent *)theEvent {
-    if(!self.disableScrolling) {
-        [super scrollWheel:theEvent];
-    } else {
-        self.isScrollRightNow = NO;
-        return;
-    }
-    
-    if(theEvent.phase == NSEventPhaseEnded) {
-        self.isScrollRightNow = NO;
-        return;
-    }
-    
-    if(theEvent.phase == NSEventPhaseCancelled) {
-        self.isScrollRightNow = NO;
-        return;
-    }
-    
-    if(theEvent.momentumPhase == NSEventPhaseEnded) {
-        self.isScrollRightNow = NO;
-        return;
-    }
-    
-    if(theEvent.momentumPhase == NSEventPhaseCancelled) {
-        self.isScrollRightNow = NO;
-        return;
-    }
-    
-    self.isScrollRightNow = YES;
-}
+//- (void)scrollWheel:(NSEvent *)theEvent {
+//    if(!self.disableScrolling) {
+//        [super scrollWheel:theEvent];
+//    } else {
+//        self.isScrollRightNow = NO;
+//        return;
+//    }
+//    
+//    if(theEvent.phase == NSEventPhaseEnded) {
+//        self.isScrollRightNow = NO;
+//        return;
+//    }
+//    
+//    if(theEvent.phase == NSEventPhaseCancelled) {
+//        self.isScrollRightNow = NO;
+//        return;
+//    }
+//    
+//    if(theEvent.momentumPhase == NSEventPhaseEnded) {
+//        self.isScrollRightNow = NO;
+//        return;
+//    }
+//    
+//    if(theEvent.momentumPhase == NSEventPhaseCancelled) {
+//        self.isScrollRightNow = NO;
+//        return;
+//    }
+//    
+//    self.isScrollRightNow = YES;
+//}
 
 - (void)setIsScrollRightNow:(BOOL)isScrollRightNow {
     if(self.isScrollRightNow == isScrollRightNow)

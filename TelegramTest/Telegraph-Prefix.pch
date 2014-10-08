@@ -12,7 +12,7 @@
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import "ImageUtils.h"
 #import <POP/POP.h>
-
+#import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"
 #import "TLClassStore.h"
@@ -87,7 +87,7 @@
 
 #ifdef TGDEBUG
 
-#define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define DLog(fmt, ...)// NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 #else
 

@@ -113,9 +113,9 @@
             if([current.item isEqualToItem:operation.item]) {
                 
                 current.item.result = operation.item.result;
-                
-                if(current.item.downloadState == DownloadStateDownloading)
-                    current.item.downloadState = DownloadStateCompleted;
+//                
+//                if(current.item.downloadState == DownloadStateDownloading)
+//                    current.item.downloadState = DownloadStateCompleted;
                 
                 if(current.item.errorType == DownloadErrorNone)
                     [current.item notify:DownloadItemHandlerTypeCompletion];

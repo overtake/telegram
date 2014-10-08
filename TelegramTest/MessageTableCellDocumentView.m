@@ -78,23 +78,23 @@ static CAAnimation *ani() {
     BOOL needAnimation = self.image && (self.image.size.width != 100 || self.image.size.height != 100);
     BOOL isBlur = NO;
     
-    if(image.size.width != 100 || image.size.height != 100) {
-       
-        isBlur = YES;
-        needAnimation = NO;
-        
-        [ASQueue dispatchOnStageQueue:^{
-            NSImage *blured = [self blur:image];
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [super setImage:blured];
-            }];
-        }];
-        
-        return;
-       
-    }
+//    if(image.size.width != 100 || image.size.height != 100) {
+//       
+//        isBlur = YES;
+//        needAnimation = NO;
+////        
+////        [ASQueue dispatchOnStageQueue:^{
+////            NSImage *blured = [self blur:image];
+////            [[ASQueue mainQueue] dispatchOnQueue:^{
+////                [super setImage:blured];
+////            }];
+////        }];
+////        
+////        return;
+//       
+//    }
     
-    if(self.isAlwaysBlur && !isBlur) {
+    if(self.isAlwaysBlur) {
         
         [ASQueue dispatchOnStageQueue:^{
             NSImage *blured = [self blur:image];

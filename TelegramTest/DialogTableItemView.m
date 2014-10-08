@@ -483,6 +483,8 @@ static int unreadOffsetRight = 13;
         [item.writeAttributedString appendString:@"." withColor:self.isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x9b9b9b)];
         [item.writeAttributedString setSelected:self.isSelected];
         [self.messageTextField setAttributedStringValue:item.writeAttributedString];
+        [item.writeAttributedString setAlignment:NSLeftTextAlignment range:NSMakeRange(0, item.writeAttributedString.length)];
+        
         
     } queue:dispatch_get_main_queue()];
     [self.timer start];

@@ -38,7 +38,7 @@
         
         self.blockSize = size;
         
-        if(thumb.bytes) {
+        if(thumb.bytes.length > 0) {
             self.cachedThumb = [ImageUtils blurImage:[[NSImage alloc] initWithData:thumb.bytes] blurRadius:60 frameSize:self.blockSize];
             
             self.cachedThumb = [ImageUtils roundCorners:self.cachedThumb size:NSMakeSize(3, 3)];

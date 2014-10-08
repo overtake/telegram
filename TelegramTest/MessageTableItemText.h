@@ -7,10 +7,12 @@
 //
 
 #import "MessageTableItem.h"
-
+#import "TGCTextMark.h"
 @interface MessageTableItemText : MessageTableItem
 
 @property (nonatomic, strong) NSMutableAttributedString *textAttributed;
 @property (nonatomic,strong) NSDictionary *textAttributes;
+
+@property (nonatomic,strong) SearchSelectItem *mark;
 
 @end

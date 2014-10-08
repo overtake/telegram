@@ -291,6 +291,15 @@
     
 }
 
+-(id)identifier {
+    return @(self.message.n_id);
+}
+
+
+-(NSString *)string {
+    return self.message.message;
+}
+
 - (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass force:(BOOL)force {
     
     if(!self.downloadItem) {

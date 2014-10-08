@@ -31,8 +31,7 @@
 @property (nonatomic,strong) ITProgressIndicator *progressIndicator;
 
 
-@property (nonatomic) BOOL isSelected;
-@property (nonatomic) BOOL isEditable;
+
 
 @end
 
@@ -60,6 +59,8 @@ static NSImage* image_broadcast() {
         [self.layer disableActions];
         
         assert(self.layer != nil);
+        
+       
         
         self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
         [self.rightView setLayer:[CALayer layer]];
@@ -204,8 +205,7 @@ static NSImage* image_broadcast() {
             
         }];
         
-        [self setNeedsDisplay:YES];
-        
+
         
         
     }
@@ -279,6 +279,9 @@ NSImage *selectCheckActiveImage() {
     [self.layer pop_addAnimation:animation forKey:@"background"];
 }
 
+
+
+
 - (void)stopSearchSelection {
     [self.layer pop_removeAnimationForKey:@"background"];
 }
@@ -289,7 +292,7 @@ NSImage *selectCheckActiveImage() {
     
     
     self.item.isSelected = isSelected;
-    self.isSelected = isSelected;
+    _isSelected = isSelected;
     
     [self.selectButton setSelected:!self.selectButton.isSelected];
     
@@ -349,7 +352,6 @@ NSImage *selectCheckActiveImage() {
         [self.layer setBackgroundColor:color.CGColor];
     }
     
-    
 }
 
 
@@ -359,6 +361,7 @@ static BOOL mouseIsDown = NO;
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
+    [super mouseUp:theEvent];
     mouseIsDown = NO;
 }
 
@@ -372,7 +375,10 @@ static BOOL mouseIsDown = NO;
 }
 
 
--(void)acceptEvent:(NSEvent *)theEvent {
+-(BOOL)acceptEvent:(NSEvent *)theEvent {
+    
+    if(!self.isEditable)
+        return false;
     
     NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
     
@@ -389,9 +395,9 @@ static BOOL mouseIsDown = NO;
             [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
         }
         
-        
-        return;
     }
+    
+    return true;
 
 }
 
@@ -422,6 +428,7 @@ static BOOL dragAction = NO;
     }
     
     if(!self.isEditable) {
+        [super mouseDown:theEvent];
         return;
     }
     
@@ -451,13 +458,18 @@ static BOOL dragAction = NO;
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {
+    
+    
    
-    [self acceptEvent:theEvent];
+    if(![self acceptEvent:theEvent]) {
+        [super mouseDragged:theEvent];
+    }
 }
 
 - (void)setItem:(MessageTableItem *)item {
     [super setItem:item];
-   // DLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)self));
+    
+    
     float offsetContainerView;
     
     if(item.isForwadedMessage) {
@@ -548,7 +560,7 @@ static BOOL dragAction = NO;
     
     [self.avatarImageView setUser:item.user];
     [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
-    
+
     [self checkActionState:YES];
     
     
@@ -563,6 +575,8 @@ static BOOL dragAction = NO;
     
     [self.rightView setToolTip:self.item.fullDate];
     
+    
+    [self setNeedsDisplay:YES];
     
 
 }
@@ -595,7 +609,7 @@ static int offsetEditable = 30;
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
     if(self.isEditable == editable && animation)
         return;
-    self.isEditable = editable;
+    _isEditable = editable;
     
     static float duration = 0.1f;
     

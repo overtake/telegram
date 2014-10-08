@@ -14,6 +14,7 @@
 @optional
 - (void) searchFieldFocus;
 - (void) searchFieldBlur;
+- (void) searchFieldDidEnter;
 
 @required
 - (void) searchFieldTextChange:(NSString*)searchString;

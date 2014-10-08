@@ -12,14 +12,17 @@
 #import "ImageUtils.h"
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
-@interface MessageTableNavigationTitleView()<TMTextFieldDelegate>
+@interface MessageTableNavigationTitleView()<TMTextFieldDelegate, TMSearchTextFieldDelegate>
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
 @property (nonatomic, strong) NSMutableAttributedString *attributedString;
 
 @property (nonatomic,strong) TMTextField *typingTextField;
 
-@property (nonatomic,strong) TMView *containerView;
+
+
+
+@property (nonatomic,strong) TMView *container;
 
 
 
@@ -33,6 +36,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setAutoresizingMask:NSViewWidthSizable];
+        
+        
+        
+        self.container = [[TMView alloc] initWithFrame:self.bounds];
+        self.container.wantsLayer = YES;
         
         self.typingTextField = [TMTextField defaultTextField];
         
@@ -49,7 +57,7 @@
         [[self.nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.nameTextField setDrawsBackground:NO];
         [self.nameTextField setNameDelegate:self];
-        [self addSubview:self.nameTextField];
+        [self.container addSubview:self.nameTextField];
     
         self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(0, 3, 0, 0)];
         [self.statusTextField setSelector:@selector(statusForMessagesHeaderView)];
@@ -59,22 +67,24 @@
         
         //[self.statusTextField setBackgroundColor:NSColorFromRGB(0x000000)];
         
-        [self addSubview:self.statusTextField];
+        [self.container addSubview:self.statusTextField];
         
-        self.attributedString = [[NSMutableAttributedString alloc] init];
-        
-        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
-        
-        [self addSubview:self.containerView];
-        
-         self.containerView.wantsLayer = YES;
+        [self addSubview:self.container];
         
         
-        [self.containerView addSubview:self.typingTextField];
     
         
     }
     return self;
+}
+
+
+
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self buildForSize:newSize];
 }
 
 -(void)textFieldDidChange:(id)field {
@@ -115,37 +125,19 @@
 
 
 
-
 - (void)buildForSize:(NSSize)size {
+    
+    
+    [self.container setFrame:self.bounds];
+    
 
     [self.nameTextField sizeToFit];
     [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 20, self.nameTextField.bounds.size.height)];
     
-    
-    [self.typingTextField sizeToFit];
-    
-    [self.typingTextField setCenterByView:self];
-    
-    self.typingTextField.backgroundColor = NSColorFromRGB(0x000000);
-    
-    
-    int totalSize = NSWidth(self.typingTextField.frame);
-    
-    
-    [self.containerView setFrameSize:NSMakeSize(totalSize, self.typingTextField.frame.size.height)];
-    
-    [self.containerView setCenterByView:self];
-    
-    [self.containerView setFrameOrigin:NSMakePoint(self.containerView.frame.origin.x, 9)];
-    
-    
-    
-    
-
-
-    
 
     [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
+    
+  
     
 
 }
@@ -159,12 +151,7 @@
     [self buildForSize:self.bounds.size];
 }
 
-- (void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
-    
-//    DLog(@"newSize %@", NSStringFromSize(newSize));
-    [self buildForSize:newSize];
-}
+
 
 
 
@@ -173,6 +160,7 @@
     
     if(self.tapBlock)
         self.tapBlock();
+    
 }
 
 @end

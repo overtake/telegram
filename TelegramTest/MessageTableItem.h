@@ -12,7 +12,7 @@
 
 #define FORWARMESSAGE_TITLE_HEIGHT 28
 
-@interface MessageTableItem : NSObject
+@interface MessageTableItem : NSObject<SelectTextDelegate>
 
 @property (nonatomic, strong) TL_localMessage *message;
 @property (nonatomic, strong) SenderItem *messageSender;
