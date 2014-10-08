@@ -3,6 +3,44 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[MessagesTableView mouseDragged:]:MessagesTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentY">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.historyController.prevState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "next">
+            </PersistentString>
+            <PersistentString
+               value = "prev">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -14,51 +52,29 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
-      </ContextState>
-      <ContextState
-         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
+         contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
-               value = "currentY">
+               value = "items">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
+         contextName = "__open_card_block_invoke_2:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.window.contentView ">
+               value = "self.contentViewController.view">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__40-[ChatHistoryController markAsReceived:]_block_invoke:ChatHistoryController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "max_id">
-            </PersistentString>
-            <PersistentString
-               value = "saved_max_id">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
-         contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
-      </ContextState>
-      <ContextState
-         contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[MainWindow validateUserInterfaceItem:]:MainWindow.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "anItem.action">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "-[TMGrowingTextView validateUserInterfaceItem:]:TMGrowingTextView.m">
@@ -69,134 +85,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
-      </ContextState>
-      <ContextState
-         contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
+         contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
          <PersistentStrings>
             <PersistentString
-               value = "message">
-            </PersistentString>
-            <PersistentString
-               value = "message.length">
-            </PersistentString>
-            <PersistentString
-               value = "[UsersManager currentUserId]">
+               value = "[strongSelf rowItem].lastMessage.dstate">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[DialogTableView initWithFrame:]:DialogTableView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "+[RPCRequest sendRequest:successHandler:errorHandler:]:RPCRequest.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TMMediaController media:]:TMMediaController.mm">
-      </ContextState>
-      <ContextState
-         contextName = "-[UsersManager setUserStatus:forUser:]:UsersManager.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "currentUser.status.was_online">
-            </PersistentString>
-            <PersistentString
-               value = "currentUser.status.expires">
-            </PersistentString>
-            <PersistentString
-               value = "status.was_online">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.item.state">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "main:main.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[ReadHistroryTask loop:]:ReadHistroryTask.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.isHidden">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[LeftViewController updateSize]:LeftViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.tabViewController.currentController">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.minSize">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__36+[SelectTextManager enumerateItems:]_block_invoke_2:SelectTextManager.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.marks">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "message.n_id">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[NSThread currentThread]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__23-[DownloadItem notify:]_block_invoke_3:DownloadItem.m">
-      </ContextState>
-      <ContextState
-         contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
-      </ContextState>
-      <ContextState
-         contextName = "-[TL_localMessage setDstate:]:TL_localMessage.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
@@ -210,24 +104,67 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
+         contextName = "-[MainViewController updateWindowMinSize]:MainViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "maxSize">
-            </PersistentString>
-            <PersistentString
-               value = "image.size">
-            </PersistentString>
-            <PersistentString
-               value = "self.image">
+               value = "self.view.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__open_card_block_invoke_2:FileUtils.m">
+         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[MainWindow sendEvent:]:MainWindow.m">
+         contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSThread currentThread]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchItem initWithMessageItem:searchString:]:SearchItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+            <PersistentString
+               value = "self.user">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "self.table.scrollView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCTextView setSelectionRange:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.marks">
+            </PersistentString>
+            <PersistentString
+               value = "self.realMark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[SelectTextManager enumerateItemsWithOptions:usingBlock:]:SelectTextManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke308:AppDelegate.m">
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController windowBecomeNotification:]:ChatHistoryController.m">
@@ -236,6 +173,238 @@
                value = "[[NSApp mainWindow]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__33-[DialogsManager updateReadList:]_block_invoke_2:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.dialog.last_marked_message">
+            </PersistentString>
+            <PersistentString
+               value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.broadcast.n_id ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[LeftViewController updateSize]:LeftViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.tabViewController.currentController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellGifView setItem:]:MessageTableCellGifView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40-[ChatHistoryController markAsReceived:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "max_id">
+            </PersistentString>
+            <PersistentString
+               value = "saved_max_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TelegramFirstController validateMenuItem:]:TelegramFirstController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "menuItem.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.document.thumb.location">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_localMessage setDstate:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "frameRect">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AccountSettingsViewController enterClick]:AccountSettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.firstNameView.textView.stringValue">
+            </PersistentString>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[RPCRequest sendRequest:successHandler:errorHandler:]:RPCRequest.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMMediaController media:]:TMMediaController.mm">
+      </ContextState>
+      <ContextState
+         contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[appUrl path]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ReadHistroryTask loop:]:ReadHistroryTask.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ComposeActionGroupBehavior centerTitle]:ComposeActionGroupBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self rowItem].table">
+            </PersistentString>
+            <PersistentString
+               value = "((SelectUsersTableView *)[self rowItem].table).selectDelegate ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.state">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__23-[DownloadItem notify:]_block_invoke_3:DownloadItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__36+[SelectTextManager enumerateItems:]_block_invoke_2:SelectTextManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.window.contentView ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
+      </ContextState>
+      <ContextState
+         contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageView setObject:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellGifView playAnimation]:MessageTableCellGifView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__24-[TGCTextView drawRect:]_block_invoke:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "mark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.minSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SelectUsersTableView search:]:SelectUsersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "searchString.lenght">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
@@ -252,183 +421,27 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke308:AppDelegate.m">
+         contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
       </ContextState>
       <ContextState
-         contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TGCTextView setSelectionRange:]:TGCTextView.m">
+         contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.marks">
+               value = "maxSize">
             </PersistentString>
             <PersistentString
-               value = "self.realMark">
+               value = "image.size">
+            </PersistentString>
+            <PersistentString
+               value = "self.image">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__33-[DialogsManager updateReadList:]_block_invoke_2:DialogsManager.m">
+         contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString
-               value = "message.dialog.last_marked_message">
-            </PersistentString>
-            <PersistentString
-               value = "message.n_id">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[AccountSettingsViewController enterClick]:AccountSettingsViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.firstNameView.textView.stringValue">
-            </PersistentString>
-            <PersistentString
-               value = "">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellGifView setItem:]:MessageTableCellGifView.m">
-      </ContextState>
-      <ContextState
-         contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "next">
-            </PersistentString>
-            <PersistentString
-               value = "prev">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[SelectUsersTableView search:]:SelectUsersTableView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "searchString.lenght">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "result">
-            </PersistentString>
-            <PersistentString
-               value = "self.table.scrollView.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[appUrl path]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MainViewController updateWindowMinSize]:MainViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.view.window">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[SearchItem initWithMessageItem:searchString:]:SearchItem.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "message">
-            </PersistentString>
-            <PersistentString
-               value = "self.user">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.message.media.document.thumb.location">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessagesTableView mouseDragged:]:MessagesTableView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "i">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.cachePhoto">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.tableView.selectedRow">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "frameRect">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[ComposeActionGroupBehavior centerTitle]:ComposeActionGroupBehavior.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.action">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.selectedRow">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
-         <PersistentStrings>
-            <PersistentString
-               value = "file">
+               value = "self.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -441,6 +454,28 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.tableView.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+            <PersistentString
+               value = "message.length">
+            </PersistentString>
+            <PersistentString
+               value = "[UsersManager currentUserId]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[RightViewController showByDialog:withJump:historyFilter:sender:]:RightViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -449,42 +484,43 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__36-[MTKeychain filePathForName:group:]_block_invoke:MTKeychain.m">
+         contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[DialogTableView initWithFrame:]:DialogTableView.m">
          <PersistentStrings>
             <PersistentString
-               value = "name">
+               value = "frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.marks">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UsersManager setUserStatus:forUser:]:UsersManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentUser.status.was_online">
+            </PersistentString>
+            <PersistentString
+               value = "currentUser.status.expires">
+            </PersistentString>
+            <PersistentString
+               value = "status.was_online">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "main:main.m">
       </ContextState>
       <ContextState
          contextName = "-[TMTextField placeholderView:]:TMTextField.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TelegramFirstController validateMenuItem:]:TelegramFirstController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "menuItem.action">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
-      </ContextState>
-      <ContextState
-         contextName = "+[SelectTextManager enumerateItemsWithOptions:usingBlock:]:SelectTextManager.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "obj">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.historyController.prevState">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MainViewController loadView]:MainViewController.m">
@@ -503,79 +539,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "items">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TGImageView setObject:]:TGImageView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.image">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__24-[TGCTextView drawRect:]_block_invoke:TGCTextView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "mark">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.searchParams">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.contentViewController.view">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[strongSelf rowItem].lastMessage.dstate">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.broadcast.n_id ">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
       </ContextState>
       <ContextState
          contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
@@ -586,15 +550,59 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
+         contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
          <PersistentStrings>
             <PersistentString
-               value = "[self rowItem].table">
-            </PersistentString>
-            <PersistentString
-               value = "((SelectUsersTableView *)[self rowItem].table).selectDelegate ">
+               value = "self.cachePhoto">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainWindow validateUserInterfaceItem:]:MainWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "anItem.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MTKeychain filePathForName:group:]_block_invoke:MTKeychain.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "file">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.searchParams">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainWindow sendEvent:]:MainWindow.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

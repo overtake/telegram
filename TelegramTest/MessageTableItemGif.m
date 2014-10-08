@@ -21,7 +21,7 @@
         self.previewLocation = thumb.location;
         
         NSSize size;
-        float maxSize = 300;
+        float maxSize = 250;
         if(thumb.w > thumb.h) {
             size.width = maxSize;
             float k = size.width / thumb.w;

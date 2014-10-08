@@ -556,9 +556,9 @@ static const int lineHeight = 15;
             
         }
         
-        _selectRange = range;
-        
         [self setSelectionRange:range];
+        
+        _selectRange = range;
         
     }
     

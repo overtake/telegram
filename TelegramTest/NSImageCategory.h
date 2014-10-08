@@ -12,4 +12,7 @@
 
 - (NSImage *) imageWithInsets:(NSEdgeInsets)insets;
 
+
+-(CGImageRef)CGImage;
+
 @end

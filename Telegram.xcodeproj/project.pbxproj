@@ -370,6 +370,8 @@
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
 		C2753DD519E43EA500752BAF /* TGCTextMark.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD419E43EA500752BAF /* TGCTextMark.m */; };
+		C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DDB19E5A44300752BAF /* FLAnimatedImage.m */; };
+		C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
@@ -1351,6 +1353,10 @@
 		C2753DD119E4282000752BAF /* SearchMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchMessagesView.m; sourceTree = "<group>"; };
 		C2753DD319E43EA500752BAF /* TGCTextMark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCTextMark.h; sourceTree = "<group>"; };
 		C2753DD419E43EA500752BAF /* TGCTextMark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCTextMark.m; sourceTree = "<group>"; };
+		C2753DDA19E5A44300752BAF /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
+		C2753DDB19E5A44300752BAF /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
+		C2753DDD19E5B24500752BAF /* TGModernAnimatedImagePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernAnimatedImagePlayer.h; sourceTree = "<group>"; };
+		C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernAnimatedImagePlayer.m; sourceTree = "<group>"; };
 		C276C7D1195C6C1B0037C4D7 /* ITProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITProgressIndicator.h; sourceTree = "<group>"; };
 		C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITProgressIndicator.m; sourceTree = "<group>"; };
 		C277E2A118AAA69B00FFCA35 /* MessagesDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessagesDelegate.h; sourceTree = "<group>"; };
@@ -3065,6 +3071,10 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2753DDD19E5B24500752BAF /* TGModernAnimatedImagePlayer.h */,
+				C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */,
+				C2753DDA19E5A44300752BAF /* FLAnimatedImage.h */,
+				C2753DDB19E5A44300752BAF /* FLAnimatedImage.m */,
 				C20A7E6019D706D0008844F2 /* ASActor.h */,
 				C20A7E6119D706D0008844F2 /* ASActor.m */,
 				C20A7E5D19D7069C008844F2 /* TGActor.h */,
@@ -4421,6 +4431,7 @@
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
 				C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */,
 				0AB8F64E1861B07C000E6FF3 /* TMRowView.m in Sources */,
+				C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */,
 				C233FB2818B610E9008C9A96 /* NewConversationViewController.m in Sources */,
 				0A073FCF18BF65F500BAA928 /* TMNavigationBar.m in Sources */,
 				C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */,
@@ -4534,6 +4545,7 @@
 				C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */,
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
 				CEB0A25117DB09C10055F150 /* TGInitializer.m in Sources */,
+				C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,

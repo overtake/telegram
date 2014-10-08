@@ -13,6 +13,8 @@
 #import "MessageTableCellVideoView.h"
 #import "GifAnimationLayer.h"
 #import "TGImageView.h"
+#import "FLAnimatedImage.h"
+#import "TGModernAnimatedImagePlayer.h"
 //#import "TelegramImageView.h"
 
 
@@ -25,6 +27,8 @@
 @property (nonatomic, strong) BTRButton *downloadButton;
 @property (nonatomic, strong) VideoTimeView *videoTimeView;
 @property (nonatomic, assign) BOOL needOpenAfterDownload;
+
+@property (nonatomic,strong) TGModernAnimatedImagePlayer *animatedPlayer;
 
 @end
 
@@ -41,6 +45,7 @@
         [self.imageView setBlurRadius:60];
         [self.containerView addSubview:self.imageView];
         [self setProgressToView:self.imageView];
+        self.imageView.cornerRadius = 4;
         
         weak();
         
@@ -83,28 +88,56 @@
 }
 
 - (void)playAnimation {
+    
+    
+    
+    
+ 
+    
     MessageTableItemGif *item = (MessageTableItemGif *)self.item;
     
     if([item isset]) {
         
-        if(self.gifAnimationLayer) {
-            [self.gifAnimationLayer removeAllAnimations];
-            [self.gifAnimationLayer stopAnimating];
-        } else {
-            self.gifAnimationLayer = [GifAnimationLayer layer];
-            [self.imageView.layer addSublayer:self.gifAnimationLayer];
-        }
-        [self.gifAnimationLayer setMasksToBounds:YES];
-        [self.gifAnimationLayer setCornerRadius:4];
-        [self.gifAnimationLayer setGifFilePath:item.path];
-        [self.gifAnimationLayer setFrame:self.imageView.bounds];
-        [self.gifAnimationLayer startAnimating];
+        weak();
         
-        [self.gifAnimationLayer setOpacity:1];
-        [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:0 toValue:1] forKey:@"opacity"];
+        if(!self.animatedPlayer) {
+            self.animatedPlayer = [[TGModernAnimatedImagePlayer alloc] initWithSize:self.imageView.frame.size path:item.path];
+            
+            [self.animatedPlayer setFrameReady:^(NSImage *image) {
+                weakSelf.imageView.image = image;
+            }];
+            
+            [self.animatedPlayer play];
+            
+            [self.playButton setHidden:YES];
+        } else {
+            [self animationDidStop:nil finished:YES];
+        }
+        
+        
+        
 
         
-        [self.playButton setHidden:YES];
+       // [self addSubview:animatedImage];
+        
+        
+//        if(self.gifAnimationLayer) {
+//            [self.gifAnimationLayer removeAllAnimations];
+//            [self.gifAnimationLayer stopAnimating];
+//        } else {
+//            self.gifAnimationLayer = [GifAnimationLayer layer];
+//            [self.imageView.layer addSublayer:self.gifAnimationLayer];
+//        }
+//        [self.gifAnimationLayer setMasksToBounds:YES];
+//        [self.gifAnimationLayer setCornerRadius:4];
+//        [self.gifAnimationLayer setGifFilePath:item.path];
+//        [self.gifAnimationLayer setFrame:self.imageView.bounds];
+//        [self.gifAnimationLayer startAnimating];
+//        
+//        [self.gifAnimationLayer setOpacity:1];
+//        [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:0 toValue:1] forKey:@"opacity"];
+//
+//        
     }
     
 }
@@ -114,15 +147,27 @@
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    [self.gifAnimationLayer stopAnimating];
     
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:^{
-        self.gifAnimationLayer.contents = nil;
-    }];
-    [self.gifAnimationLayer setOpacity:0];
-    [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:1 toValue:0] forKey:@"opacity"];
-    [CATransaction commit];
+    [self.animatedPlayer stop];
+    self.animatedPlayer = nil;
+    
+    MessageTableItemGif *item = (MessageTableItemGif *)self.item;
+    
+    if(item.cachedThumb) {
+        [self.imageView setImage:item.cachedThumb];
+    } else {
+        self.imageView.object = item.imageObject;
+    }
+    
+//    [self.gifAnimationLayer stopAnimating];
+//
+//    [CATransaction begin];
+//    [CATransaction setCompletionBlock:^{
+//        self.gifAnimationLayer.contents = nil;
+//    }];
+//    [self.gifAnimationLayer setOpacity:0];
+//    [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:1 toValue:0] forKey:@"opacity"];
+//    [CATransaction commit];
     [self.playButton setHidden:NO];
 }
 
@@ -134,7 +179,7 @@
 }
 
 - (void)open {
-    if(!self.gifAnimationLayer.isAnimationRunning) {
+    if(!self.animatedPlayer.isPlaying) {
         [self playAnimation];
     } else {
         [self animationDidStop:nil finished:YES];
@@ -142,11 +187,13 @@
 }
 
 - (void)resumeAnimation {
-    [self.gifAnimationLayer resumeAnimating];
+   // [self.gifAnimationLayer resumeAnimating];
+    [self.animatedPlayer play];
 }
 
 - (void)pauseAnimation {
-    [self.gifAnimationLayer pauseAnimating];
+  //  [self.gifAnimationLayer pauseAnimating];
+    [self.animatedPlayer pause];
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -191,9 +238,11 @@
     [self updateDownloadState];
     
     
+    [self.animatedPlayer stop];
+    self.animatedPlayer = nil;
     
-    [self.gifAnimationLayer stopAnimating];
-    self.gifAnimationLayer.contents = nil;
+   // [self.gifAnimationLayer stopAnimating];
+   // self.gifAnimationLayer.contents = nil;
 
     
     [self.progressView setStyle:TMCircularProgressDarkStyle];

@@ -19,4 +19,13 @@
     return newImage;
 }
 
+-(CGImageRef)CGImage {
+    NSData * imageData = [self TIFFRepresentation];
+    CGImageRef imageRef;
+    if(!imageData) return nil;
+    CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+    imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+    return imageRef;
+}
+
 @end
