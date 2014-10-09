@@ -57,7 +57,15 @@
         
         NSImage *thumb = strongResize(image, 90);
         
-        NSData *thumbData = compressImage([thumb TIFFRepresentation], 0.4);
+        float coef = 0.4;
+        
+        NSData *thumbData = compressImage([thumb TIFFRepresentation], coef);
+        
+        while (thumbData.length > 5*1024) {
+            coef = coef - 0.05;
+            thumbData = compressImage(thumbData, coef);
+        }
+        
         
         NSSize origin = image.size;
         
