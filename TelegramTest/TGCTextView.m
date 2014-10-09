@@ -7,7 +7,7 @@
 //
 
 #import "TGCTextView.h"
-
+#import "NSString+Extended.h"
 
 @interface DrawsRect : NSObject
 
@@ -359,6 +359,9 @@
                 runBounds.size.width = width;
                 runBounds.size.height = floor(ascent + ceil(descent) + leading);
                 
+                if(runBounds.size.height > 15)
+                    runBounds.size.height--;
+                
                 
                 runBounds.origin.x = startOffset;
                 runBounds.origin.y = origins[i].y - ceil(descent - leading);
@@ -435,26 +438,32 @@
 
 
 
-static const int lineHeight = 15;
+-(BOOL)isCurrentLine:(NSPoint)position linePosition:(NSPoint)linePosition idx:(int)idx {
+    
+    CTLineRef line = CFArrayGetValueAtIndex(CTFrameGetLines(CTFrame), idx);
+    
+    CGFloat ascent, descent, leading;
+    
+    CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+    
+    int lineHeight = floor(ascent + ceil(descent) + leading);
 
-
--(BOOL)isCurrentLine:(NSPoint)position linePosition:(NSPoint)linePosition {
+    
     return (position.y > linePosition.y) && position.y < (linePosition.y + lineHeight);
 }
 
--(int)selectLinesCount {
-    return ceil( abs( startSelectPosition.y - currentSelectPosition.y ) % lineHeight );
-}
 
 
 -(int)lineIndex:(CGPoint[])origins count:(int)count location:(NSPoint)location { // fix this method
     
     for (int i = 0; i < count; i++) {
-        if([self isCurrentLine:location linePosition:origins[i]])
+        if([self isCurrentLine:location linePosition:origins[i] idx:i])
             return i;
     }
     
-    return location.y < 3 ? (count-1) : 0 ;
+  //  NSLog(@"idx:%d, location.y:%f",location.y < 3 ? (count-1) : 0,location.y);
+    
+    return location.y >= NSHeight(self.frame) ? 0 : (count -1); // location.y < 3 ? (count-1) : 0 ;
 }
 
 
@@ -466,6 +475,46 @@ static const int lineHeight = 15;
     
 }
 
+
+/*
+ -(int)lineIndexOnLocation:(NSPoint)position {
+ 
+ CFArrayRef lines = CTFrameGetLines(CTFrame);
+ 
+ NSPoint location;
+ 
+ int count = (int) CFArrayGetCount(lines);
+ 
+ 
+ for (int i = 0 ; i < count; i++) {
+ 
+ CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+ 
+ CGFloat ascent, descent, leading;
+ 
+ CGFloat width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+ 
+ float height = floor(ascent + ceil(descent) + leading);
+ 
+ if((position.y > location.y) && position.y < (location.y + height)) {
+ 
+ NSLog(@"index:%d",i);
+ 
+ return i - (count -1);
+ }
+ 
+ location.y+=height;
+ 
+ }
+ 
+ 
+ 
+ return position.y < 0 ? 0 : count-1;
+ 
+ 
+ //
+ }
+ */
 
 
 
@@ -532,6 +581,14 @@ static const int lineHeight = 15;
         NSRange range = NSMakeRange(startIndex == 0 ? 0 : (startIndex == self.attributedString.length ? startIndex - 1 : startIndex), 1);
         
         NSString *currentChar = [self.attributedString.string substringWithRange:NSMakeRange(range.location, 1)];
+        
+        if([currentChar isEqualToString:@""])
+            return NO;
+        
+        
+//        for (int i = 0; i < self.attributedString.length; i++) {
+//            NSLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
+//        }
         
         BOOL valid = [[currentChar stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet]] isEqualToString:@""];
         

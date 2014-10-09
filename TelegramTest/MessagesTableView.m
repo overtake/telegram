@@ -271,7 +271,7 @@
             if(i > startRow && i < endRow) {
                 
                 textView->startSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
-                textView->currentSelectPosition = NSMakePoint(1, 3);
+                textView->currentSelectPosition = NSMakePoint(1, INT32_MAX); //location.y < 3 ? (count-1) : 0 ;
                 
             } else if(i == startRow) {
                 
@@ -286,13 +286,13 @@
                     if(!reversed) {
                         
                         textView->startSelectPosition = NSMakePoint(startConverted.x, startConverted.y);
-                        textView->currentSelectPosition = NSMakePoint(1, 3);
+                        textView->currentSelectPosition = NSMakePoint(1, INT32_MAX);
                         
                     } else {
                         
                         // its end :D
                         
-                        textView->startSelectPosition = NSMakePoint(0, 3);
+                        textView->startSelectPosition = NSMakePoint(0, INT32_MAX);
                         textView->currentSelectPosition = currentConverted;
                         
                         

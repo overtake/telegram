@@ -75,7 +75,7 @@
             __block NSString *result = @"";
             
             [SelectTextManager enumerateItems:^(MessageTableItemText *obj, NSRange range) {
-                result = [result stringByAppendingFormat:@">%@\n%@\n\n",obj.user.first_name,[obj.string substringWithRange:range]];
+                result = [result stringByAppendingFormat:@">%@\n%@\n\n",[obj.message isKindOfClass:[TL_localMessageForwarded class]] ? obj.fwd_user.first_name : obj.user.first_name,[obj.string substringWithRange:range]];
             }];
             
           //  result = [result substringToIndex:result.length-1];

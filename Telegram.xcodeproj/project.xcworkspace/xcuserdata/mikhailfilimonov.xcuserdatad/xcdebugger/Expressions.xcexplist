@@ -33,21 +33,10 @@
          contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
-               value = "next">
+               value = "self.attributedString.length">
             </PersistentString>
             <PersistentString
-               value = "prev">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.currentController">
-            </PersistentString>
-            <PersistentString
-               value = "self.currentController.view">
+               value = "self.attributedString.string">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -60,13 +49,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__open_card_block_invoke_2:FileUtils.m">
-      </ContextState>
-      <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
          <PersistentStrings>
             <PersistentString
                value = "self.contentViewController.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__open_card_block_invoke_2:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMSimpleTabViewController showController:]:TMSimpleTabViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.currentController">
+            </PersistentString>
+            <PersistentString
+               value = "self.currentController.view">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -539,15 +539,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
          <PersistentStrings>
             <PersistentString
                value = "self.type">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
       </ContextState>
       <ContextState
          contextName = "+[SenderItem sendingDequeue]:SenderItem.m">

@@ -67,7 +67,7 @@
         TL_photoSize *photoSize = [TL_photoSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:-1 secret:rand_long()] w:origin.width h:origin.height size:0];
         
         
-        TL_photoCachedSize *cachedSize = [TL_photoCachedSize createWithType:@"x" location:photoSize.location w:origin.width h:origin.height bytes:thumbData];
+        TL_photoCachedSize *cachedSize = [TL_photoCachedSize createWithType:@"x" location:photoSize.location w:thumb.size.width h:thumb.size.height bytes:thumbData];
         
         [sizes addObject:cachedSize];
         [sizes addObject:photoSize];
