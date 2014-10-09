@@ -328,6 +328,10 @@
 
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    [SelectTextManager clear];
+}
+
 
 - (void)viewDidEndLiveResize {
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {

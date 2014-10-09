@@ -167,9 +167,7 @@
                 dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
-                
-                DLog(@"top message: %d",dialog.top_message);
-                
+                                
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
                 

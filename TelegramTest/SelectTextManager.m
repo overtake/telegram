@@ -93,6 +93,8 @@
         result = [result stringByAppendingFormat:@"%@\n",[[obj string] substringWithRange:range]];
     }];
     
+    result = [result substringToIndex:result.length -1];
+    
     return result;
 }
 
@@ -120,8 +122,6 @@
         
         
     NSString *result = [SelectTextManager fullString];
-        
-    result = [result substringToIndex:result.length - 1];
         
     [cb setString:result forType:NSStringPboardType];
     

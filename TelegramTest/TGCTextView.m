@@ -467,6 +467,35 @@ static const int lineHeight = 15;
 }
 
 
+
+
+-(int)currentIndexInLocation:(NSPoint)location {
+    
+    CFArrayRef lines = CTFrameGetLines(CTFrame);
+    
+    CGPoint origins[CFArrayGetCount(lines)];
+    CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
+    
+    int lineIdx = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
+    
+    CTLineRef lineRef = CFArrayGetValueAtIndex(lines, lineIdx);
+    
+    int width = CTLineGetTypographicBounds(lineRef, NULL, NULL, NULL);
+    
+    if( (NSMinX(self.frame) + width) > location.x && location.x > NSMinX(self.frame)) {
+        int index = (int) CTLineGetStringIndexForPosition(lineRef, location);
+        return index == self.attributedString.length ? index-1 : index;
+    }
+    
+   
+    return -1;
+}
+
+-(BOOL)indexIsSelected:(int)index {
+    return self.selectRange.location <= index && (self.selectRange.location + self.selectRange.length) > index;
+}
+
+
 -(void)_mouseDown:(NSEvent *)theEvent {
     if(!_isEditable)
         return;
@@ -486,19 +515,13 @@ static const int lineHeight = 15;
          _selectRange = NSMakeRange(0, self.attributedString.length);
         
     } else if(theEvent.clickCount == 2) {
-        CFArrayRef lines = CTFrameGetLines(CTFrame);
+       
         
-        CGPoint origins[CFArrayGetCount(lines)];
-        CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
+        int startIndex = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
         
-        NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        if(startIndex == -1)
+            return NO;
         
-        int lineIdx = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
-        
-        CTLineRef lineRef = CFArrayGetValueAtIndex(lines, lineIdx);
-        
-        
-        int startIndex = (int) CTLineGetStringIndexForPosition(lineRef, location);
         
         int prev = startIndex ;
         
@@ -629,6 +652,7 @@ static const int lineHeight = 15;
     
     return nil;
 }
+
 
 -(void)checkCursor:(NSEvent *)theEvent {
     NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
