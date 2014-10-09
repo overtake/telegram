@@ -126,8 +126,8 @@
     NSSize layoutSize = NSMakeSize(newSize.width, newSize.height);
     
     dispatch_block_t future = ^ {
-        [self.scrollView setFrameSize:NSMakeSize(self.scrollView.bounds.size.width, newSize.height-4)];
-        [self.scrollView setFrameOrigin:NSMakePoint(self.scrollView.frame.origin.x, 2)];
+        [self.scrollView setFrameSize:NSMakeSize(self.scrollView.bounds.size.width, newSize.height-2)];
+        [self.scrollView setFrameOrigin:NSMakePoint(self.scrollView.frame.origin.x, 1)];
         
         if(size.height != self.lastHeight) {
             
