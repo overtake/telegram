@@ -342,7 +342,7 @@ static NSImage *attachBackgroundThumb() {
             
         case CellStateSending:
             self.item.state = DocumentStateUploading;
-            [self setProgressStringValue:0 format:NSLocalizedString(@"Document.Uploading", nil)];
+            [self setProgressStringValue:self.item.messageSender.progress format:NSLocalizedString(@"Document.Uploading", nil)];
             break;
             
         case CellStateNeedDownload:
@@ -372,7 +372,7 @@ static NSImage *attachBackgroundThumb() {
         case DocumentStateDownloading:
             [self.attachButton setImage:nil forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:YES];
-            [self setProgressStringValue:0 format:NSLocalizedString(@"Document.Downloading", nil)];
+            [self setProgressStringValue:self.progressView.currentProgress format:NSLocalizedString(@"Document.Downloading", nil)];
             break;
             
         case DocumentStateUploading:
@@ -427,6 +427,8 @@ static NSImage *attachBackgroundThumb() {
     
     
   [self updateDownloadState];
+    
+    
     
     
     [self.fileNameTextField setStringValue:item.fileName];

@@ -130,7 +130,7 @@
         
         playAlpha = 1.0f;
 
-        [self.playButton setBackgroundImage:image_VideoPlay() forControlState:BTRControlStateNormal];
+        [self.playButton setBackgroundImage:image_Download() forControlState:BTRControlStateNormal];
         [self.playButton setBackgroundImage:nil forControlState:BTRControlStateHover];
     }
     

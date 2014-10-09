@@ -472,6 +472,9 @@ static BOOL dragAction = NO;
     
     float offsetContainerView;
     
+    
+    
+    
     if(item.isForwadedMessage) {
         
         float minus = 0;
@@ -547,6 +550,12 @@ static BOOL dragAction = NO;
     [self setProgressContainerVisibility:YES];
     
     if(item.messageSender)  {
+        
+        if(item.messageSender) {
+            [self uploadProgressHandler:item.messageSender animated:NO];
+        }
+        
+        
         [item.messageSender addEventListener:self];
         
         if(item.messageSender.state == MessageStateWaitSend)

@@ -105,7 +105,7 @@ CACHE_IMAGE(VoiceMic)
 CACHE_IMAGE(VoiceMicHighlighted)
 CACHE_IMAGE(VoiceMicHighlighted2)
 CACHE_IMAGE(TelegramNotifications)
-
+CACHE_IMAGE(PlayButtonBig)
 
 
 
@@ -138,7 +138,7 @@ NSImage *previewImageForDocument(NSString *path) {
         rect = NSMakeRect(0, -roundf((height - needSize.height) / 2), needSize.width, height);
     }
     
-    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(100, 100)];
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(rect.size.width, rect.size.height)];
     [image lockFocus];
     [thumbIcon drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     [image unlockFocus];

@@ -174,7 +174,7 @@
 //    CGContextSetShouldSubpixelQuantizeFonts(context, true);
 //    CGContextSetAllowsFontSubpixelPositioning(context, true);
 //    CGContextSetShouldSubpixelPositionFonts(context, false);
-    CGContextSetAllowsAntialiasing(context,true);
+ //   CGContextSetAllowsAntialiasing(context,true);
     CGContextSetShouldSmoothFonts(context, true);
     CGContextSetAllowsFontSmoothing(context,true);
     

@@ -113,7 +113,7 @@
         newSize.height = 33;
     
     
-    int maxHeight = 100; //old = 50;
+    int maxHeight = 300; //old = 50;
     
     if(newSize.height > maxHeight)
         newSize.height = maxHeight;

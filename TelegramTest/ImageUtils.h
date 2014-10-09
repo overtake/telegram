@@ -99,6 +99,7 @@ CACHE_IMAGE(HeaderDropdownArrow)
 CACHE_IMAGE(BroadcastAvatarIcon)
 CACHE_IMAGE(TelegramNotifications)
 CACHE_IMAGE(newConversationBroadcast)
+CACHE_IMAGE(PlayButtonBig)
 @interface ImageUtils : NSObject
 
 

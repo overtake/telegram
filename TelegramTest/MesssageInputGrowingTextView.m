@@ -13,7 +13,8 @@
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
-    PasteBoardItemTypeImage
+    PasteBoardItemTypeImage,
+    PasteBoardItemTypeGif
 } PasteBoardItemType;
 
 @implementation MesssageInputGrowingTextView
@@ -108,6 +109,7 @@ typedef enum {
         CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
         
         if (UTTypeConformsTo(fileUTI, kUTTypeImage)) {
+
             image = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
             if(!image) {
                 CFRelease(fileUTI);
@@ -116,6 +118,11 @@ typedef enum {
             
             type = PasteBoardItemTypeImage;
             iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
+            
+            
+            if(UTTypeConformsTo(fileUTI, kUTTypeGIF)) {
+                type = PasteBoardItemTypeGif;
+            }
             
         } else if (UTTypeConformsTo(fileUTI, kUTTypeMovie)) {
             NSDictionary *dictionary = [MessageSender videoParams:path];
@@ -179,6 +186,18 @@ typedef enum {
                 }
             }];
             break;
+            
+        case PasteBoardItemTypeGif:
+            alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisGif", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisGifDescription", nil) block:^(id result) {
+                if([result intValue] == 1000) {
+                    
+                    [[[Telegram rightViewController] messagesViewController] sendDocument:path];
+                    
+                }
+            }];
+            break;
+            
+
             
         default:
             break;
@@ -253,8 +272,8 @@ typedef enum {
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     BOOL superAnswer = [super validateMenuItem:menuItem];
     if(menuItem.action == @selector(paste:)) {
-        BOOL ok = [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
         
+        BOOL ok = [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
         
         return ok || superAnswer;
     }
