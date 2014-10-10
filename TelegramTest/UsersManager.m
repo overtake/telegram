@@ -119,6 +119,8 @@
                     
                     isNeedRebuildNames = YES;
                     isNeedChangeTypeNotify = YES;
+                    
+                    needUpdateUserInDB = YES;
                 }
                 
                 if(currentUser.type != TGUserTypeEmpty) {
@@ -128,6 +130,8 @@
                         currentUser.last_name = newUser.last_name;
                         
                         isNeedRebuildNames = YES;
+                        
+                        needUpdateUserInDB = YES;
                     }
                 }
                 
