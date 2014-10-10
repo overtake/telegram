@@ -359,7 +359,7 @@
                 runBounds.size.width = width;
                 runBounds.size.height = floor(ascent + ceil(descent) + leading);
                 
-                if(runBounds.size.height > 15)
+                if(runBounds.size.height == 22)
                     runBounds.size.height--;
                 
                 

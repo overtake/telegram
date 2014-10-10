@@ -26,7 +26,7 @@
         [self.textField setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.textField setDrawsBackground:NO];
         [self.textField setAlignment:NSCenterTextAlignment];
-        [self.textField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+
         
          [self addSubview:self.textField];
     }
@@ -37,9 +37,16 @@
     [super setItem:item];
     [self.textField setStringValue:item.text];
     
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.messagesViewController deleteItem:self.item];
     });
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.textField setFrameSize:NSMakeSize(newSize.width, 26)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
