@@ -166,7 +166,18 @@ static NSCache *cacheItems;
     self->_selectLimit = selectLimit;
     NSUInteger count = self.count;
     
-    NSArray *copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
+    NSArray *copy;
+    
+    if(self.list.count > 0) {
+        if([self.list[0] isKindOfClass:[SelectUsersSearchItem class]]) {
+            copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
+        } else {
+            copy = [self.list copy];
+        }
+    } else {
+        copy = [self.list copy];
+    }
+    
     
     for (SelectUserItem *item in copy) {
         item.isSelected = NO;
@@ -183,19 +194,31 @@ static NSCache *cacheItems;
 - (void)setExceptions:(NSArray *)exceptions {
     self->_exceptions = exceptions;
     
-    
-    for (NSNumber *exception in exceptions) {
-    
-        NSArray *copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
-        
-        [copy enumerateObjectsUsingBlock:^(SelectUserItem * obj, NSUInteger idx, BOOL *stop) {
-            if(obj.contact.user_id == [exception intValue]) {
-                [self removeItem:obj];
-                [self.items removeObject:obj];
-                *stop = YES;
+    if(self.list) {
+        for (NSNumber *exception in exceptions) {
+            
+            NSArray *copy;
+            
+            if(self.list.count > 0) {
+                if([self.list[0] isKindOfClass:[SelectUsersSearchItem class]]) {
+                   copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
+                } else {
+                    copy = [self.list copy];
+                }
+            } else {
+                copy = [self.list copy];
             }
-        }];
+            
+            [copy enumerateObjectsUsingBlock:^(SelectUserItem * obj, NSUInteger idx, BOOL *stop) {
+                if(obj.contact.user_id == [exception intValue]) {
+                    [self removeItem:obj];
+                    [self.items removeObject:obj];
+                    *stop = YES;
+                }
+            }];
+        }
     }
+    
 }
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(SelectUserItem *) item {

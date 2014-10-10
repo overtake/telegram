@@ -358,6 +358,12 @@
         dialog.last_marked_message = dialog.top_message;
         dialog.last_marked_date = dialog.last_message_date;
     }
+
+    
+    if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
+        dialog.last_marked_message = message.n_id;
+        dialog.last_marked_date = message.date;
+    }
     
     int last_real_date = dialog.last_real_message_date;
     
@@ -418,6 +424,11 @@
                 if(dialog.last_marked_message == 0) {
                     dialog.last_marked_message = dialog.top_message;
                     dialog.last_marked_date = dialog.last_message_date;
+                }
+                
+                if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
+                    dialog.last_marked_message = message.n_id;
+                    dialog.last_marked_date = message.date;
                 }
                 
                 if(!message.n_out && message.unread) {

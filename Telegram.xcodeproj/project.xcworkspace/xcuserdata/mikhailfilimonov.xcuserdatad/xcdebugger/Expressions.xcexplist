@@ -446,12 +446,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SelectUsersTableView setExceptions:]:SelectUsersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.list">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString
                value = "menuItem.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">
