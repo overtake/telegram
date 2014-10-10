@@ -122,6 +122,8 @@ NSImage *previewImageForDocument(NSString *path) {
         thumbIcon = [[NSImage alloc] initWithCGImage:quickLookIcon size:NSMakeSize(0, 0)];
         CFRelease(quickLookIcon);
     }
+    
+    return thumbIcon;
 
     if(!thumbIcon)
         return nil;
