@@ -262,11 +262,17 @@ typedef enum {
 }
 
 -(NSParagraphStyle *)defaultParagraphStyle {
-    NSMutableParagraphStyle *p = [[NSMutableParagraphStyle alloc] init];
+    static NSMutableParagraphStyle *para;
     
-    p.lineSpacing = 3;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        para = [[NSMutableParagraphStyle alloc] init];
+        [para setLineSpacing:0];
+    });
     
-    return p;
+    //[para setMaximumLineHeight:spacing];
+    
+    return para;
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

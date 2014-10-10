@@ -108,7 +108,7 @@
     size.width = self.containerView.bounds.size.width;
     
     NSSize newSize = NSMakeSize(size.width, size.height);
-    newSize.height+=2;
+    newSize.height+=6;
     if(newSize.height < 33)
         newSize.height = 33;
     
@@ -173,7 +173,11 @@
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     [self.growingDelegate TMGrowingTextViewTextDidChange:self];
     
-     [self setNeedsDisplay:YES];
+    [self setNeedsDisplay:YES];
+    
+    [self setSelectedRange:NSMakeRange(self.string.length, 0)];
+    
+    [self setNeedsDisplay:YES];
 }
 
 - (void)initialize {
@@ -188,6 +192,8 @@
     self.delegate = self;
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
     self.insertionPointColor = NSColorFromRGB(0x0f92dd);
+    
+    
     
   
 //    [self setBackgroundColor:[NSColor redColor]];
@@ -223,6 +229,8 @@
     [self.containerView addSubview:self.scrollView];
 }
 
+
+
 - (void)setFrameOrigin:(NSPoint)newOriginN {
 }
 
@@ -238,7 +246,7 @@
     NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         
     
-    return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect) )/ 2 ));
+    return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect) )/ 2 -1 ));
     
     
 }
