@@ -175,7 +175,7 @@
     
     [self setNeedsDisplay:YES];
     
-    [self setSelectedRange:NSMakeRange(self.string.length, 0)];
+    [self setSelectedRange:NSMakeRange(self.selectedRange.location, self.selectedRange.length)];
     
     [self setNeedsDisplay:YES];
 }
