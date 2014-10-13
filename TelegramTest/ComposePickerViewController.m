@@ -75,17 +75,10 @@
 
 -(void)behaviorDidEndRequest:(id)response {
     [self hideModalProgress];
-    
-    [self.backButton setDisabled:NO];
-    [self.doneButton setDisable:NO];
 }
 
 -(void)behaviorDidStartRequest {
     [self showModalProgress];
-    
-    
-    [self.backButton setDisabled:YES];
-    [self.doneButton setDisable:YES];
 }
 
 -(void)viewDidDisappear:(BOOL)animated {

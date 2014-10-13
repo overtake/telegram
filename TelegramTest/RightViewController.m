@@ -132,6 +132,13 @@
     
     self.encryptedKeyViewController = [[EncryptedKeyViewController alloc] initWithFrame:self.view.bounds];
     
+    
+    self.blockedUsersViewController = [[BlockedUsersViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.generalSettingsViewController = [[GeneralSettingsViewController alloc] initWithFrame:self.view.bounds];
+    self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:self.view.bounds];
+    
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
     [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
@@ -139,6 +146,9 @@
     [self.navigationViewController pushViewController:self.composePickerViewController animated:NO];
     [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:NO];
     [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:NO];
+    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:NO];
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:NO];
+    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:NO];
     [self.navigationViewController clear];
 
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
@@ -537,6 +547,36 @@
 
 - (BOOL)isModalViewActive {
     return self.modalView != nil;
+}
+
+- (void)showBlockedUsers {
+    if(self.navigationViewController.currentController == self.blockedUsersViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+
+    
+    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:YES];
+}
+
+- (void)showGeneralSettings {
+    if(self.navigationViewController.currentController == self.generalSettingsViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:YES];
+}
+
+- (void)showSecuritySettings {
+    if(self.navigationViewController.currentController == self.settingsSecurityViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:YES];
 }
 
 @end

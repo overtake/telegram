@@ -138,7 +138,7 @@
         if(block)
             block(NO);
         
-    }];
+    } timeout:5];
 }
 
 -(id)find:(NSInteger)_id withCustomKey:(NSString *)key {

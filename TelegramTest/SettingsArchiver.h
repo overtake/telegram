@@ -27,7 +27,10 @@ typedef enum {
     SoundEffects = 1 << 13,
     
     
-    BlockedContactsSynchronized = 1 << 14
+    BlockedContactsSynchronized = 1 << 14,
+    
+    AutoGroupPhoto = 1 << 15,
+    AutoPrivatePhoto = 1 << 16
     
 } SettingsMask;
 

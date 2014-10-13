@@ -18,6 +18,9 @@
 #import "ComposeChatCreateViewController.h"
 #import "ComposeBroadcastListViewController.h"
 #import "EncryptedKeyViewController.h"
+#import "BlockedUsersViewController.h"
+#import "GeneralSettingsViewController.h"
+#import "SettingsSecurityViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -29,6 +32,10 @@
 @property (nonatomic, strong) ComposeChatCreateViewController *composeChatCreateViewController;
 @property (nonatomic, strong) ComposeBroadcastListViewController *composeBroadcastListViewController;
 @property (nonatomic, strong) EncryptedKeyViewController *encryptedKeyViewController;
+@property (nonatomic, strong) BlockedUsersViewController *blockedUsersViewController;
+@property (nonatomic, strong) GeneralSettingsViewController *generalSettingsViewController;
+@property (nonatomic, strong) SettingsSecurityViewController *settingsSecurityViewController;
+
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
 - (BOOL)isActiveDialog;
@@ -42,8 +49,6 @@
 
 - (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)filter sender:(id)sender;
 
-- (void)showComposeWithAction:(ComposeAction *)composeAction filter:(NSArray *)filter;
-
 - (void)showComposeWithAction:(ComposeAction *)composeAction;
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
@@ -55,5 +60,9 @@
 - (void)showNotSelectedDialog;
 
 -(void)showEncryptedKeyWindow:(TL_encryptedChat *)chat;
+
+- (void)showBlockedUsers;
+- (void)showGeneralSettings;
+- (void)showSecuritySettings;
 
 @end

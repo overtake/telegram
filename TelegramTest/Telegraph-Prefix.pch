@@ -107,7 +107,7 @@
 
 #define LIGHT_BLUE NSColorFromRGB(0x99b8d0)
 #define DARK_BLUE NSColorFromRGB(0x57a4e1)
-#define BLUE_UI_COLOR NSColorFromRGB(0x1d80cc) //0x3395cc
+#define BLUE_UI_COLOR NSColorFromRGB(0x2481cc) //0x1d80cc
 
 #define LIGHT_GRAY NSColorFromRGB(0xa1a1a1)
 #define DARK_GRAY NSColorFromRGB(0xa0a0a0)

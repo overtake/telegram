@@ -160,16 +160,6 @@
     }
     
     
-    
-    
-    
-    
-//    if(numberOfLines >= self.maxLines) {
-//        [self setString:oldString];
-//    }
-    
-//    [self setSelectedRange:NSMakeRange(selectedRange.location, 0)];
-    
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     [self.growingDelegate TMGrowingTextViewTextDidChange:self];
     

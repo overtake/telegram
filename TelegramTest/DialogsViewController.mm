@@ -88,8 +88,6 @@
             
                 [self initConversations];
             
-                [[BlockedUsersManager sharedManager] remoteLoad];
-            
             }];
         }];
         
@@ -107,6 +105,8 @@
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
         [[MTNetwork instance] startNetwork];
+        
+        [[BlockedUsersManager sharedManager] remoteLoad];
         
         if(result.count != 0) {
             

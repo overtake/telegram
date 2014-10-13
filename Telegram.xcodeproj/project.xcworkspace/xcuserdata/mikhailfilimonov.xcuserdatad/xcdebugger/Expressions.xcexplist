@@ -257,6 +257,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__25-[MTNetwork sendRequest:]_block_invoke:MTNetwork.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_context">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
@@ -454,15 +462,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString
                value = "menuItem.action">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">

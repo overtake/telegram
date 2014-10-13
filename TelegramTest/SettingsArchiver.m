@@ -52,7 +52,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 
 - (void)initialize {
     self.auto_download_limit_size = DownloadLimitSize10;
-    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio;
+    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto;
     self.documents_folder = dp();
     self.defaultSoundNotification = @"DefaultSoundName";
 

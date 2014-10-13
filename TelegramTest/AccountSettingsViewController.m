@@ -364,7 +364,8 @@ typedef enum {
     
     
     self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
-        [[Telegram settingsWindowController] showWindowWithAction:SettingsWindowActionBlockedUsers];
+        [[Telegram rightViewController] showBlockedUsers];
+         //[[Telegram settingsWindowController] showWindowWithAction:SettingsWindowActionBlockedUsers];
     }];
    
     
@@ -381,7 +382,8 @@ typedef enum {
     
     
     self.chatSettings = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ChatSettings",nil) tapBlock:^{
-        [[Telegram settingsWindowController] showWindowWithAction:SettingsWindowActionChatSettings];
+        [[Telegram rightViewController] showGeneralSettings];
+        
     }];
     
     currentY+=42;
