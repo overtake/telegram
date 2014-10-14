@@ -17,12 +17,12 @@
         [self.textView setBordered:NO];
         [self.textView setFocusRingType:NSFocusRingTypeNone];
         [self.textView setAutoresizingMask:NSViewWidthSizable];
-        [self.textView setFrameOrigin:NSMakePoint(8, 8)];
+        [self.textView setFrameOrigin:NSMakePoint(8, 2)];
         [self.textView setDrawsBackground:NO];
         
 //        [[self.textView cell] setTruncatesLastVisibleLine:NO];
 //        [[self.textView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.textView setFont:[NSFont fontWithName:@"Helvetica" size:22]];
+        [self.textView setFont:[NSFont fontWithName:@"Helvetica" size:16]];
 //        [self.textView setVerticallyResizable:NO];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textView];

@@ -274,6 +274,14 @@
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
       </ContextState>
       <ContextState
+         contextName = "__53-[AccountSettingsViewController defaultContainerView]_block_invoke262:AccountSettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationViewController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
          <PersistentStrings>
             <PersistentString
@@ -452,6 +460,9 @@
                value = "self.isHidden">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatParticipantRowView initWithFrame:]:ChatParticipantRowView.m">
       </ContextState>
       <ContextState
          contextName = "-[SelectUsersTableView setExceptions:]:SelectUsersTableView.m">

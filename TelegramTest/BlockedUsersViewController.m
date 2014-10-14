@@ -9,7 +9,7 @@
 #import "BlockedUsersViewController.h"
 #import "ComposeActionBlockUsersBehavior.h"
 @interface BlockedUsersViewController () <TMTableViewDelegate>
-@property (nonatomic,strong) TMTextButton *addButton;
+@property (nonatomic,strong) BTRButton *addButton;
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TMBackButton *backButton;
 @property (nonatomic,strong) TMTableView *tableView;
@@ -46,24 +46,15 @@
     
     TMView *rightView = [[TMView alloc] init];
     
-    weakify();
     
-    self.addButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Add"];
+    NSImage *image = [NSImage imageNamed:@"AddBlockUser"];
     
-    [self.addButton setTapBlock:^{
-        
-        NSMutableArray *filter = [[NSMutableArray alloc] init];
-        
-        NSArray *all = [[BlockedUsersManager sharedManager] all];
-        
-        [all enumerateObjectsUsingBlock:^(TL_contactBlocked *obj, NSUInteger idx, BOOL *stop) {
-            [filter addObject:@(obj.user_id)];
-        }];
-        
-
-        
-        [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlockUsersBehavior class] filter:filter object:strongSelf]];
-    }];
+    self.addButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image.size.width, image.size.height)];
+    
+    [self.addButton setBackgroundImage:image forControlState:BTRControlStateNormal];
+    
+    
+    [self.addButton addTarget:self action:@selector(addBlockUsers) forControlEvents:BTRControlEventClick];
     
     [rightView setFrameSize:self.addButton.frame.size];
     
@@ -99,6 +90,20 @@
     
     [self.view addSubview:self.tableView.containerView];
 
+}
+
+-(void)addBlockUsers {
+    NSMutableArray *filter = [[NSMutableArray alloc] init];
+    
+    NSArray *all = [[BlockedUsersManager sharedManager] all];
+    
+    [all enumerateObjectsUsingBlock:^(TL_contactBlocked *obj, NSUInteger idx, BOOL *stop) {
+        [filter addObject:@(obj.user_id)];
+    }];
+    
+    
+    
+    [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlockUsersBehavior class] filter:filter object:self]];
 }
 
 
@@ -171,7 +176,7 @@
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 100 : 50;
+    return row == 0 ? 97 : 50;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;

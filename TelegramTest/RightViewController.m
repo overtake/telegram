@@ -439,7 +439,7 @@
     if(self.navigationViewController.currentController == self.userInfoViewController && self.userInfoViewController.user.n_id == user.n_id)
         return;
     
-    if([user isKindOfClass:[TL_userEmpty class]])
+    if([user isKindOfClass:[TL_userEmpty class]] || [user isKindOfClass:[TL_userSelf class]])
         return;
     
     [self hideModalView:YES animation:NO];

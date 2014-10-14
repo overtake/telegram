@@ -164,6 +164,13 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [titleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:titleForMessageAttributedString.range];
     [self setTITLE_FOR_MESSAGE:titleForMessageAttributedString];
     
+    
+    NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
+    [profileAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
+    [profileAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:18] forRange:profileAttributedString.range];
+    [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
+    [self setProfileTitle:profileAttributedString];
+    
     NSMutableAttributedString *encryptedTitleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
     [encryptedTitleForMessageAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachmentBlack()]];
     [encryptedTitleForMessageAttributedString appendString:fullNameFull withColor:DARK_BLACK];
@@ -205,8 +212,14 @@ DYNAMIC_PROPERTY(CHATINFOTITLE);
 DYNAMIC_PROPERTY(DIALOGTITLE);
 DYNAMIC_PROPERTY(DIALOGTITLEENCRYPTED);
 
+DYNAMIC_PROPERTY(ProfileTitle);
+
 - (NSAttributedString *)dialogTitle {
     return [self getDIALOGTITLE];
+}
+
+- (NSAttributedString *)profileTitle {
+    return [self getProfileTitle];
 }
 
 - (NSAttributedString *)dialogTitleEncrypted {
@@ -298,7 +311,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa1a1a1)];
         }
         
-        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:13] forRange:range];
+        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:12] forRange:range];
     }
     return str;
 }
@@ -342,6 +355,28 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     }
     return str;
 }
+
+
+- (NSAttributedString *)statusForProfile {
+    NSMutableAttributedString *str;
+    if(!str) {
+        str = [[NSMutableAttributedString alloc] init];
+        
+        NSString *string = self.lastSeen;
+        NSRange range;
+        if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
+            range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:NSColorFromRGB(0x999999)];
+        } else {
+            range = [str appendString:string withColor:NSColorFromRGB(0x999999)];
+        }
+        
+        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5f] forRange:range];
+        
+        [str setAlignment:NSLeftTextAlignment range:range];
+    }
+    return str;
+}
+
 
 
 - (NSString *) dialogFullName {

@@ -106,7 +106,7 @@ CACHE_IMAGE(VoiceMicHighlighted)
 CACHE_IMAGE(VoiceMicHighlighted2)
 CACHE_IMAGE(TelegramNotifications)
 CACHE_IMAGE(PlayButtonBig)
-
+CACHE_IMAGE(ArrowWhite)
 
 
 @implementation ImageUtils
@@ -496,5 +496,12 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     return nil;
 }
 
+
+NSImageView *imageViewWithImage(NSImage *image) {
+    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0,image.size.width,image.size.height)];
+    imageView.image = image;
+    
+    return imageView;
+}
 
 @end

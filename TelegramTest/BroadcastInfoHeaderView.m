@@ -21,7 +21,7 @@
         
         
         
-        float offsetRight = self.bounds.size.width - 286;
+        float offsetRight = self.bounds.size.width - 200;
         
         weakify();
         
@@ -47,13 +47,12 @@
         }];
         
         
-        [self.createdByTextField setHidden:YES];
         
         [self.setGroupPhotoButton setHidden:YES];
         
         
         [self.addMembersButton setFrameSize:NSMakeSize(offsetRight, 0)];
-        [self.addMembersButton setFrameOrigin:NSMakePoint(170, self.bounds.size.height - 146)];
+        [self.addMembersButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
         
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 0)];
@@ -79,6 +78,8 @@
     
     TL_broadcast *broadcast = self.controller.broadcast;
     
+    [self.statusTextField setBroadcast:broadcast];
+    
     [self.avatarImageView setBroadcast:self.controller.broadcast];
     
     [self.avatarImageView setSourceType:ChatAvatarSourceBroadcast];
@@ -90,9 +91,9 @@
     [self.sharedMediaButton setConversation:broadcast.conversation];
     
     
-    
     BOOL isMute = broadcast.conversation.isMute;
-    [self.notificationView.switchControl setOn:!isMute animated:YES];
+
+    [self.notificationSwitcher setOn:!isMute animated:YES];
 }
 
 @end

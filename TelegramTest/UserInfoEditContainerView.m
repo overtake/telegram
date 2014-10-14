@@ -25,22 +25,21 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        float offsetY = self.bounds.size.height - 78;
-        float offsetRight = self.bounds.size.width - 286;
-        float width = self.bounds.size.width - 286;
+        float offsetY = self.bounds.size.height - 60;
+        float offsetRight = self.bounds.size.width - 200;
+        float width = self.bounds.size.width - 285;
         
         self.firstNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
-        [self.firstNameView setFrameOrigin:NSMakePoint(170, offsetY)];
-        [self.firstNameView setFrameSize:NSMakeSize(width, 42)];
+        [self.firstNameView setFrameOrigin:NSMakePoint(185, offsetY)];
+        [self.firstNameView setFrameSize:NSMakeSize(width, 35)];
    
         [self addSubview:self.firstNameView];
 
         self.lastNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
-        [self.lastNameView setFrameOrigin:NSMakePoint(170, offsetY - self.firstNameView.bounds.size.height)];
-        [self.lastNameView setFrameSize:NSMakeSize(width, 42)];
+        [self.lastNameView setFrameOrigin:NSMakePoint(185, offsetY - self.firstNameView.bounds.size.height)];
+        [self.lastNameView setFrameSize:NSMakeSize(width, 35)];
         [self addSubview:self.lastNameView];
         
-//        [self.firstNameView setNextResponder:self.lastNameView];
         [self.firstNameView.textView setNextKeyView:self.lastNameView.textView];
         [self.firstNameView.textView setTarget:self];
         [self.firstNameView.textView setAction:@selector(enterClick)];
@@ -68,32 +67,6 @@
         [self addSubview:self.deleteContactButton];
         [self.deleteContactButton setFrameSize:NSMakeSize(offsetRight, 0)];
 
-        self.blockContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"User.Block", nil) tapBlock:^{
-            
-            self.blockContactButton.locked = YES;
-            
-            BlockedHandler handlerBlock = ^(BOOL result) {
-                self.blockContactButton.locked = NO;
-            };
-            
-            if(self.user.isBlocked) {
-                [[BlockedUsersManager sharedManager] unblock:self.user.n_id completeHandler:handlerBlock];
-            } else {
-                [[BlockedUsersManager sharedManager] block:self.user.n_id completeHandler:handlerBlock];
-            }
-            
-            
-
-        }];
-        self.blockContactButton.textButton.textColor = NSColorFromRGB(0xe07676);
-        [self addSubview:self.blockContactButton];
-        [self.blockContactButton setFrameSize:NSMakeSize(offsetRight, 0)];
-
-        
-        
-        
-        
-        
 
 
         [self buildPage];
@@ -112,14 +85,11 @@
         [self.deleteContactButton setHidden:NO];
 
         float offset = self.bounds.size.height - 180;
-        [self.clearChatHistoryButton setFrameOrigin:NSMakePoint(170, offset)];
+        [self.clearChatHistoryButton setFrameOrigin:NSMakePoint(100, offset)];
         
         offset -= self.clearChatHistoryButton.bounds.size.height;
-        [self.deleteContactButton setFrameOrigin:NSMakePoint(170, offset)];
+        [self.deleteContactButton setFrameOrigin:NSMakePoint(100, offset)];
         
-        
-        offset -= self.deleteContactButton.bounds.size.height;
-        [self.blockContactButton setFrameOrigin:NSMakePoint(170, offset)];
 
     } else {
         [self.clearChatHistoryButton setHidden:YES];

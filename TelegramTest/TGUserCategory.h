@@ -34,6 +34,8 @@ typedef enum {
 - (NSAttributedString *)dialogTitleEncrypted;
 - (NSAttributedString *)chatInfoTitle;
 
+- (NSAttributedString *)profileTitle;
+
 - (NSAttributedString *)titleForMessage;
 - (NSAttributedString *)encryptedTitleForMessage;
 
@@ -43,7 +45,7 @@ typedef enum {
 - (NSAttributedString *)statusForUserInfoView;
 - (NSAttributedString *)statusForGroupInfo;
 - (NSAttributedString *)statusForSearchTableView;
-
+- (NSAttributedString *)statusForProfile;
 
 - (int)lastSeenUpdate;
 - (void)setLastSeenUpdate:(int)seenUpdate;

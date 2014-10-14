@@ -14,7 +14,7 @@
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
-@property (nonatomic, strong) TMButton *kickButton;
+@property (nonatomic, strong) TMTextButton *kickButton;
 @end
 
 @implementation ChatParticipantRowView
@@ -24,26 +24,40 @@
     if (self) {
         
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
-        [self.avatarImageView setFrameOrigin:NSMakePoint(180, 3)];
+        
+        [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
+        
+        [self.avatarImageView setFrameOrigin:NSMakePoint(100, 7)];
+        
+        
         [self addSubview:self.avatarImageView];
         
         self.nameTextField = [[TMNameTextField alloc] init];
         self.nameTextField.nameDelegate = self;
         [self.nameTextField setSelector:@selector(chatInfoTitle)];
-        [self.nameTextField setFrameOrigin:NSMakePoint(236, 26)];
+        [self.nameTextField setFrameOrigin:NSMakePoint(146, 26)];
         [self addSubview:self.nameTextField];
         
         self.statusTextField = [[TMStatusTextField alloc] init];
         [self.statusTextField setStatusDelegate:self];
         [self.statusTextField setSelector:@selector(statusForGroupInfo)];
-        [self.statusTextField setFrameOrigin:NSMakePoint(236, 7)];
+        [self.statusTextField setFrameOrigin:NSMakePoint(146, 10)];
         [self addSubview:self.statusTextField];
         
-        self.kickButton = [[TMButton alloc] initWithFrame:NSMakeRect(self.bounds.size.width - image_kick().size.width - 34, 10, image_kick().size.width, image_kick().size.height)];
+        self.kickButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Chat.Kick", nil)];
         [self.kickButton setAutoresizingMask:NSViewMinXMargin];
-        [self.kickButton setImage:image_kick() forState:TMButtonNormalState];
-        [self.kickButton setImage:image_kick() forState:TMButtonPressedState];
-        [self.kickButton setTarget:self selector:@selector(kickPressed)];
+        [self.kickButton setStringValue:NSLocalizedString(@"Chat.Kick", nil)];
+        [self.kickButton setDisableColor:NSColorFromRGB(0x999999)];
+        
+        
+        [self.kickButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.kickButton.frame), roundf((50 - NSHeight(self.kickButton.frame))/2))];
+        
+        
+        weak();
+        
+        [self.kickButton setTapBlock:^{
+            [weakSelf kickPressed];
+        }];
         [self addSubview:self.kickButton];
         
     }
@@ -59,13 +73,10 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if(self.row == 1) {
-        ChatParticipantItem *item = (ChatParticipantItem *) self.rowItem;
-        
-        [item.membersCount drawAtPoint:NSMakePoint(160 - item.membersCount.size.width, 28)];
-        [item.onlineCount drawAtPoint:NSMakePoint(160 - item.onlineCount.size.width, 10)];
-    }
+    [NSColorFromRGB(0xe0e0e0) setFill];
     
+    NSRectFill(NSMakeRect(146, 0, NSWidth(self.frame) - 246, 1));
+
 }
 
 
@@ -75,13 +86,13 @@
         [self.statusTextField setSelected:YES];
         self.avatarImageView.layer.opacity = 0.5;
         [self.kickButton setAlphaValue:0.5];
-        [self.kickButton setDisabled:YES];
+        [self.kickButton setDisable:YES];
     } else {
         [self.nameTextField setSelected:NO];
         [self.statusTextField setSelected:NO];
         self.avatarImageView.layer.opacity = 1;
         [self.kickButton setAlphaValue:1];
-        [self.kickButton setDisabled:NO];
+        [self.kickButton setDisable:NO];
     }
 }
 

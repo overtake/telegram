@@ -68,7 +68,7 @@
         [flippedClipView setAutoresizesSubviews:YES];
         [flippedClipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         
-        self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 500)];
+        self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 600)];
         [self.containerView setAutoresizingMask:NSViewWidthSizable];
         
         self.normalContainer = [[UserInfoContainerView alloc] initWithFrame:self.containerView.bounds];
@@ -87,7 +87,9 @@
         
 
         _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
-        [_avatarImageView setFrameOrigin:NSMakePoint(30, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        
+        [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
+        [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
         [_containerView addSubview:_avatarImageView];
         
         weakify();

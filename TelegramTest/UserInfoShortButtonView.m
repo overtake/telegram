@@ -27,10 +27,13 @@
 - (id)initWithFrame:(NSRect)frame withName:(NSString *)name andBlock:(dispatch_block_t)block {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.wantsLayer = YES;
+        
         self.textButton = [TMTextButton standartUserProfileButtonWithTitle:name];
         self.tapBlock = block;
         [self.textButton sizeToFit];
-        [self.textButton setFrameOrigin:NSMakePoint(10, 12)];
+        [self.textButton setFrameOrigin:NSMakePoint(0, 12)]; // 10
         [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textButton];
@@ -77,13 +80,16 @@
         [_rightContainer.subviews[0] removeFromSuperview];
     }
     
+    
+    [_currentRightController setFrameOrigin:NSMakePoint(1, 1)];
+    
     [_rightContainer addSubview:_currentRightController];
 
     [self updateRightControllerFrame];
 }
 
 - (void)updateRightControllerFrame {
-      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + _rightContainerOffset.x, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + +_rightContainerOffset.y, _currentRightController.frame.size.width, _currentRightController.frame.size.height);
+      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + _rightContainerOffset.x - 2, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + _rightContainerOffset.y, _currentRightController.frame.size.width + 2, _currentRightController.frame.size.height + 2 );
 }
 
 -(void)setLocked:(BOOL)locked {
@@ -171,7 +177,7 @@
     
     [self setRightContainer:self.currentRightController];
     
-     [self.textButton setFrameSize:NSMakeSize(newSize.width - NSWidth(self.rightContainer.frame) - 15, NSHeight(self.textButton.frame))];
+    [self.textButton setFrameSize:NSMakeSize(newSize.width - NSWidth(self.rightContainer.frame) - 15, NSHeight(self.textButton.frame))];
 }
 
 
@@ -212,6 +218,18 @@
 }
 
 
+-(void)setSelectedColor:(NSColor *)selectedColor {
+    self->_selectedColor = selectedColor;
+    
+    [self setNeedsDisplay:YES];
+}
+
+-(void)setIsSelected:(BOOL)isSelected {
+    self->_isSelected = isSelected;
+    
+    [self setNeedsDisplay:YES];
+}
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [self changeBackground];
@@ -219,14 +237,17 @@
     [super drawRect:dirtyRect];
 
     [LIGHT_GRAY_BORDER_COLOR set];
-    NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));
+    NSRectFill(NSMakeRect(self.textButton.frame.origin.x, 0, self.bounds.size.width, 1));
     
     if(self.backgroundColor) {
         [self.backgroundColor set];
         NSRectFill(NSMakeRect(0, 1, self.bounds.size.width, self.bounds.size.height-1));
     }
   
-    
+    if(self.isSelected) {
+        [self.selectedColor set];
+        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+    }
     
     
 }

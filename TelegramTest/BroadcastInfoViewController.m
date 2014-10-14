@@ -19,7 +19,7 @@
 -(id)initWithFrame:(NSRect)frame {
     if(self = [super initWithFrame:frame]) {
         
-         self.headerView = [[BroadcastInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 250)];
+         self.headerView = [[BroadcastInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 260)];
         
         [Notification removeObserver:self];
         
@@ -53,11 +53,6 @@
     
     if(self.notNeedToUpdate) {
         self.notNeedToUpdate = NO;
-        if(self.tableView.count > 1) {
-            [self buildFirstItem];
-            TMRowItem *item = (TMRowItem *)[self.tableView itemAtPosition:1];
-            [item redrawRow];
-        }
         return;
     }
     
@@ -92,7 +87,6 @@
     }] startIndex:1 tableRedraw:NO];
     
     [self.tableView addItem:self.bottomItem tableRedraw:NO];
-    [self buildFirstItem];
     [self.tableView reloadData];
     
 }
@@ -115,43 +109,15 @@
 }
 
 
-- (void)buildFirstItem {
-    if(self.tableView.count < 2)
-        return;
-    
-    ChatParticipantItem *item;
-    for(int i = 0; i < self.tableView.count; i++) {
-        ChatParticipantItem *loopItem = (ChatParticipantItem *)[self.tableView itemAtPosition:i];
-        if([loopItem isKindOfClass:[ChatParticipantItem class]]) {
-            item = loopItem;
-            break;
-        }
-    }
-
-    
-    if(!item)
-        return;
-    
-    int allCount = (int) self.broadcast.participants.count;
-    NSString *membersCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.MembersCount", nil), allCount, allCount == 1 ? @"" : @"s"];
-    item.membersCount = [[NSAttributedString alloc] initWithString:membersCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-    
-    int onlineCount = [[BroadcastManager sharedManager] getOnlineCount:self.broadcast.n_id];
-    NSString *onlineCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.OnlineCount", nil), onlineCount];
-    item.onlineCount = [[NSAttributedString alloc] initWithString:onlineCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-}
-
 - (void)kickParticipantByItem:(ChatParticipantItem *)item {
     [self.broadcast removeParticipant:item.user.n_id];
     
-    
+    self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
     [self.tableView removeItem:item];
+    
+    self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
 
-    
-    [self reloadParticipants];
-    
-    [Notification perform:BROADCAST_STATUS data:@{KEY_CHAT_ID:@(self.broadcast.n_id)}];
     [Notification perform:BROADCAST_UPDATE_TITLE data:@{KEY_BROADCAST:self.broadcast}];
 }
 

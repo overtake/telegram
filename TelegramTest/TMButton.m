@@ -77,6 +77,9 @@
             self.pressedBackground = image;
             break;
     }
+    
+    
+    
     [self setNeedsDisplay:YES];
 }
 
@@ -233,7 +236,7 @@
     [super drawRect:dirtyRect];
     
     
-    [self setWantsBestResolutionOpenGLSurface:YES];
+  //  [self setWantsBestResolutionOpenGLSurface:YES];
     
     [self.bgImage drawInRect:self.bounds fromRect:self.bounds operation:NSCompositeSourceOver fraction:1];
     
@@ -253,7 +256,7 @@
 //        NSRectFill( rect ) ;
         
         [self.text drawInRect:rect withAttributes:attributes];
-        
+      
     
     }
 }

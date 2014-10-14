@@ -31,10 +31,15 @@
 
 @property (nonatomic, strong) UserInfoShortButtonView *sendMessageButton;
 @property (nonatomic, strong) UserInfoShortButtonView *shareContactButton;
+@property (nonatomic, strong) UserInfoShortButtonView *blockContact;
+
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
+
+
+
 
 @property (nonatomic, strong) UserInfoShortButtonView *encryptedKeyButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
@@ -42,7 +47,7 @@
 
 @property (nonatomic, strong) UserInfoPhoneView *phoneView;
 
-@property (nonatomic, strong) ChatInfoNotificationView *notificationView;
+@property (nonatomic, strong) UserInfoShortButtonView *notificationView;
 
 @property (nonatomic, strong) TMView *nameNormalView;
 @property (nonatomic, strong) TMView *nameEditView;
@@ -51,6 +56,8 @@
 
 @property (nonatomic,strong) TMTextField *ttlTitle;
 @property (nonatomic,strong) TMTextField *sharedTitle;
+
+@property (nonatomic,strong) ITSwitch *notificationsSwitcher;
 
 @property (nonatomic, strong) NSProgressIndicator *profileProgressIndicator;
 
@@ -61,6 +68,10 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.wantsLayer = YES;
+        
+       // self.layer.backgroundColor = [NSColor blueColor].CGColor;
         
         self.profileProgressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(40, 40, 30, 30)];
         
@@ -83,7 +94,7 @@
         self.ttlTitle = [TMTextField defaultTextField];
         self.sharedTitle = [TMTextField defaultTextField];
       
-        float offsetRight = self.bounds.size.width - 286;
+        float offsetRight = self.bounds.size.width - 200;
         
         __block UserInfoContainerView *weakSelf = self;
     
@@ -96,6 +107,25 @@
 
         self.shareContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShareContact", nil) tapBlock:^{
             [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+        }];
+        
+        
+        self.blockContact = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.BlockContact", nil) tapBlock:^{
+            
+            self.blockContact.locked = YES;
+            
+            BlockedHandler handlerBlock = ^(BOOL result) {
+                self.blockContact.locked = NO;
+            };
+            
+            if(self.user.isBlocked) {
+                [[BlockedUsersManager sharedManager] unblock:self.user.n_id completeHandler:handlerBlock];
+            } else {
+                [[BlockedUsersManager sharedManager] block:self.user.n_id completeHandler:handlerBlock];
+            }
+            
+
+            
         }];
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
@@ -130,6 +160,9 @@
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 0)];
         [self addSubview:self.sharedMediaButton];
+        
+        [self.blockContact setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self addSubview:self.blockContact];
         
         
         
@@ -187,34 +220,48 @@
         [self.startSecretChatButton.textButton setTextColor:NSColorFromRGB(0x61ad5e)];
         [self addSubview:self.startSecretChatButton];
         
-        offsetRight = self.bounds.size.width - 60;
         
-        self.phoneView = [[UserInfoPhoneView alloc] initWithFrame:NSMakeRect(30, 0, offsetRight, 66)];
+        self.phoneView = [[UserInfoPhoneView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 66)];
         [self addSubview:self.phoneView];
         
         
-        self.notificationView = [[ChatInfoNotificationView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width - 60, 40)];
-        [self.notificationView setNoBorder:YES];
+        self.notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
+            
+        }];
+        
+        
+        
+        self.notificationsSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 21)];
+        
+        weakify();
+        
+        [self.notificationsSwitcher setDidChangeHandler:^(BOOL isOn) {
+            TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:strongSelf.user.n_id];
+            
+            BOOL isMute = dialog.isMute;
+            if(isMute == isOn) {
+                [dialog muteOrUnmute:nil];
+            }
+        }];
+        
+        [self.notificationView setRightContainer:self.notificationsSwitcher];
         
         [self.encryptedKeyButton setRightContainerOffset:NSMakePoint(-8, 3)];
         [self.setTTLButton setRightContainerOffset:NSMakePoint(0, 2)];
         
+        [self.notificationView setFrameSize:NSMakeSize(offsetRight, 0)];
         
-        weakify();
-        [self.notificationView.switchControl setDidChangeHandler:^(BOOL change) {
-            TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:strongSelf.user.n_id];
-            
-            BOOL isMute = dialog.isMute;
-            if(isMute == change) {
-                [dialog muteOrUnmute:nil];
-            }
-        }];
+        
+
         [self addSubview:self.notificationView];
         
         
-         [self.profileProgressIndicator startAnimation:self];
+        [self.profileProgressIndicator startAnimation:self];
         
         [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+        
+        
+        self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
     }
     return self;
 }
@@ -227,7 +274,7 @@
     static NSTextAttachment *attach;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 3, 0, 5)]];
+        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 10, 0, 0)]];
     });
     
     
@@ -257,60 +304,69 @@
 }
 
 - (void)buildPage {
-    float offset = self.bounds.size.height - 104;
+    float offset = self.bounds.size.height - 170;
+    
+    [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
 
-    //if(self.user.type != TGUserTypeSelf) {
-        offset -= self.sendMessageButton.bounds.size.height;
-        [self.sendMessageButton setFrameOrigin:NSMakePoint(170, offset)];
+    if(!self.controller.isSecretProfile) {
+        offset -= 60;
+        [self.sendMessageButton setFrameOrigin:NSMakePoint(100, offset)];
         
         [self.sendMessageButton setHidden:NO];
-  //  } else {
-     //   [self.sendMessageButton setHidden:YES];
-  //  }
-    
-   
-    
-    [self.setProfilePhotoButton setHidden:self.user.type != TGUserTypeSelf];
-    [self.importContacts setHidden:self.user.type != TGUserTypeSelf];
-    
-    if(self.user.type == TGUserTypeContact || self.user.type == TGUserTypeSelf) {
-        offset -= self.shareContactButton.bounds.size.height;
-        [self.shareContactButton setFrameOrigin:NSMakePoint(170, offset)];
-        [self.shareContactButton setHidden:NO];
+        
+        
+        
+        
+        [self.setProfilePhotoButton setHidden:self.user.type != TGUserTypeSelf];
+        [self.importContacts setHidden:self.user.type != TGUserTypeSelf];
+        
+        
+        if(self.user.type == TGUserTypeContact || self.user.type == TGUserTypeSelf) {
+            offset -= self.shareContactButton.bounds.size.height;
+            [self.shareContactButton setFrameOrigin:NSMakePoint(100, offset)];
+            [self.shareContactButton setHidden:NO];
+        } else {
+            [self.shareContactButton setHidden:YES];
+        }
+        
+        
+        if(self.user.type != TGUserTypeSelf) {
+            offset -= self.blockContact.bounds.size.height;
+            [self.blockContact setFrameOrigin:NSMakePoint(100, offset)];
+            [self.blockContact setHidden:NO];
+        } else {
+            [self.blockContact setHidden:YES];
+        }
+
     } else {
+        [self.sendMessageButton setHidden:YES];
+        [self.blockContact setHidden:YES];
         [self.shareContactButton setHidden:YES];
+        [self.setProfilePhotoButton setHidden:YES];
+        [self.importContacts setHidden:YES];
+    }
+
+    if(self.user.type != TGUserTypeSelf && !self.controller.isSecretProfile) {
+        
+         offset -= 60;
+        
+        [self.startSecretChatButton setHidden:self.controller.isSecretProfile];
+        [self.startSecretChatButton setFrameOrigin:NSMakePoint(100, offset)];
+    } else {
+        [self.startSecretChatButton setHidden:YES];
     }
     
+    
+
     if(self.user.type != TGUserTypeSelf) {
-        offset-= self.sharedMediaButton.frame.size.height+30;
+        offset-=60;
         
-        [self.sharedMediaButton setFrameOrigin:NSMakePoint(170, offset)];
+        [self.sharedMediaButton setFrameOrigin:NSMakePoint(100, offset)];
         
         [self.sharedMediaButton setHidden:NO];
     } else {
         [self.sharedMediaButton setHidden:YES];
-    }
-    
-    offset -= 60;
-    
-    if(self.user.type == TGUserTypeSelf) {
-        offset-=self.setProfilePhotoButton.bounds.size.height;
-        [self.setProfilePhotoButton setFrameOrigin:NSMakePoint(170, offset)];
-        
-        offset-=self.importContacts.bounds.size.height;
-        [self.importContacts setFrameOrigin:NSMakePoint(170, offset)];
-    }
-    
-    
-    if(self.user.type != TGUserTypeSelf) {
-        if(!self.controller.isSecretProfile) {
-            offset-=12;
-        }
-        [self.startSecretChatButton setHidden:self.controller.isSecretProfile];
-        [self.startSecretChatButton setFrameOrigin:NSMakePoint(170, offset)];
-    } else {
-        [self.startSecretChatButton setHidden:YES];
     }
     
     
@@ -319,20 +375,21 @@
     [self.deleteSecretChatButton setHidden:!self.controller.isSecretProfile];
     
     if(self.controller.isSecretProfile) {
-        offset-=12;
-        [self.encryptedKeyButton setFrameOrigin:NSMakePoint(170, offset )];
+        
+        offset-=self.sharedMediaButton.frame.size.height;
+        [self.encryptedKeyButton setFrameOrigin:NSMakePoint(100, offset )];
         
         offset-=self.encryptedKeyButton.bounds.size.height;
         
-        [self.setTTLButton setFrameOrigin:NSMakePoint(170, offset )];
+        [self.setTTLButton setFrameOrigin:NSMakePoint(100, offset )];
 
         [self.encryptedKeyButton setRightContainer:self.imageForKey];
         
        
         
-        offset-=self.deleteSecretChatButton.frame.size.height+30;
+        offset-=60;
         
-        [self.deleteSecretChatButton setFrameOrigin:NSMakePoint(170, offset)];
+        [self.deleteSecretChatButton setFrameOrigin:NSMakePoint(100, offset)];
         
     }
     
@@ -341,11 +398,11 @@
     
     [self buildTTLTitle];
     
-    offset -= self.phoneView.bounds.size.height;
-    [self.phoneView setFrameOrigin:NSMakePoint(30, offset)];
+    offset-=self.notificationView.frame.size.height;
+    
+    [self.notificationView setFrameOrigin:NSMakePoint(100, offset)];
     
     
-    [self.notificationView setFrameOrigin:NSMakePoint(30, offset - 55)];
     
 //    offset-=self.notificationView.frame.size.height;
     
@@ -373,7 +430,7 @@
     
 }
 
-#define DEFAULT_FONT [NSFont fontWithName:@"HelveticaNeue-Medium" size:13]
+#define DEFAULT_FONT [NSFont fontWithName:@"HelveticaNeue" size:13]
 #define DEFAULT_COLOR NSColorFromRGB(0xa1a1a1)
 
 - (void)setUser:(TGUser *)user {
@@ -382,18 +439,18 @@
     [self.sharedMediaButton setConversation:self.controller.conversation];
     
     
-    [self.avatarImageView setUser:user];
     NSSize size;
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     
-    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"Helvetica" size:22], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"Helvetica" size:16], NSParagraphStyleAttributeName: paragraphStyle}];
     size = [userNameAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.nameTextView textStorage] setAttributedString:userNameAttributedString];
     [self.nameTextView setFrameSize:NSMakeSize(self.bounds.size.width - 204 - 55, size.height)];
-    [self.nameTextView setFrameOrigin:NSMakePoint(175, self.bounds.size.height - 44 - self.nameTextView.bounds.size.height)];
+    [self.nameTextView setFrameOrigin:NSMakePoint(185, self.bounds.size.height - 47 - self.nameTextView.bounds.size.height)];
+    [self.nameTextView setTextContainerInset:NSMakeSize(-3, 0)];
     
     [self.statusTextField setUser:self.user];
     [self.phoneView setPhoneNumber:self.user.phoneWithFormat];
@@ -401,12 +458,13 @@
     
     if(self.user.type != TGUserTypeSelf) {
         [self.notificationView setHidden:self.controller.isSecretProfile];
-        weakify();
         
         TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];
         
         BOOL isMute =  dialog.isMute;
-        [strongSelf.notificationView.switchControl setOn:!isMute animated:YES];
+        
+        
+        [self.notificationsSwitcher setOn:!isMute animated:YES];
         
     } else {
         [self.notificationView setHidden:YES];
@@ -417,14 +475,14 @@
 
 - (void)TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {
     [self.statusTextField sizeToFit];
-    [self.statusTextField setFrameOrigin:NSMakePoint(self.nameTextView.frame.origin.x + 3, self.nameTextView.frame.origin.y - self.statusTextField.bounds.size.height - 4)];
+    [self.statusTextField setFrameOrigin:NSMakePoint(self.nameTextView.frame.origin.x, self.nameTextView.frame.origin.y - self.statusTextField.bounds.size.height - 2 )];
 }
 
 + (NSDictionary *)attributsForInfoPlaceholderString {
     static NSDictionary *info = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        info = @{NSForegroundColorAttributeName: DEFAULT_COLOR, NSFontAttributeName: DEFAULT_FONT};
+        info = @{NSForegroundColorAttributeName: BLUE_UI_COLOR, NSFontAttributeName: DEFAULT_FONT};
     });
     return info;
 }

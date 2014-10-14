@@ -15,4 +15,7 @@
 @property (nonatomic, assign) NSPoint rightContainerOffset;
 + (id) buttonWithText:(NSString *)string tapBlock:(dispatch_block_t)block;
 - (id)initWithFrame:(NSRect)frame withName:(NSString *)name andBlock:(dispatch_block_t)block;
+
+@property (nonatomic,strong) NSColor *selectedColor;
+@property (nonatomic,assign) BOOL isSelected;
 @end

@@ -23,8 +23,8 @@
 
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
-#define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
-#define kDisabledBackgroundColor [NSColor clearColor]
+#define kDisabledBorderColor NSColorFromRGB(0xD7D7D7) // [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
+#define kDisabledBackgroundColor NSColorFromRGB(0xD7D7D7)// [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 
 
@@ -104,10 +104,10 @@
     _knobLayer.frame = [self rectForKnob];
     _knobLayer.autoresizingMask = kCALayerHeightSizable;
     _knobLayer.backgroundColor = kKnobBackgroundColor.CGColor;
-    _knobLayer.shadowColor = [NSColor blackColor].CGColor;
-    _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
-    _knobLayer.shadowRadius = 1.f;
-    _knobLayer.shadowOpacity = 0.3f;
+//    _knobLayer.shadowColor = [NSColor blackColor].CGColor;
+//    _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
+//    _knobLayer.shadowRadius = 1.f;
+//    _knobLayer.shadowOpacity = 0.3f;
     [_rootLayer addSublayer:_knobLayer];
     
     _knobInsideLayer = [CALayer layer];
@@ -205,11 +205,12 @@
 
 - (CGRect)rectForKnob {
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
-    CGFloat width = !self.isActive ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
-    (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
+    CGFloat width = height; //!self.isActive ? height :  (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
     CGFloat x = ((!self.hasDragged && !self.isOn) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
+    
+   
     
     return (CGRect) {
         .size.width = width,

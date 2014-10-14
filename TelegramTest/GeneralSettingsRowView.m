@@ -27,8 +27,8 @@
         self.subdescField = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         
         
-        [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
-        [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forControlState:BTRControlStateNormal];
+        [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
+        [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forControlState:BTRControlStateNormal];
         
         self.descriptionField.textColor = DARK_BLACK;
         

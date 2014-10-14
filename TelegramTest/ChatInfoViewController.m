@@ -63,7 +63,7 @@
         [center setTarget:self selector:@selector(navigationGoBack)];
         self.centerNavigationBarView = center;
         center.acceptCursor = NO;
-        _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 330)];
+        _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
         
         [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
     }
@@ -223,24 +223,31 @@
     weakify();
     
     [MessageSender sendStatedMessage:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
+        
+        
         TGChatParticipants *participants = strongSelf.fullChat.participants;
-        id object = nil;
-        for(TGChatParticipant *participant in participants.participants) {
-            if(participant.user_id == item.user.n_id) {
-                object = participant;
-                break;
-            }
-        }
         
-        if(object)
-            [participants.participants removeObject:object];
         
-        [[Storage manager] insertFullChat:strongSelf.fullChat completeHandler:nil];
+        NSArray *participant = [participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",item.user.n_id]];
+        
+        if(participant.count == 1) {
+            id object = participant[0];
+            
+            
+            if(object)
+                [participants.participants removeObject:object];
+            
+            [[Storage manager] insertFullChat:strongSelf.fullChat completeHandler:nil];
+            
+            strongSelf.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+            
+            [strongSelf.tableView removeItem:item];
+            
+            strongSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+            
+            self.notNeedToUpdate = YES;
 
-        [strongSelf.tableView removeItem:item];
-        
-        self.notNeedToUpdate = YES;
-      //  [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(strongSelf.fullChat.n_id), KEY_PARTICIPANTS: strongSelf.fullChat.participants}];
+        }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^{
@@ -263,11 +270,11 @@
     
     if(self.notNeedToUpdate) {
         self.notNeedToUpdate = NO;
-        if(_tableView.count > 1) {
-            [self buildFirstItem];
-            TMRowItem *item = (TMRowItem *)[_tableView itemAtPosition:1];
-            [item redrawRow];
-        }
+//        if(_tableView.count > 1) {
+//            [self buildFirstItem];
+//            TMRowItem *item = (TMRowItem *)[_tableView itemAtPosition:1];
+//            [item redrawRow];
+//        }
         return;
     }
     TGChatParticipants *participants = self.fullChat.participants;
@@ -308,34 +315,34 @@
     }] startIndex:1 tableRedraw:NO];
     
     [_tableView addItem:_bottomItem tableRedraw:NO];
-    [self buildFirstItem];
+    //[self buildFirstItem];
     [_tableView reloadData];
 }
 
-- (void)buildFirstItem {
-    if(_tableView.count < 2)
-        return;
-    
-    ChatParticipantItem *item;
-    for(int i = 0; i < _tableView.count; i++) {
-        ChatParticipantItem *loopItem = (ChatParticipantItem *)[_tableView itemAtPosition:i];
-        if([loopItem isKindOfClass:[ChatParticipantItem class]]) {
-            item = loopItem;
-            break;
-        }
-    }
-    
-    if(!item)
-        return;
-    
-    int allCount = self.chat.participants_count;
-    NSString *membersCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.MembersCount", nil), allCount, allCount == 1 ? @"" : @"s"];
-    item.membersCount = [[NSAttributedString alloc] initWithString:membersCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-    
-    int onlineCount = [[FullChatManager sharedManager] getOnlineCount:self.chat.n_id];
-    NSString *onlineCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.OnlineCount", nil), onlineCount];
-    item.onlineCount = [[NSAttributedString alloc] initWithString:onlineCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-}
+//- (void)buildFirstItem {
+//    if(_tableView.count < 2)
+//        return;
+//    
+//    ChatParticipantItem *item;
+//    for(int i = 0; i < _tableView.count; i++) {
+//        ChatParticipantItem *loopItem = (ChatParticipantItem *)[_tableView itemAtPosition:i];
+//        if([loopItem isKindOfClass:[ChatParticipantItem class]]) {
+//            item = loopItem;
+//            break;
+//        }
+//    }
+//    
+//    if(!item)
+//        return;
+//    
+//    int allCount = self.chat.participants_count;
+//    NSString *membersCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.MembersCount", nil), allCount, allCount == 1 ? @"" : @"s"];
+//    item.membersCount = [[NSAttributedString alloc] initWithString:membersCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
+//    
+//    int onlineCount = [[FullChatManager sharedManager] getOnlineCount:self.chat.n_id];
+//    NSString *onlineCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.OnlineCount", nil), onlineCount];
+//    item.onlineCount = [[NSAttributedString alloc] initWithString:onlineCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
+//}
 
 //Table methods
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
@@ -344,7 +351,7 @@
     }  else if([item isEqualTo:_bottomItem]) {
         return 40.f;
     } else {
-        return 56.f;
+        return 50;
     }
 }
 

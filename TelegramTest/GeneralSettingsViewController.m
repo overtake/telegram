@@ -24,7 +24,7 @@
     _centerTextField = [TMTextField defaultTextField];
     [self.centerTextField setAlignment:NSCenterTextAlignment];
     [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
     [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
     [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
     [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -121,14 +121,10 @@
     //audio end
     
     
-    GeneralSettingsBlockHeaderItem *separator = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:nil];
-    
-    [self.tableView insert:separator atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
+
     GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
         
-    } description:NSLocalizedString(@"Settings.SoundNotification", nil) height:40 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.SoundNotification", nil) height:70 stateback:^id(GeneralSettingsRowItem *item) {
         return NSLocalizedString([SettingsArchiver soundNotification], nil);
     }];
     
@@ -176,7 +172,7 @@
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]] ? 60 :  item.height;
+    return [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]] ? 57 :  item.height;
 }
 
 - (BOOL)isGroupRow:(NSUInteger)row item:(GeneralSettingsRowItem *) item {

@@ -248,6 +248,15 @@
     
     lastName = lastName.length > 30 ? [lastName substringToIndex:30] : lastName;
     
+    
+    if([firstName isEqualToString:self.userSelf.first_name] && [lastName isEqualToString:self.userSelf.last_name])
+    {
+        completeHandler(self.userSelf);
+        
+        return;
+    }
+    
+    
     self.userSelf.first_name = firstName;
     self.userSelf.last_name = lastName;
     

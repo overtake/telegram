@@ -46,10 +46,14 @@
         weakify();
         
         
-        float offsetRight = self.bounds.size.width - 286;
+        float offsetRight = self.bounds.size.width - 200;
         
         _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
-        [self.avatarImageView setFrameOrigin:NSMakePoint(30, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        
+        [self.avatarImageView setFrameSize:NSMakeSize(70, 70)];
+        
+        [self.avatarImageView setFrameOrigin:NSMakePoint(100, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        
         [self addSubview:self.avatarImageView];
         
         [self.avatarImageView setSourceType:ChatAvatarSourceGroup];
@@ -77,24 +81,28 @@
         [self.nameTextField setEditable:NO];
         [self.nameTextField setSelectable:YES];
         [[self.nameTextField cell] setFocusRingType:NSFocusRingTypeNone];
-        [self.nameTextField setFont:[NSFont fontWithName:@"Helvetica" size:22]];
+        [self.nameTextField setFont:[NSFont fontWithName:@"Helvetica" size:16]];
         [self.nameTextField setTarget:self];
         [self.nameTextField setAction:@selector(enter)];
         [self addSubview:self.nameTextField];
         
-        _nameLiveView = [[LineView alloc] initWithFrame:NSMakeRect(170, self.bounds.size.height - 80, offsetRight, 1)];
+        _nameLiveView = [[LineView alloc] initWithFrame:NSMakeRect(185, self.bounds.size.height - 80, NSWidth(self.frame) - 310, 1)];
         [self.nameLiveView setHidden:YES];
         [self addSubview:self.nameLiveView];
         
-        _createdByTextField = [[TMHyperlinkTextField alloc] init];
-        [self.createdByTextField setBordered:NO];
-        [self addSubview:self.createdByTextField];
+        _statusTextField = [[TMStatusTextField alloc] init];
+        
+        [_statusTextField setSelector:@selector(statusForMessagesHeaderView)];
+        
+        
+        [self.statusTextField setBordered:NO];
+        [self addSubview:self.statusTextField];
         
         _setGroupPhotoButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SetGroupPhoto", nil) tapBlock:^{
             [self.avatarImageView showUpdateChatPhotoBox];
         }];
         [self.setGroupPhotoButton setFrameSize:NSMakeSize(offsetRight, 0)];
-        [self.setGroupPhotoButton setFrameOrigin:NSMakePoint(170, self.bounds.size.height - 146)];
+        [self.setGroupPhotoButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
         [self addSubview:self.setGroupPhotoButton];
         
         
@@ -133,22 +141,35 @@
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 72)];
         
         [self addSubview:self.sharedMediaButton];
+        
+        
 
         
-       _notificationView = [[ChatInfoNotificationView alloc] initWithFrame:NSMakeRect(30, self.sharedMediaButton.frame.origin.y - 40 - 20, self.bounds.size.width - 60, 40)];
+        _notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
+           
+        }];
         
-        [self.notificationView.switchControl setDidChangeHandler:^(BOOL change) {
-            
+        _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
+        
+        _notificationView.rightContainer = self.notificationSwitcher;
+        
+        [self.notificationSwitcher setDidChangeHandler:^(BOOL isOn) {
             
             TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
             
             BOOL isMute =  dialog.isMute;
-            if(isMute == change) {
+            if(isMute == isOn) {
                 [dialog muteOrUnmute:nil];
             }
-            
+
         }];
+        
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedMediaButton.frame) - 42, NSWidth(self.frame) - 200, NSHeight(self.notificationView.frame))];
+        
+
         [self addSubview:self.notificationView];
+        
+        self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
         
         
 
@@ -171,12 +192,12 @@
     self->_type = type;
     
     float duration = 0.08;
-    [self.createdByTextField prepareForAnimation];
+    [self.statusTextField prepareForAnimation];
     [self.nameLiveView prepareForAnimation];
     
     [CATransaction begin];
     [CATransaction setCompletionBlock:^{
-        [self.createdByTextField setHidden:self.createdByTextField.layer.opacity == 0];
+        [self.statusTextField setHidden:self.statusTextField.layer.opacity == 0];
         [self.nameLiveView setHidden:self.nameLiveView.layer.opacity == 0];
     }];
     switch (self->_type) {
@@ -186,14 +207,14 @@
                  [self.nameTextField setCursorToEnd];
             }
            
-            [self.createdByTextField setAnimation:[TMAnimations fadeWithDuration:duration fromValue:1 toValue:0] forKey:@"opacity"];
+            [self.statusTextField setAnimation:[TMAnimations fadeWithDuration:duration fromValue:1 toValue:0] forKey:@"opacity"];
             [self.nameLiveView setAnimation:[TMAnimations fadeWithDuration:duration fromValue:0 toValue:1] forKey:@"opacity"];
         }
             break;
             
         case ChatInfoViewControllerNormal: {
             [self.nameTextField setEditable:NO];
-            [self.createdByTextField setAnimation:[TMAnimations fadeWithDuration:duration fromValue:0 toValue:1] forKey:@"opacity"];
+            [self.statusTextField setAnimation:[TMAnimations fadeWithDuration:duration fromValue:0 toValue:1] forKey:@"opacity"];
             [self.nameLiveView setAnimation:[TMAnimations fadeWithDuration:duration fromValue:1 toValue:0] forKey:@"opacity"];
 
         }
@@ -218,7 +239,11 @@
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(178, self.bounds.size.height - 44   - self.nameTextField.bounds.size.height, self.bounds.size.width - 178 - 30, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 47   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
+    
+    
+    [self.statusTextField sizeToFit];
+    [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
 }
 
 - (void)setController:(ChatInfoViewController *)controller {
@@ -231,6 +256,8 @@
     
     TGChat *chat = self.controller.chat;
     
+    [self.statusTextField setChat:chat];
+    
     self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     if(!self.fullChat) {
         DLog(@"full chat is not loading");
@@ -242,23 +269,18 @@
     [self.avatarImageView setChat:chat];
     [self.avatarImageView rebuild];
     
-    [self.nameTextField setChat:chat];
+   
     
     [_mediaView setConversation:chat.dialog];
     [self.sharedMediaButton setConversation:chat.dialog];
     
-    NSMutableAttributedString *createdByAttributedString = [[NSMutableAttributedString alloc] init];
-    [createdByAttributedString appendString:NSLocalizedString(@"Profile.CreatedBy", nil) withColor:NSColorFromRGB(0xa1a1a1)];
-    TGUser *user = [[UsersManager sharedManager] find:self.fullChat.participants.admin_id];
-    NSRange range = [createdByAttributedString appendString:user.fullName withColor:NSColorFromRGB(0xa1a1a1)];
-    [createdByAttributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:range];
-    [createdByAttributedString setFont:[NSFont fontWithName:@"Helvetica-Light" size:13] forRange:createdByAttributedString.range];
-    [self.createdByTextField setAttributedStringValue:createdByAttributedString];
-    [self.createdByTextField sizeToFit];
-    [self.createdByTextField setFrameOrigin:NSMakePoint(self.nameTextField.frame.origin.x, self.nameTextField.frame.origin.y - self.createdByTextField.bounds.size.height - 3)];
+    
+    [self.nameTextField setChat:chat];
     
     BOOL isMute = chat.dialog.isMute;
-    [self.notificationView.switchControl setOn:!isMute animated:YES];
+    
+    [self.notificationSwitcher setOn:!isMute animated:NO];
+    [self TMNameTextFieldDidChanged:self.nameTextField];
 }
 
 

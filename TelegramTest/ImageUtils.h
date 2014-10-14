@@ -100,6 +100,7 @@ CACHE_IMAGE(BroadcastAvatarIcon)
 CACHE_IMAGE(TelegramNotifications)
 CACHE_IMAGE(newConversationBroadcast)
 CACHE_IMAGE(PlayButtonBig)
+CACHE_IMAGE(ArrowWhite)
 @interface ImageUtils : NSObject
 
 
@@ -122,4 +123,8 @@ NSSize resizeToMaxCorner(NSSize from, float size);
 NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize);
 
 NSImage *TGIdenticonImage(NSData *data, CGSize size);
+
+NSImageView *imageViewWithImage(NSImage *image);
+
+
 @end
