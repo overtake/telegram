@@ -155,6 +155,10 @@ static const int bottomOffset = 58;
 
 }
 
+-(void)showUserSettings {
+    [self.tabController setSelectedIndex:2];
+}
+
 
 -(void)setUnreadCount:(int)count {
     [self.tabController setUnreadCount:count];
@@ -194,65 +198,6 @@ static const int bottomOffset = 58;
     return self.searchTextField;
 }
 
-- (void) onWriteMessageButtonClick {
-    [self showNewConversationPopover:NewConversationActionWrite];
-}
-
-- (IBAction)newMessage:(id)sender {
-    [self showNewConversationPopover:NewConversationActionWrite];
-}
-
-- (IBAction)newGroup:(id)sender {
-    [self showNewConversationPopover:NewConversationActionCreateGroup];
-}
-
-- (IBAction)newSecretChat:(id)sender {
-    [self showNewConversationPopover:NewConversationActionCreateSecretChat];
-}
-
-- (void)showNewConversationPopover:(NewConversationAction)action {
-    [self showNewConversationPopover:action toButton:self.topButton];
-}
-
--(void)showNewConversationPopover:(NewConversationAction)action toButton:(id)button {
-    [self showNewConversationPopover:action filter:nil target:nil selector:nil toButton:button title:NSLocalizedString(@"Group.AddMembers", nil)];
-}
-
-- (void)showNewConversationPopover:(NewConversationAction)action filter:(NSArray *)filter target:(id)target selector:(SEL)selector toButton:(id)button title:(NSString *)title {
-    
-    if(!self.popover.isShown) {
-        
-        NewConversationViewController *controller = [[NewConversationViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, action == NewConversationActionChoosePeople ? 400 : 500)];
-        [controller setCurrentAction:action];
-        
-        controller.filter = filter;
-        controller.chooseSelector = selector;
-        controller.chooseTarget = target;
-        [controller setChooseButtonTitle:title];
-        
-        self.popover = [[TMPopover alloc] initWithViewController:controller];
-        [self.popover showRelativeToView:button];
-
-        
-    } else {
-        NewConversationViewController *controller = (NewConversationViewController *)self.popover.contentViewController;
-        if([controller isKindOfClass:[NewConversationViewController class]]) {
-            
-            if(action == NewConversationActionWrite) {
-                [controller actionGoBack];
-            }
-            if(action == NewConversationActionCreateSecretChat) {
-                [controller actionCreateSecretChat];
-            }
-            
-            if(action == NewConversationActionCreateGroup) {
-                [controller actionCreateChat];
-            }
-        }
-    }
-    
-    
-}
 
 - (void) dealloc {
     [Notification removeObserver:self];

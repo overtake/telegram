@@ -297,6 +297,11 @@ typedef enum {
         
     }
     
+    if([controller isKindOfClass:[AboutViewController class]]) {
+        [self selectController:self.about];
+        return;
+    }
+    
     [self selectController:nil];
 }
 
@@ -380,7 +385,6 @@ typedef enum {
     [self.scrollView.documentView setFrameSize:NSMakeSize(NSWidth(self.scrollView.frame), height)];
     
 }
-
 
 
 -(NSView *)defaultContainerView {
@@ -568,8 +572,9 @@ typedef enum {
             return;
         }
         
-       // [self selectController:self.about];
+        // [self selectController:self.blockedUsers];
         
+        [[Telegram rightViewController] showAbout];
     }];
     
     
@@ -789,7 +794,9 @@ typedef enum {
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-      [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
+    [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
+    
+    [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
 }
 
 @end

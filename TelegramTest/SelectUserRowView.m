@@ -15,8 +15,8 @@
 
 @interface SelectUserRowView ()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
-@property (nonatomic, strong) TMTextField *titleTextField;
-@property (nonatomic,strong) TMTextField *lastSeenTextField;
+@property (nonatomic, strong) TMNameTextField *titleTextField;
+@property (nonatomic,strong) TMStatusTextField *lastSeenTextField;
 @property (nonatomic, strong) BTRButton *selectButton;
 
 -(SelectUserItem *)rowItem;
@@ -38,24 +38,28 @@ static int offsetEditable = 30;
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
-        self.titleTextField = [[TMTextField alloc] init];
+        self.titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
         [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
+        
+        [self.titleTextField setSelector:@selector(chatInfoTitle)];
         [self addSubview:self.titleTextField];
         
         
         
-        self.lastSeenTextField = [[TMTextField alloc] init];
+        self.lastSeenTextField = [[TMStatusTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
         [self.lastSeenTextField setBackgroundColor:[NSColor clearColor]];
         [self.lastSeenTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
+        [self.lastSeenTextField setSelector:@selector(statusForGroupInfo)];
+        
         [self addSubview:self.lastSeenTextField];
         
         
@@ -86,11 +90,14 @@ static int offsetEditable = 30;
     
     [super redrawRow];
     
-    [self.titleTextField setAttributedStringValue:[self rowItem].title];
-    [self.lastSeenTextField setAttributedStringValue:[self rowItem].lastSeen];
+    [self.titleTextField setUser:[self rowItem].contact.user];
+    
+   // [self.titleTextField setAttributedStringValue:[self rowItem].title];
+    
+    [self.lastSeenTextField setUser:[self rowItem].contact.user];
 
     
-     [self setSelected:[[self rowItem] isSelected]];
+    [self setSelected:[[self rowItem] isSelected]];
     
     [self.titleTextField sizeToFit];
     

@@ -72,7 +72,7 @@
     [[NewContactsManager sharedManager] syncContacts:nil];
 }
 - (IBAction)openSettings:(id)sender {
-    [[Telegram settingsWindowController] showWindow:sender];
+    [[Telegram rightViewController] showGeneralSettings];
     
 }
 
@@ -127,7 +127,7 @@
 }
 
 - (IBAction)settings:(id)sender {
-    [[Telegram rightViewController] showUserInfoPage:[UsersManager currentUser]];
+    [[Telegram leftViewController] showUserSettings];
 }
 - (IBAction)showMedia:(id)sender {
      [[TMMediaController getCurrentController] show:nil];
@@ -177,12 +177,7 @@
 
 
 - (IBAction)aboutAction:(id)sender {
-    
-    if(!self.aboutViewController) {
-        self.aboutViewController = [[AboutViewControllerWindowController alloc] initWithWindowNibName:@"AboutViewControllerWindowController"];
-    }
-    
-    [self.aboutViewController showWindow:self];
+    [[Telegram rightViewController] showAbout];
 }
 
 - (BOOL)closeAllPopovers {

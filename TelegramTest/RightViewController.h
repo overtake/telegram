@@ -21,6 +21,7 @@
 #import "BlockedUsersViewController.h"
 #import "GeneralSettingsViewController.h"
 #import "SettingsSecurityViewController.h"
+#import "AboutViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -35,6 +36,7 @@
 @property (nonatomic, strong) BlockedUsersViewController *blockedUsersViewController;
 @property (nonatomic, strong) GeneralSettingsViewController *generalSettingsViewController;
 @property (nonatomic, strong) SettingsSecurityViewController *settingsSecurityViewController;
+@property (nonatomic, strong) AboutViewController *aboutViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -64,5 +66,6 @@
 - (void)showBlockedUsers;
 - (void)showGeneralSettings;
 - (void)showSecuritySettings;
+- (void)showAbout;
 
 @end

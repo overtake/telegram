@@ -499,8 +499,6 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
         [filter addObject:@(contact.user_id)];
     }
     
-    
-    [[Telegram leftViewController] showNewConversationPopover:NewConversationActionChoosePeople filter:filter target:self.blocked_table_view selector:@selector(addBlockedUsers:) toButton:self.add_to_blocks title:NSLocalizedString(@"Settings.BlockUsers", nil)];
 }
 
 

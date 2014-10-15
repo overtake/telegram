@@ -132,7 +132,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffd) forColor:BLUE_UI_COLOR];
 
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
     NSMutableAttributedString *dialogEncryptedTitleAttributedString = [[NSMutableAttributedString alloc] init];
@@ -141,7 +141,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     [dialogEncryptedTitleAttributedString appendString:fullNameOrPhone withColor:DARK_GREEN];
     [dialogEncryptedTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_GREEN];
-    [dialogEncryptedTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:14] forRange:dialogEncryptedTitleAttributedString.range];
+    [dialogEncryptedTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogEncryptedTitleAttributedString.range];
     [self setDIALOGTITLEENCRYPTED:dialogEncryptedTitleAttributedString];
     
     
@@ -149,7 +149,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     [chatInfoTitleAttributedString appendString:fullName withColor:NSColorFromRGB(0x222222)];
     [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xaaaaaa) forColor:NSColorFromRGB(0x222222)];
-    [chatInfoTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:12.5] forRange:chatInfoTitleAttributedString.range];
+    [chatInfoTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:chatInfoTitleAttributedString.range];
     [self setCHATINFOTITLE:chatInfoTitleAttributedString];
     
     

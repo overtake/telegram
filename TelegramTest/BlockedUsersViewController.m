@@ -24,7 +24,7 @@
     _centerTextField = [TMTextField defaultTextField];
     [self.centerTextField setAlignment:NSCenterTextAlignment];
     [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
     [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
     [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
     [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -159,6 +159,7 @@
    
     } else {
         [self.tableView removeItem:filter[0] tableRedraw:YES];
+        [self.tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
     }
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;

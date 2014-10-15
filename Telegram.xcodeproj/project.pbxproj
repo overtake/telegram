@@ -355,6 +355,7 @@
 		C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */; };
 		C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */; };
 		C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */; };
+		C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13819EE9DF9007F836A /* AboutViewController.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1334,6 +1335,8 @@
 		C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNetworkWorker.m; sourceTree = "<group>"; };
 		C2689F6D18B3B96300272CD4 /* TGUpdateMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateMessageService.h; sourceTree = "<group>"; };
 		C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateMessageService.m; sourceTree = "<group>"; };
+		C268C13719EE9DF9007F836A /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		C268C13819EE9DF9007F836A /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2639,6 +2642,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C268C13219EE9DE6007F836A /* about */,
 				C297955219EC29CA00BE893E /* general */,
 				C2C2491819EBC680006BB1AB /* BlockedUsers */,
 				C235365219C8B40F0044978E /* exportcrard */,
@@ -2900,6 +2904,15 @@
 				C25F91EF197D374F006868F3 /* TimeObserver.m */,
 			);
 			name = test_utilites;
+			sourceTree = "<group>";
+		};
+		C268C13219EE9DE6007F836A /* about */ = {
+			isa = PBXGroup;
+			children = (
+				C268C13719EE9DF9007F836A /* AboutViewController.h */,
+				C268C13819EE9DF9007F836A /* AboutViewController.m */,
+			);
+			name = about;
 			sourceTree = "<group>";
 		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
@@ -4474,6 +4487,7 @@
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
 				0AB7927E182587E500B3E2A1 /* UploadOperation.m in Sources */,
 				0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */,
+				C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */,
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
 				0A59068718AA32C8002ED7BA /* BTRControlAction.m in Sources */,

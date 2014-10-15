@@ -138,6 +138,8 @@
     self.generalSettingsViewController = [[GeneralSettingsViewController alloc] initWithFrame:self.view.bounds];
     self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:self.view.bounds];
     
+    self.aboutViewController = [[AboutViewController alloc] initWithFrame:self.view.bounds];
+    
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
@@ -577,6 +579,16 @@
     
     
     [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:YES];
+}
+
+- (void)showAbout {
+    if(self.navigationViewController.currentController == self.aboutViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.aboutViewController animated:YES];
 }
 
 @end
