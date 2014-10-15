@@ -29,23 +29,37 @@
     
     NSString *message = [object.message trim];
     
+    // check for /me
+    BOOL isMe = NO;
+    if ([message length] > 5 && [[message substringToIndex:4] isEqualTo:@"/me "]) {
+        isMe = YES;
+        NSLog(@"It's a-me, Mario!");
+        message = [NSString stringWithFormat:@"%@ %@", self.user.first_name, [[message substringFromIndex:4] trim]];
+    }
+
+    NSColor *color;
+    NSString *font = @"HelveticaNeue";
+    if (isMe) {
+        color = NSColorFromRGB(0x666666);
+        font = @"HelveticaNeue-MediumItalic";
+    } else {
+        color = NSColorFromRGB(0x060606);
+    }
     
-    NSRange range = [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+    NSRange range = [self.textAttributed appendString:message withColor:color];
+    [self.textAttributed setFont:[NSFont fontWithName:font size:13] forRange:range];
     [self.textAttributed detectAndAddLinks];
 
  //   [self.textAttributed addAttribute:NSBackgroundColorAttributeName value:NSColorFromRGB(0xcfcfcf) range:self.textAttributed.range];
     
   //  [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:self.textAttributed.range];
-    
-    
+         
     NSString *fullname = self.user.fullName;
     
 //    self.headerAttributed = [[NSMutableAttributedString alloc] init];
     
     self.nameAttritutedString = [[NSMutableAttributedString alloc] init];
     NSRange rangeHeader =  [self.nameAttritutedString appendString:fullname ? fullname : NSLocalizedString(@"User.Deleted", nil) withColor:[MessagesUtils colorForUserId:self.message.from_id]];
-    
     
     [self.nameAttritutedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:11] forRange:rangeHeader];
     
