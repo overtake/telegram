@@ -49,7 +49,7 @@
     self.leftView = view;
     [self.leftViewBlock setFrameSize:NSMakeSize(self.leftView.bounds.size.width, self.leftView.bounds.size.height)];
     [self.leftViewBlock addSubview:self.leftView];
-    [self.leftViewBlock setFrameOrigin:NSMakePoint(15, (self.bounds.size.height - view.bounds.size.height) /2)];
+    [self.leftViewBlock setFrameOrigin:NSMakePoint(15, roundf((self.bounds.size.height - view.bounds.size.height) /2))];
     [self buildSizes];
 }
 
@@ -190,7 +190,7 @@
         
         self.rightView = newRightView;
         [self.rightViewBlock addSubview:self.rightView];
-        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - newRightView.bounds.size.width - 15, (self.bounds.size.height - newRightView.bounds.size.height) /2)];
+        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - newRightView.bounds.size.width - 15, roundf((self.bounds.size.height - newRightView.bounds.size.height) /2))];
         [self.rightViewBlock setFrameSize:newRightView.bounds.size];
         [self buildSizes];
     }

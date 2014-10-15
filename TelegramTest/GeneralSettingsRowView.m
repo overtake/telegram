@@ -79,9 +79,9 @@
         
 
         
-        self.nextImage = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_select().size.width, image_select().size.height)];
+        self.nextImage = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_ArrowGrey().size.width, image_ArrowGrey().size.height)];
         
-        self.nextImage.image = image_select();
+        self.nextImage.image = image_ArrowGrey();
         
         [self addSubview:self.nextImage];
         [self addSubview:self.descriptionField];
@@ -150,7 +150,7 @@
     
     [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.switchControl.frame), 10)];
     
-    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_select().size.width, 13)];
+    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_ArrowGrey().size.width, 14)];
 }
 
 

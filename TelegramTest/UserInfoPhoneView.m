@@ -38,14 +38,14 @@
     
     [paragraphStyle setAlignment:NSLeftTextAlignment];
         
-    NSAttributedString *phoneAttributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Light" size:15], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *phoneAttributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Light" size:14], NSParagraphStyleAttributeName: paragraphStyle}];
     
     NSSize size = [phoneAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.textView textStorage] setAttributedString:phoneAttributedString];
     [self.textView setTextContainerInset:NSMakeSize(-3, 0)];
     [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, size.height)];
-    [self.textView setFrameOrigin:NSMakePoint(0, 12)];
+    [self.textView setFrameOrigin:NSMakePoint(0, 10)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -53,7 +53,7 @@
 	
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Profile.MobilePhone", nil) attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
     
-    [attributedString drawAtPoint:NSMakePoint(0, 35)];
+    [attributedString drawAtPoint:NSMakePoint(0, 31)];
     
     [NSColorFromRGB(0xe6e6e6) set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));

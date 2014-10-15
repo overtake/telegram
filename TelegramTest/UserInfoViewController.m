@@ -106,7 +106,7 @@
         _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
         
         [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
-        [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
         [_containerView addSubview:_avatarImageView];
         
         weakify();

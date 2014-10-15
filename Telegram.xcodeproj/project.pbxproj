@@ -356,6 +356,7 @@
 		C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */; };
 		C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */; };
 		C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13819EE9DF9007F836A /* AboutViewController.m */; };
+		C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13C19EEB580007F836A /* UserNameViewController.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1337,6 +1338,8 @@
 		C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateMessageService.m; sourceTree = "<group>"; };
 		C268C13719EE9DF9007F836A /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		C268C13819EE9DF9007F836A /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		C268C13B19EEB580007F836A /* UserNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNameViewController.h; sourceTree = "<group>"; };
+		C268C13C19EEB580007F836A /* UserNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserNameViewController.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2642,6 +2645,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C268C13A19EEB56C007F836A /* username */,
 				C268C13219EE9DE6007F836A /* about */,
 				C297955219EC29CA00BE893E /* general */,
 				C2C2491819EBC680006BB1AB /* BlockedUsers */,
@@ -2913,6 +2917,15 @@
 				C268C13819EE9DF9007F836A /* AboutViewController.m */,
 			);
 			name = about;
+			sourceTree = "<group>";
+		};
+		C268C13A19EEB56C007F836A /* username */ = {
+			isa = PBXGroup;
+			children = (
+				C268C13B19EEB580007F836A /* UserNameViewController.h */,
+				C268C13C19EEB580007F836A /* UserNameViewController.m */,
+			);
+			name = username;
 			sourceTree = "<group>";
 		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
@@ -4340,6 +4353,7 @@
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
 				C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */,
+				C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */,
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,
 				CEDAEB751881AF85006189A2 /* YapDatabaseConnection.m in Sources */,

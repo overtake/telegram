@@ -139,6 +139,7 @@
     self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:self.view.bounds];
     
     self.aboutViewController = [[AboutViewController alloc] initWithFrame:self.view.bounds];
+    self.userNameViewController = [[UserNameViewController alloc] initWithFrame:self.view.bounds];
     
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
@@ -473,7 +474,6 @@
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == broadcast.n_id)
         return;
     
-    
     [self hideModalView:YES animation:NO];
     
     [self.broadcastInfoViewController setBroadcast:broadcast];
@@ -590,5 +590,16 @@
     
     [self.navigationViewController pushViewController:self.aboutViewController animated:YES];
 }
+
+- (void)showUserNameController {
+    if(self.navigationViewController.currentController == self.userNameViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.userNameViewController animated:YES];
+}
+
 
 @end

@@ -107,7 +107,7 @@ CACHE_IMAGE(VoiceMicHighlighted2)
 CACHE_IMAGE(TelegramNotifications)
 CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
-
+CACHE_IMAGE(ArrowGrey)
 
 @implementation ImageUtils
 

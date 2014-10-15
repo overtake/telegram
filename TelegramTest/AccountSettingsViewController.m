@@ -14,6 +14,25 @@
 #import "UserInfoShortTextEditView.h"
 #import "UserCardViewController.h"
 #import "TGPeer+Extensions.h"
+
+@interface AccountScrollView : NSScrollView
+
+@end
+
+@implementation AccountScrollView
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    [DIALOG_BORDER_COLOR setFill];
+    NSRectFill(NSMakeRect(NSMaxX(dirtyRect), 0, DIALOG_BORDER_WIDTH, NSHeight(dirtyRect)));
+}
+
+
+@end
+
+
+
 @interface ExView : TMView
 
 @end
@@ -169,11 +188,14 @@ typedef enum {
     [self.view addSubview:topContainer];
     
 
-    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 50, NSWidth(self.frameInit) - DIALOG_BORDER_WIDTH, NSHeight(self.frameInit) - 50)];
+    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 50, NSWidth(self.frameInit), NSHeight(self.frameInit) - 50)];
     
     self.scrollView.autoresizesSubviews = YES;
     self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     [self.scrollView setDrawsBackground:YES];
+    
+  
+    
     
     
     
@@ -183,13 +205,22 @@ typedef enum {
     FlippedView *container = [[FlippedView alloc] initWithFrame:self.scrollView.bounds];
     
     
+    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(NSWidth(self.scrollView.frame) - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(self.scrollView.frame))];
+    
+    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    
+    separator.autoresizingMask = NSViewHeightSizable | NSViewMinXMargin;
+    
+    [container addSubview:separator];
+    
+    
     [container setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable ];
     
     [self.view addSubview:self.scrollView];
     
     self.avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
     
-    [self.avatarImageView setFrameSize:NSMakeSize(70, 70)];
+    [self.avatarImageView setFrameSize:NSMakeSize(66, 66)];
     
     
     int currentY = 20;
@@ -198,10 +229,10 @@ typedef enum {
     [container addSubview:self.avatarImageView];
     
     
-    currentY+=10;
+    currentY+=12;
    
     
-    self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(100, currentY, NSWidth(self.view.frame) - 115 , 20)];
+    self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(100, currentY, NSWidth(self.view.frame) - 115 , 22)];
     
     [self.nameTextField setSelector:@selector(profileTitle)];
     
@@ -210,7 +241,7 @@ typedef enum {
     
     [container addSubview:self.nameTextField];
     
-    currentY+=20;
+    currentY+=24;
     
     self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(100, currentY, NSWidth(self.view.frame) - 115, 20)];
     
@@ -244,7 +275,7 @@ typedef enum {
     [self.avatarImageView setUser:[UsersManager currentUser]];
     
     
-    currentY+=48;
+    currentY+=50;
     
     self.defaultView = [self defaultContainerView];
     
@@ -299,6 +330,11 @@ typedef enum {
     
     if([controller isKindOfClass:[AboutViewController class]]) {
         [self selectController:self.about];
+        return;
+    }
+    
+    if([controller isKindOfClass:[UserNameViewController class]]) {
+        [self selectController:self.userName];
         return;
     }
     
@@ -396,28 +432,6 @@ typedef enum {
     
     container.wantsLayer = YES;
     
-   // container.backgroundColor = [NSColor redColor];
-    
-//    self.updateProfileButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.EditProfile",nil) tapBlock:^{
-//        
-//        [self enterClick];
-//        
-//    }];
-//    
-//   
-//    
-//    [self.updateProfileButton setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
-//    
-//    //   [self.updateProfileButton.textButton setAlignment:NSCenterTextAlignment];
-//    [self.updateProfileButton.textButton setFrameSize:NSMakeSize(NSWidth(self.updateProfileButton.frame), NSHeight(self.updateProfileButton.textButton.frame))];
-//    [self.updateProfileButton.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.updateProfileButton.textButton.frame))];
-//    
-//    self.updateProfileButton.autoresizingMask = self.updateProfileButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
-//    
-//    [container addSubview:self.updateProfileButton];
-//
-//    
-//     currentY+=42;
     
     self.updatePhotoButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.SetProfilePhoto",nil) tapBlock:^{
         [self.avatarImageView showUpdateChatPhotoBox];
@@ -426,7 +440,7 @@ typedef enum {
    
     
     
-    [self.updatePhotoButton setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.updatePhotoButton setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     // [self.updatePhotoButton.textButton setAlignment:NSCenterTextAlignment];
     [self.updatePhotoButton.textButton setFrameSize:NSMakeSize(NSWidth(self.updatePhotoButton.frame), NSHeight(self.updatePhotoButton.textButton.frame))];
@@ -435,51 +449,7 @@ typedef enum {
     
     [container addSubview:self.updatePhotoButton];
     
-//     currentY+=42;
-//    
-//    
-//    
-//    self.exportCard = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ExportCard",nil) tapBlock:^{
-//        
-//        NSRect rect = self.exportCard.bounds;
-//        
-//        rect.origin.y-=10;
-//
-//        
-//        [self.userCardViewController showWithType:UserCardViewTypeExport relativeRect:rect ofView:self.exportCard preferredEdge:CGRectMinYEdge];
-//    
-//    
-//    }];
-//    
-//    [self.exportCard setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
-//    
-//    [self.exportCard.textButton setFrameSize:NSMakeSize(NSWidth(self.exportCard.frame), NSHeight(self.exportCard.textButton.frame))];
-//    [self.exportCard.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.exportCard.textButton.frame))];
-//    
-//    
-//    [container addSubview:self.exportCard];
-    
-    
-//    currentY+=42;
-//    
-//    
-//    self.importCard = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportCard",nil) tapBlock:^{
-//        
-//    }];
-//    
-//    container.wantsLayer = YES;
-//    
-//    
-//    
-//    [self.importCard setFrame:NSMakeRect(20, currentY, NSWidth(self.view.frame) - 30, 60)];
-//    
-//    [self.importCard.textButton setFrameSize:NSMakeSize(NSWidth(self.importCard.frame), NSHeight(self.importCard.textButton.frame))];
-//    [self.importCard.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.importCard.textButton.frame))];
-//    
-//    
-//    [container addSubview:self.importCard];
-    
-     currentY+=57;
+     currentY+=59;
     
     
     self.generalSettings = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.General",nil) tapBlock:^{
@@ -497,7 +467,7 @@ typedef enum {
     }];
     
     
-    [self.generalSettings setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.generalSettings setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.generalSettings.textButton setFrameSize:NSMakeSize(NSWidth(self.generalSettings.frame), NSHeight(self.generalSettings.textButton.frame))];
     [self.generalSettings.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.generalSettings.textButton.frame))];
@@ -507,7 +477,7 @@ typedef enum {
     
     
     
-    currentY+=42;
+    currentY+=38;
     
     self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
         
@@ -523,7 +493,7 @@ typedef enum {
     }];
    
     
-    [self.blockedUsers setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.blockedUsers setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.blockedUsers.textButton setFrameSize:NSMakeSize(NSWidth(self.blockedUsers.frame), NSHeight(self.blockedUsers.textButton.frame))];
     [self.blockedUsers.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.blockedUsers.textButton.frame))];
@@ -532,7 +502,7 @@ typedef enum {
     [container addSubview:self.blockedUsers];
     
     
-    currentY+=42;
+    currentY+=38;
     
     
     self.userName = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.UserName",nil) tapBlock:^{
@@ -545,12 +515,12 @@ typedef enum {
         
        //  [self selectController:self.userName];
         
-        [[Telegram rightViewController] showGeneralSettings];
+        [[Telegram rightViewController] showUserNameController];
     }];
     
    
     
-    [self.userName setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.userName setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.userName.textButton setFrameSize:NSMakeSize(NSWidth(self.userName.frame), NSHeight(self.userName.textButton.frame))];
     [self.userName.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.userName.textButton.frame))];
@@ -560,7 +530,7 @@ typedef enum {
     
     
     
-    currentY+=65;
+    currentY+=75;
     
     
     
@@ -579,7 +549,7 @@ typedef enum {
     
     
     
-    [self.about setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.about setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.about.textButton setFrameSize:NSMakeSize(NSWidth(self.about.frame), NSHeight(self.about.textButton.frame))];
     [self.about.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.about.textButton.frame))];
@@ -589,13 +559,13 @@ typedef enum {
     [container addSubview:self.about];
     
     
-    currentY+=42;
+    currentY+=38;
     
     self.faq = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.FAQ",nil) tapBlock:^{
         open_link(@"https://telegram.org/faq");
     }];
     
-    [self.faq setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.faq setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.faq.textButton setFrameSize:NSMakeSize(NSWidth(self.faq.frame), NSHeight(self.faq.textButton.frame))];
     [self.faq.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.faq.textButton.frame))];
@@ -604,7 +574,7 @@ typedef enum {
     
     [container addSubview:self.faq];
     
-    currentY+=42;
+    currentY+=38;
     
     self.askQuestion = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.AskQuestion",nil) tapBlock:^{
         
@@ -662,7 +632,7 @@ typedef enum {
     
     
     
-    [self.askQuestion setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 60)];
+    [self.askQuestion setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     [self.askQuestion.textButton setFrameSize:NSMakeSize(NSWidth(self.askQuestion.frame), NSHeight(self.askQuestion.textButton.frame))];
     [self.askQuestion.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.askQuestion.textButton.frame))];
@@ -682,12 +652,12 @@ typedef enum {
     [container setFrameSize:NSMakeSize(NSWidth(container.frame), currentY+50)];
     
     
-    self.userName.rightContainer = imageViewWithImage(image_select());
-    self.blockedUsers.rightContainer = imageViewWithImage(image_select());
-    self.generalSettings.rightContainer = imageViewWithImage(image_select());
-    self.about.rightContainer = imageViewWithImage(image_select());
-    self.faq.rightContainer = imageViewWithImage(image_select());
-    self.askQuestion.rightContainer = imageViewWithImage(image_select());
+    self.userName.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.blockedUsers.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.generalSettings.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.about.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.faq.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.askQuestion.rightContainer = imageViewWithImage(image_ArrowGrey());
     
     self.userName.rightContainerOffset = NSMakePoint(-10, 0);
     self.blockedUsers.rightContainerOffset = NSMakePoint(-10, 0);
@@ -710,7 +680,7 @@ typedef enum {
     
     if(self.selectedController != selectController) {
         [self.selectedController.textButton setTextColor:DARK_BLACK];
-        self.selectedController.rightContainer = imageViewWithImage(image_select());
+        self.selectedController.rightContainer = imageViewWithImage(image_ArrowGrey());
         self.selectedController.isSelected = NO;
         
         
@@ -756,7 +726,7 @@ typedef enum {
     
     self.firstNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
     [self.firstNameView setFrameOrigin:NSMakePoint(10, offsetY)];
-    [self.firstNameView setFrameSize:NSMakeSize(self.frameInit.size.width-20, 42)];
+    [self.firstNameView setFrameSize:NSMakeSize(self.frameInit.size.width-20, 38)];
     
     [container addSubview:self.firstNameView];
     
@@ -764,7 +734,7 @@ typedef enum {
     
     self.lastNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
     [self.lastNameView setFrameOrigin:NSMakePoint(10, offsetY + self.firstNameView.bounds.size.height)];
-    [self.lastNameView setFrameSize:NSMakeSize(self.frameInit.size.width-20, 42)];
+    [self.lastNameView setFrameSize:NSMakeSize(self.frameInit.size.width-20, 38)];
     [container addSubview:self.lastNameView];
     
     //        [self.firstNameView setNextResponder:self.lastNameView];
@@ -778,8 +748,8 @@ typedef enum {
     [self.lastNameView.textView setTarget:self];
     [self.lastNameView.textView setAction:@selector(enterClick)];
     
-    [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
-    [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+    [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     
     [self.firstNameView.textView setAlignment:NSLeftTextAlignment];
     [self.lastNameView.textView setAlignment:NSLeftTextAlignment];

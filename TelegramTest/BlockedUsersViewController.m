@@ -177,7 +177,7 @@
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 97 : 50;
+    return row == 0 ? 103 : 50;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;

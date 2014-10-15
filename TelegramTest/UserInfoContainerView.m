@@ -101,7 +101,7 @@
         self.sendMessageButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SendMessage", nil) tapBlock:^{
             [[Telegram sharedInstance] showMessagesWidthUser:weakSelf.user sender:weakSelf];
         }];
-        [self.sendMessageButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.sendMessageButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sendMessageButton];
         
 
@@ -148,20 +148,20 @@
             [self.controller.avatarImageView showUpdateChatPhotoBox];
         }];
         
-        [self.setProfilePhotoButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.setProfilePhotoButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.setProfilePhotoButton];
         
-        [self.importContacts setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.importContacts setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.importContacts];
         
         
-        [self.shareContactButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.shareContactButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.shareContactButton];
         
-        [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sharedMediaButton];
         
-        [self.blockContact setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.blockContact setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.blockContact];
         
         
@@ -192,7 +192,7 @@
         
         
         
-        [self.encryptedKeyButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.encryptedKeyButton setFrameSize:NSMakeSize(offsetRight, 42)];
         
         [self addSubview:self.encryptedKeyButton];
         
@@ -208,20 +208,20 @@
             [menu popUpForView:weakSelf.setTTLButton withType:PopUpAlignTypeRight];
         }];
         
-        [self.setTTLButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.setTTLButton setFrameSize:NSMakeSize(offsetRight, 42)];
         
         [self addSubview:self.setTTLButton];
         
         [self addSubview:self.deleteSecretChatButton];
         
         [self.deleteSecretChatButton.textButton setTextColor:[NSColor redColor]];
-        [self.deleteSecretChatButton setFrameSize:NSMakeSize(offsetRight, 0)];
-        [self.startSecretChatButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.deleteSecretChatButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self.startSecretChatButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self.startSecretChatButton.textButton setTextColor:NSColorFromRGB(0x61ad5e)];
         [self addSubview:self.startSecretChatButton];
         
         
-        self.phoneView = [[UserInfoPhoneView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 66)];
+        self.phoneView = [[UserInfoPhoneView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
         [self addSubview:self.phoneView];
         
         
@@ -249,7 +249,7 @@
         [self.encryptedKeyButton setRightContainerOffset:NSMakePoint(-8, 3)];
         [self.setTTLButton setRightContainerOffset:NSMakePoint(0, 2)];
         
-        [self.notificationView setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.notificationView setFrameSize:NSMakeSize(offsetRight, 42)];
         
         
 
@@ -324,13 +324,13 @@
 }
 
 - (void)buildPage {
-    float offset = self.bounds.size.height - 170;
+    float offset = self.bounds.size.height - 187;
     
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
 
     if(!self.controller.isSecretProfile) {
-        offset -= 60;
+        offset -= 62;
         [self.sendMessageButton setFrameOrigin:NSMakePoint(100, offset)];
         
         [self.sendMessageButton setHidden:NO];
@@ -369,7 +369,7 @@
 
     if(self.user.type != TGUserTypeSelf && !self.controller.isSecretProfile) {
         
-         offset -= 60;
+         offset -= 62;
         
         [self.startSecretChatButton setHidden:self.controller.isSecretProfile];
         [self.startSecretChatButton setFrameOrigin:NSMakePoint(100, offset)];
@@ -380,7 +380,7 @@
     
 
     if(self.user.type != TGUserTypeSelf) {
-        offset-=60;
+        offset-=62;
         
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(100, offset)];
         
@@ -407,7 +407,7 @@
         
        
         
-        offset-=60;
+        offset-=62;
         
         [self.deleteSecretChatButton setFrameOrigin:NSMakePoint(100, offset)];
         
@@ -464,12 +464,12 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     
-    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"Helvetica" size:16], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"Helvetica" size:18], NSParagraphStyleAttributeName: paragraphStyle}];
     size = [userNameAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.nameTextView textStorage] setAttributedString:userNameAttributedString];
     [self.nameTextView setFrameSize:NSMakeSize(self.bounds.size.width - 204 - 55, size.height)];
-    [self.nameTextView setFrameOrigin:NSMakePoint(185, self.bounds.size.height - 47 - self.nameTextView.bounds.size.height)];
+    [self.nameTextView setFrameOrigin:NSMakePoint(185, self.bounds.size.height - 51 - self.nameTextView.bounds.size.height)];
     [self.nameTextView setTextContainerInset:NSMakeSize(-3, 0)];
     
     [self.statusTextField setUser:self.user];
@@ -497,7 +497,7 @@
 
 - (void)TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {
     [self.statusTextField sizeToFit];
-    [self.statusTextField setFrameOrigin:NSMakePoint(self.nameTextView.frame.origin.x, self.nameTextView.frame.origin.y - self.statusTextField.bounds.size.height - 2 )];
+    [self.statusTextField setFrameOrigin:NSMakePoint(self.nameTextView.frame.origin.x, self.nameTextView.frame.origin.y - self.statusTextField.bounds.size.height - 3 )];
 }
 
 + (NSDictionary *)attributsForInfoPlaceholderString {

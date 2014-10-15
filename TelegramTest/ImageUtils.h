@@ -101,6 +101,8 @@ CACHE_IMAGE(TelegramNotifications)
 CACHE_IMAGE(newConversationBroadcast)
 CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
+CACHE_IMAGE(ArrowGrey)
+
 @interface ImageUtils : NSObject
 
 

@@ -141,7 +141,6 @@
         [str setAlignment:NSLeftTextAlignment range:str.range];
         [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:16] forRange:str.range];
         
-//        
         [self.textView.cell setPlaceholderAttributedString:str];
         [self.textView setPlaceholderPoint:NSMakePoint(2, 0)];
         
@@ -151,28 +150,9 @@
         [self.textView becomeFirstResponder];
         
         
-//        weakify();
-//        [self.textView setDidChangedValue:^{
-//            
-//            [strongSelf setName:nil];
-//            
-//        }];
-        
-        
         [self setName:self.textView.stringValue];
-//        
-//        self.textView.singleLineMode = YES;
-//        
-//        [self setName:[self.textView.placeholderStr substringToIndex:1]];
-        
-
-       
-      //  self.textView.delegate = [Telegram rightViewController].composeChatCreateViewController;
         
         [self addSubview:self.textView];
-        
-      //  [self addSubview:separator];
-        
         
         self.chat = [TL_chat createWithN_id:-1 title:@"" photo:[TL_chatPhotoEmpty create] participants_count:0 date:0 left:NO version:1];
         

@@ -43,7 +43,7 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         self.textField = [TMTextField defaultTextField];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:12]];
+        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
         [self.textField setTextColor:NSColorFromRGB(0x999999)];
         
         [self.textField setFrameOrigin:NSMakePoint(100, 0)];

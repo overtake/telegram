@@ -311,7 +311,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa1a1a1)];
         }
         
-        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:12] forRange:range];
+        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:12.5] forRange:range];
     }
     return str;
 }
@@ -370,7 +370,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0x999999)];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5f] forRange:range];
+        [str setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:range];
         
         [str setAlignment:NSLeftTextAlignment range:range];
     }

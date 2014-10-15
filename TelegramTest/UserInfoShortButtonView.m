@@ -89,7 +89,7 @@
 }
 
 - (void)updateRightControllerFrame {
-      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + _rightContainerOffset.x - 2, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + _rightContainerOffset.y, _currentRightController.frame.size.width + 2, _currentRightController.frame.size.height + 2 );
+      _rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - _currentRightController.frame.size.width) + _rightContainerOffset.x - 2, roundf((self.frame.size.height-_currentRightController.frame.size.height) /2) + _rightContainerOffset.y - 2, _currentRightController.frame.size.width + 2, _currentRightController.frame.size.height + 2 );
 }
 
 -(void)setLocked:(BOOL)locked {
@@ -146,7 +146,7 @@
         self.tapBlock();
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.backgroundColor = NSColorFromRGB(0xffffff);
+        self.backgroundColor = [NSColor clearColor];
         [self setNeedsDisplay:YES];
     });
     
@@ -155,7 +155,7 @@
 
 - (void)mouseUp:(NSEvent *)theEvent {
     
-    self.backgroundColor = NSColorFromRGB(0xffffff);
+    self.backgroundColor = [NSColor clearColor];
     [self setNeedsDisplay:YES];
     [super mouseUp:theEvent];
     
@@ -172,7 +172,6 @@
 
 
 - (void)setFrameSize:(NSSize)newSize {
-    newSize.height = 42;
     [super setFrameSize:newSize];
     
     [self setRightContainer:self.currentRightController];

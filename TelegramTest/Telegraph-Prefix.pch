@@ -116,9 +116,9 @@
 
 #define DARK_BLACK NSColorFromRGB(0x222222)
 
-#define DIALOG_BORDER_COLOR NSColorFromRGB(0xf4f4f4)
+#define DIALOG_BORDER_COLOR NSColorFromRGB(0xeaeaea)
 //#define DIALOG_BORDER_COLOR [NSColor redColor]
-#define DIALOG_BORDER_WIDTH 2
+#define DIALOG_BORDER_WIDTH 1
 
 
 #define weakify() __block __typeof(&*self)strongSelf = self;

@@ -13,7 +13,7 @@
 - (id)initWithFrame:(NSRect)frame  {
     self = [super initWithFrame:frame];
     if (self) {
-        self.textView = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width - 10, 26)];
+        self.textView = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width - 10, 24)];
         [self.textView setBordered:NO];
         [self.textView setFocusRingType:NSFocusRingTypeNone];
         [self.textView setAutoresizingMask:NSViewWidthSizable];
@@ -34,7 +34,9 @@
     [super setFrameSize:newSize];
 }
 
-
+-(BOOL)becomeFirstResponder {
+    return [self.textView becomeFirstResponder];
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];

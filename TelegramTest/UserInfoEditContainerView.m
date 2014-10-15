@@ -25,7 +25,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        float offsetY = self.bounds.size.height - 60;
+        float offsetY = self.bounds.size.height - 65;
         float offsetRight = self.bounds.size.width - 200;
         float width = self.bounds.size.width - 285;
         
@@ -55,7 +55,7 @@
         }];
         self.clearChatHistoryButton.textButton.textColor = NSColorFromRGB(0xe07676);
         [self addSubview:self.clearChatHistoryButton];
-        [self.clearChatHistoryButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.clearChatHistoryButton setFrameSize:NSMakeSize(offsetRight, 42)];
 
 
         self.deleteContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.DeleteContact", nil) tapBlock:^{
@@ -65,7 +65,7 @@
         }];
         self.deleteContactButton.textButton.textColor = NSColorFromRGB(0xe07676);
         [self addSubview:self.deleteContactButton];
-        [self.deleteContactButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.deleteContactButton setFrameSize:NSMakeSize(offsetRight, 42)];
 
 
 

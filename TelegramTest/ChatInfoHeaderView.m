@@ -101,7 +101,7 @@
         _setGroupPhotoButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SetGroupPhoto", nil) tapBlock:^{
             [self.avatarImageView showUpdateChatPhotoBox];
         }];
-        [self.setGroupPhotoButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.setGroupPhotoButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self.setGroupPhotoButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
         [self addSubview:self.setGroupPhotoButton];
         
@@ -121,7 +121,7 @@
             
         }];
         
-        [self.addMembersButton setFrameSize:NSMakeSize(self.setGroupPhotoButton.bounds.size.width, 0)];
+        [self.addMembersButton setFrameSize:NSMakeSize(self.setGroupPhotoButton.bounds.size.width, 42)];
         [self.addMembersButton setFrameOrigin:NSMakePoint(self.setGroupPhotoButton.frame.origin.x, self.setGroupPhotoButton.frame.origin.y - 42)];
         
        
@@ -137,7 +137,7 @@
                                                 withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
         }];
         
-        [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 0)];
+        [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 72)];
         
         [self addSubview:self.sharedMediaButton];
@@ -164,7 +164,7 @@
 
         }];
         
-        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedMediaButton.frame) - 42, NSWidth(self.frame) - 200, NSHeight(self.notificationView.frame))];
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
 
         [self addSubview:self.notificationView];
