@@ -262,11 +262,31 @@
         
         
         self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
+        
+        
+        [Notification addObserver:self selector:@selector(didChangedBlockedUsers:) name:USER_BLOCK];
+        
+        
     }
     return self;
 }
 
+-(void)didChangedBlockedUsers:(NSNotification *)notification {
+    TL_contactBlocked *user = [notification.userInfo objectForKey:KEY_USER];
+    
+    
+    if(self.user.n_id != user.user_id)
+        return;
+    
+    [self updateBlockedText];
+    
+}
 
+-(void)updateBlockedText {
+    [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"Profile.UnblockContact", nil) : NSLocalizedString(@"Profile.BlockContact", nil)];
+    
+    [self.blockContact sizeToFit];
+}
 
 
 -(void)buildTTLTitle  {
@@ -471,6 +491,8 @@
     }
     
     [self buildPage];
+    
+    [self updateBlockedText];
 }
 
 - (void)TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {

@@ -49,7 +49,7 @@
     self.leftView = view;
     [self.leftViewBlock setFrameSize:NSMakeSize(self.leftView.bounds.size.width, self.leftView.bounds.size.height)];
     [self.leftViewBlock addSubview:self.leftView];
-    [self.leftViewBlock setFrameOrigin:NSMakePoint(32, (self.bounds.size.height - view.bounds.size.height) /2)];
+    [self.leftViewBlock setFrameOrigin:NSMakePoint(15, (self.bounds.size.height - view.bounds.size.height) /2)];
     [self buildSizes];
 }
 
@@ -119,7 +119,7 @@
             [oldRightView setFrameOrigin:NSMakePoint(oldRightView.frame.origin.x, ceilf((newSize.height - blockSize.height) / 2.0))];
         }
         
-        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - self.rightViewBlock.bounds.size.width - 30, roundf((self.bounds.size.height - self.rightViewBlock.bounds.size.height) / 2))];
+        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - self.rightViewBlock.bounds.size.width - 15, roundf((self.bounds.size.height - self.rightViewBlock.bounds.size.height) / 2))];
         
         oldRightView.layer.opacity = 1;
         self.rightView.layer.opacity = 0;
@@ -137,7 +137,7 @@
                 [oldRightView removeFromSuperview];
                 [self.rightView setFrameOrigin:NSMakePoint(0, 0)];
                 [self.rightViewBlock setFrameSize:newSize];
-                [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - self.rightViewBlock.bounds.size.width - 30, roundf((self.bounds.size.height - self.rightViewBlock.bounds.size.height) / 2))];
+                [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - self.rightViewBlock.bounds.size.width - 15, roundf((self.bounds.size.height - self.rightViewBlock.bounds.size.height) / 2))];
                 [self buildSizes];
             }];
             
@@ -190,7 +190,7 @@
         
         self.rightView = newRightView;
         [self.rightViewBlock addSubview:self.rightView];
-        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - newRightView.bounds.size.width - 30, (self.bounds.size.height - newRightView.bounds.size.height) /2)];
+        [self.rightViewBlock setFrameOrigin:NSMakePoint(self.bounds.size.width - newRightView.bounds.size.width - 15, (self.bounds.size.height - newRightView.bounds.size.height) /2)];
         [self.rightViewBlock setFrameSize:newRightView.bounds.size];
         [self buildSizes];
     }

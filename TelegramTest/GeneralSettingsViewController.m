@@ -10,7 +10,7 @@
 #import "GeneralSettingsRowItem.h"
 #import "GeneralSettingsRowView.h"
 #import "GeneralSettingsBlockHeaderView.h"
-@interface GeneralSettingsViewController () <TMTableViewDelegate>
+@interface GeneralSettingsViewController () <TMTableViewDelegate,SettingsListener>
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TMBackButton *backButton;
 @property (nonatomic,strong) TMTableView *tableView;
@@ -32,7 +32,7 @@
     
     [self.centerTextField setStringValue:NSLocalizedString(@"GeneralSettings.General", nil)];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -15)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
     
@@ -53,11 +53,13 @@
     //photo
     
     
+    [SettingsArchiver addEventListener:self];
+    
+    
     
     GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoPhotoDownloadHeader", nil)];
     
      [self.tableView insert:autoPhotoHeader atIndex:self.tableView.list.count tableRedraw:NO];
-    
     
     
     
@@ -157,7 +159,7 @@
     
     GeneralSettingsRowItem *advancedSettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
-        
+        [[Telegram mainViewController].settingsWindowController showWindowWithAction:SettingsWindowActionChatSettings];
         
     } description:NSLocalizedString(@"Settings.AdvancedSettings", nil) height:40 stateback:^id(GeneralSettingsRowItem *item) {
         return nil;
@@ -169,6 +171,11 @@
     
     [self.tableView reloadData];
     
+}
+
+
+-(void)didChangeSettingsMask:(SettingsMask)mask {
+    [self.tableView reloadData];
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {

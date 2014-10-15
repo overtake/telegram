@@ -38,7 +38,7 @@
     
     [self.centerTextField setStringValue:NSLocalizedString(@"GeneralSettings.Security", nil)];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -15)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
     

@@ -17,7 +17,7 @@
 
 #import "BlockedTableController.h"
 
-@interface SettingsWindowController ()
+@interface SettingsWindowController ()<SettingsListener>
 
 @property (weak) IBOutlet NSButton *open_links_in_background;
 
@@ -208,8 +208,13 @@
     
     self.window.title = NSLocalizedString(@"Preferences", nil);
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    
+    [SettingsArchiver addEventListener:self];
 }
 
+-(void)didChangeSettingsMask:(SettingsMask)mask {
+    [self updateUI];
+}
 
 static void ListChanged(LSSharedFileListRef inList, void *context) {
     [(__bridge SettingsWindowController *)context updateUI];

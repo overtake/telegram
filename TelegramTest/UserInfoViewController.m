@@ -21,7 +21,7 @@
 @property (nonatomic, strong) UserInfoContainerView *normalContainer;
 @property (nonatomic, strong) UserInfoEditContainerView *editContainer;
 
-
+@property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic, strong) TMBackButton *backButton;
 
 
@@ -83,6 +83,23 @@
         [self.editContainer setAutoresizingMask:NSViewWidthSizable];
         [self.editContainer setController:self];
         [self.containerView addSubview:self.editContainer];
+        
+        
+        _centerTextField = [TMTextField defaultTextField];
+        [self.centerTextField setAlignment:NSCenterTextAlignment];
+        [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
+        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+        [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
+        [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
+        [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.centerTextField setDrawsBackground:NO];
+        
+        [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
+        
+        [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
+        
+        self.centerNavigationBarView = (TMView *) self.centerTextField;
+
         
         
 

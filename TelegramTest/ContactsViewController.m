@@ -73,7 +73,7 @@
 	
     [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 - 16, 1));
+    NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 , 1));
 //    
 //    [NSColorFromRGB(0xe41f5d) set];
 //    NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
@@ -158,7 +158,7 @@
 	
     [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - [self rowItem].rightBorderMargin, 1));
+    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x, 1));
 
     [self.color set];
     NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));

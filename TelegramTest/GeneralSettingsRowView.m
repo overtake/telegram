@@ -28,7 +28,7 @@
         
         
         [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
-        [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forControlState:BTRControlStateNormal];
+        [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forControlState:BTRControlStateNormal];
         
         self.descriptionField.textColor = DARK_BLACK;
         

@@ -35,7 +35,7 @@
 @end
 
 @interface ChatInfoViewController ()
-
+@property (nonatomic,strong) TMTextField *centerTextField;
 @end
 
 @implementation ChatInfoViewController
@@ -59,10 +59,28 @@
         self.type = ChatInfoViewControllerNormal;
         
         
-        TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
-        [center setTarget:self selector:@selector(navigationGoBack)];
-        self.centerNavigationBarView = center;
-        center.acceptCursor = NO;
+        _centerTextField = [TMTextField defaultTextField];
+        [self.centerTextField setAlignment:NSCenterTextAlignment];
+        [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
+        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+        [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
+        [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
+        [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.centerTextField setDrawsBackground:NO];
+        
+        [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
+        
+        [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
+        
+        self.centerNavigationBarView = (TMView *) self.centerTextField;
+        
+//        
+//        TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
+//        [center setTarget:self selector:@selector(navigationGoBack)];
+//        self.centerNavigationBarView = center;
+//        center.acceptCursor = NO;
+        
+        
         _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
         
         [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];

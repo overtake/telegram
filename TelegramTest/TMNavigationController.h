@@ -23,6 +23,15 @@
 #import <Cocoa/Cocoa.h>
 #import "TMNavigationBar.h"
 #import "ConnectionStatusViewControllerView.h"
+
+@protocol TMNavagationDelegate <NSObject>
+
+-(void)willChangedController:(TMViewController *)controller;
+-(void)didChangedController:(TMViewController *)controller;
+
+@end
+
+
 #ifndef ITNavigationViewTypedef
 #define ITNavigationViewTypedef
 
@@ -47,6 +56,10 @@ typedef enum {
 
 @property (nonatomic, readonly) BOOL isLocked;
 
+
+
+-(void)addDelegate:(id<TMNavagationDelegate>)delegate;
+-(void)removeDelegate:(id<TMNavagationDelegate>)delegate;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated;
 - (void)goBackWithAnimation:(BOOL)animated;
 - (void)clear;

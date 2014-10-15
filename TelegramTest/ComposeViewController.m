@@ -26,7 +26,7 @@
     [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [self.centerTextField setDrawsBackground:NO];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -15)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
     

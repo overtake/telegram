@@ -116,6 +116,8 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     
     [[SettingsArchiver instance] setDefaultSoundNotification:notificationName];
     [[SettingsArchiver instance] save];
+    
+    [self didChangeMask];
     return YES;
 }
 

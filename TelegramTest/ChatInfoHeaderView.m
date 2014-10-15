@@ -239,7 +239,7 @@
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 47   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
     
     
     [self.statusTextField sizeToFit];

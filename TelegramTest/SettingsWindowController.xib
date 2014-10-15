@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="14A314h" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A388a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SettingsWindowController">
             <connections>
-                <outlet property="accountToolItem" destination="H8F-Ht-mev" id="Jbd-Nr-Z6a"/>
                 <outlet property="account_desc" destination="e3s-cY-dgv" id="pzo-kh-RVb"/>
                 <outlet property="add_to_blocks" destination="xVY-c2-9Gn" id="DTj-tZ-KIT"/>
                 <outlet property="auto_download_desc" destination="BGL-fI-MsQ" id="J41-2u-IYK"/>
@@ -27,7 +26,6 @@
                 <outlet property="documents_desc" destination="eAW-Ny-dot" id="b8R-bG-pI1"/>
                 <outlet property="documents_folder_button" destination="r4o-zX-lDn" id="qhf-98-GEx"/>
                 <outlet property="file_size_limit_desc" destination="e9T-qT-TvO" id="phU-sF-5OR"/>
-                <outlet property="generalToolItem" destination="gQs-jK-u4U" id="YRQ-Tl-dCf"/>
                 <outlet property="launch_on_startup" destination="N7k-He-UVX" id="g1t-sG-xcQ"/>
                 <outlet property="log_out_button" destination="7UH-rj-e4p" id="GxY-v1-vet"/>
                 <outlet property="online_settings" destination="ZFZ-TV-onU" id="UaW-RL-uwL"/>
@@ -47,14 +45,13 @@
                 <outlet property="sound_notifications_desc" destination="Vhh-ee-HNm" id="nrn-dD-Ksx"/>
                 <outlet property="tabView" destination="hIq-yQ-YWW" id="gGk-W5-fTy"/>
                 <outlet property="terminate_all_other_sessions_button" destination="WPZ-i7-vdd" id="Pfh-fi-xhZ"/>
-                <outlet property="tool_bar" destination="4gj-w3-QX6" id="Odt-9K-VdA"/>
                 <outlet property="video_desc" destination="Myt-Vp-xFz" id="BF5-GX-TXu"/>
                 <outlet property="voice_messages_desc" destination="tfT-ro-Gpg" id="8HA-ME-dKz"/>
                 <outlet property="window" destination="1" id="3"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" appearanceType="aqua" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -64,32 +61,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="633" height="533"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="E6C5A650-F616-4F9C-8387-E674B2F260EC" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="4gj-w3-QX6">
-                <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="43F7A100-5FC3-4822-BD51-A634E7E0066D" explicitItemIdentifier="general" label="General" paletteLabel="General" image="NSPreferencesGeneral" selectable="YES" id="gQs-jK-u4U">
-                        <connections>
-                            <action selector="chatSettingAction:" target="-2" id="tfP-sw-OzT"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="0A7A7C6B-B0B2-4356-A52D-8A6753141F94" explicitItemIdentifier="security" label="Account" paletteLabel="Account" tag="1" image="NSUser" selectable="YES" id="H8F-Ht-mev">
-                        <connections>
-                            <action selector="securityAction:" target="-2" id="n7Z-Im-YEi"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="17A481A4-DF9C-4FE6-AB2F-FE7BE5F4DE15" explicitItemIdentifier="blacklist" label="Black list" paletteLabel="Black list" tag="2" image="NSInfo" selectable="YES" id="3y0-ro-COU">
-                        <connections>
-                            <action selector="blackListAction:" target="-2" id="aEj-XI-Gq0"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="dsu-al-1yj"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Roz-6D-Cbt"/>
-                </allowedToolbarItems>
-                <defaultToolbarItems>
-                    <toolbarItem reference="gQs-jK-u4U"/>
-                    <toolbarItem reference="H8F-Ht-mev"/>
-                    <toolbarItem reference="Roz-6D-Cbt"/>
-                </defaultToolbarItems>
-            </toolbar>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="jWH-V9-UL0"/>
         <customView appearanceType="aqua" id="0RT-Xr-Du5">
@@ -106,7 +77,7 @@
                                 <rect key="frame" x="10" y="33" width="596" height="233"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <button appearanceType="aqua" verticalHuggingPriority="750" id="WPZ-i7-vdd">
+                                    <button verticalHuggingPriority="750" id="WPZ-i7-vdd">
                                         <rect key="frame" x="233" y="90" width="215" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Terminate all other sessions" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UXw-bu-2SE">
@@ -117,7 +88,7 @@
                                             <action selector="terminateSessions:" target="-2" id="we1-Yg-tzl"/>
                                         </connections>
                                     </button>
-                                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="B2E-J8-GiB">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="B2E-J8-GiB">
                                         <rect key="frame" x="237" y="44" width="298" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Logs out all devices expect for the current one" id="0pP-3M-fyL">
@@ -126,7 +97,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="zAU-qj-vub">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="zAU-qj-vub">
                                         <rect key="frame" x="237" y="144" width="298" height="51"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Deleting all pictures, video and voice messages in cache folder" id="bKL-tQ-iOP">
@@ -135,7 +106,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Ue3-yQ-etS">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Ue3-yQ-etS">
                                         <rect key="frame" x="177" y="206" width="47" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Cache:" id="SaF-bN-rc4">
@@ -144,7 +115,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="pJZ-ec-IHz">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="pJZ-ec-IHz">
                                         <rect key="frame" x="163" y="101" width="61" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sessions:" id="BcJ-eZ-ZKY">
@@ -153,7 +124,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e3s-cY-dgv">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e3s-cY-dgv">
                                         <rect key="frame" x="163" y="21" width="60" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Account:" id="9f4-YW-9yr">
@@ -162,7 +133,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button appearanceType="aqua" verticalHuggingPriority="750" id="7UH-rj-e4p">
+                                    <button verticalHuggingPriority="750" id="7UH-rj-e4p">
                                         <rect key="frame" x="233" y="10" width="111" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Log out" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jqv-Uw-tiR">
@@ -173,7 +144,7 @@
                                             <action selector="logOut:" target="-2" id="c6d-sn-8QW"/>
                                         </connections>
                                     </button>
-                                    <button appearanceType="aqua" verticalHuggingPriority="750" id="InX-g9-kjJ">
+                                    <button verticalHuggingPriority="750" id="InX-g9-kjJ">
                                         <rect key="frame" x="233" y="196" width="156" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="Clear all the cache" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HbL-eL-ZpF">
@@ -207,7 +178,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" id="aeg-fy-f31" customClass="BlockedTableController">
-                                                    <rect key="frame" x="0.0" y="0.0" width="562" height="196"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="562" height="19"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -253,7 +224,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <button appearanceType="aqua" id="qoI-jc-Nyd">
+                                    <button id="qoI-jc-Nyd">
                                         <rect key="frame" x="37" y="5" width="21" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="below" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0oM-CQ-0li">
@@ -264,7 +235,7 @@
                                             <action selector="removeBlockedUsers:" target="-2" id="9P5-Tx-uOJ"/>
                                         </connections>
                                     </button>
-                                    <button appearanceType="aqua" id="xVY-c2-9Gn">
+                                    <button id="xVY-c2-9Gn">
                                         <rect key="frame" x="17" y="5" width="21" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="below" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Cc5-fD-myn">
@@ -286,7 +257,7 @@
             <rect key="frame" x="0.0" y="0.0" width="633" height="508"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Myt-Vp-xFz">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Myt-Vp-xFz">
                     <rect key="frame" x="116" y="353" width="124" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Videos:" id="QDo-nT-8HN">
@@ -295,7 +266,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BGL-fI-MsQ">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BGL-fI-MsQ">
                     <rect key="frame" x="80" y="383" width="160" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Auto download:" id="OBc-OI-YtS">
@@ -304,7 +275,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button appearanceType="aqua" id="kUB-Am-aTf">
+                <button id="kUB-Am-aTf">
                     <rect key="frame" x="253" y="352" width="67" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tij-ww-D1J">
@@ -315,7 +286,7 @@
                         <action selector="autoDownloadGroupVideo:" target="-2" id="iRq-9T-3ix"/>
                     </connections>
                 </button>
-                <button appearanceType="aqua" id="tyo-Ik-9xp">
+                <button id="tyo-Ik-9xp">
                     <rect key="frame" x="337" y="352" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="JYl-Sp-6HT">
@@ -326,7 +297,7 @@
                         <action selector="autoDownloadPrivateVideo:" target="-2" id="IIc-0J-75b"/>
                     </connections>
                 </button>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="tfT-ro-Gpg">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="tfT-ro-Gpg">
                     <rect key="frame" x="112" y="304" width="128" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Voice messages:" id="hdr-zW-NW0">
@@ -335,7 +306,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button appearanceType="aqua" id="Qdv-uC-Qwc">
+                <button id="Qdv-uC-Qwc">
                     <rect key="frame" x="253" y="302" width="67" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="AEz-IQ-WMb">
@@ -346,7 +317,7 @@
                         <action selector="autoDownloadGroupAudio:" target="-2" id="65v-nz-m8x"/>
                     </connections>
                 </button>
-                <button appearanceType="aqua" id="ocI-YA-GBk">
+                <button id="ocI-YA-GBk">
                     <rect key="frame" x="337" y="302" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="21Q-aN-ca9">
@@ -357,7 +328,7 @@
                         <action selector="autoDownloadPrivateAudio:" target="-2" id="bXf-Ip-LxE"/>
                     </connections>
                 </button>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e9T-qT-TvO">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e9T-qT-TvO">
                     <rect key="frame" x="25" y="263" width="215" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="File size limit:" id="WG9-y9-hfH">
@@ -366,7 +337,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eAW-Ny-dot">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eAW-Ny-dot">
                     <rect key="frame" x="112" y="328" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Documents:" id="T6o-FZ-gEq">
@@ -375,7 +346,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button appearanceType="aqua" id="p93-k3-eDL">
+                <button id="p93-k3-eDL">
                     <rect key="frame" x="253" y="327" width="67" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eiv-VL-cO1">
@@ -386,7 +357,7 @@
                         <action selector="autoDownloadGroupDocuments:" target="-2" id="3mj-sO-gRN"/>
                     </connections>
                 </button>
-                <button appearanceType="aqua" id="Ekc-0j-nDV">
+                <button id="Ekc-0j-nDV">
                     <rect key="frame" x="337" y="327" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9dQ-J0-KVx">
@@ -397,7 +368,7 @@
                         <action selector="autoDownloadPrivateDocuments:" target="-2" id="PZ9-qH-yme"/>
                     </connections>
                 </button>
-                <matrix appearanceType="aqua" verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="fRN-gj-wwt">
+                <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="fRN-gj-wwt">
                     <rect key="frame" x="255" y="189" width="118" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -423,7 +394,7 @@
                         <action selector="sendMessageAs:" target="-2" id="Oqm-h1-cwV"/>
                     </connections>
                 </matrix>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="h7G-oj-hEs">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="h7G-oj-hEs">
                     <rect key="frame" x="112" y="214" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Send message:" id="sMg-YW-G1e">
@@ -432,7 +403,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <matrix appearanceType="aqua" verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="ZFZ-TV-onU">
+                <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="ZFZ-TV-onU">
                     <rect key="frame" x="253" y="431" width="273" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -458,7 +429,7 @@
                         <action selector="onlineSettings:" target="-2" id="DXO-BW-3sg"/>
                     </connections>
                 </matrix>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="GVl-Ez-LMj">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="GVl-Ez-LMj">
                     <rect key="frame" x="46" y="456" width="194" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Online when:" id="z9Q-dB-Ztl">
@@ -467,7 +438,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <popUpButton appearanceType="aqua" verticalHuggingPriority="750" id="r4o-zX-lDn">
+                <popUpButton verticalHuggingPriority="750" id="r4o-zX-lDn">
                     <rect key="frame" x="252" y="152" width="255" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="cjv-nE-rfP">
@@ -485,7 +456,7 @@
                         <action selector="editDocumentsFolder:" target="-2" id="sf5-qc-Y0Q"/>
                     </connections>
                 </popUpButton>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Vhh-ee-HNm">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Vhh-ee-HNm">
                     <rect key="frame" x="80" y="126" width="160" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sound notification:" id="Twf-XP-Sm8">
@@ -494,7 +465,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nSZ-tq-yZo">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nSZ-tq-yZo">
                     <rect key="frame" x="195" y="73" width="44" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Other:" id="NmL-O9-uRW">
@@ -503,7 +474,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <popUpButton appearanceType="aqua" verticalHuggingPriority="750" id="qcy-kN-GFS">
+                <popUpButton verticalHuggingPriority="750" id="qcy-kN-GFS">
                     <rect key="frame" x="252" y="121" width="255" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="GfT-ex-Y4W">
@@ -515,7 +486,7 @@
                         <action selector="didChangedSoundNotification:" target="-2" id="U1H-g8-Fif"/>
                     </connections>
                 </popUpButton>
-                <popUpButton appearanceType="aqua" verticalHuggingPriority="750" id="Kx6-7a-HZg">
+                <popUpButton verticalHuggingPriority="750" id="Kx6-7a-HZg">
                     <rect key="frame" x="253" y="257" width="88" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="100 MB" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="By6-T2-wXl" id="fK7-cH-1d1">
@@ -555,7 +526,7 @@
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
-                <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="6av-g3-c2i">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="6av-g3-c2i">
                     <rect key="frame" x="6" y="158" width="233" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Save documents to:" id="Z4Q-99-Bnj">
@@ -564,7 +535,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button appearanceType="aqua" id="I4j-XC-W57">
+                <button id="I4j-XC-W57">
                     <rect key="frame" x="252" y="72" width="152" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Sound effects" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="LjB-RI-yv9">
@@ -575,7 +546,7 @@
                         <action selector="soundEffectCheckbox:" target="-2" id="zMR-mh-2SW"/>
                     </connections>
                 </button>
-                <button appearanceType="aqua" id="4Xz-Dy-e8a">
+                <button id="4Xz-Dy-e8a">
                     <rect key="frame" x="252" y="47" width="301" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Open links in background" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="K6j-hy-uPv">
@@ -586,7 +557,7 @@
                         <action selector="openLinksInBackground:" target="-2" id="H0n-sw-rQw"/>
                     </connections>
                 </button>
-                <button appearanceType="aqua" id="N7k-He-UVX">
+                <button id="N7k-He-UVX">
                     <rect key="frame" x="252" y="22" width="301" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Launch on startup" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="X6k-h1-hgC">
@@ -602,9 +573,6 @@
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSInfo" width="32" height="32"/>
-        <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

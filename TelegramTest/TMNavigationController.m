@@ -36,7 +36,7 @@
 @property (nonatomic, strong) NSView *animationView;
 @property (strong) NSImageView *oldCachedImageView;
 @property (strong) NSImageView *cachedImageView;
-
+@property (nonatomic,strong) NSMutableArray *delegates;
 
 @end
 
@@ -65,6 +65,7 @@ static const int navigationOffset = 50;
     self.viewControllerStack = [[NSMutableArray alloc] init];
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
+    _delegates = [[NSMutableArray alloc] init];
 }
 
 - (void) loadView {
@@ -94,6 +95,15 @@ static const int navigationOffset = 50;
 //    [self.nagivationBarView setWantsLayer:YES];
 //    [self.nagivationBarView.layer setBackgroundColor:NSColorFromRGBWithAlpha(0xffffff, 0.9).CGColor];
     [self.view addSubview:self.nagivationBarView];
+}
+
+
+-(void)addDelegate:(id<TMNavagationDelegate>)delegate {
+    [_delegates addObject:delegate];
+}
+
+-(void)removeDelegate:(id<TMNavagationDelegate>)delegate {
+    [_delegates removeObject:delegate];
 }
 
 #pragma mark -
@@ -203,6 +213,10 @@ static const int navigationOffset = 50;
         return;
     }
     
+    [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
+        [obj willChangedController:newViewController];
+    }];
+    
     BOOL isNavigationBarHiddenOld = self.nagivationBarView.isHidden;
     if(newViewController.isNavigationBarHidden != isNavigationBarHiddenOld) {
         if(newViewController.isNavigationBarHidden) {
@@ -285,6 +299,10 @@ static const int navigationOffset = 50;
         
         [newViewController becomeFirstResponder];
         
+        [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
+            [obj didChangedController:newViewController];
+        }];
+        
     } else {
         // Animate
         
@@ -353,6 +371,10 @@ static const int navigationOffset = 50;
             
             
             _isLocked = NO;
+            
+            [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
+                [obj didChangedController:newViewController];
+            }];
         };
         
      

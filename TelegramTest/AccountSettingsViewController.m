@@ -13,6 +13,7 @@
 #import "UserInfoShortButtonView.h"
 #import "UserInfoShortTextEditView.h"
 #import "UserCardViewController.h"
+#import "TGPeer+Extensions.h"
 @interface ExView : TMView
 
 @end
@@ -40,7 +41,7 @@
 
 @end
 
-@interface AccountSettingsViewController ()
+@interface AccountSettingsViewController ()<TMNavagationDelegate>
 @property (nonatomic,strong) ChatAvatarImageView *avatarImageView;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
 @property (nonatomic,strong) TMStatusTextField *statusTextField;
@@ -270,6 +271,37 @@ typedef enum {
     
     self.scrollView.documentView = self.containerView;
     
+    
+    [[Telegram rightViewController].navigationViewController addDelegate:self];
+    
+}
+
+
+-(void)willChangedController:(TMViewController *)controller {
+    if([controller isKindOfClass:[GeneralSettingsViewController class]]) {
+        [self selectController:self.generalSettings];
+        return;
+    }
+    
+    if([controller isKindOfClass:[BlockedUsersViewController class]]) {
+        [self selectController:self.blockedUsers];
+        return;
+    }
+    
+    if([controller isKindOfClass:[MessagesViewController class]]) {
+        if(((MessagesViewController *)controller).dialog.peer.peer_id == [SettingsArchiver supportUserId]) {
+            [self selectController:self.askQuestion];
+            
+            return;
+        }
+        
+    }
+    
+    [self selectController:nil];
+}
+
+-(void)didChangedController:(TMViewController *)controller {
+  
 }
 
 -(void)setState:(AccountSettingsState)state animated:(BOOL)animated {
@@ -454,7 +486,7 @@ typedef enum {
             return;
         }
         
-        [self selectController:self.generalSettings];
+       // [self selectController:self.generalSettings];
         
         [[Telegram rightViewController] showGeneralSettings];
         
@@ -481,7 +513,7 @@ typedef enum {
             return;
         }
         
-        [self selectController:self.blockedUsers];
+       // [self selectController:self.blockedUsers];
         
         [[Telegram rightViewController] showBlockedUsers];
     }];
@@ -507,7 +539,7 @@ typedef enum {
             return;
         }
         
-         [self selectController:self.userName];
+       //  [self selectController:self.userName];
         
         [[Telegram rightViewController] showGeneralSettings];
     }];
@@ -536,7 +568,7 @@ typedef enum {
             return;
         }
         
-        [self selectController:self.about];
+       // [self selectController:self.about];
         
     }];
     
@@ -577,7 +609,7 @@ typedef enum {
             return;
         }
         
-        [self selectController:self.askQuestion];
+       // [self selectController:self.askQuestion];
         
         NSUInteger supportUserId = [SettingsArchiver supportUserId];
         

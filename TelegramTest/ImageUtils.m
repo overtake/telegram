@@ -123,7 +123,12 @@ NSImage *previewImageForDocument(NSString *path) {
         CFRelease(quickLookIcon);
     }
     
-    return thumbIcon;
+    
+    CFStringRef fileExtension = (__bridge CFStringRef) [path pathExtension];
+    CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+    
+    if(UTTypeConformsTo(fileUTI, kUTTypeGIF))
+        return thumbIcon;
 
     if(!thumbIcon)
         return nil;
@@ -140,7 +145,7 @@ NSImage *previewImageForDocument(NSString *path) {
         rect = NSMakeRect(0, -roundf((height - needSize.height) / 2), needSize.width, height);
     }
     
-    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(rect.size.width, rect.size.height)];
+    NSImage *image = [[NSImage alloc] initWithSize:needSize];
     [image lockFocus];
     [thumbIcon drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     [image unlockFocus];

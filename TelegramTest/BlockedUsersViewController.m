@@ -32,7 +32,7 @@
     
     [self.centerTextField setStringValue:NSLocalizedString(@"BlockedUsers.BlockedUsers", nil)];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -15)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
     
     
