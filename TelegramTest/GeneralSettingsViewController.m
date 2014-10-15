@@ -59,6 +59,8 @@
     
     GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoPhotoDownloadHeader", nil)];
     
+    autoPhotoHeader.height = 61;
+    
      [self.tableView insert:autoPhotoHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
     
@@ -93,6 +95,8 @@
     
     GeneralSettingsBlockHeaderItem *autoAudioHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoAudioDownloadHeader", nil)];
     
+     autoAudioHeader.height = 48;
+    
     [self.tableView insert:autoAudioHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
     
@@ -102,7 +106,7 @@
         
         [SettingsArchiver addOrRemoveSetting:AutoGroupAudio];
         
-    } description:NSLocalizedString(@"Settings.Groups", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.Groups", nil) height:40 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
     }];
     
@@ -126,7 +130,7 @@
 
     GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
         
-    } description:NSLocalizedString(@"Settings.SoundNotification", nil) height:70 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.SoundNotification", nil) height:80 stateback:^id(GeneralSettingsRowItem *item) {
         return NSLocalizedString([SettingsArchiver soundNotification], nil);
     }];
     
@@ -138,7 +142,7 @@
         
         [SettingsArchiver addOrRemoveSetting:SoundEffects];
         
-    } description:NSLocalizedString(@"Settings.SoundEffects", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.SoundEffects", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:SoundEffects]);
     }];
     
@@ -149,7 +153,7 @@
         
         [[Telegram rightViewController] showSecuritySettings];
         
-    } description:NSLocalizedString(@"Settings.SecuritySettings", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.SecuritySettings", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return nil;
     }];
     
@@ -161,7 +165,7 @@
         
         [[Telegram mainViewController].settingsWindowController showWindowWithAction:SettingsWindowActionChatSettings];
         
-    } description:NSLocalizedString(@"Settings.AdvancedSettings", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.AdvancedSettings", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return nil;
     }];
     
@@ -179,7 +183,7 @@
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]] ? 61 :  item.height;
+    return  item.height;
 }
 
 - (BOOL)isGroupRow:(NSUInteger)row item:(GeneralSettingsRowItem *) item {

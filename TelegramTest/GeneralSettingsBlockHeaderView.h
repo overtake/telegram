@@ -10,12 +10,12 @@
 
 @interface GeneralSettingsBlockHeaderItem : TMRowItem
 @property (nonatomic,strong,readonly) NSString *header;
+@property (nonatomic,assign) int height;
 
 @end
 
 
 @interface GeneralSettingsBlockHeaderView : TMRowView
-
 
 
 @end
