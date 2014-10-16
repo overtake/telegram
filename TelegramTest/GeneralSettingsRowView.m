@@ -38,7 +38,7 @@
         self.switchControl = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
         
         
-        [self.descriptionField setFrameOrigin:NSMakePoint(100, 10)];
+        [self.descriptionField setFrameOrigin:NSMakePoint(100, 12)];
         
         [self.subdescField addBlock:^(BTRControlEvents events) {
             
@@ -150,7 +150,7 @@
     
     [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.switchControl.frame), 10)];
     
-    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_ArrowGrey().size.width, 14)];
+    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_ArrowGrey().size.width - 4, 14)];
 }
 
 

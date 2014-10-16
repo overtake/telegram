@@ -36,11 +36,6 @@
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
     
-    _backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-    self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
-    [self.leftNavigationBarView addSubview:self.backButton];
-    
-    
     self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     
     self.tableView.tm_delegate = self;
@@ -69,7 +64,7 @@
         
         [SettingsArchiver addOrRemoveSetting:AutoGroupPhoto];
         
-    } description:NSLocalizedString(@"Settings.Groups", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupPhoto]);
     }];
     
@@ -80,7 +75,7 @@
         
         [SettingsArchiver addOrRemoveSetting:AutoPrivatePhoto];
         
-    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoPrivatePhoto]);
     }];
     
@@ -95,7 +90,7 @@
     
     GeneralSettingsBlockHeaderItem *autoAudioHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoAudioDownloadHeader", nil)];
     
-     autoAudioHeader.height = 48;
+     autoAudioHeader.height = 51;
     
     [self.tableView insert:autoAudioHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -106,7 +101,7 @@
         
         [SettingsArchiver addOrRemoveSetting:AutoGroupAudio];
         
-    } description:NSLocalizedString(@"Settings.Groups", nil) height:40 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
     }];
     
@@ -117,7 +112,7 @@
         
         [SettingsArchiver addOrRemoveSetting:AutoPrivateAudio];
         
-    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:44 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoPrivateAudio]);
     }];
     

@@ -281,6 +281,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.action.currentViewController = self;
 
     [self.centerTextField setAttributedStringValue:self.action.behavior.centerTitle];

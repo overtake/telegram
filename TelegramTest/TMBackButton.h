@@ -7,10 +7,21 @@
 //
 
 #import "TMButton.h"
-
+#import "TMViewController.h"
 @interface TMBackButton : TMButton
+
+typedef enum {
+    TMBackButtonClose,
+    TMBackButtonBack
+} TMBackButtonType;
+
+@property (nonatomic,strong) TMViewController *controller;
+
 - (id)initWithFrame:(NSRect)frame string:(NSString *)string;
 
 @property (nonatomic, strong) NSImageView *imageView;
 - (void)setStringValue:(NSString *)stringValue;
+
+-(void)updateBackButton;
+
 @end

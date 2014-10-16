@@ -12,6 +12,7 @@
 #import "HackUtils.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
+@property (nonatomic,strong) TMBackButton *backButton;
 @end
 
 @implementation TMViewController
@@ -62,6 +63,13 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
+    if(self.backButton)
+    {
+        [self.backButton updateBackButton];
+        
+        self.leftNavigationBarView = self.backButton;
+    }
     
 }
 - (void)viewDidAppear:(BOOL)animated {
@@ -146,9 +154,19 @@
 }
 
 
+
 - (void)loadView {
-//    [super loadView];
     self.view = [[TMView alloc] initWithFrame: self.frameInit];
+    
+    if(![self isKindOfClass:[MessagesViewController class]]) { // =)))
+        self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
+        self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
+        
+        self.backButton.controller = self;
+        
+        [self.leftNavigationBarView addSubview:self.backButton];
+    }
+    
 }
 
 - (TMView *)view {

@@ -21,10 +21,6 @@
     [super loadView];
     
     
-   TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Profile.Back", nil)];
-    self.leftNavigationBarView = [[TMView alloc] initWithFrame:backButton.bounds];
-    [self.leftNavigationBarView addSubview:backButton];
-    
     
     TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
     [center setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];

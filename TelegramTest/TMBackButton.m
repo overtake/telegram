@@ -21,7 +21,7 @@
         [self addSubview:self.imageView];
         [self setTarget:self selector:@selector(click)];
         [self setAutoresizesSubviews:YES];
-        [self setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self setTextFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
         
         [self setWantsLayer:YES];
         [self setFrameOrigin:NSMakePoint(0, 1)];
@@ -36,9 +36,20 @@
     return self;
 }
 
-- (void)setStringValue:(NSString *)stringValue {
-    [self setText:[NSString stringWithFormat:@"  %@", stringValue]];
+-(void)updateBackButton {
+    if(self.controller.navigationViewController.viewControllerStack.count > 2) {
+        [self setText:[NSString stringWithFormat:@"  %@", NSLocalizedString(@"Compose.Back",nil)]];
+    } else {
+        [self setText:NSLocalizedString(@"Close", nil)];
+    }
+    
+    [self.imageView setHidden:self.controller.navigationViewController.viewControllerStack.count <= 2];
+    
     [self sizeToFit];
+}
+
+- (void)setStringValue:(NSString *)stringValue {
+    
 }
 
 - (void)sizeToFit {

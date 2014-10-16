@@ -232,7 +232,7 @@ typedef enum {
     currentY+=12;
    
     
-    self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(100, currentY, NSWidth(self.view.frame) - 115 , 22)];
+    self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(95, currentY, NSWidth(self.view.frame) - 115 , 22)];
     
     [self.nameTextField setSelector:@selector(profileTitle)];
     
@@ -243,11 +243,13 @@ typedef enum {
     
     currentY+=24;
     
-    self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(100, currentY, NSWidth(self.view.frame) - 115, 20)];
+    self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(95, currentY, NSWidth(self.view.frame) - 115, 20)];
     
     [self.statusTextField setSelector:@selector(statusForProfile)];
     
     [self.statusTextField setUser:[UsersManager currentUser]];
+    
+    self.statusTextField.autoresizingMask = NSViewWidthSizable;
     
     
     [container addSubview:self.statusTextField];

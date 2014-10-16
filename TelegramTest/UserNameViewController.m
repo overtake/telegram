@@ -81,7 +81,7 @@
     
     [button setStringValue:NSLocalizedString(@"Username.setName", nil)];
     
-    [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     
     [button setTextColor:BLUE_UI_COLOR];
     

@@ -33,9 +33,6 @@
     
     self.centerNavigationBarView = (TMView *) centerTextField;
     
-    TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-    self.leftNavigationBarView = [[TMView alloc] initWithFrame:backButton.bounds];
-    [self.leftNavigationBarView addSubview:backButton];
     
     
     

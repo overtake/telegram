@@ -51,11 +51,7 @@
      
         _headerItem = [[ChatHeaderItem alloc] init];
         _bottomItem = [[ChatBottomItem alloc] init];
-        
-        TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Conversation.Back", nil)];
-        
-        self.leftNavigationBarView = [[TMView alloc] initWithFrame:backButton.bounds];
-        [self.leftNavigationBarView addSubview:backButton];
+
         self.type = ChatInfoViewControllerNormal;
         
         

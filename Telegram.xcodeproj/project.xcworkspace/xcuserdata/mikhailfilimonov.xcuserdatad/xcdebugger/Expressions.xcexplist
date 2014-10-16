@@ -74,6 +74,14 @@
          contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[TMBackButton updateBackButton]:TMBackButton.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.controller.navigationViewController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState

@@ -139,16 +139,16 @@
 
 - (void)mouseDown:(NSEvent *)theEvent {
     
-    self.backgroundColor = NSColorFromRGB(0xfafafa);
+  //  self.backgroundColor = NSColorFromRGB(0xfafafa);
    
     [self setNeedsDisplay:YES];
     if(self.tapBlock && !self.locked) {
         self.tapBlock();
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.backgroundColor = [NSColor clearColor];
-        [self setNeedsDisplay:YES];
-    });
+   // dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+   //     self.backgroundColor = [NSColor clearColor];
+    //    [self setNeedsDisplay:YES];
+   // });
     
   
 }

@@ -90,14 +90,14 @@
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return  ![self.leftViewController canMinimisize] ? 200 : 70;
+    return  ![self.leftViewController canMinimisize] ? 250 : 70;
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
     if(proposedPosition < 80)
         return 70;
-    if(proposedPosition < 200)
-        return 200;
+    if(proposedPosition < 250)
+        return 250;
     
     return roundf(proposedPosition);
 }
