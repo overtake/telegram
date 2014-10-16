@@ -114,7 +114,12 @@ CACHE_IMAGE(ArrowGrey)
 NSImage *previewImageForDocument(NSString *path) {
     int sizeSquere = IS_RETINA ? 200 : 100;
     
-    CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere * 2, sizeSquere * 2), nil);
+    NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kQLThumbnailOptionIconModeKey];
+    
+    CGImageRef quickLookIcon = QLThumbnailImageCreate(kCFAllocatorDefault, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere , sizeSquere ), (__bridge CFDictionaryRef)options);
+    
+  //  CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere * 2, sizeSquere * 2), nil);
+    
     
     NSImage *thumbIcon = nil;
     
@@ -144,12 +149,11 @@ NSImage *previewImageForDocument(NSString *path) {
         float height = roundf(thumbIcon.size.height / k);
         rect = NSMakeRect(0, -roundf((height - needSize.height) / 2), needSize.width, height);
     }
-    
+
     NSImage *image = [[NSImage alloc] initWithSize:needSize];
     [image lockFocus];
     [thumbIcon drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     [image unlockFocus];
-    
     
     return image;
 }

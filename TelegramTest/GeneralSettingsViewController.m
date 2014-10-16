@@ -12,7 +12,6 @@
 #import "GeneralSettingsBlockHeaderView.h"
 @interface GeneralSettingsViewController () <TMTableViewDelegate,SettingsListener>
 @property (nonatomic,strong) TMTextField *centerTextField;
-@property (nonatomic,strong) TMBackButton *backButton;
 @property (nonatomic,strong) TMTableView *tableView;
 @end
 

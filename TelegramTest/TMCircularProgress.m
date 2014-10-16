@@ -195,6 +195,8 @@ static CVReturn progressCallback(CVDisplayLinkRef displayLink, const CVTimeStamp
     }
     
     [path stroke];
+    
+    
 }
 
 

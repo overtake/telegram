@@ -76,7 +76,7 @@
     
     TMTextField *version = [TMTextField defaultTextField];
     [version setStringValue:[NSString stringWithFormat:@"Version %@",API_VERSION]];
-    [version setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+    [version setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
     [version setSelectable:YES];
     [version sizeToFit];
    

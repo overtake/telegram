@@ -388,6 +388,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMViewController viewWillAppear:]:TMViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.backButton">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__24-[TGCTextView drawRect:]_block_invoke:TGCTextView.m">
          <PersistentStrings>
             <PersistentString

@@ -36,9 +36,6 @@
     
     self.centerNavigationBarView = (TMView *) centerTextField;
     
-    TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-    self.leftNavigationBarView = [[TMView alloc] initWithFrame:backButton.bounds];
-    [self.leftNavigationBarView addSubview:backButton];
     
     self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 80, NSWidth(self.view.frame) - 200, 23)];
     
@@ -104,10 +101,18 @@
 }
 
 
--(void)viewDidAppear:(BOOL)animated {
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     [self.textView.textView setStringValue:@""];
-    [self.textView becomeFirstResponder];
+    
     [self controlTextDidChange:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.textView becomeFirstResponder];
+    
 }
 
 @end

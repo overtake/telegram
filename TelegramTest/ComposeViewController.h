@@ -10,8 +10,6 @@
 #import "ComposeAction.h"
 @interface ComposeViewController : TMViewController
 
-
-@property (nonatomic,strong,readonly) TMBackButton *backButton;
 @property (nonatomic,strong,readonly) TMTextField *centerTextField;
 @property (nonatomic,strong,readonly) TMTextButton *doneButton;
 

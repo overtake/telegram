@@ -69,6 +69,18 @@
         [self.backButton updateBackButton];
         
         self.leftNavigationBarView = self.backButton;
+        
+    } else {
+        if(![self isKindOfClass:[MessagesViewController class]]) { // =)))
+            self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
+            self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
+            
+            self.backButton.controller = self;
+            
+            [self.leftNavigationBarView addSubview:self.backButton];
+            
+            [self.backButton updateBackButton];
+        }
     }
     
 }
@@ -157,16 +169,7 @@
 
 - (void)loadView {
     self.view = [[TMView alloc] initWithFrame: self.frameInit];
-    
-    if(![self isKindOfClass:[MessagesViewController class]]) { // =)))
-        self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-        self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
-        
-        self.backButton.controller = self;
-        
-        [self.leftNavigationBarView addSubview:self.backButton];
-    }
-    
+
 }
 
 - (TMView *)view {

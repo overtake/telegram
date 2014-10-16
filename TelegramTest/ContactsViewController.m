@@ -186,7 +186,7 @@
 -(void)loadView {
     [super loadView];
     
-    int topOffset = 50;
+    int topOffset = 48;
     
     self.searchViewController.type = SearchTypeContacts;
     

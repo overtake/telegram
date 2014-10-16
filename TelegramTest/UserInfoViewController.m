@@ -22,8 +22,6 @@
 @property (nonatomic, strong) UserInfoEditContainerView *editContainer;
 
 @property (nonatomic,strong) TMTextField *centerTextField;
-@property (nonatomic, strong) TMBackButton *backButton;
-
 
 
 
@@ -54,11 +52,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Conversation.Back", nil)];
-        self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
-        [self.leftNavigationBarView addSubview:self.backButton];
-        
         
         TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
         [center setTarget:self selector:@selector(navigationGoBack)];
@@ -382,16 +375,6 @@
     self->_isSecretProfile = self.conversation && self.conversation.type == DialogTypeSecretChat;
     
     [self.avatarImageView setUser:user];
-    
-    //Old Controller
-    if(self.navigationViewController.currentController != [Telegram rightViewController].chatInfoViewController) {
-        [self.backButton setStringValue:NSLocalizedString(@"Conversation.Back", nil)];
-    } else {
-        [self.backButton setStringValue:NSLocalizedString(@"Conversation.BackToInfo", nil)];
-    }
-    [self.backButton sizeToFit];
-    
-    self.leftNavigationBarView = self.backButton;
     
     [[TMMediaUserPictureController controller] prepare:user completionHandler:nil];
     

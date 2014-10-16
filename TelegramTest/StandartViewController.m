@@ -52,7 +52,7 @@
     
     [exView setController:self];
     
-    int topOffset = 50;
+    int topOffset = 48;
     
     
     TMView *topView = [[TMView alloc] initWithFrame:NSMakeRect(0, self.view.bounds.size.height - topOffset, self.view.bounds.size.width - DIALOG_BORDER_WIDTH, topOffset)];
@@ -207,7 +207,7 @@
 
 -(void)hideSearch:(BOOL)hide {
    
-    NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 50);
+    NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 48);
     
     
     [self.searchView setFrame:tableRect];

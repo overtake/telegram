@@ -124,7 +124,7 @@ typedef enum {
     
     self.view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
-    TMView *topContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, 49)];
+    TMView *topContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, 47)];
     
     topContainer.backgroundColor = [NSColor whiteColor];
     
@@ -188,7 +188,7 @@ typedef enum {
     [self.view addSubview:topContainer];
     
 
-    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 50, NSWidth(self.frameInit), NSHeight(self.frameInit) - 50)];
+    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 48, NSWidth(self.frameInit), NSHeight(self.frameInit) - 48)];
     
     self.scrollView.autoresizesSubviews = YES;
     self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;

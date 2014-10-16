@@ -11,7 +11,6 @@
 #import "ImageStorage.h"
 @interface SettingsSecurityViewController ()
 @property (nonatomic,strong) TMTextField *centerTextField;
-@property (nonatomic,strong) TMBackButton *backButton;
 @property (nonatomic,strong) TMTextButton *logoutButton;
 @property (nonatomic,strong) UserInfoShortButtonView *clearCache;
 @property (nonatomic,strong) UserInfoShortButtonView *terminate;

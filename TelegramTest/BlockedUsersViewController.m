@@ -11,7 +11,6 @@
 @interface BlockedUsersViewController () <TMTableViewDelegate>
 @property (nonatomic,strong) BTRButton *addButton;
 @property (nonatomic,strong) TMTextField *centerTextField;
-@property (nonatomic,strong) TMBackButton *backButton;
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,strong) TMTextField *noBlockedUsersView;
 @end

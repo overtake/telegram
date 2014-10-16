@@ -59,8 +59,10 @@
     return self;
 }
 
-static const int navigationHeight = 50;
-static const int navigationOffset = 50;
+static const int navigationHeight = 48;
+static const int navigationOffset = 48;
+
+
 - (void)initNavigationController {
     self.viewControllerStack = [[NSMutableArray alloc] init];
     [self.view setAutoresizesSubviews:YES];
