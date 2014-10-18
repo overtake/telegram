@@ -64,6 +64,8 @@
         while (thumbData.length > 5*1024) {
             coef = coef - 0.05;
             thumbData = compressImage(thumbData, coef);
+            if(coef <= 0)
+                break;
         }
         
         

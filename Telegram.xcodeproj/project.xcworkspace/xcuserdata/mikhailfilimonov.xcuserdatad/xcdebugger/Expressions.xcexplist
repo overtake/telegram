@@ -93,6 +93,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]:MessageTableCellTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "anim.fromValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
          <PersistentStrings>
             <PersistentString
@@ -138,6 +146,14 @@
             </PersistentString>
             <PersistentString
                value = "self.user">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke_6:TMCircularProgress.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -238,12 +254,15 @@
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.message.media.document.thumb.location">
+               value = "self.message.media.document.thumb">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TL_localMessage setDstate:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
@@ -335,6 +354,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.item.state">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.isHasThumb">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -439,6 +461,14 @@
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
       </ContextState>
       <ContextState
+         contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "size">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -478,7 +508,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellAudioView setCellState:]:MessageTableCellAudioView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.state">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatParticipantRowView initWithFrame:]:ChatParticipantRowView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke:TMCircularProgress.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.isHidden">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SelectUsersTableView setExceptions:]:SelectUsersTableView.m">
@@ -615,6 +661,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMButton drawRect:]:TMButton.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
       </ContextState>
       <ContextState
@@ -622,6 +671,14 @@
          <PersistentStrings>
             <PersistentString
                value = "name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemDocument isHasThumb]:MessageTableItemDocument.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.document.thumb">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

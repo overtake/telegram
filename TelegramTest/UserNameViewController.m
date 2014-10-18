@@ -23,7 +23,7 @@
     TMTextField* centerTextField = [TMTextField defaultTextField];
     [centerTextField setAlignment:NSCenterTextAlignment];
     [centerTextField setAutoresizingMask:NSViewWidthSizable];
-    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
     [centerTextField setTextColor:NSColorFromRGB(0x222222)];
     [[centerTextField cell] setTruncatesLastVisibleLine:YES];
     [[centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -43,7 +43,7 @@
     
     [str appendString:NSLocalizedString(@"UserName.placeHolder", nil) withColor:DARK_GRAY];
     [str setAlignment:NSLeftTextAlignment range:str.range];
-    [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:16] forRange:str.range];
+    [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
     
     [[self.textView textView].cell setPlaceholderAttributedString:str];
     [[self.textView textView] setPlaceholderPoint:NSMakePoint(2, 0)];

@@ -40,8 +40,17 @@
         [self setProgressFrameSize:image_CancelDownload().size];
         [self setProgressToView:self.imageView];
 
-        [self setProgressStyle:TMCircularProgressDarkStyle];
+        
         [self.containerView addSubview:self.imageView];
+        
+        [self setProgressStyle:TMCircularProgressDarkStyle];
+        
+        
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
+        
+        
     }
     return self;
 }
@@ -56,6 +65,8 @@
     if(cellState == CellStateNormal) {
          [self.imageView setIsAlwaysBlur:NO];
     }
+    
+    [self.progressView setState:cellState];
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {
@@ -67,16 +78,7 @@
     self.imageView.object = item.imageObject;
     
     
-    NSSize progressSize = self.progressView.cancelImage.size;
-    
-    if(item.blockSize.height < 50) {
-        progressSize = NSMakeSize(item.blockSize.height-12, item.blockSize.height-12);
-    }
-    
-    
     [self updateCellState];
-    
-    [self setProgressFrameSize:progressSize];
 }
 
 

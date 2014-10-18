@@ -8,7 +8,6 @@
 
 #import "MessageTableCellContainerView.h"
 #import "MessageTableElements.h"
-#import <POP/POP.h>
 #import "ITProgressIndicator.h"
 #import "ImageUtils.h"
 @interface MessageTableCellContainerView()
@@ -192,25 +191,40 @@ static NSImage* image_broadcast() {
         
         
         
-        self.progressView = [[TMCircularProgress alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
-       // [self.progressView setCancelImage:image_iconCancelDownload()];
+        _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
         [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-        [self.progressView setCancelCallback:^{
-            
-            if(weakSelf.item.messageSender) {
-                [weakSelf deleteAndCancel];
-            } else if(weakSelf.item.downloadItem.downloadState == DownloadStateDownloading) {
-                [weakSelf cancelDownload];
-            }
-            
-        }];
-        
-
-        
+        [self.progressView addTarget:self selector:@selector(checkOperation)];
         
     }
     return self;
 }
+
+-(void)checkOperation {
+    if(self.item.messageSender) {
+        [self deleteAndCancel];
+        return;
+    } else if(self.item.downloadItem.downloadState == DownloadStateDownloading) {
+        [self cancelDownload];
+        return;
+    }
+    
+    if(self.progressView.state == TMLoaderViewStateNeedDownload) {
+        [self startDownload:YES];
+        return;
+    }
+    
+    if([self.item isset]) {
+        [self open];
+        return;
+    }
+
+}
+
+-(void)open {
+    
+}
+
+
 NSImage *selectCheckImage() {
     return [NSImage imageNamed:@"ComposeCheck"];
 }
@@ -276,11 +290,17 @@ NSImage *selectCheckActiveImage() {
     [animation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
         [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)).CGColor];
     }];
+    
+    [self _didChangeBackgroundColorWithAnimation:animation];
+    
     [self.layer pop_addAnimation:animation forKey:@"background"];
 }
 
 
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim {
+    
+}
 
 - (void)stopSearchSelection {
     [self.layer pop_removeAnimationForKey:@"background"];
@@ -342,9 +362,12 @@ NSImage *selectCheckActiveImage() {
         
         [self.layer pop_animationForKey:@"background"];
         
-        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
+        POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
         animation.fromValue = (__bridge id)(oldColor.CGColor);
         animation.toValue = (__bridge id)(color.CGColor);
+        animation.duration = 0.2;
+        [self _didChangeBackgroundColorWithAnimation:animation];
+        
         [self.layer pop_addAnimation:animation forKey:@"background"];
         
     } else {
@@ -538,23 +561,17 @@ static BOOL dragAction = NO;
         [self.nameTextField sizeToFit];
         
         [self.nameTextField setFrameOrigin:NSMakePoint(77, item.viewSize.height - 24)];
-        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
+        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 10)];
     } else {
         [self.avatarImageView setHidden:YES];
         [self.nameTextField setHidden:YES];
-        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 6)];
+        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
     }
     
     [self.containerView setFrameSize:NSMakeSize(self.containerView.bounds.size.width, item.blockSize.height)];
-    [self.progressView setHidden:YES];
-    [self setProgressContainerVisibility:YES];
+   // [self.progressView setHidden:YES];
     
     if(item.messageSender)  {
-        
-        if(item.messageSender) {
-            [self uploadProgressHandler:item.messageSender animated:NO];
-        }
-        
         
         [item.messageSender addEventListener:self];
         
@@ -724,13 +741,7 @@ static int offsetEditable = 30;
 - (void)setCellState:(CellState)cellState {
     self->_cellState = cellState;
     
-    if(cellState == CellStateDownloading) {
-        [self.progressView setHidden:![self.item needUploader]];
-    } else if(cellState == CellStateSending) {
-        [self.progressView setHidden:![self.item needUploader]];
-    } else {
-        [self.progressView setHidden:YES];
-    }
+    [self.progressView setHidden:cellState == CellStateNormal];
     
 }
 
@@ -777,16 +788,6 @@ static int offsetEditable = 30;
     [self checkActionState:YES];
 }
 
-//- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass {
-//    BOOL autoStart = [SettingsArchiver checkMaskedSetting:setting];
-//    
-//    if(size > [SettingsArchiver autoDownloadLimitSize])
-//        autoStart = NO;
-//    
-//    if((autoStart && !self.item.downloadItem && !self.item.isset) || (self.item.downloadItem && self.item.downloadItem.downloadState != DownloadStateCanceled)) {
-//        [self startDownload:NO downloadItemClass:itemClass];
-//    }
-//}
 
 -(BOOL)canEdit {
     return self.item.messageSender == nil || self.item.messageSender.state == MessageSendingStateSent;
@@ -809,18 +810,15 @@ static int offsetEditable = 30;
     [self.progressView setCenterByView:self.progressView.superview];
 }
 
-- (void)setProgressContainerVisibility:(BOOL)visibility {
-
-}
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
     [self.progressView setProgress:item.progress animated:YES];
 }
 
-- (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass {
+- (void)startDownload:(BOOL)cancel {
    
     
-    [self.item startDownload:cancel downloadItemClass:itemClass force:YES];
+    [self.item startDownload:cancel force:YES];
     
     [self updateDownloadState];
 }
@@ -829,27 +827,29 @@ static int offsetEditable = 30;
 -(void)updateDownloadState {
     
     
-    weak();
-        
-    [self.progressView setProgress:self.item.downloadItem.progress animated:NO];
-        
-        
-    [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        [weakSelf.item doAfterDownload];
-        [weakSelf updateCellState];
-        [weakSelf doAfterDownload];
-        weakSelf.item.downloadItem = nil;
-    }];
-        
-    [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
-        if(weakSelf.cellState != CellStateDownloading)
-            [weakSelf updateCellState];
-        [weakSelf downloadProgressHandler:item];
-    }];
-    
-    
-    
     [self updateCellState];
+    
+    weak();
+    
+    if(self.item.downloadItem) {
+        [self.progressView setProgress:self.item.downloadItem.progress animated:NO];
+        
+        
+        [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
+            [weakSelf.item doAfterDownload];
+            [weakSelf updateCellState];
+            [weakSelf doAfterDownload];
+            weakSelf.item.downloadItem = nil;
+        }];
+        
+        [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
+            if(weakSelf.cellState != CellStateDownloading)
+                [weakSelf updateCellState];
+            [weakSelf downloadProgressHandler:item];
+        }];
+
+    } 
+   
 }
 
 - (void)onProgressChanged:(SenderItem *)item {
@@ -860,8 +860,8 @@ static int offsetEditable = 30;
 
 - (void)onAddedListener:(SenderItem *)item {
     if(item == self.item.messageSender) {
-        [self updateCellState];
         [self uploadProgressHandler:item animated:NO];
+        [self updateCellState];
     }
 }
 
@@ -880,8 +880,9 @@ static int offsetEditable = 30;
 - (void)onStateChanged:(SenderItem *)item {
     if(item == self.item.messageSender) {
         [self checkState:item];
+        [self uploadProgressHandler:item animated:NO];
         [self updateCellState];
-        [self.progressView setProgress:item.progress animated:NO];
+        
         
         if(item.state == MessageSendingStateError) {
             [self checkState:item];
@@ -976,7 +977,7 @@ static int offsetEditable = 30;
 
 -(void)dealloc {
     self.containerView = nil;
-    self.progressView = nil;
+    _progressView = nil;
     self.nameTextField = nil;
     self.avatarImageView = nil;
     self.fwdContainer = nil;

@@ -234,12 +234,6 @@
 
 
 - (void) setTapBlock:(dispatch_block_t)tapBlock {
-    if(tapBlock) {
-        
-    } else {
-        
-    }
-    
     self->_tapBlock = tapBlock;
 }
 
@@ -272,7 +266,7 @@
 }
 
 
-- (void)mouseUp:(NSEvent *)theEvent  {
+- (void)mouseDown:(NSEvent *)theEvent  {
     
     if(self.isNotNeedHackMouseUp) {
         [super mouseUp:theEvent];

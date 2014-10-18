@@ -18,6 +18,7 @@
 #import "MessageTableItemAudio.h"
 #import "MessageTableItemGif.h"
 #import "MessagetableitemUnreadMark.h"
+#import "MessageTableItemAudioDocument.h"
 #import "TGDialog+Extensions.h"
 #import "MessageTableItemServiceMessage.h"
 #import "TGDateUtils.h"
@@ -192,6 +193,8 @@
             
             if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                 objectReturn = [[MessageTableItemGif alloc] initWithObject:object];
+            } else if([document.mime_type hasPrefix:@"audio/"]) {
+                 objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:object];
             } else {
                 objectReturn = [[MessageTableItemDocument alloc] initWithObject:object];
             }
@@ -256,6 +259,10 @@
 }
 
 
+- (Class)downloadClass {
+    return [NSNull class];
+}
+
 - (BOOL)canDownload {
     return NO;
 }
@@ -273,7 +280,7 @@
 }
 
 
-- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass {
+- (void)checkStartDownload:(SettingsMask)setting size:(int)size {
     self.autoStart = [SettingsArchiver checkMaskedSetting:setting];
     
     if(size > [SettingsArchiver autoDownloadLimitSize])
@@ -281,11 +288,11 @@
     
     if(!self.downloadItem || self.downloadItem.downloadState == DownloadStateCompleted || self.downloadItem.downloadState == DownloadStateCanceled)
         if(![self isset])
-            self.downloadItem = [[itemClass alloc] initWithObject:self.message];
+            self.downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
     
     
     if((self.autoStart && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
-        [self startDownload:NO downloadItemClass:itemClass force:NO];
+        [self startDownload:NO force:NO];
     }
     
     
@@ -300,10 +307,10 @@
     return self.message.message;
 }
 
-- (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass force:(BOOL)force {
+- (void)startDownload:(BOOL)cancel force:(BOOL)force {
     
     if(!self.downloadItem) {
-        self.downloadItem = [[itemClass alloc] initWithObject:self.message];
+        self.downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
     }
     
     if((self.downloadItem.downloadState == DownloadStateCanceled || self.downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart))

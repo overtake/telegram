@@ -8,12 +8,8 @@
 
 #import "MessageTableCellContainerView.h"
 
-#import "DownloadQueue.h"
-#import "TGOpusAudioPlayerAU.h"
+#import "MessagetableCellAudioController.h"
 
-@interface MessageTableCellAudioView : MessageTableCellContainerView
-
-+ (void)stop;
-- (void)stopPlayer;
+@interface MessageTableCellAudioView : MessagetableCellAudioController
 
 @end

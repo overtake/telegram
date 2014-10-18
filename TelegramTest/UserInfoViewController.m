@@ -81,7 +81,7 @@
         _centerTextField = [TMTextField defaultTextField];
         [self.centerTextField setAlignment:NSCenterTextAlignment];
         [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
-        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
         [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
         [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];

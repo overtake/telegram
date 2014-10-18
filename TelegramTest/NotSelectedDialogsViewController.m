@@ -51,15 +51,16 @@
 //    [self.view addSubview:test];
 
     
-    TMTextField *textField = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
-    [textField setEditable:NO];
-    [textField setBordered:NO];
-    [textField setSelectable:NO];
+    TMTextField *textField = [TMTextField defaultTextField];
+    
+    
     NSMutableParagraphStyle *mutParaStyle=[[NSMutableParagraphStyle alloc] init];
     [mutParaStyle setAlignment:NSCenterTextAlignment];
     [mutParaStyle setLineSpacing:3];
-    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSParagraphStyleAttributeName: mutParaStyle}]];
+    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14]}]];
     [textField sizeToFit];
+    
+    [textField setDrawsBackground:NO];
  //   [imageView setFrameOrigin:NSMakePoint(roundf((textField.frame.size.width - imageView.frame.size.width) / 2), textField.frame.size.height + 20)];
     
 
@@ -70,9 +71,6 @@
   //  [containerView setFrameOrigin:NSMakePoint(roundf((self.view.bounds.size.width - containerView.frame.size.width) / 2), roundf((self.view.bounds.size.height - containerView.frame.size.height) / 2) + 30)];
     [self.view setAutoresizesSubviews:YES];
     
-    
-
-    containerView.layer.backgroundColor =[NSColor redColor].CGColor;
     
     [containerView setFrameSize:textField.frame.size];
     

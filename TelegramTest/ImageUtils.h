@@ -103,6 +103,15 @@ CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
 CACHE_IMAGE(ArrowGrey)
 
+
+CACHE_IMAGE(DownloadIconGrey)
+CACHE_IMAGE(DownloadIconWhite)
+CACHE_IMAGE(DownloadPauseIconGrey)
+CACHE_IMAGE(DownloadPauseIconWhite)
+CACHE_IMAGE(LoadCancelGrayIcon)
+CACHE_IMAGE(DocumentThumbIcon)
+CACHE_IMAGE(LoadCancelWhiteIcon)
+CACHE_IMAGE(PlayIconWhite)
 @interface ImageUtils : NSObject
 
 

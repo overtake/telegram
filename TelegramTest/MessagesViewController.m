@@ -1595,7 +1595,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.noMessagesView setConversation:dialog];
         
-        [MessageTableCellAudioView stop];
+        [globalAudioPlayer() stop];
+        
+        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
         
         _isMarkIsset = NO;
         
@@ -2382,7 +2384,7 @@ static NSTextAttachment *headerMediaIcon() {
     MessageTableCell *cell = nil;
     
     
-    if([item isKindOfClass:[MessageTableItemServiceMessage class]]) {
+    if(item.class == [MessageTableItemServiceMessage class]) {
         
         static NSString *const kRowIdentifier = @"service";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
@@ -2391,7 +2393,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemText class]]) {
+    } else if(item.class == [MessageTableItemText class]) {
         static NSString *const kRowIdentifier = @"text";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
@@ -2404,7 +2406,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         // DLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)cell));
         
-    } else if([item isKindOfClass:[MessageTableItemPhoto class]]) {
+    } else if(item.class == [MessageTableItemPhoto class]) {
         static NSString *const kRowIdentifier = @"photo";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2412,7 +2414,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemVideo class]]) {
+    } else if(item.class == [MessageTableItemVideo class]) {
         static NSString *const kRowIdentifier = @"video";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2420,7 +2422,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemGeo class]]) {
+    } else if(item.class == [MessageTableItemGeo class]) {
         static NSString *const kRowIdentifier = @"geo";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2428,7 +2430,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemContact class]]) {
+    } else if(item.class == [MessageTableItemContact class]) {
         static NSString *const kRowIdentifier = @"contact";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2436,7 +2438,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemAudio class]]) {
+    } else if(item.class == [MessageTableItemAudio class]) {
         static NSString *const kRowIdentifier = @"audio";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2444,7 +2446,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemGif class]]) {
+    } else if(item.class == [MessageTableItemGif class]) {
         static NSString *const kRowIdentifier = @"gif";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2452,7 +2454,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemDocument class]]) {
+    } else if(item.class == [MessageTableItemDocument class]) {
         static NSString *const kRowIdentifier = @"document";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
@@ -2460,7 +2462,15 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if([item isKindOfClass:[MessageTableItemUnreadMark class]]) {
+    } else if(item.class == [MessageTableItemAudioDocument class]) {
+        static NSString *const kRowIdentifier = @"auido_document";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        if(!cell) {
+            cell = [[MessageTablecellAudioDocumentView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+    } else if(item.class == [MessageTableItemUnreadMark class]) {
         static NSString *const kRowIdentifier = @"unread_mark_cell";
         cell = (MessageTableCellUnreadMarkView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
@@ -2469,7 +2479,7 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
-    } else if(![item isKindOfClass:[MessageTableCellServiceMessage class]] && ![item isKindOfClass:[MessageTableItemTyping class]]) {
+    } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         
         assert(NO);
         

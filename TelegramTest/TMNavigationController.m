@@ -20,7 +20,6 @@
 //  Copyright (c) 2013 Ilija Tovilo. All rights reserved.
 //
 #import "TMNavigationController.h"
-#import <POP/POP.h>
 #import <QuartzCore/QuartzCore.h>
 #import "ConnectionStatusViewControllerView.h"
 #import "HackUtils.h"

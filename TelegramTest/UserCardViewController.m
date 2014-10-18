@@ -99,7 +99,7 @@
     
     [self.button setTextOffset:NSMakeSize(0, 0)];
     
-    [self.button setDrawBlock:separatorDraw];
+   // [self.button setDrawBlock:separatorDraw];
     
     [self.button setTextColor:BLUE_UI_COLOR forState:TMButtonNormalState];
     [self.button setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];

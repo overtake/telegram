@@ -29,7 +29,7 @@
         
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
         [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:16]];
+        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15]];
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         

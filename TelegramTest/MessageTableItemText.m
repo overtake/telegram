@@ -30,8 +30,17 @@
     NSString *message = [object.message trim];
     
     
+    NSFontManager *fontManager = [NSFontManager sharedFontManager];
+    NSFont *font = [fontManager fontWithFamily:@"Helvetica Neue"
+                                              traits:0
+                                              weight:4
+                                                size:13];
+    
+    
+ //   font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    
     NSRange range = [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+    [self.textAttributed setFont:font forRange:range];
     [self.textAttributed detectAndAddLinks];
 
  //   [self.textAttributed addAttribute:NSBackgroundColorAttributeName value:NSColorFromRGB(0xcfcfcf) range:self.textAttributed.range];

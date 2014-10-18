@@ -41,10 +41,6 @@
     [super mouseUp:theEvent];
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
-    //    [super drawRect:dirtyRect];
-}
-
 
 static CAAnimation *ani() {
     static CAAnimation *animation;
@@ -76,23 +72,6 @@ static CAAnimation *ani() {
     
     
     BOOL needAnimation = self.image && (self.image.size.width != 100 || self.image.size.height != 100);
-    BOOL isBlur = NO;
-    
-//    if(image.size.width != 100 || image.size.height != 100) {
-//       
-//        isBlur = YES;
-//        needAnimation = NO;
-////        
-////        [ASQueue dispatchOnStageQueue:^{
-////            NSImage *blured = [self blur:image];
-////            [[ASQueue mainQueue] dispatchOnQueue:^{
-////                [super setImage:blured];
-////            }];
-////        }];
-////        
-////        return;
-//       
-//    }
     
     if(self.isAlwaysBlur) {
         
@@ -156,13 +135,32 @@ static NSImage *attachBackground() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSRect rect = NSMakeRect(0, 0, 48, 48);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [NSColorFromRGB(0xf4f4f4) set];
+        [NSColorFromRGB(0xf2f2f2) set];
         NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+
+
+static NSImage *attachDownloadedBackground() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 48, 48);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0x4ba3e2) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        
+        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((48 - image_DocumentThumbIcon().size.width)/2), roundf((48 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height)];
         [image unlockFocus];
     });
     return image;
@@ -190,42 +188,21 @@ static NSImage *attachBackgroundThumb() {
         weak();
         
         [self setProgressStyle:TMCircularProgressLightStyle];
-        [self setProgressFrameSize:NSMakeSize(42, 42)];
+        [self setProgressFrameSize:NSMakeSize(48, 48)];
         
         self.attachButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         [self.attachButton addBlock:^(BTRControlEvents events) {
             
-            switch (weakSelf.item.state) {
-                case DocumentStateDownloaded:
-                    if(weakSelf.item.isset) {
-                        [weakSelf open];
-                        return;
-                    }
-                    
-                    if([weakSelf.item canDownload]) {
-                        [weakSelf startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
-                    }
-                    
-                    break;
-                    
-                case DocumentStateWaitingDownload:
-                    if([weakSelf.item canDownload])
-                        [weakSelf startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
-                    break;
-                    
-                case DocumentStateDownloading:
-                    [weakSelf cancelDownload];
-                    break;
-                    
-                case DocumentStateUploading:
-                    [weakSelf deleteAndCancel];
-                    break;
-                    
-                default:
-                    break;
+            if(weakSelf.item.state == DocumentStateDownloaded) {
+                if(weakSelf.item.isset) {
+                    [weakSelf open];
+                    return;
+                }
             }
             
         } forControlEvents:BTRControlEventLeftClick];
+        
+        
         [self.containerView addSubview:self.attachButton];
         
         self.fileNameTextField = [[TMTextField alloc] initWithFrame:NSZeroRect];
@@ -264,8 +241,6 @@ static NSImage *attachBackgroundThumb() {
         [self.thumbView setCornerRadius:4];
 
         
-        
-        
         NSMutableArray *subviews = [self.attachButton.subviews mutableCopy];
         [subviews insertObject:self.thumbView atIndex:1];
         [self.attachButton setSubviews:subviews];
@@ -277,19 +252,7 @@ static NSImage *attachBackgroundThumb() {
 
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];
-    
 
-    return;
-    
-//    if([self.item.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-//        
-//        NSImage *image = [self.item isset] ? image_MessageFile() : image_MessageFileDownload();
-//        
-//        NSPoint point = NSMakePoint(rect.origin.x + roundf(((rect.size.width - image.size.width) / 2.f)), rect.origin.y + roundf(((rect.size.height - image.size.height) / 2.f)));
-//        
-//        
-//        [image drawAtPoint:point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
-//    }
 }
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
@@ -306,15 +269,15 @@ static NSImage *attachBackgroundThumb() {
     
     NSString *downloadString = [NSString stringWithFormat:format, progress];
     
-    [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
+    [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
 }
 
-- (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass {
+- (void)startDownload:(BOOL)cancel {
     if(!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCanceled) {
         [self setProgressStringValue:0 format:NSLocalizedString(@"Document.Downloading", nil)];
     }
     
-    [super startDownload:cancel downloadItemClass:itemClass];
+    [super startDownload:cancel];
 }
 
 
@@ -362,27 +325,41 @@ static NSImage *attachBackgroundThumb() {
     }
     
     
+    
     switch (self.item.state) {
         case DocumentStateDownloaded:
-            [self.attachButton setImage:self.item.isHasThumb ? nil : image_MessageFile() forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:NO];
             self.thumbView.object = self.item.thumbObject;
-            break;
+            
+            if(!self.item.isHasThumb) {
+                id thumb =  self.item.message.media.document.thumb;
+                
+                if(thumb) {
+                    int i =0;
+                }
+            }
+            
+            [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachDownloadedBackground() forControlState:BTRControlStateNormal];
+            
+           break;
             
         case DocumentStateDownloading:
-            [self.attachButton setImage:nil forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:YES];
             [self setProgressStringValue:self.progressView.currentProgress format:NSLocalizedString(@"Document.Downloading", nil)];
+            [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
+            [self.progressView setState:TMLoaderViewStateDownloading];
             break;
             
         case DocumentStateUploading:
-            [self.attachButton setImage:nil forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:YES];
+            [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
+            [self.progressView setState:TMLoaderViewStateUploading];
             break;
             
         case DocumentStateWaitingDownload:
-            [self.attachButton setImage:self.item.isHasThumb ? image_Download() : image_MessageFileDownload() forControlState:BTRControlStateNormal];
             [self.thumbView setIsAlwaysBlur:YES];
+            [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
+            [self.progressView setState:TMLoaderViewStateNeedDownload];
             break;
             
         default:
@@ -400,6 +377,8 @@ static NSImage *attachBackgroundThumb() {
     
     [self.thumbView setIsAlwaysBlur:NO];
     
+    [self setProgressFrameSize:NSMakeSize(48, 48)];
+    
     if(item.isHasThumb) {
         [self.attachButton setBackgroundImage:attachBackgroundThumb() forControlState:BTRControlStateNormal];
         self.thumbView.image = nil;
@@ -414,22 +393,24 @@ static NSImage *attachBackgroundThumb() {
         }
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
-        [self setProgressFrameSize:self.progressView.cancelImage.size];
+       
+        
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
+        
     } else {
-        [self.attachButton setBackgroundImage:attachBackground() forControlState:BTRControlStateNormal];
+        
+        [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
+        
         self.thumbView.image = nil;
         [self setProgressStyle:TMCircularProgressLightStyle];
-        [self.progressView setCancelImage:image_MessageFileCancel()];
-        
-        [self setProgressFrameSize:NSMakeSize(42, 42)];
     }
     
     
-    
-  [self updateDownloadState];
-    
-    
-    
+   [self updateDownloadState];
     
     [self.fileNameTextField setStringValue:item.fileName];
     if(!item.fileNameSize.width) {
@@ -497,19 +478,19 @@ static NSImage *attachBackgroundThumb() {
     if([url isEqualToString:@"download"]) {
         
         if([self.item canDownload])
-            [self startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
+            [self startDownload:NO];
     } else if ([url isEqualToString:@"finder"]){
         if(self.item.isset) {
            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
             
         } else {
             if([self.item canDownload])
-                [self startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
+                [self startDownload:NO];
         }
     } else if([url isEqualToString:@"show"])  {
         if(self.item.isset)
             [self open];
-        else if([self.item canDownload]) [self startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
+        else if([self.item canDownload]) [self startDownload:NO];
     }
 }
 
@@ -539,7 +520,7 @@ static NSAttributedString *docStateDownload() {
     static NSAttributedString *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Medium" size:13]}];
+        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14]}];
     });
     return instance;
 }
@@ -550,16 +531,12 @@ static NSAttributedString *docStateLoaded() {
     dispatch_once(&onceToken, ^{
         NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
         
-        NSRange range = [mutableAttributedString appendString:NSLocalizedString(@"Message.File.Open", nil) withColor:BLUE_UI_COLOR];
-        [mutableAttributedString setLink:@"show" forRange:range];
         
-        [mutableAttributedString appendString:@"   "];
-        
-        range = [mutableAttributedString appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:BLUE_UI_COLOR];
+        NSRange range = [mutableAttributedString appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:BLUE_UI_COLOR];
         [mutableAttributedString setLink:@"finder" forRange:range];
         
         
-        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:mutableAttributedString.range];
+        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:mutableAttributedString.range];
 
         instance = mutableAttributedString;
     });

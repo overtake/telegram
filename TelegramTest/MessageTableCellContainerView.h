@@ -9,7 +9,7 @@
 #import "MessageTableCell.h"
 #import "SenderHeader.h"
 #import "TMCircularProgress.h"
-
+#import "TMLoaderView.h"
 typedef enum {
     CellStateNormal = 2,
     CellStateSending = 4,
@@ -34,13 +34,17 @@ typedef enum {
 @property (nonatomic) MessageTableCellState actionState;
 @property (nonatomic, strong) TMView *containerView;
 
-@property (nonatomic, strong) TMCircularProgress *progressView;
+@property (nonatomic, strong,readonly) TMLoaderView *progressView;
+
+-(void)checkOperation;
+
+-(void)open;
 
 - (void)cancelDownload;
 - (void)deleteAndCancel:(MessageTableItem *)item;
 - (void)deleteAndCancel;
 - (void)doAfterDownload;
-- (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass;
+- (void)startDownload:(BOOL)cancel;
 - (void)updateCellState;
 //- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass;
 - (void)setProgressFrameSize:(NSSize)newsize;
@@ -58,10 +62,10 @@ typedef enum {
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation;
 
 - (void)setProgressToView:(NSView *)view;
-- (void)setProgressContainerVisibility:(BOOL)visibility;
 - (void)setProgressStyle:(TMCircularProgressStyle)style;
 
 
 - (void)checkActionState:(BOOL)redraw;
+
 
 @end

@@ -21,78 +21,84 @@
 @interface MessageTableCellGifView()
 
 @property (nonatomic, strong) TGImageView *imageView;
-@property (nonatomic, strong) GifAnimationLayer *gifAnimationLayer;
-//@property (nonatomic, strong) TMGifImageView *gifImageView;
-@property (nonatomic, strong) BTRButton *playButton;
-@property (nonatomic, strong) BTRButton *downloadButton;
-@property (nonatomic, strong) VideoTimeView *videoTimeView;
 @property (nonatomic, assign) BOOL needOpenAfterDownload;
 
 @property (nonatomic,strong) TGModernAnimatedImagePlayer *animatedPlayer;
+
+@property (nonatomic,strong) NSImageView *playImage;
 
 @end
 
 @implementation MessageTableCellGifView
 
 
+static NSImage *playImage() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 48, 48);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGBWithAlpha(0x000000, 0.5) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        
+        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
+        [image unlockFocus];
+    });
+    return image;//image_VideoPlay();
+}
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.imageView = [[TGImageView alloc] init];
-        [self.imageView setFrameOrigin:NSMakePoint(0, 0)];
-        [self.imageView setRoundSize:4];
-        [self.imageView setBlurRadius:60];
-        [self.containerView addSubview:self.imageView];
-        [self setProgressToView:self.imageView];
-        self.imageView.cornerRadius = 4;
         
         weak();
         
-        __block dispatch_block_t block = ^{
-            if(![weakSelf.item isset])
-            {
-                if([weakSelf.item canDownload]) {
-                    weakSelf.needOpenAfterDownload = YES;
-                    [weakSelf startDownload:NO downloadItemClass:[DownloadDocumentItem class]];
-                }
-                
-            } else
-            {
-                if(!weakSelf.gifAnimationLayer.isAnimationRunning) {
-                    [weakSelf playAnimation];
-                } else {
-                    [weakSelf animationDidStop:nil finished:YES];
-                }
-            }
-        };
-
+        self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+        [self.imageView setRoundSize:4];
+        [self.imageView setBlurRadius:60];
         
-        [self.imageView setTapBlock:block];
-
-        self.playButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_GIFPlay().size.width, image_GIFPlay().size.height)];
-        [self.playButton setBackgroundImage:image_GIFPlay() forControlState:BTRControlStateNormal];
-       // [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
-        [self.playButton addBlock:^(BTRControlEvents events) {
-            block();
-        } forControlEvents:BTRControlEventLeftClick];
-        [self.playButton setCenterByView:self.imageView];
-        [self.playButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-        [self.imageView addSubview:self.playButton];
+        [self.imageView setTapBlock:^{
+            
+            [weakSelf checkOperation];
+            
+        }];
         
-        self.videoTimeView = [[VideoTimeView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
-        [self.imageView addSubview:self.videoTimeView];
+        self.imageView.borderWidth = 1;
+        self.imageView.borderColor = NSColorFromRGB(0xf3f3f3);
         
+        [self setProgressToView:self.imageView];
+        [self.containerView addSubview:self.imageView];
+        
+        self.playImage = imageViewWithImage(playImage());
+        
+        [self.imageView addSubview:self.playImage];
+        
+        
+        [self.playImage setCenterByView:self.imageView];
+        [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+        
+        [self setProgressStyle:TMCircularProgressDarkStyle];
+        
+        
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
     }
     return self;
+}
+
+-(void)checkOperation {
+    [super checkOperation];
+    self.needOpenAfterDownload = YES;
 }
 
 - (void)playAnimation {
     
     
-    
-    
- 
     
     MessageTableItemGif *item = (MessageTableItemGif *)self.item;
     
@@ -109,35 +115,10 @@
             
             [self.animatedPlayer play];
             
-            [self.playButton setHidden:YES];
+            [self.playImage setHidden:YES];
         } else {
             [self animationDidStop:nil finished:YES];
         }
-        
-        
-        
-
-        
-       // [self addSubview:animatedImage];
-        
-        
-//        if(self.gifAnimationLayer) {
-//            [self.gifAnimationLayer removeAllAnimations];
-//            [self.gifAnimationLayer stopAnimating];
-//        } else {
-//            self.gifAnimationLayer = [GifAnimationLayer layer];
-//            [self.imageView.layer addSublayer:self.gifAnimationLayer];
-//        }
-//        [self.gifAnimationLayer setMasksToBounds:YES];
-//        [self.gifAnimationLayer setCornerRadius:4];
-//        [self.gifAnimationLayer setGifFilePath:item.path];
-//        [self.gifAnimationLayer setFrame:self.imageView.bounds];
-//        [self.gifAnimationLayer startAnimating];
-//        
-//        [self.gifAnimationLayer setOpacity:1];
-//        [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:0 toValue:1] forKey:@"opacity"];
-//
-//        
     }
     
 }
@@ -159,16 +140,24 @@
         self.imageView.object = item.imageObject;
     }
     
-//    [self.gifAnimationLayer stopAnimating];
-//
-//    [CATransaction begin];
-//    [CATransaction setCompletionBlock:^{
-//        self.gifAnimationLayer.contents = nil;
-//    }];
-//    [self.gifAnimationLayer setOpacity:0];
-//    [self.gifAnimationLayer addAnimation:[TMAnimations fadeWithDuration:0.3 fromValue:1 toValue:0] forKey:@"opacity"];
-//    [CATransaction commit];
-    [self.playButton setHidden:NO];
+    [self.playImage setHidden:NO];
+}
+
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    const int borderOffset = self.imageView.borderWidth;
+    const int borderSize = borderOffset*2;
+    
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
+    [path addClip];
+    
+    
+    [self.imageView.borderColor set];
+    NSRectFill(rect);
 }
 
 
@@ -199,35 +188,9 @@
 - (void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    float playAlpha = 1.0;
+    [self.playImage setHidden:!(cellState == CellStateNormal)];
     
-    if(cellState == CellStateSending) {
-        playAlpha = 0.0f;
-    }
-    
-    if(cellState == CellStateNormal) {
-        playAlpha = 1.0f;
-        [self.playButton setBackgroundImage:image_GIFPlay() forControlState:BTRControlStateNormal];
-    }
-    
-    if(cellState == CellStateDownloading) {
-        playAlpha = 0.0f;
-    }
-    
-    if(cellState == CellStateNeedDownload) {
-        playAlpha = 1.0f;
-        
-        [self.playButton setBackgroundImage:image_Download() forControlState:BTRControlStateNormal];
-        
-    }
-    
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0.1];
-        [[self.playButton animator] setAlphaValue:playAlpha];
-    } completionHandler:^{
-        [[self.playButton animator] setHidden:playAlpha == 0.0f || self.animatedPlayer.isPlaying];
-    }];
-    
+    [self.progressView setState:cellState];
 }
 
 - (void) setItem:(MessageTableItemGif *)item {
@@ -241,16 +204,6 @@
     [self.animatedPlayer stop];
     self.animatedPlayer = nil;
     
-   // [self.gifAnimationLayer stopAnimating];
-   // self.gifAnimationLayer.contents = nil;
-
-    
-    [self.progressView setStyle:TMCircularProgressDarkStyle];
-    
-    // [self.progressView setCancelImage:image_MessageFileCancel()];
-    
-//    [self.gifImageView setFrameSize:item.blockSize];
-//    [self.gifImageView setImage:item.cachedThumb isRounded:YES];
     
     [self.imageView setFrameSize:item.blockSize];
     
@@ -259,11 +212,6 @@
     } else {
         self.imageView.object = item.imageObject;
     }
-    
-    
-   
-    [self setProgressContainerVisibility:NO];
-    [self setProgressFrameSize:image_GIFPlay().size];
 }
 
 

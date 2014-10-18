@@ -302,8 +302,6 @@
 		C233FB2E18B61415008C9A96 /* NewConversationRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C233FB2D18B61415008C9A96 /* NewConversationRowItem.m */; };
 		C233FB3118B61618008C9A96 /* NewConversationRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C233FB3018B61618008C9A96 /* NewConversationRowView.m */; };
 		C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = C233FB3318B661B6008C9A96 /* TMCheckBox.m */; };
-		C235364A19C88CFA0044978E /* pop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364919C88CFA0044978E /* pop.framework */; };
-		C235364B19C88CFE0044978E /* pop.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364919C88CFA0044978E /* pop.framework */; };
 		C235365919C8B4320044978E /* UserCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C235365819C8B4320044978E /* UserCardViewController.m */; };
 		C235369A19CB1A100044978E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235369919CB1A100044978E /* Foundation.framework */; };
 		C235369D19CB1A100044978E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C235369C19CB1A100044978E /* main.m */; };
@@ -357,6 +355,29 @@
 		C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */; };
 		C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13819EE9DF9007F836A /* AboutViewController.m */; };
 		C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13C19EEB580007F836A /* UserNameViewController.m */; };
+		C268C14019EFF70E007F836A /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13F19EFF70E007F836A /* GLView.m */; };
+		C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C14219F01AE3007F836A /* TMLoaderView.m */; };
+		C268C18519F0519C007F836A /* POPAnimatableProperty.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C15419F0519C007F836A /* POPAnimatableProperty.mm */; };
+		C268C18619F0519C007F836A /* POPAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C15619F0519C007F836A /* POPAnimation.mm */; };
+		C268C18719F0519C007F836A /* POPAnimationEvent.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C15819F0519C007F836A /* POPAnimationEvent.mm */; };
+		C268C18819F0519C007F836A /* POPAnimationExtras.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C15B19F0519C007F836A /* POPAnimationExtras.mm */; };
+		C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C15F19F0519C007F836A /* POPAnimationRuntime.mm */; };
+		C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16119F0519C007F836A /* POPAnimationTracer.mm */; };
+		C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16419F0519C007F836A /* POPAnimator.mm */; };
+		C268C18C19F0519C007F836A /* POPBasicAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16719F0519C007F836A /* POPBasicAnimation.mm */; };
+		C268C18D19F0519C007F836A /* POPCGUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16A19F0519C007F836A /* POPCGUtils.mm */; };
+		C268C18E19F0519C007F836A /* POPCustomAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16C19F0519C007F836A /* POPCustomAnimation.mm */; };
+		C268C18F19F0519C007F836A /* POPDecayAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C16E19F0519C007F836A /* POPDecayAnimation.mm */; };
+		C268C19019F0519C007F836A /* POPGeometry.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17219F0519C007F836A /* POPGeometry.mm */; };
+		C268C19119F0519C007F836A /* POPLayerExtras.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17419F0519C007F836A /* POPLayerExtras.mm */; };
+		C268C19219F0519C007F836A /* POPMath.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17619F0519C007F836A /* POPMath.mm */; };
+		C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17819F0519C007F836A /* POPPropertyAnimation.mm */; };
+		C268C19419F0519C007F836A /* POPSpringAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17B19F0519C007F836A /* POPSpringAnimation.mm */; };
+		C268C19519F0519C007F836A /* POPVector.mm in Sources */ = {isa = PBXBuildFile; fileRef = C268C17F19F0519C007F836A /* POPVector.mm */; };
+		C268C19619F0519C007F836A /* TransformationMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C268C18219F0519C007F836A /* TransformationMatrix.cpp */; };
+		C268C19919F12B66007F836A /* MessageTablecellAudioDocumentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */; };
+		C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */; };
+		C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19E19F13721007F836A /* MessagetableCellAudioController.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -610,7 +631,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C235364B19C88CFE0044978E /* pop.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 				C25D938219D952D700BAB6C2 /* HockeySDK.framework in Copy Files (6 items) */,
 				C25D938319D952E100BAB6C2 /* Sparkle.framework in Copy Files (6 items) */,
@@ -1240,7 +1260,6 @@
 		C233FB3018B61618008C9A96 /* NewConversationRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewConversationRowView.m; sourceTree = "<group>"; };
 		C233FB3218B661B6008C9A96 /* TMCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCheckBox.h; sourceTree = "<group>"; };
 		C233FB3318B661B6008C9A96 /* TMCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCheckBox.m; sourceTree = "<group>"; };
-		C235364919C88CFA0044978E /* pop.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = pop.framework; sourceTree = "<group>"; };
 		C235364C19C88D620044978E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		C235365719C8B4320044978E /* UserCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardViewController.h; sourceTree = "<group>"; };
 		C235365819C8B4320044978E /* UserCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardViewController.m; sourceTree = "<group>"; };
@@ -1340,6 +1359,67 @@
 		C268C13819EE9DF9007F836A /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		C268C13B19EEB580007F836A /* UserNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNameViewController.h; sourceTree = "<group>"; };
 		C268C13C19EEB580007F836A /* UserNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserNameViewController.m; sourceTree = "<group>"; };
+		C268C13E19EFF70E007F836A /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
+		C268C13F19EFF70E007F836A /* GLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
+		C268C14119F01AE3007F836A /* TMLoaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMLoaderView.h; sourceTree = "<group>"; };
+		C268C14219F01AE3007F836A /* TMLoaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMLoaderView.m; sourceTree = "<group>"; };
+		C268C15119F0519C007F836A /* POP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POP.h; sourceTree = "<group>"; };
+		C268C15219F0519C007F836A /* POPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAction.h; sourceTree = "<group>"; };
+		C268C15319F0519C007F836A /* POPAnimatableProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimatableProperty.h; sourceTree = "<group>"; };
+		C268C15419F0519C007F836A /* POPAnimatableProperty.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimatableProperty.mm; sourceTree = "<group>"; };
+		C268C15519F0519C007F836A /* POPAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimation.h; sourceTree = "<group>"; };
+		C268C15619F0519C007F836A /* POPAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimation.mm; sourceTree = "<group>"; };
+		C268C15719F0519C007F836A /* POPAnimationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationEvent.h; sourceTree = "<group>"; };
+		C268C15819F0519C007F836A /* POPAnimationEvent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimationEvent.mm; sourceTree = "<group>"; };
+		C268C15919F0519C007F836A /* POPAnimationEventInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationEventInternal.h; sourceTree = "<group>"; };
+		C268C15A19F0519C007F836A /* POPAnimationExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationExtras.h; sourceTree = "<group>"; };
+		C268C15B19F0519C007F836A /* POPAnimationExtras.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimationExtras.mm; sourceTree = "<group>"; };
+		C268C15C19F0519C007F836A /* POPAnimationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationInternal.h; sourceTree = "<group>"; };
+		C268C15D19F0519C007F836A /* POPAnimationPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationPrivate.h; sourceTree = "<group>"; };
+		C268C15E19F0519C007F836A /* POPAnimationRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationRuntime.h; sourceTree = "<group>"; };
+		C268C15F19F0519C007F836A /* POPAnimationRuntime.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimationRuntime.mm; sourceTree = "<group>"; };
+		C268C16019F0519C007F836A /* POPAnimationTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationTracer.h; sourceTree = "<group>"; };
+		C268C16119F0519C007F836A /* POPAnimationTracer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimationTracer.mm; sourceTree = "<group>"; };
+		C268C16219F0519C007F836A /* POPAnimationTracerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimationTracerInternal.h; sourceTree = "<group>"; };
+		C268C16319F0519C007F836A /* POPAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimator.h; sourceTree = "<group>"; };
+		C268C16419F0519C007F836A /* POPAnimator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPAnimator.mm; sourceTree = "<group>"; };
+		C268C16519F0519C007F836A /* POPAnimatorPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPAnimatorPrivate.h; sourceTree = "<group>"; };
+		C268C16619F0519C007F836A /* POPBasicAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPBasicAnimation.h; sourceTree = "<group>"; };
+		C268C16719F0519C007F836A /* POPBasicAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPBasicAnimation.mm; sourceTree = "<group>"; };
+		C268C16819F0519C007F836A /* POPBasicAnimationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPBasicAnimationInternal.h; sourceTree = "<group>"; };
+		C268C16919F0519C007F836A /* POPCGUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPCGUtils.h; sourceTree = "<group>"; };
+		C268C16A19F0519C007F836A /* POPCGUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPCGUtils.mm; sourceTree = "<group>"; };
+		C268C16B19F0519C007F836A /* POPCustomAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPCustomAnimation.h; sourceTree = "<group>"; };
+		C268C16C19F0519C007F836A /* POPCustomAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPCustomAnimation.mm; sourceTree = "<group>"; };
+		C268C16D19F0519C007F836A /* POPDecayAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPDecayAnimation.h; sourceTree = "<group>"; };
+		C268C16E19F0519C007F836A /* POPDecayAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPDecayAnimation.mm; sourceTree = "<group>"; };
+		C268C16F19F0519C007F836A /* POPDecayAnimationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPDecayAnimationInternal.h; sourceTree = "<group>"; };
+		C268C17019F0519C007F836A /* POPDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPDefines.h; sourceTree = "<group>"; };
+		C268C17119F0519C007F836A /* POPGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPGeometry.h; sourceTree = "<group>"; };
+		C268C17219F0519C007F836A /* POPGeometry.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPGeometry.mm; sourceTree = "<group>"; };
+		C268C17319F0519C007F836A /* POPLayerExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPLayerExtras.h; sourceTree = "<group>"; };
+		C268C17419F0519C007F836A /* POPLayerExtras.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPLayerExtras.mm; sourceTree = "<group>"; };
+		C268C17519F0519C007F836A /* POPMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPMath.h; sourceTree = "<group>"; };
+		C268C17619F0519C007F836A /* POPMath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPMath.mm; sourceTree = "<group>"; };
+		C268C17719F0519C007F836A /* POPPropertyAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPPropertyAnimation.h; sourceTree = "<group>"; };
+		C268C17819F0519C007F836A /* POPPropertyAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPPropertyAnimation.mm; sourceTree = "<group>"; };
+		C268C17919F0519C007F836A /* POPPropertyAnimationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPPropertyAnimationInternal.h; sourceTree = "<group>"; };
+		C268C17A19F0519C007F836A /* POPSpringAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPSpringAnimation.h; sourceTree = "<group>"; };
+		C268C17B19F0519C007F836A /* POPSpringAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPSpringAnimation.mm; sourceTree = "<group>"; };
+		C268C17C19F0519C007F836A /* POPSpringAnimationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPSpringAnimationInternal.h; sourceTree = "<group>"; };
+		C268C17D19F0519C007F836A /* POPSpringSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPSpringSolver.h; sourceTree = "<group>"; };
+		C268C17E19F0519C007F836A /* POPVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POPVector.h; sourceTree = "<group>"; };
+		C268C17F19F0519C007F836A /* POPVector.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = POPVector.mm; sourceTree = "<group>"; };
+		C268C18119F0519C007F836A /* FloatConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloatConversion.h; sourceTree = "<group>"; };
+		C268C18219F0519C007F836A /* TransformationMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformationMatrix.cpp; sourceTree = "<group>"; };
+		C268C18319F0519C007F836A /* TransformationMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformationMatrix.h; sourceTree = "<group>"; };
+		C268C18419F0519C007F836A /* UnitBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitBezier.h; sourceTree = "<group>"; };
+		C268C19719F12B66007F836A /* MessageTablecellAudioDocumentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTablecellAudioDocumentView.h; sourceTree = "<group>"; };
+		C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTablecellAudioDocumentView.m; sourceTree = "<group>"; };
+		C268C19A19F12EFA007F836A /* MessageTableItemAudioDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemAudioDocument.h; sourceTree = "<group>"; };
+		C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemAudioDocument.m; sourceTree = "<group>"; };
+		C268C19D19F13721007F836A /* MessagetableCellAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagetableCellAudioController.h; sourceTree = "<group>"; };
+		C268C19E19F13721007F836A /* MessagetableCellAudioController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagetableCellAudioController.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -1804,7 +1884,6 @@
 				CECBC1661800CA2400AD98E6 /* Foundation.framework in Frameworks */,
 				CE29CA7C1801355200803E22 /* libssl.a in Frameworks */,
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
-				C235364A19C88CFA0044978E /* pop.framework in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
@@ -2040,6 +2119,8 @@
 				C222773118FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m */,
 				C2936943197E6B5700DD9680 /* MessageTableHeaderItem.h */,
 				C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */,
+				C268C19A19F12EFA007F836A /* MessageTableItemAudioDocument.h */,
+				C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -2069,6 +2150,10 @@
 				0ABC223018EE88DA00243F82 /* MessageTableCellGifView.m */,
 				C222773318FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.h */,
 				C222773418FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.m */,
+				C268C19719F12B66007F836A /* MessageTablecellAudioDocumentView.h */,
+				C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */,
+				C268C19D19F13721007F836A /* MessagetableCellAudioController.h */,
+				C268C19E19F13721007F836A /* MessagetableCellAudioController.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -2475,6 +2560,8 @@
 				C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */,
 				C2753DD319E43EA500752BAF /* TGCTextMark.h */,
 				C2753DD419E43EA500752BAF /* TGCTextMark.m */,
+				C268C14119F01AE3007F836A /* TMLoaderView.h */,
+				C268C14219F01AE3007F836A /* TMLoaderView.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -2928,6 +3015,72 @@
 			name = username;
 			sourceTree = "<group>";
 		};
+		C268C14F19F05139007F836A /* pop */ = {
+			isa = PBXGroup;
+			children = (
+				C268C15119F0519C007F836A /* POP.h */,
+				C268C15219F0519C007F836A /* POPAction.h */,
+				C268C15319F0519C007F836A /* POPAnimatableProperty.h */,
+				C268C15419F0519C007F836A /* POPAnimatableProperty.mm */,
+				C268C15519F0519C007F836A /* POPAnimation.h */,
+				C268C15619F0519C007F836A /* POPAnimation.mm */,
+				C268C15719F0519C007F836A /* POPAnimationEvent.h */,
+				C268C15819F0519C007F836A /* POPAnimationEvent.mm */,
+				C268C15919F0519C007F836A /* POPAnimationEventInternal.h */,
+				C268C15A19F0519C007F836A /* POPAnimationExtras.h */,
+				C268C15B19F0519C007F836A /* POPAnimationExtras.mm */,
+				C268C15C19F0519C007F836A /* POPAnimationInternal.h */,
+				C268C15D19F0519C007F836A /* POPAnimationPrivate.h */,
+				C268C15E19F0519C007F836A /* POPAnimationRuntime.h */,
+				C268C15F19F0519C007F836A /* POPAnimationRuntime.mm */,
+				C268C16019F0519C007F836A /* POPAnimationTracer.h */,
+				C268C16119F0519C007F836A /* POPAnimationTracer.mm */,
+				C268C16219F0519C007F836A /* POPAnimationTracerInternal.h */,
+				C268C16319F0519C007F836A /* POPAnimator.h */,
+				C268C16419F0519C007F836A /* POPAnimator.mm */,
+				C268C16519F0519C007F836A /* POPAnimatorPrivate.h */,
+				C268C16619F0519C007F836A /* POPBasicAnimation.h */,
+				C268C16719F0519C007F836A /* POPBasicAnimation.mm */,
+				C268C16819F0519C007F836A /* POPBasicAnimationInternal.h */,
+				C268C16919F0519C007F836A /* POPCGUtils.h */,
+				C268C16A19F0519C007F836A /* POPCGUtils.mm */,
+				C268C16B19F0519C007F836A /* POPCustomAnimation.h */,
+				C268C16C19F0519C007F836A /* POPCustomAnimation.mm */,
+				C268C16D19F0519C007F836A /* POPDecayAnimation.h */,
+				C268C16E19F0519C007F836A /* POPDecayAnimation.mm */,
+				C268C16F19F0519C007F836A /* POPDecayAnimationInternal.h */,
+				C268C17019F0519C007F836A /* POPDefines.h */,
+				C268C17119F0519C007F836A /* POPGeometry.h */,
+				C268C17219F0519C007F836A /* POPGeometry.mm */,
+				C268C17319F0519C007F836A /* POPLayerExtras.h */,
+				C268C17419F0519C007F836A /* POPLayerExtras.mm */,
+				C268C17519F0519C007F836A /* POPMath.h */,
+				C268C17619F0519C007F836A /* POPMath.mm */,
+				C268C17719F0519C007F836A /* POPPropertyAnimation.h */,
+				C268C17819F0519C007F836A /* POPPropertyAnimation.mm */,
+				C268C17919F0519C007F836A /* POPPropertyAnimationInternal.h */,
+				C268C17A19F0519C007F836A /* POPSpringAnimation.h */,
+				C268C17B19F0519C007F836A /* POPSpringAnimation.mm */,
+				C268C17C19F0519C007F836A /* POPSpringAnimationInternal.h */,
+				C268C17D19F0519C007F836A /* POPSpringSolver.h */,
+				C268C17E19F0519C007F836A /* POPVector.h */,
+				C268C17F19F0519C007F836A /* POPVector.mm */,
+				C268C18019F0519C007F836A /* WebCore */,
+			);
+			name = pop;
+			sourceTree = "<group>";
+		};
+		C268C18019F0519C007F836A /* WebCore */ = {
+			isa = PBXGroup;
+			children = (
+				C268C18119F0519C007F836A /* FloatConversion.h */,
+				C268C18219F0519C007F836A /* TransformationMatrix.cpp */,
+				C268C18319F0519C007F836A /* TransformationMatrix.h */,
+				C268C18419F0519C007F836A /* UnitBezier.h */,
+			);
+			path = WebCore;
+			sourceTree = "<group>";
+		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
 			isa = PBXGroup;
 			children = (
@@ -3153,6 +3306,7 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C268C14F19F05139007F836A /* pop */,
 				C2753DDD19E5B24500752BAF /* TGModernAnimatedImagePlayer.h */,
 				C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */,
 				C2753DDA19E5A44300752BAF /* FLAnimatedImage.h */,
@@ -3175,6 +3329,8 @@
 				C2AA4ED118A8ED3A00E20C68 /* utils */,
 				CEB0D72218E3770D00457D08 /* TMWindowTitleView.h */,
 				CEB0D72318E3770D00457D08 /* TMWindowTitleView.m */,
+				C268C13E19EFF70E007F836A /* GLView.h */,
+				C268C13F19EFF70E007F836A /* GLView.m */,
 			);
 			name = external;
 			sourceTree = "<group>";
@@ -3407,7 +3563,6 @@
 				C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */,
 				C2E40E2919D58E370079046E /* CoreMedia.framework */,
 				C235364C19C88D620044978E /* Sparkle.framework */,
-				C235364919C88CFA0044978E /* pop.framework */,
 				C2082B7219C1E1C4000005E2 /* HockeySDK.framework */,
 				0AB8F2BA1948BCF30074E4E7 /* AVFoundation.framework */,
 				0A7C78FC1947E147001617DB /* GLKit.framework */,
@@ -4184,6 +4339,7 @@
 				C2A5C00718E17C630021BE68 /* SettingsWindowController.m in Sources */,
 				C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */,
 				0ABC223918F2D65900243F82 /* TLAPIAdd.m in Sources */,
+				C268C18819F0519C007F836A /* POPAnimationExtras.mm in Sources */,
 				CEB09E6F17DAFC250055F150 /* AppDelegate.m in Sources */,
 				0A59068018AA32C8002ED7BA /* BTRSecureTextField.m in Sources */,
 				CEB26165180C928A00378932 /* RpcError.m in Sources */,
@@ -4213,6 +4369,7 @@
 				0AF4F4AD189D5CD5004BA4DF /* MessageTableCellServiceMessage.m in Sources */,
 				CEAE5D68181ECDF100C17645 /* FMResultSet.m in Sources */,
 				C2FA78E61923CB6A001A9D1B /* VideoHistoryFilter.m in Sources */,
+				C268C18C19F0519C007F836A /* POPBasicAnimation.mm in Sources */,
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
@@ -4265,6 +4422,7 @@
 				CEAE5D18181BF9D300C17645 /* RPCRequest.m in Sources */,
 				0A6E13D218A8F3CB004D1BC7 /* NewContactsManager.m in Sources */,
 				C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */,
+				C268C18719F0519C007F836A /* POPAnimationEvent.mm in Sources */,
 				C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */,
 				C21C7B3E18D777B300253A7A /* DocumentSenderItem.m in Sources */,
 				0AA0A98718B160CF00836E83 /* TMAvatarImageView.m in Sources */,
@@ -4292,11 +4450,14 @@
 				0A6D098A19535E8500A9AC64 /* NSAttributedStringCategory.m in Sources */,
 				CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */,
 				0A9EDC4E1897BA0E0037E1BC /* NSColor+RBLCGColorAdditions.m in Sources */,
+				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C22C7F2D18B2163F007C4D17 /* TelegramSerialization.m in Sources */,
 				0AB8F64B1861B05B000E6FF3 /* DialogTableItemView.m in Sources */,
 				CEDAEB8D1881AFA6006189A2 /* DDLog.m in Sources */,
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
 				0ADA319C19469D16002BAEDB /* EmojiViewController.m in Sources */,
+				C268C19419F0519C007F836A /* POPSpringAnimation.mm in Sources */,
+				C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */,
 				C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */,
 				0A59067F18AA32C8002ED7BA /* BTRScrollView.m in Sources */,
 				CEB0D72418E3770D00457D08 /* TMWindowTitleView.m in Sources */,
@@ -4346,9 +4507,11 @@
 				0A241A9718AAF5B900C32F45 /* DialogTableView.m in Sources */,
 				C28261E219926C62004AC73E /* TL_peerBroadcast.m in Sources */,
 				0AEE20851821352D00F348F2 /* MessagesTableView.m in Sources */,
+				C268C18E19F0519C007F836A /* POPCustomAnimation.mm in Sources */,
 				C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */,
 				0A241AAE18ACD39700C32F45 /* MessageTableCellVideoView.m in Sources */,
 				0ACDB14118D09CC0009FE910 /* LoginButtonAndErrorView.m in Sources */,
+				C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */,
 				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
@@ -4357,6 +4520,7 @@
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,
 				CEDAEB751881AF85006189A2 /* YapDatabaseConnection.m in Sources */,
+				C268C18519F0519C007F836A /* POPAnimatableProperty.mm in Sources */,
 				0A5F0FFB18DC2FF900CCFA60 /* ChatParticipantItem.m in Sources */,
 				C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */,
 				CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */,
@@ -4378,6 +4542,7 @@
 				0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */,
 				CEC8B88A1832108A00283E53 /* Reachability.m in Sources */,
 				C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */,
+				C268C18D19F0519C007F836A /* POPCGUtils.mm in Sources */,
 				0A59067918AA32C8002ED7BA /* BTRClipView.m in Sources */,
 				C21D486219B08E64000F06E1 /* TMTokenCell.m in Sources */,
 				C21D482A19AC78BB000F06E1 /* TMTabItem.m in Sources */,
@@ -4401,6 +4566,7 @@
 				C2A5BFFD18E03D150021BE68 /* MessageTableCellAudioView.m in Sources */,
 				0A5F0FFE18DC300A00CCFA60 /* ChatParticipantRowView.m in Sources */,
 				C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */,
+				C268C19619F0519C007F836A /* TransformationMatrix.cpp in Sources */,
 				C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */,
 				0A9EDC5B1897BA0E0037E1BC /* RBLScrollView.m in Sources */,
 				0A241A9418AAEF2900C32F45 /* TMTextField.m in Sources */,
@@ -4412,11 +4578,13 @@
 				CEB0A1E417DB03AA0055F150 /* AsyncUdpSocket.m in Sources */,
 				C23536AD19CC64330044978E /* LoginBottomView.m in Sources */,
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
+				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
 				CEDAEB5B1881AF85006189A2 /* YapDatabaseSecondaryIndexConnection.m in Sources */,
 				CEB7ADF11812E31F005CB6A1 /* ImageCache.m in Sources */,
 				0A5F0FF818DC0F5C00CCFA60 /* ChatInfoNotificationView.m in Sources */,
 				0AC7F475185DA87A00F90558 /* TMTableView.mm in Sources */,
+				C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */,
 				0ACDB13218CF28DC009FE910 /* NewLoginViewController.m in Sources */,
 				0A9EDC611897BA0E0037E1BC /* RBLViewController.m in Sources */,
 				CEDAEB661881AF85006189A2 /* YapDatabaseViewTransaction.m in Sources */,
@@ -4464,6 +4632,7 @@
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C256E90E18D20701008FFA04 /* DownloadVideoItem.m in Sources */,
+				C268C19119F0519C007F836A /* POPLayerExtras.mm in Sources */,
 				0A4A1A1F189FFAE400D756CD /* MessageTableItemTyping.m in Sources */,
 				C20A7E6219D706D0008844F2 /* ASActor.m in Sources */,
 				0A9EDC4F1897BA0E0037E1BC /* NSFont+RBLFallbackAdditions.m in Sources */,
@@ -4482,9 +4651,11 @@
 				0A6D098B19535E8500A9AC64 /* NSBezierPathCategory.m in Sources */,
 				CEA5894C181673E500462DF0 /* NS(Attributed)String+Geometrics.m in Sources */,
 				0A59068518AA32C8002ED7BA /* NSImage+BTRImageAdditions.m in Sources */,
+				C268C19219F0519C007F836A /* POPMath.mm in Sources */,
 				CEDAEB6F1881AF85006189A2 /* YapTouch.m in Sources */,
 				C2A5BFBF18DC80620021BE68 /* internal.c in Sources */,
 				C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */,
+				C268C19019F0519C007F836A /* POPGeometry.mm in Sources */,
 				C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */,
 				0ABB7090181D5F1300D1F12D /* TLApiObject.m in Sources */,
 				C21C7B3218D737BD00253A7A /* ImageSenderItem.m in Sources */,
@@ -4514,6 +4685,7 @@
 				0AB43BC518D8A4AC00FB805A /* CNGridViewItemLayout.m in Sources */,
 				0AB43BC718D8A4AC00FB805A /* NSView+CNGridView.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
+				C268C14019EFF70E007F836A /* GLView.m in Sources */,
 				0A9EDC511897BA0E0037E1BC /* NSObject+RBObjectSizzlingAdditions.m in Sources */,
 				C2201A00192CCB5C00C0E441 /* SelectUserItem.m in Sources */,
 				0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */,
@@ -4602,6 +4774,7 @@
 				C2227752190E564B002AA0F6 /* OnlineNotificationManager.m in Sources */,
 				0AB8F2AF194866050074E4E7 /* MapPanel.m in Sources */,
 				C233FB3118B61618008C9A96 /* NewConversationRowView.m in Sources */,
+				C268C18619F0519C007F836A /* POPAnimation.mm in Sources */,
 				C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */,
 				CE84549A18244F1600E73DF7 /* TelegramWindow.m in Sources */,
 				C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */,
@@ -4609,8 +4782,10 @@
 				C2F39970190FD1FC006B36F7 /* SGraphObjectNode.m in Sources */,
 				C256E90918D201CD008FFA04 /* TMPreviewVideoItem.m in Sources */,
 				0AB43BA518D44A1C00FB805A /* GifAnimationLayer.m in Sources */,
+				C268C18F19F0519C007F836A /* POPDecayAnimation.mm in Sources */,
 				0A9C56A218CB0D66005B5049 /* TMBackButton.m in Sources */,
 				C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */,
+				C268C19919F12B66007F836A /* MessageTablecellAudioDocumentView.m in Sources */,
 				C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */,
 				CEAE5CD0181B0D7600C17645 /* ImageUtils.m in Sources */,
 				C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */,
@@ -4630,6 +4805,7 @@
 				C23298DE18CF61DD000826E5 /* TMMediaController.mm in Sources */,
 				CEB7AE0818143E35005CB6A1 /* MessageSender.m in Sources */,
 				CE8454911822EE2000E73DF7 /* ChatsManager.m in Sources */,
+				C268C19519F0519C007F836A /* POPVector.mm in Sources */,
 				0A6758981894367E00F4487D /* TMStandartImages.m in Sources */,
 				C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */,
 				C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */,
@@ -4644,6 +4820,8 @@
 				0A9EDC5C1897BA0E0037E1BC /* RBLShadowedTextFieldCell.m in Sources */,
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,
 				C2200B7618F43B3300F28803 /* EncryptedKeyWindow.m in Sources */,
+				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
+				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
 				0AA7E1CD18CD28570064EFC7 /* TelegramFirstController.m in Sources */,
@@ -4807,19 +4985,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
 					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
@@ -4830,12 +4996,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/opus/lib,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
 					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -4858,19 +5018,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
 					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
@@ -4881,12 +5029,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/lib/opus,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
 					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;

@@ -246,6 +246,17 @@
         NSSize size = [self sizeOfText];
         
         
+//        CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
+//                                              graphicsPort];
+//        
+//        CGContextSetAllowsFontSubpixelQuantization(context, true);
+//        CGContextSetShouldSubpixelQuantizeFonts(context, true);
+//        CGContextSetAllowsFontSubpixelPositioning(context, true);
+//        CGContextSetShouldSubpixelPositionFonts(context, false);
+//        CGContextSetAllowsAntialiasing(context,true);
+       // CGContextSetShouldSmoothFonts(context, true);
+       // CGContextSetAllowsFontSmoothing(context,true);
+        
 //        NSAttributedString *nsAttributedString = [[NSAttributedString alloc] initWithString:self.text attributes:attributes];
 //        [nsAttributedString size]
         
@@ -255,7 +266,7 @@
 //        [[NSColor redColor] set] ;
 //        NSRectFill( rect ) ;
         
-        [self.text drawInRect:rect withAttributes:attributes];
+        [self.text drawWithRect:rect options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes];
       
     
     }

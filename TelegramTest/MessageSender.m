@@ -53,7 +53,7 @@
         return;
     }
     
-    AVAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
+    AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
     
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
     
@@ -117,6 +117,8 @@
     int duration = ceil(time.value / time.timescale);
     
     
+    
+    
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     generator.appliesPreferredTrackTransform = TRUE;
     CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
@@ -146,7 +148,7 @@
 
     
     
-    NSSize size = NSMakeSize(640, 480);
+    NSSize size = NSMakeSize(MIN(640, [asset naturalSize].width), MIN(480,[asset naturalSize].height));
     return @{@"duration": @(duration), @"image":thumbImg, @"size":NSStringFromSize(size)};
 }
 

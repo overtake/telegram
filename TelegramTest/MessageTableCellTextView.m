@@ -9,6 +9,7 @@
 #import "MessageTableCellTextView.h"
 #import "MessageTableItemText.h"
 #import "TGTimerTarget.h"
+#import "POPCGUtils.h"
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -26,7 +27,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
         [self.containerView addSubview:self.textView];
         
@@ -42,8 +42,6 @@
 -(void)selectSearchTextInRange:(NSRange)range {
     
     [self.textView setSelectionRange:range];
-    
-  //  [self.textField becomeFirstResponder];
     
 }
 
@@ -82,43 +80,30 @@
      [self.textView setNeedsDisplay:YES];
 }
 
--(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim {
     
-    if(self.isSelected == selected)
-        return;
     
-    [super setSelected:selected animation:animation];
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
     
-//    if(animation) {
-//        NSColor *color = selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
-//        NSColor *oldColor = !selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
-//        
-//        
-//        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
-//        animation.fromValue = (__bridge id)(oldColor.CGColor);
-//        animation.toValue = (__bridge id)(color.CGColor);
-//        
-//        animation.removedOnCompletion = YES;
-//        
-//        animation.delegate = self;
-//        
-//        
-//        
-//        [self.bgTimer invalidate];
-//        
-//        self.bgTimer = [TGTimerTarget scheduledMainThreadTimerWithTarget:self action:@selector(_colorAnimationEvent) interval:0.05 repeat:true];
-//        
-//        [[NSRunLoop mainRunLoop] addTimer:self.bgTimer forMode:NSRunLoopCommonModes];
-//        
-//        [self.textView.layer pop_addAnimation:animation forKey:@"backgroundColor"];
-//        
-//        
-//    } else {
-//        [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
-//    }
-//    
-//    
-     [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [self.textView pop_addAnimation:animation forKey:@"background"];
+    
 }
 
 -(void)_colorAnimationEvent {
@@ -130,23 +115,15 @@
     [self.textView setNeedsDisplay:YES];
 }
 
-- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)finished {
-    if(finished) {
-        [self.bgTimer invalidate];
-        self.bgTimer = nil;
+-(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+    if(selected == self.isSelected)
+        return;
+    
+    [super setSelected:selected animation:animation];
+    
+    if(!animation) {
+        [self.textView setBackgroundColor:selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
     }
-    
-    [self.textView setBackgroundColor:self.item.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
-}
-
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    
-  //  CFAttributedStringRef attrString =
-    
-   
-    
 }
 
 @end

@@ -19,5 +19,5 @@
 #import "MessageTableCellDocumentView.h"
 #import "MessageTableCellAudioView.h"
 #import "MessageTableCellUnreadMarkView.h"
-
+#import "MessageTablecellAudioDocumentView.h"
 

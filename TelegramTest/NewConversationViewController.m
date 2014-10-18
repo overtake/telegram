@@ -318,7 +318,7 @@
     
     [createChatButton setTextOffset:NSMakeSize(0, 3)];
     
-     [createChatButton setDrawBlock:separatorDraw];
+   //  [createChatButton setDrawBlock:separatorDraw];
     
     NSSize size = NSMakeSize([createChatButton sizeOfText].width+30, [createChatButton sizeOfText].height);
     [createChatButton setTextColor:BLUE_UI_COLOR forState:TMButtonNormalState];
@@ -360,7 +360,7 @@
     
     [broadcastButton addSubview:bImageView];
     
-     [broadcastButton setDrawBlock:separatorDraw];
+ //    [broadcastButton setDrawBlock:separatorDraw];
     
     
     [topView addSubview:broadcastButton];
@@ -378,7 +378,7 @@
     
     [createSecretChatButton setTextOffset:NSMakeSize(0, 2)];
     
-    [createSecretChatButton setDrawBlock:separatorDraw];
+   // [createSecretChatButton setDrawBlock:separatorDraw];
     
     size = NSMakeSize([createSecretChatButton sizeOfText].width+20, [createSecretChatButton sizeOfText].height);
     

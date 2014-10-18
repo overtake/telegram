@@ -9,18 +9,15 @@
 #import "AddContactView.h"
 #import "TMBlueInputTextField.h"
 #import "RMPhoneFormat.h"
-
+#import "UserInfoShortTextEditView.h"
 @interface AddContactView ()
-@property (nonatomic,strong) TMBlueInputTextField *firstName;
-@property (nonatomic,strong) TMBlueInputTextField *lastName;
-@property (nonatomic,strong) TMBlueInputTextField *phoneNumber;
+@property (nonatomic,strong) UserInfoShortTextEditView *firstNameView;
+@property (nonatomic,strong) UserInfoShortTextEditView *lastNameView;
+@property (nonatomic,strong) UserInfoShortTextEditView *phoneNumberView;
 @property (nonatomic,strong) TMAvatarImageView *avatarImage;
 
 @property (nonatomic,strong) TGUser *user;
 @end
-
-#define ActiveStartingColor BLUE_UI_COLOR
-#define InactiveStartingColor NSColorFromRGB(0xdedede)
 
 @implementation AddContactView
 
@@ -28,98 +25,115 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
+        
+        self.isFlipped = YES;
+        
+        
+        TMView *rightView = [[TMView alloc] init];
+        
+        
+        TMTextButton *doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Done"];
+        [doneButton setTapBlock:^{
+            [self actionAddContact];
+        }];
+        
+        [rightView setFrameSize:doneButton.frame.size];
+        
+        
+        [rightView addSubview:doneButton];
+        
+        [self.controller setRightNavigationBarView:rightView animated:NO];
+        
+        
         
         self.user = [TL_userContact createWithN_id:-1 first_name:@"" last_name:@"" access_hash:0 phone:0 photo:[TL_userProfilePhotoEmpty create] status:[TL_userStatusEmpty create]];
         
-        int bOfsset = 20;
+        
+        int offsetY = 30;
         
         
         
-        self.backgroundColor = NSColorFromRGB(0xffffff);
-        
-        self.avatarImage = [[TMAvatarImageView alloc] initWithFrame:NSMakeRect(18, 90 + bOfsset, 78, 78)];
-        
-        self.firstName = [[TMBlueInputTextField alloc] initWithFrame:NSMakeRect(106,134 + bOfsset, 172, 35)];
-        
-        self.firstName.placeholderTitle = NSLocalizedString(@"AddContact.FirstNamePlaceholder", nil);
-        
-        self.firstName.font = self.firstName.placeholderFont = [NSFont fontWithName:@"HelveticaNeue" size:13];
-        
-        self.firstName.fieldXInset = 7.0f;
-        self.firstName.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
-        [self.firstName setDrawsFocusRing:NO];
-    
+        self.firstNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
+        [self.firstNameView setFrameOrigin:NSMakePoint(190, offsetY)];
+        [self.firstNameView setFrameSize:NSMakeSize(self.frame.size.width-290, 38)];
         
         
         
-        self.lastName = [[TMBlueInputTextField alloc] initWithFrame:NSMakeRect(106, 90 + bOfsset, 172, 35)];
+        [self addSubview:self.firstNameView];
         
-        self.lastName.fieldXInset = 7.0f;
-        self.lastName.font = self.lastName.placeholderFont = [NSFont fontWithName:@"HelveticaNeue" size:13];
-        self.lastName.placeholderTitle = NSLocalizedString(@"AddContact.LastNamePlaceholder", nil);
-        self.lastName.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
-        [self.lastName setDrawsFocusRing:NO];
+        
+        
+        self.lastNameView = [[UserInfoShortTextEditView alloc] initWithFrame:NSZeroRect];
+        [self.lastNameView setFrameOrigin:NSMakePoint(190, offsetY + self.firstNameView.bounds.size.height)];
+        [self.lastNameView setFrameSize:NSMakeSize(self.frame.size.width-290, 38)];
+        [self addSubview:self.lastNameView];
+        
+        [self.firstNameView.textView setNextKeyView:self.lastNameView.textView];
+        [self.firstNameView.textView setTarget:self];
+        [self.firstNameView.textView setAction:@selector(enterClick)];
+        
+        
+        
+        [self.lastNameView.textView setNextKeyView:self.phoneNumberView.textView];
+        [self.lastNameView.textView setTarget:self];
+        [self.lastNameView.textView setAction:@selector(enterClick)];
+        
+        [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        
+        [self.firstNameView.textView setAlignment:NSLeftTextAlignment];
+        [self.lastNameView.textView setAlignment:NSLeftTextAlignment];
+        
+       
+        
+        [self.phoneNumberView.textView setNextKeyView:self.firstNameView.textView];
+        [self.phoneNumberView.textView setTarget:self];
+        [self.phoneNumberView.textView setAction:@selector(enterClick)];
+        
+        
+        self.phoneNumberView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 115 + offsetY, frame.size.width-200, 35)];
+        
+        
+        self.phoneNumberView.textView.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+        
+        NSAttributedString *phoneViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.PhoneNumberPlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:NSColorFromRGB(0x999999)}];
+        
+        
+        [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
+        
+        
+        NSAttributedString *firstNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.FirstNamePlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:NSColorFromRGB(0x999999)}];
+        
+        
+        [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
 
         
-        self.phoneNumber = [[TMBlueInputTextField alloc] initWithFrame:NSMakeRect(18, 43 + bOfsset, frame.size.width-40, 35)];
-        
-        self.phoneNumber.fieldXInset = 7.0f;
-        self.phoneNumber.font = self.phoneNumber.placeholderFont = [NSFont fontWithName:@"HelveticaNeue" size:13];
-        self.phoneNumber.placeholderTitle = NSLocalizedString(@"AddContact.PhoneNumberPlaceholder", nil);
-        self.phoneNumber.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
-        [self.phoneNumber setDrawsFocusRing:NO];
+        NSAttributedString *lastNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.LastNamePlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:NSColorFromRGB(0x999999)}];
         
         
+        [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
+        [self.firstNameView.textView.cell setPlaceholderAttributedString:firstNameViewPlaceHolder];
+        [self.lastNameView.textView.cell setPlaceholderAttributedString:lastNameViewPlaceHolder];
         
         
-        self.phoneNumber.delegate = self;
-        self.firstName.delegate = self;
-        self.lastName.delegate = self;
+        [self addSubview:self.phoneNumberView];
         
-        [self addSubview:self.firstName];
-        [self addSubview:self.lastName];
-        [self addSubview:self.phoneNumber];
+        
+        [self.firstNameView.textView setFrameOrigin:NSMakePoint(0, 8)];
+        [self.lastNameView.textView setFrameOrigin:NSMakePoint(0, 8)];
+        [self.phoneNumberView.textView setFrameOrigin:NSMakePoint(0, 8)];
+        
+        
+        self.firstNameView.textView.delegate = self;
+        self.lastNameView.textView.delegate = self;
+        self.phoneNumberView.textView.delegate = self;
+        
+        
+        
+
+        self.avatarImage = [[TMAvatarImageView alloc] initWithFrame:NSMakeRect(100, 35, 75, 75)];
         
         [self addSubview:self.avatarImage];
-        
-        
-        [self.firstName setActiveFieldColor:ActiveStartingColor];
-        [self.firstName setInactiveFieldColor:InactiveStartingColor];
-        
-        [self.lastName setActiveFieldColor:ActiveStartingColor];
-        [self.lastName setInactiveFieldColor:InactiveStartingColor];
-        
-        [self.phoneNumber setActiveFieldColor:ActiveStartingColor];
-        [self.phoneNumber setInactiveFieldColor:InactiveStartingColor];
-        
-        
-        dispatch_block_t separatorDraw = ^ {
-            [GRAY_BORDER_COLOR set];
-            NSRectFill(NSMakeRect(0, 46, frame.size.width, 1));
-        };
-        
-        
-        TMButton *addContactButton = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, frame.size.width, 47)];
-        [addContactButton setAutoresizesSubviews:YES];
-        [addContactButton setAutoresizingMask:NSViewMinXMargin];
-        [addContactButton setTarget:self selector:@selector(actionAddContact)];
-        [addContactButton setText:NSLocalizedString(@"AddContact.AddContact", nil)];
-        [addContactButton setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        
-        [addContactButton setBackgroundColor:NSColorFromRGB(0xfdfdfd)];
-        
-        [addContactButton setTextOffset:NSMakeSize(0, 0)];
-        
-        [addContactButton setDrawBlock:separatorDraw];
-
-        [addContactButton setTextColor:BLUE_UI_COLOR forState:TMButtonNormalState];
-        [addContactButton setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];
-        [addContactButton setTextColor:NSColorFromRGB(0x2e618c) forState:TMButtonPressedState];
-        
-        [self addSubview:addContactButton];
-        
-        
         
         [self.avatarImage setUser:self.user];
     }
@@ -129,19 +143,19 @@
 
 - (void)actionAddContact {
     
-    TL_inputPhoneContact *contact = [TL_inputPhoneContact createWithClient_id:rand_long() phone:self.phoneNumber.stringValue first_name:self.firstName.stringValue last_name:self.lastName.stringValue];
+    TL_inputPhoneContact *contact = [TL_inputPhoneContact createWithClient_id:rand_long() phone:self.phoneNumberView.textView.stringValue first_name:self.firstNameView.textView.stringValue last_name:self.lastNameView.textView.stringValue];
     
     
 
     NSMutableArray *failFields = [[NSMutableArray alloc] init];
     
-    if(self.firstName.stringValue.length == 0) {
-        [failFields addObject:self.firstName];
+    if(self.firstNameView.textView.stringValue.length == 0) {
+        [failFields addObject:self.firstNameView];
     }
     
 
-    if(self.phoneNumber.stringValue.length == 0) {
-        [failFields addObject:self.phoneNumber];
+    if(self.phoneNumberView.textView.stringValue.length == 0) {
+        [failFields addObject:self.phoneNumberView];
     }
     
     
@@ -178,51 +192,31 @@
         }];
     } else {
         NSBeep();
-        for (BTRTextField *failField in failFields) {
-            [failField setInactiveFieldColor:NSColorFromRGB(0xdd1111)];
-            [failField setActiveFieldColor:NSColorFromRGB(0xdd1111)];
-        }
+        
       
     }
  
 }
 
 -(void)clear {
-    [self.firstName setActiveFieldColor:ActiveStartingColor];
-    [self.firstName setInactiveFieldColor:InactiveStartingColor];
     
-    [self.lastName setActiveFieldColor:ActiveStartingColor];
-    [self.lastName setInactiveFieldColor:InactiveStartingColor];
+    self.firstNameView.textView.stringValue = self.lastNameView.textView.stringValue = self.phoneNumberView.textView.stringValue = @"";
     
-    [self.phoneNumber setActiveFieldColor:ActiveStartingColor];
-    [self.phoneNumber setInactiveFieldColor:InactiveStartingColor];
-    
-    self.firstName.stringValue = self.lastName.stringValue = self.phoneNumber.stringValue = @"";
-    
-    self.user.first_name = self.firstName.stringValue;
-    self.user.last_name = self.lastName.stringValue;
+    self.user.first_name = self.firstNameView.textView.stringValue;
+    self.user.last_name = self.lastNameView.textView.stringValue;
     
     [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.user}];
 
 }
 
 -(BOOL)becomeFirstResponder {
-    return [self.firstName becomeFirstResponder];
+    return [self.firstNameView.textView becomeFirstResponder];
 }
 
 -(void)controlTextDidChange:(NSNotification *)obj {
     
-    BTRTextField *field = obj.object;
-    
-    [field setActiveFieldColor:ActiveStartingColor];
-    [field setInactiveFieldColor:InactiveStartingColor];
-    
-    
-    if(obj.object == self.phoneNumber) {
-        DLog(@"%@",self.phoneNumber.stringValue);
-        
-        
-        NSString *inputed = self.phoneNumber.stringValue;
+    if(obj.object == self.phoneNumberView.textView) {
+        NSString *inputed = self.phoneNumberView.textView.stringValue;
         
         if([inputed rangeOfString:@"("].location != NSNotFound && [inputed rangeOfString:@")"].location == NSNotFound) {
             int i = 1;
@@ -250,10 +244,10 @@
             format = @"";
         }
         
-        self.phoneNumber.stringValue = format;
+        self.phoneNumberView.textView.stringValue = format;
     } else {
-        self.user.first_name = self.firstName.stringValue;
-        self.user.last_name = self.lastName.stringValue;
+        self.user.first_name = self.firstNameView.textView.stringValue;
+        self.user.last_name = self.lastNameView.textView.stringValue;
         
         [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.user}];
     }
@@ -262,11 +256,5 @@
     
 }
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
 
 @end

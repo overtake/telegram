@@ -48,7 +48,7 @@
             
             
         } else {
-            self.thumbSize = NSMakeSize(50, 50);
+            self.thumbSize = NSMakeSize(48, 48);
         }
         
         self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:self.cachedThumb];
@@ -64,7 +64,7 @@
             self.state = DocumentStateWaitingDownload;
         }
         
-          [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size downloadItemClass:[DownloadDocumentItem class]];
+          [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
     }
     return self;
@@ -72,6 +72,10 @@
 
 - (int)size {
     return self.message.media.document.size;
+}
+
+- (Class)downloadClass {
+    return [DownloadDocumentItem class];
 }
 
 - (NSString *)path {

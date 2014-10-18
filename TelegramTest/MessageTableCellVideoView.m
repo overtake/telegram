@@ -33,7 +33,7 @@
 @end
 
 @interface MessageTableCellVideoView()
-@property (nonatomic, strong) BTRButton *playButton;
+@property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) VideoTimeView *videoTimeView;
 
@@ -42,54 +42,89 @@
 @implementation MessageTableCellVideoView
 
 
+
+static NSImage *playImage() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 48, 48);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGBWithAlpha(0x000000, 0.5) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        
+        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
+        [image unlockFocus];
+    });
+    return image;//image_VideoPlay();
+}
+
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
         weak();
         
         self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
         [self.imageView setRoundSize:4];
         [self.imageView setBlurRadius:60];
+        
         [self.imageView setTapBlock:^{
-            if(![weakSelf.item isset]) {
-                if([weakSelf.item canDownload]) {
-                    [weakSelf startDownload:NO downloadItemClass:[DownloadVideoItem class]];
-                }
-                
-            } else {
-                [weakSelf open];
-            }
+           
+            [weakSelf checkOperation];
+            
         }];
+        
         [self setProgressToView:self.imageView];
         [self.containerView addSubview:self.imageView];
         
-        self.playButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_VideoPlay().size.width, image_VideoPlay().size.height)];
-        [self.playButton setBackgroundImage:image_VideoPlay() forControlState:BTRControlStateNormal];
-      //  [self.playButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+        self.playImage = imageViewWithImage(playImage());
         
-        [self.playButton addBlock:^(BTRControlEvents events) {
-            if(![weakSelf.item isset]) {
-                if([weakSelf.item canDownload]) {
-                    [weakSelf startDownload:NO downloadItemClass:[DownloadVideoItem class]];
-                }
-            } else {
-                [weakSelf open];
-            }
-        } forControlEvents:BTRControlEventMouseDownInside];
-        [self.imageView addSubview:self.playButton];
-        [self.playButton setCenterByView:self.imageView];
-        [self.playButton setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+        [self.imageView addSubview:self.playImage];
+        
+        self.imageView.borderWidth = 1;
+        self.imageView.borderColor = NSColorFromRGB(0xf3f3f3);
+        
+        
+        [self.playImage setCenterByView:self.imageView];
+        [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
         
         self.videoTimeView = [[VideoTimeView alloc] initWithFrame:NSMakeRect(10, 10, 0, 0)];
         [self.imageView addSubview:self.videoTimeView];
-        
-        [self setProgressFrameSize:image_VideoPlay().size];
-        
+                
         [self setProgressStyle:TMCircularProgressDarkStyle];
+        
+        
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
+        
+
     }
     return self;
 }
+
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    const int borderOffset = self.imageView.borderWidth;
+    const int borderSize = borderOffset*2;
+    
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
+    [path addClip];
+    
+    
+    [self.imageView.borderColor set];
+    NSRectFill(rect);
+}
+
 
 - (void)open {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
@@ -103,43 +138,9 @@
 - (void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    float playAlpha = 1.0;
+    [self.playImage setHidden:!(cellState == CellStateNormal)];
     
-    if(cellState == CellStateSending) {
-        playAlpha = 0.0f;
-        
-        
-        
-    }
-    
-    if(cellState == CellStateNormal) {
-        
-        playAlpha = 1.0f;
-        
-        [self.playButton setBackgroundImage:image_VideoPlay() forControlState:BTRControlStateNormal];
-        [self.playButton setBackgroundImage:image_VideoPlay() forControlState:BTRControlStateHover];
-    }
-    
-    if(cellState == CellStateDownloading) {
-        
-        playAlpha = 0.0f;
-        
-    }
-    
-    if(cellState == CellStateNeedDownload) {
-        
-        playAlpha = 1.0f;
-
-        [self.playButton setBackgroundImage:image_Download() forControlState:BTRControlStateNormal];
-        [self.playButton setBackgroundImage:nil forControlState:BTRControlStateHover];
-    }
-    
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0.1];
-        [[self.playButton animator] setAlphaValue:playAlpha];
-    } completionHandler:^{
-        [[self.playButton animator] setHidden:playAlpha == 0.0f];
-    }];
+    [self.progressView setState:cellState];
     
 }
 
@@ -155,7 +156,6 @@
     
     self.imageView.object = item.imageObject;
     
-    [self setProgressContainerVisibility:NO];
     [self updateVideoTimeView];
 }
 

@@ -11,6 +11,8 @@
 #import "Telegram.h"
 #import "NSStringCategory.h"
 #import "DownloadAudioItem.h"
+#import "MessagetableCellAudioController.h"
+
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TGMessage *)object {
@@ -27,12 +29,15 @@
             self.state = AudioStateWaitDownloading;
         
         
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.audio.size downloadItemClass:[DownloadAudioItem class]];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.audio.size];
         
     }
     return self;
 }
 
+- (Class)downloadClass {
+    return [DownloadAudioItem class];
+}
 
 - (NSString *)path {
     return mediaFilePath(self.message.media);

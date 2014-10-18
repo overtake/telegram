@@ -47,9 +47,6 @@
     
     self.view.wantsLayer = YES;
     
-    //self.firstItem = [[DialogFirstItem alloc] init];
-    
-   // self.dialogFirstView = [[DialogTableFirstView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 25)];
     
     self.historyController = [DialogsHistoryController sharedController];
     

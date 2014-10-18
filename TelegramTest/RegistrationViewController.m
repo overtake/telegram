@@ -63,7 +63,7 @@
     
     
     TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Profile.Back", nil)];
-    [backButton setTextFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
+    [backButton setFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
     [backButton.imageView setFrameOrigin:NSMakePoint(0, 4)];
     [backButton sizeToFit];
     [backButton setFrameOrigin:NSMakePoint(6, 260)];

@@ -44,8 +44,8 @@ static NSMutableDictionary *cache;
         self.container = [[TMView alloc] initWithFrame:NSZeroRect];
         
         
-        self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_select().size.width, image_select().size.height)];
-        self.imageView .image = image_select();
+        self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_ArrowGrey().size.width, image_ArrowGrey().size.height)];
+        self.imageView .image = image_ArrowGrey();
         [self.container addSubview:self.imageView];
         
         
@@ -154,7 +154,7 @@ static NSMutableDictionary *cache;
     
     [self.field sizeToFit];
     
-    [self.container setFrameSize:NSMakeSize(NSWidth(self.field.frame) + 10 + NSWidth(self.imageView.frame), NSHeight(self.field.frame))];
+    [self.container setFrameSize:NSMakeSize(NSWidth(self.field.frame) + 10 + NSWidth(self.imageView.frame) + 4, NSHeight(self.field.frame))];
     
   
     [self.imageView setFrameOrigin:NSMakePoint(NSWidth(self.field.frame) + 10, 3)];

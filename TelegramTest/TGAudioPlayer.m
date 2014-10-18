@@ -35,6 +35,16 @@
         return [[TGNativeAudioPlayer alloc] initWithPath:path];
 }
 
+static TGAudioPlayer *player;
+
+TGAudioPlayer *globalAudioPlayer() {
+    return player;
+}
+
+void setGlobalAudioPlayer(TGAudioPlayer *newPlayer) {
+    player = newPlayer;
+}
+
 -(BOOL)isPaused {
     return YES;
 }

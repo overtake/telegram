@@ -48,12 +48,16 @@
         
         self.imageObject.imageSize = size;
         
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size downloadItemClass:[DownloadDocumentItem class]];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
         
 
     }
     return self;
+}
+
+-(Class)downloadClass {
+    return [DownloadDocumentItem class];
 }
 
 -(void)doAfterDownload {

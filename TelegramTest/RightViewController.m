@@ -141,6 +141,8 @@
     self.aboutViewController = [[AboutViewController alloc] initWithFrame:self.view.bounds];
     self.userNameViewController = [[UserNameViewController alloc] initWithFrame:self.view.bounds];
     
+    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:self.view.bounds];
+    
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
@@ -599,6 +601,16 @@
     
     
     [self.navigationViewController pushViewController:self.userNameViewController animated:YES];
+}
+
+-(void)showAddContactController {
+    if(self.navigationViewController.currentController == self.addContactViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.addContactViewController animated:YES];
 }
 
 

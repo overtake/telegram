@@ -109,6 +109,15 @@ CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
 CACHE_IMAGE(ArrowGrey)
 
+
+CACHE_IMAGE(DownloadIconGrey)
+CACHE_IMAGE(DownloadIconWhite)
+CACHE_IMAGE(DownloadPauseIconGrey)
+CACHE_IMAGE(DownloadPauseIconWhite)
+CACHE_IMAGE(LoadCancelGrayIcon)
+CACHE_IMAGE(DocumentThumbIcon)
+CACHE_IMAGE(LoadCancelWhiteIcon)
+CACHE_IMAGE(PlayIconWhite)
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -116,7 +125,7 @@ NSImage *previewImageForDocument(NSString *path) {
     
     NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kQLThumbnailOptionIconModeKey];
     
-    CGImageRef quickLookIcon = QLThumbnailImageCreate(kCFAllocatorDefault, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere , sizeSquere ), (__bridge CFDictionaryRef)options);
+    CGImageRef quickLookIcon = QLThumbnailImageCreate(kCFAllocatorDefault, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere*2 , sizeSquere*2 ), (__bridge CFDictionaryRef)options);
     
   //  CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere * 2, sizeSquere * 2), nil);
     

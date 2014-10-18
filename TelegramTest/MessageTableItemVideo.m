@@ -38,9 +38,14 @@
         
         self.previewSize = blockSize;
         
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.video.size downloadItemClass:[DownloadVideoItem class]];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.video.size];
     }
     return self;
+}
+
+
+- (Class)downloadClass {
+    return [DownloadVideoItem class];
 }
 
 -(void)rebuildTimeString {

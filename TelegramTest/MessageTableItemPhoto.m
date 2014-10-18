@@ -50,14 +50,11 @@
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
-           
-            
-            
         }
         
        
         self.imageObject.imageSize = imageSize;
-        self.blockSize = imageSize;
+        self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
         self.previewSize = imageSize;
     }
     return self;

@@ -68,18 +68,20 @@
     {
         [self.backButton updateBackButton];
         
+       // [TMTextButton standartMessageNavigationButtonWithTitle:@"Back"];
+        
         self.leftNavigationBarView = self.backButton;
         
     } else {
         if(![self isKindOfClass:[MessagesViewController class]]) { // =)))
             self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-            self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
+           // self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
             
             self.backButton.controller = self;
             
-            [self.leftNavigationBarView addSubview:self.backButton];
+           [self.backButton updateBackButton];
             
-            [self.backButton updateBackButton];
+            self.leftNavigationBarView = self.backButton;
         }
     }
     

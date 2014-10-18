@@ -38,6 +38,7 @@
 @property (nonatomic, strong) DownloadItem *downloadItem;
 @property (nonatomic,strong) DownloadEventListener *downloadListener;
 
+
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;
 
@@ -50,11 +51,13 @@
 
 - (void)rebuildDate;
 
+- (Class)downloadClass;
+
 - (BOOL)isset;
 - (BOOL)needUploader;
 - (void)doAfterDownload;
-- (void)startDownload:(BOOL)cancel downloadItemClass:(Class)itemClass force:(BOOL)force;
-- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass;
+- (void)startDownload:(BOOL)cancel force:(BOOL)force;
+- (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
 + (NSDateFormatter *)dateFormatter;
 @end

@@ -25,6 +25,9 @@
 
 + (TGAudioPlayer *)audioPlayerForPath:(NSString *)path;
 
+TGAudioPlayer *globalAudioPlayer();
+void setGlobalAudioPlayer(TGAudioPlayer *newPlayer);
+
 - (void)play;
 - (void)playFromPosition:(NSTimeInterval)position;
 - (void)pause;

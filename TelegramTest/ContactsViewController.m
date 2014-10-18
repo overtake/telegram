@@ -335,12 +335,15 @@
         [[Telegram sharedInstance] showMessagesWidthUser:searchItem.contact.user sender:self];
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
-        [self.addContactViewController clear];
+        [[Telegram rightViewController] showAddContactController];
         
-         NSRect rect = self.tableView.containerView.bounds;
-        rect.origin.y -= (NSHeight(self.tableView.containerView.frame) - 40);
-
-        [self.addContactViewController.rbl showRelativeToRect:rect ofView:self.tableView.containerView preferredEdge:CGRectMinYEdge];
+        
+//        [self.addContactViewController clear];
+//        
+//         NSRect rect = self.tableView.containerView.bounds;
+//        rect.origin.y -= (NSHeight(self.tableView.containerView.frame) - 40);
+//
+//        [self.addContactViewController.rbl showRelativeToRect:rect ofView:self.tableView.containerView preferredEdge:CGRectMinYEdge];
     }
    
 }

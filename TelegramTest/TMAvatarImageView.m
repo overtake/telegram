@@ -639,11 +639,12 @@ static CAAnimation *ani2() {
                                              radius: roundf(image.size.width/2)
                                          startAngle: 0
                                            endAngle: 360 clockwise:NO];
-            
-            [NSColorFromRGB(0xdedede) set];
+            [path setLineWidth:2];
+            [NSColorFromRGB(0x999999) set];
             [path stroke];
             
-            color = NSColorFromRGB(0xc8c8c8);
+            
+            color = NSColorFromRGB(0x999999);
         }
         
         NSDictionary *attributes = @{NSFontAttributeName: self.font, NSForegroundColorAttributeName: color};

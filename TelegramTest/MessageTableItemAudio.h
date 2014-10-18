@@ -8,7 +8,9 @@
 
 #import "MessageTableItem.h"
 #import "TGAudioPlayer.h"
-#import "MessageTableCellAudioView.h"
+
+
+@class MessagetableCellAudioController;
 
 @interface MessageTableItemAudio : MessageTableItem<TGAudioPlayerDelegate>
 
@@ -24,7 +26,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *duration;
 @property (nonatomic, strong) TGAudioPlayer *player;
 @property (nonatomic) AudioState state;
-@property (nonatomic, weak) MessageTableCellAudioView *cellView;
+@property (nonatomic, weak) MessagetableCellAudioController *cellView;
 
 - (BOOL)isset;
 - (NSString *)path;

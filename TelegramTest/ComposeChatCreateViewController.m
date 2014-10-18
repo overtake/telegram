@@ -105,7 +105,7 @@
         
        
         
-        [self.nameField setFont:[NSFont fontWithName:@"Helvetica" size:16]];
+        [self.nameField setFont:[NSFont fontWithName:@"Helvetica" size:15]];
         
         [self.nameField setAlignment:NSCenterTextAlignment];
         
@@ -124,7 +124,7 @@
         self.textView = [[TMTextField alloc] initWithFrame:NSMakeRect(90, 45, NSWidth(frameRect) - 110, 23)];
         
         
-        [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+        [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         
         [self.textView setEditable:YES];
         [self.textView setBordered:NO];
@@ -139,7 +139,7 @@
         
         [str appendString:NSLocalizedString(@"Compose.GroupNamePlaceHolder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:16] forRange:str.range];
+        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
         
         [self.textView.cell setPlaceholderAttributedString:str];
         [self.textView setPlaceholderPoint:NSMakePoint(2, 0)];

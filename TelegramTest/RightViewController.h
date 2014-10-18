@@ -23,6 +23,7 @@
 #import "SettingsSecurityViewController.h"
 #import "AboutViewController.h"
 #import "UserNameViewController.h"
+#import "AddContactViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -39,6 +40,7 @@
 @property (nonatomic, strong) SettingsSecurityViewController *settingsSecurityViewController;
 @property (nonatomic, strong) AboutViewController *aboutViewController;
 @property (nonatomic, strong) UserNameViewController *userNameViewController;
+@property (nonatomic, strong) AddContactViewController *addContactViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -70,5 +72,7 @@
 - (void)showSecuritySettings;
 - (void)showAbout;
 - (void)showUserNameController;
+
+-(void)showAddContactController;
 
 @end

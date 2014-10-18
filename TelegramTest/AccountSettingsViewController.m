@@ -136,7 +136,7 @@ typedef enum {
     
     [header setStringValue:NSLocalizedString(@"Settings", nil)];
     
-    [header setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
+    [header setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
     [header setTextColor:DARK_BLACK];
     
     [header sizeToFit];

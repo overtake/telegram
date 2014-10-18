@@ -38,7 +38,6 @@
         self.filePath = path;
         self.dialog = dialog;
         
-        
         self.thumbImage = previewImageForDocument(self.filePath);
         
         long randomId = rand_long();
@@ -149,7 +148,6 @@
     }
     
     
- 
     weakify();
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage *obj) {
         
@@ -174,7 +172,7 @@
         }
         
         
-        
+        TL_localMessage *message = strongSelf.message;
         
         if(isNewDocument) {
             [strongSelf.uploader saveFileInfo:msg.media.document];
@@ -182,11 +180,15 @@
             if(![thumb isKindOfClass:[TL_photoSizeEmpty class]] && thumb) {
                 [strongSelf.uploaderThumb saveFileInfo:[TL_photoEmpty createWithN_id:0]];
             }
+            
+            
+            message.media.document.thumb = [msg media].document.thumb;
+            message.media.document.thumb.bytes = nil;
         }
 
         [[NSFileManager defaultManager] removeItemAtPath:exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]) error:nil];
         
-        TL_localMessage *message = strongSelf.message;
+       
         message.n_id = msg.n_id;
         message.date = msg.date;
         message.dstate = DeliveryStateNormal;
@@ -195,8 +197,7 @@
         message.media.document.access_hash = [msg media].document.access_hash;
         message.media.document.n_id = [msg media].document.n_id;
     
-        message.media.document.thumb = [msg media].document.thumb;
-        message.media.document.thumb.bytes = nil;
+        
         
         if(![message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
            

@@ -167,7 +167,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
     [profileAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
-    [profileAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:18] forRange:profileAttributedString.range];
+    [profileAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:profileAttributedString.range];
     [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
     [self setProfileTitle:profileAttributedString];
     

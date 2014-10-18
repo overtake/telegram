@@ -18,8 +18,6 @@
 #import "MapPanel.h"
 #import "TGTimer.h"
 
-#import <pop/POPLayerExtras.h>
-
 #import "TMAudioRecorder.h"
 
 

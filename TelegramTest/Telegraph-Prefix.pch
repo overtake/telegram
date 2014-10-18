@@ -11,7 +11,7 @@
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import "ImageUtils.h"
-#import <POP/POP.h>
+#import "POP.h"
 #import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"
