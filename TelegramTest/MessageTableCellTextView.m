@@ -122,7 +122,7 @@
     [super setSelected:selected animation:animation];
     
     if(!animation) {
-        [self.textView setBackgroundColor:selected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)];
+        [self.textView setBackgroundColor:selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)];
     }
 }
 

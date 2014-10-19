@@ -10,6 +10,10 @@
 #import "MessageTableElements.h"
 #import "ITProgressIndicator.h"
 #import "ImageUtils.h"
+#import "TMClockProgressView.h"
+#import "MessageStateLayer.h"
+
+
 @interface MessageTableCellContainerView()
 @property (nonatomic, strong) TMTextButton *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -24,11 +28,9 @@
 @property (nonatomic, strong) NSView *rightView;
 @property (nonatomic, strong) TMTextLayer *forwardMessagesTextLayer;
 @property (nonatomic, strong) TMTextLayer *dateLayer;
-@property (nonatomic, strong) TMCircleLayer *circleLayer;
 @property (nonatomic, strong) BTRButton *selectButton;
-@property (nonatomic, strong) BTRButton *errorSendingButton;
-@property (nonatomic,strong) ITProgressIndicator *progressIndicator;
 
+@property (nonatomic,strong) MessageStateLayer *stateLayer;
 
 
 
@@ -85,13 +87,11 @@ static NSImage* image_broadcast() {
         [self.rightView.layer addSublayer:self.dateLayer];
         
         
-        self.circleLayer = [TMCircleLayer layer];
-        [self.circleLayer setFrame:CGRectMake(0, 4, 0, 0)];
-        [self.circleLayer setContentsScale:self.layer.contentsScale];
-        [self.circleLayer setRadius:8];
-        [self.circleLayer setFillColor:NSColorFromRGB(0x41a2f7)];
-        [self.circleLayer setNeedsDisplay];
-        [self.rightView.layer addSublayer:self.circleLayer];
+        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 20, NSHeight(self.rightView.frame))];
+        
+        
+        [self.rightView addSubview:self.stateLayer];
+        
         
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.rightView.bounds.size.width - image_checked().size.width - 6, 0, image_checked().size.width, image_checked().size.height)];
         [self.selectButton setAutoresizingMask:NSViewMinXMargin];
@@ -117,22 +117,6 @@ static NSImage* image_broadcast() {
 
         [self.rightView addSubview:self.selectButton];
         
-        
-       
-        self.errorSendingButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
-        [self.errorSendingButton setAutoresizingMask:NSViewMinXMargin];
-        [self.errorSendingButton setHidden:NO];
-        [self.errorSendingButton setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
-        
-        [self.errorSendingButton addBlock:^(BTRControlEvents events) {
-            
-            
-            [weakSelf alertError];
-          
-            
-        } forControlEvents:BTRControlEventClick];
-        
-        [self addSubview:self.errorSendingButton];
         
         
         
@@ -195,6 +179,7 @@ static NSImage* image_broadcast() {
         [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
         [self.progressView addTarget:self selector:@selector(checkOperation)];
         
+        
     }
     return self;
 }
@@ -230,7 +215,7 @@ NSImage *selectCheckImage() {
 }
 
 NSImage *selectCheckActiveImage() {
-    return [NSImage imageNamed:@"ComposeCheckActive"];
+    return [NSImage imageNamed:@"checked"];
 }
 
 
@@ -357,8 +342,8 @@ NSImage *selectCheckActiveImage() {
         
         [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
         
-        color = isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
-        NSColor *oldColor = !isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
+        color = isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
+        NSColor *oldColor = !isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
         
         [self.layer pop_animationForKey:@"background"];
         
@@ -371,7 +356,7 @@ NSImage *selectCheckActiveImage() {
         [self.layer pop_addAnimation:animation forKey:@"background"];
         
     } else {
-        color = isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff);
+        color = isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
         [self.layer setBackgroundColor:color.CGColor];
     }
     
@@ -493,6 +478,8 @@ static BOOL dragAction = NO;
     [super setItem:item];
     
     
+    self.stateLayer.container = self;
+    
     float offsetContainerView;
     
     
@@ -608,7 +595,7 @@ static BOOL dragAction = NO;
 }
 
 
-static int offserUnreadMark = 14;
+static int offserUnreadMark = 20;
 static int offsetEditable = 30;
 
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
@@ -624,9 +611,6 @@ static int offsetEditable = 30;
     
     [self.broadcastImageView setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53 - offset, self.item.viewSize.height - self.broadcastImageView.bounds.size.height - (self.item.isHeaderMessage ? 29 : 5) )];
     
-     [self.errorSendingButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53 - offset, self.item.viewSize.height - self.errorSendingButton.bounds.size.height - (self.item.isHeaderMessage ? 28 : 4))];
-    
-   // [self.broadcastImageView setFrameOrigin:NSMakePoint(NSMinX(self.broadcastImageView.frame) - offset, NSMinY(self.broadcastImageView.frame))];
     
     [self.rightView.layer setFrameOrigin:position];
     [self.rightView setFrameOrigin:position];
@@ -675,17 +659,6 @@ static int offsetEditable = 30;
     }];
     [self.rightView.layer pop_addAnimation:position forKey:@"slide"];
     
-    
-    from = self.errorSendingButton.layer.frame.origin.x;
-    to = self.errorSendingButton.layer.frame.origin.x + (editable ? -offsetEditable : offsetEditable);
-    
-    POPBasicAnimation *errorPos = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-    errorPos.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    errorPos.fromValue = @(from);
-    errorPos.toValue = @(to);
-    errorPos.duration = duration;
-
-    [self.errorSendingButton.layer pop_addAnimation:errorPos forKey:@"slide"];
     
     from = self.broadcastImageView.layer.frame.origin.x;
     to = self.broadcastImageView.layer.frame.origin.x + (editable ? -offsetEditable : offsetEditable);
@@ -762,29 +735,13 @@ static int offsetEditable = 30;
 }
 
 - (void)checkState:(SenderItem *)sender {
-    if(sender.state == MessageStateSending) {
-        
-        if(!self.progressIndicator) {
-            self.progressIndicator = [[ITProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 14, 14)];
-            [self.progressIndicator setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin];
-            [self addSubview:self.progressIndicator];
-            
-            self.progressIndicator.color = NSColorFromRGB(0x808080);
-            
-            [self.progressIndicator setIndeterminate:YES];
-        }
-        
-    } else {
-        [self.progressIndicator removeFromSuperview];
-        self.progressIndicator = nil;
-        if(sender.state == MessageSendingStateSent) {
-            [self.item.messageSender removeEventListener:self];
-            self.cellState = CellStateNormal;
-            self.item.messageSender = nil;
-        }
+    
+    if(sender.state == MessageSendingStateSent) {
+        [self.item.messageSender removeEventListener:self];
+        self.cellState = CellStateNormal;
+        self.item.messageSender = nil;
     }
-    
-    
+
     [self checkActionState:YES];
 }
 
@@ -897,7 +854,9 @@ static int offsetEditable = 30;
 }
 
 - (void)checkActionState:(BOOL)redraw {
+    
     MessageTableCellState state;
+    
     if(self.item.message.n_out && self.item.message.unread) {
         if(self.item.messageSender) {
             if(self.item.messageSender.state == MessageSendingStateError) {
@@ -913,65 +872,7 @@ static int offsetEditable = 30;
         state = MessageTableCellRead;
     }
     
-    
-//    if(state != self.actionState)
-    {
-        MessageTableCellState oldState = self.actionState;
-        
-        self.actionState = state;
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [self.circleLayer setHidden:!(self.actionState == MessageTableCellUnread) || self.item.message.dialog.type == DialogTypeBroadcast];
-        [CATransaction commit];
-        
-    
-        
-        int offset = self.messagesViewController.state == MessagesViewControllerStateEditable ? offsetEditable : 0;
-        
-        [self.broadcastImageView setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53 - offset, self.item.viewSize.height - self.broadcastImageView.bounds.size.height - (self.item.isHeaderMessage ? 29 : 5))];
-        
-        [self.broadcastImageView setHidden:state != MessageTableCellUnread || self.item.message.dialog.type != DialogTypeBroadcast];
-        
-        
-        
-        if(oldState == MessageTableCellSending && state == MessageTableCellUnread && self.item.message.dialog.type != DialogTypeBroadcast) {
-            
-            
-            
-            float fromValue = 0.5f;
-            float duration = 0.1;
-            
-            POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-            scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(fromValue, fromValue)];
-            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-            scaleAnimation.duration = duration;
-            [self.circleLayer pop_addAnimation:scaleAnimation forKey:@"scale"];
-            
-            
-        }
-        
-        
-        [self.errorSendingButton setHidden:state != MessageTableCellSendingError];
-        if(state == MessageTableCellSendingError) {
-            [self.errorSendingButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53 - offset, self.item.viewSize.height - self.errorSendingButton.bounds.size.height - (self.item.isHeaderMessage ? 28 : 4) )];
-        }
-        
-        
-        if(self.actionState == MessageTableCellSending) {
-            
-            [self.progressIndicator setHidden:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if(self.actionState != MessageTableCellSending)
-                    return;
-                
-                [self.progressIndicator setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53, self.item.viewSize.height - self.progressIndicator.bounds.size.height - (self.item.isHeaderMessage ? 29 : 5))];
-                [self.progressIndicator setHidden:NO];
-            });
-            
-        } else {
-            [self.progressIndicator setHidden:YES];
-        }
-    }
+    [self.stateLayer setState:state];
 }
 
 

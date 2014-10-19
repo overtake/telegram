@@ -378,6 +378,8 @@
 		C268C19919F12B66007F836A /* MessageTablecellAudioDocumentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */; };
 		C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */; };
 		C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19E19F13721007F836A /* MessagetableCellAudioController.m */; };
+		C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A619F3F6C3007F836A /* TMClockProgressView.m */; };
+		C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A919F43575007F836A /* MessageStateLayer.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1420,6 +1422,10 @@
 		C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemAudioDocument.m; sourceTree = "<group>"; };
 		C268C19D19F13721007F836A /* MessagetableCellAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagetableCellAudioController.h; sourceTree = "<group>"; };
 		C268C19E19F13721007F836A /* MessagetableCellAudioController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagetableCellAudioController.m; sourceTree = "<group>"; };
+		C268C1A519F3F6C3007F836A /* TMClockProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMClockProgressView.h; sourceTree = "<group>"; };
+		C268C1A619F3F6C3007F836A /* TMClockProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMClockProgressView.m; sourceTree = "<group>"; };
+		C268C1A819F43575007F836A /* MessageStateLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageStateLayer.h; sourceTree = "<group>"; };
+		C268C1A919F43575007F836A /* MessageStateLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageStateLayer.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2562,6 +2568,8 @@
 				C2753DD419E43EA500752BAF /* TGCTextMark.m */,
 				C268C14119F01AE3007F836A /* TMLoaderView.h */,
 				C268C14219F01AE3007F836A /* TMLoaderView.m */,
+				C268C1A519F3F6C3007F836A /* TMClockProgressView.h */,
+				C268C1A619F3F6C3007F836A /* TMClockProgressView.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -2673,6 +2681,8 @@
 				C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */,
 				C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */,
 				C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */,
+				C268C1A819F43575007F836A /* MessageStateLayer.h */,
+				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -4335,6 +4345,7 @@
 				0A59067718AA32C8002ED7BA /* BTRActivityIndicator.m in Sources */,
 				0A613C2018AD9892004096DD /* MessageTableItemContact.m in Sources */,
 				0A6758E61895507200F4487D /* MessageTableItemText.m in Sources */,
+				C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */,
 				C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */,
 				C2A5C00718E17C630021BE68 /* SettingsWindowController.m in Sources */,
 				C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */,
@@ -4760,6 +4771,7 @@
 				CEC22DF81827CC10008817D0 /* FullChatManager.m in Sources */,
 				0AA3F3AB18BE1F7600D383F1 /* TMNameTextField.m in Sources */,
 				C25F91B31977E115006868F3 /* TGImageView.m in Sources */,
+				C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */,
 				CEAE5D65181ECDF100C17645 /* FMDatabasePool.m in Sources */,
 				0AB8501B18757F1F001A796C /* SearchTableCell.m in Sources */,
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,

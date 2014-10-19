@@ -38,6 +38,8 @@ typedef enum {
 
 -(void)checkOperation;
 
+- (void)alertError;
+
 -(void)open;
 
 - (void)cancelDownload;

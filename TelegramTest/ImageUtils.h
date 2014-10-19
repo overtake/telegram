@@ -112,6 +112,15 @@ CACHE_IMAGE(LoadCancelGrayIcon)
 CACHE_IMAGE(DocumentThumbIcon)
 CACHE_IMAGE(LoadCancelWhiteIcon)
 CACHE_IMAGE(PlayIconWhite)
+
+CACHE_IMAGE(MessageStateRead)
+CACHE_IMAGE(MessageStateSent)
+
+CACHE_IMAGE(ClockMin)
+CACHE_IMAGE(ClockHour)
+CACHE_IMAGE(ClockFrame)
+
+
 @interface ImageUtils : NSObject
 
 
