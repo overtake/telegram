@@ -74,6 +74,9 @@
     
     TL_decryptedMessage * decryptedMessage = [[TLClassStore sharedManager] deserialize:decrypted];
     
+    if(!decryptedMessage)
+        return nil;
+    
     TGEncryptedChat *chat = [[ChatsManager sharedManager] find:message.chat_id];
     if(chat) {
         TGMessage *msg;

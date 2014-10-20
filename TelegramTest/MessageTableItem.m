@@ -242,7 +242,7 @@
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
     self.dateStr = [TGDateUtils stringForMessageListDate:time];
-    NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:11]}];
+    NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12]}];
     dateSize.width = roundf(dateSize.width);
     dateSize.height = roundf(dateSize.height);
     self.dateSize = dateSize;

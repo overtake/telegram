@@ -58,6 +58,7 @@ typedef enum {
 - (NSString *)lastSeen;
 - (int)lastSeenTime;
 - (TL_conversation *)dialog;
+- (TL_contact *)contact;
 
 
 @end

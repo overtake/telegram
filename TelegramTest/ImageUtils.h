@@ -33,6 +33,7 @@ CACHE_IMAGE(CancelDownload)
 CACHE_IMAGE(chat)
 CACHE_IMAGE(chatHighlighted)
 CACHE_IMAGE(ChatMessageError)
+CACHE_IMAGE(DialogSelectedSendError)
 CACHE_IMAGE(checked)
 CACHE_IMAGE(clear)
 CACHE_IMAGE(clearActive)
@@ -120,6 +121,17 @@ CACHE_IMAGE(ClockMin)
 CACHE_IMAGE(ClockHour)
 CACHE_IMAGE(ClockFrame)
 
+
+CACHE_IMAGE(MessageActionForward)
+CACHE_IMAGE(MessageActionForwardActive)
+CACHE_IMAGE(MessageActionDelete)
+CACHE_IMAGE(MessageActionDeleteActive)
+
+
+CACHE_IMAGE(MessageStateReadWhite)
+CACHE_IMAGE(MessageStateSentWhite)
+CACHE_IMAGE(SendingClockWhite)
+CACHE_IMAGE(SendingClockGray)
 
 @interface ImageUtils : NSObject
 

@@ -18,6 +18,8 @@
 #import "MapPanel.h"
 #import "TGTimer.h"
 
+#import "POPLayerExtras.h"
+
 #import "TMAudioRecorder.h"
 
 
@@ -138,7 +140,7 @@
 //    [self.actionsView setBorder:TMViewBorderTop];
 //    [self.actionsView setBorderColor:GRAY_BORDER_COLOR];
     
-    self.deleteButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil)];
+    self.deleteButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) standartImage:image_MessageActionDeleteActive() disabledImage:image_MessageActionDelete()];
     [self.deleteButton setFrameOrigin:NSMakePoint(30, roundf((self.bounds.size.height - self.deleteButton.bounds.size.height) / 2) )];
     [self.deleteButton setAutoresizingMask:NSViewMinYMargin | NSViewMaxYMargin];
     [self.deleteButton setTapBlock:^{
@@ -154,7 +156,7 @@
     [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.actionsView addSubview:self.messagesSelectedCount];
     
-    self.forwardButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Messages.Selected.Forward", nil)];
+    self.forwardButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Forward", nil) standartImage:image_MessageActionForwardActive() disabledImage:image_MessageActionForward()];
     [self.forwardButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.forwardButton.bounds.size.width - 22, roundf((self.bounds.size.height - self.deleteButton.bounds.size.height) / 2))];
     [self.forwardButton setAutoresizingMask:NSViewMinYMargin | NSViewMaxYMargin | NSViewMaxXMargin | NSViewMinXMargin];
     self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);

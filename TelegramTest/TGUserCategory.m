@@ -130,7 +130,6 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [dialogTitleAttributedString appendString:fullName withColor:colorByNameOrPhone];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
-    [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffd) forColor:BLUE_UI_COLOR];
 
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     [self setDIALOGTITLE:dialogTitleAttributedString];
@@ -147,8 +146,9 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *chatInfoTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
-    [chatInfoTitleAttributedString appendString:fullName withColor:NSColorFromRGB(0x222222)];
-    [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xaaaaaa) forColor:NSColorFromRGB(0x222222)];
+    [chatInfoTitleAttributedString appendString:fullName withColor:DARK_BLACK];
+    [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_BLACK];
+    
     [chatInfoTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:chatInfoTitleAttributedString.range];
     [self setCHATINFOTITLE:chatInfoTitleAttributedString];
     
@@ -339,9 +339,8 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     NSMutableAttributedString *str;
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
-        [str setSelectionColor:NSColorFromRGBWithAlpha(0xaeaeae, 0.5) forColor:NSColorFromRGB(0xaeaeae)];
-        [str setSelectionColor:NSColorFromRGBWithAlpha(0x3395cc, 0.5) forColor:BLUE_UI_COLOR];
-
+        [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0xaeaeae)];
+         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
         
         NSString *string = self.lastSeen;
         NSRange range;
@@ -438,6 +437,10 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         return [TL_inputPeerContact createWithUser_id:self.n_id];
     }
     return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash];
+}
+
+- (TL_contact *)contact {
+    return [[NewContactsManager sharedManager] find:self.n_id];
 }
 
 @end

@@ -184,13 +184,13 @@
     
     self.dateSize = NSZeroSize;
     self.date = [[NSMutableAttributedString alloc] init];
-    [self.date setSelectionColor:NSColorFromRGB(0xcbe1f0) forColor:NSColorFromRGB(0xaeaeae)];
+    [self.date setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
     [self.date setSelectionColor:NSColorFromRGB(0x999999) forColor:NSColorFromRGB(0x333333)];
     [self.date setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
 
     if(self.messageText.length > 0) {
         NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
-        [self.date appendString:dateStr withColor:NSColorFromRGB(0xaeaeae)];
+        [self.date appendString:dateStr withColor:NSColorFromRGB(0x999999)];
     } else {
         [self.date appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }

@@ -34,8 +34,6 @@
     }else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil), [user fullName],action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
-        
-        
         if(action.user_id != message.from_id) {
             TGUser *userDelete = [[UsersManager sharedManager] find:action.user_id];
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.KickedGroup", nil), [user fullName], [userDelete fullName]];
@@ -118,8 +116,8 @@
 +(NSMutableAttributedString *)conversationLastText:(TGMessage *)message conversation:(TL_conversation *)conversation {
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
-    [messageText setSelectionColor:NSColorFromRGB(0xcbe1f1) forColor:NSColorFromRGB(0x9b9b9b)];
-    [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
+    [messageText setSelectionColor:NSColorFromRGB(0xcbe1f1) forColor:DARK_BLACK];
+    [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
     
     
     
@@ -167,12 +165,9 @@
             
             if(!message.n_out) {
                 userLast = [[UsersManager sharedManager] find:message.from_id];
-                chatUserNameString = [userLast ? userLast.dialogFullName : @"" stringByAppendingString:@": "];
+                chatUserNameString = [userLast ? userLast.dialogFullName : @"" stringByAppendingString:@"\n"];
             }
         }
-        
-        if(message.n_out)
-            chatUserNameString = [NSString stringWithFormat:@"%@: ", NSLocalizedString(@"Profile.You", nil)];
         
         
         
@@ -222,7 +217,7 @@
         }
         
         if(chatUserNameString)
-            [messageText appendString:chatUserNameString withColor:isAction ? NSColorFromRGB(0x9b9b9b) : NSColorFromRGB(0x333333)];
+            [messageText appendString:chatUserNameString withColor:DARK_BLACK];
         
         
         if(!message.action) {
@@ -240,20 +235,31 @@
         msgText = [msgText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
         
         if(msgText) {
-            [messageText appendString:msgText withColor:NSColorFromRGB(0x9b9b9b)];
+            [messageText appendString:msgText withColor:NSColorFromRGB(0x808080)];
         }
         
         if(userSecond) {
-            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.dialogFullName] withColor:NSColorFromRGB(0x9b9b9b)];
+            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.dialogFullName] withColor:NSColorFromRGB(0x808080)];
         }
         
     } else {
         [messageText appendString:@"" withColor:LIGHT_GRAY];
     }
     
+    
+    static NSMutableParagraphStyle *paragraph;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        paragraph = [[NSMutableParagraphStyle alloc] init];
+        [paragraph setLineSpacing:0];
+        [paragraph setMinimumLineHeight:5];
+        [paragraph setMaximumLineHeight:15];
+    });
+    
     [messageText setAlignment:NSLeftTextAlignment range:NSMakeRange(0, messageText.length)];
     
-    
+    [messageText addAttribute:NSParagraphStyleAttributeName value:paragraph range:messageText.range];
     
     [messageText endEditing];
     
@@ -403,7 +409,7 @@
     } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
         return NSLocalizedString(@"ChatMedia.Audio", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
-        return NSLocalizedString(@"ChatMedia.File", nil);
+        return message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name;
     } else {
         return NSLocalizedString(@"ChatMedia.Unsupported", nil);
     }

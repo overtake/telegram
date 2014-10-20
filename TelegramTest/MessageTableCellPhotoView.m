@@ -36,8 +36,7 @@
         }];
         
         
-        //Progress
-        [self setProgressFrameSize:image_CancelDownload().size];
+        
         [self setProgressToView:self.imageView];
 
         

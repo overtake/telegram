@@ -278,8 +278,6 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     
     self.action = action;
     
-    [self updateAction];
-    
     [self showWindow:self];
     
     [self updateAction];

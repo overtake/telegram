@@ -41,6 +41,7 @@ CACHE_IMAGE(CancelDownload)
 CACHE_IMAGE(chat)
 CACHE_IMAGE(chatHighlighted)
 CACHE_IMAGE(ChatMessageError)
+CACHE_IMAGE(DialogSelectedSendError)
 CACHE_IMAGE(checked)
 CACHE_IMAGE(ScrollDownArrow)
 CACHE_IMAGE(clear)
@@ -95,7 +96,6 @@ CACHE_IMAGE(unchecked)
 CACHE_IMAGE(uncheckedHover)
 CACHE_IMAGE(UnpinPhoto)
 CACHE_IMAGE(VideoPlay)
-CACHE_IMAGE(DialogSelectedSendError)
 CACHE_IMAGE(VoiceMessageCancel)
 CACHE_IMAGE(VoiceMessageDownload)
 CACHE_IMAGE(VoiceMessagePause)
@@ -126,6 +126,17 @@ CACHE_IMAGE(ClockMin)
 CACHE_IMAGE(ClockHour)
 CACHE_IMAGE(ClockFrame)
 
+
+CACHE_IMAGE(MessageActionForward)
+CACHE_IMAGE(MessageActionForwardActive)
+CACHE_IMAGE(MessageActionDelete)
+CACHE_IMAGE(MessageActionDeleteActive)
+
+CACHE_IMAGE(MessageStateReadWhite)
+CACHE_IMAGE(MessageStateSentWhite)
+CACHE_IMAGE(SendingClockWhite)
+CACHE_IMAGE(SendingClockGray)
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -134,9 +145,7 @@ NSImage *previewImageForDocument(NSString *path) {
     NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kQLThumbnailOptionIconModeKey];
     
     CGImageRef quickLookIcon = QLThumbnailImageCreate(kCFAllocatorDefault, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere*2 , sizeSquere*2 ), (__bridge CFDictionaryRef)options);
-    
-  //  CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(sizeSquere * 2, sizeSquere * 2), nil);
-    
+        
     
     NSImage *thumbIcon = nil;
     

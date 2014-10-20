@@ -71,7 +71,7 @@ static NSDictionary *attributes() {
     [[NSColor whiteColor] setStroke];
     [path stroke];
     
-    [NSColorFromRGB(0x6ac065) setFill];
+    [NSColorFromRGB(0x4ba3e2) setFill];
     [path fill];
 
     [[NSColor whiteColor] set];
@@ -132,9 +132,8 @@ static NSDictionary *attributes() {
         [self.shortUnreadCount setHidden:YES];
         
         
-        int mutedWith = [self rowItem].isMuted ? image_muted().size.width + 6 : 0;
-        [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - [self rowItem].dateSize.width - 80 - mutedWith, self.titleTextField.bounds.size.height)];
-        [self.messageTextField setFrameSize:NSMakeSize(self.bounds.size.width - 110, 19)];
+     //   int mutedWith = [self rowItem].isMuted ? image_muted().size.width + 6 : 0;
+      //  [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - [self rowItem].dateSize.width - 80 - mutedWith, self.titleTextField.bounds.size.height)];
 
         
         tableView.scrollView.isHideVerticalScroller = NO;
@@ -151,91 +150,74 @@ static NSDictionary *attributes() {
         
         self.swipePanelActive = YES;
         
-        weakify();
+        weak();
         
         self.controll = [[DialogSwipeTableControll alloc] initWithFrame:self.bounds itemView:self];
         [self.controll setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [self.controll setDrawBlock:^{
+            
             NSColor *color = nil;
-            if(!strongSelf.isSelected) {
-                color = [NSColor whiteColor]; //strongSelf.isHover ? NSColorFromRGB(0xfafafa) : [NSColor whiteColor];
+            if(!weakSelf.isSelected) {
+                color = [NSColor whiteColor];
                 [color set];
-                NSRectFill(NSMakeRect(0, 0, strongSelf.bounds.size.width - DIALOG_BORDER_WIDTH, strongSelf.bounds.size.height));
+                NSRectFill(NSMakeRect(0, 0, weakSelf.bounds.size.width - DIALOG_BORDER_WIDTH, weakSelf.bounds.size.height));
+                
+                
+                [DIALOG_BORDER_COLOR setFill];
+                NSRectFill(NSMakeRect(NSMinX(weakSelf.titleTextField.frame), 0, NSWidth(weakSelf.frame) - NSMinX(weakSelf.titleTextField.frame), 1));
+                
             } else {
-                color = DIALOG_SELECT_COLOR;
+                color = BLUE_COLOR_SELECT;
                 [color set];
-                NSRectFill(NSMakeRect(0, 0, strongSelf.bounds.size.width, strongSelf.bounds.size.height));
+                NSRectFill(NSMakeRect(0, 0, weakSelf.bounds.size.width, weakSelf.bounds.size.height));
             }
-            strongSelf.controll.backgroundColor = color;
+            
+            weakSelf.controll.backgroundColor = color;
         }];
         [self.controll.containerView setDrawBlock:^{
             
-           
-            
-            if([strongSelf rowItem].isOut) {
-                
-                if(![strongSelf rowItem].isRead) {
-                    if([strongSelf rowItem].lastMessage.dstate == DeliveryStateNormal) {
-                        
-                        if([strongSelf rowItem].dialog.type != DialogTypeBroadcast) {
-                            NSRect rect = NSMakeRect(strongSelf.bounds.size.width - 10 - 11, 18, 8, 8);
-                            NSBezierPath* circlePath = [NSBezierPath bezierPath];
-                            [circlePath appendBezierPathWithOvalInRect: rect];
-                            if(strongSelf.isSelected) {
-                                [NSColorFromRGB(0xc1d6e5) setFill];
-                            } else {
-                                [NSColorFromRGB(0x41a2f7) setFill];
-                            }
-                            
-                            [circlePath fill];
-                        } else {
-                            
-                            NSImage *white = [NSImage imageNamed:@"broadcastSendingWhite"];
-                            NSImage *gray = [NSImage imageNamed:@"broadcastSendingGray"];
-                            
-                            NSImage *current = strongSelf.isSelected ? white : gray;
-                            
-                            
-                            [current drawInRect:NSMakeRect(strongSelf.bounds.size.width - 12 - current.size.width, 14, current.size.width, current.size.height)];
-                        }
-                        
-                        
-                    } else if([strongSelf rowItem].lastMessage.dstate == DeliveryStateError) {
-                        
-                        NSImage *img = !strongSelf.isSelected ? image_ChatMessageError() : [NSImage imageNamed:@"DialogSelectedSendError"];
-                        
-                        [img drawInRect:NSMakeRect(strongSelf.bounds.size.width - 12 - img.size.width, 14, img.size.width, img.size.height)];
-                    } else if([strongSelf rowItem].lastMessage.dstate == DeliveryStatePending) {
-                        NSRect rect = NSMakeRect(strongSelf.bounds.size.width - 10 - 11, 18, 8, 8);
-                        NSBezierPath* circlePath = [NSBezierPath bezierPath];
-                        [circlePath appendBezierPathWithOvalInRect: rect];
-                        if(strongSelf.isSelected) {
-                            [NSColorFromRGB(0xffffff) setFill];
-                        } else {
-                            [NSColorFromRGB(0xcccccc) setFill];
-                        }
-                        
-                         [circlePath fill];
+           if([weakSelf rowItem].isOut) {
+               
+               NSImage *stateImage;
+               
+               if([weakSelf rowItem].lastMessage.dstate == DeliveryStateNormal) {
+                    
+                    if([weakSelf rowItem].isRead) {
+                         stateImage = weakSelf.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
+                    } else {
+                        stateImage = weakSelf.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
                     }
+                   
+                  [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width , NSHeight(weakSelf.frame) - stateImage.size.height - 14) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
                     
+                } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStateError) {
                     
+                    stateImage = weakSelf.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
                     
-                }
+                     [stateImage drawAtPoint:NSMakePoint(NSWidth(weakSelf.frame) - stateImage.size.width - 13, 9) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
                 
-            }
+                } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStatePending) {
+                        
+                    stateImage = weakSelf.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
+                    
+                    [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width -2, NSHeight(weakSelf.frame) - stateImage.size.height - 13) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                
+                }
+           
+           }
             
-            if(strongSelf.style == DialogTableItemViewShortStyle) {
-                [strongSelf.shortUnreadCount setUnreadCount:[strongSelf rowItem].unreadTextCount];
+            if(weakSelf.style == DialogTableItemViewShortStyle) {
+                [weakSelf.shortUnreadCount setUnreadCount:[weakSelf rowItem].unreadTextCount];
                 return;
             }
             
-            if([strongSelf rowItem].isMuted) {
-                NSImage *mutedImage = strongSelf.isSelected ? image_mutedSld() : image_muted();
-                [mutedImage drawAtPoint:NSMakePoint(strongSelf.bounds.size.width - strongSelf.dateTextField.bounds.size.width - 25, strongSelf.dateTextField.frame.origin.y + 1) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+            if([weakSelf rowItem].isMuted) {
+                NSImage *mutedImage = weakSelf.isSelected ? image_mutedSld() : image_muted();
+                [mutedImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.titleTextField.frame) + NSWidth(weakSelf.titleTextField.frame) + 3, weakSelf.dateTextField.frame.origin.y + 3) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
             }
             
-            if([strongSelf rowItem].unreadTextCount.length)
-                [strongSelf drawUnreadCount];
+            if([weakSelf rowItem].unreadTextCount.length)
+                [weakSelf drawUnreadCount];
         }];
         [self.controll setItemView:self];
         [self addSubview:self.controll];
@@ -248,8 +230,7 @@ static NSDictionary *attributes() {
         [self.shortUnreadCount setHidden:YES];
         [self.controll addSubview:self.shortUnreadCount];
         
-        self.titleTextField
-        = [[TMNameTextField alloc] initWithFrame:NSMakeRect(68, 33, 0, 0)];
+        self.titleTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(68, 40, 0, 0)];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setSelector:@selector(dialogTitle)];
@@ -260,7 +241,7 @@ static NSDictionary *attributes() {
         [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         [self.controll addSubview:self.titleTextField];
         
-        self.messageTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(68, 15, 0, 0)];
+        self.messageTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(68, 2, 0, 0)];
         [self.messageTextField setEditable:NO];
         [self.messageTextField setBordered:NO];
         [self.messageTextField setBackgroundColor:[NSColor clearColor]];
@@ -270,12 +251,12 @@ static NSDictionary *attributes() {
         [self.messageTextField setAutoresizingMask:NSViewWidthSizable];
         [self.controll addSubview:self.messageTextField];
         
-        self.dateTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 34, 0, 0)];
+        self.dateTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 40, 0, 0)];
         [self.dateTextField setAutoresizingMask:NSViewMinXMargin];
         [self.dateTextField setEditable:NO];
         [self.dateTextField setBordered:NO];
         [self.dateTextField setBackgroundColor:[NSColor clearColor]];
-        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:11]];
+        [self.dateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [self.controll addSubview:self.dateTextField];
         
         [[NSNotificationCenter defaultCenter]
@@ -300,15 +281,6 @@ static NSDictionary *attributes() {
 }
 
 - (void) tableViewScrollerStyleChangeNotification:(NSNotification *)notify {
-
-//    if([NSScroller preferredScrollerStyle] == NSScrollerStyleLegacy) {
-//        [self.messageTextField setFrameSize:NSMakeSize(164-15, 19)];
-////        self.width = 280-15;
-//    } else {
-////        self.width = 280;
-//    }
-    
-    [self.messageTextField setFrameSize:NSMakeSize(self.bounds.size.width - 110, 19)];
     
     if([self rowItem])
         [self redrawRow];
@@ -327,8 +299,11 @@ static NSDictionary *attributes() {
     
     self.style = newSize.width == 70 ? DialogTableItemViewShortStyle : DialogTableItemViewFullStyle;
     
-    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 110, 19)];
+    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 105, 35)];
     
+    [self.titleTextField sizeToFit];
+    
+    [self.titleTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.titleTextField.frame),NSWidth(self.frame) - [self rowItem].dateSize.width - 90 - ([self rowItem].isMuted ? image_muted().size.width + 6 : 0) ), NSHeight(self.titleTextField.frame))];
     
 }
 
@@ -337,7 +312,7 @@ static int unreadOffsetRight = 13;
 
 - (void)drawUnreadCount {
     
-    static int offsetY = 12;
+    static int offsetY = 9;
     
     int sizeWidth = MAX([self rowItem].unreadTextSize.width + 12, unreadCountRadius * 2);
     
@@ -364,7 +339,7 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
 
     } else {
-        [NSColorFromRGB(0x6ac065) set];
+        [NSColorFromRGB(0x4ba3e2) set];
     }
     [path fill];
     [path closePath];
@@ -382,16 +357,6 @@ static int unreadOffsetRight = 13;
     [[self rowItem].writeAttributedString setSelected:isSelected];
 }
 
-- (void) changeSelected:(BOOL)isSelected {
-    if(isSelected) {
-//        if(self.row != 0)
-//            [self setBorder:TMViewBorderTop | TMViewBorderBottom];
-//        else
-//            [self setBorder:TMViewBorderBottom];
-    } else {
-//        [self setBorder:0];
-    }
-}
 
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
@@ -406,8 +371,6 @@ static int unreadOffsetRight = 13;
 
 - (void)redrawRow {
     [super redrawRow];
-
-//    [self.shortUnreadCount draw];
     
     DialogTableItem *item = [self rowItem];
     
@@ -428,10 +391,6 @@ static int unreadOffsetRight = 13;
     else
         [self.titleTextField setUser:item.user isEncrypted:YES];
 
-    [self.titleTextField sizeToFit];
-    int mutedWith = item.isMuted ? image_muted().size.width + 6 : 0;
-    [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - item.dateSize.width - 80 - mutedWith, self.titleTextField.bounds.size.height)];
-        
     [self.dateTextField setFrameOrigin:NSMakePoint(self.bounds.size.width - item.dateSize.width - 10, self.dateTextField.frame.origin.y)];
     
     if(item.isTyping) {
@@ -442,8 +401,6 @@ static int unreadOffsetRight = 13;
         [self.messageTextField setAttributedStringValue:item.messageText];
     }
     
-
-
     
     if(item.type == DialogTypeChat) {
         [self.avatarImageView setChat:item.chat];
@@ -484,9 +441,6 @@ static int unreadOffsetRight = 13;
         [item.writeAttributedString setSelected:self.isSelected];
         [self.messageTextField setAttributedStringValue:item.writeAttributedString];
         
-         [self.messageTextField sizeToFit];
-        
-        [ self.messageTextField setFrameSize:NSMakeSize(self.frame.size.width - 110, 19)];
     } queue:dispatch_get_main_queue()];
     [self.timer start];
 }

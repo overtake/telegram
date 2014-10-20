@@ -64,9 +64,9 @@
     [self.view addSubview:topView];
     
     
-    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 9, 205, 32)];
+    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , 205, 29)];
     
-    [self.searchTextField setFrameSize:NSMakeSize(self.view.bounds.size.width-70, 32)];
+    [self.searchTextField setFrameSize:NSMakeSize(self.view.bounds.size.width-70, 31)];
     
     
      self.searchTextField.delegate = self;
@@ -80,7 +80,7 @@
     NSImage *compose = [NSImage imageNamed:@"ComposeNewMsg"];
     NSImage *composeActive = [NSImage imageNamed:@"ComposeNewMsgActive"];
     
-    self.topButton = [[BTRButton alloc] initWithFrame:NSMakeRect(buttonX, 9, 38, 30)];
+    self.topButton = [[BTRButton alloc] initWithFrame:NSMakeRect(buttonX, 9, 38, 29)];
     
     [self.topButton setBackgroundImage:compose forControlState:BTRControlStateNormal];
     [self.topButton setBackgroundImage:composeActive forControlState:BTRControlStateSelected];

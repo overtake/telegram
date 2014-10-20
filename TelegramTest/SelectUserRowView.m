@@ -217,6 +217,11 @@ static int offsetEditable = 30;
     [self setSelected:isSelected animation:NO];
 }
 
+-(void)checkSelected:(BOOL)isSelected {
+    [self.lastSeenTextField setSelected:isSelected];
+    [self.titleTextField setSelected:isSelected];
+}
+
 NSImage *composeCheckImage() {
     return [NSImage imageNamed:@"ComposeCheck"];
 }

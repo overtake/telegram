@@ -12,7 +12,6 @@
         
         self.wantsLayer = YES;
         
-      //  self.layer.backgroundColor = [NSColor blueColor].CGColor;
         
         _frameView = imageViewWithImage(image_ClockFrame());
         [self addSubview:_frameView];
@@ -64,7 +63,7 @@
     [self animateMinView];
 }
 
-#define MINUTE_DURATION 0.3f
+#define MINUTE_DURATION 1.2f
 
 - (void)animateHourView
 {
@@ -85,7 +84,7 @@
     
     CABasicAnimation *animation  = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    animation.duration = MINUTE_DURATION*2;
+    animation.duration = MINUTE_DURATION;
     animation.repeatCount = HUGE_VAL;
     animation.toValue = @(- (M_PI * 2));
     [_minView.layer addAnimation:animation forKey:@"rotate"];

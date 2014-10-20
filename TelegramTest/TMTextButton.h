@@ -19,4 +19,6 @@
 + (instancetype)standartUserProfileNavigationButtonWithTitle:(NSString *)title;
 + (instancetype)standartMessageNavigationButtonWithTitle:(NSString *)title;
 
++ (instancetype)standartButtonWithTitle:(NSString *)title standartImage:(NSImage *)image disabledImage:(NSImage *)disabledImage;
+
 @end

@@ -80,6 +80,7 @@
 
 }
 
+
 @end
 
 
@@ -135,17 +136,22 @@
     return _color != nil ? _color : NSColorFromRGB(0xffffff);
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    
-    self.color = NSColorFromRGB(0xfafafa);
-    
-    [self setNeedsDisplay:YES];
+//-(void)mouseDown:(NSEvent *)theEvent {
+//    [super mouseDown:theEvent];
+//    
+//    self.color = NSColorFromRGB(0xfafafa);
+//    
+//    [self setNeedsDisplay:YES];
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        self.color = NSColorFromRGB(0xffffff);
+//        [self setNeedsDisplay:YES];
+//    });
+//}
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.color = NSColorFromRGB(0xffffff);
-        [self setNeedsDisplay:YES];
-    });
+
+-(void)redrawRow {
+    [super redrawRow];
 }
 
 -(ContactUserItem *)rowItem {
@@ -155,13 +161,18 @@
 -(void)drawRect:(NSRect)dirtyRect {
     
     NSPoint point = [self rowItem].noSelectTitlePoint;
-	
-    [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x, 1));
+    if(self.isSelected) {
+        [BLUE_COLOR_SELECT setFill];
+        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+    } else {
+        [LIGHT_GRAY_BORDER_COLOR setFill];
+        
+        NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x, 1));
+    }
+	
+   
 
-    [self.color set];
-    NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
     
 }
 
@@ -217,7 +228,22 @@
     
     
     [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
+    [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
 
+}
+
+
+- (void)notificationDialogSelectionChanged:(NSNotification *)notify {
+    if([notify.userInfo objectForKey:@"sender"] != self) {
+        TL_conversation *conversation = [notify.userInfo objectForKey:KEY_DIALOG];
+        
+        [self.tableView cancelSelection];
+        
+        if(![conversation isKindOfClass:NSNull.class]) {
+            NSUInteger hash = [ContactUserItem hash:conversation.user.contact];
+            [self.tableView setSelectedByHash:hash];
+        }
+    }
 }
 
 
@@ -324,7 +350,11 @@
     [TMTableView setCurrent:self.tableView];
 }
 
-- (BOOL) selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
+- (BOOL) selectionWillChange:(NSInteger)row item:(ContactUserItem *) item {
+    if(row != 0 && [[Telegram rightViewController] isModalViewActive]) {
+        [[Telegram rightViewController] modalViewSendAction:item.contact.user.dialog];
+        return NO;
+    }
     return YES;
 }
 
@@ -336,14 +366,7 @@
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
         [[Telegram rightViewController] showAddContactController];
-        
-        
-//        [self.addContactViewController clear];
-//        
-//         NSRect rect = self.tableView.containerView.bounds;
-//        rect.origin.y -= (NSHeight(self.tableView.containerView.frame) - 40);
-//
-//        [self.addContactViewController.rbl showRelativeToRect:rect ofView:self.tableView.containerView preferredEdge:CGRectMinYEdge];
+
     }
    
 }

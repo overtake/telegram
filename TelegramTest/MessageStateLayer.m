@@ -26,9 +26,9 @@
     if(self = [super initWithFrame:frameRect]) {
         
         
-        self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 0, 15, 15)];
+        self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 4, 15, 15)];
         
-        self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+        self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
         [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
         
         
@@ -39,7 +39,7 @@
         } forControlEvents:BTRControlEventClick];
         
         
-        self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 3, 0, 0)];
+        self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 5, 0, 0)];
 
         self.readOrSentView.wantsLayer = YES;
     }

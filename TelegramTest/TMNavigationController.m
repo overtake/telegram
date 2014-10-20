@@ -23,6 +23,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ConnectionStatusViewControllerView.h"
 #import "HackUtils.h"
+#import "TGAnimationBlockDelegate.h"
 #define kDefaultAnimationDuration 0.1
 #define kSlowAnimationMultiplier 4
 #define kDefaultTimingFunction [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]
@@ -84,6 +85,8 @@ static const int navigationOffset = 48;
     [self.containerView setAutoresizesSubviews:YES];
     [self.containerView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     [self.containerView setWantsLayer:YES];
+    
+    self.containerView.layer.backgroundColor = [NSColor clearColor].CGColor;
     [self.view addSubview:self.containerView];
     
     int connectingHeight = navigationOffset-navigationHeight;
@@ -309,38 +312,60 @@ static const int navigationOffset = 48;
         
         _isLocked = YES;
         
-        [oldView.layer setOpacity:1];
-        [newView.layer setOpacity:0];
+      //  [oldView.layer setOpacity:1];
+      //  [newView.layer setOpacity:0];
+        
+     
+        [newView.layer removeAllAnimations];
+        [oldView.layer removeAllAnimations];
         
         
         [newView setHidden:NO];
         
-        [self.containerView addSubview:newView];
+        
+        
+       
+        newView.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
     
-        float duration = 0.3;
+        float duration = 0.25;
         
         [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
         
-        float anim1To = 0;
-        float anim2From = 0;
+        float animOldFrom,animOldTo,animNewTo,animNewFrom = 0;
         
         CAMediaTimingFunction *timingFunction;
         
         switch (self.animationStyle) {
             case TMNavigationControllerStylePush: {
-                anim1To = - self.containerView.bounds.size.width;
-                anim2From = roundf(self.containerView.bounds.size.width /3);
+                
+                animNewFrom = self.containerView.bounds.size.width;
+                animNewTo = 0;
+                
+                animOldFrom = 0;
+                animOldTo = - roundf(self.containerView.bounds.size.width/3);
+                
+              //  anim2From = roundf(self.containerView.bounds.size.width );
                 
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                
+                [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
 
             }
                 break;
             case TMNavigationControllerStylePop: {
-                anim1To = self.containerView.bounds.size.width;
-                anim2From = - roundf(self.containerView.bounds.size.width/3);
                 
+                
+                animNewFrom = - roundf(self.containerView.bounds.size.width/3);
+                animNewTo = 0;
+                
+                animOldFrom = 0;
+                animOldTo = self.containerView.bounds.size.width;
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                
+                 [self.containerView addSubview:newView positioned:NSWindowBelow relativeTo:oldView];
+                
 
             }
                 break;
@@ -358,18 +383,6 @@ static const int navigationOffset = 48;
                 return;
             
             
-          //  [oldView.layer setOpacity:1];
-            [oldView setHidden:YES];
-        //    [newView setWantsLayer:NO];
-            
-            [oldView setFrameOrigin:NSMakePoint(0, 0)];
-            [newView setFrameOrigin:NSMakePoint(0, 0)];
-            
-            [oldView removeFromSuperview];
-            
-            [oldViewController viewDidDisappear:NO];
-            [newViewController viewDidAppear:NO];
-            
             
             _isLocked = NO;
             
@@ -378,56 +391,87 @@ static const int navigationOffset = 48;
             }];
         };
         
-     
         
-        POPBasicAnimation *oldViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-        oldViewPositionAnimation.toValue = @(anim1To);
-        oldViewPositionAnimation.duration = duration;
-        oldViewPositionAnimation.delegate = self;
-        oldViewPositionAnimation.timingFunction = timingFunction;
-        oldViewPositionAnimation.removedOnCompletion = YES;
-        [oldViewPositionAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-             block();
+        TGAnimationBlockDelegate *odelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:oldView.layer];
+        
+        odelegate.removeLayerOnCompletion = YES;
+        
+        
+        [odelegate setCompletion:^(BOOL finished) {
+            
+            [oldView setHidden:YES];
+            [oldView removeFromSuperview];
+            [oldView setFrameOrigin:NSMakePoint(0, 0)];
+            [oldViewController viewDidDisappear:NO];
+            block();
+            
         }];
-        [oldView.layer pop_addAnimation:oldViewPositionAnimation forKey:@"position"];
         
-        POPBasicAnimation *oldViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        [CATransaction begin];
+        
+        
+        CABasicAnimation *oldViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+        oldViewPositionAnimation.fromValue = @(animOldFrom);
+        oldViewPositionAnimation.toValue = @(animOldTo);
+        oldViewPositionAnimation.duration = duration;
+        oldViewPositionAnimation.delegate = odelegate;
+        oldViewPositionAnimation.timingFunction = timingFunction;
+        oldViewPositionAnimation.removedOnCompletion = true;
+        oldViewPositionAnimation.fillMode = kCAFillModeRemoved;
+        [oldView.layer addAnimation:oldViewPositionAnimation forKey:@"position"];
+        oldView.layer.position = CGPointMake(animOldTo, 0.0f);
+       
+        
+        CABasicAnimation *oldViewAlpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
         oldViewAlpha.toValue = @(0.0);
         oldViewAlpha.fromValue = @(0.5);
-        oldViewAlpha.duration = duration/2;
+        oldViewAlpha.duration = duration;
         oldViewAlpha.timingFunction = timingFunction;
-        oldViewAlpha.removedOnCompletion = YES;
-        [oldView.layer pop_addAnimation:oldViewAlpha forKey:@"opacity"];
+       // [oldView.layer addAnimation:oldViewAlpha forKey:@"opacity"];
         
         
-        POPBasicAnimation *newViewAlpha = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        
+        CABasicAnimation *newViewAlpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
         newViewAlpha.toValue = @(1.0);
-        newViewAlpha.fromValue = @(0.0);
+        newViewAlpha.fromValue = @(0.1);
         newViewAlpha.duration = duration;
         newViewAlpha.timingFunction = timingFunction;
-        newViewAlpha.removedOnCompletion = YES;
-        [newView.layer pop_addAnimation:newViewAlpha forKey:@"opacity"];
+       // [newView.layer addAnimation:newViewAlpha forKey:@"opacity"];
         
         
-        POPBasicAnimation *newViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-        newViewPositionAnimation.fromValue = @(anim2From);
-        newViewPositionAnimation.toValue = @(0);
-        newViewPositionAnimation.duration = duration;
-        newViewPositionAnimation.timingFunction = timingFunction;
-        newViewPositionAnimation.removedOnCompletion = YES;
-        [newViewPositionAnimation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
+        TGAnimationBlockDelegate *ndelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:newView.layer];
+    
+        
+        [ndelegate setCompletion:^(BOOL finished) {
+            [newView setFrameOrigin:NSMakePoint(0, 0)];
+            [newViewController viewDidAppear:NO];
             block();
         }];
-        [newView.layer pop_addAnimation:newViewPositionAnimation forKey:@"position"];
+        
+        
+        
+        CABasicAnimation *newViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+        newViewPositionAnimation.fromValue = @(animNewFrom);
+        newViewPositionAnimation.toValue = @(animNewTo);
+        newViewPositionAnimation.duration = duration;
+        newViewPositionAnimation.delegate = ndelegate;
+        newViewPositionAnimation.timingFunction = timingFunction;
+        [newView.layer addAnimation:newViewPositionAnimation forKey:@"position"];
+        
+        
+        [CATransaction commit];
+       
         
     }
 }
 
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag  {
+    
+}
 
 - (BOOL)enableShiftModifier {
     return YES;
 }
-
 
 
 #pragma mark -

@@ -11,6 +11,12 @@
 @interface TMTextButton()
 @property (nonatomic) NSTrackingArea *trackingArea;
 @property (nonatomic, strong) NSColor *normalColor;
+
+
+@property (nonatomic,strong) NSImage *standartImage;
+@property (nonatomic,strong) NSImage *disabledImage;
+
+
 @end
 
 @implementation TMTextButton
@@ -84,6 +90,35 @@
     return button;
 }
 
+
++ (instancetype)standartButtonWithTitle:(NSString *)title standartImage:(NSImage *)standartImage disabledImage:(NSImage *)disabledImage {
+    TMTextButton *button = [[TMTextButton alloc] init];
+    [button setStringValue:title];
+    [button setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [button setTextColor:BLUE_UI_COLOR];
+    [button setWantsLayer:YES];
+    [button sizeToFit];
+    [button setFrameOrigin:NSMakePoint(0,0)];
+    [button setAlignment:NSRightTextAlignment];
+
+    
+    button.standartImage = standartImage;
+    button.disabledImage = disabledImage;
+    
+    NSImageView *imageView = imageViewWithImage(standartImage);
+
+    [button setFrameSize:NSMakeSize(NSWidth(button.frame) + imageView.frame.size.width + 5, 24)];
+    
+    
+    
+    [button addSubview:imageView];
+    
+  
+    
+    
+    return button;
+}
+
 - (void) cursorUpdate:(NSEvent *)event {
 //    if([self.window.contentView hitTest:event.locationInWindow] == self && !self.disable) { //cursoroff
 //        NSCursor *cursor = [NSCursor pointingHandCursor];
@@ -103,10 +138,22 @@
         self.normalColor = self.textColor;
         if(self.disableColor)
             [super setTextColor:self.disableColor];
-        
     } else {
         [super setTextColor:self.normalColor];
     }
+    
+    if( self.subviews.count > 0 ){
+        
+        NSImageView *imageView = self.subviews[0];
+        
+        imageView.image = self.disable ? self.disabledImage : self.standartImage;
+        
+        [imageView setFrameSize:NSMakeSize(20, 20)];
+        
+        [imageView setFrameOrigin:NSMakePoint(0, 1)];
+    
+    }
+    
 }
 
 - (void)setTextColor:(NSColor *)color {

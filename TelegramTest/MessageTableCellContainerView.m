@@ -82,7 +82,7 @@ static NSImage* image_broadcast() {
         [self.dateLayer setContentsScale:self.layer.contentsScale];
         [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 0)];
         [self.dateLayer setTextColor:NSColorFromRGB(0x999999)];
-        [self.dateLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:11]];
+        [self.dateLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [self.dateLayer setBackgroundColor:[NSColor clearColor].CGColor];
         [self.rightView.layer addSublayer:self.dateLayer];
         
@@ -116,9 +116,6 @@ static NSImage* image_broadcast() {
 
 
         [self.rightView addSubview:self.selectButton];
-        
-        
-        
         
         self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         [self.avatarImageView setTapBlock:^{
@@ -601,7 +598,7 @@ static int offsetEditable = 30;
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     //    static int offserUnreadMark = 12;
     
-    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width - 2, self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 26 : 2));
+    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 26 : 2));
     
     if(editable)
         position.x -= offsetEditable;

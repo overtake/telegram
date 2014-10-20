@@ -8,7 +8,7 @@
 
 #import "ChatAvatarImageView.h"
 #import "ImageUtils.h"
-#import "TMCircularProgress.h"
+#import "TMLoaderView.h"
 
 @interface AvatarUpdaterItem : NSObject
 @property (nonatomic, strong) UploadOperation *operation;
@@ -20,7 +20,7 @@
 @end
 
 @interface ChatAvatarImageView()
-@property (nonatomic, strong) TMCircularProgress *progress;
+@property (nonatomic, strong) TMLoaderView *progress;
 @property (nonatomic, strong) TMView *progressContainer;
 @property (nonatomic, strong) BTRButton *cancelButton;
 @property (nonatomic, strong) AvatarUpdaterItem  *updaterItem;
@@ -55,33 +55,31 @@
     if(self->_progressContainer)
         return self->_progressContainer;
     
-    self->_progressContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height)];
+    self->_progressContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.frame.size.width, self.frame.size.height)];
     
     
     self.progressContainer.wantsLayer = YES;
     self.progressContainer.layer.masksToBounds = YES;
-    self.progressContainer.layer.cornerRadius = ceil(self.bounds.size.width / 2);
-
+    self.progressContainer.layer.cornerRadius = ceil(self.frame.size.width / 2);
+    self.progressContainer.layer.opacity = 0.8;
     
     [self.progressContainer setBackgroundColor:NSColorFromRGB(0x000000)];
     [self.progressContainer setHidden:YES];
     
-    self.progress = [[TMCircularProgress alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
+    self.progress = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
     
-    self.progress.style = TMCircularProgressLightStyle;
+    self.progress.style = TMCircularProgressDarkStyle;
+    
+    [self.progress setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
+    
+    [self.progress setState:TMLoaderViewStateUploading];
     
     [self.progress setCenterByView:self.progressContainer];
-    
-    weakify();
-    [self.progress setCancelCallback:^{
-        [strongSelf cancelUploading];
-    }];
+
+    [self.progress addTarget:self selector:@selector(cancelUploading)];
     
     
     [self.progressContainer addSubview:self.progress];
-    
-    
-
     
     return self.progressContainer;
     
@@ -171,6 +169,15 @@
 
 -(int)lockId {
     return self.sourceType == ChatAvatarSourceUser ? self.user.n_id : self.chat.n_id;
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.progressContainer setFrameSize:newSize];
+    self.progressContainer.layer.cornerRadius = newSize.width/2;
+    
+    [self.progress setCenterByView:self.progressContainer];
 }
 
 - (void)startUploading:(AvatarUpdaterItem *)updateItem withAnimation:(BOOL)isAnimation {

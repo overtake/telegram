@@ -135,7 +135,6 @@
 
 - (void) mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
-    
     [TMTableView setCurrent:self];
 }
 
