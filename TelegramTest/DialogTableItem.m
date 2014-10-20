@@ -131,11 +131,26 @@
         } else {
             string = NSLocalizedString(@"Typing.Typing", nil);
         }
-        [self.writeAttributedString appendString:string withColor:NSColorFromRGB(0x9b9b9b)];
+        [self.writeAttributedString appendString:string withColor:NSColorFromRGB(0x808080)];
+        [self.writeAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:self.writeAttributedString.range];
         self.isTyping = YES;
     } else {
         self.isTyping = NO;
     }
+    
+    static NSMutableParagraphStyle *paragraph;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        paragraph = [[NSMutableParagraphStyle alloc] init];
+        [paragraph setLineSpacing:0];
+        [paragraph setMinimumLineHeight:5];
+        [paragraph setMaximumLineHeight:15];
+    });
+    
+    [self.writeAttributedString setAlignment:NSLeftTextAlignment range:NSMakeRange(0, self.writeAttributedString.length)];
+    
+    [self.writeAttributedString addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.writeAttributedString.range];
     
     [self redrawRow];
 }
