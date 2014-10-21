@@ -133,7 +133,7 @@
             return messageText;
         } else if(params.state == EncryptedWaitOnline) {
             
-            [messageText appendString:[NSString stringWithFormat:NSLocalizedString(@"MessageAction.Secret.WaitingToGetOnline",nil), conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x9b9b9b)];
+            [messageText appendString:[NSString stringWithFormat:NSLocalizedString(@"MessageAction.Secret.WaitingToGetOnline",nil), conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x808080)];
             
             [messageText endEditing];
             return messageText;
@@ -141,7 +141,7 @@
             
             NSString *actionFormat = [UsersManager currentUserId] == conversation.encryptedChat.admin_id ? NSLocalizedString(@"MessageAction.Secret.UserJoined",nil) : NSLocalizedString(@"MessageAction.Secret.CreatedSecretChat",nil);
             
-            [messageText appendString:[NSString stringWithFormat:actionFormat,conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x9b9b9b)];
+            [messageText appendString:[NSString stringWithFormat:actionFormat,conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x808080)];
             
             
             [messageText endEditing];

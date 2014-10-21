@@ -107,7 +107,6 @@
 
 
 @property (nonatomic, strong) TMNameTextField *nameTextField;
-@property (nonatomic, strong) BTRButton *rightButton;
 
 
 @property (nonatomic, strong) NoMessagesView *noMessagesView;
@@ -123,7 +122,10 @@
 
 @property (nonatomic, strong) TMTextButton *normalNavigationLeftView;
 @property (nonatomic, strong) MessageTableNavigationTitleView *normalNavigationCenterView;
-@property (nonatomic, strong) TMView *normalNavigationRightView;
+
+
+@property (nonatomic, strong) TMTextButton *normalNavigationRightView;
+@property (nonatomic, strong) TMTextButton *editableNavigationRightView;
 
 @property (nonatomic, strong) TMTextButton *filtredNavigationLeftView;
 @property (nonatomic, strong) TMTextButton *filtredNavigationCenterView;
@@ -303,8 +305,54 @@
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
-    self.normalNavigationRightView =  [[TMView alloc] initWithFrame:NSMakeRect(0, 0, image_actions().size.width, image_actions().size.height)];
-    [self.normalNavigationRightView addSubview:self.rightButton];
+    
+    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
+    
+    
+    weak();
+    
+    [self.normalNavigationRightView setTapBlock:^{
+        
+        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
+        if(weakSelf.dialog.type == DialogTypeChat) {
+            
+            if(weakSelf.dialog.chat.type == TGChatTypeNormal) {
+                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
+                    [weakSelf leaveOrReturn:weakSelf.dialog];
+                }]];
+            }
+            
+            
+            
+            
+            
+            
+        } else {
+            
+            if(weakSelf.dialog.type != DialogTypeSecretChat) {
+                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
+                    [weakSelf deleteDialog:weakSelf.dialog];
+                }]];
+                
+                
+                
+            } else {
+                
+                
+            }
+        }
+        
+        [weakSelf.filterMenu popUpForView:weakSelf.normalNavigationRightView];
+ 
+    }];
+    
+    
+    self.editableNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
+    
+    [self.editableNavigationRightView setTapBlock:^{
+          [weakSelf clearHistory:weakSelf.dialog];
+    }];
+    
     
     self.selectedNagivationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Done", nil)];
     [self.selectedNagivationLeftView setTapBlock:^{
@@ -357,12 +405,7 @@
     
     [self.view addSubview:self.topInfoView];
     
-   // _connectionController = [[ConnectionStatusViewControllerView alloc] initWithFrame:NSZeroRect];
-   // _connectionController.controller = self;
-   // [self showConnectionController:NO];
-   // [self.view addSubview:self.connectionController];
-    
-    
+   
     
     self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.view.frame), 40)];
     [self.searchMessagesView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable];
@@ -655,7 +698,7 @@ static NSTextAttachment *headerMediaIcon() {
         // [self.filtredNavigationCenterView sizeToFit];
         
     } else {
-        rightView = self.normalNavigationRightView;
+        rightView = self.editableNavigationRightView;
         leftView = self.selectedNagivationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
     }
@@ -755,116 +798,79 @@ static NSTextAttachment *headerMediaIcon() {
     
     return submenu;
 }
-
-- (BTRButton *) rightButton {
-    if(self->_rightButton)
-        return self->_rightButton;
-    
-    self->_rightButton = [[BTRButton alloc] initWithFrame:self.normalNavigationRightView.bounds];
-    
-    [self.rightButton setBackgroundImage:image_actions() forControlState:BTRControlStateNormal];
-    [self.rightButton setBackgroundImage:image_actionsHover() forControlState:BTRControlStateHover];
-    [self.rightButton setBackgroundImage:image_actionsActive() forControlState:BTRControlStateHighlighted];
-    
-    __block MessagesViewController *weakSelf = self;
-    
-    [self.rightButton addBlock:^(BTRControlEvents events) {
-        FullChatManager *fullChat = weakSelf.dialog.type == DialogTypeChat ? [[FullChatManager sharedManager] find:weakSelf.dialog.chat.n_id] : nil;
-        
-        
-        
-        
-        NSMenuItem *destructItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Conversation.Menu.SetSelfDestruct",nil) action:nil keyEquivalent:@""];
-        [destructItem setSubmenu:[MessagesViewController destructMenu:nil click:nil]];
-        
-        NSMenuItem *filterItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Conversation.ShowMedia",nil) action:nil keyEquivalent:@""];
-        [filterItem setSubmenu:weakSelf.filterMenu];
-        
-        
-        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
-        if(fullChat) {
-            
-            if(weakSelf.dialog.chat.type == TGChatTypeNormal) {
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
-                    [weakSelf leaveOrReturn:weakSelf.dialog];
-                }]];
-            }
-            
-            [theMenu addItem:filterItem];
-            
-            
-            [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteAndExit", nil) withBlock:^(id sender) {
-                [weakSelf deleteDialog:weakSelf.dialog];
-            }]];
-            
-            
-            
-        } else {
-            TGUser *user = [[UsersManager sharedManager] find:weakSelf.dialog.peer.user_id];
-            if(weakSelf.dialog.type != DialogTypeSecretChat) {
-                
-                if(user.type == TGUserTypeContact && weakSelf.dialog.type != DialogTypeBroadcast) {
-                    [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.StartSecretChat", nil) withBlock:^(id sender) {
-                        [MessageSender startEncryptedChat:weakSelf.dialog.user callback:nil];
-                    }]];
-                }
-                [theMenu addItem:filterItem];
-            }
-            
-            
-            
-            if(weakSelf.dialog.type != DialogTypeSecretChat) {
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
-                    [weakSelf deleteDialog:weakSelf.dialog];
-                }]];
-                
-                
-                
-            } else {
-                
-                if(weakSelf.dialog.encryptedChat.encryptedParams.state == EncryptedAllowed) {
-                    [theMenu addItem:destructItem];
-                    
-                    [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowEncryptionKey", nil) withBlock:^(id sender) {
-                        [EncryptedKeyWindow showForChat:weakSelf.dialog.encryptedChat];
-                    }]];
-                    
-                }
-                
-                
-                [theMenu addItem:filterItem];
-                
-                
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ClearMessageHistory", nil) withBlock:^(id sender) {
-                    [weakSelf clearHistory:weakSelf.dialog];
-                }]];
-                
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) withBlock:^(id sender) {
-                    [weakSelf deleteDialog:weakSelf.dialog];
-                }]];
-                
-            }
-        }
-        
-        
-        if(weakSelf.dialog.type != DialogTypeSecretChat && weakSelf.dialog.type != DialogTypeBroadcast) {
-            BOOL isMute = weakSelf.dialog.isMute;
-            NSString *muteKey = isMute ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil);
-            [theMenu addItem:[NSMenuItem menuItemWithTitle:muteKey withBlock:^(id sender) {
-                [weakSelf.dialog muteOrUnmute:nil];
-                //                [[PushNotificationsManager sharedManager] muteOrUnmute:weakSelf.dialog];
-            }]];
-        }
-        
-        
-        
-        [theMenu popUpForView:weakSelf.rightButton];
-        
-        
-    } forControlEvents:BTRControlEventLeftClick];
-    
-    return self.rightButton;
-}
+//
+//- (BTRButton *) rightButton {
+//    if(self->_rightButton)
+//        return self->_rightButton;
+//    
+//    self->_rightButton = [[BTRButton alloc] initWithFrame:self.normalNavigationRightView.bounds];
+//    
+//    [self.rightButton setBackgroundImage:image_actions() forControlState:BTRControlStateNormal];
+//    [self.rightButton setBackgroundImage:image_actionsHover() forControlState:BTRControlStateHover];
+//    [self.rightButton setBackgroundImage:image_actionsActive() forControlState:BTRControlStateHighlighted];
+//    
+//    __block MessagesViewController *weakSelf = self;
+//    
+//    [self.rightButton addBlock:^(BTRControlEvents events) {
+//        NSMenuItem *filterItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Conversation.ShowMedia",nil) action:nil keyEquivalent:@""];
+//        [filterItem setSubmenu:weakSelf.filterMenu];
+//        
+//        
+//        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
+//        if(weakSelf.dialog.type == DialogTypeChat) {
+//            
+//            if(weakSelf.dialog.chat.type == TGChatTypeNormal) {
+//                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
+//                    [weakSelf leaveOrReturn:weakSelf.dialog];
+//                }]];
+//            }
+//            
+//            [theMenu addItem:filterItem];
+//            
+//            
+//            [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteAndExit", nil) withBlock:^(id sender) {
+//                [weakSelf deleteDialog:weakSelf.dialog];
+//            }]];
+//            
+//            
+//            
+//        } else {
+//            if(weakSelf.dialog.type != DialogTypeSecretChat) {
+//                
+//                [theMenu addItem:filterItem];
+//            }
+//            
+//            
+//            
+//            if(weakSelf.dialog.type != DialogTypeSecretChat) {
+//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
+//                    [weakSelf deleteDialog:weakSelf.dialog];
+//                }]];
+//                
+//                
+//                
+//            } else {
+//                
+//                [theMenu addItem:filterItem];
+//                
+//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ClearMessageHistory", nil) withBlock:^(id sender) {
+//                    [weakSelf clearHistory:weakSelf.dialog];
+//                }]];
+//                
+//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) withBlock:^(id sender) {
+//                    [weakSelf deleteDialog:weakSelf.dialog];
+//                }]];
+//                
+//            }
+//        }
+//        
+//        [theMenu popUpForView:weakSelf.rightButton];
+//        
+//        
+//    } forControlEvents:BTRControlEventLeftClick];
+//    
+//    return self.rightButton;
+//}
 
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force {

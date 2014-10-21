@@ -47,15 +47,19 @@
         }];
         
         
-        
         [self.setGroupPhotoButton setHidden:YES];
         
+        [self.addMembersButton setHidden:NO];
         
-        [self.addMembersButton setFrameSize:NSMakeSize(offsetRight, 0)];
+        [self.sharedMediaButton setHidden:NO];
+        
+        
+        
+        
+        
         [self.addMembersButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
         
         
-        [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 0)];
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 72)];
         
         [self.notificationView setHidden:YES];

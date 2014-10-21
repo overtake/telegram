@@ -69,10 +69,10 @@ static NSColor *stateColor[5];
         stateColor[ConnectingStatusTypeNormal] = NSColorFromRGB(0x81d36e);
         
         stateString[ConnectingStatusTypeConnecting] = NSLocalizedString(@"Connecting.Connecting",nil);
-        stateString[ConnectingStatusTypeConnected] = NSLocalizedString(@"Connecting.Connected",nil);
+        stateString[ConnectingStatusTypeConnected] = NSLocalizedString(@"Connecting.Connecting",nil);
         stateString[ConnectingStatusTypeWaitingNetwork] = NSLocalizedString(@"Connecting.WaitingNetwork",nil);
         stateString[ConnectingStatusTypeUpdating] = NSLocalizedString(@"Connecting.Updating",nil);
-        stateString[ConnectingStatusTypeNormal] = NSLocalizedString(@"Connecting.Updated",nil);
+        stateString[ConnectingStatusTypeNormal] = NSLocalizedString(@"Connecting.Updating",nil);
     });
     
 
@@ -92,7 +92,7 @@ static NSColor *stateColor[5];
         [self setNeedsDisplay:YES];
         
         if(_state == ConnectingStatusTypeNormal || (oldState == ConnectingStatusTypeNormal && (_state == ConnectingStatusTypeConnected))) {
-            [self hideAfter:1.0 withState:ConnectingStatusTypeNormal];
+            [self hideAfter:0.1 withState:ConnectingStatusTypeNormal];
             return;
         } else {
             if(!self.isShown) {
@@ -106,7 +106,7 @@ static NSColor *stateColor[5];
             [self startAnimation];
         } else {
             
-            [self hideAfter:1.0 withState:ConnectingStatusTypeConnected];
+            [self hideAfter:0.1 withState:ConnectingStatusTypeConnected];
         }
     
         

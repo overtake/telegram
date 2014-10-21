@@ -50,8 +50,8 @@
         
         weakify();
 
-        self.clearChatHistoryButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ClearHistory", nil) tapBlock:^{
-            [[Telegram rightViewController].messagesViewController clearHistory:[[DialogsManager sharedManager] findByUserId:strongSelf.user.n_id]];
+        self.clearChatHistoryButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.Delete", nil) tapBlock:^{
+            [[Telegram rightViewController].messagesViewController deleteDialog:strongSelf.user.dialog];
         }];
         self.clearChatHistoryButton.textButton.textColor = NSColorFromRGB(0xe07676);
         [self addSubview:self.clearChatHistoryButton];

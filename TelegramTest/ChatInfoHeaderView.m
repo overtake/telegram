@@ -257,6 +257,7 @@
     TGChat *chat = self.controller.chat;
     
     [self.statusTextField setChat:chat];
+    [self.statusTextField sizeToFit];
     
     self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     if(!self.fullChat) {

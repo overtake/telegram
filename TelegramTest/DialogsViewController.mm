@@ -367,23 +367,8 @@
     [menu addItem:openConversationMenuItem];
     
     
-    if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast) {
-        [menu addItem:[NSMenuItem separatorItem]];
-        
-        NSMenuItem *clearHistory = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.ClearHistory", nil) withBlock:^(id sender) {
-            [[Telegram rightViewController].messagesViewController clearHistory:dialog];
-        }];
-        [menu addItem:clearHistory];
-        
-        BOOL isMuted = dialog.isMute;
-        
-        NSMenuItem *muteMenuItem = [NSMenuItem menuItemWithTitle:isMuted ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil) withBlock:^(id sender) {
-            [dialog muteOrUnmute:nil];
-        }];
-        if(dialog.type == DialogTypeSecretChat)
-            muteMenuItem.target = nil;
-        [menu addItem:muteMenuItem];
-    }
+    
+    
     
     
     
@@ -396,6 +381,15 @@
         }];
         [menu addItem:showUserProfile];
         
+        
+        BOOL isMuted = dialog.isMute;
+        
+        NSMenuItem *muteMenuItem = [NSMenuItem menuItemWithTitle:isMuted ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil) withBlock:^(id sender) {
+            [dialog muteOrUnmute:nil];
+        }];
+        if(dialog.type == DialogTypeSecretChat)
+            muteMenuItem.target = nil;
+        [menu addItem:muteMenuItem];
         
         
         if(user.type == TGUserTypeRequest) {
@@ -427,6 +421,15 @@
             [menu addItem:deleteMenuItem];
         }
         
+        if(dialog.type == DialogTypeUser) {
+            [menu addItem:[NSMenuItem separatorItem]];
+            
+            NSMenuItem *clearHistory = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
+                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+            }];
+            [menu addItem:clearHistory];
+        }
+        
     } else {
         
          NSMenuItem *showСhatProfile;
@@ -440,21 +443,29 @@
             showСhatProfile = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowBroadcastInfo", nil) withBlock:^(id sender) {
                 [[Telegram rightViewController] showBroadcastInfoPage:dialog.broadcast];
             }];
-
+            
         }
         
-       
         if(chat.type != TGChatTypeNormal || chat.left)
             showСhatProfile.target = nil;
         
         [menu addItem:showСhatProfile];
         
+        BOOL isMuted = dialog.isMute;
+        
+        NSMenuItem *muteMenuItem = [NSMenuItem menuItemWithTitle:isMuted ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil) withBlock:^(id sender) {
+            [dialog muteOrUnmute:nil];
+        }];
+        if(dialog.type == DialogTypeSecretChat)
+            muteMenuItem.target = nil;
+        [menu addItem:muteMenuItem];
+        
+        
+         [menu addItem:[NSMenuItem separatorItem]];
         
         if(dialog.type == DialogTypeChat) {
             
-            [menu addItem:[NSMenuItem separatorItem]];
-            
-            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TGChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+           NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TGChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];
@@ -466,7 +477,14 @@
                 leaveFromGroupItem.target = nil;
             
             [menu addItem:leaveFromGroupItem];
+        } else {
+            NSMenuItem *deleteBroadcast = [NSMenuItem menuItemWithTitle: NSLocalizedString(@"Profile.DeleteBroadcast", nil) withBlock:^(id sender) {
+                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+            }];
+            [menu addItem:deleteBroadcast];
         }
+        
+       
     }
     
     [NSMenu popUpContextMenu:menu withEvent:theEvent forView:view];
