@@ -367,11 +367,11 @@ static const int navigationOffset = 48;
                 animOldTo = self.containerView.bounds.size.width;
                 timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
                 
-                 [self.containerView addSubview:newView positioned:NSWindowBelow relativeTo:oldView];
+                [self.containerView addSubview:newView positioned:NSWindowBelow relativeTo:oldView];
                 
-
-            }
                 break;
+            }
+                
             default:
                 break;
         }
@@ -425,23 +425,6 @@ static const int navigationOffset = 48;
         [oldView.layer addAnimation:oldViewPositionAnimation forKey:@"position"];
         oldView.layer.position = CGPointMake(animOldTo, 0.0f);
        
-        
-        CABasicAnimation *oldViewAlpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        oldViewAlpha.toValue = @(0.0);
-        oldViewAlpha.fromValue = @(0.5);
-        oldViewAlpha.duration = duration;
-        oldViewAlpha.timingFunction = timingFunction;
-       // [oldView.layer addAnimation:oldViewAlpha forKey:@"opacity"];
-        
-        
-        
-        CABasicAnimation *newViewAlpha = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        newViewAlpha.toValue = @(1.0);
-        newViewAlpha.fromValue = @(0.1);
-        newViewAlpha.duration = duration;
-        newViewAlpha.timingFunction = timingFunction;
-       // [newView.layer addAnimation:newViewAlpha forKey:@"opacity"];
-        
         
         TGAnimationBlockDelegate *ndelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:newView.layer];
     

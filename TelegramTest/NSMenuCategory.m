@@ -56,7 +56,7 @@
 
 - (void)popUpForView:(NSView *)view center:(BOOL)center {
     NSRect wc = [view convertRect: [view bounds] toView: nil];
-    wc.origin.y -= 8;
+    wc.origin.y -= 15;
     
     NSSize menuSize = self.size;
     NSSize screenSize = [NSScreen mainScreen].frame.size;

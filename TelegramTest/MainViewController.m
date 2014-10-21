@@ -47,7 +47,7 @@
     
     if(!archiver) {
         archiver = [[TGWindowArchiver alloc] initWithName:@"conversation"];
-        archiver.size = NSMakeSize(280, self.view.bounds.size.height);
+        archiver.size = NSMakeSize(290, self.view.bounds.size.height);
         archiver.origin = NSMakePoint(0, 0);
     }
     
@@ -64,7 +64,7 @@
     
     self.settingsWindowController = [[SettingsWindowController alloc] initWithWindowNibName:@"SettingsWindowController"];
     
-    self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(280, 0, self.view.bounds.size.width - 280, self.view.bounds.size.height)];
+    self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(archiver.size.width, 0, self.view.bounds.size.width - archiver.size.width, self.view.bounds.size.height)];
     [self.rightViewController viewWillAppear:NO];
     [self.view addSubview:self.rightViewController.view];
     [self.rightViewController viewDidAppear:NO];
@@ -95,7 +95,7 @@
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return  ![self.leftViewController canMinimisize] ? 250 : 70;
+    return  ![self.leftViewController canMinimisize] ? 300 : 70;
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {

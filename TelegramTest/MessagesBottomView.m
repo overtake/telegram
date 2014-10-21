@@ -136,6 +136,8 @@
     [self.actionsView setWantsLayer:YES];
     [self.actionsView setAutoresizesSubviews:YES];
     [self.actionsView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
+    self.actionsView.backgroundColor = [NSColor whiteColor];
 //    [self.actionsView setBackgroundColor:NSColorFromRGB(0xfafafa)];
 //    [self.actionsView setBorder:TMViewBorderTop];
 //    [self.actionsView setBorderColor:GRAY_BORDER_COLOR];

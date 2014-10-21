@@ -70,6 +70,9 @@ static const int duration = 0.1;
 -(void)changeConnection:(BOOL)show animated:(BOOL)animated {
     
     if(animated) {
+        
+        [self.connectionView setHidden:NO];
+        
         TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
         
         [CATransaction begin];
@@ -88,7 +91,9 @@ static const int duration = 0.1;
         self.connectionView.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue]);
         
         [connectionDelegate setCompletion:^(BOOL isFinished) {
+            [self.connectionView setHidden:!show];
             [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
+            [self.connectionView startAnimation];
         }];
         
         [self.connectionView.layer addAnimation:connectionAnimation forKey:@"position"];
@@ -119,11 +124,11 @@ static const int duration = 0.1;
         
         
     } else {
+        
+        [self.connectionView setHidden:!show];
+        
         [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];
         [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
-        
-        self.connectionView.layer.position = self.connectionView.frame.origin;
-        self.centerViewBlock.layer.position = self.centerViewBlock.frame.origin;
     }
     
 }

@@ -342,7 +342,7 @@
             }
         }
         
-        [weakSelf.filterMenu popUpForView:weakSelf.normalNavigationRightView];
+        [weakSelf.filterMenu popUpForView:weakSelf.normalNavigationRightView center:YES];
  
     }];
     

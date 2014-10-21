@@ -31,4 +31,7 @@ typedef enum {
 
 - (void)hide:(BOOL)animated;
 - (void)show:(BOOL)animated;
+
+- (void)startAnimation;
+- (void)stopAnimation;
 @end

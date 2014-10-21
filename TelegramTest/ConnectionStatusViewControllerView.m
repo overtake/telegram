@@ -15,6 +15,7 @@
 @property (nonatomic,strong) NSColor *backgroundColor;
 @property (nonatomic,assign) NSRect origin;
 @property (nonatomic,assign) BOOL isShown;
+@property (nonatomic,strong) NSProgressIndicator *progress;
 @end
 
 
@@ -28,14 +29,21 @@
         self.wantsLayer = YES;
         self.origin = frame;
         
-        self.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin | NSViewMaxYMargin | NSViewMaxXMargin | NSViewMinXMargin;
+//        self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
+//        
+//        [self.progress setStyle:NSProgressIndicatorSpinningStyle];
+//        [self.progress setUsesThreadedAnimation:YES];
+//        
+       // [self addSubview:self.progress];
+        
+        self.autoresizingMask = NSViewWidthSizable;
         
         self.field = [TMTextField defaultTextField];
         
         
         [self.field setTextColor:DARK_BLACK];
         
-        self.field.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        self.progress.autoresizingMask = self.field.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
         
         [self.field setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         
@@ -92,7 +100,7 @@ static NSColor *stateColor[5];
         [self setNeedsDisplay:YES];
         
         if(_state == ConnectingStatusTypeNormal || (oldState == ConnectingStatusTypeNormal && (_state == ConnectingStatusTypeConnected))) {
-            [self hideAfter:0.1 withState:ConnectingStatusTypeNormal];
+            [self hide:YES];
             return;
         } else {
             if(!self.isShown) {
@@ -103,10 +111,10 @@ static NSColor *stateColor[5];
        
         
         if(self.state != ConnectingStatusTypeConnected) {
-            [self startAnimation];
+            //[self startAnimation];
         } else {
             
-            [self hideAfter:0.1 withState:ConnectingStatusTypeConnected];
+            [self hide:YES];
         }
     
         
@@ -125,6 +133,8 @@ static NSColor *stateColor[5];
 - (void)hide:(BOOL)animated {
     if(self.isShown || !animated) {
         self.isShown = NO;
+        [self stopAnimation];
+
         [self.delegate hideConnectionController:animated];
     }
 }
@@ -132,7 +142,9 @@ static NSColor *stateColor[5];
 - (void)show:(BOOL)animated {
     if(!self.isShown || !animated) {
         self.isShown = YES;
+        
         [self.delegate showConnectionController:animated];
+        //[self startAnimation];
     }
 }
 
@@ -146,23 +158,24 @@ static NSColor *stateColor[5];
         [self.field setCenterByView:self];
         
         self.field.frame = NSOffsetRect(self.field.frame, 0, -2);
+        
     }
     
 }
 
 -(void)setFrame:(NSRect)frameRect {
     [super setFrame:frameRect];
-    [self setString:self.field.stringValue update:YES];
+    [self setString:[self.field.stringValue stringByReplacingOccurrencesOfString:@"." withString:@""] update:YES];
 }
 
 - (void)setFrameOrigin:(NSPoint)newOrigin {
     [super setFrameOrigin:newOrigin];
-    [self setString:self.field.stringValue update:YES];
+    [self setString:[self.field.stringValue stringByReplacingOccurrencesOfString:@"." withString:@""] update:YES];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    [self setString:self.field.stringValue update:YES];
+    [self setString:[self.field.stringValue stringByReplacingOccurrencesOfString:@"." withString:@""] update:YES];
 }
 
 
@@ -171,8 +184,9 @@ static NSColor *stateColor[5];
 }
 
 - (void)startAnimation {
+    
     if(!self.animationTimer) {
-        self.animationTimer = [[TGTimer alloc] initWithTimeout:0.35 repeat:YES completion:^{
+        self.animationTimer = [[TGTimer alloc] initWithTimeout:0.16 repeat:YES completion:^{
             
             
             NSMutableString *string = [self.field.stringValue mutableCopy];
@@ -194,6 +208,8 @@ static NSColor *stateColor[5];
 }
 
 - (void)stopAnimation {
+    
+    
     [self.animationTimer invalidate];
     self.animationTimer = nil;
 }
