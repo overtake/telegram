@@ -541,7 +541,6 @@
 		CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB3D1881AF85006189A2 /* YapMemoryTable.m */; };
 		CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB3F1881AF85006189A2 /* YapNull.m */; };
 		CEDAEB6F1881AF85006189A2 /* YapTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB411881AF85006189A2 /* YapTouch.m */; };
-		CEDAEB701881AF85006189A2 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB421881AF85006189A2 /* LICENSE.txt */; };
 		CEDAEB711881AF85006189A2 /* YapCollectionKey.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB451881AF85006189A2 /* YapCollectionKey.m */; };
 		CEDAEB721881AF85006189A2 /* YapDatabaseQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB471881AF85006189A2 /* YapDatabaseQuery.m */; };
 		CEDAEB731881AF85006189A2 /* YapSet.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB491881AF85006189A2 /* YapSet.m */; };
@@ -556,7 +555,6 @@
 		CEDAEB8F1881AFA6006189A2 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB851881AFA6006189A2 /* ContextFilterLogFormatter.m */; };
 		CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDAEB871881AFA6006189A2 /* DispatchQueueLogFormatter.m */; };
 		CEDAEB911881AFA6006189A2 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB881881AFA6006189A2 /* README.txt */; };
-		CEDAEB921881AFA6006189A2 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEDAEB891881AFA6006189A2 /* LICENSE.txt */; };
 		CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF5C02717FFFEFE006CEE27 /* NSData+Extensions.m */; };
 		CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8EB8917FCA81000740D66 /* NSString+NSStringHexToBytes.m */; };
 /* End PBXBuildFile section */
@@ -1073,6 +1071,7 @@
 		0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellServiceMessage.m; sourceTree = "<group>"; };
 		0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemGif.h; sourceTree = "<group>"; };
 		0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemGif.m; sourceTree = "<group>"; };
+		179AF7CA19D9F63000100871 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = SOURCE_ROOT; };
 		C2002D0119990F10002A1915 /* BroadcastInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoViewController.h; sourceTree = "<group>"; };
 		C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastInfoViewController.m; sourceTree = "<group>"; };
 		C2002D0419994D7A002A1915 /* BroadcastInfoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoHeaderView.h; sourceTree = "<group>"; };
@@ -3372,6 +3371,7 @@
 				CEB260F4180C0EB300378932 /* ui */,
 				CEF8EB8617FCA7CF00740D66 /* utils */,
 				CEB0A25217DB09C60055F150 /* protocol */,
+				179AF7CA19D9F63000100871 /* Application.h */,
 				CEB09E6D17DAFC250055F150 /* AppDelegate.h */,
 				CEB09E6E17DAFC250055F150 /* AppDelegate.m */,
 				C271524919B0D8C700841C8A /* Images.xcassets */,
@@ -4031,8 +4031,6 @@
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
 				0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */,
-				CEDAEB921881AFA6006189A2 /* LICENSE.txt in Resources */,
-				CEDAEB701881AF85006189A2 /* LICENSE.txt in Resources */,
 				C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */,
 				C2200B6118EDD1E200F28803 /* AboutViewControllerWindowController.xib in Resources */,
 				0A59068318AA32C8002ED7BA /* Butter-Info.plist in Resources */,
@@ -4701,37 +4699,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/opus/lib,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
-					"$(PROJECT_DIR)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
@@ -4752,37 +4726,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					/Users/dmitry/Documents/Projects/telegram/telegram,
-					/Users/user/Dropbox/xcode/telegram,
-					/Users/mikhailfilimonov/Documents/telegram,
-					/Users/user/Dropbox/telegram,
-					/Users/dmitry/Projects/Telegram/telegram,
 					"$(PROJECT_DIR)",
-					"/Users/mikhailfilimonov/Documents/библиотеки/telegram-p-edition",
-					"/Users/mikhailfilimonov/Documents/telegram-p-edition",
-					/Users/mikhailfilimonov/Documents/current,
-					"telegram/telegram-p-edition",
-					"/Users/user/Dropbox/telegram-pro",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/user/Dropbox/xcode/TelegramTest,
-					"$(SDKROOT)/usr/lib/system",
-					/Users/mikhailfilimonov/Documents/new_normal,
-					/Users/mikhailfilimonov/Documents/new_normal/lib/opus,
-					/Users/mikhailfilimonov/Desktop,
-					/Users/user/Dropbox/t,
-					"$(PROJECT_DIR)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
