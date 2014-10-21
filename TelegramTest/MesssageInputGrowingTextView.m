@@ -258,6 +258,8 @@ typedef enum {
 //    self.containerView.backgroundColor = NSColorFromRGB(0x000000);
 //    self.backgroundColor = [NSColor redColor];
 //    self.scrollView.backgroundColor = [NSColor blueColor];
+    
+    [self setTypingAttributes:@{NSParagraphStyleAttributeName:[self defaultParagraphStyle]}];
 
 }
 
@@ -268,6 +270,7 @@ typedef enum {
     dispatch_once(&onceToken, ^{
         para = [[NSMutableParagraphStyle alloc] init];
         [para setLineSpacing:0];
+        [para setMaximumLineHeight:16];
     });
     
     //[para setMaximumLineHeight:spacing];

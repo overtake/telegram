@@ -464,8 +464,6 @@ static BOOL dragAction = NO;
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     
-    
-   
     if(![self acceptEvent:theEvent]) {
         [super mouseDragged:theEvent];
     }
@@ -869,7 +867,10 @@ static int offsetEditable = 30;
         state = MessageTableCellRead;
     }
     
-    [self.stateLayer setState:state];
+    [self.stateLayer setHidden:!self.item.message.n_out];
+    
+    if(!self.stateLayer.isHidden)
+        [self.stateLayer setState:state];
 }
 
 

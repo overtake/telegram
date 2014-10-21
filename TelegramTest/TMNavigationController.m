@@ -103,7 +103,8 @@ static const int navigationOffset = 48;
 
 
 -(void)addDelegate:(id<TMNavagationDelegate>)delegate {
-    [_delegates addObject:delegate];
+    if([_delegates indexOfObject:delegate] == NSNotFound)
+        [_delegates addObject:delegate];
 }
 
 -(void)removeDelegate:(id<TMNavagationDelegate>)delegate {
@@ -218,7 +219,8 @@ static const int navigationOffset = 48;
     }
     
     [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
-        [obj willChangedController:newViewController];
+        if([obj respondsToSelector:@selector(willChangedController:)])
+            [obj willChangedController:newViewController];
     }];
     
     BOOL isNavigationBarHiddenOld = self.nagivationBarView.isHidden;
@@ -304,7 +306,8 @@ static const int navigationOffset = 48;
         [newViewController becomeFirstResponder];
         
         [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
-            [obj didChangedController:newViewController];
+            if([obj respondsToSelector:@selector(didChangedController:)])
+                [obj didChangedController:newViewController];
         }];
         
     } else {
@@ -387,7 +390,8 @@ static const int navigationOffset = 48;
             _isLocked = NO;
             
             [_delegates enumerateObjectsUsingBlock:^(id<TMNavagationDelegate> obj, NSUInteger idx, BOOL *stop) {
-                [obj didChangedController:newViewController];
+                if([obj respondsToSelector:@selector(didChangedController:)])
+                    [obj didChangedController:newViewController];
             }];
         };
         

@@ -1,0 +1,13 @@
+//
+//  SearchMessageCellView.h
+//  Telegram
+//
+//  Created by keepcoder on 21.10.14.
+//  Copyright (c) 2014 keepcoder. All rights reserved.
+//
+
+#import "DialogTableItemView.h"
+
+@interface SearchMessageCellView : DialogTableItemView
+
+@end

@@ -11,11 +11,11 @@
 #import "LeftViewController.h"
 #import "RightViewController.h"
 #import "SettingsWindowController.h"
-
 @interface MainViewController : TMViewController<NSSplitViewDelegate>
 @property (nonatomic, strong) SettingsWindowController *settingsWindowController;
 @property (nonatomic, strong) LeftViewController *leftViewController;
 @property (nonatomic, strong) RightViewController *rightViewController;
+
 
 
 -(void)updateWindowMinSize;

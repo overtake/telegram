@@ -23,6 +23,10 @@
 
 @implementation Telegram
 
++(void)setConnectionState:(ConnectingStatusType)state {
+    [[Telegram rightViewController].navigationViewController.nagivationBarView setConnectionState:state];
+}
+
 + (Telegram *)sharedInstance {
     return [self delegate].telegram;
 }

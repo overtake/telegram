@@ -12,7 +12,7 @@
 #import "AppDelegate.h"
 #import "SettingsWindowController.h"
 #import "ASQueue.h"
-
+#import "ConnectionStatusViewControllerView.h"
 @interface Telegram : NSObjectController
 
 + (Telegram *)sharedInstance;
@@ -32,6 +32,9 @@ NSString* appName();
 + (MainViewController *)mainViewController;
 + (SettingsWindowController *)settingsWindowController;
 + (AppDelegate *)delegate;
+
+
++ (void)setConnectionState:(ConnectingStatusType)state;
 
 
 - (void)makeFirstController:(TMViewController *)controller;

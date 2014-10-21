@@ -16,6 +16,7 @@
 #import "SelectUserRowView.h"
 #import "NewConversationViewController.h"
 #import "RBLPopover.h"
+#import "TGPeer+Extensions.h"
 #import "AddContactViewController.h"
 @interface ContactFirstItem : TMRowItem
 
@@ -56,12 +57,11 @@
         
         [self addSubview:self.field];
         
-        NSImage *image = [NSImage imageNamed:@"ContactsAddContact"];
         
-        self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(17, roundf( (40 - image.size.height) / 2), image.size.width, image.size.height)];
+        self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(17, roundf( (40 - image_ContactsAddContact().size.height) / 2), image_ContactsAddContact().size.width, image_ContactsAddContact().size.height)];
         
         
-        self.imageView.image = image;
+        self.imageView.image = image_ContactsAddContact();
         
         [self addSubview:self.imageView];
     }
@@ -69,14 +69,22 @@
     return self;
 }
 
+-(void)checkSelected:(BOOL)isSelected {
+    self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
+    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : BLUE_UI_COLOR];
+}
+
 -(void)drawRect:(NSRect)dirtyRect {
 	
-    [LIGHT_GRAY_BORDER_COLOR setFill];
-    
-    NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 , 1));
-//    
-//    [NSColorFromRGB(0xe41f5d) set];
-//    NSRectFill(NSMakeRect(0, 1, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+   if(self.isSelected) {
+        [BLUE_COLOR_SELECT setFill];
+        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+    } else {
+        [LIGHT_GRAY_BORDER_COLOR setFill];
+        
+        NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 , 1));
+    }
+
 
 }
 
@@ -179,7 +187,7 @@
 @end
 
 
-@interface ContactsViewController ()<TMTableViewDelegate>
+@interface ContactsViewController ()<TMTableViewDelegate,TMNavagationDelegate>
 
 @property (nonatomic,strong) TMTableView *tableView;
 
@@ -228,23 +236,57 @@
     
     
     [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
-    [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
+    
+   
 
 }
 
+-(void)didChangedController:(TMViewController *)controller {
+    
+}
 
-- (void)notificationDialogSelectionChanged:(NSNotification *)notify {
-    if([notify.userInfo objectForKey:@"sender"] != self) {
-        TL_conversation *conversation = [notify.userInfo objectForKey:KEY_DIALOG];
+-(void)willChangedController:(TMViewController *)controller {
+    if([controller isKindOfClass:[AddContactViewController class]]) {
+        [self.tableView setSelectedByHash:0];
         
-        [self.tableView cancelSelection];
+        return;
         
-        if(![conversation isKindOfClass:NSNull.class]) {
-            NSUInteger hash = [ContactUserItem hash:conversation.user.contact];
-            [self.tableView setSelectedByHash:hash];
-        }
+    } else {
+        
+        __block BOOL ret = NO;
+        
+        [[Telegram rightViewController].navigationViewController.viewControllerStack enumerateObjectsUsingBlock:^(TMViewController *obj, NSUInteger idx, BOOL *stop) {
+            
+            if([obj isKindOfClass:[MessagesViewController class]]) {
+                MessagesViewController *messagesController = (MessagesViewController *)obj;
+                if(messagesController.dialog.type == DialogTypeUser) {
+                    [self.tableView setSelectedByHash:messagesController.dialog.peer.peer_id];
+                    
+                    *stop = YES;
+                    ret = YES;
+                }
+            }
+            
+            
+            
+        }];
+        
+        if(ret)
+            return;
     }
+    
+    [self.tableView cancelSelection];
 }
+
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[Telegram rightViewController].navigationViewController addDelegate:self];
+    
+    [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
+}
+
 
 
 -(void)contactsLoaded:(NSNotification *)notify {

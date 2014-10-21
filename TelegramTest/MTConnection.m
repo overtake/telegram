@@ -22,7 +22,7 @@
         [[Telegram sharedInstance] setAccountOnline];
     }
     if(!isNetworkAvailable) {
-        [[Telegram rightViewController].messagesViewController.connectionController setState:ConnectingStatusTypeWaitingNetwork];
+        [Telegram setConnectionState:ConnectingStatusTypeWaitingNetwork];
     }
 }
 - (void)mtProtoConnectionStateChanged:(MTProto *)mtProto isConnected:(bool)isConnected {
@@ -31,7 +31,7 @@
         [[Telegram sharedInstance] setAccountOnline];
     }
     
-    [[Telegram rightViewController].messagesViewController.connectionController setState:isConnected ?ConnectingStatusTypeConnected : ConnectingStatusTypeConnecting];
+    [Telegram setConnectionState:isConnected ?ConnectingStatusTypeConnected : ConnectingStatusTypeConnecting];
     
 
 }

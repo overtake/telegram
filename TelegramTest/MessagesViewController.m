@@ -357,10 +357,10 @@
     
     [self.view addSubview:self.topInfoView];
     
-    _connectionController = [[ConnectionStatusViewControllerView alloc] initWithFrame:NSZeroRect];
-    _connectionController.controller = self;
-    [self showConnectionController:NO];
-    [self.view addSubview:self.connectionController];
+   // _connectionController = [[ConnectionStatusViewControllerView alloc] initWithFrame:NSZeroRect];
+   // _connectionController.controller = self;
+   // [self showConnectionController:NO];
+   // [self.view addSubview:self.connectionController];
     
     
     
@@ -982,10 +982,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)showTopInfoView:(BOOL)animated {
     
-    if(!self.connectionController.isHidden)
-        return;
-    
-    
     NSRect topRect = NSMakeRect(0,self.view.frame.size.height-40, self.view.frame.size.width, 40);
     NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 40);
     
@@ -1005,10 +1001,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)hideTopInfoView:(BOOL)animated {
-    
-    if(!self.connectionController.isHidden)
-        return;
-    
     NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
     NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
     if(animated) {
@@ -1026,59 +1018,59 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)showConnectionController:(BOOL)animated {
-    
-    [self hideTopInfoView:NO];
-    
-    self.connectionController.alphaValue = 0.0;
-    [self.connectionController setHidden:NO];
-    NSRect topRect = NSMakeRect(0,self.view.frame.size.height-20, self.view.frame.size.width, 20);
-    NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 20);
-    
-    if(animated) {
-        [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
-            [context setDuration:0.3];
-            [[self.connectionController animator] setAlphaValue:1.0f];
-            [[self.connectionController animator] setFrame:topRect];
-            [[self.table.scrollView animator] setFrame:tableRect];
-        } completionHandler:nil];
-    } else {
-        self.connectionController.frame = topRect;
-        [self.connectionController setAlphaValue:1.0f];
-        [self.table.scrollView setFrame:tableRect];
-    }
-    
-}
+//- (void)showConnectionController:(BOOL)animated {
+//    
+//    [self hideTopInfoView:NO];
+//    
+//    self.connectionController.alphaValue = 0.0;
+//    [self.connectionController setHidden:NO];
+//    NSRect topRect = NSMakeRect(0,self.view.frame.size.height-20, self.view.frame.size.width, 20);
+//    NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 20);
+//    
+//    if(animated) {
+//        [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
+//            [context setDuration:0.3];
+//            [[self.connectionController animator] setAlphaValue:1.0f];
+//            [[self.connectionController animator] setFrame:topRect];
+//            [[self.table.scrollView animator] setFrame:tableRect];
+//        } completionHandler:nil];
+//    } else {
+//        self.connectionController.frame = topRect;
+//        [self.connectionController setAlphaValue:1.0f];
+//        [self.table.scrollView setFrame:tableRect];
+//    }
+//    
+//}
 
 
-- (void)hideConnectionController:(BOOL)animated {
-    self.connectionController.alphaValue = 1.0f;
-    [self.connectionController setHidden:NO];
-    NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
-    NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
-    if(animated) {
-        [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
-            [context setDuration:0.3];
-            [[self.table.scrollView animator] setFrameSize:newSize];
-            [[self.connectionController animator] setFrameOrigin:newPoint];
-            [[self.connectionController animator] setAlphaValue:0.0f];
-            
-            
-        } completionHandler:^{
-            [self.connectionController setHidden:YES];
-            if([self.topInfoView isShown])
-                [self showTopInfoView:YES];
-        }];
-        
-    } else {
-        [self.table.scrollView setFrameSize:newSize];
-        [self.connectionController setHidden:YES];
-        [self.connectionController setFrameOrigin:newPoint];
-        if([self.topInfoView isShown])
-            [self showTopInfoView:NO];
-    }
-    
-}
+//- (void)hideConnectionController:(BOOL)animated {
+//    self.connectionController.alphaValue = 1.0f;
+//    [self.connectionController setHidden:NO];
+//    NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
+//    NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
+//    if(animated) {
+//        [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {
+//            [context setDuration:0.3];
+//            [[self.table.scrollView animator] setFrameSize:newSize];
+//            [[self.connectionController animator] setFrameOrigin:newPoint];
+//            [[self.connectionController animator] setAlphaValue:0.0f];
+//            
+//            
+//        } completionHandler:^{
+//            [self.connectionController setHidden:YES];
+//            if([self.topInfoView isShown])
+//                [self showTopInfoView:YES];
+//        }];
+//        
+//    } else {
+//        [self.table.scrollView setFrameSize:newSize];
+//        [self.connectionController setHidden:YES];
+//        [self.connectionController setFrameOrigin:newPoint];
+//        if([self.topInfoView isShown])
+//            [self showTopInfoView:NO];
+//    }
+//    
+//}
 
 
 
@@ -2111,23 +2103,16 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         }
         
-        
-        if([message isEqualToString:@"exportcard"]) {
-            
-            
-            [RPCRequest sendRequest:[TLAPI_contactsExportCard create] successHandler:^(RPCRequest *request, id response) {
-                
-                NSString *c = decodeCard(response);
-               
-                NSLog(@"%@, %@",response,c);
-           
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-            }];
-            
+        if([message isEqualToString:@"1"] && [UsersManager currentUserId] == 438078) {
+            [Telegram setConnectionState:ConnectingStatusTypeConnecting];
             return;
         }
-
+        
+        if([message isEqualToString:@"2"] && [UsersManager currentUserId] == 438078) {
+            [Telegram setConnectionState:ConnectingStatusTypeNormal];
+            return;
+        }
+        
         
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];

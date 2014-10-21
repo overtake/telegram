@@ -600,7 +600,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     _holdUpdates = YES;
     
-    [[Telegram rightViewController].messagesViewController.connectionController setState:ConnectingStatusTypeUpdating];
+    [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:pts date:date qts:qts];
     [[NSApp delegate] setConnectionStatus:NSLocalizedString(@"App.updating", nil)];
@@ -720,7 +720,7 @@ static NSString *kUpdateState = @"kUpdateState";
         } else {
             [[NSApp delegate] setConnectionStatus:nil];
             [Notification perform:PROTOCOL_UPDATED data:nil];
-            [[Telegram rightViewController].messagesViewController.connectionController setState:ConnectingStatusTypeNormal];
+            [Telegram setConnectionState:ConnectingStatusTypeNormal];
         }
        
         

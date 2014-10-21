@@ -7,7 +7,7 @@
 //
 
 #import "TMView.h"
-
+#import "ConnectionStatusViewControllerView.h"
 @interface TMNavigationBar : TMView
 
 - (void) setLeftView:(TMView *)view animated:(BOOL)animated;
@@ -19,6 +19,6 @@
 @property (nonatomic, strong) TMView *rightView;
 
 
-
+-(void)setConnectionState:(ConnectingStatusType)state;
 
 @end

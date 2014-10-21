@@ -54,6 +54,8 @@
         
         self.scrollView.delegate = self;
         
+        _startSelectPosition = NSMakePoint(INT32_MIN, INT32_MIN);
+        
         [SelectTextManager addSelectManagerDelegate:self];
     }
     return self;
@@ -179,19 +181,18 @@
     
     self.firstSelectItem = [self.viewController messageList][row];
     
-    [self clearSelection];
-    
-    _startSelectPosition = tablePoint;
     
     [SelectTextManager clear];
     [SelectTextManager becomeFirstResponder];
+    
+    _startSelectPosition = tablePoint;
     
     
 }
 
 
-
 - (void)clearSelection {
+    
     [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
         
         MessageTableCellContainerView *container = [rowView subviews][0];
@@ -209,6 +210,9 @@
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
+    
+    if(_startSelectPosition.x == INT32_MIN && _startSelectPosition.y == INT32_MIN)
+        return;
     
     [SelectTextManager clear];
     [SelectTextManager becomeFirstResponder];

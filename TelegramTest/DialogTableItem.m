@@ -70,7 +70,7 @@
     self.isMuted = self.dialog.isMute;
     
     self.writeAttributedString = [[NSMutableAttributedString alloc] init];
-    [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x9b9b9b)];
+    [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
     [self notificationChangeMessage:nil];
     return self;
 }

@@ -8,6 +8,7 @@
 
 #import "TMGrowingTextView.h"
 #import "TMNineImage.h"
+#import "NSString+Extended.h"
 #import "TGAnimationBlockDelegate.h"
 @interface TMGrowingTextCell : NSTextFieldCell
 
@@ -107,13 +108,38 @@
     NSSize size = newRect.size;
     size.width = self.containerView.bounds.size.width;
     
+    
+   // NSArray *
+   
+    
     NSSize newSize = NSMakeSize(size.width, size.height);
-    newSize.height+=6;
+//
+//    int height = (int)newSize.height % 14;
+//    
+//    if(height == 0 && [self.string getEmojiFromString].count > 0)
+//        height = 6;
+//    
+//    NSArray *lines = [self.string componentsSeparatedByString:@"\n"];
+//    
+//    
+    
+    
+//    
+//    if(height != 0)
+//        height = 4;
+//
+    
+//    newSize.height-=height;
+    
+    newSize.height+= 8;
+    
+  //  NSLog(@"%@, height:%d",NSStringFromSize(newSize), height);
+    
     if(newSize.height < 33)
         newSize.height = 33;
     
     
-    int maxHeight = 300; //old = 50;
+    int maxHeight = 300;
     
     if(newSize.height > maxHeight)
         newSize.height = maxHeight;
@@ -217,6 +243,7 @@
 //    [self.scrollView setBackgroundColor:[NSColor redColor]];
     [self.scrollView setFrame:NSMakeRect(9, 0, self.bounds.size.width - 9, self.bounds.size.height - 2)];
     [self.containerView addSubview:self.scrollView];
+    
 }
 
 
@@ -230,13 +257,12 @@
 
 -(NSPoint)textContainerOrigin {
     
-    
-    
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
-        
     
-    return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect) )/ 2 -1 ));
+    int yOffset = [self.string getEmojiFromString].count > 0 ? 0 : 1;
+    
+    return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
     
     
 }

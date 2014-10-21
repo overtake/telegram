@@ -27,25 +27,22 @@
         // Initialization code here.
         self.wantsLayer = YES;
         self.origin = frame;
-       // self.backgroundColor = NSColorFromRGB(0xcccccc);
-      //  self.layer.cornerRadius = 4;
         
         self.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin | NSViewMaxYMargin | NSViewMaxXMargin | NSViewMinXMargin;
         
         self.field = [TMTextField defaultTextField];
         
         
-        [self.field setTextColor:NSColorFromRGB(0xffffff)];
+        [self.field setTextColor:DARK_BLACK];
         
         self.field.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
         
-        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         
         [self addSubview:self.field];
         
-        _state = INT16_MAX;
+        _state = ConnectingStatusTypeNormal;
         
-        self.state = ConnectingStatusTypeConnecting;
         
         
     }
@@ -78,7 +75,6 @@ static NSColor *stateColor[5];
         stateString[ConnectingStatusTypeNormal] = NSLocalizedString(@"Connecting.Updated",nil);
     });
     
-   
 
     
     [LoopingUtils runOnMainQueueAsync:^{
@@ -89,7 +85,7 @@ static NSColor *stateColor[5];
         
         self->_state = state;
         
-        self.backgroundColor = stateColor[state];
+        self.backgroundColor = [NSColor whiteColor]; // stateColor[state];
         
         [self setString:stateString[state]];
         
@@ -119,7 +115,7 @@ static NSColor *stateColor[5];
 
 - (void)hideAfter:(float)time withState:(ConnectingStatusType)state {
     [self stopAnimation];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after_seconds(time, ^{
         if(_state == state) {
             [self hide:YES];
         }
@@ -127,52 +123,17 @@ static NSColor *stateColor[5];
 }
 
 - (void)hide:(BOOL)animated {
-    if(self.isShown) {
+    if(self.isShown || !animated) {
         self.isShown = NO;
-        [self.controller hideConnectionController:animated];
+        [self.delegate hideConnectionController:animated];
     }
-    
-//    self.alphaValue = 1.0f;
-//    
-//    if(animated) {
-//        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-//            [context setDuration:.3];
-//            [[self animator] setAlphaValue:0.0f];
-//            [[self animator] setFrame:NSOffsetRect(self.frame, 0, self.frame.size.height)];
-//            
-//        } completionHandler:^{
-//            [self setHidden:YES];
-//        }];
-//    } else {
-//        self.alphaValue = 0.0f;
-//        [self setFrame:NSOffsetRect(self.frame, 0, self.frame.size.height)];
-//    }
-//  
-    //[self.layer pop_addAnimation:anim forKey:@"posY"];
 }
 
 - (void)show:(BOOL)animated {
-    if(!self.isShown) {
+    if(!self.isShown || !animated) {
         self.isShown = YES;
-        [self.controller showConnectionController:animated];
+        [self.delegate showConnectionController:animated];
     }
-    
-    
-//    [self setHidden:NO];
-//    self.alphaValue = 0.0f;
-//    if(animated) {
-//        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-//            [context setDuration:.3];
-//            [self.animator setAlphaValue:1.0];
-//            [[self animator] setFrame:NSOffsetRect(self.frame, 0, -self.frame.size.height)];
-//            
-//        } completionHandler:^{
-//            
-//        }];
-//    } else {
-//        self.alphaValue = 1.0f;
-//        [self setFrame:NSOffsetRect(self.frame, 0, -self.frame.size.height)];
-//    }
 }
 
 - (void)setString:(NSString *)string update:(BOOL)update {
@@ -239,29 +200,11 @@ static NSColor *stateColor[5];
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    [super drawRect:dirtyRect];
-//    CGFloat cornerRadius = 8;
-//    
-//    NSBezierPath *path = [NSBezierPath bezierPath];
-//    
-//    // Start drawing from upper left corner
-//    [path moveToPoint:NSMakePoint(NSMinX(self.bounds), NSMinY(self.bounds))];
-//    
-//    // Draw top border and a top-right rounded corner
-//    NSPoint topRightCorner = NSMakePoint(NSMaxX(self.bounds), NSMinY(self.bounds));
-//    [path lineToPoint:NSMakePoint(NSMaxX(self.bounds) - cornerRadius, NSMinY(self.bounds))];
-//    [path curveToPoint:NSMakePoint(NSMaxX(self.bounds), NSMinY(self.bounds) + cornerRadius)
-//         controlPoint1:topRightCorner
-//         controlPoint2:topRightCorner];
-//    
-//    // Draw right border, bottom border and left border
-//    [path lineToPoint:NSMakePoint(NSMaxX(self.bounds), NSMaxY(self.bounds))];
-//    [path lineToPoint:NSMakePoint(NSMinX(self.bounds), NSMaxY(self.bounds))];
-//    [path lineToPoint:NSMakePoint(NSMinX(self.bounds), NSMinY(self.bounds))];
-    
-    // Fill path
+   // [super drawRect:dirtyRect];
+
     [self.backgroundColor setFill];
-    //[path fill];
+    
+    NSRectFill(NSMakeRect(0, 0, self.frame.size.width, self.frame.size.height -1));
     
 }
 

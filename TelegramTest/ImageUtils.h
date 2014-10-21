@@ -133,6 +133,10 @@ CACHE_IMAGE(MessageStateSentWhite)
 CACHE_IMAGE(SendingClockWhite)
 CACHE_IMAGE(SendingClockGray)
 
+CACHE_IMAGE(ContactsAddContactActive)
+
+CACHE_IMAGE(ContactsAddContact)
+
 @interface ImageUtils : NSObject
 
 

@@ -380,6 +380,8 @@
 		C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19E19F13721007F836A /* MessagetableCellAudioController.m */; };
 		C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A619F3F6C3007F836A /* TMClockProgressView.m */; };
 		C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A919F43575007F836A /* MessageStateLayer.m */; };
+		C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */; };
+		C268C1B019F6B1F7007F836A /* SearchMessageTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1426,6 +1428,10 @@
 		C268C1A619F3F6C3007F836A /* TMClockProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMClockProgressView.m; sourceTree = "<group>"; };
 		C268C1A819F43575007F836A /* MessageStateLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageStateLayer.h; sourceTree = "<group>"; };
 		C268C1A919F43575007F836A /* MessageStateLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageStateLayer.m; sourceTree = "<group>"; };
+		C268C1AB19F6B0A3007F836A /* SearchMessageCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchMessageCellView.h; sourceTree = "<group>"; };
+		C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchMessageCellView.m; sourceTree = "<group>"; };
+		C268C1AE19F6B1F7007F836A /* SearchMessageTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchMessageTableItem.h; sourceTree = "<group>"; };
+		C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchMessageTableItem.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2436,6 +2442,10 @@
 				0ACF9E381921F4BD001F9E1E /* SearchLoaderCell.m */,
 				0ACF9E3D19235FED001F9E1E /* SearchLoadMoreCell.h */,
 				0ACF9E3E19235FED001F9E1E /* SearchLoadMoreCell.m */,
+				C268C1AB19F6B0A3007F836A /* SearchMessageCellView.h */,
+				C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */,
+				C268C1AE19F6B1F7007F836A /* SearchMessageTableItem.h */,
+				C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */,
 			);
 			name = tableCells;
 			sourceTree = "<group>";
@@ -4498,6 +4508,7 @@
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
+				C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */,
 				C21C7B3818D769B100253A7A /* VideoSenderItem.m in Sources */,
 				C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */,
 				C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */,
@@ -4768,6 +4779,7 @@
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
 				CEDAEB621881AF85006189A2 /* YapDatabaseViewRangeOptions.m in Sources */,
 				CEDAEB611881AF85006189A2 /* YapDatabaseViewMappings.m in Sources */,
+				C268C1B019F6B1F7007F836A /* SearchMessageTableItem.m in Sources */,
 				CEC22DF81827CC10008817D0 /* FullChatManager.m in Sources */,
 				0AA3F3AB18BE1F7600D383F1 /* TMNameTextField.m in Sources */,
 				C25F91B31977E115006868F3 /* TGImageView.m in Sources */,

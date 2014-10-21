@@ -8,14 +8,17 @@
 
 #import "TMNavigationBar.h"
 #import "NSString+Extended.h"
-
+#import "TGAnimationBlockDelegate.h"
 #define ANIM_DURATION 2.05
 
-@interface TMNavigationBar()
+@interface TMNavigationBar()<ConnectionStatusDelegate>
 
 @property (nonatomic, strong) TMView *leftViewBlock;
 @property (nonatomic, strong) TMView *centerViewBlock;
 @property (nonatomic, strong) TMView *rightViewBlock;
+
+
+@property (nonatomic,strong) ConnectionStatusViewControllerView *connectionView;
 
 @property (nonatomic) NSUInteger rightHash;
 @end
@@ -34,14 +37,105 @@
         
         self.centerViewBlock = [[TMView alloc] initWithFrame:NSZeroRect];
         [self.centerViewBlock setAutoresizingMask:NSViewWidthSizable];
+        [self.centerViewBlock setWantsLayer:YES];
         [self addSubview:self.centerViewBlock];
         
         self.rightViewBlock = [[TMView alloc] initWithFrame:NSZeroRect];
         [self.rightViewBlock setAutoresizingMask:YES];
         [self.rightViewBlock setAutoresizingMask:NSViewMinXMargin];
         [self addSubview:self.rightViewBlock];
+        
+        self.connectionView = [[ConnectionStatusViewControllerView alloc] initWithFrame:NSZeroRect];
+        
+        self.connectionView.delegate = self;
+        
+        [self.connectionView setWantsLayer:YES];
+        
+        [self addSubview:self.connectionView];
+        
+        
     }
     return self;
+}
+
+static const int duration = 0.1;
+
+-(void)showConnectionController:(BOOL)animated {
+    
+    [self changeConnection:YES animated:animated];
+   
+}
+
+
+-(void)changeConnection:(BOOL)show animated:(BOOL)animated {
+    
+    if(animated) {
+        TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
+        
+        [CATransaction begin];
+        
+        CABasicAnimation *connectionAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+        
+        connectionAnimation.duration = duration;
+        connectionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        
+        connectionAnimation.toValue = @( show ? 0 : NSHeight(self.connectionView.frame)  );
+        connectionAnimation.fromValue = @( show ? NSHeight(self.connectionView.frame) : 0 );
+        connectionAnimation.delegate = connectionDelegate;
+        connectionAnimation.removedOnCompletion = YES;
+        connectionAnimation.fillMode = kCAFillModeRemoved;
+        
+        self.connectionView.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue]);
+        
+        [connectionDelegate setCompletion:^(BOOL isFinished) {
+            [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
+        }];
+        
+        [self.connectionView.layer addAnimation:connectionAnimation forKey:@"position"];
+        
+        
+        TGAnimationBlockDelegate *centerDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
+        
+        CABasicAnimation *centerAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+        
+        centerAnimation.duration = duration;
+        centerAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        
+        centerAnimation.toValue = @( !show ? 0 : -NSHeight(self.centerViewBlock.frame) );
+        centerAnimation.fromValue = @( !show ? -NSHeight(self.centerViewBlock.frame) : 0 );
+        centerAnimation.delegate = centerDelegate;
+        centerAnimation.removedOnCompletion = YES;
+        centerAnimation.fillMode = kCAFillModeRemoved;
+        
+        self.centerViewBlock.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [centerAnimation.toValue floatValue]);
+        
+        [centerDelegate setCompletion:^(BOOL isFinished) {
+            [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+        }];
+        
+        [self.centerViewBlock.layer addAnimation:centerAnimation forKey:@"position"];
+        
+        [CATransaction commit];
+        
+        
+    } else {
+        [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];
+        [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+        
+        self.connectionView.layer.position = self.connectionView.frame.origin;
+        self.centerViewBlock.layer.position = self.centerViewBlock.frame.origin;
+    }
+    
+}
+
+
+
+-(void)hideConnectionController:(BOOL)animated {
+     [self changeConnection:NO animated:animated];
+}
+
+-(void)setConnectionState:(ConnectingStatusType)state {
+    [self.connectionView setState:state];
 }
 
 - (void) setLeftView:(TMView *)view animated:(BOOL)animated {
@@ -69,10 +163,17 @@
     [self.centerViewBlock setFrameSize:NSMakeSize(self.bounds.size.width - 60 - maxSize * 2, self.bounds.size.height)];
     [self.centerViewBlock setFrameOrigin:NSMakePoint(32 + maxSize, 0)];
     
-//    float maxLeftWidth = self.bounds.size.width - 60 - 20 - self.rightView.bounds.size.width;
-//    [self.leftViewBlock setAutoresizingMask:NSViewNotSizable];
-//    [self.leftViewBlock setFrameSize:NSMakeSize(maxLeftWidth, self.leftView.bounds.size.height)];
-//    [self.leftViewBlock setAutoresizingMask:NSViewWidthSizable];
+    
+    [self.connectionView setFrame:self.centerViewBlock.frame];
+    
+    if(self.connectionView.state == ConnectingStatusTypeNormal || self.connectionView.state == ConnectingStatusTypeConnected) {
+        [self.connectionView hide:NO];
+    } else {
+        [self.connectionView show:NO];
+    }
+    
+    
+    
 }
 
 - (void) setRightView:(TMView *)newRightView animated:(BOOL)animated {

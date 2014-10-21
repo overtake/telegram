@@ -39,8 +39,6 @@ typedef enum {
 
 @property (nonatomic) MessagesViewControllerState state;
 
-@property (nonatomic,strong,readonly) ConnectionStatusViewControllerView *connectionController;
-
 @property (nonatomic,copy) dispatch_block_t didUpdatedTable;
 
 - (void)sendTyping;
@@ -106,8 +104,8 @@ typedef enum {
 - (void)hideTopInfoView:(BOOL)animated;
 - (void)showTopInfoView:(BOOL)animated;
 
-- (void)showConnectionController:(BOOL)animated;
-- (void)hideConnectionController:(BOOL)animated;
+//- (void)showConnectionController:(BOOL)animated;
+//- (void)hideConnectionController:(BOOL)animated;
 
 -(void)showSearchBox;
 

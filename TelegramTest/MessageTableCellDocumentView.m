@@ -520,7 +520,7 @@ static NSAttributedString *docStateDownload() {
     static NSAttributedString *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14]}];
+        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13]}];
     });
     return instance;
 }
@@ -536,7 +536,7 @@ static NSAttributedString *docStateLoaded() {
         [mutableAttributedString setLink:@"finder" forRange:range];
         
         
-        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:mutableAttributedString.range];
+        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:mutableAttributedString.range];
 
         instance = mutableAttributedString;
     });

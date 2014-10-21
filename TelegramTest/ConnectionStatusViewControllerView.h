@@ -7,7 +7,15 @@
 //
 
 #import "TMView.h"
-@class MessagesViewController;
+
+@protocol ConnectionStatusDelegate <NSObject>
+
+@required
+-(void)showConnectionController:(BOOL)animated;
+-(void)hideConnectionController:(BOOL)animated;
+
+@end
+
 @interface ConnectionStatusViewControllerView : TMView
 
 typedef enum {
@@ -19,7 +27,7 @@ typedef enum {
 } ConnectingStatusType;
 
 @property (nonatomic,assign) ConnectingStatusType state;
-@property (nonatomic,strong) MessagesViewController *controller;
+@property (nonatomic,strong) id<ConnectionStatusDelegate> delegate;
 
 - (void)hide:(BOOL)animated;
 - (void)show:(BOOL)animated;

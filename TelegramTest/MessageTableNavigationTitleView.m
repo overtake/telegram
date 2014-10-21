@@ -20,8 +20,6 @@
 @property (nonatomic,strong) TMTextField *typingTextField;
 
 
-
-
 @property (nonatomic,strong) TMView *container;
 
 
@@ -36,8 +34,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setAutoresizingMask:NSViewWidthSizable];
-        
-        
         
         self.container = [[TMView alloc] initWithFrame:self.bounds];
         self.container.wantsLayer = YES;
@@ -70,9 +66,6 @@
         [self.container addSubview:self.statusTextField];
         
         [self addSubview:self.container];
-        
-        
-    
         
     }
     return self;

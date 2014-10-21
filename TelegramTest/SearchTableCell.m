@@ -30,7 +30,7 @@
         
         self.wantsLayer = YES;
         
-    self.titleTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(66, 33, 200, 20)];
+    self.titleTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(68, 33, 200, 20)];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setSelectable:NO];
@@ -43,7 +43,7 @@
 
         [self addSubview:self.titleTextField];
         
-        self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(66, 14, 200, 20)];
+        self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(68, 14, 200, 20)];
         [self.statusTextField setEditable:NO];
         [self.statusTextField setBordered:NO];
         [self.statusTextField setDrawsBackground:NO];
@@ -60,7 +60,7 @@
         [self.dateTextField setBordered:NO];
         [self.dateTextField setAutoresizingMask:NSViewMinXMargin];
         [self.dateTextField setBackgroundColor:[NSColor clearColor]];
-        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:11]];
+        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
         [self addSubview:self.dateTextField];
         
         self.avatarImageView = [TMAvatarImageView standartTableAvatar];
@@ -71,11 +71,7 @@
 }
 
 - (void) changeSelected:(BOOL)isSelected {
-//    if(isSelected) {
-//        [self setBorder:TMViewBorderTop | TMViewBorderBottom];
-//    } else {
-//        [self setBorder:0];
-//    }
+
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent {
@@ -184,12 +180,9 @@
     if(self.isSelected) {
         [BLUE_COLOR_SELECT set];
         NSRectFill(self.bounds);
-    } else if(self.isHover) {
-      //  [NSColorFromRGB(0xfafafa) set];
-      //  NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
     } else {
-        [NSColorFromRGB(0xffffff) set];
-        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+        [DIALOG_BORDER_COLOR set];
+        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
         
 //        [NSColorFromRGB(0xcccccc) set];
 //        

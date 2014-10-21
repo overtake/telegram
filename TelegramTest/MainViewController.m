@@ -74,6 +74,11 @@
    // [self updateWindowMinSize];
 }
 
+
+-(void)setConnectionState:(ConnectingStatusType)state {
+   
+}
+
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
     if(subview == self.leftViewController.view)
         return NO;

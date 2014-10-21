@@ -19,7 +19,8 @@
 #import "SearchLoadMoreCell.h"
 #import "HackUtils.h"
 #import "TGPeer+Extensions.h"
-
+#import "SearchMessageCellView.h"
+#import "SearchMessageTableItem.h"
 typedef enum {
     SearchSectionDialogs,
     SearchSectionContacts,
@@ -133,7 +134,6 @@ typedef enum {
         NSRectFill(NSMakeRect(strongSelf.view.bounds.size.width - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, strongSelf.view.bounds.size.height));
     }];
     
-    
     [self.noResultsView setAutoresizesSubviews:YES];
     
     self.noResultsImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_noResults().size.width, image_noResults().size.height)];
@@ -153,7 +153,6 @@ typedef enum {
     self.tableView.tm_delegate = self;
     [self.tableView addItem:[[SearchLoaderItem alloc] init] tableRedraw:NO];
     [self.tableView reloadData];
-  //  [self.tableView setBackgroundColor:[NSColor redColor]];
     [self.view addSubview:self.tableView.containerView];
     
     
@@ -212,9 +211,13 @@ typedef enum {
         return [self.tableView cacheViewForClass:[SearchLoaderCell class] identifier:@"SearchTableLoader" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
     } if ([item isKindOfClass:[SearchLoadMoreItem class]]) {
         return [self.tableView cacheViewForClass:[SearchLoadMoreCell class] identifier:@"SearchTableLoadMore" withSize:NSMakeSize(self.view.bounds.size.width, 40)];
-    } else {
+    } else if([item isKindOfClass:[SearchItem class]]) {
         return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"SearchTableCell" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
+    } else if([item isKindOfClass:[SearchMessageTableItem class]]) {
+        return [self.tableView cacheViewForClass:[SearchMessageTableItem class] identifier:@"SearchMessageTableItem" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
     }
+    
+    return nil;
 }
 
 - (BOOL) isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
@@ -463,15 +466,15 @@ static int insertCount = 3;
         
         NSMutableArray *filterIds = [[NSMutableArray alloc] init];
         
-        [params.messages enumerateObjectsUsingBlock:^(SearchItem *obj, NSUInteger idx, BOOL *stop) {
-            [filterIds addObject:@(obj.message.n_id)];
+        [params.messages enumerateObjectsUsingBlock:^(SearchMessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            [filterIds addObject:@(obj.lastMessage.n_id)];
         }];
         
         NSArray *filtred = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",filterIds]];
         
-        for(TGMessage *message in filtred) {
+        for(TL_localMessage *message in filtred) {
             
-              [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
+              [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
         }
         
         params.messages_offset += (int)filtred.count;
@@ -729,8 +732,8 @@ static int insertCount = 3;
         if(!params.messages)
             params.messages = [NSMutableArray array];
         
-        for(TGMessage *message in messages)
-            [params.messages addObject:[[SearchItem alloc] initWithMessageItem:message searchString:params.searchString]];
+        for(TL_localMessage *message in messages)
+            [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
         
         if(params.messages.count > 0)
             [self showMessagesResults:params];
