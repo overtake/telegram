@@ -54,6 +54,29 @@
     return self;
 }
 
+
+- (NSMenu *)contextMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Photo menu"];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
+        [self performSelector:@selector(saveAs:) withObject:self];
+    }]];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+        [self performSelector:@selector(copy:) withObject:self];
+    }]];
+    
+    
+    [menu addItem:[NSMenuItem separatorItem]];
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    
+    return menu;
+}
+
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     

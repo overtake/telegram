@@ -2543,7 +2543,32 @@ static NSTextAttachment *headerMediaIcon() {
     [alert show];
 }
 
--(void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback {
+
+
+
+- (void)leaveOrReturn:(TL_conversation *)dialog {
+    TGInputUser *input = [[UsersManager currentUser] inputUser];
+    
+    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
+    
+    
+    if(dialog.chat.left) {
+        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
+            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
+    } else {
+        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
+    }
+
+}
+
+- (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback startDeleting:(dispatch_block_t)startDeleting {
     weakify();
     
     
@@ -2567,6 +2592,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TGChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
+            if(startDeleting != nil)
+                startDeleting();
             block();
         }
     }];
@@ -2578,26 +2605,8 @@ static NSTextAttachment *headerMediaIcon() {
     [alert show];
 }
 
-- (void)leaveOrReturn:(TL_conversation *)dialog {
-    TGInputUser *input = [[UsersManager currentUser] inputUser];
-    
-    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
-    
-    
-    if(dialog.chat.left) {
-        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
-            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-    } else {
-        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-    }
-    
+-(void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback {
+    [self deleteDialog:dialog callback:callback startDeleting:nil];
 }
 
 - (void)deleteDialog:(TL_conversation *)dialog {

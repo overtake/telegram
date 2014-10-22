@@ -232,6 +232,23 @@
     
 }
 
+- (void)setStateTextFieldString:(NSString *)string {
+    [self.stateTextField setHidden:NO];
+    [self.stateTextField setStringValue:string];
+    [self.stateTextField sizeToFit];
+    [self.stateTextField setFrameOrigin:NSMakePoint(self.playerButton.frame.size.width + 10 + self.progressRect.size.width - self.stateTextField.frame.size.width, self.durationView.frame.origin.y - 2)];
+}
+
+
+- (NSMenu *)contextMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Audio menu"];
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    return menu;
+}
 
 
 - (void)setItem:(MessageTableItemAudio *)item {

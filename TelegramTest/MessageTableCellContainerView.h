@@ -69,5 +69,8 @@ typedef enum {
 
 - (void)checkActionState:(BOOL)redraw;
 
+- (NSMenu *)contextMenu;
+
+-(NSArray *)defaultMenuItems;
 
 @end

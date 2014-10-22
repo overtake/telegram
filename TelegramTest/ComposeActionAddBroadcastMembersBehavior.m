@@ -16,7 +16,7 @@
 }
 
 -(NSUInteger)limit {
-    return MAX_BROADCAST_USERS - self.broadcast.participants.count;
+    return maxBroadcastUsers() - self.broadcast.participants.count;
 }
 
 

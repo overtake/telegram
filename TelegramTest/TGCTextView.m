@@ -778,6 +778,8 @@
         
         
         [NSMenu popUpContextMenu:[view menuForEvent:theEvent] withEvent:theEvent forView:view];
+    } else {
+        [super rightMouseDown:theEvent];
     }
 }
 

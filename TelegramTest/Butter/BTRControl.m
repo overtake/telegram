@@ -383,13 +383,13 @@ static void BTRControlCommonInit(BTRControl *self) {
 	}
 }
 
-- (void)rightMouseDown:(NSEvent *)event {
-	if (self.shouldHandleEvents) {
-		[self handleMouseDown:event];
-	} else {
-		[super rightMouseDown:event];
-	}
-}
+//- (void)rightMouseDown:(NSEvent *)event { // i need this event!
+//	if (self.shouldHandleEvents) {
+//		[self handleMouseDown:event];
+//	} else {
+//		[super rightMouseDown:event];
+//	}
+//}
 
 - (void)mouseEntered:(NSEvent *)event {
 	if (self.shouldHandleEvents) {

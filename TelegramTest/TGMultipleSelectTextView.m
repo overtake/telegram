@@ -107,6 +107,8 @@
         
         if([SelectTextManager count] > 0) {
             [self rightMouseDown:theEvent];
+        } else {
+            [super rightMouseDown:theEvent];
         }
         
         

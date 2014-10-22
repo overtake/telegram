@@ -41,7 +41,7 @@
                 [filter addObject:participant];
             }
             
-            if(strongSelf.controller.broadcast.participants.count < MAX_BROADCAST_USERS) {
+            if(strongSelf.controller.broadcast.participants.count < maxBroadcastUsers()) {
                 [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddBroadcastMembersBehavior class] filter:filter object:strongSelf.controller.broadcast]];
             }
         }];
@@ -81,7 +81,7 @@
 - (void)reload {
     
     TL_broadcast *broadcast = self.controller.broadcast;
-    
+        
     [self.statusTextField setBroadcast:broadcast];
     
     [self.avatarImageView setBroadcast:self.controller.broadcast];

@@ -16,7 +16,7 @@
 
 
 -(NSUInteger)limit {
-    return MAX_BROADCAST_USERS;
+    return maxBroadcastUsers();
 }
 
 -(NSString *)doneTitle {

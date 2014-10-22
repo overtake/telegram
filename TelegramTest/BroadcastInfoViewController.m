@@ -35,6 +35,8 @@
 {
     self->_broadcast = broadcast;
     
+    self.bottomView.conversation = broadcast.conversation;
+    
     [super setChat:nil];
     
 }

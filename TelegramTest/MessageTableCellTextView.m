@@ -67,6 +67,19 @@
 }
 
 
+- (NSMenu *)contextMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Text menu"];
+   
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    
+    return menu;
+}
+
+
 -(void)_mouseDragged:(NSEvent *)theEvent {
     [self.textView _parentMouseDragged:theEvent];
 }
@@ -81,9 +94,14 @@
 }
 
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim {
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
     
+    if(!anim) {
+        self.textView.backgroundColor = color;
+        return;
+    }
+
     POPBasicAnimation *animation = [POPBasicAnimation animation];
     
     animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
@@ -105,6 +123,7 @@
     [self.textView pop_addAnimation:animation forKey:@"background"];
     
 }
+
 
 -(void)_colorAnimationEvent {
     CALayer *currentLayer = (CALayer *)[self.textView.layer presentationLayer];

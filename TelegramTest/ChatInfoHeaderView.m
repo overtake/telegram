@@ -115,7 +115,7 @@
             }
             
             
-            if(self.fullChat.participants.participants.count < MAX_CHAT_USERS)
+            if(self.fullChat.participants.participants.count < maxChatUsers())
                 [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.fullChat]];
             
             

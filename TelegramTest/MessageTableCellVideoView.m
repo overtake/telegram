@@ -144,6 +144,31 @@ static NSImage *playImage() {
     
 }
 
+- (NSMenu *)contextMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Video menu"];
+    
+    if([self.item isset]) {
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
+            [self performSelector:@selector(saveAs:) withObject:self];
+        }]];
+        
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+            [self performSelector:@selector(copy:) withObject:self];
+        }]];
+        
+        
+        [menu addItem:[NSMenuItem separatorItem]];
+    }
+    
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    
+    return menu;
+}
+
 
 - (void) setItem:(MessageTableItemVideo *)item {
     [super setItem:item];

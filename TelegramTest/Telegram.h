@@ -43,6 +43,11 @@ NSString* appName();
 - (void)onLogoutSuccess;
 + (void)drop;
 
+void setMaxChatUsers(int max_chat_users);
+void setMaxBroadcastUsers(int max_broadcast_users);
+
+int maxBroadcastUsers();
+int maxChatUsers();
 
 @property (nonatomic) BOOL isWindowActive;
 @property (nonatomic, assign) BOOL isOnline;

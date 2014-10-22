@@ -154,7 +154,8 @@
     
     
     self.messagesSelectedCount = [TMTextButton standartUserProfileNavigationButtonWithTitle:@""];
-    self.messagesSelectedCount.textColor = NSColorFromRGB(0xa1a1a1);
+    self.messagesSelectedCount.textColor = DARK_BLACK;
+    self.messagesSelectedCount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
     [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.actionsView addSubview:self.messagesSelectedCount];
     

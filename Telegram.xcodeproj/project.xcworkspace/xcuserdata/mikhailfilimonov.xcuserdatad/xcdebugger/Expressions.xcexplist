@@ -109,6 +109,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellAudioView setStateTextFieldString:]:MessageTableCellAudioView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.progressRect">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -568,6 +576,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMNavigationBar buildSizes]:TMNavigationBar.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">
          <PersistentStrings>
             <PersistentString
@@ -599,6 +610,9 @@
       </ContextState>
       <ContextState
          contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ConnectionStatusViewControllerView show:]:ConnectionStatusViewControllerView.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogTableView initWithFrame:]:DialogTableView.m">

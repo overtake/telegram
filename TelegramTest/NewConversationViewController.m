@@ -793,7 +793,7 @@
     
     
     self.currentAction = NewConversationActionCreateGroup;
-    self.tableView.selectLimit = MAX_CHAT_USERS;
+    self.tableView.selectLimit = maxChatUsers();
     [self.textField setStringValue:NSLocalizedString(@"NewConversation.CreatingGroupChat", nil)];
     self.currentBottomView = self.bottomViewForGroupChat;
     [self startAnimation:prevAction animated:YES];
@@ -806,7 +806,7 @@
     NewConversationAction prevAction = self.currentAction;
     self.currentTopView = self.createChatTopView;
     self.currentAction = NewConversationActionCreateBroadcast;
-    self.tableView.selectLimit = MAX_BROADCAST_USERS;
+    self.tableView.selectLimit = maxBroadcastUsers();
     [self.textField setStringValue:NSLocalizedString(@"NewConversation.CreatingBroadcast", nil)];
     self.currentBottomView = self.broadcastBottomView;
     [self startAnimation:prevAction animated:YES];

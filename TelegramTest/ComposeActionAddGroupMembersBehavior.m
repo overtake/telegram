@@ -20,7 +20,7 @@
 }
 
 -(NSUInteger)limit {
-    return MAX_CHAT_USERS - self.chat.participants.participants.count;
+    return maxChatUsers() - self.chat.participants.participants.count;
 }
 
 

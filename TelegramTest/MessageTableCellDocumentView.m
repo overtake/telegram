@@ -17,7 +17,7 @@
 #import "MessageTableItemAudio.h"
 #import "TGOpusAudioPlayerAU.h"
 
-
+#import "NSMenuItemCategory.h"
 @interface DocumentThumbImageView()
 @property (nonatomic, strong) NSImage *originImage;
 @property (nonatomic) BOOL isAlwaysBlur;
@@ -367,6 +367,37 @@ static NSImage *attachBackgroundThumb() {
     }
 }
 
+- (NSMenu *)contextMenu {
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
+    
+    if([self.item isset]) {
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInFinder", nil) withBlock:^(id sender) {
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
+        }]];
+        
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
+            [self performSelector:@selector(saveAs:) withObject:self];
+        }]];
+        
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+            [self performSelector:@selector(copy:) withObject:self];
+        }]];
+        
+        
+        [menu addItem:[NSMenuItem separatorItem]];
+    }
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    
+    return menu;
+}
+
+
+
+
 
 - (void)setItem:(MessageTableItemDocument *)item {
     [super setItem:item];
@@ -499,16 +530,6 @@ static NSImage *attachBackgroundThumb() {
 }
 
 - (void)open {
-    if([self.item isKindOfClass:[MessageTableItemAudio class]]) {
-        NSString *path = mediaFilePath(self.item.message.media);
-        if([TGOpusAudioPlayerAU canPlayFile:path]) {
-            self.player = [[TGOpusAudioPlayerAU alloc] initWithPath:path];
-            [self.player play];
-        }
-        
-        return;
-    }
-    
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
     TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];

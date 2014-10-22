@@ -11,8 +11,50 @@
 #import "ChatParticipantItem.h"
 #import "ChatParticipantRowView.h"
 #import "HackUtils.h"
-#import "UserInfoContainerView.h"
 
+
+
+
+
+@implementation ChatBottomView
+
+-(id)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        
+        weak();
+        
+        self.wantsLayer = YES;
+        
+        self.button= [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.Delete", nil) tapBlock:^{
+            
+           
+            [[Telegram rightViewController].messagesViewController deleteDialog:weakSelf.conversation callback:^{
+                [weakSelf.button setLocked:NO];
+            } startDeleting:^ {
+                [weakSelf.button setLocked:YES];
+            }];
+        }];
+        
+        [self.button.textButton setTextColor:[NSColor redColor]];
+        
+        [self.button setFrame:NSMakeRect(100, 15, frameRect.size.width - 200, 42)];
+        
+       // self.backgroundColor = [NSColor blueColor];
+        
+        [self addSubview:self.button];
+
+    }
+    
+    return self;
+}
+
+-(void)redrawRow {
+    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteBroadcast", nil)];
+    
+    [self.button sizeToFit];
+}
+
+@end
 
 
 @implementation ChatHeaderItem
@@ -32,10 +74,13 @@
 + (NSUInteger)hash:(NSObject *)object {
     return [object hash];
 }
+
+
 @end
 
 @interface ChatInfoViewController ()
 @property (nonatomic,strong) TMTextField *centerTextField;
+
 @end
 
 @implementation ChatInfoViewController
@@ -70,6 +115,8 @@
         
         self.centerNavigationBarView = (TMView *) self.centerTextField;
         
+        
+        _bottomView = [[ChatBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
 //        
 //        TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
 //        [center setTarget:self selector:@selector(navigationGoBack)];
@@ -107,20 +154,19 @@
         [view addSubview:button];
         
         
-        
-        TMTextButton *exitButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:[self isKindOfClass:[BroadcastInfoViewController class]] ? NSLocalizedString(@"Delete", nil) : NSLocalizedString(@"Conversation.DeleteAndExit", nil)];
-        
-        
-        [exitButton setTapBlock:^{
-            [[[Telegram rightViewController] messagesViewController] deleteDialog:[self isKindOfClass:[BroadcastInfoViewController class]] ? ((BroadcastInfoViewController *)self).broadcast.conversation : self.chat.dialog];
-        }];
-        
-        
-        [exitButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, exitButton.frame.origin.y)];
-        
-        [view addSubview:exitButton];
+//        TMTextButton *exitButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:[self isKindOfClass:[BroadcastInfoViewController class]] ? NSLocalizedString(@"Delete", nil) : NSLocalizedString(@"Conversation.DeleteAndExit", nil)];
+//        
+//        
+//        [exitButton setTapBlock:^{
+//            [[[Telegram rightViewController] messagesViewController] deleteDialog:[self isKindOfClass:[BroadcastInfoViewController class]] ? ((BroadcastInfoViewController *)self).broadcast.conversation : self.chat.dialog];
+//        }];
+//        
+//        
+//        [exitButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, exitButton.frame.origin.y)];
+//        
+//        [view addSubview:exitButton];
 
-        width = exitButton.frame.size.width+10;
+     //   width = exitButton.frame.size.width+10;
         
     } else {
         
@@ -209,6 +255,10 @@
 
 - (void)setChat:(TGChat *)chat {
     self->_chat = chat;
+    
+    if(chat)
+        _bottomView.conversation = chat.dialog;
+    
     [_tableView scrollToBeginningOfDocument:_tableView];
     [_tableView.scrollView scrollToPoint:NSMakePoint(0, 0) animation:NO];
     
@@ -284,11 +334,6 @@
     
     if(self.notNeedToUpdate) {
         self.notNeedToUpdate = NO;
-//        if(_tableView.count > 1) {
-//            [self buildFirstItem];
-//            TMRowItem *item = (TMRowItem *)[_tableView itemAtPosition:1];
-//            [item redrawRow];
-//        }
         return;
     }
     TGChatParticipants *participants = self.fullChat.participants;
@@ -306,9 +351,6 @@
    
     }
     
-//    if(!isNeedUpdate) {
-//        return;
-//    }
     
     [_tableView removeAllItems:NO];
     [_tableView addItem:_headerItem tableRedraw:NO];
@@ -329,41 +371,16 @@
     }] startIndex:1 tableRedraw:NO];
     
     [_tableView addItem:_bottomItem tableRedraw:NO];
-    //[self buildFirstItem];
     [_tableView reloadData];
 }
 
-//- (void)buildFirstItem {
-//    if(_tableView.count < 2)
-//        return;
-//    
-//    ChatParticipantItem *item;
-//    for(int i = 0; i < _tableView.count; i++) {
-//        ChatParticipantItem *loopItem = (ChatParticipantItem *)[_tableView itemAtPosition:i];
-//        if([loopItem isKindOfClass:[ChatParticipantItem class]]) {
-//            item = loopItem;
-//            break;
-//        }
-//    }
-//    
-//    if(!item)
-//        return;
-//    
-//    int allCount = self.chat.participants_count;
-//    NSString *membersCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.MembersCount", nil), allCount, allCount == 1 ? @"" : @"s"];
-//    item.membersCount = [[NSAttributedString alloc] initWithString:membersCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-//    
-//    int onlineCount = [[FullChatManager sharedManager] getOnlineCount:self.chat.n_id];
-//    NSString *onlineCountString = [NSString stringWithFormat:NSLocalizedString(@"Group.OnlineCount", nil), onlineCount];
-//    item.onlineCount = [[NSAttributedString alloc] initWithString:onlineCountString attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
-//}
 
 //Table methods
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
     if([item isEqualTo:_headerItem]) {
         return _headerView.bounds.size.height;
     }  else if([item isEqualTo:_bottomItem]) {
-        return 40.f;
+        return 70;
     } else {
         return 50;
     }
@@ -377,7 +394,7 @@
     if([item isEqualTo:_headerItem]) {
         return _headerView;
     } else if([item isEqualTo:_bottomItem]) {
-        return nil;
+        return _bottomView;
     } else {
         return [_tableView cacheViewForClass:[ChatParticipantRowView class] identifier:@"row"];
     }

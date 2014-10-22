@@ -12,9 +12,8 @@
 #import "ImageUtils.h"
 #import "TMClockProgressView.h"
 #import "MessageStateLayer.h"
-
-
-@interface MessageTableCellContainerView()
+#import "NSMenuItemCategory.h"
+@interface MessageTableCellContainerView() <NSMenuDelegate>
 @property (nonatomic, strong) TMTextButton *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
@@ -263,24 +262,24 @@ NSImage *selectCheckActiveImage() {
 
 - (void)searchSelection {
     NSColor *color = NSColorFromRGB(0xffffff);
-    NSColor *oldColor = NSColorFromRGB(0xf4f4f4);
+    NSColor *oldColor = NSColorFromRGB(0xf7f7f7);
     
     POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
     animation.duration = 2;
     animation.fromValue = (__bridge id)(oldColor.CGColor);
     animation.toValue = (__bridge id)(color.CGColor);
     [animation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
-        [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xfafafa) : NSColorFromRGB(0xffffff)).CGColor];
+        [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)).CGColor];
     }];
     
-    [self _didChangeBackgroundColorWithAnimation:animation];
+    [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
     
     [self.layer pop_addAnimation:animation forKey:@"background"];
 }
 
 
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim {
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)toColor {
     
 }
 
@@ -348,13 +347,14 @@ NSImage *selectCheckActiveImage() {
         animation.fromValue = (__bridge id)(oldColor.CGColor);
         animation.toValue = (__bridge id)(color.CGColor);
         animation.duration = 0.2;
-        [self _didChangeBackgroundColorWithAnimation:animation];
+        [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
         
         [self.layer pop_addAnimation:animation forKey:@"background"];
         
     } else {
         color = isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
         [self.layer setBackgroundColor:color.CGColor];
+        [self _didChangeBackgroundColorWithAnimation:nil toColor:color];
     }
     
 }
@@ -461,6 +461,113 @@ static BOOL dragAction = NO;
     }
 }
 
+
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    NSMenu *contextMenu = [self contextMenu];
+    
+    if(contextMenu && self.messagesViewController.state == MessagesViewControllerStateNone) {
+        
+        contextMenu.delegate = self;
+        
+        [NSMenu popUpContextMenu:contextMenu withEvent:theEvent forView:self];
+    } else {
+        [super rightMouseDown:theEvent];
+    }
+}
+
+
+- (void)menuWillOpen:(NSMenu *)menu {
+    self.layer.backgroundColor =  NSColorFromRGB(0xf7f7f7).CGColor;
+    [self _didChangeBackgroundColorWithAnimation:nil toColor:NSColorFromRGB(0xf7f7f7)];
+}
+
+
+- (void)menuDidClose:(NSMenu *)menu {
+    self.layer.backgroundColor = NSColorFromRGB(0xffffff).CGColor;
+    [self _didChangeBackgroundColorWithAnimation:nil toColor:NSColorFromRGB(0xffffff)];
+}
+
+
+- (NSMenu *)contextMenu {
+    
+    return nil;
+}
+
+-(NSArray *)defaultMenuItems {
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
+
+        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        
+        
+        
+        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+        
+        
+        [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.dialog messagesCount:1];
+        
+        
+        
+    }]];
+    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
+
+        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        
+        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+        
+        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+
+        
+    }]];
+    
+    return items;
+    
+}
+
+
+- (void)copy:(id)sender {
+    
+    if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+        [pasteboard clearContents];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];
+    }
+}
+
+
+- (void)saveAs:(id)sender {
+    
+    if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        
+        NSSavePanel *panel = [NSSavePanel savePanel];
+        
+        NSString *path = mediaFilePath(self.item.message.media);
+        
+        NSString *fileName = [path lastPathComponent];
+        
+        [panel setNameFieldStringValue:fileName];
+        
+        
+        [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+            if (result == NSFileHandlingPanelOKButton) {
+                
+                NSURL *file = [panel URL];
+                if ( [[NSFileManager defaultManager] isReadableFileAtPath:path] ) {
+
+                    [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:path] toURL:file error:nil];
+                }
+            } else if(result == NSFileHandlingPanelCancelButton) {
+                
+            }
+        }];
+    }
+    
+}
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     

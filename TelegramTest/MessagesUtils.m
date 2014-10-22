@@ -212,8 +212,9 @@
             } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
                 msgText = action.title;
             }
+            if(chatUserNameString)
+                msgText = [NSString stringWithFormat:@" %@", msgText];
             
-            msgText = [NSString stringWithFormat:@" %@", msgText];
         }
         
         if(chatUserNameString)

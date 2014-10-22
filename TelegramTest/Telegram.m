@@ -39,11 +39,6 @@ Telegram *TelegramInstance() {
     return [Telegram sharedInstance];
 }
 
-//- (void) setDialog:(TL_conversation *)dialog {
-//    self->_dialog = dialog;
-////    [Notification perform:@"CHANGE_DIALOG" object:self.dialog];
-//}
-
 + (MainViewController *)mainViewController {
     return (MainViewController *)[self delegate].mainWindow.rootViewController;
 }
@@ -95,6 +90,25 @@ Telegram *TelegramInstance() {
         [self setAccountOnline];
     } queue:[ASQueue globalQueue].nativeQueue];
     [self.accountStatusTimer start];
+}
+
+static int max_chat_users = 200;
+static int max_broadcast_users = 100;
+
+void setMaxChatUsers(int c) {
+    max_chat_users = c;
+}
+
+int maxChatUsers() {
+    return max_chat_users;
+}
+
+void setMaxBroadcastUsers(int b) {
+    max_broadcast_users = b;
+}
+
+int maxBroadcastUsers() {
+    return max_broadcast_users;
 }
 
 - (BOOL)canBeOnline {

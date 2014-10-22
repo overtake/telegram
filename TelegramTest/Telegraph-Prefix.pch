@@ -50,8 +50,6 @@
 #import "Telegram.h"
 #import "SettingsArchiver.h"
 #import "Application.h"
-#define MAX_CHAT_USERS 199
-#define MAX_BROADCAST_USERS 100
 #define TGMINFAKEID 1500000000
 #define TGMINSECRETID 800000000
 //#define NSLocalizedString(key, comment) \

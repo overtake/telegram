@@ -72,7 +72,9 @@ typedef enum {
 - (void)clearHistory:(TL_conversation *)dialog;
 - (void)leaveOrReturn:(TL_conversation *)dialog;
 - (void)deleteDialog:(TL_conversation *)dialog;
+
 - (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback;
+- (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback startDeleting:(dispatch_block_t)startDeleting;
 
 - (void)deleteItem:(MessageTableItem *)item;
 - (void)resendItem:(MessageTableItem *)item;

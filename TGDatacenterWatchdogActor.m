@@ -155,6 +155,9 @@
 {
     MTContext *context = [[MTNetwork instance] context];
     
+    setMaxChatUsers(config.chat_size_max-1);
+    setMaxBroadcastUsers(config.broadcast_size_max);
+    
 #if TARGET_IPHONE_SIMULATOR
     NSMutableArray *dcOptions = [[NSMutableArray alloc] init];
     bool processedFirst = false;
