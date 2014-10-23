@@ -93,6 +93,10 @@
     }];
 }
 
++(NSArray *)findUsersByName:(NSString *)userName {
+    return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name BEGINSWITH[c] %@",userName]];
+}
+
 - (void)addFromDB:(NSArray *)array {
     [self add:array withCustomKey:@"n_id" update:NO];
 }

@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/UsersManager.m"
-            timestampString = "435755096.549456"
+            timestampString = "435776725.247696"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "304"
-            endingLineNumber = "304"
+            startingLineNumber = "308"
+            endingLineNumber = "308"
             landmarkName = "-updateAccount:lastName:completeHandler:errorHandler:"
             landmarkType = "5">
          </BreakpointContent>

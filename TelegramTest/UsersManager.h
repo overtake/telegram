@@ -15,6 +15,9 @@
 + (int)currentUserId;
 + (TGUser *)currentUser;
 
++(NSArray *)findUsersByName:(NSString *)userName;
+
+
 - (void)addFromDB:(NSArray *)array;
 
 - (void)add:(NSArray *)all withCustomKey:(NSString *)key update:(BOOL)isNeedUpdateDB;

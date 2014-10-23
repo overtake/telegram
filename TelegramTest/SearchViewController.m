@@ -722,7 +722,7 @@ static int insertCount = 3;
                     
                     searchParams.globalUsers = [[NSMutableArray alloc] init];
                     
-                    NSArray *filtred = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name CONTAINS[c] %@",searchString]];
+                    NSArray *filtred = [UsersManager findUsersByName:searchString];
                     
                     [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
                         

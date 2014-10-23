@@ -450,39 +450,48 @@ void open_card(NSString *link) {
 }
 
 void open_user_by_name(NSString * userName) {
-    [[Telegram rightViewController] showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:1] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+    NSArray *users = [UsersManager findUsersByName:userName];
+    
+    if(users.count == 1) {
+        [[Telegram rightViewController] showUserInfoPage:users[0]];
+    } else {
+        [[Telegram rightViewController] showModalProgress];
         
-        [[Telegram rightViewController] hideModalProgress];
-        
-        dispatch_after_seconds(0.2,^ {
+        [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:1] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
             
-            if(response.users.count == 1) {
+            [[Telegram rightViewController] hideModalProgress];
+            
+            dispatch_after_seconds(0.2,^ {
                 
-                TGUser *user = response.users[0];
+                if(response.users.count == 1) {
+                    
+                    TGUser *user = response.users[0];
+                    
+                    [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:NO];
+                    
+                    [[Telegram rightViewController] showUserInfoPage:user];
+                } else {
+                    alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
+                }
                 
-                [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:NO];
                 
-                [[Telegram rightViewController] showUserInfoPage:user];
-            } else {
-                 alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
-            }
+                
+            });
             
             
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
             
-        });
-        
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        [[Telegram rightViewController] hideModalProgress];
-        
-        dispatch_after_seconds(0.2, ^{
-            alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
-        });
-        
-    } timeout:4];
+            [[Telegram rightViewController] hideModalProgress];
+            
+            dispatch_after_seconds(0.2, ^{
+                alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
+            });
+            
+        } timeout:4];
+    }
+    
+    
 }
 
 

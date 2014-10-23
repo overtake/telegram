@@ -28,6 +28,21 @@
     self.view.isFlipped = YES;
     
     
+    TMTextField* centerTextField = [TMTextField defaultTextField];
+    [centerTextField setAlignment:NSCenterTextAlignment];
+    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [centerTextField setTextColor:NSColorFromRGB(0x222222)];
+    [centerTextField setDrawsBackground:NO];
+    
+    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, -12)];
+
+    
+    [centerTextField setStringValue:NSLocalizedString(@"AddContactController.Addcontact", nil)];
+    
+    
+    self.centerNavigationBarView = (TMView *) centerTextField;
+    
+    
     TMView *rightView = [[TMView alloc] init];
     
     weak();
@@ -118,8 +133,6 @@
     [self.phoneNumberView.textView setNextKeyView:self.firstNameView.textView];
     [self.phoneNumberView.textView setTarget:self];
     [self.phoneNumberView.textView setAction:@selector(enterClick:)];
-    
-    
     
     
     [self.view addSubview:self.phoneNumberView];
