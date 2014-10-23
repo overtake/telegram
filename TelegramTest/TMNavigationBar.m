@@ -93,7 +93,6 @@ static const int duration = 0.1;
         [connectionDelegate setCompletion:^(BOOL isFinished) {
             [self.connectionView setHidden:!show];
             [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
-            [self.connectionView startAnimation];
         }];
         
         [self.connectionView.layer addAnimation:connectionAnimation forKey:@"position"];

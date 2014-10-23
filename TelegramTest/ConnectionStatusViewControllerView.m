@@ -101,7 +101,6 @@ static NSColor *stateColor[5];
         
         if(_state == ConnectingStatusTypeNormal || (oldState == ConnectingStatusTypeNormal && (_state == ConnectingStatusTypeConnected))) {
              [self hideAfter:1.0 withState:ConnectingStatusTypeNormal];
-            return;
         } else {
             if(!self.isShown) {
                 [self show:YES];
@@ -111,7 +110,7 @@ static NSColor *stateColor[5];
        
         
         if(self.state != ConnectingStatusTypeConnected) {
-            //[self startAnimation];
+            [self startAnimation];
         } else {
             
             [self hideAfter:1.0 withState:ConnectingStatusTypeConnected];
@@ -122,7 +121,7 @@ static NSColor *stateColor[5];
 }
 
 - (void)hideAfter:(float)time withState:(ConnectingStatusType)state {
-    [self stopAnimation];
+   
     dispatch_after_seconds(time, ^{
         if(_state == state) {
             [self hide:YES];
@@ -144,7 +143,7 @@ static NSColor *stateColor[5];
         self.isShown = YES;
         
         [self.delegate showConnectionController:animated];
-        //[self startAnimation];
+        [self startAnimation];
     }
 }
 
