@@ -2090,7 +2090,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     NSArray *array = [message getEmojiFromString];
-    if(array) {
+    if(array.count > 0) {
         [[EmojiViewController instance] saveEmoji:array];
     }
     [ASQueue dispatchOnStageQueue:^{

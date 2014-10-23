@@ -194,10 +194,11 @@
                 [self->list removeAllObjects];
                 
                 [self->list addObjectsFromArray:result.contacts];
-                for(TGContact *contact in result.contacts)
-                    [self insertContact:contact insertToDB:YES];
                 
-                DLog(@"");
+                [needSave enumerateObjectsUsingBlock:^(TGContact *obj, NSUInteger idx, BOOL *stop) {
+                      [self->keys setObject:obj forKey:[NSNumber numberWithInt:obj.user_id]];
+                }];
+                
                 [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->keys}];
             }
         } errorHandler:nil timeout:0 queue:[ASQueue globalQueue].nativeQueue];
@@ -206,6 +207,7 @@
 }
 
 - (void) insertContact:(TGContact *)contact insertToDB:(BOOL)insertToDB {
+    
     [ASQueue dispatchOnStageQueue:^{
         [self->keys setObject:contact forKey:[NSNumber numberWithInt:contact.user_id]];
         if(insertToDB) {

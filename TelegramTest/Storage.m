@@ -1024,6 +1024,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
+    
     [queue inDatabase:^(FMDatabase *db) {
         for (TGUser *user in users) {
             if(!user)
@@ -1067,6 +1068,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 - (void) insertContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler {
+    
+    int i =0;
+    
     [queue inDatabase:^(FMDatabase *db) {
         if(![db executeUpdate:@"insert or replace into contacts (user_id, mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]]) {
             ELog(@"DB insert contact error: %d", contact.user_id);
@@ -1104,6 +1108,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 -(void)insertContacst:(NSArray *)contacts completeHandler:(void (^)(void))completeHandler {
+    
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
         for (TGContact *contact in contacts) {

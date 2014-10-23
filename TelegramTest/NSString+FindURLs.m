@@ -37,10 +37,31 @@
     
     NSError *error = nil;
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w\\._-]+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w]{5}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
-    NSArray* userNames = [regex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
+    
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSRange range = [obj range];
+        
+        NSMutableArray *toremove = [[NSMutableArray alloc] init];
+        
+        [userNames enumerateObjectsUsingBlock:^(id userObj, NSUInteger idx, BOOL *stop) {
+            
+            NSRange nameRange = [userObj range];
+            
+            if(range.location >= nameRange.location && (range.location+range.length) > (nameRange.location + nameRange.length)) {
+                [toremove addObject:userObj];
+            }
+            
+        }];
+        
+        [userNames removeObjectsInArray:toremove];
+        
+        
+    }];
     
    return [results arrayByAddingObjectsFromArray:userNames];
 }
