@@ -67,7 +67,7 @@
         
         request = [TLAPI_messages_readEncryptedHistory createWithPeer:[_conversation.encryptedChat inputPeer] max_date:[[MTNetwork instance] getTime]];
     } else {
-        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset];
+        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset read_contents:YES];
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {

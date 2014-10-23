@@ -66,12 +66,6 @@
     [para setMaximumLineHeight:spacing];
     [self.nameAttritutedString addAttribute:NSParagraphStyleAttributeName value:para range:rangeHeader];
 
-//    DLog(@"[TMInAppLinks userProfile:self.user.n_id] %@", [TMInAppLinks userProfile:self.user.n_id]);
-    
-//    NSURL *url = [NSURL URLWithString:];
-    
-//    NSString *string = [ copy];
-    
     
     [self.nameAttritutedString setLink:[TMInAppLinks userProfile:self.user.n_id] withColor:[MessagesUtils colorForUserId:self.message.from_id] forRange:rangeHeader];
     
@@ -123,40 +117,10 @@
     
     textSize.width= width;
     textSize.height = floor(textSize.height);
-   // textSize.height = 120;
     
     CFRelease(framesetter);
     
     
-//    
-//    float oldWidth = self.blockSize.width;
-//    
-//    
-//    static NSMutableParagraphStyle *paragraphStyle = nil;
-//    if(!paragraphStyle) {
-//        paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//        [paragraphStyle setLineSpacing:1];
-//        [paragraphStyle setMinimumLineHeight:18];
-//        [paragraphStyle setMaximumLineHeight:19];
-//        
-//    }
-//    
-//    NSMutableAttributedString *copy = [self.textAttributed mutableCopy];
-//    
-//    [copy addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:copy.range];
-//    
-//    
-//    NSSize textSize = [copy sizeForWidth:width height:FLT_MAX];
-//    textSize.width = ceil(textSize.width);
-//    textSize.height = ceil(textSize.height);
-//    
-//    NSSize roundSize = [copy sizeForWidth:width+5 height:FLT_MAX];
-//    
-//    if(roundSize.height < textSize.height)
-//        textSize = roundSize;
-//    
-//    if(textSize.width == oldWidth)
-//        return NO;
     
     self.blockSize = textSize;
     return YES;

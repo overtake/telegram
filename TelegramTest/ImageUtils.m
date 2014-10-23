@@ -141,6 +141,8 @@ CACHE_IMAGE(SendingClockGray)
 CACHE_IMAGE(ContactsAddContactActive)
 CACHE_IMAGE(ContactsAddContact)
 
+CACHE_IMAGE(UsernameCheck)
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

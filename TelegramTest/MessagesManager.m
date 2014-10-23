@@ -82,12 +82,12 @@
         TGMessage *msg;
         if(![decryptedMessage isKindOfClass:[TL_decryptedMessageService class]]) {
             TGMessageMedia *media = [[MessagesManager sharedManager] mediaFromEncryptedMessage:decryptedMessage.media file:[message file]];
-            msg = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] n_out:NO unread:YES date:[message date] message:[decryptedMessage message] media:media destruction_time:0 randomId:decryptedMessage.random_id fakeId:[MessageSender getFakeMessageId] dstate:DeliveryStateNormal];
+            msg = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGUNREADMESSAGE from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] date:[message date] message:[decryptedMessage message] media:media destruction_time:0 randomId:decryptedMessage.random_id fakeId:[MessageSender getFakeMessageId] dstate:DeliveryStateNormal];
             
         } else {
             if([[decryptedMessage action] isKindOfClass:[TL_decryptedMessageActionSetMessageTTL class]]) {
                 
-                msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] n_out:NO unread:NO date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:[MessagesUtils selfDestructTimer:[decryptedMessage.action ttl_seconds]]] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] flags:TGNOFLAGSMESSAGE from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:[MessagesUtils selfDestructTimer:[decryptedMessage.action ttl_seconds]]] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                 
                 Destructor *destructor = [[Destructor alloc] initWithTLL:[decryptedMessage.action ttl_seconds] max_id:msg.n_id chat_id:chat.n_id];
                 [SelfDestructionController addDestructor:destructor];
@@ -95,7 +95,7 @@
             }
             
             if([[decryptedMessage action] isKindOfClass:[TL_decryptedMessageActionScreenshotMessages class]]) {
-                msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] n_out:NO unread:NO date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.Secret.TookScreenshot", nil)] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] flags:TGNOFLAGSMESSAGE from_id:[chat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:[message chat_id]] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.Secret.TookScreenshot", nil)] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
             }
             
             if([[decryptedMessage action] isKindOfClass:[TL_decryptedMessageActionDeleteMessages class]]) {
@@ -400,7 +400,7 @@
             
             if(msg.unread == YES)
                 [marked addObject:@([msg n_id])];
-            msg.unread = NO;
+            msg.flags&=~TGUNREADMESSAGE;
         }
         [[Storage manager] markAllInDialog:dialog];
     } synchronous:YES];

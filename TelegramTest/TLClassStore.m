@@ -91,11 +91,11 @@
 		[self.classes setObject:[TL_fileLocationUnavailable class] forKey:[NSNumber numberWithInt:0x7c596b46]];
 		[self.classes setObject:[TL_fileLocation class] forKey:[NSNumber numberWithInt:0x53d69076]];
 		[self.classes setObject:[TL_userEmpty class] forKey:[NSNumber numberWithInt:0x200250ba]];
-		[self.classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:0x720535ec]];
-		[self.classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:0xf2fb8319]];
-		[self.classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:0x22e8ceb0]];
-		[self.classes setObject:[TL_userForeign class] forKey:[NSNumber numberWithInt:0x5214c89d]];
-		[self.classes setObject:[TL_userDeleted class] forKey:[NSNumber numberWithInt:0xb29ad7cc]];
+		[self.classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:0x7007b451]];
+		[self.classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:0xcab35e18]];
+		[self.classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:0xd9ccc4ef]];
+		[self.classes setObject:[TL_userForeign class] forKey:[NSNumber numberWithInt:0x75cf7a8]];
+		[self.classes setObject:[TL_userDeleted class] forKey:[NSNumber numberWithInt:0xd6016d7a]];
 		[self.classes setObject:[TL_userProfilePhotoEmpty class] forKey:[NSNumber numberWithInt:0x4f11bae1]];
 		[self.classes setObject:[TL_userProfilePhoto class] forKey:[NSNumber numberWithInt:0xd559d8c8]];
 		[self.classes setObject:[TL_userStatusEmpty class] forKey:[NSNumber numberWithInt:0x9d05049]];
@@ -111,9 +111,9 @@
 		[self.classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:0x37c1011c]];
 		[self.classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:0x6153276a]];
 		[self.classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:0x83e5de54]];
-		[self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:0x22eb6aba]];
-		[self.classes setObject:[TL_messageForwarded class] forKey:[NSNumber numberWithInt:0x5f46804]];
-		[self.classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:0x9f8d60bb]];
+		[self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:0x567699b3]];
+		[self.classes setObject:[TL_messageForwarded class] forKey:[NSNumber numberWithInt:0xa367e716]];
+		[self.classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:0x1d86f70e]];
 		[self.classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:0x3ded6320]];
 		[self.classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:0xc8c45a2a]];
 		[self.classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:0xa2d24290]];
@@ -198,11 +198,11 @@
 		[self.classes setObject:[TL_updateReadMessages class] forKey:[NSNumber numberWithInt:0xc6649e31]];
 		[self.classes setObject:[TL_updateDeleteMessages class] forKey:[NSNumber numberWithInt:0xa92bfe26]];
 		[self.classes setObject:[TL_updateRestoreMessages class] forKey:[NSNumber numberWithInt:0xd15de04d]];
-		[self.classes setObject:[TL_updateUserTyping class] forKey:[NSNumber numberWithInt:0x6baa8508]];
-		[self.classes setObject:[TL_updateChatUserTyping class] forKey:[NSNumber numberWithInt:0x3c46cfe6]];
+		[self.classes setObject:[TL_updateUserTyping class] forKey:[NSNumber numberWithInt:0x5c486927]];
+		[self.classes setObject:[TL_updateChatUserTyping class] forKey:[NSNumber numberWithInt:0x9a65ea1f]];
 		[self.classes setObject:[TL_updateChatParticipants class] forKey:[NSNumber numberWithInt:0x7761198]];
 		[self.classes setObject:[TL_updateUserStatus class] forKey:[NSNumber numberWithInt:0x1bfbd823]];
-		[self.classes setObject:[TL_updateUserName class] forKey:[NSNumber numberWithInt:0xda22d9ad]];
+		[self.classes setObject:[TL_updateUserName class] forKey:[NSNumber numberWithInt:0xa7332b73]];
 		[self.classes setObject:[TL_updateUserPhoto class] forKey:[NSNumber numberWithInt:0x95313b0c]];
 		[self.classes setObject:[TL_updateContactRegistered class] forKey:[NSNumber numberWithInt:0x2575bbb9]];
 		[self.classes setObject:[TL_updateContactLink class] forKey:[NSNumber numberWithInt:0x51a48a9a]];
@@ -357,6 +357,22 @@
         [self.classes setObject:[TL_initConnection class] forKey:[NSNumber numberWithInt:1769565673]];
         [self.classes setObject:[TL_sentAppCode class] forKey:[NSNumber numberWithInt:0xe325edcf]];
         
+        [self.classes setObject:[TL_sendMessageTypingAction class] forKey:[NSNumber numberWithInt:0x16bf744e]];
+        [self.classes setObject:[TL_sendMessageCancelAction class] forKey:[NSNumber numberWithInt:0xfd5ec8f5]];
+        [self.classes setObject:[TL_sendMessageRecordVideoAction class] forKey:[NSNumber numberWithInt:0xa187d66f]];
+        [self.classes setObject:[TL_sendMessageUploadVideoAction class] forKey:[NSNumber numberWithInt:0x92042ff7]];
+        [self.classes setObject:[TL_sendMessageRecordAudioAction class] forKey:[NSNumber numberWithInt:0xd52f73f7]];
+        [self.classes setObject:[TL_sendMessageUploadAudioAction class] forKey:[NSNumber numberWithInt:0xe6ac8a6f]];
+        [self.classes setObject:[TL_sendMessageUploadPhotoAction class] forKey:[NSNumber numberWithInt:0x990a3c1a]];
+        [self.classes setObject:[TL_sendMessageUploadDocumentAction class] forKey:[NSNumber numberWithInt:0x8faee98e]];
+        [self.classes setObject:[TL_sendMessageGeoLocationAction class] forKey:[NSNumber numberWithInt:0x176f8ba1]];
+        [self.classes setObject:[TL_sendMessageChooseContactAction class] forKey:[NSNumber numberWithInt:0x628cbc6f]];
+        [self.classes setObject:[TL_updateServiceNotification class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        
+
+    
+        
+        
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:(int32_t)0xcb9f372d]];
         
         //свои консуторы начинаем с 1? но эт не правильно инфа.
@@ -474,7 +490,7 @@
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
     [outputStream open];
     [stream setOuput:outputStream];
-    [stream writeInt:0xcf5f0987];
+    [stream writeInt:0x1c900537]; //invokeWithLayer
    
 
     [stream writeInt:constructor];

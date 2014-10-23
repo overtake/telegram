@@ -10,5 +10,5 @@
 #import "TL_localMessage.h"
 @interface TL_destructMessage : TL_localMessage
 @property (nonatomic,assign) int destruction_time;
-+(TL_destructMessage *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer*)to_id n_out:(Boolean)n_out unread:(Boolean)unread date:(int)date message:(NSString*)message media:(TGMessageMedia*)media destruction_time:(int)destruction_time randomId:(long)randomId fakeId:(int)fakeId dstate:(DeliveryState)dstate;
++(TL_destructMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer*)to_id date:(int)date message:(NSString*)message media:(TGMessageMedia*)media destruction_time:(int)destruction_time randomId:(long)randomId fakeId:(int)fakeId dstate:(DeliveryState)dstate;
 @end

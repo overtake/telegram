@@ -37,8 +37,18 @@
             return [TL_peerUser createWithUser_id:self.from_id];
         
     }
-    
-    
 }
+
+
+
+-(BOOL)n_out {
+    return (self.flags & TGOUTMESSAGE) == TGOUTMESSAGE;
+}
+
+
+-(BOOL)unread {
+   return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
+}
+
 
 @end

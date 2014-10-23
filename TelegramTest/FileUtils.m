@@ -21,7 +21,7 @@
 
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"telegram://import?card=";
-
+NSString *const TGUserNamePrefix = @"@";
 
 -(id)init {
     if(self = [super init]) {
@@ -295,6 +295,7 @@ void confirm(NSString *text, NSString *info, void (^block)(void)) {
 }
 
 void alert(NSString *text, NSString *info) {
+    
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSInformationalAlertStyle];
     [alert setMessageText:text];
@@ -448,6 +449,42 @@ void open_card(NSString *link) {
 
 }
 
+void open_user_by_name(NSString * userName) {
+    [[Telegram rightViewController] showModalProgress];
+    
+    [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:1] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+        
+        [[Telegram rightViewController] hideModalProgress];
+        
+        dispatch_after_seconds(0.2,^ {
+            
+            if(response.users.count == 1) {
+                
+                TGUser *user = response.users[0];
+                
+                [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:NO];
+                
+                [[Telegram rightViewController] showUserInfoPage:user];
+            } else {
+                 alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
+            }
+            
+            
+            
+        });
+        
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        [[Telegram rightViewController] hideModalProgress];
+        
+        dispatch_after_seconds(0.2, ^{
+            alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
+        });
+        
+    } timeout:4];
+}
+
 
 BOOL NSStringIsValidEmail(NSString *checkString) {
     BOOL stricterFilter = NO; // Discussion http://blog.logichigh.com/2010/09/02/validating-an-e-mail-address/
@@ -469,6 +506,10 @@ void open_link(NSString *link) {
     }
     
     
+    if([link hasPrefix:TGUserNamePrefix]) {
+        open_user_by_name([link substringFromIndex:TGUserNamePrefix.length]);
+        return;
+    }
     
     
     

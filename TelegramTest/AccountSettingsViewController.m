@@ -104,6 +104,9 @@
 
 @property (nonatomic,strong) NSView *containerView;
 
+
+@property (nonatomic,strong) TMTextField *userNameTextField;
+
 typedef enum {
     AccountSettingsStateNormal,
     AccountSettingsStateEditable
@@ -307,10 +310,40 @@ typedef enum {
     
     [[Telegram rightViewController].navigationViewController addDelegate:self];
     
+    [Notification addObserver:self selector:@selector(didChangedUserName:) name:USER_UPDATE_NAME];
+    
+}
+
+
+-(void)didChangedUserName:(NSNotification *)notification {
+    
+    TGUser *user = notification.userInfo[KEY_USER];
+    
+    if(user != [UsersManager currentUser])
+        return;
+    
+    [self updateUserName];
+    
+}
+
+-(void)updateUserName {
+    
+    
+    NSMutableAttributedString *attr = (NSMutableAttributedString *) [UsersManager currentUser].userNameTitle;
+    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.userName ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999) range:attr.range];
+    self.userNameTextField.attributedStringValue = attr;
+    
+    [self.userNameTextField sizeToFit];
+    [self.userNameTextField setFrameOrigin:NSMakePoint(NSWidth(self.userName.frame) - NSWidth(self.userNameTextField.frame) - NSWidth(self.userName.rightContainer.frame) - abs(self.userName.rightContainerOffset.x) - 5, 11)];
+
 }
 
 
 -(void)willChangedController:(TMViewController *)controller {
+    
+    
+    
+    
     if([controller isKindOfClass:[GeneralSettingsViewController class]]) {
         [self selectController:self.generalSettings];
         return;
@@ -520,6 +553,11 @@ typedef enum {
         [[Telegram rightViewController] showUserNameController];
     }];
     
+    
+    self.userNameTextField = [TMNameTextField defaultTextField];
+    
+    
+    [self.userName addSubview:self.userNameTextField];
    
     
     [self.userName setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
@@ -529,6 +567,8 @@ typedef enum {
     
     
     [container addSubview:self.userName];
+    
+    
     
     
     
@@ -691,6 +731,8 @@ typedef enum {
         selectController.isSelected = YES;
         
         self.selectedController = selectController;
+        
+        [self updateUserName];
     }
 }
 
@@ -766,6 +808,7 @@ typedef enum {
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self updateUserName];
     [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
     
     [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];

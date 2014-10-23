@@ -161,6 +161,10 @@ static NSString *kUpdateState = @"kUpdateState";
         [self updateDifference];
     }
     
+    if([update isKindOfClass:[TL_updateServiceNotification class]]) { // for debug
+        [self proccessUpdate:update];
+    }
+    
 }
 
 -(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts {
@@ -280,7 +284,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] n_out:NO unread:YES date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -288,7 +292,7 @@ static NSString *kUpdateState = @"kUpdateState";
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] n_out:NO unread:YES date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -323,7 +327,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         for(NSNumber *mgsId in [update messages]) {
             TL_localMessage *message = [[MessagesManager sharedManager] find:[mgsId intValue]];
-            message.unread = NO;
+            message.flags&= ~TGUNREADMESSAGE;
         }
         
         [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
@@ -338,6 +342,49 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([update isKindOfClass:[TL_updateUserName class]]) {
+        
+        
+        TGUser *user = [[UsersManager sharedManager] find:update.user_id];
+        
+        if(user) {
+            user.first_name = update.first_name;
+            user.last_name = update.last_name;
+            user.user_name = update.user_name;
+            
+            [user rebuildNames];
+            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:user}];
+            
+            [[Storage manager] insertUser:user completeHandler:nil];
+        }
+       
+        
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateServiceNotification class]]) {
+        
+        
+        TL_updateServiceNotification *updateNotification = (TL_updateServiceNotification *)update;
+        
+        TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
+        TGUser *user = [[UsersManager sharedManager] find:777000];
+        if(!conversation) {
+            conversation = [[DialogsManager sharedManager] createDialogForUser:user];
+            [conversation save];
+        }
+        
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        
+        [MessagesManager addAndUpdateMessage:msg];
+        
+        
+        if(updateNotification.popup) {
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                alert(NSLocalizedString(@"UpdateNotification.Alert", nil), updateNotification.message);
+            }];
+            
+        }
+        
         
         return;
     }
@@ -526,7 +573,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] n_out:NO unread:YES date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -539,7 +586,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
         
-        TL_localMessageService *message = [TL_localMessageService createWithN_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] n_out:YES unread:NO date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        TL_localMessageService *message = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
 
@@ -603,7 +650,6 @@ static NSString *kUpdateState = @"kUpdateState";
     [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:pts date:date qts:qts];
-    [[NSApp delegate] setConnectionStatus:NSLocalizedString(@"App.updating", nil)];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
         TL_updates_difference *updates = response;

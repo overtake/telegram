@@ -207,7 +207,7 @@
     
     int topOffset = 48;
     
-    self.searchViewController.type = SearchTypeContacts;
+    self.searchViewController.type = SearchTypeContacts | SearchTypeGlobalUsers;
     
     self.addContactViewController = [[AddContactViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, 200)];
     

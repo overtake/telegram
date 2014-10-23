@@ -46,7 +46,7 @@
         
         
         
-        self.user = [TL_userContact createWithN_id:-1 first_name:@"" last_name:@"" access_hash:0 phone:0 photo:[TL_userProfilePhotoEmpty create] status:[TL_userStatusEmpty create]];
+        self.user = [TL_userContact createWithN_id:-1 first_name:@"" last_name:@"" user_name:@"" access_hash:0 phone:0 photo:[TL_userProfilePhotoEmpty create] status:[TL_userStatusEmpty create]];
         
         
         int offsetY = 30;

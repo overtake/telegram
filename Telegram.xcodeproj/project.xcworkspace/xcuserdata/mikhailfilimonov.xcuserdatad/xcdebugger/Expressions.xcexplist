@@ -93,6 +93,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke:DialogsHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]:MessageTableCellTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -289,6 +292,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[AccountSettingsViewController enterClick]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -369,6 +375,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[UserNameViewContainer initWithFrame:]_block_invoke_2:UserNameViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
          <PersistentStrings>
             <PersistentString
@@ -389,6 +398,9 @@
                value = "">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
@@ -469,6 +481,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[UserInfoShortButtonView setRightContainer:]:UserInfoShortButtonView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_currentRightController.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -519,6 +539,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DialogsManager createDialogForMessage:]:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString
@@ -546,6 +569,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DialogTableItem notificationChangeMessage:]:DialogTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.lastMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatParticipantRowView initWithFrame:]:ChatParticipantRowView.m">
       </ContextState>
       <ContextState
@@ -565,6 +596,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke_3:UsersManager.m">
+      </ContextState>
+      <ContextState
          contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -574,6 +608,9 @@
                value = "menuItem.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "-[TMNavigationBar buildSizes]:TMNavigationBar.m">
@@ -695,6 +732,9 @@
                value = "anItem.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke198:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "-[TMButton drawRect:]:TMButton.m">

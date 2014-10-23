@@ -49,7 +49,7 @@
     
     TGMessageMedia *media;
     
-     self.message = [TL_destructMessage createWithN_id:0 from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:dialog.peer.chat_id] n_out:YES unread:YES date:[[MTNetwork instance] getTime] message:@"" media:media destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] dstate:DeliveryStatePending];
+    self.message = [TL_destructMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:dialog.peer.chat_id] date:[[MTNetwork instance] getTime] message:@"" media:media destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] dstate:DeliveryStatePending];
     
     if(self.uploadType == UploadImageType) {
         

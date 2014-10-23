@@ -52,7 +52,7 @@
             int total = 0;
             for (TGMessage *message in messages) {
                 TGMessage *local = [manager find:message.n_id];
-                local.unread = NO;
+                local.flags&= ~TGUNREADMESSAGE;
                 if(message.unread && message.dialog) {
                     if(!message.n_out) {
                         if(message.dialog.unread_count != 0)
@@ -500,6 +500,8 @@
 }
 
 - (void)add:(NSArray *)all {
+    
+    
     [ASQueue dispatchOnStageQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer.peer_id)];

@@ -17,7 +17,8 @@
 typedef enum {
     SearchTypeContacts = 1 << 1,
     SearchTypeDialogs = 1 << 3,
-    SearchTypeMessages = 1 << 4
+    SearchTypeMessages = 1 << 4,
+    SearchTypeGlobalUsers = 1 << 5
     
 } SearchType;
 

@@ -267,6 +267,8 @@
 	
 @class TGMsgResendReq;
 
+@class TL_SendMessageAction;
+
 	
 @interface TGDecryptedMessageMedia : TLObject
 @property (nonatomic) int duration;
@@ -604,6 +606,7 @@
 @property (nonatomic) int n_id;
 @property (nonatomic, strong) NSString *first_name;
 @property (nonatomic, strong) NSString *last_name;
+@property (nonatomic, strong) NSString *user_name;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) TGUserProfilePhoto *photo;
 @property (nonatomic, strong) TGUserStatus *status;
@@ -615,19 +618,19 @@
 + (TL_userEmpty *)createWithN_id:(int)n_id;
 @end
 @interface TL_userSelf : TGUser
-+ (TL_userSelf *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status inactive:(BOOL)inactive;
++ (TL_userSelf *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status inactive:(BOOL)inactive;
 @end
 @interface TL_userContact : TGUser
-+ (TL_userContact *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name access_hash:(long)access_hash phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
++ (TL_userContact *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name access_hash:(long)access_hash phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
 @end
 @interface TL_userRequest : TGUser
-+ (TL_userRequest *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name access_hash:(long)access_hash phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
++ (TL_userRequest *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name access_hash:(long)access_hash phone:(NSString *)phone photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
 @end
 @interface TL_userForeign : TGUser
-+ (TL_userForeign *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name access_hash:(long)access_hash photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
++ (TL_userForeign *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name access_hash:(long)access_hash photo:(TGUserProfilePhoto *)photo status:(TGUserStatus *)status;
 @end
 @interface TL_userDeleted : TGUser
-+ (TL_userDeleted *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name;
++ (TL_userDeleted *)createWithN_id:(int)n_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name;
 @end
 	
 @interface TGUserProfilePhoto : TLObject
@@ -734,11 +737,10 @@
 @end
 	
 @interface TGMessage : TLObject
+@property (nonatomic,assign) int flags;
 @property (nonatomic) int n_id;
 @property (nonatomic) int from_id;
 @property (nonatomic, strong) TGPeer *to_id;
-@property BOOL n_out;
-@property BOOL unread;
 @property (nonatomic) int date;
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, strong) TGMessageMedia *media;
@@ -751,13 +753,13 @@
 + (TL_messageEmpty *)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TGMessage
-+ (TL_message *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(BOOL)n_out unread:(BOOL)unread date:(int)date message:(NSString *)message media:(TGMessageMedia *)media;
++ (TL_message *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media;
 @end
 @interface TL_messageForwarded : TGMessage
-+ (TL_messageForwarded *)createWithN_id:(int)n_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(BOOL)n_out unread:(BOOL)unread date:(int)date message:(NSString *)message media:(TGMessageMedia *)media;
++ (TL_messageForwarded *)createWithN_id:(int)n_id flags:(int)flags fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media;
 @end
 @interface TL_messageService : TGMessage
-+ (TL_messageService *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(BOOL)n_out unread:(BOOL)unread date:(int)date action:(TGMessageAction *)action;
++ (TL_messageService *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date action:(TGMessageAction *)action;
 @end
 	
 @interface TGMessageMedia : TLObject
@@ -1352,6 +1354,7 @@
 	
 @interface TGUpdate : TLObject
 @property (nonatomic, strong) TGMessage *message;
+@property (nonatomic,strong) TL_SendMessageAction *action;
 @property (nonatomic) int pts;
 @property (nonatomic) int n_id;
 @property long random_id;
@@ -1362,6 +1365,7 @@
 @property (nonatomic, strong) TGUserStatus *status;
 @property (nonatomic, strong) NSString *first_name;
 @property (nonatomic, strong) NSString *last_name;
+@property (nonatomic, strong) NSString *user_name;
 @property (nonatomic) int date;
 @property (nonatomic, strong) TGUserProfilePhoto *photo;
 @property BOOL previous;
@@ -1399,10 +1403,10 @@
 + (TL_updateRestoreMessages *)createWithMessages:(NSMutableArray *)messages pts:(int)pts;
 @end
 @interface TL_updateUserTyping : TGUpdate
-+ (TL_updateUserTyping *)createWithUser_id:(int)user_id;
++ (TL_updateUserTyping *)createWithUser_id:(int)user_id action:(TL_SendMessageAction *)action;
 @end
 @interface TL_updateChatUserTyping : TGUpdate
-+ (TL_updateChatUserTyping *)createWithChat_id:(int)chat_id user_id:(int)user_id;
++ (TL_updateChatUserTyping *)createWithChat_id:(int)chat_id user_id:(int)user_id action:(TL_SendMessageAction *)action;
 @end
 @interface TL_updateChatParticipants : TGUpdate
 + (TL_updateChatParticipants *)createWithParticipants:(TGChatParticipants *)participants;
@@ -1411,7 +1415,7 @@
 + (TL_updateUserStatus *)createWithUser_id:(int)user_id status:(TGUserStatus *)status;
 @end
 @interface TL_updateUserName : TGUpdate
-+ (TL_updateUserName *)createWithUser_id:(int)user_id first_name:(NSString *)first_name last_name:(NSString *)last_name;
++ (TL_updateUserName *)createWithUser_id:(int)user_id first_name:(NSString *)first_name last_name:(NSString *)last_name user_name:(NSString *)user_name;
 @end
 @interface TL_updateUserPhoto : TGUpdate
 + (TL_updateUserPhoto *)createWithUser_id:(int)user_id date:(int)date photo:(TGUserProfilePhoto *)photo previous:(BOOL)previous;

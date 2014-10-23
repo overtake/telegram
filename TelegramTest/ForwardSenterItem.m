@@ -46,7 +46,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessageForwarded *fake = [TL_localMessageForwarded createWithN_id:0 fwd_from_id:f.fwd_from_id ? f.fwd_from_id : f.from_id fwd_date:f.fwd_date ? f.fwd_date : f.date from_id:UsersManager.currentUserId to_id:dialog.peer n_out:YES unread:YES date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random fwd_n_id:[f n_id] state:DeliveryStatePending];
+            TL_localMessageForwarded *fake = [TL_localMessageForwarded createWithN_id:0 flags:TGOUTUNREADMESSAGE fwd_from_id:f.fwd_from_id ? f.fwd_from_id : f.from_id fwd_date:f.fwd_date ? f.fwd_date : f.date from_id:UsersManager.currentUserId to_id:dialog.peer date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random fwd_n_id:[f n_id] state:DeliveryStatePending];
             
             [fake save:i == copy.count-1];
             

@@ -241,7 +241,7 @@ static NSDictionary *attributes() {
         [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         [self.controll addSubview:self.titleTextField];
         
-        self.messageTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(68, 2, 0, 0)];
+        self.messageTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(68, 3, 0, 0)];
         [self.messageTextField setEditable:NO];
         [self.messageTextField setBordered:NO];
         [self.messageTextField setBackgroundColor:[NSColor clearColor]];
@@ -299,7 +299,7 @@ static NSDictionary *attributes() {
     
     self.style = newSize.width == 70 ? DialogTableItemViewShortStyle : DialogTableItemViewFullStyle;
     
-    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 105, 35)];
+    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 105, 36)];
     
     [self.titleTextField sizeToFit];
     

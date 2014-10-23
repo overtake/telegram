@@ -104,7 +104,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t70"; // 61
+    NSString *dbName = @"t73"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -120,7 +120,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, unread integer, n_out integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
+        [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
         
         
         
@@ -147,7 +147,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         
-        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, type TINYINT, first_name STRING, last_name STRING, phone STRING, access_hash BIGINT, lastseen INTEGER, lastseen_update INTEGER, photo BLOB)"];
+        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, type TINYINT, first_name STRING, last_name STRING, user_name STRING, phone STRING, access_hash BIGINT, lastseen INTEGER, lastseen_update INTEGER, photo BLOB)"];
         
         [db executeUpdate:@"create table if not exists contacts (user_id INTEGER PRIMARY KEY,mutual integer)"];
         
@@ -334,7 +334,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
        
         
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,unread from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
         
         
         
@@ -342,7 +342,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
             TGMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            msg.unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
+            msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
         [result close];
@@ -380,14 +380,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,unread from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",limit];
         
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
        
         while ([result next]) {
             TL_localMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            msg.unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
+            msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
         [result close];
@@ -405,11 +405,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,unread from messages where n_id = %d",msgId];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where n_id = %d",msgId];
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         while ([result next]) {
             message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            message.unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
+            message.flags = [result intForColumn:@"flags"];
         }
         [result close];
 
@@ -430,13 +430,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,unread from messages where %@ in (%@) order by date DESC",random ? @"randomId" : @"n_id",strIds];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where %@ in (%@) order by date DESC",random ? @"randomId" : @"n_id",strIds];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
             TGMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            msg.unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
+            msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
         [result close];
@@ -484,9 +484,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             
             if([result next]) {
-                BOOL unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
                 message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-                message.unread = unread;
+                message.flags = [result intForColumn:@"flags"];
             }
             
         }
@@ -531,7 +530,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             if([obj isKindOfClass:[TL_destructMessage class]])
                 destructTime = [(TL_destructMessage *)obj destruction_time];
             
-             [db executeUpdate:@"update messages set message_text = ?, unread = ?, n_out = ?, from_id = ?, peer_id = ?, date = ?, serialized = ?, random_id = ?, destruct_time = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",obj.message,@(obj.unread),@(obj.n_out),@(obj.from_id),@(obj.peer_id),@(obj.date),[[TLClassStore sharedManager] serialize:obj],@(obj.randomId), @(destructTime), @(obj.filterType),@(obj.fakeId),@(obj.dstate),@(obj.n_id),nil];
+             [db executeUpdate:@"update messages set message_text = ?, flags = ?, from_id = ?, peer_id = ?, date = ?, serialized = ?, random_id = ?, destruct_time = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",obj.message,@(obj.flags),@(obj.from_id),@(obj.peer_id),@(obj.date),[[TLClassStore sharedManager] serialize:obj],@(obj.randomId), @(destructTime), @(obj.filterType),@(obj.fakeId),@(obj.dstate),@(obj.n_id),nil];
             
         }];
     
@@ -547,7 +546,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
         NSString *mark = [messages componentsJoinedByString:@","];
-        NSString *sql = [NSString stringWithFormat:@"update messages set unread = 0 WHERE n_id IN (%@)",mark];
+        NSString *sql = [NSString stringWithFormat:@"update messages set flags = flags & ~1 WHERE n_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
 
@@ -561,7 +560,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)markAllInDialog:(TL_conversation *)dialog {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        [db executeUpdate:@"update messages set unread = 0 where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
+        [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
         //[db commit];
 
     }];
@@ -644,12 +643,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             void (^insertBlock)(NSString *tableName) = ^(NSString *tableName) {
                 
-                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,date,from_id,unread,n_out,peer_id,serialized, destruct_time, message_text, filter_mask,fake_id,dstate,random_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",tableName],
+                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,date,from_id,flags,peer_id,serialized, destruct_time, message_text, filter_mask,fake_id,dstate,random_id) values (?,?,?,?,?,?,?,?,?,?,?,?)",tableName],
                  @(message.n_id),
                  @(message.date),
                  @(message.from_id),
-                 @(message.unread),
-                 @(message.n_out),
+                 @(message.flags),
                  @(peer_id),
                  [[TLClassStore sharedManager] serialize:message isCacheSerialize:NO],
                  @(destruct_time),
@@ -744,7 +742,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         TL_localMessage *message;
         if(![serializedMessage isKindOfClass:[NSNull class]]) {
             message = [[TLClassStore sharedManager] deserialize:serializedMessage];
-            message.unread = [[[result resultDictionary] objectForKey:@"unread"] boolValue];
+            message.flags = [result intForColumn:@"flags"];
             if(message)
                 [messages addObject:message];
         }
@@ -822,7 +820,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         
         
-        FMResultSet *result = [db executeQuery:@"select messages.from_id,messages.n_out, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.unread from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",[NSNumber numberWithInt:limit],[NSNumber numberWithInt:offset]];
+        FMResultSet *result = [db executeQuery:@"select messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",[NSNumber numberWithInt:limit],[NSNumber numberWithInt:offset]];
         
         [self parseDialogs:result dialogs:dialogs messages:messages];
         
@@ -957,6 +955,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             if(![last_name isKindOfClass:[NSString class]])
                 last_name = [NSString stringWithFormat:@"%@", last_name];
             
+            NSString *user_name = [row objectForKey:@"user_name"];
+            if(![user_name isKindOfClass:[NSString class]])
+                user_name = [NSString stringWithFormat:@"%@", user_name];
+            
             NSString *phone = [row objectForKey:@"phone"];
             if(![phone isKindOfClass:[NSString class]])
                 phone = [NSString stringWithFormat:@"%@", phone];            
@@ -975,11 +977,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             TGUser *user = nil;
             switch (type) {
                 case TGUserTypeContact:
-                    user = [TL_userContact createWithN_id:user_id first_name:first_name last_name:last_name access_hash:access_hash phone:phone photo:photo status:status];
+                    user = [TL_userContact createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash phone:phone photo:photo status:status];
                     break;
                     
                 case TGUserTypeDeleted:
-                    user = [TL_userDeleted createWithN_id:user_id first_name:first_name last_name:last_name];
+                    user = [TL_userDeleted createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name];
                     break;
                     
                 case TGUserTypeEmpty:
@@ -987,15 +989,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                     break;
                     
                 case TGUserTypeForeign:
-                    user = [TL_userForeign createWithN_id:user_id first_name:first_name last_name:last_name access_hash:access_hash photo:photo status:status];
+                    user = [TL_userForeign createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash photo:photo status:status];
                     break;
                     
                 case TGUserTypeRequest:
-                    user = [TL_userRequest createWithN_id:user_id first_name:first_name last_name:last_name access_hash:access_hash phone:phone photo:photo status:status];
+                    user = [TL_userRequest createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash phone:phone photo:photo status:status];
                     break;
                     
                 case TGUserTypeSelf:
-                    user = [TL_userSelf createWithN_id:user_id first_name:first_name last_name:last_name phone:phone photo:photo status:status inactive:NO];
+                    user = [TL_userSelf createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name phone:phone photo:photo status:status inactive:NO];
                     break;
                     
                 default:
@@ -1018,7 +1020,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 - (void)insertUser:(TGUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
-    [self insertUsers:[NSArray arrayWithObject:user] completeHandler:completeHandler];
+    [self insertUsers:@[user] completeHandler:completeHandler];
 }
 
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
@@ -1041,8 +1043,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             if(!user.phone)
                 user.phone = @"";
             
+            if(!user.user_name)
+                user.user_name = @"";
             
-            [db executeUpdate:@"insert or replace into users (n_id, type, first_name, last_name, phone, access_hash, lastseen, lastseen_update, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", @(user.n_id), @(user.type), user.first_name, user.last_name, user.phone, @(user.access_hash), @(user.lastSeenTime), @(user.lastSeenUpdate), photoSerialize];
+            
+            [db executeUpdate:@"insert or replace into users (n_id, type, first_name, last_name, user_name, phone, access_hash, lastseen, lastseen_update, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?)", @(user.n_id), @(user.type), user.first_name, user.last_name, user.user_name, user.phone, @(user.access_hash), @(user.lastSeenTime), @(user.lastSeenUpdate), photoSerialize];
         }
         
         if(completeHandler) {

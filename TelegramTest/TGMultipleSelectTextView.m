@@ -75,7 +75,24 @@
             __block NSString *result = @"";
             
             [SelectTextManager enumerateItems:^(MessageTableItemText *obj, NSRange range) {
-                result = [result stringByAppendingFormat:@">%@\n%@\n\n",[obj.message isKindOfClass:[TL_localMessageForwarded class]] ? obj.fwd_user.first_name : obj.user.first_name,[obj.string substringWithRange:range]];
+                
+                NSString *userName = @"";
+                
+                if([obj.message isKindOfClass:[TL_localMessageForwarded class]]) {
+                    if(obj.fwd_user.user_name.length > 0) {
+                        userName = [NSString stringWithFormat:@"@%@",obj.fwd_user.user_name];
+                    } else {
+                        userName = obj.fwd_user.first_name;
+                    }
+                } else {
+                    if(obj.user.user_name.length > 0) {
+                        userName = [NSString stringWithFormat:@"@%@",obj.user.user_name];
+                    } else {
+                        userName = obj.user.first_name;
+                    }
+                }
+                
+                result = [result stringByAppendingFormat:@"> %@\n%@\n\n", userName,[obj.string substringWithRange:range]];
             }];
             
           //  result = [result substringToIndex:result.length-1];

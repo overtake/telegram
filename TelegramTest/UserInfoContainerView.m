@@ -12,7 +12,7 @@
 #import "NS(Attributed)String+Geometrics.h"
 #import "Telegram.h"
 #import "UserInfoShortButtonView.h"
-#import "UserInfoPhoneView.h"
+#import "UserInfoParamsView.h"
 #import "ChatInfoNotificationView.h"
 #import "HackUtils.h"
 #import "ProfileSharedMediaView.h"
@@ -45,7 +45,8 @@
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
 @property (nonatomic, strong) UserInfoShortButtonView *deleteSecretChatButton;
 
-@property (nonatomic, strong) UserInfoPhoneView *phoneView;
+@property (nonatomic, strong) UserInfoParamsView *phoneView;
+@property (nonatomic, strong) UserInfoParamsView *userNameView;
 
 @property (nonatomic, strong) UserInfoShortButtonView *notificationView;
 
@@ -221,8 +222,17 @@
         [self addSubview:self.startSecretChatButton];
         
         
-        self.phoneView = [[UserInfoPhoneView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
+        self.phoneView = [[UserInfoParamsView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
+        
+        [self.phoneView setHeader:NSLocalizedString(@"Profile.MobilePhone", nil)];
+        
         [self addSubview:self.phoneView];
+        
+        self.userNameView = [[UserInfoParamsView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
+        
+        [self.userNameView setHeader:NSLocalizedString(@"Profile.username", nil)];
+        
+        [self addSubview:self.userNameView];
         
         
         self.notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
@@ -326,9 +336,19 @@
 - (void)buildPage {
     float offset = self.bounds.size.height - 187;
     
+   
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
-
+   
+    [self.userNameView setHidden:self.user.user_name.length == 0];
+    
+    if(!self.userNameView.isHidden) {
+        offset-=62;
+        
+        [self.userNameView setFrameOrigin:NSMakePoint(100, offset)];
+    }
+    
+   
     if(!self.controller.isSecretProfile) {
         offset -= 62;
         [self.sendMessageButton setFrameOrigin:NSMakePoint(100, offset)];
@@ -456,6 +476,8 @@
 - (void)setUser:(TGUser *)user {
     self->_user = user;
     
+    [self.userNameView setString:[NSString stringWithFormat:@"@%@",user.user_name]];
+    
     [self.sharedMediaButton setConversation:self.controller.conversation];
     
     
@@ -473,7 +495,7 @@
     [self.nameTextView setTextContainerInset:NSMakeSize(-3, 0)];
     
     [self.statusTextField setUser:self.user];
-    [self.phoneView setPhoneNumber:self.user.phoneWithFormat];
+    [self.phoneView setString:self.user.phoneWithFormat ? self.user.phoneWithFormat : NSLocalizedString(@"User.Hidden", nil)];
     
     
     if(self.user.type != TGUserTypeSelf) {

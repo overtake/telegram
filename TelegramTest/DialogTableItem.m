@@ -30,7 +30,7 @@
     self.dialog = [[DialogsManager sharedManager] find:dialog.peer.peer_id];
     
     
-  //  assert(dialog == [[DialogsManager sharedManager] find:dialog.peer.peer_id]);
+    assert(dialog == [[DialogsManager sharedManager] find:dialog.peer.peer_id]);
     
     
     [Notification addObserver:self selector:@selector(notificationChangeMessage:) name:[Notification notificationNameByDialog:dialog action:@"message"]];

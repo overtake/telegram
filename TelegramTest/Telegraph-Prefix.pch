@@ -50,6 +50,12 @@
 #import "Telegram.h"
 #import "SettingsArchiver.h"
 #import "Application.h"
+#import "TGMessage+Extensions.h"
+#define TGOUTMESSAGE 0x2
+#define TGUNREADMESSAGE 0x1
+#define TGOUTUNREADMESSAGE 0x3
+#define TGNOFLAGSMESSAGE 0x0
+
 #define TGMINFAKEID 1500000000
 #define TGMINSECRETID 800000000
 //#define NSLocalizedString(key, comment) \

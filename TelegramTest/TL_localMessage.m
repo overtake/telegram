@@ -11,14 +11,13 @@
 #import "TL_localMessageForwarded.h"
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(Boolean)n_out unread:(Boolean)unread date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
+    msg.flags = flags;
     msg.n_id = n_id == 0 ? fakeId : n_id;
     msg.from_id = from_id;
     msg.to_id = to_id;
-    msg.n_out = n_out;
-    msg.unread = unread;
     msg.date = date;
     msg.message = message;
     msg.media = media;
@@ -50,11 +49,11 @@
     TL_localMessage *msg;
     
     if([message isKindOfClass:[TL_messageService class]]) {
-        msg = [TL_localMessageService createWithN_id:message.n_id from_id:message.from_id to_id:message.to_id n_out:message.n_out unread:message.unread date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     } else if([message isKindOfClass:[TL_messageForwarded class]]) {
-        msg = [TL_localMessageForwarded createWithN_id:message.n_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date from_id:message.from_id to_id:message.to_id n_out:message.n_out unread:message.unread date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() fwd_n_id:message.n_id state:DeliveryStateNormal];
+        msg = [TL_localMessageForwarded createWithN_id:message.n_id flags:message.flags fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date from_id:message.from_id to_id:message.to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() fwd_n_id:message.n_id state:DeliveryStateNormal];
     } else {
-        msg = [TL_localMessage createWithN_id:message.n_id from_id:message.from_id to_id:message.to_id n_out:message.n_out unread:message.unread date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
     };
     
     return msg;
@@ -77,11 +76,10 @@
 }
 
 -(void)serialize:(SerializedData*)stream {
+    [stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
 	[[TLClassStore sharedManager] TLSerialize:self.to_id stream:stream];
-	[stream writeBool:self.n_out];
-	[stream writeBool:self.unread];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[[TLClassStore sharedManager] TLSerialize:self.media stream:stream];
@@ -90,11 +88,10 @@
     [stream writeLong:self.randomId];
 }
 -(void)unserialize:(SerializedData*)stream {
+    self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
 	self.to_id = [[TLClassStore sharedManager] TLDeserialize:stream];
-	self.n_out = [stream readBool];
-	self.unread = [stream readBool];
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [[TLClassStore sharedManager] TLDeserialize:stream];

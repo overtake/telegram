@@ -35,7 +35,14 @@
     
     NSArray *results = [detect matchesInString:self options:0 range:NSMakeRange(0, [self length])];
     
-   return results;
+    NSError *error = nil;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w\\._-]+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    
+    NSArray* userNames = [regex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
+    
+   return [results arrayByAddingObjectsFromArray:userNames];
 }
 
 @end

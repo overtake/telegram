@@ -153,6 +153,35 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [self setCHATINFOTITLE:chatInfoTitleAttributedString];
     
     
+    NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
+    
+    [userNameTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:NSColorFromRGB(0x999999)];
+    [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
+    
+    [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];
+    [self setUserNameTitle:userNameTitle];
+    
+    
+    NSMutableAttributedString *userNameProfileTitle = [[NSMutableAttributedString alloc] init];
+    
+    [userNameProfileTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:NSColorFromRGB(0x333333)];
+    [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
+    
+    
+    [userNameProfileTitle setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:userNameProfileTitle.range];
+    [self setUserNameProfileTitle:userNameProfileTitle];
+    
+    
+    
+    NSMutableAttributedString *userNameSearchTitle = [[NSMutableAttributedString alloc] init];
+    
+    [userNameSearchTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:BLUE_UI_COLOR];
+    [userNameSearchTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
+    
+    
+    [userNameSearchTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:userNameSearchTitle.range];
+    [self setUserNameSearchTitle:userNameSearchTitle];
+    
     //Message Tite
     
     NSMutableAttributedString *titleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
@@ -207,6 +236,10 @@ static NSTextAttachment *encryptedIconSelectedAttachment() {
 }
 
 
+DYNAMIC_PROPERTY(UserNameTitle);
+DYNAMIC_PROPERTY(UserNameProfileTitle);
+DYNAMIC_PROPERTY(UserNameSearchTitle)
+
 DYNAMIC_PROPERTY(CHATINFOTITLE);
 
 DYNAMIC_PROPERTY(DIALOGTITLE);
@@ -230,6 +263,19 @@ DYNAMIC_PROPERTY(ProfileTitle);
     return [self getCHATINFOTITLE];
 }
 
+
+- (NSAttributedString *)userNameTitle {
+    return [self getUserNameTitle];
+}
+
+- (NSAttributedString *)userNameProfileTitle {
+    return [self getUserNameProfileTitle];
+}
+
+- (NSAttributedString *)userNameSearchTitle {
+    return [self getUserNameSearchTitle];
+}
+
 DYNAMIC_PROPERTY(TITLE_FOR_MESSAGE);
 DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
 
@@ -240,6 +286,8 @@ DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
 - (NSAttributedString *) encryptedTitleForMessage {
     return [self getENCRYPTED_TITLE_FOR_MESSAGE];
 }
+
+
 
 DYNAMIC_PROPERTY(DFullName);
 

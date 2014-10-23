@@ -8,8 +8,9 @@
 
 #import "TMView.h"
 
-@interface UserInfoPhoneView : TMView
+@interface UserInfoParamsView : TMView
 
-- (void)setPhoneNumber:(NSString *)string;
+- (void)setString:(NSString *)string;
+- (void)setHeader:(NSString *)header;
 
 @end

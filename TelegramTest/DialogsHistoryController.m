@@ -7,7 +7,7 @@
 //
 
 #import "DialogsHistoryController.h"
-
+#import "TGPeer+Extensions.h"
 @implementation DialogsHistoryController
 
 
@@ -33,30 +33,46 @@
 
 
 -(void)next:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback usersCallback:(void (^)(NSArray *))usersCallback  {
-    self.isLoading = YES;
-    if(self.state == DialogsHistoryStateNeedLocal) {
-        [self loadlocal:offset limit:limit callback:callback];
-    } else {
-        [self loadremote:offset limit:limit callback:callback];
-    }
+    
+    [ASQueue dispatchOnStageQueue:^{
+        self.isLoading = YES;
+        if(self.state == DialogsHistoryStateNeedLocal) {
+            [self loadlocal:offset limit:limit callback:callback];
+        } else {
+            [self loadremote:offset limit:limit callback:callback];
+        }
+    }];
 }
 
 -(void)loadlocal:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback  {
     [[Storage manager] dialogsWithOffset:offset limit:limit completeHandler:^(NSArray *d, NSArray *m) {
         
-        [[DialogsManager sharedManager] add:d];
-        [[MessagesManager sharedManager] add:m];
-        
-        if(d.count < limit) {
-            self.state = DialogsHistoryStateNeedRemote;
+        [ASQueue dispatchOnStageQueue:^{
             
-        }
-        
-         self.isLoading = NO;
-        
-        if(callback)
-            callback(d);
-        
+            
+            
+            NSMutableArray *filtred = [[NSMutableArray alloc] init];
+            
+            [d enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+                if(![[DialogsManager sharedManager] find:obj.peer.peer_id]) {
+                    [filtred addObject:obj];
+                }
+            }];
+            
+            [[DialogsManager sharedManager] add:filtred];
+            [[MessagesManager sharedManager] add:m];
+            
+            if(d.count < limit) {
+                self.state = DialogsHistoryStateNeedRemote;
+                
+            }
+            
+            self.isLoading = NO;
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                if(callback)
+                    callback(filtred);
+            }];
+        }];
        
     }];
 }
@@ -74,15 +90,20 @@
         NSMutableArray *converted = [[NSMutableArray alloc] init];
         for (TL_conversation *dialog in [dialogs dialogs]) {
             
-            TGMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
+            if(![[DialogsManager sharedManager] find:dialog.peer.peer_id]) {
+                TGMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
+                
+                [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date]];
+            }
             
-            [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date]];
+            
             
         }
         
         [[DialogsManager sharedManager] add:converted];
         [[Storage manager] insertDialogs:converted completeHandler:nil];
         
+       
         
         
         if(dialogs.dialogs.count < limit) {
@@ -91,8 +112,14 @@
         
          self.isLoading = NO;
         
-        if(callback)
-            callback(converted);
+        
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            if(callback)
+                callback(converted);
+        }];
+        
+        
        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -104,7 +131,7 @@
             return;
         }
         
-    } timeout:10];
+    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
 
 }
 

@@ -37,6 +37,8 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *dialogs;
 @property (nonatomic, strong) NSMutableArray *messages;
 
+@property (nonatomic, strong) NSMutableArray *globalUsers;
+
 @property (nonatomic) int messages_offset;
 @property (nonatomic) int messages_count;
 
@@ -45,11 +47,15 @@ typedef enum {
 
 @property (atomic) BOOL isStorageLoaded;
 @property (atomic) BOOL isRemoteLoaded;
+@property (atomic) BOOL isNeedRemoteLoad;
+
 @property (atomic) BOOL isLoading;
 @property (atomic) BOOL isFinishLoading;
 
+@property (atomic) BOOL isRemoteGlobalUsersLoaded;
+@property (atomic) BOOL isNeedGlobalUsersLoad;
 
-@property (atomic) BOOL isNeedRemoteLoad;
+
 @end
 
 @implementation SearchParams
@@ -81,6 +87,7 @@ typedef enum {
 @property (nonatomic, strong) SearchSeparatorItem *contactsSeparator;
 @property (nonatomic, strong) SearchSeparatorItem *usersSeparator;
 @property (nonatomic, strong) SearchSeparatorItem *messagesSeparator;
+@property (nonatomic, strong) SearchSeparatorItem *globalUsersSeparator;
 
 @property (nonatomic, strong) SearchLoadMoreItem *dialogsLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *contactsLoadMoreItem;
@@ -103,6 +110,8 @@ typedef enum {
     self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contact", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
     self.usersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.User", nil) pluralName:NSLocalizedString(@"Search.Separator.Users", nil)];
     self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Message", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
+    
+    self.globalUsersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.GlobalSearch", nil) pluralName:NSLocalizedString(@"Search.Separator.GlobalSearch", nil)];
     
     self.dialogsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.dialogsLoadMoreItem setClickBlock:^{
@@ -174,12 +183,15 @@ typedef enum {
     if(![self.tableView.scrollView isNeedUpdateBottom] || self.searchParams.isLoading || self.searchParams.isFinishLoading)
         return;
     
-    if(self.searchParams.isStorageLoaded)
-    {
-        [self remoteSearch:self.searchParams];
-    } else {
-        [self localSearch:self.searchParams];
+    if((self.type & SearchTypeMessages) == SearchTypeMessages) {
+        if(self.searchParams.isStorageLoaded)
+        {
+            [self remoteSearch:self.searchParams];
+        } else {
+            [self localSearch:self.searchParams];
+        }
     }
+    
     
    // ;
 }
@@ -397,6 +409,19 @@ static int insertCount = 3;
         isNeedSeparator = YES;
     }
     
+    if(params.globalUsers.count > 0) {
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.globalUsersSeparator tableRedraw:NO];
+            isOneSearchResult = NO;
+        }
+        
+        [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
+        
+        isNeedSeparator = NO;
+        
+        
+    }
+    
     
     //MessagesLoader
     if(isNeedSeparator && params.isNeedRemoteLoad) {
@@ -406,7 +431,11 @@ static int insertCount = 3;
     }
     if(params.isNeedRemoteLoad)
         [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
-
+    
+    
+    if(params.isNeedGlobalUsersLoad && !params.isRemoteGlobalUsersLoaded)
+        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+    
     [self.tableView reloadData];
     
     if(isOneSearchResult) {
@@ -416,15 +445,12 @@ static int insertCount = 3;
     }
     
     
-    
-   
-    
     if(params.isRemoteLoaded) {
         [self showMessagesResults:params];
     } else {
-        
         [self.tableView.containerView setHidden:self.tableView.count == 0];
     }
+    
     
     DLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
 
@@ -533,7 +559,6 @@ static int insertCount = 3;
     
     DLog(@"count %lu", self.tableView.count);
     
-    int i = 0;
     
 }
 
@@ -593,7 +618,7 @@ static int insertCount = 3;
             }
             
             //Users
-            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@)", searchString, searchString, transform, transform, transformReverse, transformReverse]];
+            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) ",searchString, searchString, transform, transform, transformReverse, transformReverse]];
             
             searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TGUser *obj1, TGUser *obj2) {
                 if(obj1.lastSeenTime > obj2.lastSeenTime) {
@@ -653,6 +678,23 @@ static int insertCount = 3;
                         }
                         
                         
+                        if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+                            
+                            searchParams.globalUsers = [[NSMutableArray alloc] init];
+                            
+                            NSArray *filtred = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name CONTAINS[c] %@",searchString]];
+                            
+                            [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
+                                
+                                SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj];
+                                
+                                [searchParams.globalUsers addObject:item];
+                                
+                            }];
+                            
+                         }
+                        
+                        
                         
                         [[ASQueue mainQueue] dispatchOnQueue:^{
                            // searchParams.isStorageLoaded = YES;
@@ -674,17 +716,31 @@ static int insertCount = 3;
                         [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
                     }
                     
-                   
+                }
+                
+                if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
                     
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
-                        [self showSearchResults:searchParams];
+                    searchParams.globalUsers = [[NSMutableArray alloc] init];
+                    
+                    NSArray *filtred = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name CONTAINS[c] %@",searchString]];
+                    
+                    [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
+                        
+                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj];
+                        
+                        [searchParams.globalUsers addObject:item];
+                   
                     }];
+                    
                     
                 }
                 
             }
             
             
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                [self showSearchResults:searchParams];
+            }];
             
             searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
             
@@ -696,6 +752,14 @@ static int insertCount = 3;
                 });
             }
             
+            searchParams.isNeedGlobalUsersLoad = ((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5);
+            
+            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+                dispatch_after_seconds(0.1, ^{
+                    [self remoteGlobalSearch:searchParams];
+                });
+            }
+            
             
         }];
         
@@ -703,6 +767,58 @@ static int insertCount = 3;
         
        
     });
+}
+
+
+
+- (void)showGlobalSearchResults:(SearchParams *)params {
+    
+}
+
+-(void)remoteGlobalSearch:(SearchParams *)params {
+    params.isLoading = YES;
+    
+    [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:params.searchString limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+        
+        
+        if(self.searchParams != params)
+            return;
+        
+        params.isLoading = NO;
+        params.isRemoteGlobalUsersLoaded = YES;
+        
+        if(response.users.count > 0) {
+            
+            
+            NSMutableArray *ids = [[NSMutableArray alloc] init];
+            
+            [params.globalUsers enumerateObjectsUsingBlock:^(SearchItem *obj, NSUInteger idx, BOOL *stop) {
+                [ids addObject:@([obj.user n_id])];
+            }];
+            
+            
+            
+            
+            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+            
+            [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:NO];
+            
+            [filtred enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj]];
+            }];
+            
+        }
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            [self showSearchResults:params];
+        }];
+        
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+          params.isLoading = NO;
+        
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 

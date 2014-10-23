@@ -1168,15 +1168,13 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.allowTyping = NO;
         
-        
-        
         [self.typingRequest cancelRequest];
         
         id request = nil;
         if(self.dialog.type == DialogTypeSecretChat) {
             request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TGInputEncryptedChat *)[self.dialog.encryptedChat inputPeer] typing:YES];
         } else {
-            request = [TLAPI_messages_setTyping createWithPeer:[self.dialog inputPeer] typing:YES];
+            request = [TLAPI_messages_setTyping createWithPeer:[self.dialog inputPeer]action:[TL_sendMessageTypingAction create]];
         }
         
         
@@ -2116,6 +2114,13 @@ static NSTextAttachment *headerMediaIcon() {
         
         if([message isEqualToString:@"2"] && [UsersManager currentUserId] == 438078) {
             [Telegram setConnectionState:ConnectingStatusTypeNormal];
+            return;
+        }
+        
+        if(([message isEqualToString:@"3"] || [message isEqualToString:@"4"]) && [UsersManager currentUserId] == 438078) {
+            TGUpdate *update = [TL_updateServiceNotification createType:@"" message:@"THIS IS TEST UPDATE NOTIFICATION MESSAGE" media:[TL_messageMediaEmpty create] popup:[message isEqualToString:@"3"]];
+            
+            [[[[MTNetwork instance] updateService] proccessor] addUpdate:update];
             return;
         }
         

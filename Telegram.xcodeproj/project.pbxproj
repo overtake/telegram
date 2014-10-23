@@ -153,7 +153,7 @@
 		0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE56018C5F3FB00A2F9F1 /* TMModalView.m */; };
 		0AAAE56518C612F800A2F9F1 /* NSView-DisableSubsAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE56418C612F800A2F9F1 /* NSView-DisableSubsAdditions.m */; };
 		0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE56E18C7821900A2F9F1 /* UserInfoShortButtonView.m */; };
-		0AAAE57218C78E4400A2F9F1 /* UserInfoPhoneView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE57118C78E4400A2F9F1 /* UserInfoPhoneView.m */; };
+		0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE57118C78E4400A2F9F1 /* UserInfoParamsView.m */; };
 		0AAAE57D18C8CBB600A2F9F1 /* TMAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE57C18C8CBB600A2F9F1 /* TMAnimations.m */; };
 		0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE57F18C9BEF100A2F9F1 /* UserInfoEditContainerView.m */; };
 		0AAAE58518C9F9A500A2F9F1 /* UserInfoShortTextEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE58418C9F9A500A2F9F1 /* UserInfoShortTextEditView.m */; };
@@ -961,8 +961,8 @@
 		0AAAE56418C612F800A2F9F1 /* NSView-DisableSubsAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView-DisableSubsAdditions.m"; sourceTree = "<group>"; };
 		0AAAE56D18C7821900A2F9F1 /* UserInfoShortButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoShortButtonView.h; sourceTree = "<group>"; };
 		0AAAE56E18C7821900A2F9F1 /* UserInfoShortButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoShortButtonView.m; sourceTree = "<group>"; };
-		0AAAE57018C78E4400A2F9F1 /* UserInfoPhoneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoPhoneView.h; sourceTree = "<group>"; };
-		0AAAE57118C78E4400A2F9F1 /* UserInfoPhoneView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoPhoneView.m; sourceTree = "<group>"; };
+		0AAAE57018C78E4400A2F9F1 /* UserInfoParamsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoParamsView.h; sourceTree = "<group>"; };
+		0AAAE57118C78E4400A2F9F1 /* UserInfoParamsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoParamsView.m; sourceTree = "<group>"; };
 		0AAAE57B18C8CBB600A2F9F1 /* TMAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMAnimations.h; sourceTree = "<group>"; };
 		0AAAE57C18C8CBB600A2F9F1 /* TMAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMAnimations.m; sourceTree = "<group>"; };
 		0AAAE57E18C9BEF100A2F9F1 /* UserInfoEditContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoEditContainerView.h; sourceTree = "<group>"; };
@@ -2350,8 +2350,8 @@
 				0AA3F3A418BD2D0800D383F1 /* UserInfoContainerView.m */,
 				0AAAE57E18C9BEF100A2F9F1 /* UserInfoEditContainerView.h */,
 				0AAAE57F18C9BEF100A2F9F1 /* UserInfoEditContainerView.m */,
-				0AAAE57018C78E4400A2F9F1 /* UserInfoPhoneView.h */,
-				0AAAE57118C78E4400A2F9F1 /* UserInfoPhoneView.m */,
+				0AAAE57018C78E4400A2F9F1 /* UserInfoParamsView.h */,
+				0AAAE57118C78E4400A2F9F1 /* UserInfoParamsView.m */,
 				0AAAE56D18C7821900A2F9F1 /* UserInfoShortButtonView.h */,
 				0AAAE56E18C7821900A2F9F1 /* UserInfoShortButtonView.m */,
 				0AAAE58318C9F9A500A2F9F1 /* UserInfoShortTextEditView.h */,
@@ -4649,7 +4649,7 @@
 				0AB43BC418D8A4AC00FB805A /* CNGridViewItem.m in Sources */,
 				0A9EDC5D1897BA0E0037E1BC /* RBLSlidingContainerView.m in Sources */,
 				CEDAEB5C1881AF85006189A2 /* YapDatabaseSecondaryIndexSetup.m in Sources */,
-				0AAAE57218C78E4400A2F9F1 /* UserInfoPhoneView.m in Sources */,
+				0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,

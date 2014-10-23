@@ -137,6 +137,8 @@ CACHE_IMAGE(ContactsAddContactActive)
 
 CACHE_IMAGE(ContactsAddContact)
 
+CACHE_IMAGE(UsernameCheck)
+
 @interface ImageUtils : NSObject
 
 

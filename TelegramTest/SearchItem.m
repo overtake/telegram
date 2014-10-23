@@ -35,17 +35,37 @@
     if(self) {
         [self initialize];
         
+        self.user = user;
+        
         self.type = SearchItemUser;
         self.dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];
         if(!self.dialog) {
             self.dialog = [[DialogsManager sharedManager] createDialogForUser:user];
         }
         
-        self.user = [[UsersManager sharedManager] find:user.n_id];
-        
         [self.title appendString:user.fullName withColor:DARK_BLACK];
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString *)self.title selectionColor:BLUE_UI_COLOR];
     
+    }
+    return self;
+}
+
+
+- (id)initWithGlobalItem:(TGUser*)user {
+    self = [super init];
+    if(self) {
+        [self initialize];
+        
+        self.type = SearchItemGlobalUser;
+        self.dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];
+        if(!self.dialog) {
+            self.dialog = [[DialogsManager sharedManager] createDialogForUser:user];
+        }
+        
+        self.user = user;
+        
+        [self.title appendString:user.fullName withColor:DARK_BLACK];
+        
     }
     return self;
 }
@@ -178,6 +198,8 @@
     
     if(item.type == SearchItemMessage) {
         hashStr = [NSString stringWithFormat:@"message_%d", item.message.n_id];
+    } else if(item.type ==SearchItemGlobalUser) {
+        hashStr = [NSString stringWithFormat:@"global_user_%d", item.user.n_id];
     } else {
         if([object isKindOfClass:[TL_conversation class]]) {
             hashStr = [Notification notificationNameByDialog:(TL_conversation *)object action:@"hash"];

@@ -124,10 +124,11 @@
                 }
                 
                 if(currentUser.type != TGUserTypeEmpty) {
-                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name]) {
+                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.user_name isEqualToString:currentUser.user_name]) {
                         
                         currentUser.first_name = newUser.first_name;
                         currentUser.last_name = newUser.last_name;
+                        currentUser.user_name = newUser.user_name;
                         
                         isNeedRebuildNames = YES;
                         
@@ -162,6 +163,7 @@
                     newUser.first_name = @"Deleted";
                     newUser.last_name = @"";
                     newUser.phone = @"";
+                    newUser.user_name = @"";
                 }
                 
                 [self->list addObject:newUser];
@@ -218,8 +220,6 @@
 }
 
 - (void)setUserStatus:(TGUserStatus *)status forUid:(int)uid {
-    int i = 0;
-    
     [ASQueue dispatchOnStageQueue:^{
         TGUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
@@ -240,6 +240,45 @@
 + (TGUser *)currentUser {
     return [[UsersManager sharedManager] userSelf];
 }
+
+
+
+
+
+-(void)updateUserName:(NSString *)userName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
+    
+    if([userName isEqualToString:self.userSelf.user_name] )
+    {
+        completeHandler(self.userSelf);
+        
+        return;
+    }
+    
+    [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TGUser *response) {
+        
+        [ASQueue dispatchOnStageQueue:^{
+            if(response.type == TGUserTypeSelf) {
+                [self add:@[response]];
+            }
+            
+            [[Storage manager] insertUser:self.userSelf completeHandler:nil];
+            
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                completeHandler(self.userSelf);
+            }];
+            
+            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+        }];
+        
+       
+        
+     } errorHandler:^(RPCRequest *request, RpcError *error) {
+         if(errorHandler)
+             errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
+     } timeout:10];
+}
+
+
 
 
 -(void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {

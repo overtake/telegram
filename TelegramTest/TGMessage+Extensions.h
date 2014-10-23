@@ -11,4 +11,9 @@
 @interface TGMessage (Extensions)
 -(int)peer_id;
 -(TGPeer *)peer;
+
+
+-(BOOL)n_out;
+-(BOOL)unread;
+
 @end

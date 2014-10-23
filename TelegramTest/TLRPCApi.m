@@ -571,18 +571,20 @@
 @end
 
 @implementation TLAPI_messages_readHistory
-+ (TLAPI_messages_readHistory *)createWithPeer:(TGInputPeer *)peer max_id:(int)max_id offset:(int)offset {
++ (TLAPI_messages_readHistory *)createWithPeer:(TGInputPeer *)peer max_id:(int)max_id offset:(int)offset read_contents:(BOOL)read_contents {
     TLAPI_messages_readHistory *obj = [[TLAPI_messages_readHistory alloc] init];
     obj.peer = peer;
 	obj.max_id = max_id;
 	obj.offset = offset;
+    obj.read_contents = read_contents;
     return obj;
 }
 - (NSData *)getData:(BOOL)isFirstRequest {
-	SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:-1336990448 isFirstRequest:isFirstRequest];
+	SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:0xeed884c6 isFirstRequest:isFirstRequest];
 	[[TLClassStore sharedManager] TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.offset];
+    [stream writeBool:self.read_contents];
 	return [stream getOutput];
 }
 @end
@@ -660,16 +662,16 @@
 @end
 
 @implementation TLAPI_messages_setTyping
-+ (TLAPI_messages_setTyping *)createWithPeer:(TGInputPeer *)peer typing:(BOOL)typing {
++ (TLAPI_messages_setTyping *)createWithPeer:(TGInputPeer *)peer action:(TL_SendMessageAction *)action {
     TLAPI_messages_setTyping *obj = [[TLAPI_messages_setTyping alloc] init];
     obj.peer = peer;
-	obj.typing = typing;
+    obj.action = action;
     return obj;
 }
 - (NSData *)getData:(BOOL)isFirstRequest {
-	SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:1905801705 isFirstRequest:isFirstRequest];
+	SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:0xa3825e50 isFirstRequest:isFirstRequest];
 	[[TLClassStore sharedManager] TLSerialize:self.peer stream:stream];
-	[stream writeBool:self.typing];
+    [[TLClassStore sharedManager] TLSerialize:self.action stream:stream];
 	return [stream getOutput];
 }
 @end

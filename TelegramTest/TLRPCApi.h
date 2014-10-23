@@ -255,8 +255,9 @@
 @property (nonatomic, strong) TGInputPeer *peer;
 @property (nonatomic) int max_id;
 @property (nonatomic) int offset;
+@property (nonatomic) BOOL read_contents;
 
-+ (TLAPI_messages_readHistory *)createWithPeer:(TGInputPeer *)peer max_id:(int)max_id offset:(int)offset;
++ (TLAPI_messages_readHistory *)createWithPeer:(TGInputPeer *)peer max_id:(int)max_id offset:(int)offset read_contents:(BOOL)read_contents;
 @end
 
 @interface TLAPI_messages_deleteHistory : TLApiObject
@@ -286,9 +287,9 @@
 
 @interface TLAPI_messages_setTyping : TLApiObject
 @property (nonatomic, strong) TGInputPeer *peer;
-@property BOOL typing;
+@property (nonatomic, strong) TL_SendMessageAction *action;
 
-+ (TLAPI_messages_setTyping *)createWithPeer:(TGInputPeer *)peer typing:(BOOL)typing;
++ (TLAPI_messages_setTyping *)createWithPeer:(TGInputPeer *)peer action:(TL_SendMessageAction *)action;
 @end
 
 @interface TLAPI_messages_sendMessage : TLApiObject

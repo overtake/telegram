@@ -16,7 +16,7 @@ typedef enum {
     MessageOutStateError = 2
 } MessageOutState;
 
-+(TL_localMessage *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(Boolean)n_out unread:(Boolean)unread date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
 @property (nonatomic,assign) int fakeId;
 @property (nonatomic,assign) long randomId;
 @property (nonatomic,assign) DeliveryState dstate;

@@ -47,6 +47,10 @@ typedef enum {
 - (NSAttributedString *)statusForSearchTableView;
 - (NSAttributedString *)statusForProfile;
 
+
+- (NSAttributedString *)userNameTitle;
+- (NSAttributedString *)userNameProfileTitle;
+- (NSAttributedString *)userNameSearchTitle;
 - (int)lastSeenUpdate;
 - (void)setLastSeenUpdate:(int)seenUpdate;
 

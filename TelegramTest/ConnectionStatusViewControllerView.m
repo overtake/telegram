@@ -100,7 +100,7 @@ static NSColor *stateColor[5];
         [self setNeedsDisplay:YES];
         
         if(_state == ConnectingStatusTypeNormal || (oldState == ConnectingStatusTypeNormal && (_state == ConnectingStatusTypeConnected))) {
-            [self hide:YES];
+             [self hideAfter:1.0 withState:ConnectingStatusTypeNormal];
             return;
         } else {
             if(!self.isShown) {
@@ -114,7 +114,7 @@ static NSColor *stateColor[5];
             //[self startAnimation];
         } else {
             
-            [self hide:YES];
+            [self hideAfter:1.0 withState:ConnectingStatusTypeConnected];
         }
     
         

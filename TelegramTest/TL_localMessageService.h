@@ -9,5 +9,5 @@
 #import "TL_localMessage.h"
 
 @interface TL_localMessageService : TL_localMessage
-+ (TL_localMessageService *)createWithN_id:(int)n_id from_id:(int)from_id to_id:(TGPeer *)to_id n_out:(BOOL)n_out unread:(BOOL)unread date:(int)date action:(TGMessageAction *)action fakeId:(int)fakeId randomId:(long)randomId dstate:(DeliveryState)dstate;
++ (TL_localMessageService *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date action:(TGMessageAction *)action fakeId:(int)fakeId randomId:(long)randomId dstate:(DeliveryState)dstate;
 @end

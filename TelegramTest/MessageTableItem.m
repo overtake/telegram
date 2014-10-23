@@ -34,23 +34,20 @@
 
 @implementation MessageTableItem
 
-- (id)initWithObject:(TGMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super init];
     if(self) {
         self.message = object;
         
         
         if(object.peer.peer_id == [UsersManager currentUserId])
-            object.unread = NO;
+            object.flags&= ~TGUNREADMESSAGE;
         
         self.isForwadedMessage = [self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]];
         self.isChat = self.message.dialog.type == DialogTypeChat;
         
         if(self.message) {
            
-            
-            
-            
             self.user = [[UsersManager sharedManager] find:object.from_id];
             
             if(self.isForwadedMessage) {

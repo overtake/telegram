@@ -155,7 +155,7 @@
 
 
 +(TL_localMessage *)createOutMessage:(NSString *)message media:(TGMessageMedia *)media dialog:(TL_conversation *)dialog {
-    return  [TL_localMessage createWithN_id:0 from_id:UsersManager.currentUserId to_id:[dialog.peer peerOut] n_out:YES unread:YES date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
+    return  [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[dialog.peer peerOut] date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
 }
 
 
@@ -187,7 +187,7 @@
     
     NSString *text = [MessagesUtils selfDestructTimer:ttl];
     
-    TL_localMessageService *message = [TL_localMessageService createWithN_id:0 from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:chat.n_id] n_out:YES unread:NO date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+    TL_localMessageService *message = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     
     
     
@@ -247,7 +247,7 @@
 
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TGEncryptedChat *)chat {
     
-    TL_localMessageService *msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] n_out:NO unread:NO date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
+    TL_localMessageService *msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] flags:TGNOFLAGSMESSAGE from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
     [MessagesManager addAndUpdateMessage:msg];
 }
 

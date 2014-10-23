@@ -163,6 +163,7 @@
     if(self.nameDelegate) {
         [self.nameDelegate TMNameTextFieldDidChanged:self];
     }
+    
 }
 
 - (void)update {

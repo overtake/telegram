@@ -14,7 +14,7 @@
 extern NSString *const TGImagePType;
 
 extern NSString *const TGImportCardPrefix;
-
+extern NSString *const TGUserNamePrefix;
 
 +(NSString*)mimetypefromExtension:(NSString *)extension;
 unsigned long fileSize(NSString *path);
@@ -55,6 +55,6 @@ BOOL NSStringIsValidEmail(NSString *checkString);
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
-
+void open_user_by_name(NSString * userName);
 
 @end

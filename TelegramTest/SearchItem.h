@@ -13,7 +13,8 @@
 typedef enum {
     SearchItemChat,
     SearchItemUser,
-    SearchItemMessage
+    SearchItemMessage,
+    SearchItemGlobalUser
 } SearchItemType;
 
 @interface SearchItem : TMRowItem
@@ -33,6 +34,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableAttributedString *status;
 
 - (id)initWithUserItem:(TGUser *)user searchString:(NSString *)searchString;
+- (id)initWithGlobalItem:(TGUser*)user;
 - (id)initWithChatItem:(TGChat *)chat searchString:(NSString *)searchString;
 - (id)initWithMessageItem:(TGMessage *)message searchString:(NSString *)searchString;
 - (id)initWithDialogItem:(TL_conversation *)dialog searchString:(NSString *)searchString;
