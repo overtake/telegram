@@ -74,22 +74,48 @@
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineBreakMode = NSLineBreakByTruncatingTail;
     
-    static NSColor * color[8];
+    static NSColor * colors[6];
+    static NSMutableDictionary *cacheColorIds;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        color[0] = NSColorFromRGB(0xe74336);
-        color[1] = NSColorFromRGB(0x4fad2d);
-        color[2] = NSColorFromRGB(0xc68b02);
-        color[3] = NSColorFromRGB(0x1173be);
-        color[4] = NSColorFromRGB(0x8544d6);
-        color[5] = NSColorFromRGB(0xe63e7b);
-        color[6] = NSColorFromRGB(0x0ba28e);
-        color[7] = NSColorFromRGB(0x92a708);
+        colors[0] = NSColorFromRGB(0xce5247);
+        colors[1] = NSColorFromRGB(0xcda322);
+        colors[2] = NSColorFromRGB(0x5eaf33);
+        colors[3] = NSColorFromRGB(0x468ec4);
+        colors[4] = NSColorFromRGB(0xac6bc8);
+        colors[5] = NSColorFromRGB(0xe28941);
+        
+        cacheColorIds = [[NSMutableDictionary alloc] init];
     });
     
-    NSColor *nameColor = self.isChat ? color[self.user.n_id % 8] : LINK_COLOR;
-  
+    
+   
+    
+    NSColor *nameColor = LINK_COLOR;
+    
+    if(self.isChat) {
+        
+        int uid = self.user.n_id;
+        int colorMask = 0;
+        
+        if(cacheColorIds[@(uid)]) {
+            colorMask = [cacheColorIds[@(uid)] intValue];
+        } else {
+            const int numColors = 8;
+            
+            char buf[16];
+            snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
+            unsigned char digest[CC_MD5_DIGEST_LENGTH];
+            CC_MD5(buf, (unsigned) strlen(buf), digest);
+            colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
+            
+            cacheColorIds[@(uid)] = @(colorMask);
+        }
+        
+        nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
+        
+    }
     
     self.headerName = name;
     self.headerColor = nameColor;

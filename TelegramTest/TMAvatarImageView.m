@@ -34,13 +34,34 @@ typedef struct
 
 
 static const TGTwoColors colors[] = {
-    { .top = 0xff516a, .bottom = 0xff885e },
-    { .top = 0xffa85c, .bottom = 0xffcd6a },
-    { .top = 0x54cb68, .bottom = 0xa0de7e },
-    { .top = 0x2a9ef1, .bottom = 0x72d5fd },
-    { .top = 0x6c65f9, .bottom = 0x84b2fd },
-    { .top = 0xd575ea, .bottom = 0xe0a8f1 },
+    { .top = 0xec6a5e, .bottom = 0xec6a5e },
+    { .top = 0xf4d447, .bottom = 0xf4d447 },
+    { .top = 0x7ccd52, .bottom = 0x7ccd52 },
+    { .top = 0x66aee4, .bottom = 0x66aee4 },
+    { .top = 0xc789e1, .bottom = 0xc789e1 },
+    { .top = 0xffaf51, .bottom = 0xffaf51 },
 };
+
+
+/*
+ 
+ ec6a5e - ce5247
+ f4d447 - cda322
+ 7ccd52 - 5eaf33
+ 66aee4 - 468ec4
+ c789e1 - ac6bc8
+ ffaf51 - e28941
+ 
+ 
+ { .top = 0xff516a, .bottom = 0xff885e },
+ { .top = 0xffa85c, .bottom = 0xffcd6a },
+ { .top = 0x54cb68, .bottom = 0xa0de7e },
+ { .top = 0x2a9ef1, .bottom = 0x72d5fd },
+ { .top = 0x6c65f9, .bottom = 0x84b2fd },
+ { .top = 0xd575ea, .bottom = 0xe0a8f1 },
+ 
+ 
+ */
 
 @interface TMAvatarImageView()
 @property (nonatomic, strong) DownloadPhotoItem *downloadItem;

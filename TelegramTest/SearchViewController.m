@@ -686,7 +686,7 @@ static int insertCount = 3;
                             
                             [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
                                 
-                                SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj];
+                                SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
                                 
                                 [searchParams.globalUsers addObject:item];
                                 
@@ -726,7 +726,7 @@ static int insertCount = 3;
                     
                     [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
                         
-                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj];
+                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
                         
                         [searchParams.globalUsers addObject:item];
                    
@@ -804,7 +804,7 @@ static int insertCount = 3;
             [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:NO];
             
             [filtred enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj]];
+                [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj searchString:params.searchString]];
             }];
             
         }

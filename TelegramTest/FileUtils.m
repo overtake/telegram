@@ -475,8 +475,6 @@ void open_user_by_name(NSString * userName) {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }
                 
-                
-                
             });
             
             

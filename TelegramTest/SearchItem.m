@@ -51,7 +51,7 @@
 }
 
 
-- (id)initWithGlobalItem:(TGUser*)user {
+- (id)initWithGlobalItem:(TGUser*)user searchString:(NSString *)searchString {
     self = [super init];
     if(self) {
         [self initialize];
@@ -63,8 +63,12 @@
         }
         
         self.user = user;
-        
+                
         [self.title appendString:user.fullName withColor:DARK_BLACK];
+        
+        [self.status appendString:[NSString stringWithFormat:@"@%@",user.user_name] withColor:NSColorFromRGB(0x999999)];
+        
+        [NSMutableAttributedString selectText:[NSString stringWithFormat:@"@%@",searchString] fromAttributedString:(NSMutableAttributedString *)self.status selectionColor:BLUE_UI_COLOR];
         
     }
     return self;

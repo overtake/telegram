@@ -29,8 +29,11 @@
 @property (nonatomic,strong) NSString *lastUserName;
 @property (nonatomic,strong) NSString *checkedUserName;
 @property (nonatomic,strong) RPCRequest *request;
+
+@property (nonatomic,strong) TMTextField *statusTextField;
 @end
 
+#define GC NSColorFromRGB(0x61ad5e)
 
 @implementation UserNameViewContainer
 
@@ -63,6 +66,19 @@
         [self.textView addSubview:self.progressView];
         
         
+        self.statusTextField = [TMTextField defaultTextField];
+        
+        [self.statusTextField setTextColor:[NSColor redColor]];
+        
+        [self.statusTextField setStringValue:@"error cant set user name"];
+        
+        [self.statusTextField sizeToFit];
+        
+        [self.statusTextField setFrameOrigin:NSMakePoint(100, NSMinY(self.textView.frame) + 30)];
+        
+        [self addSubview:self.statusTextField];
+        
+        
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
         
@@ -83,7 +99,7 @@
         [self.textView.textView setFrameOrigin:NSMakePoint(0, NSMinY(self.textView.textView.frame))];
         
         
-        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(98, 110, NSWidth(self.frame) - 200, 100)];
+        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(96, 122, NSWidth(self.frame) - 200, 100)];
         
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         
@@ -97,13 +113,12 @@
         
         [self addSubview:self.descriptionView];
         
-        self.button = [[TMTextButton alloc] initWithFrame:NSMakeRect(100, 110+NSHeight(self.descriptionView.frame)+10, 150, 20)];
-        
 
     }
     
     return self;
 }
+
 
 - (void)performEnter {
     if(self.isRemoteChecked && ![[UsersManager currentUser].user_name isEqualToString:self.checkedUserName]) {
@@ -120,7 +135,7 @@
         return;
     }
     
-    [self.controller.doneButton setDisable:(self.textView.textView.stringValue.length < 5 && self.textView.textView.stringValue.length != 0) || (!self.isRemoteChecked)];
+    [self.controller.doneButton setDisable:(self.textView.textView.stringValue.length < 5 && self.textView.textView.stringValue.length != 0) || (!self.isRemoteChecked || !self.isSuccessChecked)];
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {
@@ -132,14 +147,29 @@
     [self updateSaveButton];
     
     
-    if(self.textView.textView.stringValue.length >= 5 || self.textView.textView.stringValue.length == 0) {
+    if((self.textView.textView.stringValue.length >= 5 && [self isNumberValid]) || self.textView.textView.stringValue.length == 0) {
          [self updateChecker];
     } else {
         [self.progressView setHidden:YES];
         [self.progressView stopAnimation:self];
         [self.successView setHidden:YES];
+        
+       
+        if(![self isNumberValid]) {
+            [self setState:NSLocalizedString(@"USERNAME_CANT_FIRST_NUMBER", nil) color:[NSColor redColor]];
+        } else {
+            [self setState:NSLocalizedString(@"USERNAME_MIN_SYMBOLS_ERROR", nil) color:[NSColor redColor]];
+        }
+        
     }
    
+}
+
+-(BOOL)isNumberValid {
+    NSCharacterSet* nonNumbers = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    NSRange r = [self.textView.textView.stringValue rangeOfCharacterFromSet: nonNumbers];
+    
+    return r.location == 0;
 }
 
 
@@ -149,7 +179,10 @@
         [self.progressView setHidden:YES];
         [self.progressView stopAnimation:self];
         [self.successView setHidden:NO];
-    } else if(![self.lastUserName isEqualToString:self.textView.textView.stringValue]) {
+        
+        [self setState:nil color:nil];
+        
+    } else if(![self.lastUserName isEqualToString:self.textView.textView.stringValue] && self.textView.textView.stringValue.length != 0) {
         
         if(!self.timer) {
             
@@ -176,6 +209,15 @@
                     self.isRemoteChecked = YES;
                     self.checkedUserName = userNameToCheck;
                     
+                    
+                    if(self.isSuccessChecked) {
+                        [self setState:self.checkedUserName.length > 0 ? [NSString stringWithFormat:NSLocalizedString(@"UserName.avaiable", nil),self.checkedUserName] : nil color:GC];
+                    } else {
+                        [self setState:[NSString stringWithFormat:NSLocalizedString(@"USERNAME_IS_ALREADY_TAKEN", nil)] color:[NSColor redColor]];
+                    }
+                    
+                    
+                    
                     [self updateSaveButton];
                     
                     [self.progressView setHidden:YES];
@@ -185,6 +227,12 @@
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
                     
+                    [self.progressView setHidden:YES];
+                    [self.progressView stopAnimation:self];
+                    
+                    [self.successView setHidden:YES];
+                    
+                    [self setState:NSLocalizedString(error.error_msg, nil) color:[NSColor redColor]];
                     
                 }];
                 
@@ -200,9 +248,21 @@
         }
 
         
+    } else {
+        [self setState:nil color:nil];
     }
     
     self.lastUserName = self.textView.textView.stringValue;
+    
+}
+
+-(void)setState:(NSString *)state color:(NSColor *)color {
+    [self.statusTextField setHidden:state.length == 0 || color == nil];
+    self.statusTextField.stringValue = state;
+    [self.statusTextField sizeToFit];
+    self.statusTextField.textColor = color;
+    
+    [self.descriptionView setFrameOrigin:NSMakePoint(96, !self.statusTextField.isHidden ? 130 : 110)];
     
 }
 
@@ -214,8 +274,6 @@
    
     
     [self.descriptionView setFrameSize:size];
-    
-    [self.button setFrameOrigin:NSMakePoint(100, 110+NSHeight(self.descriptionView.frame))];
 }
 
 @end
