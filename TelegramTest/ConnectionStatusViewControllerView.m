@@ -123,9 +123,9 @@ static NSColor *stateColor[5];
 - (void)hideAfter:(float)time withState:(ConnectingStatusType)state {
    
     dispatch_after_seconds(time, ^{
-        if(_state == state) {
+       // if(_state == state) {
             [self hide:YES];
-        }
+       // }
     });
 }
 

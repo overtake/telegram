@@ -112,7 +112,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
     
     if(![oldName isEqualToString:dbName]) {
-        [SettingsArchiver drop];
+        [SettingsArchiver setSupportUserId:0];
         
         [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1069,7 +1069,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 - (void) insertContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler {
     
-    int i =0;
     
     [queue inDatabase:^(FMDatabase *db) {
         if(![db executeUpdate:@"insert or replace into contacts (user_id, mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]]) {

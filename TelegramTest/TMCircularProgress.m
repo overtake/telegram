@@ -125,6 +125,9 @@ float ease(float t, float b, float c, float d) {
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    if(self.isHidden)
+        return;
+    
 	[super drawRect:dirtyRect];
     
     

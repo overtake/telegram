@@ -309,16 +309,15 @@
     self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
     
     
-    weak();
     
     [self.normalNavigationRightView setTapBlock:^{
         
         NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
-        if(weakSelf.dialog.type == DialogTypeChat) {
+        if(strongSelf.dialog.type == DialogTypeChat) {
             
-            if(weakSelf.dialog.chat.type == TGChatTypeNormal) {
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
-                    [weakSelf leaveOrReturn:weakSelf.dialog];
+            if(strongSelf.dialog.chat.type == TGChatTypeNormal) {
+                [theMenu addItem:[NSMenuItem menuItemWithTitle:strongSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
+                    [strongSelf leaveOrReturn:strongSelf.dialog];
                 }]];
             }
             
@@ -329,9 +328,9 @@
             
         } else {
             
-            if(weakSelf.dialog.type != DialogTypeSecretChat) {
+            if(strongSelf.dialog.type != DialogTypeSecretChat) {
                 [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
-                    [weakSelf deleteDialog:weakSelf.dialog];
+                    [strongSelf deleteDialog:strongSelf.dialog];
                 }]];
                 
                 
@@ -342,7 +341,7 @@
             }
         }
         
-        [weakSelf.filterMenu popUpForView:weakSelf.normalNavigationRightView center:YES];
+        [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
  
     }];
     
@@ -350,7 +349,7 @@
     self.editableNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
     
     [self.editableNavigationRightView setTapBlock:^{
-          [weakSelf clearHistory:weakSelf.dialog];
+          [strongSelf clearHistory:strongSelf.dialog];
     }];
     
     

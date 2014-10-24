@@ -91,13 +91,13 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 }
 
 + (BOOL)setSupportUserId:(NSUInteger)supportUserId {
-    if(supportUserId != 0) {
+    //if(supportUserId != 0) {
        
         [SettingsArchiver instance].supportUserId = supportUserId;
         [[SettingsArchiver instance] save];
         
         return YES;
-    }
+   // }
     
     return NO;
 }

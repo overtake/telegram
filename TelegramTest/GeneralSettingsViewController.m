@@ -51,7 +51,7 @@
     
     
     
-    GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoPhotoDownloadHeader", nil)];
+    GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoVideoDownloadHeader", nil)];
     
     autoPhotoHeader.height = 61;
     
@@ -64,7 +64,7 @@
         [SettingsArchiver addOrRemoveSetting:AutoGroupPhoto];
         
     } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupPhoto]);
+        return @([SettingsArchiver checkMaskedSetting:AutoGroupVideo]);
     }];
     
     [self.tableView insert:autoPhotoDownloadGroup atIndex:self.tableView.list.count tableRedraw:NO];
@@ -72,7 +72,7 @@
     
     GeneralSettingsRowItem *autoPhotoDownloadPrivate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
-        [SettingsArchiver addOrRemoveSetting:AutoPrivatePhoto];
+        [SettingsArchiver addOrRemoveSetting:AutoPrivateVideo];
         
     } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoPrivatePhoto]);

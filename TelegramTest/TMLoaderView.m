@@ -21,6 +21,10 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     
+    if(self.isHidden)
+        return;
+    
+    
     if(self.style == TMCircularProgressDarkStyle) {
         NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:self.bounds];
         [NSColorFromRGBWithAlpha(0x000000, 0.5) setFill];
@@ -31,6 +35,7 @@
     
     
 }
+
 
 
 -(id)initWithFrame:(NSRect)frameRect {
@@ -86,6 +91,14 @@
     } else {
         [super mouseDown:theEvent];
     }
+}
+
+
+-(void)setHidden:(BOOL)flag {
+    [super setHidden:flag];
+    
+    if(!self.isHidden)
+        [self setNeedsDisplay:YES];
 }
 
 @end
