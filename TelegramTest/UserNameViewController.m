@@ -141,9 +141,6 @@
 - (void)controlTextDidChange:(NSNotification *)obj {
     
     
-    self.textView.textView.stringValue = [[self.textView.textView.stringValue componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]] componentsJoinedByString:@""];;
-    
-    
     [self updateSaveButton];
     
     

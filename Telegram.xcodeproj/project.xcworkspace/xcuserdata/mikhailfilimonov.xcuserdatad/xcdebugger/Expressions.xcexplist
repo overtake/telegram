@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.searchViewController.type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__43-[SearchViewController remoteGlobalSearch:]_block_invoke:SearchViewController.m">
       </ContextState>
       <ContextState
@@ -203,6 +211,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellDocumentView setItem:]:MessageTableCellDocumentView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DialogsManager createDialogForMessage:]:DialogsManager.m">
       </ContextState>
       <ContextState
@@ -367,6 +378,17 @@
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.type">
+            </PersistentString>
+            <PersistentString
+               value = "self.type &amp; SearchTypeGlobalUsers">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">

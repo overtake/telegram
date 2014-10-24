@@ -25,7 +25,8 @@ typedef enum {
     SearchSectionDialogs,
     SearchSectionContacts,
     SearchSectionUsers,
-    SearchSectionMessages
+    SearchSectionMessages,
+    SearchSectionGlobalUsers
 } SearchSection;
 
 @interface SearchParams : NSObject
@@ -93,6 +94,7 @@ typedef enum {
 @property (nonatomic, strong) SearchLoadMoreItem *contactsLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *usersLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *messagesLoadMoreItem;
+@property (nonatomic, strong) SearchLoadMoreItem *globalUsersLoadMoreItem;
 @property (nonatomic, strong) SearchLoaderItem *messagesLoaderItem;
 
 @end
@@ -127,6 +129,15 @@ typedef enum {
     [self.usersLoadMoreItem setClickBlock:^{
         [strongSelf showMore:SearchSectionUsers animation:YES];
     }];
+    
+    
+    self.globalUsersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
+    [self.globalUsersLoadMoreItem setClickBlock:^{
+        [strongSelf showMore:SearchSectionGlobalUsers animation:YES];
+    }];
+    
+    
+    
     
     self.messagesLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.messagesLoadMoreItem setClickBlock:^{
@@ -325,6 +336,10 @@ static int insertCount = 3;
             separatorItem = self.usersLoadMoreItem;
             items = self.searchParams.users;
             break;
+        case SearchSectionGlobalUsers:
+            separatorItem = self.globalUsersLoadMoreItem;
+            items = self.searchParams.globalUsers;
+            break;
             
         default:
             break;
@@ -415,9 +430,17 @@ static int insertCount = 3;
             isOneSearchResult = NO;
         }
         
-        [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
+        if(params.globalUsers.count > insertCount) {
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.globalUsers objectAtIndex:i] tableRedraw:NO];
+            
+            self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
+            [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
+        } else {
+            [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
+        }
         
-        isNeedSeparator = NO;
+        isNeedSeparator = YES;
         
         
     }
@@ -636,6 +659,10 @@ static int insertCount = 3;
                     [dialogsNeedCheck addObject:@(user.n_id)];
             }
             
+            
+            
+            
+            
             if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
                     
@@ -678,21 +705,6 @@ static int insertCount = 3;
                         }
                         
                         
-                        if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
-                            
-                            searchParams.globalUsers = [[NSMutableArray alloc] init];
-                            
-                            NSArray *filtred = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name CONTAINS[c] %@",searchString]];
-                            
-                            [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
-                                
-                                SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
-                                
-                                [searchParams.globalUsers addObject:item];
-                                
-                            }];
-                            
-                         }
                         
                         
                         
@@ -705,35 +717,38 @@ static int insertCount = 3;
                     }];
                 }];
             } else {
-                if((self.type & SearchTypeContacts) == SearchTypeContacts) {
+                
+                
+            }
+            
+            
+            if((self.type & SearchTypeContacts) == SearchTypeContacts) {
+                
+                searchParams.users = [NSMutableArray array];
+                searchParams.contacts = [NSMutableArray array];
+                
+                for(TGUser *user in searchUsers) {
+                    id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                     
-                    searchParams.users = [NSMutableArray array];
-                    searchParams.contacts = [NSMutableArray array];
-                    
-                    for(TGUser *user in searchUsers) {
-                        id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
-                        
-                        [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
-                    }
-                    
+                    [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
                 }
                 
-                if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+            }
+            
+            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+                
+                searchParams.globalUsers = [[NSMutableArray alloc] init];
+                
+                NSArray *filtred = [UsersManager findUsersByName:searchString];
+                
+                [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
                     
-                    searchParams.globalUsers = [[NSMutableArray alloc] init];
+                    SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
                     
-                    NSArray *filtred = [UsersManager findUsersByName:searchString];
+                    [searchParams.globalUsers addObject:item];
                     
-                    [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
-                        
-                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
-                        
-                        [searchParams.globalUsers addObject:item];
-                   
-                    }];
-                    
-                    
-                }
+                }];
+                
                 
             }
             

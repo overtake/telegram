@@ -50,7 +50,7 @@
     
     self.historyController = [DialogsHistoryController sharedController];
     
-    self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts;
+    self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts | SearchTypeGlobalUsers;
    
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset);
     
