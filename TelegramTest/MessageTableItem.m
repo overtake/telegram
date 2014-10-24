@@ -94,7 +94,7 @@
     
     NSColor *nameColor = LINK_COLOR;
     
-    if(self.isChat) {
+    if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
         
         int uid = self.user.n_id;
         int colorMask = 0;

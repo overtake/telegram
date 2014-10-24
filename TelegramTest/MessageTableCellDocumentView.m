@@ -337,7 +337,7 @@ static NSImage *attachBackgroundThumb() {
             
         case DocumentStateDownloading:
             [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
-            [self setProgressStringValue:self.progressView.currentProgress format:NSLocalizedString(@"Document.Downloading", nil)];
+            [self setProgressStringValue:self.item.downloadItem.progress format:NSLocalizedString(@"Document.Downloading", nil)];
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
             [self.progressView setState:TMLoaderViewStateDownloading];
             break;
@@ -352,6 +352,7 @@ static NSImage *attachBackgroundThumb() {
             [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
             [self.progressView setState:TMLoaderViewStateNeedDownload];
+            [self.progressView setProgress:0 animated:NO];
             break;
             
         default:

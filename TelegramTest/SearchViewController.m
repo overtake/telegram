@@ -364,115 +364,119 @@ static int insertCount = 3;
         return;
     }
     
-    [self.tableView removeAllItems:NO];
+    assert([NSThread isMainThread]);
     
-    BOOL isNeedSeparator = NO;
-    BOOL isOneSearchResult = YES;
     
-    if(params.dialogs.count) {
+        [self.tableView removeAllItems:NO];
         
-        if(params.dialogs.count > insertCount) {
-            for(int i = 0; i < insertCount; i++)
-                [self.tableView addItem:[params.dialogs objectAtIndex:i] tableRedraw:NO];
+        BOOL isNeedSeparator = NO;
+        BOOL isOneSearchResult = YES;
+        
+        if(params.dialogs.count) {
             
-            self.dialogsLoadMoreItem.num = (int)params.dialogs.count - insertCount;
-            [self.tableView addItem:self.dialogsLoadMoreItem tableRedraw:NO];
+            if(params.dialogs.count > insertCount) {
+                for(int i = 0; i < insertCount; i++)
+                    [self.tableView addItem:[params.dialogs objectAtIndex:i] tableRedraw:NO];
+                
+                self.dialogsLoadMoreItem.num = (int)params.dialogs.count - insertCount;
+                [self.tableView addItem:self.dialogsLoadMoreItem tableRedraw:NO];
+            } else {
+                [self.tableView insert:params.dialogs startIndex:[self.tableView count] tableRedraw:NO];
+            }
+            
+            isNeedSeparator = YES;
+        }
+        
+        if(params.contacts.count) {
+            if(isNeedSeparator) {
+                [self.tableView addItem:self.contactsSeparator tableRedraw:NO];
+                [self.contactsSeparator setItemCount:(int)params.contacts.count];
+                isOneSearchResult = NO;
+            }
+            
+            if(params.contacts.count > insertCount) {
+                for(int i = 0; i < insertCount; i++)
+                    [self.tableView addItem:[params.contacts objectAtIndex:i] tableRedraw:NO];
+                
+                self.contactsLoadMoreItem.num = (int)params.contacts.count - insertCount;
+                [self.tableView addItem:self.contactsLoadMoreItem tableRedraw:NO];
+            } else {
+                [self.tableView insert:params.contacts startIndex:[self.tableView count] tableRedraw:NO];
+            }
+            
+            isNeedSeparator = YES;
+        }
+        
+        if(params.users.count) {
+            if(isNeedSeparator) {
+                [self.tableView addItem:self.usersSeparator tableRedraw:NO];
+                [self.usersSeparator setItemCount:(int)params.users.count];
+                isOneSearchResult = NO;
+            }
+            
+            if(params.users.count > insertCount) {
+                for(int i = 0; i < insertCount; i++)
+                    [self.tableView addItem:[params.users objectAtIndex:i] tableRedraw:NO];
+                
+                self.usersLoadMoreItem.num = (int)params.users.count - insertCount;
+                [self.tableView addItem:self.usersLoadMoreItem tableRedraw:NO];
+            } else {
+                [self.tableView insert:params.users startIndex:[self.tableView count] tableRedraw:NO];
+            }
+            
+            isNeedSeparator = YES;
+        }
+        
+        if(params.globalUsers.count > 0) {
+            if(isNeedSeparator) {
+                [self.tableView addItem:self.globalUsersSeparator tableRedraw:NO];
+                isOneSearchResult = NO;
+            }
+            
+            if(params.globalUsers.count > insertCount) {
+                [self.tableView insert:[params.globalUsers subarrayWithRange:NSMakeRange(0, insertCount-1)] startIndex:[self.tableView count] tableRedraw:NO];
+                
+                self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
+                [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
+            } else {
+                [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
+            }
+            
+            isNeedSeparator = YES;
+            
+            
+        }
+        
+        
+        //MessagesLoader
+        if(isNeedSeparator && params.isNeedRemoteLoad) {
+            [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
+            [self.messagesSeparator setItemCount:-1];
+            isOneSearchResult = NO;
+        }
+        if(params.isNeedRemoteLoad)
+            [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+        
+        
+        if(params.isNeedGlobalUsersLoad && !params.isRemoteGlobalUsersLoaded)
+            [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+        
+        [self.tableView reloadData];
+        
+        if(isOneSearchResult) {
+            [self showMore:SearchSectionContacts animation:NO];
+            [self showMore:SearchSectionDialogs animation:NO];
+            [self showMore:SearchSectionUsers animation:NO];
+            [self showMore:SearchSectionGlobalUsers animation:NO];
+        }
+        
+        
+        if(params.isRemoteLoaded) {
+            [self showMessagesResults:params];
         } else {
-            [self.tableView insert:params.dialogs startIndex:[self.tableView count] tableRedraw:NO];
+            [self.tableView.containerView setHidden:self.tableView.count == 0];
         }
 
-        isNeedSeparator = YES;
-    }
-    
-    if(params.contacts.count) {
-        if(isNeedSeparator) {
-            [self.tableView addItem:self.contactsSeparator tableRedraw:NO];
-            [self.contactsSeparator setItemCount:(int)params.contacts.count];
-            isOneSearchResult = NO;
-        }
-        
-        if(params.contacts.count > insertCount) {
-            for(int i = 0; i < insertCount; i++)
-                [self.tableView addItem:[params.contacts objectAtIndex:i] tableRedraw:NO];
-            
-            self.contactsLoadMoreItem.num = (int)params.contacts.count - insertCount;
-            [self.tableView addItem:self.contactsLoadMoreItem tableRedraw:NO];
-        } else {
-            [self.tableView insert:params.contacts startIndex:[self.tableView count] tableRedraw:NO];
-        }
-        
-        isNeedSeparator = YES;
-    }
-    
-    if(params.users.count) {
-        if(isNeedSeparator) {
-            [self.tableView addItem:self.usersSeparator tableRedraw:NO];
-            [self.usersSeparator setItemCount:(int)params.users.count];
-            isOneSearchResult = NO;
-        }
-        
-        if(params.users.count > insertCount) {
-            for(int i = 0; i < insertCount; i++)
-                [self.tableView addItem:[params.users objectAtIndex:i] tableRedraw:NO];
-            
-            self.usersLoadMoreItem.num = (int)params.users.count - insertCount;
-            [self.tableView addItem:self.usersLoadMoreItem tableRedraw:NO];
-        } else {
-            [self.tableView insert:params.users startIndex:[self.tableView count] tableRedraw:NO];
-        }
-        
-        isNeedSeparator = YES;
-    }
-    
-    if(params.globalUsers.count > 0) {
-        if(isNeedSeparator) {
-            [self.tableView addItem:self.globalUsersSeparator tableRedraw:NO];
-            isOneSearchResult = NO;
-        }
-        
-        if(params.globalUsers.count > insertCount) {
-            for(int i = 0; i < insertCount; i++)
-                [self.tableView addItem:[params.globalUsers objectAtIndex:i] tableRedraw:NO];
-            
-            self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
-            [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
-        } else {
-            [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
-        }
-        
-        isNeedSeparator = YES;
-        
-        
-    }
-    
-    
-    //MessagesLoader
-    if(isNeedSeparator && params.isNeedRemoteLoad) {
-        [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
-        [self.messagesSeparator setItemCount:-1];
-        isOneSearchResult = NO;
-    }
-    if(params.isNeedRemoteLoad)
-        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
-    
-    
-    if(params.isNeedGlobalUsersLoad && !params.isRemoteGlobalUsersLoaded)
-        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
-    
-    [self.tableView reloadData];
-    
-    if(isOneSearchResult) {
-        [self showMore:SearchSectionContacts animation:NO];
-        [self showMore:SearchSectionDialogs animation:NO];
-        [self showMore:SearchSectionUsers animation:NO];
-    }
-    
-    
-    if(params.isRemoteLoaded) {
-        [self showMessagesResults:params];
-    } else {
-        [self.tableView.containerView setHidden:self.tableView.count == 0];
-    }
     
     
     DLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
@@ -608,7 +612,7 @@ static int insertCount = 3;
     self.searchParams = searchParams;
     
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after_seconds(duration, ^{
         
         if(self.searchParams != searchParams) {
             return;
@@ -692,24 +696,8 @@ static int insertCount = 3;
                             [searchParams.dialogs addObject:[[DialogTableItem alloc] initWithDialogItem:dialog selectString:searchParams.searchString]];
                         }
                         
-                        searchParams.users = [NSMutableArray array];
-                        searchParams.contacts = [NSMutableArray array];
-                        
-                        if((self.type & SearchTypeContacts) == SearchTypeContacts) {
-                            for(TGUser *user in searchUsers) {
-                                if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
-                                    id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
-                                    [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
-                                }
-                            }
-                        }
-                        
-                        
-                        
-                        
                         
                         [[ASQueue mainQueue] dispatchOnQueue:^{
-                           // searchParams.isStorageLoaded = YES;
                             
                             [self showSearchResults:searchParams];
                         }];
@@ -731,6 +719,7 @@ static int insertCount = 3;
                     id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                     
                     [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
+                    assert(dispatch_get_current_queue() == [ASQueue globalQueue].nativeQueue);
                 }
                 
             }
@@ -844,37 +833,45 @@ static int insertCount = 3;
     
     [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
         
-        if(self.searchParams != params)
-            return;
+        [ASQueue dispatchOnStageQueue:^{
+            if(self.searchParams != params)
+                return;
+            
+            [[MessagesManager sharedManager] add:messages];
+            
+            
+            self.searchParams.isLoading = NO;
+            
+            params.local_offset += (int) count;
+            
+            
+            params.messages_offset+= (int)count;
+            
+            params.messages_count+=(int)count;
+            
+            
+            if(!params.messages)
+                params.messages = [NSMutableArray array];
+            
+            for(TL_localMessage *message in messages)
+                [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
+            
+            if(params.messages.count > 0) {
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                     [self showMessagesResults:params];
+                }];
+            }
+            
+            
+            
+            if(count < 50) {
+                params.isStorageLoaded = YES;
+                params.messages_count = 0;
+                [self remoteSearch:params];
+            }
+
+        }];
         
-        [[MessagesManager sharedManager] add:messages];
-        
-        
-         self.searchParams.isLoading = NO;
-        
-        params.local_offset += (int) count;
-        
-        
-        params.messages_offset+= (int)count;
-        
-        params.messages_count+=(int)count;
-        
-        
-        if(!params.messages)
-            params.messages = [NSMutableArray array];
-        
-        for(TL_localMessage *message in messages)
-            [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
-        
-        if(params.messages.count > 0)
-            [self showMessagesResults:params];
-        
-        
-        if(count < 50) {
-            params.isStorageLoaded = YES;
-            params.messages_count = 0;
-            [self remoteSearch:params];
-        }
         
     }];
     
