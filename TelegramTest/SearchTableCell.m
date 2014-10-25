@@ -82,8 +82,12 @@
 
 - (void) checkSelected:(BOOL)isSelected {
     [self.titleTextField setSelected:isSelected];
+    
+   
+    
     [self.statusTextField setSelected:isSelected];
     [[self rowItem].date setSelected:isSelected];
+       
 }
 
 - (void)redrawRow {

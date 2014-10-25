@@ -41,7 +41,10 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *globalUsers;
 
 @property (nonatomic) int messages_offset;
+
 @property (nonatomic) int messages_count;
+
+@property (nonatomic,assign) int messages_inserted;
 
 @property (nonatomic) int local_offset;
 @property (nonatomic) int remote_offset;
@@ -295,6 +298,10 @@ typedef enum {
         
         int msg_id = [searchItem respondsToSelector:@selector(message)] ? searchItem.message.n_id : 0;
         
+        if([item isKindOfClass:[SearchMessageTableItem class]]) {
+            msg_id = [[(SearchMessageTableItem *)searchItem lastMessage] n_id];
+        }
+        
         if(dialog){
             BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
             if(!success) {
@@ -366,117 +373,127 @@ static int insertCount = 3;
     
     assert([NSThread isMainThread]);
     
+    [self.tableView removeAllItems:NO];
     
-        [self.tableView removeAllItems:NO];
+    BOOL isNeedSeparator = NO;
+    BOOL isOneSearchResult = YES;
+    
+    if(params.dialogs.count) {
         
-        BOOL isNeedSeparator = NO;
-        BOOL isOneSearchResult = YES;
-        
-        if(params.dialogs.count) {
+        if(params.dialogs.count > insertCount) {
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.dialogs objectAtIndex:i] tableRedraw:NO];
             
-            if(params.dialogs.count > insertCount) {
-                for(int i = 0; i < insertCount; i++)
-                    [self.tableView addItem:[params.dialogs objectAtIndex:i] tableRedraw:NO];
-                
-                self.dialogsLoadMoreItem.num = (int)params.dialogs.count - insertCount;
-                [self.tableView addItem:self.dialogsLoadMoreItem tableRedraw:NO];
-            } else {
-                [self.tableView insert:params.dialogs startIndex:[self.tableView count] tableRedraw:NO];
-            }
-            
-            isNeedSeparator = YES;
+            self.dialogsLoadMoreItem.num = (int)params.dialogs.count - insertCount;
+            [self.tableView addItem:self.dialogsLoadMoreItem tableRedraw:NO];
+        } else {
+            [self.tableView insert:params.dialogs startIndex:[self.tableView count] tableRedraw:NO];
         }
         
-        if(params.contacts.count) {
-            if(isNeedSeparator) {
-                [self.tableView addItem:self.contactsSeparator tableRedraw:NO];
-                [self.contactsSeparator setItemCount:(int)params.contacts.count];
-                isOneSearchResult = NO;
-            }
-            
-            if(params.contacts.count > insertCount) {
-                for(int i = 0; i < insertCount; i++)
-                    [self.tableView addItem:[params.contacts objectAtIndex:i] tableRedraw:NO];
-                
-                self.contactsLoadMoreItem.num = (int)params.contacts.count - insertCount;
-                [self.tableView addItem:self.contactsLoadMoreItem tableRedraw:NO];
-            } else {
-                [self.tableView insert:params.contacts startIndex:[self.tableView count] tableRedraw:NO];
-            }
-            
-            isNeedSeparator = YES;
-        }
-        
-        if(params.users.count) {
-            if(isNeedSeparator) {
-                [self.tableView addItem:self.usersSeparator tableRedraw:NO];
-                [self.usersSeparator setItemCount:(int)params.users.count];
-                isOneSearchResult = NO;
-            }
-            
-            if(params.users.count > insertCount) {
-                for(int i = 0; i < insertCount; i++)
-                    [self.tableView addItem:[params.users objectAtIndex:i] tableRedraw:NO];
-                
-                self.usersLoadMoreItem.num = (int)params.users.count - insertCount;
-                [self.tableView addItem:self.usersLoadMoreItem tableRedraw:NO];
-            } else {
-                [self.tableView insert:params.users startIndex:[self.tableView count] tableRedraw:NO];
-            }
-            
-            isNeedSeparator = YES;
-        }
-        
-        if(params.globalUsers.count > 0) {
-            if(isNeedSeparator) {
-                [self.tableView addItem:self.globalUsersSeparator tableRedraw:NO];
-                isOneSearchResult = NO;
-            }
-            
-            if(params.globalUsers.count > insertCount) {
-                [self.tableView insert:[params.globalUsers subarrayWithRange:NSMakeRange(0, insertCount-1)] startIndex:[self.tableView count] tableRedraw:NO];
-                
-                self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
-                [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
-            } else {
-                [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
-            }
-            
-            isNeedSeparator = YES;
-            
-            
-        }
-        
-        
-        //MessagesLoader
-        if(isNeedSeparator && params.isNeedRemoteLoad) {
-            [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
-            [self.messagesSeparator setItemCount:-1];
+        isNeedSeparator = YES;
+    }
+    
+    if(params.contacts.count) {
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.contactsSeparator tableRedraw:NO];
+            [self.contactsSeparator setItemCount:(int)params.contacts.count];
             isOneSearchResult = NO;
         }
-        if(params.isNeedRemoteLoad)
-            [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
         
-        
-        if(params.isNeedGlobalUsersLoad && !params.isRemoteGlobalUsersLoaded)
-            [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
-        
-        [self.tableView reloadData];
-        
-        if(isOneSearchResult) {
-            [self showMore:SearchSectionContacts animation:NO];
-            [self showMore:SearchSectionDialogs animation:NO];
-            [self showMore:SearchSectionUsers animation:NO];
-            [self showMore:SearchSectionGlobalUsers animation:NO];
-        }
-        
-        
-        if(params.isRemoteLoaded) {
-            [self showMessagesResults:params];
+        if(params.contacts.count > insertCount) {
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.contacts objectAtIndex:i] tableRedraw:NO];
+            
+            self.contactsLoadMoreItem.num = (int)params.contacts.count - insertCount;
+            [self.tableView addItem:self.contactsLoadMoreItem tableRedraw:NO];
         } else {
-            [self.tableView.containerView setHidden:self.tableView.count == 0];
+            [self.tableView insert:params.contacts startIndex:[self.tableView count] tableRedraw:NO];
         }
+        
+        isNeedSeparator = YES;
+    }
+    
+    if(params.users.count) {
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.usersSeparator tableRedraw:NO];
+            [self.usersSeparator setItemCount:(int)params.users.count];
+            isOneSearchResult = NO;
+        }
+        
+        if(params.users.count > insertCount) {
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.users objectAtIndex:i] tableRedraw:NO];
+            
+            self.usersLoadMoreItem.num = (int)params.users.count - insertCount;
+            [self.tableView addItem:self.usersLoadMoreItem tableRedraw:NO];
+        } else {
+            [self.tableView insert:params.users startIndex:[self.tableView count] tableRedraw:NO];
+        }
+        
+        isNeedSeparator = YES;
+    }
+    
+    if(params.globalUsers.count > 0) {
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.globalUsersSeparator tableRedraw:NO];
+            isOneSearchResult = NO;
+        }
+        
+        if(params.globalUsers.count > insertCount) {
+            [self.tableView insert:[params.globalUsers subarrayWithRange:NSMakeRange(0, insertCount-1)] startIndex:[self.tableView count] tableRedraw:NO];
+            
+            self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
+            [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
+        } else {
+            [self.tableView insert:params.globalUsers startIndex:[self.tableView count] tableRedraw:NO];
+        }
+        
+        isNeedSeparator = YES;
+    }
+    
+    if(params.messages.count > 0) {
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
+            isOneSearchResult = NO;
+        }
+        
+        [self.tableView insert:params.messages startIndex:[self.tableView count] tableRedraw:NO];
+        
+        isNeedSeparator = NO;
+  
+    }
+    
+    
+    //MessagesLoader
+    if(isNeedSeparator && params.isNeedRemoteLoad) {
+        [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
+        [self.messagesSeparator setItemCount:-1];
+        isOneSearchResult = NO;
+    }
+    if(params.isNeedRemoteLoad)
+        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+    
+    
+    if(params.isNeedGlobalUsersLoad && !params.isRemoteGlobalUsersLoaded)
+        [self.tableView addItem:self.messagesLoaderItem tableRedraw:NO];
+    
+    [self.tableView reloadData];
+    
+    if(isOneSearchResult) {
+        [self showMore:SearchSectionContacts animation:NO];
+        [self showMore:SearchSectionDialogs animation:NO];
+        [self showMore:SearchSectionUsers animation:NO];
+        [self showMore:SearchSectionGlobalUsers animation:NO];
+    }
+    
+    
+    if(params.isRemoteLoaded) {
+        [self showMessagesResults:params];
+    } else {
+        [self.tableView.containerView setHidden:self.tableView.count == 0];
+    }
 
+    
     
     
     DLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
@@ -576,11 +593,15 @@ static int insertCount = 3;
         }
     }
     
-    int start = MAX(0, params.messages_offset - 50);
-    NSRange range = NSMakeRange(start, params.messages_offset - start);
+   // int start = MAX(0, params.messages_offset - 50);
+    NSRange range = NSMakeRange(params.messages_inserted, params.messages_offset - params.messages_inserted);
+    
+    params.messages_inserted+=range.length;
+    
+    
     NSArray *insertMessagesArray = [params.messages subarrayWithRange:range];
     
-    [self.tableView setDefaultAnimation:params.messages_offset <= 50 ? NSTableViewAnimationEffectNone : NSTableViewAnimationSlideUp];
+   // [self.tableView setDefaultAnimation:NSTableViewAnimationEffectNone];
     [self.tableView insert:insertMessagesArray startIndex:self.tableView.count tableRedraw:YES];
     
     
@@ -704,9 +725,6 @@ static int insertCount = 3;
                         
                     }];
                 }];
-            } else {
-                
-                
             }
             
             

@@ -115,6 +115,12 @@ static NSColor *stateColor[5];
             
             [self hideAfter:1.0 withState:ConnectingStatusTypeConnected];
         }
+        
+        
+        if(self.state != ConnectingStatusTypeConnected || self.state != ConnectingStatusTypeNormal)
+            dispatch_after_seconds(10, ^{
+                [self setState:self.state];
+            });
     
         
     }];

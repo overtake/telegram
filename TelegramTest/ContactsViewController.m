@@ -292,7 +292,7 @@
 -(void)contactsLoaded:(NSNotification *)notify {
     
     
-    NSArray *all = [[NewContactsManager sharedManager] all];
+    NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
     all = [all sortedArrayUsingComparator:^NSComparisonResult(TL_contact* obj1, TL_contact* obj2) {
         int first = obj1.user.lastSeenTime;

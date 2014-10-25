@@ -82,4 +82,8 @@
     return self;
 }
 
+-(NSUInteger)hash {
+    return[[NSString stringWithFormat:@"search_message_%d",self.lastMessage.n_id] hash];
+}
+
 @end

@@ -323,6 +323,8 @@
 		C248F3E319BE08A800BF658E /* flac.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3DF19BE08A800BF658E /* flac.c */; };
 		C248F3E419BE08A800BF658E /* lpc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3E119BE08A800BF658E /* lpc.c */; };
 		C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */; };
+		C24F876C19FB961800EC962E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C24F877119FB961C00EC962E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; };
 		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
@@ -341,10 +343,6 @@
 		C256E91718D22622008FFA04 /* DownloadDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91618D22622008FFA04 /* DownloadDocumentItem.m */; };
 		C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */; };
 		C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */; };
-		C25D938219D952D700BAB6C2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C25D938319D952E100BAB6C2 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C25D938419D9531000BAB6C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C25D938519D9531300BAB6C2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
@@ -403,6 +401,8 @@
 		C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
+		C2795DE919FB95D600B8732E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2795DEA19FB95DF00B8732E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
 		C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C1771917D9C2007B160F /* DraggingControllerView.m */; };
 		C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17A1917D9D9007B160F /* DraggingItemView.m */; };
@@ -635,9 +635,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C2795DEA19FB95DF00B8732E /* Sparkle.framework in Copy Files (6 items) */,
+				C2795DE919FB95D600B8732E /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C25D938219D952D700BAB6C2 /* HockeySDK.framework in Copy Files (6 items) */,
-				C25D938319D952E100BAB6C2 /* Sparkle.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1901,8 +1901,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C25D938419D9531000BAB6C2 /* Sparkle.framework in Frameworks */,
-				C25D938519D9531300BAB6C2 /* HockeySDK.framework in Frameworks */,
+				C24F876C19FB961800EC962E /* HockeySDK.framework in Frameworks */,
+				C24F877119FB961C00EC962E /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

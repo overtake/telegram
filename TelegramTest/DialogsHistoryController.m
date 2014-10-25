@@ -62,7 +62,7 @@
             [[DialogsManager sharedManager] add:filtred];
             [[MessagesManager sharedManager] add:m];
             
-            if(d.count < limit) {
+            if(filtred.count < limit) {
                 self.state = DialogsHistoryStateNeedRemote;
                 
             }

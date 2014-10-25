@@ -3,10 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
+         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.searchViewController.type">
+               value = "currentY">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -113,6 +113,9 @@
                value = "self.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController selectionDidChange:item:]:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
@@ -325,16 +328,13 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "item.downloadItem.downloadState">
+               value = "self.type">
             </PersistentString>
             <PersistentString
-               value = "item.downloadItem.downloadState != DownloadStateWaitingStart &amp;&amp; item.downloadItem.downloadState != DownloadStateCompleted">
-            </PersistentString>
-            <PersistentString
-               value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
+               value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -377,18 +377,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
-      </ContextState>
-      <ContextState
-         contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
+         contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type">
+               value = "item.downloadItem.downloadState">
             </PersistentString>
             <PersistentString
-               value = "self.type &amp; SearchTypeGlobalUsers">
+               value = "item.downloadItem.downloadState != DownloadStateWaitingStart &amp;&amp; item.downloadItem.downloadState != DownloadStateCompleted">
+            </PersistentString>
+            <PersistentString
+               value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">
@@ -644,6 +647,14 @@
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
       </ContextState>
       <ContextState
+         contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -701,6 +712,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -715,6 +729,9 @@
                value = "self.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController remoteSearch:]:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
@@ -815,10 +832,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
+         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
          <PersistentStrings>
             <PersistentString
-               value = "currentY">
+               value = "self.searchViewController.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

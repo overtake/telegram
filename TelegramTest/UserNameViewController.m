@@ -135,7 +135,11 @@
         return;
     }
     
-    [self.controller.doneButton setDisable:(self.textView.textView.stringValue.length < 5 && self.textView.textView.stringValue.length != 0) || (!self.isRemoteChecked || !self.isSuccessChecked)];
+    [self.controller.doneButton setDisable:(self.textView.textView.stringValue.length < 5) || (!self.isRemoteChecked || !self.isSuccessChecked)];
+    
+    if(self.textView.textView.stringValue.length == 0) {
+        [self.controller.doneButton setDisable:NO];
+    }
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {
@@ -247,6 +251,7 @@
         
     } else {
         [self setState:nil color:nil];
+        [self updateSaveButton];
     }
     
     self.lastUserName = self.textView.textView.stringValue;
@@ -297,21 +302,21 @@
     
     self.centerNavigationBarView = (TMView *) centerTextField;
     
-    weak();
+    weakify();
     self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Username.setName", nil)];
     [self.doneButton setTapBlock:^{
         
         
-        [weakSelf showModalProgress];
-        [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)weakSelf.view).checkedUserName completeHandler:^(TGUser *user) {
+        [strongSelf showModalProgress];
+        [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TGUser *user) {
             
-            [weakSelf hideModalProgress];
+            [strongSelf hideModalProgress];
             
             
-            [((UserNameViewContainer *)weakSelf.view) controlTextDidChange:nil];
+            [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
         } errorHandler:^(NSString *error) {
             alert(error, error);
-            [weakSelf hideModalProgress];
+            [strongSelf hideModalProgress];
         }];
     }];
     
