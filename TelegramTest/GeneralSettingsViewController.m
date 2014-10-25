@@ -61,7 +61,7 @@
     
     GeneralSettingsRowItem *autoPhotoDownloadGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
-        [SettingsArchiver addOrRemoveSetting:AutoGroupPhoto];
+        [SettingsArchiver addOrRemoveSetting:AutoGroupVideo];
         
     } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupVideo]);
@@ -75,7 +75,7 @@
         [SettingsArchiver addOrRemoveSetting:AutoPrivateVideo];
         
     } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoPrivatePhoto]);
+        return @([SettingsArchiver checkMaskedSetting:AutoPrivateVideo]);
     }];
     
     [self.tableView insert:autoPhotoDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];

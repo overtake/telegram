@@ -164,7 +164,7 @@ static NSDictionary *attributes() {
                 
                 
                 [DIALOG_BORDER_COLOR setFill];
-                NSRectFill(NSMakeRect(NSMinX(weakSelf.titleTextField.frame), 0, NSWidth(weakSelf.frame) - NSMinX(weakSelf.titleTextField.frame), 1));
+                NSRectFill(NSMakeRect(NSMinX(weakSelf.titleTextField.frame) +2, 0, NSWidth(weakSelf.frame) - NSMinX(weakSelf.titleTextField.frame), 1));
                 
             } else {
                 color = BLUE_COLOR_SELECT;
