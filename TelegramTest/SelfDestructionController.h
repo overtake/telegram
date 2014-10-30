@@ -10,9 +10,12 @@
 
 @interface SelfDestructionController : NSObject
 
-+(int)lastTTL:(TL_encryptedChat *)chat;
 
-+(void)addMessage:(TL_destructMessage *)message;
+
++(void)addMessage:(TL_destructMessage *)message force:(BOOL)force;
+
+
 +(void)addMessages:(NSArray *)messages;
-+(void)addDestructor:(Destructor *)destructor;
+
+
 @end

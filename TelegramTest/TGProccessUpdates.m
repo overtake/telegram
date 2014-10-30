@@ -17,11 +17,13 @@
 #import "SecretChatAccepter.h"
 #import "MessagesUtils.h"
 #import "TGDateUtils.h"
+#import "TGModernEncryptedUpdates.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
 @property (nonatomic,strong) TGTimer *sequenceTimer;
 @property (nonatomic,assign) BOOL holdUpdates;
+@property (nonatomic,strong) TGModernEncryptedUpdates *encryptedUpdates;
 @end
 
 @implementation TGProccessUpdates
@@ -40,6 +42,8 @@ static NSString *kUpdateState = @"kUpdateState";
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
+        
+        _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
     }
     return self;
 }
@@ -502,12 +506,10 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
-        TL_encryptedChat *chat = [[ChatsManager sharedManager] find:[[update encrypted_message] chat_id]];
-        if(chat) {
-            TL_encryptedMessage *message = (TL_encryptedMessage *) [update encrypted_message];
-            TGMessage *msg = [MessagesManager defaultMessage:message];
-            [MessagesManager addAndUpdateMessage:msg];
-        }
+        
+        [_encryptedUpdates proccessUpdate:[update encrypted_message]];
+        
+
        
         return;
     }

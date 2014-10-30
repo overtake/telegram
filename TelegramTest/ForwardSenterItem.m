@@ -26,9 +26,9 @@
 }
 
 
--(id)initWithMessages:(NSArray *)msgs dialog:(TL_conversation *)dialog {
+-(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
-        self.dialog = dialog;
+        self.conversation = conversation;
         
         NSMutableArray *ids = [[NSMutableArray alloc] init];
         NSMutableArray *fakes = [[NSMutableArray alloc] init];
@@ -46,7 +46,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessageForwarded *fake = [TL_localMessageForwarded createWithN_id:0 flags:TGOUTUNREADMESSAGE fwd_from_id:f.fwd_from_id ? f.fwd_from_id : f.from_id fwd_date:f.fwd_date ? f.fwd_date : f.date from_id:UsersManager.currentUserId to_id:dialog.peer date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random fwd_n_id:[f n_id] state:DeliveryStatePending];
+            TL_localMessageForwarded *fake = [TL_localMessageForwarded createWithN_id:0 flags:TGOUTUNREADMESSAGE fwd_from_id:f.fwd_from_id ? f.fwd_from_id : f.from_id fwd_date:f.fwd_date ? f.fwd_date : f.date from_id:UsersManager.currentUserId to_id:conversation.peer date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random fwd_n_id:[f n_id] state:DeliveryStatePending];
             
             [fake save:i == copy.count-1];
             
@@ -80,7 +80,7 @@
         return;
     }
     
-    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.dialog.inputPeer n_id:[self.msg_ids mutableCopy]];
+    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.conversation.inputPeer n_id:[self.msg_ids mutableCopy]];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessages *response) {
         

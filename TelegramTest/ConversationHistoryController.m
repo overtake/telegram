@@ -137,8 +137,8 @@
     
     if(message.peer_id == self.dialog.peer.peer_id) {
         
-        if(self.dialog.type == DialogTypeSecretChat)
-            [SelfDestructionController addMessage:message];
+      //  if(self.dialog.type == DialogTypeSecretChat)
+          //  [SelfDestructionController addMessage:message];
        
         [self.delegate receivedMessage:tableItem position:position itsSelf:NO];
         

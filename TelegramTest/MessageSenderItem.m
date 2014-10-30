@@ -17,14 +17,14 @@
 
 
 
--(id)initWithMessage:(NSString *)message forDialog:(TL_conversation *)dialog {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation{
     if(self = [super init]) {
         
         
         
-        self.dialog = dialog;
+        self.conversation = conversation;
         
-        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] dialog:dialog];
+        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] dialog:conversation];
         
         [self.message save:YES];
         
@@ -41,11 +41,11 @@
     
     id request;
     
-    if(self.dialog.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMessage createWithPeer:[self.dialog inputPeer] message:[self.message message] random_id:[self.message randomId]];
+    if(self.conversation.type != DialogTypeBroadcast) {
+        request = [TLAPI_messages_sendMessage createWithPeer:[self.conversation inputPeer] message:[self.message message] random_id:[self.message randomId]];
     } else {
         
-        TL_broadcast *broadcast = self.dialog.broadcast;
+        TL_broadcast *broadcast = self.conversation.broadcast;
         
         request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
@@ -53,7 +53,7 @@
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentMessage * response) {
         
         
-        if(self.dialog.type != DialogTypeBroadcast)  {
+        if(self.conversation.type != DialogTypeBroadcast)  {
             
             self.message.n_id = response.n_id;
             self.message.date = response.date;

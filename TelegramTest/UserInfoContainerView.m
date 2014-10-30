@@ -309,7 +309,7 @@
     
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
-    NSString *str = [MessagesUtils shortTTL:[SelfDestructionController lastTTL:self.controller.conversation.encryptedChat]];
+    NSString *str = [MessagesUtils shortTTL:[EncryptedParams findAndCreate:self.controller.conversation.peer.chat_id].ttl];
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     

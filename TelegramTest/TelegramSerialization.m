@@ -5,6 +5,7 @@
 #import "RpcError.h"
 #import "NSData+Extensions.h"
 #import "RpcErrorParser.h"
+
 @implementation TelegramSerialization
 
 - (NSData *)serializeMessage:(id)message
@@ -18,6 +19,7 @@
 
 - (id)parseMessage:(NSInputStream *)is responseParsingBlock:(int32_t (^)(int64_t, bool *))responseParsingBlock
 {
+    
     id obj = [[TLClassStore sharedManager] constructObject:is];
     if([obj isKindOfClass:[TL_gzip_packed class]]) {
         obj = [[TLClassStore sharedManager] deserialize:[[obj packed_data] gzipInflate]];

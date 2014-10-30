@@ -149,7 +149,7 @@
         [key_fingerprints getBytes:&keyId];
         
         
-        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:request.n_id encrypt_key:key_hash key_fingerprings:keyId a:b g_a:g_b dh_prime:dhPrime state:EncryptedRequested access_hash:request.access_hash];
+        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:request.n_id encrypt_key:key_hash key_fingerprings:keyId a:b g_a:g_b dh_prime:dhPrime state:EncryptedRequested access_hash:request.access_hash layer:MIN_ENCRYPTED_LAYER isAdmin:NO];
         
         [params save];
         

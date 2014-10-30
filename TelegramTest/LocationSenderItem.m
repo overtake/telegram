@@ -15,7 +15,7 @@
 {
     if(self = [super init]) {
         
-        self.dialog = conversation;
+        self.conversation = conversation;
         
         self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaGeo createWithGeo:[TL_geoPoint createWithN_long:coordinates.longitude lat:coordinates.latitude]] dialog:conversation];
         
@@ -29,7 +29,7 @@
 
 -(void)performRequest {
     
-    TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithPeer:[self.dialog inputPeer] media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId];
+    TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithPeer:[self.conversation inputPeer] media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage * response) {
         

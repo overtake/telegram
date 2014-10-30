@@ -41,13 +41,15 @@ typedef enum {
 @property (nonatomic,strong) TL_localMessage *message;
 
 
-@property (nonatomic,strong) TL_conversation *dialog;
+@property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) MessageTableItem *tableItem;
 
 @property (nonatomic, strong) NSString *filePath;
 
-- (id)initWithMessage:(NSString *)message forDialog:(TL_conversation *)dialog;
-- (id)initWithPath:(NSString *)filePath forDialog:(TL_conversation *)dialog;
+- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation;
+
+-(id)initWithConversation:(TL_conversation *)conversation;
 
 + (id)senderForMessage:(TL_localMessage *)msg;
 

@@ -1398,7 +1398,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         if([item.message isKindOfClass:[TL_destructMessage class]]) {
-            [random addObject:@(((TL_destructMessage *)item.message).randomId)];
+            [random addObject:@(item.message.randomId)];
         }
     }
     
@@ -1415,13 +1415,20 @@ static NSTextAttachment *headerMediaIcon() {
     };
     
     if(self.dialog.type == DialogTypeSecretChat) {
-        request = [MessageSender requestForDeleteEncryptedMessages:random dialog:self.dialog];
         
         if(!self.dialog.canSendMessage)
         {
             completeBlock();
             return;
         }
+        
+        
+        DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:self.dialog random_ids:random];
+        
+        [sender send];
+        
+        completeBlock();
+        
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
@@ -2098,7 +2105,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if([message isEqualToString:@"*!testmessages!#"] && [UsersManager currentUserId] == 438078) {
             for (int i =0; i < 10; i++) {
-                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forDialog:self.dialog];
+                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:self.dialog];
                 sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                 [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
             }
@@ -2129,7 +2136,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forDialog:self.dialog];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:self.dialog];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
         }
@@ -2141,7 +2148,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forDialog:self.dialog];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:self.dialog];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -2196,9 +2203,9 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         if(self.dialog.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forDialog:self.dialog];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:self.dialog];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forDialog:self.dialog];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:self.dialog];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
@@ -2224,9 +2231,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         SenderItem *sender;
         if(self.dialog.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forDialog:self.dialog];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:self.dialog];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forDialog:self.dialog];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:self.dialog];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2250,9 +2257,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         SenderItem *sender;
         if(self.dialog.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forDialog:self.dialog];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:self.dialog];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forDialog:self.dialog];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:self.dialog];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2268,14 +2275,14 @@ static NSTextAttachment *headerMediaIcon() {
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
-        ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:messages dialog:conversation];
+        ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:messages forConversation:conversation];
         sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
         [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
         
     }];
 }
 
-- (void)shareContact:(TGUser *)contact conversation:(TL_conversation *)conversation  callback:(dispatch_block_t)callback  {
+- (void)shareContact:(TGUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
     
     if(!self.dialog.canSendMessage) return;
     
@@ -2283,7 +2290,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact dialog:conversation];
+        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
@@ -2302,11 +2309,20 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
-    NSUInteger lastTTL = [SelfDestructionController lastTTL:self.dialog.encryptedChat];
+    NSUInteger lastTTL = [EncryptedParams findAndCreate:self.dialog.peer.peer_id].ttl;
     
-    if(lastTTL == -1 || lastTTL != ttl )
-        [MessageSender setTTL:ttl toConversation:self.dialog callback:callback];
-    else if(callback) callback();
+    if(lastTTL == -1 || lastTTL != ttl ) {
+        
+        [ASQueue dispatchOnStageQueue:^{
+            
+            SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:self.dialog ttl:ttl];
+            
+            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+            
+            [self.historyController addItem:sender.tableItem conversation:self.dialog callback:callback sentControllerCallback:nil];
+        }];
+        
+    } else if(callback) callback();
 }
 
 
@@ -2337,9 +2353,9 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.dialog.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithImage:image uploadType:UploadImageType forDialog:self.dialog];
+            sender = [[FileSecretSenderItem alloc] initWithImage:image uploadType:UploadImageType forConversation:self.dialog];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:image forDialog:self.dialog];
+            sender = [[ImageSenderItem alloc] initWithImage:image forConversation:self.dialog];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

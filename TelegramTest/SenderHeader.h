@@ -21,4 +21,7 @@
 #import "FileSecretSenderItem.h"
 #import "AudioSenderItem.h"
 #import "LocationSenderItem.h"
-
+#import "UpgradeLayerSenderItem.h"
+#import "SetTTLSenderItem.h"
+#import "DeleteRandomMessagesSenderItem.h"
+#import "FlushHistorySecretSenderItem.h"

@@ -24,10 +24,10 @@
     [super setState:state];
 }
 
-- (id)initWithImage:(NSImage *)image forDialog:(TL_conversation *)dialog {
+- (id)initWithImage:(NSImage *)image forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         
-        self.dialog = dialog;
+        self.conversation = conversation;
        
         
         image = prettysize(image);
@@ -75,7 +75,7 @@
         
         [[ImageCache sharedManager] setImage:image forLocation:size.location];
       
-        self.message = [MessageSender createOutMessage:@"" media:photo dialog:dialog];
+        self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         
         [compressImage([self.image TIFFRepresentation], 0.83) writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
@@ -111,10 +111,10 @@
         
         id request = nil;
         
-        if(strongSelf.dialog.type == DialogTypeBroadcast) {
-            request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.dialog.broadcast inputContacts] message:@"" media:media];
+        if(strongSelf.conversation.type == DialogTypeBroadcast) {
+            request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.dialog.inputPeer media:media random_id:rand_long()];
+            request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer media:media random_id:rand_long()];
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
@@ -126,7 +126,7 @@
             TGMessage *msg;
             
           
-            if(strongSelf.dialog.type != DialogTypeBroadcast)  {
+            if(strongSelf.conversation.type != DialogTypeBroadcast)  {
                 msg = [obj message];
                 strongSelf.message.n_id = [obj message].n_id;
                 strongSelf.message.date = [obj message].date;

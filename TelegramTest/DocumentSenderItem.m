@@ -31,12 +31,12 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)path forDialog:(TL_conversation *)dialog {
+- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation {
     
     if(self = [super init]) {
         self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
         self.filePath = path;
-        self.dialog = dialog;
+        self.conversation = conversation;
         
         self.thumbImage = previewImageForDocument(self.filePath);
         
@@ -58,7 +58,7 @@
         
         TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 user_id:UsersManager.currentUserId date:[[MTNetwork instance] getTime] file_name:[self.filePath lastPathComponent] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath]];
         
-        self.message = [MessageSender createOutMessage:@"" media:document dialog:dialog];
+        self.message = [MessageSender createOutMessage:@"" media:document dialog:conversation];
         
     }
     
@@ -141,10 +141,10 @@
     
     id request = nil;
     
-    if(self.dialog.type == DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.dialog.broadcast inputContacts] message:@"" media:media];
+    if(self.conversation.type == DialogTypeBroadcast) {
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.dialog.inputPeer media:media random_id:rand_long()];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer media:media random_id:rand_long()];
     }
     
     
@@ -157,7 +157,7 @@
         TGMessage *msg;
         
         
-        if(strongSelf.dialog.type != DialogTypeBroadcast)  {
+        if(strongSelf.conversation.type != DialogTypeBroadcast)  {
             msg = [obj message];
             strongSelf.message.n_id = [obj message].n_id;
             strongSelf.message.date = [obj message].date;

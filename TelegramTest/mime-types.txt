@@ -189,3 +189,4 @@ xof:x-world/x-vrml
 xpm:image/x-xpixmap
 xwd:image/x-xwindowdump
 z:application/x-compress
+xml:text/xml

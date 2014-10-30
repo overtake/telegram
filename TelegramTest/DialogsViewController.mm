@@ -18,7 +18,7 @@
 #import "DialogTableItem.h"
 #import "DialogTableItemView.h"
 #include "map"
-
+#import "TGSecretAction.h"
 #import "SearchSeparatorItem.h"
 #import "SearchSeparatorTableCell.h"
 #import "SearchItem.h"
@@ -118,6 +118,8 @@
         
             [[NewContactsManager sharedManager] fullReload];
             [[FullChatManager sharedManager] loadStored];
+            
+            [TGSecretAction dequeAllStorageActions];
            
             
             

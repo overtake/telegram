@@ -235,7 +235,7 @@
             objectReturn = [[MessageTableItemAudio alloc] initWithObject:object ];
             
         }
-    } else if([object isKindOfClass:[TL_localMessageService class]]) {
+    } else if([object isKindOfClass:[TL_localMessageService class]] || [object isKindOfClass:[TL_secretServiceMessage class]]) {
         objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:object ];
     }
     

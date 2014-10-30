@@ -7,7 +7,7 @@
 //
 
 #import "SecretChatAccepter.h"
-
+#import "UpgradeLayerSenderItem.h"
 @interface SecretChatAccepter ()
 @property (nonatomic,strong) NSMutableArray *ids;
 @end
@@ -58,7 +58,7 @@ static NSString *kChatIdsForAccept = @"kChatIdsForAccept";
             
             [RPCRequest sendRequest:[TLAPI_messages_acceptEncryption createWithPeer:[TL_inputEncryptedChat createWithChat_id:chat_id access_hash:params.access_hash] g_b:params.g_a key_fingerprint:params.key_fingerprints] successHandler:^(RPCRequest *request3, TL_encryptedChat * acceptResponse) {
                 
-                TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:acceptResponse.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:nil last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime]];
+                TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:acceptResponse.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime]];
                 
                 [[ChatsManager sharedManager] add:@[acceptResponse]];
                 [[DialogsManager sharedManager] insertDialog:dialog];
@@ -70,9 +70,13 @@ static NSString *kChatIdsForAccept = @"kChatIdsForAccept";
                 
                 [params save];
                 
-                 [Notification perform:DIALOG_TO_TOP data:@{KEY_DIALOG:dialog}];
+                [Notification perform:DIALOG_TO_TOP data:@{KEY_DIALOG:dialog}];
                 
                 [SecretChatAccepter removeChatId:chat_id];
+                
+                UpgradeLayerSenderItem *upgradeLayer = [[UpgradeLayerSenderItem alloc] initWithConversation:dialog];
+                
+                [upgradeLayer send];
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 [SecretChatAccepter removeChatId:chat_id];

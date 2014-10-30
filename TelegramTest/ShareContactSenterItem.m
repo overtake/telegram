@@ -18,12 +18,12 @@
 }
 
 
--(id)initWithContact:(TGUser *)contact dialog:(TL_conversation *)dialog {
+-(id)initWithContact:(TGUser *)contact forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
-        self.dialog = dialog;
+        self.conversation = conversation;
         TL_messageMediaContact *media = [TL_messageMediaContact createWithPhone_number:contact.phone  first_name:contact.first_name last_name:contact.last_name user_id:contact.n_id];
         
-        self.message = [MessageSender createOutMessage:@"" media:media dialog:dialog];
+        self.message = [MessageSender createOutMessage:@"" media:media dialog:conversation];
         
         [self.message save:YES];
 
@@ -39,15 +39,15 @@
     
     TGInputMedia *media = [TL_inputMediaContact createWithPhone_number:self.message.media.phone_number first_name:self.message.media.first_name last_name:self.message.media.last_name];
     
-    if(self.dialog.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.dialog.inputPeer media:media random_id:rand_long()];
+    if(self.conversation.type != DialogTypeBroadcast) {
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer media:media random_id:rand_long()];
     } else {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.dialog.broadcast inputContacts] message:self.message.message media:media];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:self.message.message media:media];
     }
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage * response) {
         
-        if(self.dialog.type != DialogTypeBroadcast)  {
+        if(self.conversation.type != DialogTypeBroadcast)  {
             self.message.n_id = response.message.n_id;
             self.message.date = response.message.date;
             

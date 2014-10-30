@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "TMCircularProgress.h"
 #import "ImageUtils.h"
+#import "SelfDestructionController.h"
 @interface MessageTableCellPhotoView()
 @end
 
@@ -32,6 +33,15 @@
             TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:object];
             if(item) {
                 [[TMMediaController controller] show:item];
+                
+                if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
+                    TL_destructMessage *msg = (TL_destructMessage *) weakSelf.item.message;
+                    
+                    if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
+                        [SelfDestructionController addMessage:msg force:YES];
+                    }
+                }
+                
             }
         }];
         

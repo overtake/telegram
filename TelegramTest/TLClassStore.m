@@ -390,6 +390,8 @@
         [self.classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:8]];
         [self.classes setObject:[TL_peerBroadcast class] forKey:[NSNumber numberWithInt:9]];
         [self.classes setObject:[TL_broadcast class] forKey:[NSNumber numberWithInt:10]];
+        [self.classes setObject:[TL_messageActionSetMessageTTL class] forKey:[NSNumber numberWithInt:11]];
+        [self.classes setObject:[TL_secretServiceMessage class] forKey:[NSNumber numberWithInt:12]];
         
         for(NSNumber* number in [self.classes allKeys]) {
             [self.constuctors setObject:number forKey:[self.classes objectForKey:number]];

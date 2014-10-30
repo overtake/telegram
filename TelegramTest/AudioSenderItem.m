@@ -20,17 +20,17 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)filePath forDialog:(TL_conversation *)dialog {
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         self.filePath = filePath;
-        self.dialog = dialog;
+        self.conversation = conversation;
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
 
         TL_messageMediaAudio *audio = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
         
         
-        self.message = [MessageSender createOutMessage:@"" media:audio dialog:dialog];
+        self.message = [MessageSender createOutMessage:@"" media:audio dialog:conversation];
     }
     return self;
 }
@@ -68,10 +68,10 @@
         
         id request = nil;
         
-        if(weakSelf.dialog.type == DialogTypeBroadcast) {
-            request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.dialog.broadcast inputContacts] message:@"" media:media];
+        if(weakSelf.conversation.type == DialogTypeBroadcast) {
+            request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithPeer:weakSelf.dialog.inputPeer media:media random_id:rand_long()];
+            request = [TLAPI_messages_sendMedia createWithPeer:weakSelf.conversation.inputPeer media:media random_id:rand_long()];
         }
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage *response) {
@@ -83,7 +83,7 @@
             TGMessage *msg;
             
             
-            if(weakSelf.dialog.type != DialogTypeBroadcast)  {
+            if(weakSelf.conversation.type != DialogTypeBroadcast)  {
                 msg = [response message];
                 weakSelf.message.n_id = [response message].n_id;
                 weakSelf.message.date = [response message].date;

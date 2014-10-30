@@ -15,6 +15,10 @@
 #import "Destructor.h"
 #import "ITaskRequest.h"
 #import "TGUpdateState.h"
+#import "TGSecretInAction.h"
+
+#import "TGSecretAction.h"
+
 @interface Storage : NSObject
 {
  //   FMDatabase *db;
@@ -147,13 +151,13 @@ extern NSString *const FILE_NAMES;
 //-(void)notifySettings:(void (^)(NSDictionary *))completeHandler;
 //-(void)addNotifySetting:(int)peer_id mute_until:(int)mute_until;
 
--(void)selfDestructorFor:(int)chat_id max_id:(int)max_id completeHandler:(void (^)(Destructor *destructor))completeHandler;
-
--(void)selfDestructors:(int)chat_id completeHandler:(void (^)(NSArray *destructors))completeHandler;
--(void)selfDestructors:(void (^)(NSArray *destructors))completeHandler;
-
--(void)insertDestructor:(Destructor *)destructor;
--(void)updateDestructTime:(int)time forMessages:(NSArray *)msgIds;
+//-(void)selfDestructorFor:(int)chat_id max_id:(int)max_id completeHandler:(void (^)(Destructor *destructor))completeHandler;
+//
+//-(void)selfDestructors:(int)chat_id completeHandler:(void (^)(NSArray *destructors))completeHandler;
+//-(void)selfDestructors:(void (^)(NSArray *destructors))completeHandler;
+//
+//-(void)insertDestructor:(Destructor *)destructor;
+//-(void)updateDestructTime:(int)time forMessages:(NSArray *)msgIds;
 
 -(void)insertBlockedUsers:(NSArray *)users;
 -(void)deleteBlockedUsers:(NSArray *)users;
@@ -172,5 +176,17 @@ extern NSString *const FILE_NAMES;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
 
 -(void)updateMessages:(NSArray *)messages;
+
+
+-(void)insertSecretAction:(TGSecretAction *)action;
+-(void)removeSecretAction:(TGSecretAction *)action;
+
+-(void)selectAllActions:(void (^)(NSArray *list))completeHandler;
+
+
+-(void)insertSecretInAction:(TGSecretInAction *)action;
+-(void)removeSecretInAction:(TGSecretInAction *)action;
+
+-(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
 
 @end

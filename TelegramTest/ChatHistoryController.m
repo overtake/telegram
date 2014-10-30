@@ -290,7 +290,7 @@ static NSMutableArray *filters;
             
             if(res.count == 1) {
                 
-                [SelfDestructionController addMessage:(TL_destructMessage *)message];
+                [SelfDestructionController addMessages:@[message]];
                 
                 if([self isFiltredAccepted:message.filterType]) {
                     [[ASQueue mainQueue] dispatchOnQueue:^{
@@ -370,7 +370,7 @@ static NSMutableArray *filters;
         dispatch_block_t fwd_block = ^ {
             ForwardSenterItem *sender = [[ForwardSenterItem alloc] init];
             MessageTableItem *msg = fwd[0];
-            sender.dialog = msg.message.dialog;
+            sender.conversation = msg.message.dialog;
             
             NSMutableArray *fakes = [[NSMutableArray alloc] init];
             NSMutableArray *ids = [[NSMutableArray alloc] init];
@@ -445,7 +445,7 @@ static NSMutableArray *filters;
     }];
     
     for (MessageTableItem *item in result) {
-        [SelfDestructionController addMessage:(TL_destructMessage *)item.message];
+        [SelfDestructionController addMessages:@[item.message]];
     }
 }
 
@@ -834,7 +834,7 @@ static NSMutableArray *filters;
             [item.messageSender addEventListener:self];
             
             NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
-            if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.dialog.peer.peer_id == _conversation.peer.peer_id) {
+            if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == _conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     [self.delegate receivedMessage:item position:0 itsSelf:YES];
                     
@@ -844,10 +844,10 @@ static NSMutableArray *filters;
                 }];
             }
             
-            item.messageSender.dialog.last_marked_message = item.message.n_id;
-            item.messageSender.dialog.last_marked_date = item.message.date+1;
+            item.messageSender.conversation.last_marked_message = item.message.n_id;
+            item.messageSender.conversation.last_marked_date = item.message.date+1;
             
-            [item.messageSender.dialog save];
+            [item.messageSender.conversation save];
             
             
             [LoopingUtils runOnMainQueueAsync:^{
@@ -874,7 +874,7 @@ static NSMutableArray *filters;
             MessageTableItem *item = [items lastObject];
             
             NSRange range = NSMakeRange(0, filtred.count);
-            if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.dialog.peer.peer_id == _conversation.peer.peer_id) {
+            if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == _conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     [self.delegate receivedMessageList:filtred inRange:range itsSelf:YES];
                     
@@ -922,8 +922,8 @@ static NSMutableArray *filters;
                 
                 if(_conversation.last_marked_message > TGMINFAKEID || _conversation.last_marked_message < checkItem.message.n_id) {
                     
-                    checkItem.messageSender.dialog.last_marked_message = checkItem.message.n_id;
-                    checkItem.messageSender.dialog.last_marked_date = checkItem.message.date;
+                    checkItem.messageSender.conversation.last_marked_message = checkItem.message.n_id;
+                    checkItem.messageSender.conversation.last_marked_date = checkItem.message.date;
                     
                     [_conversation save];
                     

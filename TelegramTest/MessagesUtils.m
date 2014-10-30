@@ -50,31 +50,31 @@
     if(ttl == 0) {
         return NSLocalizedString(@"SelfDestruction.DisableTimer", nil);
     }
-    
-    if(ttl <= 2) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime2s", nil)];
-    }
-    
-    if(ttl <= 5) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime5s", nil)];
-    }
-    
-    if(ttl <= 60) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1m", nil)];
-    }
-    
-    if(ttl <= 60*60) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1h", nil)];
-    }
-    
-    if(ttl <= 60*60*24) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1d", nil)];
-    }
-    
-    if(ttl <= 60*60*24*7) {
-        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1w", nil)];
-    }
-    
+//    
+//    if(ttl <= 2) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime2s", nil)];
+//    }
+//    
+//    if(ttl <= 5) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime5s", nil)];
+//    }
+//    
+//    if(ttl <= 60) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1m", nil)];
+//    }
+//    
+//    if(ttl <= 60*60) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1h", nil)];
+//    }
+//    
+//    if(ttl <= 60*60*24) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1d", nil)];
+//    }
+//    
+//    if(ttl <= 60*60*24*7) {
+//        return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetTimer", nil),NSLocalizedString(@"Notification.MessageLifetime1w", nil)];
+//    }
+//    
     return [NSString stringWithFormat:NSLocalizedString(@"SelfDestruction.SetRandomTimer", nil),ttl];
 }
 
@@ -126,7 +126,7 @@
         
         if(params.state == EncryptedDiscarted) {
             
-            [messageText appendString:NSLocalizedString(@"MessageAction.Secret.CancelledSecretChat",nil) withColor:NSColorFromRGB(0x9b9b9b)];
+            [messageText appendString:NSLocalizedString(@"MessageAction.Secret.CancelledSecretChat",nil) withColor:NSColorFromRGB(0x808080)];
             
             
             [messageText endEditing];
@@ -211,6 +211,8 @@
                 }
             } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
                 msgText = action.title;
+            } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
+                msgText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
             }
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
@@ -313,6 +315,8 @@
         }
     } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
         actionText = action.title;
+    } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
+        actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
     }
     
     static float size = 11.5;

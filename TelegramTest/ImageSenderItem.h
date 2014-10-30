@@ -10,6 +10,6 @@
 
 @interface ImageSenderItem : SenderItem
 
-- (id)initWithImage:(NSImage *)image forDialog:(TL_conversation *)dialog;
+- (id)initWithImage:(NSImage *)image forConversation:(TL_conversation *)conversation;
 
 @end

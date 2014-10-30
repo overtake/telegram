@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UploadOperation.h"
+#import "EncryptedParams.h"
 @interface MessageSender : NSObject
 
 +(RPCRequest *)sendStatedMessage:(id)request successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler;
@@ -27,5 +28,7 @@
 
 +(id)requestForDeleteEncryptedMessages:(NSMutableArray *)ids dialog:(TL_conversation *)dialog;
 +(id)requestForFlushEncryptedHistory:(TL_conversation *)dialog;
-+(NSData *)getEncrypted:(TL_conversation *)dialog messageData:(NSData *)messageData;
+
+
++(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData;
 @end

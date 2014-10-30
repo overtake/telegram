@@ -13,12 +13,12 @@
 #import "TGMessage+Extensions.h"
 #import "TGDialog+Extensions.h"
 #import "TGPeer+Extensions.h"
+#import "SenderHeader.h"
 @interface SelfDestructionController ()
 {
    
 }
 
-@property (nonatomic,strong) NSMutableDictionary *destructors;
 @property (nonatomic,strong) TGTimer *ticker;
 @property (nonatomic,strong) NSMutableArray *targets;
 @property (nonatomic,strong) NSMutableArray *keyWindowWaiting;
@@ -26,34 +26,20 @@
 @end
 
 @implementation SelfDestructionController
+
 @synthesize keyWindowWaiting = _keyWindowWaiting;
 -(id)init {
     if(self = [super init]) {
         _keyWindowWaiting = [[NSMutableArray alloc] init];
         _readWaiting = [[NSMutableArray alloc] init];
         self.targets = [[NSMutableArray alloc] init];
-        self.destructors = [[NSMutableDictionary alloc] init];
-        [[Storage manager] selfDestructors:^(NSArray *destructors) {
-            
-            [ASQueue dispatchOnStageQueue:^{
-                for (Destructor *destructor in destructors) {
-                    NSMutableArray *group = [self.destructors objectForKey:@(destructor.chat_id)];
-                    if(!group) {
-                        group = [[NSMutableArray alloc] init];
-                        [self.destructors setObject:group forKey:@(destructor.chat_id)];
-                    }
-                    [group addObject:destructor];
-                }
-
-            }];
-            
-        }];
+      
         self.ticker = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
-            [self updateDestructors];
+            [self loopAndCheckMessages];
         } queue:[ASQueue globalQueue].nativeQueue];
         
         [self.ticker start];
-        [Notification addObserver:self selector:@selector(destructSelfMessages:) name:MESSAGE_READ_EVENT];
+        [Notification addObserver:self selector:@selector(didReadMessages:) name:MESSAGE_READ_EVENT];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[[NSApp delegate] window]];
     }
     return self;
@@ -63,52 +49,64 @@
     if([[[NSApp delegate] window] isKeyWindow]) {
         [ASQueue dispatchOnStageQueue:^{
             for (TL_destructMessage *msg in _keyWindowWaiting) {
-                [self addMessage:msg];
+                [self addMessage:msg force:NO];
             }
             [_keyWindowWaiting removeAllObjects];
         }];
     }
 }
 
--(void)updateDestructors {
+
+-(void)loopAndCheckMessages {
     
-    [ASQueue dispatchOnStageQueue:^{
-        NSArray *copy = [self.targets copy];
-        NSMutableArray *todelete = [[NSMutableArray alloc] init];
-        for (TL_destructMessage *msg in copy) {
-            if(msg.destruction_time != 0 && msg.destruction_time < [[NSDate date] timeIntervalSince1970]) {
-                [self.targets removeObject:msg];
-                [todelete addObject:@(msg.n_id)];
+    NSArray *copy = [self.targets copy];
+    NSMutableArray *todelete = [[NSMutableArray alloc] init];
+    
+    
+    NSMutableDictionary *remoteDelete = [[NSMutableDictionary alloc] init];
+    
+    
+    for (TL_destructMessage *msg in copy) {
+        if(msg.destruction_time != 0 && msg.destruction_time < [[NSDate date] timeIntervalSince1970]) {
+            [self.targets removeObject:msg];
+            [todelete addObject:@(msg.n_id)];
+            
+            if(msg.params.layer > 1 && [msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                NSMutableArray *array = [remoteDelete objectForKey:@(msg.peer_id)];
+                
+                if(!array) {
+                     array = [[NSMutableArray alloc] init];
+                    [remoteDelete setObject:array forKey:@(msg.peer_id)];
+                }
+                
+                [array addObject:@(msg.randomId)];
             }
+            
         }
-        if(todelete.count) {
-            [[Storage manager] deleteMessages:todelete completeHandler:nil];
-            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:todelete}];
-        }
-    }];
+    }
+    if(todelete.count) {
+        [[Storage manager] deleteMessages:todelete completeHandler:nil];
+        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:todelete}];
+        
+        [remoteDelete enumerateKeysAndObjectsUsingBlock:^(NSNumber *chat_id, NSMutableArray *obj, BOOL *stop) {
+            
+            DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:[[DialogsManager sharedManager] find:[chat_id intValue]] random_ids:obj];
+            
+            [sender send];
+            
+        }];
+        
+        
+    }
 }
 
--(void)addDestructor:(Destructor *)destructor {
-    
-    [ASQueue dispatchOnStageQueue:^{
-        NSMutableArray *current = [self.destructors objectForKey:@(destructor.chat_id)];
-        if(!current) {
-            current = [[NSMutableArray alloc] init];
-            [self.destructors setObject:current forKey:@(destructor.chat_id)];
-        }
-        [current insertObject:destructor atIndex:0];
-        [[Storage manager] insertDestructor:destructor];
-
-    }];
-    
-}
 
 -(void)dealloc {
     [Notification removeObserver:self];
 }
 
 
--(void)destructSelfMessages:(NSNotification *)notification {
+-(void)didReadMessages:(NSNotification *)notification {
     
     [ASQueue dispatchOnStageQueue:^{
         NSArray *ids = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
@@ -117,9 +115,12 @@
             int n_id = [msg_id intValue];
             if(n_id > TGMINSECRETID) {
                 TL_destructMessage *message = [(MessagesManager *)[MessagesManager sharedManager] find:n_id];
-                Destructor *destructor = [self destructor:message];
-                if(destructor.ttl > 0) {
-                    message.destruction_time = [[NSDate date] timeIntervalSince1970]+destructor.ttl;
+                
+                if(message.params.layer > 1 && [message.media isKindOfClass:[TL_messageMediaPhoto class]] && [message n_out])
+                    continue;
+                
+                if(message.ttl_seconds != 0) {
+                    message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
                     [tosave addObject:message];
                     [self.targets addObject:message];
                 }
@@ -132,33 +133,15 @@
     
 }
 
--(Destructor *)destructor:(TGMessage *)message {
-    
-    
-    TL_conversation *dialog = message.dialog;
-    
-    NSArray *search = [[self.destructors objectForKey:@(dialog.peer.peer_id)] copy];
-    NSMutableArray *acceptDestructor = [[NSMutableArray alloc] init];
-    for(Destructor *destructor in search) {
-        if(message.n_id > destructor.max_id) {
-            [acceptDestructor addObject:destructor];
-            return destructor;
-        }
-    }
-    
-    
-    return nil;
-}
 
-
--(void)addMessage:(TL_destructMessage *)message {
+-(void)addMessage:(TL_destructMessage *)message force:(BOOL)force {
     
     [ASQueue dispatchOnStageQueue:^{
         if(![message isKindOfClass:[TL_destructMessage class]] ||
            (message.from_id == UsersManager.currentUserId && message.unread))
             return;
         
-        if(![[[NSApp delegate] window] isKeyWindow]) {
+        if(![[[NSApp delegate] window] isKeyWindow] && !force) {
             [_keyWindowWaiting addObject:message];
             return;
         }
@@ -168,11 +151,14 @@
             return;
         }
         
-        Destructor *destructor = [self destructor:message];
-        if(destructor.ttl > 0) {
-            message.destruction_time = [[NSDate date] timeIntervalSince1970]+destructor.ttl;
+        if(!force && message.params.layer > 1 && [message.media isKindOfClass:[TL_messageMediaPhoto class]])
+            return;
+        
+        
+        if(message.ttl_seconds != 0) {
+            message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
             [self.targets addObject:message];
-            [[Storage manager] insertMessage:message  completeHandler:nil];
+            [[Storage manager] updateMessages:@[message]];
         }
     }];
     
@@ -181,7 +167,7 @@
 }
 
 
-+(id)instance {
++(SelfDestructionController *)instance {
     static id instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -191,12 +177,8 @@
 }
 
 
-+(void)addDestructor:(Destructor *)destructor {
-    [[self instance] addDestructor:destructor];
-}
-
-+(void)addMessage:(TL_destructMessage *)message {
-    [[self instance] addMessage:message];
++(void)addMessage:(TL_destructMessage *)message force:(BOOL)force {
+    [[self instance] addMessage:message force:force];
 }
 
 +(void)addMessages:(NSArray *)messages {
@@ -204,21 +186,6 @@
 }
 
 
-+(int)lastTTL:(TL_encryptedChat *)chat {
-    
-    __block Destructor *destructor;
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        NSArray *group = [[[self instance] destructors] objectForKey:@(chat.n_id)];
-        
-        if(group.count > 0)
-            destructor = group[0];
-        
-    } synchronous:YES];
-    
-    return destructor ? destructor.ttl : -1;
-}
 
 +(void)initialize {
     [super initialize];
@@ -228,7 +195,7 @@
 
 -(void)addMessages:(NSArray *)messages {
     for (TL_destructMessage * msg in messages) {
-        [self addMessage:msg];
+        [self addMessage:msg force:NO];
     }
 }
 

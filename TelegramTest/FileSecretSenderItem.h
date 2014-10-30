@@ -10,8 +10,8 @@
 
 @interface FileSecretSenderItem : SecretSenderItem
 
-- (id)initWithImage:(NSImage *)image uploadType:(UploadType)uploadType forDialog:(TL_conversation *)dialog;
-- (id)initWithPath:(NSString *)filePath uploadType:(UploadType)uploadType forDialog:(TL_conversation *)dialog;
+- (id)initWithImage:(NSImage *)image uploadType:(UploadType)uploadType  forConversation:(TL_conversation *)conversation;
+- (id)initWithPath:(NSString *)filePath uploadType:(UploadType)uploadType  forConversation:(TL_conversation *)conversation;
 
 -(void)setUploaderType:(UploadType)type;
 

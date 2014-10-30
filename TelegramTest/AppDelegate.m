@@ -12,7 +12,7 @@
 #import "TGDialog+Extensions.h"
 //#import "AFnetworkActivityIndicatorManager.h"
 #import "SSKeychain.h"
-
+#import "TGSecretAction.h"
 #ifdef TGDEBUG
 
 #import <Sparkle/Sparkle.h>
@@ -222,36 +222,12 @@
     
 }
 
-- (void)initializeApplication {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSThread currentThread] setName:@"Real Main Thread"];
-    });
-}
 
 
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
 
-//    NSString *keeper = [[NSBundle mainBundle] pathForResource:@"TGKeeper" ofType:@""];
-//
-//    FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-//    
-//    daemonController.launchPath = keeper;
-//    
-//    [daemonController setDaemonStartedCallback:^(NSNumber *pid) {
-//        NSLog(@"started");
-//    }];
-//    
-//    [daemonController setDaemonStoppedCallback:^ {
-//        NSLog(@"stopped");
-//    }];
-//    
-//    [daemonController start];
-//    
-    
-    [self initializeApplication];
-    
-    
+
     [SharedManager sharedManager];
     
     [SecretChatAccepter instance];
@@ -269,21 +245,7 @@
         //[self initializeLoginWindow];
         [self logoutWithForce:NO];
     }
-    
-    
-    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    //        NSImageView *imageView = [[NSImageView alloc] init];
-    //        imageView.frame = NSMakeRect(0, 0, image.size.width, image.size.height);
-    //        imageView.alphaValue = 0.5;
-    //        imageView.image = image;
-    //
-    //        imageView.wantsLayer = YES;
-    //        NSWindow *window = self.mainWindow;
-    //        [window setFrame:NSMakeRect(0, 0, image.size.width, image.size.height) display:YES];
-    //        [window.contentView addSubview:imageView];
-    //    });
-    
-    
+
 }
 
 

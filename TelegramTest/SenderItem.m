@@ -19,23 +19,31 @@
 
 
 
-- (id)initWithTempPath:(NSData *)temp_path_to_file path_to_file:(NSString *)path_to_file forDialog:(TL_conversation *)dialog {    if(self = [super init]) {
+- (id)initWithTempPath:(NSData *)temp_path_to_file path_to_file:(NSString *)path_to_file forConversation:(TL_conversation *)conversation {    if(self = [super init]) {
         [NSException raise:@"Fatal error" format:@"Can't use (%@) this class for send message with data",NSStringFromClass([self class])];
     }
     return self;
 }
 
-- (id)initWithPath:(NSString *)path_for_file forDialog:(TL_conversation *)dialog {
+- (id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         [NSException raise:@"Fatal sending error" format:@"Can't use (%@) this class class for send message with file path",NSStringFromClass([self class])];
     }
     return self;
 }
 
-- (id)initWithMessage:(NSString *)message forDialog:(TL_conversation *)dialog {
+- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation  {
     if(self = [super init]) {
         [NSException raise:@"Fatal sending error" format:@"Can't use (%@) this class class for send message with file path",NSStringFromClass([self class])];
     }
+    return self;
+}
+
+-(id)initWithConversation:(TL_conversation *)conversation {
+    if(self = [super init]) {
+        self.conversation = conversation;
+    }
+    
     return self;
 }
 
@@ -74,27 +82,32 @@
         }
         
     } else {
-        if([msg.media isKindOfClass:[TL_messageMediaEmpty class]])
-            item = [[MessageSenderSecretItem alloc] init];
-        else {
-            item = [[FileSecretSenderItem alloc] init];
-            
-            if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-                [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
-            } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                 [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
-            } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
-                 [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
-            } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
-                 [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
+        if(msg.class == [TL_destructMessage class]) {
+            if([msg.media isKindOfClass:[TL_messageMediaEmpty class]])
+                item = [[MessageSenderSecretItem alloc] init];
+            else {
+               
+                item = [[FileSecretSenderItem alloc] init];
+                
+                if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                    [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
+                } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
+                    [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
+                } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                    [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
+                } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                    [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
+                }
             }
-        }
+
+        } 
         
     }
     
     
+    item.conversation = msg.dialog;
     item.message = msg;
-    item.dialog = msg.dialog;
+   
     
     return item;
 }
@@ -141,9 +154,9 @@ static NSMutableArray *waiting;
             }
             
             
-            if(state == MessageSendingStateError && self.dialog.type == DialogTypeSecretChat) {
+            if(state == MessageSendingStateError && self.conversation.type == DialogTypeSecretChat) {
                 if(self.rpc_request.error.error_code == 400) {
-                    EncryptedParams *params = [EncryptedParams findAndCreate:self.dialog.peer.peer_id];
+                    EncryptedParams *params = [EncryptedParams findAndCreate:self.conversation.peer.peer_id];
                     
                     [params setState:EncryptedDiscarted];
                     
@@ -167,30 +180,6 @@ static NSMutableArray *waiting;
 }
 
 
-//+ (void)sendingDequeue {
-//    
-//    if(queue.count > 0) {
-//          
-//        SenderItem *item = queue[0];
-//        
-//        if(item.state == MessageSendingStateSent || item.state == MessageSendingStateError || item.state == MessageSendingStateCancelled) {
-//            [queue removeObject:item];
-//            
-//            if(queue.count > 0) {
-//                item = queue[0];
-//                
-//                [item perform];
-//            }
-//        } else if(queue.count == 1 && item.state == MessageStateWaitSend) {
-//            [item perform];
-//        }
-//        
-//    }
-// 
-//    
-//}
-
-
 +(void)appTerminatedNeedSaveSenders {
     [ASQueue dispatchOnStageQueue:^{
         [waiting enumerateObjectsUsingBlock:^(SenderItem *obj, NSUInteger idx, BOOL *stop) {
@@ -205,8 +194,10 @@ static NSMutableArray *waiting;
                     ForwardSenterItem *f = (ForwardSenterItem *)obj;
                     
                     [f.fakes enumerateObjectsUsingBlock:^(TL_localMessage *msg, NSUInteger idx, BOOL *stop) {
-                        msg.dstate = DeliveryStateError;
-                        [msg save:NO];
+                        if(msg.class != [TL_secretServiceMessage class]) {
+                            msg.dstate = DeliveryStateError;
+                            [msg save:NO];
+                        }
                     }];
                 }
                 

@@ -14,6 +14,8 @@
 #import "TGFileLocation+Extensions.h"
 #import "TGOpusAudioPlayerAU.h"
 #import "PreviewObject.h"
+#import "SelfDestructionController.h"
+#import "DeleteRandomMessagesSenderItem.h"
 @interface FileSecretSenderItem ()
 //@property (nonatomic,strong) NSImage *thumb;
 //@property (nonatomic,strong) NSData *thumbData;
@@ -23,6 +25,8 @@
 
 @property (nonatomic,strong) NSData *key;
 @property (nonatomic,strong) NSData *iv;
+
+@property (nonatomic,strong) id media;
 
 
 @end
@@ -34,22 +38,23 @@
     [super setState:state];
 }
 
-- (id)initWithImage:(NSImage *)image uploadType:(UploadType)uploadType forDialog:(TL_conversation *)dialog {
-    if(self = [super init]) {
-        [self initializeWithImage:image filePath:nil uploadType:uploadType forDialog:dialog];
+- (id)initWithImage:(NSImage *)image uploadType:(UploadType)uploadType forConversation:(TL_conversation *)conversation {
+     if(self = [super initWithConversation:conversation]) {
+        [self initializeWithImage:image filePath:nil uploadType:uploadType];
     }
     return self;
 }
 
-- (void)initializeWithImage:(NSImage *)image filePath:(NSString *)filePath uploadType:(UploadType)uploadType forDialog:(TL_conversation *)dialog {
+- (void)initializeWithImage:(NSImage *)image filePath:(NSString *)filePath uploadType:(UploadType)uploadType  {
     
-    self.dialog = dialog;
     self.filePath = filePath;
     self.uploadType = uploadType;
     
     TGMessageMedia *media;
     
-    self.message = [TL_destructMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:dialog.peer.chat_id] date:[[MTNetwork instance] getTime] message:@"" media:media destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] dstate:DeliveryStatePending];
+    int ttl = self.params.ttl;
+    
+    self.message = [TL_destructMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:self.conversation.peer.chat_id] date:[[MTNetwork instance] getTime] message:@"" media:media destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl out_seq_no:-1 dstate:DeliveryStatePending];
     
     if(self.uploadType == UploadImageType) {
         
@@ -149,11 +154,31 @@
 
 }
 
-- (id)initWithPath:(NSString *)filePath uploadType:(UploadType)uploadType forDialog:(TL_conversation *)dialog {
-    if(self = [super init]) {
-        [self initializeWithImage:nil filePath:filePath uploadType:uploadType forDialog:dialog];
+- (id)initWithPath:(NSString *)filePath uploadType:(UploadType)uploadType forConversation:(TL_conversation *)conversation {
+    if(self = [super initWithConversation:conversation]) {
+        [self initializeWithImage:nil filePath:filePath uploadType:uploadType];
     }
     return self;
+}
+
+
+-(void)setMessage:(TL_localMessage *)message {
+    [super setMessage:message];
+    
+    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class]];
+    
+    [self addEventListener:self.action];
+}
+
+
+
+-(NSData *)decryptedMessageLayer1 {
+    return  [Secret1__Environment serializeObject:[Secret1_DecryptedMessage decryptedMessageWithRandom_id:@(self.random_id) random_bytes:self.random_bytes message:@"" media:self.media]];
+}
+
+-(NSData *)decryptedMessageLayer17 {
+    return [Secret17__Environment serializeObject:[Secret17_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(17) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret17_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.media]]];
+
 }
 
 
@@ -163,7 +188,7 @@
     self.key = [[NSMutableData alloc] initWithRandomBytes:32];
     self.iv = [[NSMutableData alloc] initWithRandomBytes:32];
     
-   if(self.dialog.encryptedChat.encryptedParams.state != EncryptedAllowed)
+   if(self.conversation.encryptedChat.encryptedParams.state != EncryptedAllowed)
         return;
     
     
@@ -195,33 +220,56 @@
     [self.uploader setUploadComplete:^(UploadOperation *uploader,TL_inputEncryptedFile *inputFile) {
         
         
-        TGDecryptedMessageMedia *media;
         if(strongSelf.uploadType == UploadImageType) {
             
             TL_photoCachedSize *size = strongSelf.message.media.photo.sizes[0];
             
             TL_photoSize *origin = [strongSelf.message.media.photo.sizes lastObject];
             
-             media = [TL_decryptedMessageMediaPhoto createWithThumb:size.bytes thumb_w:size.w thumb_h:size.h w:origin.w h:origin.h size:(int)uploader.total_size key:strongSelf.key iv:strongSelf.iv];
+            
+            if(strongSelf.params.layer == 1) {
+                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                
+            } else if(strongSelf.params.layer == 17) {
+                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            }
+            
             
         }
     
-        if (strongSelf.uploadType == UploadVideoType)
-            media = [TL_decryptedMessageMediaVideo createWithThumb:strongSelf.message.media.video.thumb.bytes thumb_w:strongSelf.message.media.video.thumb.w thumb_h:strongSelf.message.media.video.thumb.h duration:((TL_destructMessage *)strongSelf.message).media.video.duration mime_type:@"mp4"  w:((TL_destructMessage *)strongSelf.message).media.video.w h:((TL_destructMessage *)strongSelf.message).media.video.h size:(int)uploader.total_size key:strongSelf.key iv:strongSelf.iv];
         
-        if(strongSelf.uploadType == UploadDocumentType)
-             media = [TL_decryptedMessageMediaDocument createWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:strongSelf.message.media.document.thumb.w thumb_h:strongSelf.message.media.document.thumb.h file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:(int)uploader.total_size key:strongSelf.key iv:strongSelf.iv];
+        TL_destructMessage *msg = (TL_destructMessage *) strongSelf.message;
+        
+        if (strongSelf.uploadType == UploadVideoType) {
+            if(strongSelf.params.layer == 1) {
+                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                
+            } else if(strongSelf.params.layer == 17) {
+                strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            }
+        }
+        
+        if(strongSelf.uploadType == UploadDocumentType) {
+            if(strongSelf.params.layer == 1) {
+                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                
+            } else if(strongSelf.params.layer == 17) {
+                strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            }
+        }
         
         
+        if(strongSelf.uploadType == UploadAudioType) {
+            if(strongSelf.params.layer == 1) {
+                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                
+            } else if(strongSelf.params.layer == 17) {
+                strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            }
+        }
         
-        if(strongSelf.uploadType == UploadAudioType)
-            media = [TL_decryptedMessageMediaAudio createWithDuration:[strongSelf.message media].audio.duration mime_type:@"opus" size:uploader.total_size key:strongSelf.key iv:strongSelf.iv];
         
-        
-        TL_decryptedMessage *msg = [TL_decryptedMessage createWithRandom_id:((TL_destructMessage *)strongSelf.message).randomId random_bytes:[[NSMutableData alloc] initWithRandomBytes:256] message:@"" media:media];
-        
-        
-        TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[strongSelf.dialog.encryptedChat inputPeer] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.dialog  messageData:[[TLClassStore sharedManager] serialize:msg]] file:inputFile];
+        TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[TL_inputEncryptedChat createWithChat_id:strongSelf.action.chat_id access_hash:strongSelf.action.params.access_hash] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.action.params  messageData:strongSelf.decryptedMessageLayer] file:inputFile];
         
         
         

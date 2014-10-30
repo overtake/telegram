@@ -176,54 +176,10 @@
 
 }
 
-+(RPCRequest *)setTTL:(int)ttl toConversation:(TL_conversation *)conversation  callback:(dispatch_block_t)callback {
-    
-    TL_encryptedChat *chat = [[ChatsManager sharedManager] find:conversation.peer.chat_id];
-    
-    TL_decryptedMessageService *msg = [TL_decryptedMessageService createWithRandom_id:rand_long() random_bytes:[[NSMutableData alloc] initWithRandomBytes:256] action:[TL_decryptedMessageActionSetMessageTTL createWithTtl_seconds:ttl]];
-    
-    NSData *messageData = [MessageSender getEncrypted:conversation messageData:[[TLClassStore sharedManager] serialize:msg]];
-    
-    
-    NSString *text = [MessagesUtils selfDestructTimer:ttl];
-    
-    TL_localMessageService *message = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
-    
-    
-    
-    TLAPI_messages_sendEncryptedService *request = [TLAPI_messages_sendEncryptedService createWithPeer:[chat inputPeer] random_id:rand_long() data:messageData];
-    
-    return [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedMessage* response) {
-        
-        message.date = [response date];
-        
-        message.n_id = [MessageSender getFutureMessageId];
-        
-        Destructor *destructor = [[Destructor alloc] initWithTLL:ttl max_id:message.n_id chat_id:chat.n_id];
-        
-        [SelfDestructionController addDestructor:destructor];
-        
-        
-        [[MessagesManager sharedManager] addMessage:message];
-        
-        
-        [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message}];
-        [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
-        
-        if(callback) callback();
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(callback) callback();
-    }];
-    
-}
 
 
-
-+(NSData *)getEncrypted:(TL_conversation *)dialog messageData:(NSData *)messageData {
++(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData {
     
-    EncryptedParams *params = [EncryptedParams findAndCreate:dialog.peer.chat_id];
-
     int messageLength = (int) messageData.length;
     NSMutableData *fullData = [NSMutableData dataWithBytes:&messageLength length:4];
     [fullData appendData:messageData];
@@ -326,7 +282,7 @@
         NSData *g_a = [Crypto exp:[[NSData alloc] initWithBytes:&g length:1] b:a dhPrime:[response p]];
         if(!MTCheckIsSafeGAOrB(g_a, [response p])) return;
         
-        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:rand_limit(INT32_MAX-1) encrypt_key:nil key_fingerprings:0 a:a g_a:g_a dh_prime:[response p] state:EncryptedWaitOnline access_hash:0];
+        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:rand_limit(INT32_MAX-1) encrypt_key:nil key_fingerprings:0 a:a g_a:g_a dh_prime:[response p] state:EncryptedWaitOnline access_hash:0 layer:MIN_ENCRYPTED_LAYER isAdmin:YES];
         
         
         

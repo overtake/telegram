@@ -13,6 +13,7 @@
 #import "TGPeer+Extensions.h"
 #import "Telegram.h"
 #import "PreviewObject.h"
+#import "SenderHeader.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -301,11 +302,9 @@
             blockSuccess();
         }];
     } else {
-        [RPCRequest sendRequest:[MessageSender requestForFlushEncryptedHistory:dialog] successHandler:^(RPCRequest *request, id response) {
-            blockSuccess();
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
+        
+        FlushHistorySecretSenderItem *sender = [[FlushHistorySecretSenderItem alloc] initWithConversation:dialog];
+        [sender send];
         
         blockSuccess();
     }

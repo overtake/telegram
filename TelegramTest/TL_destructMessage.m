@@ -10,7 +10,7 @@
 
 @implementation TL_destructMessage
 
-+(TL_destructMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer*)to_id date:(int)date message:(NSString*)message media:(TGMessageMedia*)media destruction_time:(int)destruction_time randomId:(long)randomId fakeId:(int)fakeId dstate:(DeliveryState)dstate {
++(TL_destructMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer*)to_id date:(int)date message:(NSString*)message media:(TGMessageMedia*)media destruction_time:(int)destruction_time randomId:(long)randomId fakeId:(int)fakeId ttl_seconds:(int)ttl_seconds out_seq_no:(int)out_seq_no dstate:(DeliveryState)dstate {
 	TL_destructMessage* obj = [[TL_destructMessage alloc] init];
     obj.flags = flags;
 	obj.n_id = n_id == 0 ? fakeId : n_id;
@@ -22,6 +22,8 @@
     obj.destruction_time = destruction_time;
     obj.randomId = randomId;
     obj.fakeId = fakeId;
+    obj.ttl_seconds = ttl_seconds;
+    obj.out_seq_no = out_seq_no;
     obj.dstate = dstate;
 	return obj;
 }
@@ -36,6 +38,8 @@
     [stream writeInt:self.destruction_time];
     [stream writeLong:self.randomId];
     [stream writeInt:self.fakeId];
+    [stream writeInt:self.ttl_seconds];
+    [stream writeInt:self.out_seq_no];
     [stream writeInt:self.dstate];
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -49,6 +53,14 @@
     self.destruction_time = [stream readInt];
     self.randomId = [stream readLong];
     self.fakeId = [stream readInt];
+    self.ttl_seconds = [stream readInt];
+    self.out_seq_no = [stream readInt];
     self.dstate = [stream readInt];
 }
+
+
+-(EncryptedParams *)params {
+    return [EncryptedParams findAndCreate:self.peer_id];
+}
+
 @end

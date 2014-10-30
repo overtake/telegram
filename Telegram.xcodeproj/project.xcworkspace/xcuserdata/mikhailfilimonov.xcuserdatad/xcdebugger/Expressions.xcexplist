@@ -3,10 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
+         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
          <PersistentStrings>
             <PersistentString
-               value = "currentY">
+               value = "self.searchViewController.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -29,6 +29,14 @@
          <PersistentStrings>
             <PersistentString
                value = "frameRect">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderSecretItem decryptedMessageLayer17]:MessageSenderSecretItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.randomId">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -61,6 +69,9 @@
                value = "self.historyController.prevState">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_initConnection getData:]:TLAPIAdd.m">
       </ContextState>
       <ContextState
          contextName = "__38-[UserNameViewContainer updateChecker]_block_invoke_2:UserNameViewController.m">
@@ -265,15 +276,10 @@
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
       </ContextState>
       <ContextState
-         contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
+         contextName = "-[TGModernEncryptedUpdates proccessMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
-         contextName = "-[MainViewController loadView]:MainViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.view.window">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "__40-[ChatHistoryController markAsReceived:]_block_invoke:ChatHistoryController.m">
@@ -294,6 +300,14 @@
             </PersistentString>
             <PersistentString
                value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController loadView]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -394,6 +408,9 @@
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
       </ContextState>
       <ContextState
+         contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchViewController scrollViewDocumentOffsetChangingNotificationHandler:]:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -468,6 +485,9 @@
          contextName = "-[MainWindow sendEvent:]:MainWindow.m">
       </ContextState>
       <ContextState
+         contextName = "__32+[TGSecretAction _resendActions]_block_invoke_2:TGSecretAction.m">
+      </ContextState>
+      <ContextState
          contextName = "+[RPCRequest sendRequest:successHandler:errorHandler:]:RPCRequest.m">
       </ContextState>
       <ContextState
@@ -495,6 +515,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
          <PersistentStrings>
             <PersistentString
@@ -515,6 +538,18 @@
                value = "self.user">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccess1Layer:params:conversation:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
@@ -545,6 +580,12 @@
                value = "dialog.user">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_3:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateMessageService processMessages:]:TGUpdateMessageService.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">
@@ -630,6 +671,9 @@
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMGrowingTextView validateUserInterfaceItem:]:TMGrowingTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -651,6 +695,14 @@
          <PersistentStrings>
             <PersistentString
                value = "response">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[SenderItem senderForMessage:]:SenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "action">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -715,6 +767,9 @@
          contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[DeleteRandomMessagesSenderItem initWithConversation:random_ids:]:DeleteRandomMessagesSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -735,6 +790,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke:UsersManager.m">
@@ -791,12 +849,35 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccessUpdate:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40+[TGSecretAction dequeAllStorageActions]_block_invoke_2:TGSecretAction.m">
+      </ContextState>
+      <ContextState
+         contextName = "__32-[Storage insertSecretInAction:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TLAPI_messages_sendEncryptedService getData:]:TLRPCApi.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView search:]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
                value = "searchString.lenght">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderSecretItem performRequest]:MessageSenderSecretItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.params">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccess1Layer:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke_3:UsersManager.m">
@@ -816,6 +897,15 @@
          contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[Storage executeSaveConversation:db:]:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__48-[DeleteRandomMessagesSenderItem performRequest]_block_invoke:DeleteRandomMessagesSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates media:layer:file:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -832,10 +922,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
+         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.searchViewController.type">
+               value = "currentY">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

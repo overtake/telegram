@@ -9,5 +9,5 @@
 #import "SenderItem.h"
 
 @interface ShareContactSenterItem : SenderItem
--(id)initWithContact:(TGUser *)contact dialog:(TL_conversation *)dialog;
+-(id)initWithContact:(TGUser *)contact forConversation:(TL_conversation *)conversation;
 @end

@@ -10,6 +10,9 @@
 #import "Crypto.h"
 
 @interface EncryptedParams ()
+
+
+
 @end
 
 @implementation EncryptedParams
@@ -17,21 +20,28 @@
 
 static NSMutableDictionary *cached;
 
--(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprings:(long)key_fingerprints a:(NSData *)a g_a:(NSData *)g_a dh_prime:(NSData *)dh_prime state:(int)state access_hash:(long)access_hash {
+-(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprings:(long)key_fingerprints a:(NSData *)a g_a:(NSData *)g_a dh_prime:(NSData *)dh_prime state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin{
     if(self = [super init]) {
-        self.n_id = chat_id;
-        self.encrypt_key = encrypt_key;
-        self.key_fingerprints = key_fingerprints;
-        self.a = a;
-        self.g_a = g_a;
-        self.dh_prime = dh_prime;
-        self->_state = state;
-        self.access_hash = access_hash;
+        _n_id = chat_id;
+        _encrypt_key = encrypt_key;
+        _key_fingerprints = key_fingerprints;
+        _a = a;
+        _g_a = g_a;
+        _dh_prime = dh_prime;
+        _state = state;
+        _access_hash = access_hash;
+        _layer = layer;
+        _isAdmin = isAdmin;
+        _prev_layer = 1;
+        _out_seq_no = 1;
     }
     return self;
 }
 
-
+-(void)setLayer:(int)layer {
+    _prev_layer = _layer;
+    _layer = layer;
+}
 
 -(NSDictionary *)yapObject {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
@@ -39,6 +49,12 @@ static NSMutableDictionary *cached;
     [data setObject:@(self.key_fingerprints) forKey:@"key_fingerprints"];
     [data setObject:@(self.state) forKey:@"state"];
     [data setObject:@(self.access_hash) forKey:@"access_hash"];
+    [data setObject:@(self.layer) forKey:@"layer"];
+    [data setObject:@(self.in_seq_no) forKey:@"in_seq_no"];
+    [data setObject:@(self.out_seq_no) forKey:@"out_seq_no"];
+    [data setObject:@(self.isAdmin) forKey:@"isAdmin"];
+    [data setObject:@(self.prev_layer) forKey:@"prevLayer"];
+    [data setObject:@(self.ttl) forKey:@"ttl"];
     if(self.encrypt_key)
         [data setObject:self.encrypt_key forKey:@"encrypt_key"];
     if(self.a)
@@ -55,18 +71,48 @@ static NSMutableDictionary *cached;
     return [NSString stringWithFormat:@"%d",self.n_id];
 }
 
+-(int)out_x {
+    return self.isAdmin ? 1 : 0;
+}
+
+-(int)in_x {
+    return self.isAdmin ? 0 : 1;
+}
+
+-(void)setIn_seq_no:(int)in_seq_no {
+    _in_seq_no = in_seq_no;
+    [self save];
+}
+
+-(void)setOut_seq_no:(int)out_seq_no {
+    _out_seq_no = out_seq_no;
+    [self save];
+}
+
+-(void)setTtl:(int)ttl {
+    _ttl = ttl;
+    [self save];
+}
+
+
 -(id)initWithYap:(NSDictionary *)object {
     if(self = [super init]) {
-        self.n_id = [[object objectForKey:@"chat_id"] intValue];
-        self.state = [[object objectForKey:@"state"] intValue];
-        self.encrypt_key = [object objectForKey:@"encrypt_key"];
-        self.key_fingerprints = [[object objectForKey:@"key_fingerprints"] longValue];
-        self.a = [object objectForKey:@"a"];
-        self.g_a = [object objectForKey:@"g_a"];
-        self.dh_prime = [object objectForKey:@"dh_prime"];
-        self.access_hash = [[object objectForKey:@"access_hash"] longValue];
+        _n_id = [[object objectForKey:@"chat_id"] intValue];
+        _state = [[object objectForKey:@"state"] intValue];
+        _encrypt_key = [object objectForKey:@"encrypt_key"];
+        _key_fingerprints = [[object objectForKey:@"key_fingerprints"] longValue];
+        _a = [object objectForKey:@"a"];
+        _g_a = [object objectForKey:@"g_a"];
+        _dh_prime = [object objectForKey:@"dh_prime"];
+        _access_hash = [[object objectForKey:@"access_hash"] longValue];
+        _layer = [[object objectForKey:@"layer"] intValue];
+        _in_seq_no = [[object objectForKey:@"in_seq_no"] intValue];
+        _out_seq_no = [[object objectForKey:@"out_seq_no"] intValue];
+        _isAdmin = [[object objectForKey:@"isAdmin"] intValue];
+        _prev_layer = [[object objectForKey:@"prevLayer"] intValue];
+        _ttl = [[object objectForKey:@"ttl"] intValue];
         if(self.encrypt_key.length != 256) {
-            self.encrypt_key = [Crypto exp:[self g_a] b:self.a dhPrime:self.dh_prime];
+            _encrypt_key = [Crypto exp:[self g_a] b:self.a dhPrime:self.dh_prime];
         }
     }
     return self;
@@ -80,6 +126,8 @@ static NSMutableDictionary *cached;
     }];
 
 }
+
+
 
 +(NSMutableDictionary *)cache {
     if(cached == nil)
@@ -99,12 +147,23 @@ static NSMutableDictionary *cached;
 
 +(EncryptedParams *)findAndCreate:(int)chat_id {
     __block EncryptedParams *params;
-    if([[self cache] objectForKey:@(chat_id)])
-        return [[self cache] objectForKey:@(chat_id)];
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        params = [[EncryptedParams alloc] initWithYap:[transaction objectForKey:[NSString stringWithFormat:@"%d",chat_id] inCollection:ENCRYPTED_PARAMS_COLLECTION]];
-    }];
-    [[self cache] setObject:params forKey:@(chat_id)];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        if([[self cache] objectForKey:@(chat_id)])
+            params = [[self cache] objectForKey:@(chat_id)];
+        else {
+            [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                params = [[EncryptedParams alloc] initWithYap:[transaction objectForKey:[NSString stringWithFormat:@"%d",chat_id] inCollection:ENCRYPTED_PARAMS_COLLECTION]];
+            }];
+            
+            [[self cache] setObject:params forKey:@(chat_id)];
+
+        }
+        
+    } synchronous:YES];
+    
+    
     return params;
 }
 

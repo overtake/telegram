@@ -293,6 +293,8 @@
 		C22520E518B2801D00049558 /* MTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C22520E418B2801D00049558 /* MTConnection.m */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C22C7F2D18B2163F007C4D17 /* TelegramSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2B18B2163F007C4D17 /* TelegramSerialization.m */; };
+		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
+		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
 		C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298C918CF1A34000826E5 /* TL_conversation.m */; };
 		C23298D718CF5FC7000826E5 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C23298D618CF5FC7000826E5 /* QuickLook.framework */; };
 		C23298DB18CF61AE000826E5 /* TMPreviewPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298DA18CF61AE000826E5 /* TMPreviewPhotoItem.m */; };
@@ -323,8 +325,19 @@
 		C248F3E319BE08A800BF658E /* flac.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3DF19BE08A800BF658E /* flac.c */; };
 		C248F3E419BE08A800BF658E /* lpc.c in Sources */ = {isa = PBXBuildFile; fileRef = C248F3E119BE08A800BF658E /* lpc.c */; };
 		C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */; };
-		C24F876C19FB961800EC962E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C24F877119FB961C00EC962E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877319FE7CAB00EC962E /* SecretLayer1.m */; };
+		C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877519FE7CAB00EC962E /* SecretLayer17.m */; };
+		C24F877819FE7FFC00EC962E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C24F877919FE800300EC962E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C24F877A19FE801000EC962E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C24F877B19FE801300EC962E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C24F877F19FE92FF00EC962E /* TGModernEncryptedUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877E19FE92FF00EC962E /* TGModernEncryptedUpdates.m */; };
+		C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878419FEA70200EC962E /* UpgradeLayerSenderItem.m */; };
+		C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878719FFFFEB00EC962E /* SetTTLSenderItem.m */; };
+		C24F878B1A00002700EC962E /* DeleteRandomMessagesSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878A1A00002700EC962E /* DeleteRandomMessagesSenderItem.m */; };
+		C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */; };
+		C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87931A0015BD00EC962E /* TGSecretAction.m */; };
+		C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */; };
 		C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; };
 		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
@@ -401,8 +414,6 @@
 		C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
-		C2795DE919FB95D600B8732E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2795DEA19FB95DF00B8732E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
 		C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C1771917D9C2007B160F /* DraggingControllerView.m */; };
 		C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17A1917D9D9007B160F /* DraggingItemView.m */; };
@@ -635,8 +646,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2795DEA19FB95DF00B8732E /* Sparkle.framework in Copy Files (6 items) */,
-				C2795DE919FB95D600B8732E /* HockeySDK.framework in Copy Files (6 items) */,
+				C24F877919FE800300EC962E /* Sparkle.framework in Copy Files (6 items) */,
+				C24F877819FE7FFC00EC962E /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -1247,6 +1258,10 @@
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
 		C22C7F2A18B2163F007C4D17 /* TelegramSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TelegramSerialization.h; sourceTree = "<group>"; };
 		C22C7F2B18B2163F007C4D17 /* TelegramSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TelegramSerialization.m; sourceTree = "<group>"; };
+		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
+		C23223D11A024CC600E476E2 /* TGSecretInAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSecretInAction.m; sourceTree = "<group>"; };
+		C23223D71A029ED600E476E2 /* FlushHistorySecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushHistorySecretSenderItem.h; sourceTree = "<group>"; };
+		C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlushHistorySecretSenderItem.m; sourceTree = "<group>"; };
 		C23298C818CF1A34000826E5 /* TL_conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_conversation.h; sourceTree = "<group>"; };
 		C23298C918CF1A34000826E5 /* TL_conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_conversation.m; sourceTree = "<group>"; };
 		C23298D618CF5FC7000826E5 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -1310,6 +1325,24 @@
 		C248F3E219BE08A800BF658E /* lpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpc.h; path = ../lpc.h; sourceTree = "<group>"; };
 		C24BCB71186A2711000902BE /* NSNumber+NumberFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+NumberFormatter.h"; sourceTree = "<group>"; };
 		C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+NumberFormatter.m"; sourceTree = "<group>"; };
+		C24F877219FE7CAB00EC962E /* SecretLayer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretLayer1.h; sourceTree = "<group>"; };
+		C24F877319FE7CAB00EC962E /* SecretLayer1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretLayer1.m; sourceTree = "<group>"; };
+		C24F877419FE7CAB00EC962E /* SecretLayer17.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretLayer17.h; sourceTree = "<group>"; };
+		C24F877519FE7CAB00EC962E /* SecretLayer17.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretLayer17.m; sourceTree = "<group>"; };
+		C24F877D19FE92FF00EC962E /* TGModernEncryptedUpdates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernEncryptedUpdates.h; sourceTree = "<group>"; };
+		C24F877E19FE92FF00EC962E /* TGModernEncryptedUpdates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernEncryptedUpdates.m; sourceTree = "<group>"; };
+		C24F878319FEA70200EC962E /* UpgradeLayerSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpgradeLayerSenderItem.h; sourceTree = "<group>"; };
+		C24F878419FEA70200EC962E /* UpgradeLayerSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpgradeLayerSenderItem.m; sourceTree = "<group>"; };
+		C24F878619FFFFEB00EC962E /* SetTTLSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetTTLSenderItem.h; sourceTree = "<group>"; };
+		C24F878719FFFFEB00EC962E /* SetTTLSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetTTLSenderItem.m; sourceTree = "<group>"; };
+		C24F87891A00002700EC962E /* DeleteRandomMessagesSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteRandomMessagesSenderItem.h; sourceTree = "<group>"; };
+		C24F878A1A00002700EC962E /* DeleteRandomMessagesSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteRandomMessagesSenderItem.m; sourceTree = "<group>"; };
+		C24F878C1A00048C00EC962E /* TL_messageActionSetMessageTTL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionSetMessageTTL.h; sourceTree = "<group>"; };
+		C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionSetMessageTTL.m; sourceTree = "<group>"; };
+		C24F87921A0015BD00EC962E /* TGSecretAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretAction.h; sourceTree = "<group>"; };
+		C24F87931A0015BD00EC962E /* TGSecretAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSecretAction.m; sourceTree = "<group>"; };
+		C24F87951A002F7E00EC962E /* TL_secretServiceMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_secretServiceMessage.h; sourceTree = "<group>"; };
+		C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_secretServiceMessage.m; sourceTree = "<group>"; };
 		C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluredPhotoImageView.h; sourceTree = "<group>"; };
 		C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BluredPhotoImageView.m; sourceTree = "<group>"; };
 		C2531F521964412700F7D7A2 /* NSTextView+EmojiExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextView+EmojiExtension.h"; sourceTree = "<group>"; };
@@ -1900,9 +1933,9 @@
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
+				C24F877A19FE801000EC962E /* Sparkle.framework in Frameworks */,
+				C24F877B19FE801300EC962E /* HockeySDK.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C24F876C19FB961800EC962E /* HockeySDK.framework in Frameworks */,
-				C24F877119FB961C00EC962E /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2453,6 +2486,10 @@
 		0ABACDA5181ADB0500EF43DB /* MTProto */ = {
 			isa = PBXGroup;
 			children = (
+				C24F877219FE7CAB00EC962E /* SecretLayer1.h */,
+				C24F877319FE7CAB00EC962E /* SecretLayer1.m */,
+				C24F877419FE7CAB00EC962E /* SecretLayer17.h */,
+				C24F877519FE7CAB00EC962E /* SecretLayer17.m */,
 				C270C5A718941E6F005D80E0 /* constructors */,
 				CEAE5D26181D7A3A00C17645 /* extensions */,
 				0ABACDA6181ADB1E00EF43DB /* SerializedData.h */,
@@ -2734,6 +2771,14 @@
 				C21C7B5218D8991D00253A7A /* SecretSenderItem.m */,
 				C21C7B5A18D8A32800253A7A /* FileSecretSenderItem.h */,
 				C21C7B5B18D8A32800253A7A /* FileSecretSenderItem.m */,
+				C24F878319FEA70200EC962E /* UpgradeLayerSenderItem.h */,
+				C24F878419FEA70200EC962E /* UpgradeLayerSenderItem.m */,
+				C24F878619FFFFEB00EC962E /* SetTTLSenderItem.h */,
+				C24F878719FFFFEB00EC962E /* SetTTLSenderItem.m */,
+				C24F87891A00002700EC962E /* DeleteRandomMessagesSenderItem.h */,
+				C24F878A1A00002700EC962E /* DeleteRandomMessagesSenderItem.m */,
+				C23223D71A029ED600E476E2 /* FlushHistorySecretSenderItem.h */,
+				C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */,
 			);
 			name = secret;
 			sourceTree = "<group>";
@@ -2954,6 +2999,19 @@
 			name = tgupdates;
 			sourceTree = "<group>";
 		};
+		C24F877C19FE92D700EC962E /* modernencryptedchats */ = {
+			isa = PBXGroup;
+			children = (
+				C24F877D19FE92FF00EC962E /* TGModernEncryptedUpdates.h */,
+				C24F877E19FE92FF00EC962E /* TGModernEncryptedUpdates.m */,
+				C24F87921A0015BD00EC962E /* TGSecretAction.h */,
+				C24F87931A0015BD00EC962E /* TGSecretAction.m */,
+				C23223D01A024CC600E476E2 /* TGSecretInAction.h */,
+				C23223D11A024CC600E476E2 /* TGSecretInAction.m */,
+			);
+			name = modernencryptedchats;
+			sourceTree = "<group>";
+		};
 		C2531F6F1965DE4200F7D7A2 /* system */ = {
 			isa = PBXGroup;
 			children = (
@@ -3126,6 +3184,10 @@
 				C28261E119926C62004AC73E /* TL_peerBroadcast.m */,
 				C28261E7199291EF004AC73E /* TL_broadcast.h */,
 				C28261E8199291EF004AC73E /* TL_broadcast.m */,
+				C24F878C1A00048C00EC962E /* TL_messageActionSetMessageTTL.h */,
+				C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */,
+				C24F87951A002F7E00EC962E /* TL_secretServiceMessage.h */,
+				C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */,
 			);
 			name = constructors;
 			sourceTree = "<group>";
@@ -3776,6 +3838,7 @@
 		CEB2615B180C5B9B00378932 /* logic */ = {
 			isa = PBXGroup;
 			children = (
+				C24F877C19FE92D700EC962E /* modernencryptedchats */,
 				C222775A190E734C002AA0F6 /* taskrequest */,
 				C2A5BFD218DDB1EE0021BE68 /* ASQueue.h */,
 				C2A5BFD318DDB1EE0021BE68 /* ASQueue.m */,
@@ -4365,6 +4428,7 @@
 				0A59068018AA32C8002ED7BA /* BTRSecureTextField.m in Sources */,
 				CEB26165180C928A00378932 /* RpcError.m in Sources */,
 				0A6D098D19535E8500A9AC64 /* NSEventCategory.m in Sources */,
+				C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */,
 				C282485518BBB7FB00131533 /* Destructor.m in Sources */,
 				0AACA3F618B752C000621564 /* TMTextButton.m in Sources */,
 				0AEE20811820764900F348F2 /* NSString+Size.m in Sources */,
@@ -4432,6 +4496,7 @@
 				C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */,
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
+				C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
@@ -4516,6 +4581,7 @@
 				CEDAEB651881AF85006189A2 /* YapDatabaseViewOptions.m in Sources */,
 				0A6D099A19535E8500A9AC64 /* TGMessageCategory.m in Sources */,
 				0A073FD218BF953300BAA928 /* TMTextView.m in Sources */,
+				C24F878B1A00002700EC962E /* DeleteRandomMessagesSenderItem.m in Sources */,
 				C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */,
 				CEDAEB741881AF85006189A2 /* YapDatabase.m in Sources */,
 				C2753DD519E43EA500752BAF /* TGCTextMark.m in Sources */,
@@ -4548,6 +4614,7 @@
 				CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
+				C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */,
 				CEDAEB531881AF85006189A2 /* YapDatabaseFullTextSearch.m in Sources */,
 				0AB8500B18756ABA001A796C /* SearchSeparatorItem.m in Sources */,
 				CEDAEB641881AF85006189A2 /* YapDatabaseViewConnection.m in Sources */,
@@ -4580,6 +4647,7 @@
 				CEDAEB711881AF85006189A2 /* YapCollectionKey.m in Sources */,
 				CEDAEB731881AF85006189A2 /* YapSet.m in Sources */,
 				C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */,
+				C24F877F19FE92FF00EC962E /* TGModernEncryptedUpdates.m in Sources */,
 				CEC22DF51827B454008817D0 /* MessagesUtils.m in Sources */,
 				0A9EDC541897BA0E0037E1BC /* NSView+RBLAnimationAdditions.m in Sources */,
 				0A6D099819535E8500A9AC64 /* TGEncryptedChatCategory.m in Sources */,
@@ -4607,6 +4675,7 @@
 				0A5F0FF818DC0F5C00CCFA60 /* ChatInfoNotificationView.m in Sources */,
 				0AC7F475185DA87A00F90558 /* TMTableView.mm in Sources */,
 				C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */,
+				C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */,
 				0ACDB13218CF28DC009FE910 /* NewLoginViewController.m in Sources */,
 				0A9EDC611897BA0E0037E1BC /* RBLViewController.m in Sources */,
 				CEDAEB661881AF85006189A2 /* YapDatabaseViewTransaction.m in Sources */,
@@ -4619,6 +4688,7 @@
 				CECBC15618008B3300AD98E6 /* CMath.c in Sources */,
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
+				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,
 				CE84548E1822C41D00E73DF7 /* ImageStorage.m in Sources */,
 				0A62CC9F181FD71C0098720C /* DialogsViewController.mm in Sources */,
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,
@@ -4652,6 +4722,7 @@
 				0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
+				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C256E90E18D20701008FFA04 /* DownloadVideoItem.m in Sources */,
 				C268C19119F0519C007F836A /* POPLayerExtras.mm in Sources */,
@@ -4667,6 +4738,7 @@
 				C2AA4F0A18A8ED5500E20C68 /* TGTimer.m in Sources */,
 				0ABACDA8181ADB1E00EF43DB /* SerializedData.m in Sources */,
 				CE4CC6EA1829B4DF00B532CC /* WhiteTitleButton.m in Sources */,
+				C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */,
 				C2201A0A192E4AAA00C0E441 /* TMBlueInputTextField.m in Sources */,
 				0AA7E1C318CCF08D0064EFC7 /* ChatInfoViewController.m in Sources */,
 				C22421CA19EBCFA80030078A /* BlockedUserRowItem.m in Sources */,
@@ -4746,6 +4818,7 @@
 				0A241A9A18AB0CB200C32F45 /* MessageTableCellContainerView.m in Sources */,
 				0A9EDC4D1897BA0E0037E1BC /* NSAttributedString+RBLHTMLAdditions.m in Sources */,
 				C222773518FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.m in Sources */,
+				C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */,
 				0AC7F479185DBA0800F90558 /* TMView.m in Sources */,
 				0A59068118AA32C8002ED7BA /* BTRTextField.m in Sources */,
 				C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */,
@@ -4839,6 +4912,7 @@
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,
 				C2AA5D35187597680026EA1F /* LoopingUtils.m in Sources */,
+				C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */,
 				0A613C1A18AD7E49004096DD /* MessageTableCellGeoView.m in Sources */,
 				C297FBAB1833917B00714B3C /* DialogTableObject.m in Sources */,
 				0A9EDC5C1897BA0E0037E1BC /* RBLShadowedTextFieldCell.m in Sources */,
