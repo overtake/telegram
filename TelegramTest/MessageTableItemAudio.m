@@ -18,7 +18,7 @@
 - (id)initWithObject:(TGMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.blockSize = NSMakeSize(200, 36);
+        self.blockSize = NSMakeSize(200, 45);
         self.duration = [NSString durationTransformedValue:object.media.audio.duration];
         self.message.media.audio.duration = self.message.media.audio.duration == 0 ? 1 : self.message.media.audio.duration;
         

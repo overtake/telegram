@@ -174,7 +174,7 @@ static NSCache *photosBigCache() {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     [avatarImageView setCacheDictionary:userProfileCache(avatarImageView.bounds.size)];
     [avatarImageView setSmallCacheDictionary:tableViewCache(avatarImageView.bounds.size)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:48]];
+    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:30]];
     [avatarImageView setTakeBigPhoto:YES];
     return avatarImageView;
 }

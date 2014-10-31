@@ -139,6 +139,9 @@ CACHE_IMAGE(ContactsAddContact)
 
 CACHE_IMAGE(UsernameCheck)
 
+CACHE_IMAGE(VoicePlay)
+CACHE_IMAGE(VoicePause)
+
 @interface ImageUtils : NSObject
 
 

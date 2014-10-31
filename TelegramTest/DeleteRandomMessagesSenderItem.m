@@ -19,8 +19,7 @@
         _ids = ids;
         
         self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:self.params.n_id decryptedData:[self decryptedMessageLayer] senderClass:[self class]];
-        
-        
+    
     }
     
     return self;

@@ -36,7 +36,13 @@
 
 @end
 
+
+
 @implementation MessageTableCellAudioView
+
+
+
+
 
 
 - (id)initWithFrame:(NSRect)frame {
@@ -45,28 +51,11 @@
         
         weak();
         
-        self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 40, 40)];
-        [self.playerButton setFrameSize:image_VoiceMessagePlay().size];
+        self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 37, 37)];
         [self.playerButton setOpacityHover:YES];
-        [self.playerButton setBackgroundImage:image_VoiceMessagePlay() forControlState:BTRControlStateNormal];
+        [self.playerButton setBackgroundImage:image_VoicePlay() forControlState:BTRControlStateNormal];
     //    [self.playerButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [self.playerButton addBlock:^(BTRControlEvents events) {
-            
-            if(weakSelf.item.messageSender) {
-                [weakSelf deleteAndCancel];
-                return;
-            }
-            
-            if(weakSelf.cellState == CellStateDownloading) {
-                [weakSelf cancelDownload];
-                return;
-            }
-            
-            if(weakSelf.item.state == AudioStateWaitDownloading) {
-                if([weakSelf.item canDownload])
-                    [weakSelf startDownload:YES];
-                return;
-            }
             
             if(weakSelf.item.state == AudioStateWaitPlaying) {
                 if(weakSelf.item.isset) {
@@ -96,13 +85,14 @@
                 [weakSelf pause];
                 return;
             }
+
             
         } forControlEvents:BTRControlEventClick];
 
         
         [self.containerView addSubview:self.playerButton];
         
-        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, 15, 100, 20)];
+        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, 20, 100, 20)];
         [self.durationView setEnabled:NO];
         [self.durationView setBordered:NO];
         [self.durationView setEditable:NO];
@@ -125,14 +115,26 @@
         
         [self.containerView addSubview:self.stateTextField];
         
+        
+        
+        
+        [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
+        
+        [self setProgressStyle:TMCircularProgressLightStyle];
+        
+        [self setProgressToView:self.playerButton];
+        
     }
     return self;
 }
 
 
 - (NSRect)progressRect {
-    return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, self.containerView.frame.origin.y + 5, [self progressWidth], 2);
+    return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 22, [self progressWidth], 3);
 }
+
 
 - (void)cancelDownload {
     [super cancelDownload];
@@ -198,35 +200,35 @@
         [self.stateTextField setHidden:NO];
     }
     
+    [self.progressView setState:cellState];
+    
+    if(self.item.state == AudioStateWaitPlaying || self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
+        [self.playerButton setBackgroundImage:blueBackground() forControlState:BTRControlStateNormal];
+    } else {
+        [self.playerButton setBackgroundImage:grayBackground() forControlState:BTRControlStateNormal];
+    }
+    
+    
+    
+    
     switch (self.item.state) {
         case AudioStateWaitPlaying:
-            [self.playerButton setBackgroundImage:image_VoiceMessagePlay() forControlState:BTRControlStateNormal];
+            [self.playerButton setImage:voicePlay() forControlState:BTRControlStateNormal];
             break;
             
         case AudioStatePaused:
-            [self.playerButton setBackgroundImage:image_VoiceMessagePlay() forControlState:BTRControlStateNormal];
+            [self.playerButton setImage:voicePlay() forControlState:BTRControlStateNormal];
             break;
             
         case AudioStatePlaying:
-            [self.playerButton setBackgroundImage:image_VoiceMessagePause() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStateWaitDownloading:
-            [self.playerButton setBackgroundImage:image_VoiceMessageDownload() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStateUploading:
-            [self.playerButton setBackgroundImage:image_VoiceMessageCancel() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStateDownloading:
-            [self.playerButton setBackgroundImage:image_VoiceMessageCancel() forControlState:BTRControlStateNormal];
+            [self.playerButton setImage:image_VoicePause() forControlState:BTRControlStateNormal];
             break;
             
         default:
+            [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
             break;
     }
-
+    
     
     [self setNeedsDisplay:YES];
     

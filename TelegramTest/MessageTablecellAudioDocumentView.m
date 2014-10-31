@@ -35,53 +35,6 @@
 }
 
 
-static NSImage *blueBackground() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
-
-static NSImage *grayBackground() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0xf2f2f2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
-
-static NSImage *playImage() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, image_PlayIconWhite().size.width + 5, image_PlayIconWhite().size.height+1);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        
-        [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
-        
-        [image unlockFocus];
-    });
-    return image;
-}
-
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];

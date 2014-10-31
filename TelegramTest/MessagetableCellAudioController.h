@@ -36,5 +36,8 @@
 
 
 
-
+NSImage *blueBackground();
+NSImage *grayBackground();
+NSImage *playImage();
+NSImage *voicePlay();
 @end
