@@ -52,7 +52,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 
 - (void)initialize {
     self.auto_download_limit_size = DownloadLimitSize10;
-    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto;
+    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications;
     self.documents_folder = dp();
     self.defaultSoundNotification = @"DefaultSoundName";
 
@@ -294,6 +294,28 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
         NSData *archivedData = [defaults dataForKey:kArchivedSettings];
         instance = archivedData ? [NSKeyedUnarchiver unarchiveObjectWithData:archivedData] : [[SettingsArchiver alloc] init];
         instance.listeners = [[NSMutableArray alloc] init];
+        
+        dispatch_async(dispatch_get_current_queue(), ^{
+            if([instance.defaultSoundNotification isEqualTo:@"None"]) {
+                
+                [SettingsArchiver removeSetting:PushNotifications];
+                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+                
+            } else {
+                
+                // HARD CHECK FOR NEW PUSH NOTIFICATION
+                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                
+                if (![defaults objectForKey:@"check_push_once"]) {
+                    [defaults setObject:@"once" forKey:@"check_push_once"];
+                    
+                    [SettingsArchiver addSetting:PushNotifications];
+                }
+                
+            }
+        });
+        
     });
     
     return instance;

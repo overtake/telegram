@@ -209,13 +209,12 @@
         }
         
         
-        if ([NSUserNotification class] && [NSUserNotificationCenter class]) {
+        if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
             notification.informativeText = msg;
             notification.subtitle = subTitle ? subTitle : @"";
-            if(![[SettingsArchiver soundNotification] isEqualToString:@"None"])
-                notification.soundName = [SettingsArchiver soundNotification];
+            notification.soundName = [SettingsArchiver soundNotification];
             if (floor(NSAppKitVersionNumber) > 1187)
             {
                 if(![message.to_id isSecret])
@@ -231,12 +230,11 @@
 }
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text {
-    if ([NSUserNotification class] && [NSUserNotificationCenter class]) {
+    if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
         NSUserNotification *notification = [[NSUserNotification alloc] init];
         notification.title = title;
         notification.informativeText = text;
-        if(![[SettingsArchiver soundNotification] isEqualToString:@"None"])
-            notification.soundName = [SettingsArchiver soundNotification];
+        notification.soundName = [SettingsArchiver soundNotification];
         
         [notification setUserInfo:@{@"peer_id":@(peer_id)}];
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];

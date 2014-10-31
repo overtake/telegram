@@ -3,10 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
+         contextName = "-[MessageSenderSecretItem decryptedMessageLayer17]:MessageSenderSecretItem.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.searchViewController.type">
+               value = "self.message.randomId">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -33,10 +33,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageSenderSecretItem decryptedMessageLayer17]:MessageSenderSecretItem.m">
+         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.message.randomId">
+               value = "currentY">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -518,12 +518,7 @@
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
-         contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
-         <PersistentStrings>
-            <PersistentString
-               value = "file">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
@@ -540,7 +535,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
+         contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "file">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[Storage searchDialogsByPeers:needMessages:searchString:completeHandler:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "peers">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:]:TGModernEncryptedUpdates.m">
@@ -556,6 +564,9 @@
       </ContextState>
       <ContextState
          contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_3:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
@@ -580,9 +591,6 @@
                value = "dialog.user">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_3:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService processMessages:]:TGUpdateMessageService.m">
@@ -770,6 +778,14 @@
          contextName = "-[DeleteRandomMessagesSenderItem initWithConversation:random_ids:]:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[UserInfoViewController viewWillAppear:]:UserInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.scrollView.clipView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -922,10 +938,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
+         contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
          <PersistentStrings>
             <PersistentString
-               value = "currentY">
+               value = "self.searchViewController.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

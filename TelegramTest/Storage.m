@@ -796,12 +796,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 - (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs, NSArray *messages, NSArray *searchMessages))completeHandler {
-    [queue inDatabase:^(FMDatabase *db) {
-        NSMutableArray *dialogs = [[NSMutableArray alloc] init];
-        NSMutableArray *messages = [[NSMutableArray alloc] init];
-
+    
+    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
         if(peers.count) {
-            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select messages.from_id, messages.n_out, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_marked_message last_marked_date,dialogs.sync_message_id, messages.unread from dialogs left join messages on dialogs.top_message = messages.n_id where dialogs.peer_id in (%@) ORDER BY dialogs.last_message_date DESC", [peers componentsJoinedByString:@", "]]];
+            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id where dialogs.peer_id in (%@) ORDER BY dialogs.last_message_date DESC", [peers componentsJoinedByString:@","]]];
             
             
             [self parseDialogs:result dialogs:dialogs messages:messages];
@@ -809,13 +811,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [result close];
         }
         
-        
-        if(completeHandler) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                completeHandler(dialogs, messages, nil);
-            }];
-        }
     }];
+    
+    if(completeHandler) {
+        //   [[ASQueue mainQueue] dispatchOnQueue:^{
+        completeHandler(dialogs, messages, nil);
+        // }];
+    }
     
 }
 

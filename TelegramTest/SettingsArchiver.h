@@ -30,7 +30,8 @@ typedef enum {
     BlockedContactsSynchronized = 1 << 14,
     
     AutoGroupPhoto = 1 << 15,
-    AutoPrivatePhoto = 1 << 16
+    AutoPrivatePhoto = 1 << 16,
+    PushNotifications = 1 << 17
     
 } SettingsMask;
 

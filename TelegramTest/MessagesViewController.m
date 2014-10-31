@@ -649,7 +649,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)updateLoading {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
     [self.noMessagesView setLoading:self.historyController.isProccessing];
+    [CATransaction commit];
 }
 
 
@@ -1239,6 +1242,11 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)setIgnoredCount:(int)ignoredCount {
+    
+    [CATransaction begin];
+    
+    [CATransaction disableActions];
+    
     self->_ignoredCount = ignoredCount;
     if(ignoredCount > 0)
         [self.filtredNavigationLeftView setStringValue:[NSString stringWithFormat:@"%@ (%@)",NSLocalizedString(@"Profile.Cancel", nil),[NSString stringWithFormat:NSLocalizedString(@"Messages.scrollToBottomNewMessages", nil), ignoredCount]]];
@@ -1248,6 +1256,8 @@ static NSTextAttachment *headerMediaIcon() {
     [self.filtredNavigationLeftView sizeToFit];
     
     self.rightNavigationBarView = self.rightNavigationBarView;
+    
+    [CATransaction commit];
 }
 
 - (void)insertAndGoToEnd:(NSRange)range forceEnd:(BOOL)forceEnd items:(NSArray *)items {

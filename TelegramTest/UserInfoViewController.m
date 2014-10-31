@@ -16,7 +16,7 @@
 @interface UserInfoViewController ()
 
 @property (nonatomic, strong) TMView *containerView;
-@property (nonatomic, strong) TMScrollView *scrollView;
+@property (nonatomic, strong) BTRScrollView *scrollView;
 @property (nonatomic) UserInfoViewControllerType state;
 @property (nonatomic, strong) UserInfoContainerView *normalContainer;
 @property (nonatomic, strong) UserInfoEditContainerView *editContainer;
@@ -119,7 +119,7 @@
          [_avatarImageView setSourceType:ChatAvatarSourceUser];
         
         
-        self.scrollView = [[TMScrollView alloc] initWithFrame:self.view.bounds];
+        self.scrollView = [[BTRScrollView alloc] initWithFrame:self.view.bounds];
         [self.scrollView setAutoresizesSubviews:YES];
         [self.scrollView setContentView:flippedClipView];
         [self.scrollView setDocumentView:self.containerView];
@@ -350,6 +350,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 -(void)viewDidDisappear:(BOOL)animated {

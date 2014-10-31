@@ -689,22 +689,22 @@ static int insertCount = 3;
             
             
             if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
+                
+                
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
                     
-                    
-                    [ASQueue dispatchOnStageQueue:^{
-                        [[DialogsManager sharedManager] add:dialogsDB];
-                        [[MessagesManager sharedManager] add:messagesDB];
+                    [[DialogsManager sharedManager] add:dialogsDB];
+                    [[MessagesManager sharedManager] add:messagesDB];
                         
-                        [dialogs addObjectsFromArray:dialogsDB];
+                    [dialogs addObjectsFromArray:dialogsDB];
                         
-                        NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
-                            if(dialog1.last_message_date > dialog2.last_message_date) {
-                                return NSOrderedAscending;
-                            } else {
-                                return NSOrderedDescending;
-                            }
-                        }];
+                    NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
+                        if(dialog1.last_message_date > dialog2.last_message_date) {
+                            return NSOrderedAscending;
+                        } else {
+                            return NSOrderedDescending;
+                        }
+                    }];
                         
                         
                         NSMutableArray *cachePeers = [NSMutableArray array];
@@ -716,15 +716,10 @@ static int insertCount = 3;
                             
                             [searchParams.dialogs addObject:[[DialogTableItem alloc] initWithDialogItem:dialog selectString:searchParams.searchString]];
                         }
-                        
-                        
-                        [[ASQueue mainQueue] dispatchOnQueue:^{
-                            
-                            [self showSearchResults:searchParams];
-                        }];
-                        
-                    }];
+                    
                 }];
+                
+                
             }
             
             
@@ -737,7 +732,6 @@ static int insertCount = 3;
                     id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                     
                     [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
-                    assert(dispatch_get_current_queue() == [ASQueue globalQueue].nativeQueue);
                 }
                 
             }

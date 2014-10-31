@@ -213,8 +213,13 @@ Class convertClass(NSString *c, int layer) {
     
     NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
+    if(params.in_seq_no * 2 + [params in_x] < [layerMessage.out_seq_no intValue])
+        return;
+    
     
     id media = [TL_messageMediaEmpty create];
+    
+    
     
     
      if([layerMessage.message isKindOfClass:[Secret17_DecryptedMessage_decryptedMessage class]]) {

@@ -50,19 +50,10 @@
         [ASQueue dispatchOnStageQueue:^{
             
             
-            
-            NSMutableArray *filtred = [[NSMutableArray alloc] init];
-            
-            [d enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
-                if(![[DialogsManager sharedManager] find:obj.peer.peer_id]) {
-                    [filtred addObject:obj];
-                }
-            }];
-            
-            [[DialogsManager sharedManager] add:filtred];
+            [[DialogsManager sharedManager] add:d];
             [[MessagesManager sharedManager] add:m];
             
-            if(filtred.count < limit) {
+            if(d.count < limit) {
                 self.state = DialogsHistoryStateNeedRemote;
                 
             }
@@ -70,7 +61,7 @@
             self.isLoading = NO;
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 if(callback)
-                    callback(filtred);
+                    callback(d);
             }];
         }];
        
@@ -90,11 +81,9 @@
         NSMutableArray *converted = [[NSMutableArray alloc] init];
         for (TL_conversation *dialog in [dialogs dialogs]) {
             
-            if(![[DialogsManager sharedManager] find:dialog.peer.peer_id]) {
-                TGMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
-                
-                [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date]];
-            }
+            TGMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
+            [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date]];
+    
             
             
             

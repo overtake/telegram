@@ -161,7 +161,7 @@
     }
     
 
-    
+    [CATransaction begin];
     
     NSImage *image = nil;
     @autoreleasepool {
@@ -213,6 +213,8 @@
             
             
             CGImageRef cgImage = CGBitmapContextCreateImage(context);
+            
+            
             CGContextRelease(context);
             
             
@@ -222,6 +224,8 @@
             CGImageRelease(maskRef);
         }
     }
+    
+      [CATransaction commit];
     
     return image;
 }

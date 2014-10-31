@@ -147,7 +147,7 @@ typedef enum {
     weakify();
     
     
-    self.editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Edit"];
+    self.editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
     
     
     [self.editButton setTapBlock:^{
@@ -163,7 +163,7 @@ typedef enum {
     self.editButton.autoresizingMask = NSViewMinXMargin;
     
     
-    self.cancelEditButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Cancel"];
+    self.cancelEditButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
     
     
     [self.cancelEditButton setTapBlock:^{
