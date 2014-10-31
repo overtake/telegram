@@ -266,11 +266,11 @@
 
 
 - (void)getSMSCode {
-    if(!self.countrySelectorView.isValidPhoneNumber) {
-        [self.getSMSCodeView showErrorWithText:nil];
-        [self.countrySelectorView performShake];
-        return;
-    }
+//    if(!self.countrySelectorView.isValidPhoneNumber) {
+//        [self.getSMSCodeView showErrorWithText:nil];
+//        [self.countrySelectorView performShake];
+//        return;
+//    }
     
     [self.countrySelectorView performBlocking:YES];
     self.phoneNumber = [self.countrySelectorView phoneNumber];

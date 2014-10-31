@@ -299,7 +299,7 @@ static NSDictionary *attributes() {
     
     self.style = newSize.width == 70 ? DialogTableItemViewShortStyle : DialogTableItemViewFullStyle;
     
-    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 105, 36)];
+    [self.messageTextField setFrameSize:NSMakeSize(newSize.width - 110, 36)];
     
     [self.titleTextField sizeToFit];
     
