@@ -64,7 +64,9 @@ NSImage *playImage() {
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         
-        [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
+        [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1];
+        
+     //   [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
         
         [image unlockFocus];
     });
@@ -79,7 +81,7 @@ NSImage *voicePlay() {
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         
-        [image_VoicePlay() drawInRect:NSMakeRect(5, 0, image_VoicePlay().size.width, image_VoicePlay().size.height)];
+        [image_VoicePlay() drawInRect:NSMakeRect(5, 0, image_VoicePlay().size.width, image_VoicePlay().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1];
         
         [image unlockFocus];
     });
