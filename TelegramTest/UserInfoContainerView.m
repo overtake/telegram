@@ -200,10 +200,10 @@
         self.setTTLButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SetEncryptedTTL",nil) tapBlock:^{
             
             NSMenu *menu = [MessagesViewController destructMenu:^ {
-                [self.setTTLButton setLocked:NO];
+              //  [self.setTTLButton setLocked:NO];
                 [self buildTTLTitle];
             } click:^{
-                [self.setTTLButton setLocked:YES];
+              //  [self.setTTLButton setLocked:YES];
             }];
             
             [menu popUpForView:weakSelf.setTTLButton withType:PopUpAlignTypeRight];

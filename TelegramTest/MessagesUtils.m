@@ -52,10 +52,8 @@
     NSString *localized = @"";
     
     if(ttl == 0)
-        localized = NSLocalizedString(@"SelfDestruction.DisableTimer", nil);
-    
-    
-    if(ttl <= 59) {
+        return NSLocalizedString(@"SelfDestruction.DisableTimer", nil);
+    else if(ttl <= 59) {
         localized = [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeSeconds", nil),ttl,ttl == 1 ? @"": @"s"];
     } else if(ttl <= 3599) {
         int minutes = ttl / 60;
@@ -80,29 +78,22 @@
     if(ttl == 0 || ttl == -1) {
         return NSLocalizedString(@"Secret.SelfDestruct.Off", nil);
     }
-    
-    if(ttl <= 2) {
-        return NSLocalizedString(@"Secret.SelfDestruct.2s", nil);
-    }
-    
-    if(ttl <= 5) {
-        return NSLocalizedString(@"Secret.SelfDestruct.5s", nil);
-    }
-    
-    if(ttl <= 60) {
-        return NSLocalizedString(@"Secret.SelfDestruct.1m", nil);
-    }
-    
-    if(ttl <= 60*60) {
-        return NSLocalizedString(@"Secret.SelfDestruct.1h", nil);
-    }
-    
-    if(ttl <= 60*60*24) {
-        return NSLocalizedString(@"Secret.SelfDestruct.1d", nil);
-    }
-    
-    if(ttl <= 60*60*24*7) {
-        return NSLocalizedString(@"Secret.SelfDestruct.1w", nil);
+
+    if(ttl <= 59) {
+        return [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeSeconds", nil),ttl,ttl == 1 ? @"": @"s"];
+    } else if(ttl <= 3599) {
+        int minutes = ttl / 60;
+        return [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeMinutes", nil),minutes,minutes == 1 ? @"": @"s"];
+    } else if(ttl <= 86399) {
+        int hours = ttl / 60 / 60;
+        return [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeHours", nil),hours,hours == 1 ? @"": @"s"];
+    } else if(ttl <= 604799) {
+        int days = ttl / 60 / 60 / 24;
+        return [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeDays", nil),days,days == 1 ? @"": @"s"];
+    } else {
+        int weeks = ttl / 60 / 60 / 24 / 7;
+        return [NSString stringWithFormat:NSLocalizedString(@"Notification.MessageLifetimeWeeks", nil),weeks,weeks == 1 ? @"": @"s"];
+        
     }
     
     return [NSString stringWithFormat:@"%d s",ttl];
