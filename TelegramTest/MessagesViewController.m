@@ -2565,6 +2565,18 @@ static NSTextAttachment *headerMediaIcon() {
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }
+    } else if(item.class == [MessageTableItemSocial class]) {
+      
+        static NSString *const kRowIdentifier = @"social_cell";
+        cell = (MessageTableCellSocialView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellSocialView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+
+        
     } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         
         assert(NO);

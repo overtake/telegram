@@ -292,6 +292,11 @@
 		C2233DA01A07E3350056594F /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2233DA11A07E33A0056594F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2233DA21A07E33C0056594F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */; };
+		C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DA81A07EF060056594F /* MessageTableItemSocial.m */; };
+		C2233DAC1A07F2460056594F /* YoutubeServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DAB1A07F2460056594F /* YoutubeServiceDescription.m */; };
+		C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DB11A0818910056594F /* MessageCellDescriptionView.m */; };
+		C2233DB41A0819E30056594F /* SocialServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DB31A0819E30056594F /* SocialServiceDescription.m */; };
 		C22421CA19EBCFA80030078A /* BlockedUserRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421C919EBCFA80030078A /* BlockedUserRowItem.m */; };
 		C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421D019EBCFBC0030078A /* BlockedUserRowView.m */; };
 		C22520E518B2801D00049558 /* MTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C22520E418B2801D00049558 /* MTConnection.m */; };
@@ -1248,6 +1253,16 @@
 		C2227758190E7309002AA0F6 /* TMTaskRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTaskRequest.m; sourceTree = "<group>"; };
 		C222775C190E7403002AA0F6 /* ITaskRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ITaskRequest.h; sourceTree = "<group>"; };
 		C222775E190E747A002AA0F6 /* TaskObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskObserver.h; sourceTree = "<group>"; };
+		C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellSocialView.h; sourceTree = "<group>"; };
+		C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellSocialView.m; sourceTree = "<group>"; };
+		C2233DA71A07EF060056594F /* MessageTableItemSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemSocial.h; sourceTree = "<group>"; };
+		C2233DA81A07EF060056594F /* MessageTableItemSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemSocial.m; sourceTree = "<group>"; };
+		C2233DAA1A07F2460056594F /* YoutubeServiceDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YoutubeServiceDescription.h; sourceTree = "<group>"; };
+		C2233DAB1A07F2460056594F /* YoutubeServiceDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YoutubeServiceDescription.m; sourceTree = "<group>"; };
+		C2233DAD1A07F37A0056594F /* SocialServiceDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialServiceDescription.h; sourceTree = "<group>"; };
+		C2233DB01A0818910056594F /* MessageCellDescriptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCellDescriptionView.h; sourceTree = "<group>"; };
+		C2233DB11A0818910056594F /* MessageCellDescriptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCellDescriptionView.m; sourceTree = "<group>"; };
+		C2233DB31A0819E30056594F /* SocialServiceDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialServiceDescription.m; sourceTree = "<group>"; };
 		C22421C819EBCFA80030078A /* BlockedUserRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUserRowItem.h; sourceTree = "<group>"; };
 		C22421C919EBCFA80030078A /* BlockedUserRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUserRowItem.m; sourceTree = "<group>"; };
 		C22421CF19EBCFBC0030078A /* BlockedUserRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUserRowView.h; sourceTree = "<group>"; };
@@ -2138,6 +2153,7 @@
 		0A6758E01895504600F4487D /* items */ = {
 			isa = PBXGroup;
 			children = (
+				C2233DA61A07EEF10056594F /* social */,
 				0A613C1E18AD9892004096DD /* MessageTableItemContact.h */,
 				0A613C1F18AD9892004096DD /* MessageTableItemContact.m */,
 				0A4A1A2018A153F800D756CD /* MessageTableItemDocument.h */,
@@ -2199,6 +2215,8 @@
 				C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */,
 				C268C19D19F13721007F836A /* MessagetableCellAudioController.h */,
 				C268C19E19F13721007F836A /* MessagetableCellAudioController.m */,
+				C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */,
+				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -2730,6 +2748,8 @@
 				C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */,
 				C268C1A819F43575007F836A /* MessageStateLayer.h */,
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
+				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
+				C2233DB11A0818910056594F /* MessageCellDescriptionView.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -2919,6 +2939,19 @@
 				C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */,
 			);
 			name = types;
+			sourceTree = "<group>";
+		};
+		C2233DA61A07EEF10056594F /* social */ = {
+			isa = PBXGroup;
+			children = (
+				C2233DA71A07EF060056594F /* MessageTableItemSocial.h */,
+				C2233DA81A07EF060056594F /* MessageTableItemSocial.m */,
+				C2233DAA1A07F2460056594F /* YoutubeServiceDescription.h */,
+				C2233DAB1A07F2460056594F /* YoutubeServiceDescription.m */,
+				C2233DAD1A07F37A0056594F /* SocialServiceDescription.h */,
+				C2233DB31A0819E30056594F /* SocialServiceDescription.m */,
+			);
+			name = social;
 			sourceTree = "<group>";
 		};
 		C23298D818CF6180000826E5 /* qlmedia */ = {
@@ -4410,6 +4443,7 @@
 				C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */,
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
 				C248F3BF19BE03F600BF658E /* opusenc.c in Sources */,
+				C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */,
 				0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */,
 				C20B228918E971D0007BCCD6 /* framing.c in Sources */,
@@ -4497,6 +4531,7 @@
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
 				C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */,
+				C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
@@ -4716,6 +4751,7 @@
 				CEDAEB8C1881AFA6006189A2 /* DDFileLogger.m in Sources */,
 				C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */,
 				C2AA4F0518A8ED5500E20C68 /* TGInvocationLogger.m in Sources */,
+				C2233DB41A0819E30056594F /* SocialServiceDescription.m in Sources */,
 				0AB43BC418D8A4AC00FB805A /* CNGridViewItem.m in Sources */,
 				0A9EDC5D1897BA0E0037E1BC /* RBLSlidingContainerView.m in Sources */,
 				CEDAEB5C1881AF85006189A2 /* YapDatabaseSecondaryIndexSetup.m in Sources */,
@@ -4724,6 +4760,7 @@
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
+				C2233DAC1A07F2460056594F /* YoutubeServiceDescription.m in Sources */,
 				C256E90E18D20701008FFA04 /* DownloadVideoItem.m in Sources */,
 				C268C19119F0519C007F836A /* POPLayerExtras.mm in Sources */,
 				0A4A1A1F189FFAE400D756CD /* MessageTableItemTyping.m in Sources */,
@@ -4928,6 +4965,7 @@
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
 				CEB0A25117DB09C10055F150 /* TGInitializer.m in Sources */,
 				C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */,
+				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,

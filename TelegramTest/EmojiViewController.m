@@ -172,14 +172,11 @@ static NSImage *higlightedImage() {
         
         NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕" componentsSeparatedByString:@" "] mutableCopy];
         
-        NSLog(@"popular count:%d",popular.count);
         
         [self.userEmoji enumerateObjectsUsingBlock:^(NSString *emoji, NSUInteger idx, BOOL *stop) {
             [popular removeObject:emoji];
         }];
-        
-         NSLog(@"popular count:%d",popular.count);
-        
+                
         [self.userEmoji addObjectsFromArray:popular];
         
         

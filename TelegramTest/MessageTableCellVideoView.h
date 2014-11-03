@@ -9,9 +9,7 @@
 #import "MessageTableCellContainerView.h"
 #import "MessageTableItemVideo.h"
 #import "TGImageView.h"
-@interface VideoTimeView : NSView
-@property (nonatomic, strong) NSAttributedString *string;
-@end
+
 
 @interface MessageTableCellVideoView : MessageTableCellContainerView
 @property (nonatomic, strong) TGImageView *imageView;

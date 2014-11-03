@@ -76,6 +76,14 @@
          contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellSocialView setItem:]:MessageTableCellSocialView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[item.social imageURL]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -771,6 +779,9 @@
                value = "searchString.lenght">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[MessageTableItem socialClass:]:MessageTableItem.m">
       </ContextState>
       <ContextState
          contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">

@@ -25,7 +25,7 @@
 #import "PreviewObject.h"
 #import "NSString+Extended.h"
 #import "MessageTableHeaderItem.h"
-
+#import "MessageTableItemSocial.h"
 @interface MessageTableItem()
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
@@ -195,7 +195,12 @@
         
         if([message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
             
-            objectReturn = [[MessageTableItemText alloc] initWithObject:object ];
+            Class socialClass = [MessageTableItem socialClass:message.message];
+            
+            if(socialClass == [NSNull class])
+                objectReturn = [[MessageTableItemText alloc] initWithObject:object];
+            else
+                objectReturn = [[MessageTableItemSocial alloc] initWithObject:object socialClass:socialClass];
             
         } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
             
@@ -241,6 +246,35 @@
     
     
     return objectReturn;
+}
+
++(Class)socialClass:(NSString *)message {
+    
+    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
+    
+    
+    NSArray *results = [detect matchesInString:message options:0 range:NSMakeRange(0, [message length])];
+
+    
+    if(results.count != 1)
+        return [NSNull class];
+    
+    NSRange range = [results[0] range];
+    
+    if(range.location != 0 && range.length != message.length)
+        return [NSNull class];
+
+    // youtube checker
+    
+     NSString *vid = [YoutubeServiceDescription idWithURL:message];
+    
+    
+    if(vid.length > 0)
+        return [YoutubeServiceDescription class];
+    
+    return [NSNull class];
+    
+    
 }
 
 -(void)clean {

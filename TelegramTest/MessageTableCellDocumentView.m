@@ -160,7 +160,7 @@ static NSImage *attachDownloadedBackground() {
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
         
-        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((48 - image_DocumentThumbIcon().size.width)/2), roundf((48 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1];
+        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((48 - image_DocumentThumbIcon().size.width)/2), roundf((48 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
     return image;

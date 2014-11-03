@@ -34,7 +34,7 @@ NSImage *fireImage() {
         
         [path fill];
         
-        [image_SecretPhotoFire() drawInRect:NSMakeRect(roundf((42 - image_SecretPhotoFire().size.width)/2), roundf((42 - image_SecretPhotoFire().size.height)/2), image_SecretPhotoFire().size.width, image_SecretPhotoFire().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOut fraction:1];
+        [image_SecretPhotoFire() drawInRect:NSMakeRect(roundf((42 - image_SecretPhotoFire().size.width)/2), roundf((42 - image_SecretPhotoFire().size.height)/2), image_SecretPhotoFire().size.width, image_SecretPhotoFire().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         
         [image unlockFocus];
     });

@@ -686,7 +686,7 @@ static CAAnimation *ani2() {
         NSImage *img = self.bounds.size.width > 50.0 ? largeAvatar : smallAvatar;
         
         
-        [img drawInRect:NSMakeRect(roundf( (self.bounds.size.width - img.size.width) * 0.5 ),roundf( (self.bounds.size.height - img.size.height) * 0.5 ), img.size.width, img.size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1];
+        [img drawInRect:NSMakeRect(roundf( (self.bounds.size.width - img.size.width) * 0.5 ),roundf( (self.bounds.size.height - img.size.height) * 0.5 ), img.size.width, img.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
     
     

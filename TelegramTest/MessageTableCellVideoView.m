@@ -13,29 +13,13 @@
 #import "TMMediaController.h"
 #import "TMPreviewVideoItem.h"
 #import "FileUtils.h"
+#import "MessageCellDescriptionView.h"
 
-
-@implementation VideoTimeView
-
-- (void) drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    [path appendBezierPathWithRoundedRect:NSMakeRect(1, 1, self.bounds.size.width - 2, self.bounds.size.height - 2) xRadius:5 yRadius:5];
-    
-    [NSColorFromRGBWithAlpha(0x00000, 0.4) set];
-    [path fill];
-    
-    [self.string drawAtPoint:NSMakePoint(7, 4)];
-    
-}
-
-@end
 
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
-@property (nonatomic, strong) VideoTimeView *videoTimeView;
+@property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
 
 @end
 
@@ -55,7 +39,7 @@ static NSImage *playImage() {
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
         
-        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1];
+        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
     return image;//image_VideoPlay();
@@ -93,7 +77,7 @@ static NSImage *playImage() {
         [self.playImage setCenterByView:self.imageView];
         [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
         
-        self.videoTimeView = [[VideoTimeView alloc] initWithFrame:NSMakeRect(10, 10, 0, 0)];
+        self.videoTimeView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(10, 10, 0, 0)];
         [self.imageView addSubview:self.videoTimeView];
                 
         [self setProgressStyle:TMCircularProgressDarkStyle];
@@ -176,8 +160,7 @@ static NSImage *playImage() {
     [self updateDownloadState];
    
     
-    
-    [self.imageView setFrameSize:item.blockSize];
+     [self.imageView setFrameSize:item.blockSize];
     
     self.imageView.object = item.imageObject;
     
@@ -190,7 +173,6 @@ static NSImage *playImage() {
 - (void)updateVideoTimeView {
     [self.videoTimeView setFrameSize:((MessageTableItemVideo *)self.item).videoTimeSize];
     [self.videoTimeView setString:((MessageTableItemVideo *)self.item).videoTimeAttributedString];
-    [self.videoTimeView setNeedsDisplay:YES];
 }
 
 - (void)onStateChanged:(SenderItem *)item {

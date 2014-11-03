@@ -20,4 +20,4 @@
 #import "MessageTableCellAudioView.h"
 #import "MessageTableCellUnreadMarkView.h"
 #import "MessageTablecellAudioDocumentView.h"
-
+#import "MessageTableCellSocialView.h"

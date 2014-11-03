@@ -19,7 +19,6 @@
         self.dialog = message.dialog;
         self.selectString = selectedText;
         
-        [Notification addObserver:self selector:@selector(notificationChangeMessage:) name:[Notification notificationNameByDialog:self.dialog action:@"message"]];
         [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
         [Notification addObserver:self selector:@selector(notificationChangedDeliveryState:) name:MESSAGE_CHANGED_DSTATE];
         
