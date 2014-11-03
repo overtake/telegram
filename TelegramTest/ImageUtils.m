@@ -146,6 +146,8 @@ CACHE_IMAGE(UsernameCheck)
 CACHE_IMAGE(VoicePlay)
 CACHE_IMAGE(VoicePause)
 
+CACHE_IMAGE(SecretPhotoFire)
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

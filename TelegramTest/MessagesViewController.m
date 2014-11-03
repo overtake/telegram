@@ -1262,6 +1262,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)insertAndGoToEnd:(NSRange)range forceEnd:(BOOL)forceEnd items:(NSArray *)items {
     
+    
+   // [CATransaction begin];
+    
+    
     BOOL isScrollToEnd = [self.table.scrollView isScrollEndOfDocument];
     
     forceEnd = isScrollToEnd ? NO : forceEnd;
@@ -1384,6 +1388,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [cell.layer.superlayer addAnimation:animation forKey:@"position"];
     }
+    
+    //  [CATransaction commit];
     
 }
 

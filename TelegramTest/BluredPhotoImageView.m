@@ -36,8 +36,8 @@ static CAAnimation *ani() {
 }
 
 - (void)setIsAlwaysBlur:(BOOL)isAlwaysBlur {
-    if(self->_isAlwaysBlur == isAlwaysBlur)
-        return;
+  //  if(self->_isAlwaysBlur == isAlwaysBlur)
+    //    return;
     
     self->_isAlwaysBlur = isAlwaysBlur;
     [self setImage:self.originImage];
@@ -56,12 +56,22 @@ static CAAnimation *ani() {
     BOOL isBlur = NO;
     
     
-    if(self.isAlwaysBlur && !isBlur) {
-        image = [self blur:image];
-        isBlur = YES;
+    if(self.isAlwaysBlur) {
+        
+        [super setImage:nil];
+        
+        [ASQueue dispatchOnStageQueue:^{
+            NSImage *blured = [self blur:image];
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                [super setImage:blured];
+            }];
+            
+        }];
+        
+        return;
     }
     
-     BOOL needAnimation = self.image && (self.isAlwaysBlur != isBlur);
+    BOOL needAnimation = self.image && (self.isAlwaysBlur != isBlur);
     
     if(needAnimation) {
         [self addAnimation:ani() forKey:@"contents"];

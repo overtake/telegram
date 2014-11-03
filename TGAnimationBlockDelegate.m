@@ -16,6 +16,19 @@
 {
 }
 
+
+
+- (void)pop_animationDidStart:(POPAnimation *)anim {
+    
+}
+
+
+- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)finished {
+    [self animationDidStop:nil finished:finished];
+}
+
+
+
 - (void)animationDidStop:(CAAnimation *)__unused anim finished:(BOOL)flag
 {
     CALayer *layer = _layer;

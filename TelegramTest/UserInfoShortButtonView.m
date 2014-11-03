@@ -74,6 +74,7 @@
 
 -(void)setRightContainer:(NSView *)rightContainer {
     
+    [rightContainer removeFromSuperview];
     self.currentRightController = rightContainer;
     
     while (_rightContainer.subviews.count) {

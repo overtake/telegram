@@ -38,6 +38,9 @@
 @property (strong) NSImageView *cachedImageView;
 @property (nonatomic,strong) NSMutableArray *delegates;
 
+@property (nonatomic,strong) TGAnimationBlockDelegate *odelegate;
+@property (nonatomic,strong) TGAnimationBlockDelegate *ndelegate;
+
 @end
 
 @implementation TMNavigationController
@@ -396,12 +399,12 @@ static const int navigationOffset = 48;
         };
         
         
-        TGAnimationBlockDelegate *odelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:oldView.layer];
+        _odelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:oldView.layer];
         
-        odelegate.removeLayerOnCompletion = YES;
+        _odelegate.removeLayerOnCompletion = YES;
         
         
-        [odelegate setCompletion:^(BOOL finished) {
+        [_odelegate setCompletion:^(BOOL finished) {
             
             [oldView setHidden:YES];
             [oldView removeFromSuperview];
@@ -413,23 +416,41 @@ static const int navigationOffset = 48;
         
         [CATransaction begin];
         
-        
-        CABasicAnimation *oldViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
-        oldViewPositionAnimation.fromValue = @(animOldFrom);
-        oldViewPositionAnimation.toValue = @(animOldTo);
-        oldViewPositionAnimation.duration = duration;
-        oldViewPositionAnimation.delegate = odelegate;
-        oldViewPositionAnimation.timingFunction = timingFunction;
-        oldViewPositionAnimation.removedOnCompletion = true;
-        oldViewPositionAnimation.fillMode = kCAFillModeRemoved;
-        [oldView.layer addAnimation:oldViewPositionAnimation forKey:@"position"];
-        oldView.layer.position = CGPointMake(animOldTo, 0.0f);
-       
-        
-        TGAnimationBlockDelegate *ndelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:newView.layer];
     
         
-        [ndelegate setCompletion:^(BOOL finished) {
+        
+        if (floor(NSAppKitVersionNumber) <= 1187) {
+            POPBasicAnimation *oldViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
+            
+            oldViewPositionAnimation.fromValue = @(animOldFrom);
+            oldViewPositionAnimation.toValue = @(animOldTo);
+            oldViewPositionAnimation.duration = duration;
+            oldViewPositionAnimation.delegate = _odelegate;
+            oldViewPositionAnimation.timingFunction = timingFunction;
+            oldViewPositionAnimation.removedOnCompletion = true;
+            
+            [oldView.layer pop_addAnimation:oldViewPositionAnimation forKey:@"position"];
+            
+            
+        } else {
+            CABasicAnimation *oldViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+            oldViewPositionAnimation.fromValue = @(animOldFrom);
+            oldViewPositionAnimation.toValue = @(animOldTo);
+            oldViewPositionAnimation.duration = duration;
+            oldViewPositionAnimation.delegate = _odelegate;
+            oldViewPositionAnimation.timingFunction = timingFunction;
+            oldViewPositionAnimation.removedOnCompletion = true;
+            oldViewPositionAnimation.fillMode = kCAFillModeRemoved;
+            
+            [oldView.layer addAnimation:oldViewPositionAnimation forKey:@"position"];
+            
+            oldView.layer.position = CGPointMake(animOldTo, 0.0f);
+        }
+        
+        _ndelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:newView.layer];
+    
+        
+        [_ndelegate setCompletion:^(BOOL finished) {
             [newView setFrameOrigin:NSMakePoint(0, 0)];
             [newViewController viewDidAppear:NO];
             block();
@@ -437,20 +458,37 @@ static const int navigationOffset = 48;
         
         
         
-        CABasicAnimation *newViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
-        newViewPositionAnimation.fromValue = @(animNewFrom);
-        newViewPositionAnimation.toValue = @(animNewTo);
-        newViewPositionAnimation.duration = duration;
-        newViewPositionAnimation.delegate = ndelegate;
-        newViewPositionAnimation.timingFunction = timingFunction;
-        [newView.layer addAnimation:newViewPositionAnimation forKey:@"position"];
         
+        if (floor(NSAppKitVersionNumber) <= 1187) {
+            POPBasicAnimation *newViewPositionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
+            newViewPositionAnimation.fromValue = @(animNewFrom);
+            newViewPositionAnimation.toValue = @(animNewTo);
+            newViewPositionAnimation.duration = duration;
+            newViewPositionAnimation.delegate = _ndelegate;
+            newViewPositionAnimation.timingFunction = timingFunction;
+            [newView.layer pop_addAnimation:newViewPositionAnimation forKey:@"position"];
+        } else {
+            CABasicAnimation *newViewPositionAnimation = [CABasicAnimation animationWithKeyPath:@"position.x"];
+            newViewPositionAnimation.fromValue = @(animNewFrom);
+            newViewPositionAnimation.toValue = @(animNewTo);
+            newViewPositionAnimation.duration = duration;
+            newViewPositionAnimation.delegate = _ndelegate;
+            newViewPositionAnimation.timingFunction = timingFunction;
+            [newView.layer addAnimation:newViewPositionAnimation forKey:@"position"];
+        }
+
         
         [CATransaction commit];
        
         
     }
 }
+
+
+- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)finished {
+    
+}
+
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag  {
     

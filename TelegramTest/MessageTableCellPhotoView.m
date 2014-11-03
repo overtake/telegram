@@ -13,7 +13,33 @@
 #import "ImageUtils.h"
 #import "SelfDestructionController.h"
 @interface MessageTableCellPhotoView()
+@property (nonatomic,strong) NSImageView *fireImageView;
 @end
+
+
+
+NSImage *fireImage() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 42, 42);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, 42, 42) xRadius:21 yRadius:21];
+        
+        [NSColorFromRGBWithAlpha(0xffffff, 0.8) setFill];
+        
+        [path fill];
+        
+        [image_SecretPhotoFire() drawInRect:NSMakeRect(roundf((42 - image_SecretPhotoFire().size.width)/2), roundf((42 - image_SecretPhotoFire().size.height)/2), image_SecretPhotoFire().size.width, image_SecretPhotoFire().size.height) fromRect:NSZeroRect operation:NSCompositeDestinationOut fraction:1];
+        
+        [image unlockFocus];
+    });
+    return image;
+}
 
 @implementation MessageTableCellPhotoView
 
@@ -21,6 +47,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         weak();
+        
+     
+        
+        
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
@@ -44,6 +74,12 @@
                 
             }
         }];
+        
+        self.fireImageView = imageViewWithImage(fireImage());
+        
+        [self.fireImageView setHidden:YES];
+        
+        [self.imageView addSubview:self.fireImageView];
         
         
         
@@ -90,13 +126,26 @@
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
+    BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60;
+    
     if(cellState == CellStateSending) {
          [self.imageView setIsAlwaysBlur:YES];
     }
     
+     [self.fireImageView setHidden:YES];
+    
     if(cellState == CellStateNormal) {
-         [self.imageView setIsAlwaysBlur:NO];
+         [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
+         [self.fireImageView setHidden:!isNeedSecretBlur];
+         if(isNeedSecretBlur) {
+            [self.fireImageView setCenterByView:self.imageView];
+           
+         }
     }
+    
+    
+    
+
     
     [self.progressView setState:cellState];
 }
@@ -107,10 +156,11 @@
     [self.imageView setFrameSize:item.blockSize];
     
     
-    self.imageView.object = item.imageObject;
-    
     
     [self updateCellState];
+    
+    
+    self.imageView.object = item.imageObject;
 }
 
 

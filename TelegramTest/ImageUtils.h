@@ -142,6 +142,8 @@ CACHE_IMAGE(UsernameCheck)
 CACHE_IMAGE(VoicePlay)
 CACHE_IMAGE(VoicePause)
 
+CACHE_IMAGE(SecretPhotoFire)
+
 @interface ImageUtils : NSObject
 
 
