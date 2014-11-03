@@ -180,30 +180,31 @@ static NSDictionary *attributes() {
                
                NSImage *stateImage;
                
-               if([weakSelf rowItem].lastMessage.dstate == DeliveryStateNormal) {
-                    
-                    if([weakSelf rowItem].isRead) {
-                         stateImage = weakSelf.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
-                    } else {
-                        stateImage = weakSelf.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
-                    }
-                   
-                  [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width , NSHeight(weakSelf.frame) - stateImage.size.height - 14) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
-                    
-                } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStateError) {
-                    
-                    stateImage = weakSelf.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
-                    
-                     [stateImage drawAtPoint:NSMakePoint(NSWidth(weakSelf.frame) - stateImage.size.width - 13, 9) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
-                
-                } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStatePending) {
-                        
-                    stateImage = weakSelf.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
-                    
-                    [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width -2, NSHeight(weakSelf.frame) - stateImage.size.height - 13) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
-                
-                }
-           
+               if(weakSelf.style != DialogTableItemViewShortStyle) {
+                   if([weakSelf rowItem].lastMessage.dstate == DeliveryStateNormal) {
+                       
+                       if([weakSelf rowItem].isRead) {
+                           stateImage = weakSelf.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
+                       } else {
+                           stateImage = weakSelf.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
+                       }
+                       
+                       [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width , NSHeight(weakSelf.frame) - stateImage.size.height - 14) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                       
+                   } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStateError) {
+                       
+                       stateImage = weakSelf.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
+                       
+                       [stateImage drawAtPoint:NSMakePoint(NSWidth(weakSelf.frame) - stateImage.size.width - 13, 9) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                       
+                   } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStatePending) {
+                       
+                       stateImage = weakSelf.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
+                       
+                       [stateImage drawAtPoint:NSMakePoint(NSMinX(weakSelf.dateTextField.frame) - stateImage.size.width -2, NSHeight(weakSelf.frame) - stateImage.size.height - 13) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                       
+                   }
+               }
            }
             
             if(weakSelf.style == DialogTableItemViewShortStyle) {
