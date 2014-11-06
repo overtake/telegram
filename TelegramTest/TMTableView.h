@@ -25,9 +25,9 @@
 
 
 @interface TMTableView : NSTableView<NSTableViewDataSource, NSTableViewDelegate>
-@property (nonatomic, strong) NSMutableArray *list;
-@property (nonatomic, strong) TMScrollView *scrollView;
-@property (nonatomic, strong) NSTableColumn *tableColumn;
+@property (nonatomic, strong, readonly) NSMutableArray *list;
+@property (nonatomic, strong, readonly) TMScrollView *scrollView;
+@property (nonatomic, strong, readonly) NSTableColumn *tableColumn;
 @property (nonatomic) BOOL multipleSelection;
 @property (nonatomic, strong) id<TMTableViewDelegate> tm_delegate;
 @property (nonatomic) BOOL hoverCells;

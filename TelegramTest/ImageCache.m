@@ -58,6 +58,10 @@
 //    }
 }
 
++(NSCache *)roundedCache {
+    return [[self sharedManager] roundCache];
+}
+
 -(void) removeFromCache:(TGFileLocation *)location {
      [self removeObjectForKey:[location cacheKey]];
 }

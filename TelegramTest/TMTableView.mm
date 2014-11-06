@@ -75,7 +75,7 @@ static TMTableView *tableStatic;
     
     self.defaultAnimation = NSTableViewAnimationEffectNone;
     
-    self.scrollView = [[TMScrollView alloc] initWithFrame:self.frame];
+    _scrollView = [[TMScrollView alloc] initWithFrame:self.frame];
     
     //[self setFrame:self.bounds];
     
@@ -89,7 +89,7 @@ static TMTableView *tableStatic;
     [self.scrollView setAutoresizesSubviews:YES];
     [self.scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
-    self.tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"colum1"];
+    _tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"colum1"];
     self.tableColumn.width = self.bounds.size.width;
     [self addTableColumn:self.tableColumn];
     
@@ -101,7 +101,7 @@ static TMTableView *tableStatic;
     self.delegate = self;
     self.dataSource = self;
     
-    self.list = [[NSMutableArray alloc] init];
+    _list = [[NSMutableArray alloc] init];
     self.listCacheHash = new std::map<NSUInteger, id>();
     self.listSelectionHash = new std::set<NSUInteger>();
     

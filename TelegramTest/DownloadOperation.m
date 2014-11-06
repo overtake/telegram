@@ -76,12 +76,16 @@
     self.target = target;
     
     
-    [DownloadQueue dispatchOnStageQueue:^{
+    
+    
+    [DownloadQueue dispatchOnDownloadQueue:^{
         if(_item.fileType == DownloadFileImage) {
-            NSData *imageData = [NSData dataWithContentsOfFile:self.item.path] ;
             
+            
+            NSData *imageData = [NSData dataWithContentsOfFile:self.item.path];
+
             if(imageData == nil || (imageData.length == 0 || (self.item.size > 0 && self.item.size > imageData.length))) {
-                    [self load];
+                [self load];
             } else {
                 _item.isRemoteLoaded = NO;
                 _item.result = imageData;
@@ -96,7 +100,7 @@
 
 
 - (void)flush {
-    [DownloadQueue dispatchOnStageQueue:^{
+    [DownloadQueue dispatchOnDownloadQueue:^{
         while (self.poll.count > 0) {
             DownloadPart *part = self.poll[0];
             [part.request cancelRequest];
@@ -120,7 +124,7 @@
 
 -(void)cancel {
     
-     [DownloadQueue dispatchOnStageQueue:^{
+     [DownloadQueue dispatchOnDownloadQueue:^{
          self.resultData = nil;
          
          [self flush];
@@ -140,7 +144,7 @@
     
     part.request = [RPCRequest sendRequest:upload forDc:part.dcId successHandler:^(RPCRequest *request, id response) {
         
-        [DownloadQueue dispatchOnStageQueue:^{
+        [DownloadQueue dispatchOnDownloadQueue:^{
             
             TGupload_File *obj = response;
             
@@ -157,9 +161,6 @@
             [self.completePoll sortUsingComparator:^NSComparisonResult(DownloadPart *part1, DownloadPart *part2) {
                 return part1.partId > part2.partId ? NSOrderedDescending : NSOrderedAscending;
             }];
-            
-            
-            
             
             
             while (_completePoll.count > 0 && [_completePoll[0] partId] == _currentPartId) {
@@ -187,7 +188,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
        
-        [DownloadQueue dispatchOnStageQueue:^{
+        [DownloadQueue dispatchOnDownloadQueue:^{
             
             
             int n_dc = error.resultId;

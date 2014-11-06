@@ -58,7 +58,7 @@ typedef enum {
 
 @property (nonatomic,strong) id object;
 
-@property (nonatomic,strong) id reservedObject;
+@property (nonatomic,weak) id reservedObject;
 
 @property (nonatomic,assign) long n_id;
 @property (nonatomic,assign,readonly) long uniqueKey;

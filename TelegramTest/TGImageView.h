@@ -27,4 +27,10 @@
 
 @property (nonatomic) BOOL isNotNeedHackMouseUp;
 
+@property (nonatomic,copy) NSImage* (^cropInBackground)(NSImage *image);
+
++(NSCache *)cache;
+
++(void)clearCache;
+
 @end

@@ -232,6 +232,7 @@
     
     [SecretChatAccepter instance];
     
+    
     [self initializeUpdater];
     [self initializeKeyDownHandler];
     
@@ -298,7 +299,7 @@
                 return result;
             }
             
-            if([result.window isKindOfClass:[QLPreviewPanel class]]) {
+            if([result.window isKindOfClass:[QLPreviewPanel class]] || [result.window isKindOfClass:[NSPanel class]]) {
                  return result;
             }
             

@@ -288,7 +288,7 @@
     if ([[self string] isEqualToString:@""] ) {
         if(self.placeholderTextAttributedString) {
             
-           [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, 3)];
+           [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, 4)];
         }
     }
 }

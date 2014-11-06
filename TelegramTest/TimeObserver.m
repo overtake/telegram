@@ -47,12 +47,12 @@ void test_start_group(NSString * timeGroup) {
 }
 
 void test_log(NSString *log,NSString *group,dispatch_queue_t dispatch_queue) {
-    if(TEST_LOGS) {
+#ifdef TGDEBUG
+    
+    __unused const char *queueName = (dispatch_queue_get_label(dispatch_queue));
         
-        __unused const char *queueName = (dispatch_queue_get_label(dispatch_queue));
-        
-        DLog(@"group[%@], %@",group,log);
-    }
+    NSLog(@"group[%@], %@",group,log);
+#endif
 }
 
 void test_step_group(NSString *group) {

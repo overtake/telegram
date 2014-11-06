@@ -17,6 +17,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[PhotoTableItemView redrawRow]:PhotoTableItemView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
          <PersistentStrings>
             <PersistentString
@@ -118,6 +121,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.cachePhoto">
+            </PersistentString>
+            <PersistentString
+               value = "object">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -251,12 +257,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[TGImageObject initDownloadItem]_block_invoke:TGImageObject.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageView setObject:]:TGImageView.m">
          <PersistentStrings>
             <PersistentString
                value = "self.image">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PhotoCollectionTableView setItems:conversation:]:PhotoCollectionTableView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]:MessageTableCellTextView.m">
@@ -307,6 +319,12 @@
          contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
       </ContextState>
       <ContextState
+         contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -346,6 +364,22 @@
       </ContextState>
       <ContextState
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
+      </ContextState>
+      <ContextState
+         contextName = "__46-[PhotoCollectionImageObject initDownloadItem]_block_invoke_2:PhotoCollectionImageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__44-[TMCollectionPageController convertedRows:]_block_invoke:TMCollectionPageController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
@@ -470,6 +504,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[UserInfoShortButtonView setRightContainer:]:UserInfoShortButtonView.m">
          <PersistentStrings>
             <PersistentString
@@ -487,9 +524,19 @@
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result.window">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.selectedMessages">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__48-[DeleteRandomMessagesSenderItem performRequest]_block_invoke:DeleteRandomMessagesSenderItem.m">
@@ -515,6 +562,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.list">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[PhotoTableItemView setFrameSize:]:PhotoTableItemView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -604,6 +659,9 @@
          contextName = "-[UserInfoContainerView buildTTLTitle]:UserInfoContainerView.m">
       </ContextState>
       <ContextState
+         contextName = "-[DownloadPhotoCollectionItem initWithObject:size:]:DownloadPhotoCollectionItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
          <PersistentStrings>
             <PersistentString
@@ -634,6 +692,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__46-[PhotoCollectionImageObject initDownloadItem]_block_invoke:PhotoCollectionImageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.result.length">
+            </PersistentString>
+            <PersistentString
+               value = "item.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
       </ContextState>
       <ContextState
@@ -641,6 +710,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__23-[DownloadItem notify:]_block_invoke_2:DownloadItem.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemDocument isHasThumb]:MessageTableItemDocument.m">
@@ -732,6 +804,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DownloadOperation load]:DownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMMediaController previewPanel:sourceFrameOnScreenForPreviewItem:]:TMMediaController.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "reserved.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[Storage searchDialogsByPeers:needMessages:searchString:completeHandler:]:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -773,6 +856,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[MessageTableItem socialClass:]:MessageTableItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUsersTableView search:]:SelectUsersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -781,7 +867,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "+[MessageTableItem socialClass:]:MessageTableItem.m">
+         contextName = "-[TMCollectionPageController scrollViewDocumentOffsetChangingNotificationHandler:]:TMCollectionPageController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.locked">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">
@@ -794,6 +885,23 @@
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMCollectionPageController convertedRows:]:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__35-[DownloadQueue operationComplete:]_block_invoke_2:DownloadQueue.mm">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageView drawRect:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMCollectionPageController addNextItems:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
          contextName = "-[TMNavigationBar buildSizes]:TMNavigationBar.m">
@@ -860,6 +968,9 @@
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[TMCollectionPageController reloadData]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
          <PersistentStrings>
             <PersistentString
@@ -895,10 +1006,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__52-[TMCollectionPageController setItems:conversation:]_block_invoke:TMCollectionPageController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "pos">
+            </PersistentString>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMBackButton updateBackButton]:TMBackButton.m">
          <PersistentStrings>
             <PersistentString
                value = "self.controller.navigationViewController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageView setImage:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+            <PersistentString
+               value = "NSHeight(self.frame)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -925,10 +1058,18 @@
          contextName = "-[TMTextField placeholderView:]:TMTextField.m">
       </ContextState>
       <ContextState
-         contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke_3:UsersManager.m">
+         contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
-         contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
+         contextName = "-[TMCollectionPageController setItems:conversation:]:TMCollectionPageController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke_3:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
@@ -937,6 +1078,9 @@
                value = "self.searchViewController.type">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">

@@ -33,7 +33,10 @@
             self.photoLocation = photoSize.location;
             self.photoSize = photoSize.size;
             
+            
             imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+            
+            cachePhoto.size = imageSize;
             
             
             if(cachePhoto && imageSize.width == MIN_IMG_SIZE.width && imageSize.height == MIN_IMG_SIZE.height && photoSize.w > MIN_IMG_SIZE.width && photoSize.h > MIN_IMG_SIZE.height) {
@@ -43,7 +46,7 @@
                 cachePhoto = cropImage(cachePhoto, imageSize,NSMakePoint((photoSize.w - imageSize.width)/2, 0));
                 
             }
-            
+//
             self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
             
             

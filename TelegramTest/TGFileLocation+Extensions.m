@@ -18,7 +18,35 @@
     return self.local_id == -1;
 }
 
+
+DYNAMIC_PROPERTY(MediaFileURL)
+
+
+-(NSString *)path {
+    NSString *p = [self getMediaFileURL];
+    if(!p) {
+        p = locationFilePath(self, @"tiff");
+        [self setMediaFileURL:p];
+    }
+    
+    return p;
+}
+
+DYNAMIC_PROPERTY(SquareMediaURL)
+
+
+-(NSString *)squarePath {
+    NSString *p = [self getSquareMediaURL];
+    if(!p) {
+        p = locationFilePathWithPrefix(self,@"200x200", @"tiff");
+        [self setSquareMediaURL:p];
+    }
+    
+    return p;
+}
+
 DYNAMIC_PROPERTY(CacheKey);
+
 
 
 - (NSString *) cacheKey {

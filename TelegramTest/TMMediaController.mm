@@ -471,7 +471,7 @@ static TMMediaController* currentController;
         
         if(index != NSNotFound) {
             if(index == self->items.count-1) {
-                if([self remoteLoad:self.dialog])
+                if([self remoteLoad:self.dialog completionHandler:nil])
                     return;
                 else
                     index = 0;
@@ -517,7 +517,7 @@ static TMMediaController* currentController;
 }
 
 
-- (BOOL)remoteLoad:(TL_conversation *)conversation {
+- (BOOL)remoteLoad:(TL_conversation *)conversation completionHandler:(void (^)(NSArray *))completionHandler {
     
     
     if(self.request || self.itsFull[@(conversation.peer.peer_id)] != nil)
@@ -535,6 +535,9 @@ static TMMediaController* currentController;
         
         NSMutableArray *cache = [self media:conversation.peer.peer_id];
         
+        
+        NSMutableArray *added = [[NSMutableArray alloc] init];
+        
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
             PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
@@ -542,11 +545,11 @@ static TMMediaController* currentController;
             id<TMPreviewItem> item = [self convert:preview];
             
             if(item) {
-                 [[Storage manager] insertMedia:obj];
+                [[Storage manager] insertMedia:obj];
+                [cache addObject:item];
+                [added addObject:item];
             }
             
-            [cache addObject:item];
-       
         }];
         
         if(messages.count == 0) {
@@ -555,15 +558,20 @@ static TMMediaController* currentController;
         
         self.request = nil;
         
-        [_panel reloadData];
+        if([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])  {
+            [_panel reloadData];
+            
+            [self nextItem];
+        }
         
-        [self nextItem];
+        if(completionHandler)
+            completionHandler(added);
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         self.request = nil;
         
-        [self remoteLoad:conversation];
+     //   [self remoteLoad:conversation];
         
     } timeout:10];
     
@@ -719,15 +727,10 @@ static TMMediaController* currentController;
 -(id)previewPanel:(QLPreviewPanel *)panel transitionImageForPreviewItem:(id<TMPreviewItem>)item contentRect:(NSRect *)contentRect {
     
     
-    if([item isKindOfClass:[TMPreviewCollectionPhotoItem class]]) {
+    if([item previewObject].reservedObject) {
         
         NSImageView *imageView = [item previewObject].reservedObject;
-        
-        NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(imageView.bounds.size.width, imageView.bounds.size.height)];
-        [image lockFocus];
-        [imageView drawRect:imageView.bounds];
-        [image unlockFocus];
-        return image;        
+        return imageView.image;
     }
     
     MessagesViewController *controller = [Telegram rightViewController].messagesViewController;
@@ -768,7 +771,7 @@ static TMMediaController* currentController;
 - (NSRect)previewPanel:(QLPreviewPanel *)panel sourceFrameOnScreenForPreviewItem:(id <TMPreviewItem>)item {
     
     
-    if([item isKindOfClass:[TMPreviewCollectionPhotoItem class]]) {
+    if([item previewObject].reservedObject) {
         NSImageView * reserved = [item previewObject].reservedObject;
         
         if(!reserved || reserved.visibleRect.size.height <= 0)

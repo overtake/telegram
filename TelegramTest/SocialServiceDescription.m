@@ -26,4 +26,8 @@
     return nil;
 }
 
+-(NSImage *)centerImage {
+    return nil;
+}
+
 @end

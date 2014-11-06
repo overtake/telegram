@@ -490,55 +490,61 @@ static CAAnimation *ani2() {
         
         [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
 
-            
-            
-            weakSelf.downloadItem = nil;
-            
-            if(!item.result) {
-                [weakSelf setFileLocationBig:nil];
-                [weakSelf setFileLocationSmall:nil];
-                [weakSelf rebuild:animated];
-                return;
-            }
-            
-            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
-                __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
+            [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                if(!imageOrigin) {
-                    [LoopingUtils runOnMainQueueAsync:^{
-                        [weakSelf setFileLocationBig:nil];
-                        [weakSelf setFileLocationSmall:nil];
-                        [weakSelf rebuild:animated];
-                    }];
+                if(!item.result) {
+                    [weakSelf setFileLocationBig:nil];
+                    [weakSelf setFileLocationSmall:nil];
+                    [weakSelf rebuild:animated];
                     return;
                 }
                 
-                __block NSImage *image = [TMImageUtils roundedImageNew:imageOrigin size:weakSelf.bounds.size];
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                    if(weakSelf.cacheDictionary)
-                        [weakSelf.cacheDictionary setObject:image forKey:key];
+                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
+                    __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
                     
-                    if(!weakSelf.takeBigPhoto) {
-                        [photosSmallCache() setObject:imageOrigin forKey:key];
-                    } else {
-                        [photosBigCache() setObject:imageOrigin forKey:key];
+                    if(!imageOrigin) {
+                        [LoopingUtils runOnMainQueueAsync:^{
+                            [weakSelf setFileLocationBig:nil];
+                            [weakSelf setFileLocationSmall:nil];
+                            [weakSelf rebuild:animated];
+                        }];
+                        return;
                     }
                     
-                    if(weakSelf.currentHash != hash) return;
-                    
-                    if(animated)
-                        [weakSelf addAnimation:ani() forKey:@"contents"];
-                    else {
-                       // [weakSelf addAnimation:ani2() forKey:@"contents"];
-                    }
-                    
-                    
-                    
-                    
-                    if(weakSelf.isNeedPlaceholder)
-                        weakSelf.image =  (BTRImage *)image;
+                    __block NSImage *image = [TMImageUtils roundedImageNew:imageOrigin size:weakSelf.bounds.size];
+                    dispatch_async(dispatch_get_main_queue(), ^(void){
+                        if(weakSelf.cacheDictionary)
+                            [weakSelf.cacheDictionary setObject:image forKey:key];
+                        
+                        if(!weakSelf.takeBigPhoto) {
+                            [photosSmallCache() setObject:imageOrigin forKey:key];
+                        } else {
+                            [photosBigCache() setObject:imageOrigin forKey:key];
+                        }
+                        
+                        if(weakSelf.currentHash != hash) return;
+                        
+                        if(animated)
+                            [weakSelf addAnimation:ani() forKey:@"contents"];
+                        else {
+                            // [weakSelf addAnimation:ani2() forKey:@"contents"];
+                        }
+                        
+                        
+                        
+                        
+                        if(weakSelf.isNeedPlaceholder)
+                            weakSelf.image =  (BTRImage *)image;
+                    });
                 });
-            });
+                
+                weakSelf.downloadItem = nil;
+                
+            }];
+            
+          
+            
+            
 
         }];
         

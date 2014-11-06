@@ -395,6 +395,41 @@ NSImage *imageFromFile(NSString *filePath) {
 }
 
 
+NSImage *decompressedImage(NSImage *image) {
+    
+    
+    CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
+                                                 image.size.width,
+                                                 image.size.height,
+                                                 8 /*bitsPerComponent*/,
+                                                 0 /*bytesPerRow - CG will calculate it for you if it's allocating the data.  This might get padded out a bit for better alignment*/,
+                                                 [[NSColorSpace genericRGBColorSpace] CGColorSpace],
+                                                 kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
+    
+    NSGraphicsContext *nscontext =  [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO];
+    
+    
+    
+    [NSGraphicsContext setCurrentContext:nscontext];
+    
+    
+    [image drawAtPoint:NSMakePoint(0, 0) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0f];
+    
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+    
+    
+    CGContextRelease(context);
+    
+    
+    
+    image = [[NSImage alloc] initWithCGImage:cgImage size:image.size];
+    CGImageRelease(cgImage);
+
+    return image;
+    
+}
+
+
 NSImage *prettysize(NSImage *img) {
     if(img.representations.count > 0) {
         
@@ -548,6 +583,28 @@ NSImageView *imageViewWithImage(NSImage *image) {
     imageView.image = image;
     
     return imageView;
+}
+
+NSData *jpegNormalizedData(NSImage *image) {
+    NSBitmapImageRep* myBitmapImageRep;
+    
+      //this will get a bitmap from the image at 1 point == 1 pixel, which is probably what you want
+        NSSize imageSize = [image size];
+        [image lockFocus];
+        NSRect imageRect = NSMakeRect(0, 0, imageSize.width, imageSize.height);
+        myBitmapImageRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:imageRect];
+        [image unlockFocus];
+    
+
+    CGFloat imageCompression = 0.5; //between 0 and 1; 1 is maximum quality, 0 is maximum compression
+    
+    // set up the options for creating a JPEG
+    NSDictionary* jpegOptions = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithDouble:imageCompression], NSImageCompressionFactor,
+                                 [NSNumber numberWithBool:NO], NSImageProgressive,
+                                 nil];
+    
+    return[myBitmapImageRep representationUsingType:NSJPEGFileType properties:jpegOptions];
 }
 
 @end

@@ -27,6 +27,7 @@ NSString* path();
 BOOL checkFileSize(NSString *path, int size);
 BOOL fileExists(TGFileLocation *location);
 NSString *locationFilePath(TGFileLocation *location,NSString *extension);
+NSString* locationFilePathWithPrefix(TGFileLocation *location, NSString *prefix, NSString *extension);
 NSString *mediaFilePath(TGMessageMedia *media);
 NSString *documentPath(TGDocument *document);
 BOOL isPathExists(NSString *path);

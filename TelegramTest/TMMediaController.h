@@ -41,4 +41,6 @@
 -(void)reloadData:(NSInteger)currentIndex;
 -(id<TMPreviewItem>)convert:(PreviewObject *)from;
 -(BOOL)isExist:(id<TMPreviewItem>)item in:(NSArray *)list;
+
+- (BOOL)remoteLoad:(TL_conversation *)conversation completionHandler:(void (^)(NSArray *items))completionHandler;
 @end

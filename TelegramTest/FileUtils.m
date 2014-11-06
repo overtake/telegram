@@ -149,6 +149,10 @@ NSString* locationFilePath(TGFileLocation *location, NSString *extension) {
     return [NSString stringWithFormat:@"%@/%@.%@",path(),location.cacheKey,extension];
 }
 
+NSString* locationFilePathWithPrefix(TGFileLocation *location, NSString *prefix, NSString *extension) {
+    return [NSString stringWithFormat:@"%@/%@_%@.%@",path(),location.cacheKey,prefix,extension];
+}
+
 NSString* mediaFilePath(TGMessageMedia *media) {
     if([media isKindOfClass:[TL_messageMediaAudio class]]) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),media.audio.n_id,media.audio.access_hash];

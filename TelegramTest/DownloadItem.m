@@ -119,31 +119,27 @@ static int futureUniqueKey = 0;
 
 -(void)notify:(DownloadItemHandlerType)type {
     [DownloadQueue dispatchOnStageQueue:^{
+        
+        
        
         [self.events enumerateObjectsUsingBlock:^(DownloadEventListener *obj, NSUInteger idx, BOOL *stop) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                switch (type) {
-                    case DownloadItemHandlerTypeCompletion:
-                        if(obj.completeHandler) obj.completeHandler(obj.item);
-                        break;
-                    case DownloadItemHandlerTypeError:
-                        if(obj.errorHandler) obj.errorHandler(obj.item);
-                        break;
-                    case DownloadItemHandlerTypeProgress:
-                        if(obj.progressHandler) obj.progressHandler(obj.item);
-                        break;
-                    default:
-                        break;
+            switch (type) {
+                case DownloadItemHandlerTypeCompletion:
+                    if(obj.completeHandler) obj.completeHandler(obj.item);
+                    break;
+                case DownloadItemHandlerTypeError:
+                    if(obj.errorHandler) obj.errorHandler(obj.item);
+                    break;
+                case DownloadItemHandlerTypeProgress:
+                    if(obj.progressHandler) obj.progressHandler(obj.item);
+                    break;
+                default:
+                    break;
                 }
                 
-                if(type == DownloadItemHandlerTypeCompletion)
-                    [self clear];
-                
-            } synchronous:NO];
-            
-           
-            
+            if(type == DownloadItemHandlerTypeCompletion)
+                [self clear];
         }];
         
     }];

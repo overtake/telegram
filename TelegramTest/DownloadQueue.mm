@@ -44,6 +44,15 @@
     [[DownloadQueue dispatcher] dispatchOnQueue:block synchronous:synchronous];
 }
 
+
++ (void)dispatchOnDownloadQueue:(dispatch_block_t)block {
+    [[DownloadQueue downloader] dispatchOnQueue:block];
+}
+
++ (void)dispatchOnDownloadQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous {
+    [[DownloadQueue downloader] dispatchOnQueue:block synchronous:synchronous];
+}
+
 +(ASQueue *)dispatcher {
     static ASQueue *queue;
     
@@ -54,6 +63,18 @@
     
     return queue;
 }
+
++(ASQueue *)downloader {
+    static ASQueue *queue;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[ASQueue alloc] initWithName:"downloaderQueue"];
+    });
+    
+    return queue;
+}
+
 
 +(DownloadQueue *)sharedManager {
     static DownloadQueue *instance;
@@ -86,18 +107,20 @@
 }
 
 
--(void)dequeue {
-    [DownloadQueue dispatchOnStageQueue:^{
-       [_fileQueue enumerateObjectsUsingBlock:^(DownloadOperation *operation, NSUInteger idx, BOOL *stop) {
-           DownloadItem * item = [self find:operation.item.n_id];
-           if(!item) {
-               [operation start:self selector:@selector(operationComplete:)];
-               _loading->insert(std::pair< long, DownloadItem * >(operation.item.n_id,operation.item));
-           }
-       }];
+//static const int MAX_CONCURRENT_DOWNLOAD = 5;
 
-    }];
-}
+//-(void)dequeue {
+//    [DownloadQueue dispatchOnStageQueue:^{
+//        [_fileQueue enumerateObjectsUsingBlock:^(DownloadOperation *operation, NSUInteger idx, BOOL *stop) {
+//            DownloadItem * item = [self find:operation.item.n_id];
+//            if(!item) {
+//                [operation start:self selector:@selector(operationComplete:)];
+//                _loading->insert(std::pair< long, DownloadItem * >(operation.item.n_id,operation.item));
+//            }
+//        }];
+//
+//    }];
+//}
 
 
 -(void)operationComplete:(DownloadOperation *)operation {
@@ -114,8 +137,8 @@
                 
                 current.item.result = operation.item.result;
 //                
-//                if(current.item.downloadState == DownloadStateDownloading)
-//                    current.item.downloadState = DownloadStateCompleted;
+                if(current.item.downloadState == DownloadStateDownloading)
+                    current.item.downloadState = DownloadStateCompleted;
                 
                 if(current.item.errorType == DownloadErrorNone)
                     [current.item notify:DownloadItemHandlerTypeCompletion];
@@ -131,7 +154,7 @@
             [_fileQueue removeObject:_operation];
         }
         
-        [self dequeue];
+      //  [self dequeue];
     }];
 }
 
@@ -159,7 +182,12 @@
     [DownloadQueue dispatchOnStageQueue:^{
         DownloadOperation *operation = [[DownloadOperation alloc] initWithItem:item];
         [manager.fileQueue addObject:operation];
-        [manager dequeue];
+        
+        DownloadItem * item = [self find:operation.item.n_id];
+        if(!item) {
+            [operation start:manager selector:@selector(operationComplete:)];
+            manager.loading->insert(std::pair< long, DownloadItem * >(operation.item.n_id,operation.item));
+        }
     }];
     
 }

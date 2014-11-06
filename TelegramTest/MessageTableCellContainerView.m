@@ -895,16 +895,23 @@ static int offsetEditable = 30;
         
         
         [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
-            [weakSelf.item doAfterDownload];
-            [weakSelf updateCellState];
-            [weakSelf doAfterDownload];
-            weakSelf.item.downloadItem = nil;
+            
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                [weakSelf.item doAfterDownload];
+                [weakSelf updateCellState];
+                [weakSelf doAfterDownload];
+                weakSelf.item.downloadItem = nil;
+            }];
+            
         }];
         
         [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
-            if(weakSelf.cellState != CellStateDownloading)
-                [weakSelf updateCellState];
-            [weakSelf downloadProgressHandler:item];
+            
+            [ASQueue dispatchOnStageQueue:^{
+                if(weakSelf.cellState != CellStateDownloading)
+                    [weakSelf updateCellState];
+                [weakSelf downloadProgressHandler:item];
+            }];
         }];
 
     } 

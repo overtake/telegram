@@ -325,8 +325,10 @@
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
     for(TL_contact *contact in all) {
         
-        ContactUserItem *item = [[ContactUserItem alloc] initWithObject:contact];
-        [contacts addObject:item];
+        if(contact.user.type != TGUserTypeEmpty && contact.user.type != TGUserTypeDeleted) {
+            ContactUserItem *item = [[ContactUserItem alloc] initWithObject:contact];
+            [contacts addObject:item];
+        }
     }
     
     NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;

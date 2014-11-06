@@ -12,4 +12,8 @@
 - (BOOL) isEncrypted;
 - (NSString *) cacheKey;
 - (NSUInteger) hashCacheKey;
+
+-(NSString *)path;
+
+-(NSString *)squarePath;
 @end

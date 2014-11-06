@@ -23,6 +23,8 @@
 
 - (id)initWithSocialURL:(NSString *)url;
 
+-(NSImage *)centerImage;
+
 
 +(NSString *)idWithURL:(NSString *)url;
 +(NSRegularExpression *)regularExpression;

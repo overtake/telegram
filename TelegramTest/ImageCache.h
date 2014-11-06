@@ -24,4 +24,7 @@
 -(void)removeFromCache:(TGFileLocation *)location;
 
 - (void) clear;
+
++(NSCache *)roundedCache;
+
 @end

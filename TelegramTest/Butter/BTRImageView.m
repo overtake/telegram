@@ -82,8 +82,8 @@ static void BTRImageViewCommonInit(BTRImageView *self) {
 }
 
 - (void)setImage:(NSImage *)image {
-	if (self->_image == image)
-		return;
+	//if (self->_image == image)
+	//	return;
     
     
     
@@ -98,8 +98,11 @@ static void BTRImageViewCommonInit(BTRImageView *self) {
         
         self.imageLayer.contents = btrImage.isAnimated ? image : nil;
 	} else {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
 		self.imageLayer.contentsCenter = CGRectMake(0.0, 0.0, 1.0, 1.0);
         self.imageLayer.contents = image;
+        [CATransaction commit];
 	}
     
     [self layout];

@@ -130,8 +130,13 @@
         }];
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
-            [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
-           [[Telegram rightViewController] showByDialog:weakSelf.controller.conversation withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+            
+            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation]; 
+            
+            
+          //  [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
+          //  [[Telegram rightViewController] showByDialog:weakSelf.controller.conversation withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+        
         }];
         
         self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{

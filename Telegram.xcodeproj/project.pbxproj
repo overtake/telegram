@@ -288,10 +288,13 @@
 		C222774E19093C8C002AA0F6 /* TMBottomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C222774D19093C8C002AA0F6 /* TMBottomScrollView.m */; };
 		C2227752190E564B002AA0F6 /* OnlineNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2227751190E564B002AA0F6 /* OnlineNotificationManager.m */; };
 		C2227759190E7309002AA0F6 /* TMTaskRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C2227758190E7309002AA0F6 /* TMTaskRequest.m */; };
-		C2233D9F1A07E32E0056594F /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2233DA01A07E3350056594F /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2233DA11A07E33A0056594F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2233DA21A07E33C0056594F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C222AB2C1A08D38000BEF907 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C222AB2D1A08D38500BEF907 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C222AB2E1A08D39200BEF907 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C222AB2F1A08D39400BEF907 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C222AB311A08FF2B00BEF907 /* PhotoCollectionTableView.m */; };
+		C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C222AB351A0901DC00BEF907 /* PhotoTableItem.m */; };
+		C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C222AB381A0901F500BEF907 /* PhotoTableItemView.m */; };
 		C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */; };
 		C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DA81A07EF060056594F /* MessageTableItemSocial.m */; };
 		C2233DAC1A07F2460056594F /* YoutubeServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C2233DAB1A07F2460056594F /* YoutubeServiceDescription.m */; };
@@ -398,6 +401,9 @@
 		C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A919F43575007F836A /* MessageStateLayer.m */; };
 		C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */; };
 		C268C1B019F6B1F7007F836A /* SearchMessageTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */; };
+		C26976A21A0AB3A20047E2C3 /* PhotoCollectionImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A11A0AB3A20047E2C3 /* PhotoCollectionImageView.m */; };
+		C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A41A0AB3B80047E2C3 /* PhotoCollectionImageObject.m */; };
+		C26976A91A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A81A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -651,8 +657,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2233DA01A07E3350056594F /* Sparkle.framework in Copy Files (6 items) */,
-				C2233D9F1A07E32E0056594F /* HockeySDK.framework in Copy Files (6 items) */,
+				C222AB2D1A08D38500BEF907 /* Sparkle.framework in Copy Files (6 items) */,
+				C222AB2C1A08D38000BEF907 /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -1253,6 +1259,12 @@
 		C2227758190E7309002AA0F6 /* TMTaskRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTaskRequest.m; sourceTree = "<group>"; };
 		C222775C190E7403002AA0F6 /* ITaskRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ITaskRequest.h; sourceTree = "<group>"; };
 		C222775E190E747A002AA0F6 /* TaskObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskObserver.h; sourceTree = "<group>"; };
+		C222AB301A08FF2B00BEF907 /* PhotoCollectionTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionTableView.h; sourceTree = "<group>"; };
+		C222AB311A08FF2B00BEF907 /* PhotoCollectionTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionTableView.m; sourceTree = "<group>"; };
+		C222AB341A0901DC00BEF907 /* PhotoTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTableItem.h; sourceTree = "<group>"; };
+		C222AB351A0901DC00BEF907 /* PhotoTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTableItem.m; sourceTree = "<group>"; };
+		C222AB371A0901F500BEF907 /* PhotoTableItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTableItemView.h; sourceTree = "<group>"; };
+		C222AB381A0901F500BEF907 /* PhotoTableItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTableItemView.m; sourceTree = "<group>"; };
 		C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellSocialView.h; sourceTree = "<group>"; };
 		C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellSocialView.m; sourceTree = "<group>"; };
 		C2233DA71A07EF060056594F /* MessageTableItemSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemSocial.h; sourceTree = "<group>"; };
@@ -1480,6 +1492,12 @@
 		C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchMessageCellView.m; sourceTree = "<group>"; };
 		C268C1AE19F6B1F7007F836A /* SearchMessageTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchMessageTableItem.h; sourceTree = "<group>"; };
 		C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchMessageTableItem.m; sourceTree = "<group>"; };
+		C26976A01A0AB3A20047E2C3 /* PhotoCollectionImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionImageView.h; sourceTree = "<group>"; };
+		C26976A11A0AB3A20047E2C3 /* PhotoCollectionImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionImageView.m; sourceTree = "<group>"; };
+		C26976A31A0AB3B80047E2C3 /* PhotoCollectionImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionImageObject.h; sourceTree = "<group>"; };
+		C26976A41A0AB3B80047E2C3 /* PhotoCollectionImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionImageObject.m; sourceTree = "<group>"; };
+		C26976A71A0ABF060047E2C3 /* DownloadPhotoCollectionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPhotoCollectionItem.h; sourceTree = "<group>"; };
+		C26976A81A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPhotoCollectionItem.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -1949,8 +1967,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2233DA11A07E33A0056594F /* Sparkle.framework in Frameworks */,
-				C2233DA21A07E33C0056594F /* HockeySDK.framework in Frameworks */,
+				C222AB2E1A08D39200BEF907 /* Sparkle.framework in Frameworks */,
+				C222AB2F1A08D39400BEF907 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2941,6 +2959,20 @@
 			name = types;
 			sourceTree = "<group>";
 		};
+		C222AB331A0901BE00BEF907 /* photocollection */ = {
+			isa = PBXGroup;
+			children = (
+				C26976A61A0AB3C50047E2C3 /* image */,
+				C222AB301A08FF2B00BEF907 /* PhotoCollectionTableView.h */,
+				C222AB311A08FF2B00BEF907 /* PhotoCollectionTableView.m */,
+				C222AB341A0901DC00BEF907 /* PhotoTableItem.h */,
+				C222AB351A0901DC00BEF907 /* PhotoTableItem.m */,
+				C222AB371A0901F500BEF907 /* PhotoTableItemView.h */,
+				C222AB381A0901F500BEF907 /* PhotoTableItemView.m */,
+			);
+			name = photocollection;
+			sourceTree = "<group>";
+		};
 		C2233DA61A07EEF10056594F /* social */ = {
 			isa = PBXGroup;
 			children = (
@@ -3190,6 +3222,30 @@
 				C268C18419F0519C007F836A /* UnitBezier.h */,
 			);
 			path = WebCore;
+			sourceTree = "<group>";
+		};
+		C269769B1A0A77E40047E2C3 /* old */ = {
+			isa = PBXGroup;
+			children = (
+				C2ADB458191BBA0E00305CC8 /* items */,
+				C2ADB44E191BB93000305CC8 /* TMCollectionViewController.h */,
+				C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */,
+				C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */,
+			);
+			name = old;
+			sourceTree = "<group>";
+		};
+		C26976A61A0AB3C50047E2C3 /* image */ = {
+			isa = PBXGroup;
+			children = (
+				C26976A01A0AB3A20047E2C3 /* PhotoCollectionImageView.h */,
+				C26976A11A0AB3A20047E2C3 /* PhotoCollectionImageView.m */,
+				C26976A31A0AB3B80047E2C3 /* PhotoCollectionImageObject.h */,
+				C26976A41A0AB3B80047E2C3 /* PhotoCollectionImageObject.m */,
+				C26976A71A0ABF060047E2C3 /* DownloadPhotoCollectionItem.h */,
+				C26976A81A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m */,
+			);
+			name = image;
 			sourceTree = "<group>";
 		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
@@ -3479,10 +3535,8 @@
 		C2ADB457191BBA0200305CC8 /* collection */ = {
 			isa = PBXGroup;
 			children = (
-				C2ADB458191BBA0E00305CC8 /* items */,
-				C2ADB44E191BB93000305CC8 /* TMCollectionViewController.h */,
-				C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */,
-				C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */,
+				C269769B1A0A77E40047E2C3 /* old */,
+				C222AB331A0901BE00BEF907 /* photocollection */,
 				C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */,
 				C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */,
 			);
@@ -4490,6 +4544,7 @@
 				C2FA78E61923CB6A001A9D1B /* VideoHistoryFilter.m in Sources */,
 				C268C18C19F0519C007F836A /* POPBasicAnimation.mm in Sources */,
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
+				C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
@@ -4510,6 +4565,7 @@
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TGPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
+				C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */,
 				C2227759190E7309002AA0F6 /* TMTaskRequest.m in Sources */,
 				0A241AA618AB60BA00C32F45 /* TMGLGif.m in Sources */,
 				C21D484C19AF64A5000F06E1 /* ComposeAction.m in Sources */,
@@ -4521,6 +4577,7 @@
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
+				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
@@ -4567,6 +4624,7 @@
 				CEAE5D56181ECDD300C17645 /* Storage.m in Sources */,
 				0AAAE58518C9F9A500A2F9F1 /* UserInfoShortTextEditView.m in Sources */,
 				C209322B1938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.m in Sources */,
+				C26976A91A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m in Sources */,
 				0AAAE56518C612F800A2F9F1 /* NSView-DisableSubsAdditions.m in Sources */,
 				0A6D098A19535E8500A9AC64 /* NSAttributedStringCategory.m in Sources */,
 				CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */,
@@ -4701,6 +4759,7 @@
 				0A9EDC521897BA0E0037E1BC /* NSTextView+RBLAntialiasingAdditions.m in Sources */,
 				CEDAEB631881AF85006189A2 /* YapDatabaseView.m in Sources */,
 				CEB0A1E417DB03AA0055F150 /* AsyncUdpSocket.m in Sources */,
+				C26976A21A0AB3A20047E2C3 /* PhotoCollectionImageView.m in Sources */,
 				C23536AD19CC64330044978E /* LoginBottomView.m in Sources */,
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
 				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
@@ -4819,6 +4878,7 @@
 				C268C14019EFF70E007F836A /* GLView.m in Sources */,
 				0A9EDC511897BA0E0037E1BC /* NSObject+RBObjectSizzlingAdditions.m in Sources */,
 				C2201A00192CCB5C00C0E441 /* SelectUserItem.m in Sources */,
+				C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */,
 				0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */,
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,

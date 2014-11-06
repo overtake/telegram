@@ -1511,7 +1511,7 @@ static NSTextAttachment *headerMediaIcon() {
         completeBlock();
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
+        completeBlock();
     }];
     
 }

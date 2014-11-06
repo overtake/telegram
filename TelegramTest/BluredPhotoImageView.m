@@ -48,7 +48,7 @@ static CAAnimation *ani() {
     self.originImage = image;
     
     if(image == nil) {
-        [self removeAnimationForKey:@"contents"];
+       // [self removeAnimationForKey:@"contents"];
         [super setImage:image];
         return;
     }
@@ -74,12 +74,18 @@ static CAAnimation *ani() {
     BOOL needAnimation = self.image && (self.isAlwaysBlur != isBlur);
     
     if(needAnimation) {
-        [self addAnimation:ani() forKey:@"contents"];
+       // [self addAnimation:ani() forKey:@"contents"];
     } else {
-        [self removeAnimationForKey:@"contents"];
+       // [self removeAnimationForKey:@"contents"];
     }
     
+   // test_start_group(@"image_time");
+    
     [super setImage:image];
+    
+   // test_step_group(@"image_time");
+    
+   // test_release_group(@"image_time");
 }
 
 - (NSImage *)blur:(NSImage *)image {

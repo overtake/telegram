@@ -10,4 +10,5 @@
 
 @interface TMCollectionPageController : TMViewController
 @property (nonatomic,strong) TL_conversation *conversation;
+
 @end

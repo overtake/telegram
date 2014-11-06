@@ -170,4 +170,8 @@ NSImage *TGIdenticonImage(NSData *data, CGSize size);
 NSImageView *imageViewWithImage(NSImage *image);
 
 
+NSData *jpegNormalizedData(NSImage *image);
+
+NSImage *decompressedImage(NSImage *image);
+
 @end

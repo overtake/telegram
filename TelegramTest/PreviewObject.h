@@ -13,7 +13,7 @@
 @property (nonatomic, assign, readonly) int msg_id;
 @property (nonatomic, assign, readonly) int peerId;
 
-@property (nonatomic,strong) id reservedObject;
+@property (nonatomic,weak) id reservedObject;
 
 
 -(id)initWithMsdId:(int)msg_id media:(id)media peer_id:(int)peer_id;

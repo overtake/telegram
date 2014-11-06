@@ -25,68 +25,74 @@
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
+
+
+-(void)dealloc {
     
-    // Drawing code here.
 }
 
-
 -(void)setObject:(TGImageObject *)object {
-
+    
+    if(_object == object) {
+        self.image = self.image;
+        return;
+    }
+//    
     
      self->_object = object;
     
-    self.image = nil;
+  //  self.image = nil;
     
-    object.imageView = self;
-    object.delegate = self;
+    
     
     if(self.roundSize) {
-        BTRImage *image = (BTRImage *)[self getCacheImageByHash:[self getKeyFromFileLocation:object.location]];
+        
+        NSImage *image =  [[[self class] roundedCache] objectForKey:@([self getKeyFromFileLocation:object.location])];;
         if(image) {
             self.image = image;
             return;
-        } else {
-            image = (BTRImage *)[[ImageCache sharedManager] imageFromMemory:object.location];
-            
-            if(image) {
-               
-                image = (BTRImage *)[self roundedImage:image size:object.imageSize];
-                
-                self.image = image;
-                
-                [[ImageCache sharedManager] setRoundImageToMemory:image hash:[self getKeyFromFileLocation:object.location]];
-                return;
-            }
         }
-        
-        
-        self.image = object.placeholder ? [self roundedImage:object.placeholder size:object.imageSize] : nil;
+        self.image = object.placeholder;
         
     } else {
-        NSImage *image = [[ImageCache sharedManager] imageFromMemory:object.location];
+
+        NSImage *image = [[[self class] cache] objectForKey:object.location.cacheKey];
         if(image) {
-            self.image = (BTRImage *)image;
+            self.image = image;
             return;
         }
-        self.image = object.placeholder ? object.placeholder : nil;
+        
+        
+        self.image = object.placeholder;
     }
     
     
   
-    
+    object.delegate = self;
     
     [object initDownloadItem];
     
 }
 
 
++(NSCache *)cache {
+    return [ImageCache sharedManager];
+}
+
++(NSCache *)roundedCache {
+    return [ImageCache roundedCache];
+}
+
+
++(void)clearCache {
+    [[self cache] removeAllObjects];
+}
+
 -(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
     if(newImage) {
-        [[ImageCache sharedManager] setImage:newImage forLocation:object.location];
+        [[[self class] cache] setObject:newImage forKey:object.location.cacheKey];
         if(object.location.hashCacheKey == self.object.location.hashCacheKey) {
+            
             if(self.roundSize) {
                 
                 __block NSImage *roundImage;
@@ -114,7 +120,8 @@
                         }
                         
                         roundImage = [self roundedImage:img size:object.imageSize];
-                        [[ImageCache sharedManager] setRoundImageToMemory:roundImage hash:[self getKeyFromFileLocation:object.location]];
+                        
+                        [[[self class] roundedCache] setObject:roundImage forKey:@([self getKeyFromFileLocation:object.location])];
                         [[ASQueue mainQueue] dispatchOnQueue:^{
                             
                             [strongSelf setImage:roundImage];
@@ -127,22 +134,17 @@
                     
                 }];
                 
-                return;
             }
             
+            
             [self setImage:newImage];
-        }
-        
+        } 
     }
- 
 }
 
 
 
 
-- (NSImage *) getCacheImageByHash:(NSUInteger)hash {
-    return [[ImageCache sharedManager] roundImageFromMemoryByHash:hash];
-}
 
 - (NSUInteger) getKeyFromFileLocation:(TGFileLocation *)fileLocation {
     NSString *string = [NSString stringWithFormat:@"%d_%f_%lu", self.roundSize, [self.borderColor redComponent], fileLocation.hashCacheKey];

@@ -18,6 +18,8 @@
         
         self.blockSize = NSMakeSize(250, 150);
         
+        self.viewSize = self.blockSize;
+        
     }
     
     return self;

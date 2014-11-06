@@ -16,6 +16,7 @@
 @property (nonatomic,strong) NSImageView *imageView;
 @property (nonatomic,strong) MessageCellDescriptionView *serviceNameView;
 @property (nonatomic,strong) MessageCellDescriptionView *urlView;
+@property (nonatomic,strong) NSImageView *centerImageView;
 @end
 
 @implementation MessageTableCellSocialView
@@ -35,10 +36,22 @@
         
         [self.containerView addSubview:self.serviceNameView];
         
+        self.centerImageView = [[NSImageView alloc] initWithFrame:NSZeroRect];
+        
+        
+        [self.containerView addSubview:self.centerImageView];
         
         self.urlView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(20, 60, 0, 0)];
         
         [self.containerView addSubview:self.urlView];
+        
+        weak();
+        
+        [self.imageView setCallback:^{
+            
+            open_link([(MessageTableItemSocial *)weakSelf.item social].url);
+            
+        }];
         
     }
     
@@ -70,12 +83,21 @@
     
     [self.imageView setImageWithURL:[item.social imageURL]];
     
+    [self.centerImageView setImage:item.social.centerImage];
+    [self.centerImageView setFrameSize:item.social.centerImage.size];
+    
+    [self.centerImageView setCenterByView:self.containerView];
+    
+    [self.centerImageView setFrameOrigin:NSMakePoint(roundf((item.blockSize.width - NSWidth(self.centerImageView.frame))/2), NSMinY(self.centerImageView.frame))];
+    
     
     [self.urlView setFrameSize:item.social.titleSize];
     [self.urlView setString:item.social.title];
+    [self.urlView setFrameOrigin:NSMakePoint(10, NSHeight(self.imageView.frame) - 30)];
     
     [self.serviceNameView setFrameSize:item.social.serviceNameSize];
     [self.serviceNameView setString:item.social.serviceName];
+    [self.serviceNameView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(self.serviceNameView.frame) - 10, 10)];
 }
 
 @end

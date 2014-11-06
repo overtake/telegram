@@ -65,7 +65,7 @@ static CAAnimation *ani() {
     self.originImage = image;
 
     if(image == nil) {
-        [self removeAnimationForKey:@"contents"];
+  //      [self removeAnimationForKey:@"contents"];
         [super setImage:image];
         return;
     }
@@ -88,9 +88,9 @@ static CAAnimation *ani() {
     
     
     if(needAnimation) {
-        [self addAnimation:ani() forKey:@"contents"];
+       // [self addAnimation:ani() forKey:@"contents"];
     } else {
-        [self removeAnimationForKey:@"contents"];
+      //  [self removeAnimationForKey:@"contents"];
     }
     
     [super setImage:image];
@@ -238,7 +238,7 @@ static NSImage *attachBackgroundThumb() {
         
         self.thumbView = [[DocumentThumbImageView alloc] initWithFrame:NSMakeRect(1, 1, 48, 48)];
         [self.thumbView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [self.thumbView setCornerRadius:4];
+       // [self.thumbView setCornerRadius:4];
 
         
         NSMutableArray *subviews = [self.attachButton.subviews mutableCopy];

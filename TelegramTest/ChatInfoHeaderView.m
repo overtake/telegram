@@ -131,10 +131,12 @@
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
+            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
             
-            [[Telegram rightViewController] showByDialog:self.controller.chat.dialog
-                                                withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+            
+          //  [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
+            
+           // [[Telegram rightViewController] showByDialog:self.controller.chat.dialog withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
         }];
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];

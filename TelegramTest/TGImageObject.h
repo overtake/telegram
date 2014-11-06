@@ -33,9 +33,7 @@
 @property (nonatomic,strong) DownloadItem *downloadItem;
 @property (nonatomic,strong,readonly) DownloadEventListener *downloadListener;
 
-@property (nonatomic,strong) TGImageView *imageView;
-
-@property (nonatomic,strong) id <TGImageObjectDelegate> delegate;
+@property (nonatomic,weak) id <TGImageObjectDelegate> delegate;
 
 
 @property (nonatomic,assign) BOOL isLoaded;

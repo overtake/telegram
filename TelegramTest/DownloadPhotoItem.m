@@ -21,11 +21,11 @@
             return nil;
         
        self.isEncrypted = object.local_id == -1;
-       self.path = locationFilePath(object, @"tiff");
+       self.path = [object path];
        self.fileType = DownloadFileImage;
        self.size = size;
        self.dc_id = object.dc_id;
-       self.n_id = object.volume_id;
+       self.n_id = object.secret;
         
     }
     return self;

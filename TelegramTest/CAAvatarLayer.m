@@ -112,27 +112,29 @@ typedef enum {
         
         [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
             
-            if(weakSelf.currentHash != hash) return;
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                if(weakSelf.currentHash != hash) return;
                 
-            if(!item.result) {
-                [weakSelf generateTextImage];
-                return;
-            }
-            
-            NSImage *image = [[NSImage alloc] initWithData:item.result];
-            if(!image) {
-                [weakSelf generateTextImage];
-                return;
-            }
-            
-            if(weakSelf.cacheDictionary)
-                [weakSelf.cacheDictionary setObject:image forKey:key];
-            
-            weakSelf.drawImage = image;
-            [weakSelf redraw];
-            
-            weakSelf.downloadItem = nil;
-            weakSelf = nil;
+                if(!item.result) {
+                    [weakSelf generateTextImage];
+                    return;
+                }
+                
+                NSImage *image = [[NSImage alloc] initWithData:item.result];
+                if(!image) {
+                    [weakSelf generateTextImage];
+                    return;
+                }
+                
+                if(weakSelf.cacheDictionary)
+                    [weakSelf.cacheDictionary setObject:image forKey:key];
+                
+                weakSelf.drawImage = image;
+                [weakSelf redraw];
+                
+                weakSelf.downloadItem = nil;
+                weakSelf = nil;
+            }];  
 
         }];
         

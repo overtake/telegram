@@ -51,29 +51,33 @@
 }
 
 
+
 -(void)initDownloadItem {
+    
+    
     if(_downloadItem) {
-        return;
+        return;//[_downloadItem cancel];
     }
-    
+
     _downloadItem = [[DownloadPhotoItem alloc] initWithObject:_location size:_size];
-    
-    _downloadItem.reservedObject = self;
     
     _downloadListener = [[DownloadEventListener alloc] initWithItem:_downloadItem];
 
     [_downloadItem addEvent:_downloadListener];
+    
+    
+    weak();
 
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
         
-        TGImageObject *object = item.reservedObject;
-        
-        object.isLoaded = YES;
-        
+                
         NSImage *image = [[NSImage alloc] initWithData:item.result];
+                
+        weakSelf.downloadItem = nil;
         
-        [object.delegate didDownloadImage:image object:object];
-        object.downloadItem = nil;
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            [weakSelf.delegate didDownloadImage:image object:weakSelf];
+        }];
         
     }];
     
