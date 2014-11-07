@@ -98,7 +98,7 @@
     return false;
 }
 
-- (BOOL)remoteLoad:(TL_conversation *)conversation {
+- (BOOL)remoteLoad:(TL_conversation *)conversation completionHandler:(void (^)(NSArray *))completionHandler {
     return NO;
 }
 

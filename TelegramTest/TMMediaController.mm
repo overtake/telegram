@@ -172,6 +172,11 @@ static NSMutableDictionary *twoFingersTouches;
 //}
 
 
++(NSMenuItem *)rightMenuForItem:(id<TMPreviewItem>)item {
+    
+}
+
+
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
@@ -249,6 +254,10 @@ static NSMutableDictionary *twoFingersTouches;
                // [controller.panel performSelector:@selector(selectPreviousItem) withObject:nil];
                 
                 id<TMPreviewItem> previewItem = controller.currentItem;
+                
+                TL_localMessage *msg = previewItem.previewObject.media;
+                
+                [[Telegram rightViewController] showByDialog:msg.dialog sender:controller];
                 [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
                 [[Telegram rightViewController].messagesViewController unSelectAll:NO];
                 
@@ -266,6 +275,9 @@ static NSMutableDictionary *twoFingersTouches;
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.Delete", nil) withBlock:^(id sender) {
                 id<TMPreviewItem> previewItem = controller.currentItem;
                 
+                TL_localMessage *msg = previewItem.previewObject.media;
+                
+                [[Telegram rightViewController] showByDialog:msg.dialog sender:controller];
                 
                 [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
                 [[Telegram rightViewController].messagesViewController unSelectAll:NO];
@@ -278,6 +290,16 @@ static NSMutableDictionary *twoFingersTouches;
                 [[TMMediaController controller] deleteItem:previewItem];
                 
             }]];
+            
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.GoToMessage", nil) withBlock:^(id sender) {
+                id<TMPreviewItem> previewItem = controller.currentItem;
+                
+                TL_localMessage *msg = previewItem.previewObject.media;
+                
+                [[Telegram rightViewController] showByDialog:msg.dialog withJump:msg.n_id historyFilter:[HistoryFilter class] sender:controller];
+            
+            }]];
+            
         }
         
         
@@ -397,6 +419,8 @@ static TMMediaController* currentController;
         [self->items removeObject:item];
     }
     
+     [[Telegram rightViewController].collectionViewController didDeleteMediaItem:item];
+    
 }
 
 -(void)didAddMedia:(NSNotification *)notification {
@@ -421,6 +445,8 @@ static TMMediaController* currentController;
         if(![self isExist:item in:list])
             [list insertObject:item atIndex:0];
     }
+    
+    [[Telegram rightViewController].collectionViewController didAddMediaItem:item];
 }
 
 -(NSMutableArray *)media:(int)hash {

@@ -14,7 +14,7 @@
 @synthesize downloadListener = _downloadListener;
 
 
-static const int width = 100;
+static const int width = 180;
 
 -(void)initDownloadItem {
     

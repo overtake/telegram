@@ -272,6 +272,12 @@
     if(vid.length > 0)
         return [YoutubeServiceDescription class];
     
+    
+    NSString *iid = [InstagramServiceDescription idWithURL:message];
+    
+    if(iid.length > 0)
+        return [InstagramServiceDescription class];
+    
     return [NSNull class];
     
     

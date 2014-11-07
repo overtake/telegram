@@ -139,26 +139,26 @@
         
         }];
         
-        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
-           
-            [[NewContactsManager sharedManager] syncContacts:^{
-               
-               alert(NSLocalizedString(@"AccountSettings.ContactsSynced", nil), NSLocalizedString(@"Settings.ResyncDescription", nil));
-               
-           }];
-            
-        }];
+//        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
+//           
+//            [[NewContactsManager sharedManager] syncContacts:^{
+//               
+//               alert(NSLocalizedString(@"AccountSettings.ContactsSynced", nil), NSLocalizedString(@"Settings.ResyncDescription", nil));
+//               
+//           }];
+//            
+//        }];
+//        
+//        self.setProfilePhotoButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.UpdateProfilePhoto", nil) tapBlock:^{
+//            
+//            [self.controller.avatarImageView showUpdateChatPhotoBox];
+//        }];
         
-        self.setProfilePhotoButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.UpdateProfilePhoto", nil) tapBlock:^{
-            
-            [self.controller.avatarImageView showUpdateChatPhotoBox];
-        }];
+      //  [self.setProfilePhotoButton setFrameSize:NSMakeSize(offsetRight, 42)];
+     //   [self addSubview:self.setProfilePhotoButton];
         
-        [self.setProfilePhotoButton setFrameSize:NSMakeSize(offsetRight, 42)];
-        [self addSubview:self.setProfilePhotoButton];
-        
-        [self.importContacts setFrameSize:NSMakeSize(offsetRight, 42)];
-        [self addSubview:self.importContacts];
+    //    [self.importContacts setFrameSize:NSMakeSize(offsetRight, 42)];
+      //  [self addSubview:self.importContacts];
         
         
         [self.shareContactButton setFrameSize:NSMakeSize(offsetRight, 42)];

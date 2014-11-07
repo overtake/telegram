@@ -104,8 +104,42 @@
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
 
-
 }
+
+-(void)didAddMediaItem:(id<TMPreviewItem>)item {
+    
+    TL_localMessage *msg = item.previewObject.media;
+    
+    if(_conversation.peer_id != msg.peer_id)
+        return;
+    
+    [_items insertObjects:[self convertItems:@[item]] atIndexes:[NSIndexSet indexSetWithIndex:0]];
+    
+    [self reloadData];
+    
+}
+-(void)didDeleteMediaItem:(id<TMPreviewItem>)item {
+    TL_localMessage *msg = item.previewObject.media;
+    
+    if(_conversation.peer_id != msg.peer_id)
+        return;
+    
+    __block id item_for_delete;
+    
+    [_items enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.photoItem.previewObject.msg_id == msg.n_id) {
+            item_for_delete = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    [self.items removeObject:item_for_delete];
+    
+    [self reloadData];
+}
+
 
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     
@@ -339,7 +373,7 @@ static const int maxWidth = 120;
     
     int startIndex = (int)self.photoCollection.list.count;
     
-    if(lastItem.previewObjects.count < count) {
+    if(lastItem && lastItem.previewObjects.count < count) {
         
         int dif = count - (int)lastItem.previewObjects.count;
         
@@ -351,8 +385,8 @@ static const int maxWidth = 120;
             items = @[];
         }
         
-        insert = [insert arrayByAddingObject:lastItem];
-        startIndex--;
+    //    insert = [insert arrayByAddingObject:lastItem];
+      //  startIndex--;
         
     }
     
@@ -362,6 +396,11 @@ static const int maxWidth = 120;
     [self.items addObjectsFromArray:items];
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+       // [self reloadData];
+        
+        if(lastItem)
+            [self.photoCollection reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:startIndex-1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
          [self.photoCollection insert:insert startIndex:startIndex tableRedraw:YES];
     });
 }
@@ -383,16 +422,16 @@ static const int maxWidth = 120;
         
         NSString *path = [photoSize.location squarePath];
         
-        if(![[NSFileManager defaultManager] fileExistsAtPath:path] ||  checkFileSize(path,photoSize.size)) {
-            
-            for(TGPhotoSize *photoSize in photo.sizes) {
-                if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-                    cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
-                    break;
-                }
-            }
-            
-        }
+//        if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+//            
+//            for(TGPhotoSize *photoSize in photo.sizes) {
+//                if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
+//                    cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
+//                    break;
+//                }
+//            }
+//            
+//        }
         
         
         

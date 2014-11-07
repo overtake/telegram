@@ -420,7 +420,8 @@
     [self hideModalView:YES animation:NO];
     
     if(self.messagesViewController.dialog == dialog && self.navigationViewController.currentController != self.messagesViewController) {
-      //  [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
+      
+        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
@@ -444,8 +445,6 @@
     if(self.navigationViewController.currentController == self.userInfoViewController && self.userInfoViewController.user.n_id == user.n_id)
         return;
     
-    if([user isKindOfClass:[TL_userEmpty class]] || [user isKindOfClass:[TL_userSelf class]])
-        return;
     
     [self hideModalView:YES animation:NO];
 

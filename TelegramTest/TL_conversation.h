@@ -43,4 +43,6 @@ typedef enum {
 
 - (void)updateNotifySettings:(TGPeerNotifySettings *)notify_settings;
 
+-(int)peer_id;
+
 @end

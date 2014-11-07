@@ -404,6 +404,7 @@
 		C26976A21A0AB3A20047E2C3 /* PhotoCollectionImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A11A0AB3A20047E2C3 /* PhotoCollectionImageView.m */; };
 		C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A41A0AB3B80047E2C3 /* PhotoCollectionImageObject.m */; };
 		C26976A91A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976A81A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m */; };
+		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1498,6 +1499,8 @@
 		C26976A41A0AB3B80047E2C3 /* PhotoCollectionImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionImageObject.m; sourceTree = "<group>"; };
 		C26976A71A0ABF060047E2C3 /* DownloadPhotoCollectionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPhotoCollectionItem.h; sourceTree = "<group>"; };
 		C26976A81A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPhotoCollectionItem.m; sourceTree = "<group>"; };
+		C26976AA1A0C03610047E2C3 /* InstagramServiceDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstagramServiceDescription.h; sourceTree = "<group>"; };
+		C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstagramServiceDescription.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2982,6 +2985,8 @@
 				C2233DAB1A07F2460056594F /* YoutubeServiceDescription.m */,
 				C2233DAD1A07F37A0056594F /* SocialServiceDescription.h */,
 				C2233DB31A0819E30056594F /* SocialServiceDescription.m */,
+				C26976AA1A0C03610047E2C3 /* InstagramServiceDescription.h */,
+				C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */,
 			);
 			name = social;
 			sourceTree = "<group>";
@@ -4873,6 +4878,7 @@
 				CEDAEB8E1881AFA6006189A2 /* DDTTYLogger.m in Sources */,
 				C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */,
 				0AB43BC518D8A4AC00FB805A /* CNGridViewItemLayout.m in Sources */,
+				C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */,
 				0AB43BC718D8A4AC00FB805A /* NSView+CNGridView.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
 				C268C14019EFF70E007F836A /* GLView.m in Sources */,

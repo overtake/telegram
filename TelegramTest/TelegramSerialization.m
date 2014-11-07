@@ -453,7 +453,7 @@
 
 - (int64_t)pongMessageId:(id)message
 {
-    return [message msg_id];
+    return [(TL_pong *)message msg_id];
 }
 
 
@@ -519,8 +519,8 @@
 
 - (int64_t)detailedInfoResponseRequestMessageId:(id)message
 {
-    return [message msg_id]
-    ;}
+    return [(TL_msg_detailed_info *)message msg_id];
+}
 
 - (int64_t)detailedInfoResponseMessageId:(id)message
 {

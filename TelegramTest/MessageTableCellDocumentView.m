@@ -267,9 +267,15 @@ static NSImage *attachBackgroundThumb() {
 
 - (void)setProgressStringValue:(float)progress format:(NSString *)format {
     
+    [CATransaction begin];
+    
+    [CATransaction setDisableActions:YES];
+    
     NSString *downloadString = [NSString stringWithFormat:format, progress];
     
     [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
+    
+    [CATransaction commit];
 }
 
 - (void)startDownload:(BOOL)cancel {

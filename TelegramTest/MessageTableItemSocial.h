@@ -8,6 +8,7 @@
 
 #import "MessageTableItem.h"
 #import "YoutubeServiceDescription.h"
+#import "InstagramServiceDescription.h"
 @interface MessageTableItemSocial : MessageTableItem
 
 

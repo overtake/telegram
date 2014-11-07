@@ -185,6 +185,9 @@
     }
 }
 
+-(int)peer_id {
+    return self.peer.peer_id;
+}
 
 - (void)updateNotifySettings:(TGPeerNotifySettings *)notify_settings {
     self.notify_settings = notify_settings;

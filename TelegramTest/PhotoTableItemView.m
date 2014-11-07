@@ -67,6 +67,7 @@
             
         } else {
             imageView = [[PhotoCollectionImageView alloc] initWithFrame:NSZeroRect];
+            imageView.backgroundColor = GRAY_BORDER_COLOR;
             [self.images addObject:imageView];
             [self addSubview:imageView];
         }

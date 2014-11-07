@@ -47,7 +47,7 @@
         self.poll = [[NSMutableArray alloc] init];
         self.completePoll = [[NSMutableArray alloc] init];
         self.resultData = [[NSMutableData alloc] init];
-        self.partSize = _item.size == 0 ? 0 : 1024*64;
+        self.partSize = _item.size == 0 ? 0 : 1024*128;
         
         self.max_poll_size = self.partSize == 0 ? 1 : 5;
         

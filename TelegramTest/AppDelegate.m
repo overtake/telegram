@@ -219,6 +219,8 @@
         return;
     }
     
+    [self.mainWindow deminiaturize:self];
+    
     
 }
 

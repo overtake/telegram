@@ -7,8 +7,11 @@
 //
 
 #import "TMViewController.h"
-
+#import "TMPreviewItem.h"
 @interface TMCollectionPageController : TMViewController
 @property (nonatomic,strong) TL_conversation *conversation;
 
+
+-(void)didAddMediaItem:(id<TMPreviewItem>)item;
+-(void)didDeleteMediaItem:(id<TMPreviewItem>)item;
 @end

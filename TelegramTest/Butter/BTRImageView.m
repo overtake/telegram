@@ -98,11 +98,11 @@ static void BTRImageViewCommonInit(BTRImageView *self) {
         
         self.imageLayer.contents = btrImage.isAnimated ? image : nil;
 	} else {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
+        //[CATransaction begin];
+        //[CATransaction setDisableActions:YES];
 		self.imageLayer.contentsCenter = CGRectMake(0.0, 0.0, 1.0, 1.0);
         self.imageLayer.contents = image;
-        [CATransaction commit];
+      //  [CATransaction commit];
 	}
     
     [self layout];
