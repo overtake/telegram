@@ -171,9 +171,6 @@
                                 
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
-                
-                dialog.last_message_date = [[MTNetwork instance] getTime];
-                
             }
             
         
@@ -324,7 +321,7 @@
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     
     [ASQueue dispatchOnStageQueue:^{
-        if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
             [[Storage manager] insertMedia:message];
             
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];

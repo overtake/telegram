@@ -11,7 +11,7 @@
 #import "TMMediaController.h"
 #import "PhotoCollectionTableView.h"
 #import "TGFileLocation+Extensions.h"
-
+#import "TGPVMediaBehavior.h"
 @interface TMCollectionPageController ()<TMTableViewDelegate,TGImageObjectDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -19,6 +19,8 @@
 @property (nonatomic,assign) BOOL locked;
 
 @property (nonatomic,strong) NSMutableArray *waitItems;
+
+@property (nonatomic,strong) TGPVMediaBehavior *behavior;
 
 
 
@@ -72,6 +74,8 @@
 
         
         self.items = [[NSMutableArray alloc] init];
+        
+        self.behavior = [[TGPVMediaBehavior alloc] init];
     }
     
     return self;
@@ -104,11 +108,66 @@
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
 
+
+    
+    
 }
 
--(void)didAddMediaItem:(id<TMPreviewItem>)item {
+
+-(void)didDeleteMessages:(NSNotification *)notification {
+
     
-    TL_localMessage *msg = item.previewObject.media;
+    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    NSMutableArray *items_to_delete = [[NSMutableArray alloc] init];
+    
+    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
+            
+        [self.items enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+                
+            if(obj.previewObject.msg_id == [msg_id intValue]) {
+                    
+                [items_to_delete addObject:obj];
+                    
+                *stop = YES;
+            }
+                
+        }];
+            
+    }];
+    
+    [self.items removeObjectsInArray:items_to_delete];
+    
+    [self reloadData];
+    
+    
+}
+
+-(void)didReceivedMedia:(NSNotification *)notification {
+    
+    PreviewObject *previewObject = notification.userInfo[KEY_PREVIEW_OBJECT];
+    
+    if(_conversation.peer_id != previewObject.peerId)
+        return;
+    
+    
+    [self.items addObjectsFromArray:[self convertItems:@[previewObject]]];
+    
+    [self resort];
+    
+    [self reloadData];
+        
+    
+}
+
+-(void)resort {
+    [self.items sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
+}
+
+
+-(void)didAddMediaItem:(PreviewObject *)item {
+    
+    TL_localMessage *msg = item.media;
     
     if(_conversation.peer_id != msg.peer_id)
         return;
@@ -118,8 +177,8 @@
     [self reloadData];
     
 }
--(void)didDeleteMediaItem:(id<TMPreviewItem>)item {
-    TL_localMessage *msg = item.previewObject.media;
+-(void)didDeleteMediaItem:(PreviewObject *)item {
+    TL_localMessage *msg = item.media;
     
     if(_conversation.peer_id != msg.peer_id)
         return;
@@ -128,7 +187,7 @@
     
     [_items enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.photoItem.previewObject.msg_id == msg.n_id) {
+        if(obj.previewObject.msg_id == msg.n_id) {
             item_for_delete = obj;
             *stop = YES;
         }
@@ -213,34 +272,38 @@ static const int maxWidth = 120;
     [self.waitItems removeAllObjects];
     self.locked = NO;
     
-    [[TMMediaController controller] prepare:conversation completionHandler:^{
-        
-        NSArray *items = [TMMediaController controller]->items;
-        
-        
-        int limit = [self visibilityCount];
-        
-         self.waitItems = [[self convertItems:items] mutableCopy];
-        
-        if(self.waitItems.count > limit) {
-            
-            self.items = [[self.waitItems subarrayWithRange:NSMakeRange(0, limit)] mutableCopy];
-            
-        } else {
-            self.items = [self.waitItems mutableCopy];
-        }
-        
-        
-        [self.waitItems removeObjectsInArray:self.items];
-        
-        [self reloadData];
-        
-        if(self.items.count < 50) {
-            [self loadRemote];
-        }
-        
     
+    self.behavior = [[TGPVMediaBehavior alloc] init];
+    self.behavior.conversation = conversation;
+    
+    
+    
+    [self.behavior load:INT32_MAX callback:^(NSArray *previewObjects) {
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            int limit = [self visibilityCount];
+            
+            self.waitItems = [[self convertItems:previewObjects] mutableCopy];
+            
+            if(self.waitItems.count > limit) {
+                
+                self.items = [[self.waitItems subarrayWithRange:NSMakeRange(0, limit)] mutableCopy];
+                
+            } else {
+                self.items = [self.waitItems mutableCopy];
+            }
+            
+            
+            [self.waitItems removeObjectsInArray:self.items];
+            
+            [self reloadData];
+            
+            if(self.items.count < 50) {
+                [self loadRemote];
+            }
+        }];
     }];
+    
 }
 
 
@@ -271,16 +334,20 @@ static const int maxWidth = 120;
         
     } else {
         self.locked = YES;
-        [[TMMediaController controller] remoteLoad:_conversation completionHandler:^(NSArray *items) {
-            if(items.count > 0) {
+        
+        [self.behavior load:[[[self.items lastObject] previewObject] msg_id] callback:^(NSArray *previewObjects) {
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                if(previewObjects.count > 0) {
+                    
+                    NSArray *converted = [self convertItems:previewObjects];
+                    
+                    [self addNextItems:converted];
+                    
+                }
                 
-                NSArray *converted = [self convertItems:items];
-                
-                [self addNextItems:converted];
-                
-            }
+                self.locked = NO;
+            }];
             
-            self.locked = NO;
         }];
     }
     
@@ -291,10 +358,9 @@ static const int maxWidth = 120;
     
     NSMutableArray *converted = [[NSMutableArray alloc] init];
     
-    [items enumerateObjectsUsingBlock:^(TMPreviewPhotoItem *obj, NSUInteger idx, BOOL *stop) {
+    [items enumerateObjectsUsingBlock:^(PreviewObject *previewObject, NSUInteger idx, BOOL *stop) {
         
-        PhotoCollectionImageObject *object = [self imageObjectWithPreview:obj.previewObject];
-        object.photoItem = obj;
+        PhotoCollectionImageObject *object = [self imageObjectWithPreview:previewObject];
         
         if(object)
             [converted addObject:object];
@@ -413,14 +479,14 @@ static const int maxWidth = 120;
     
     if(photo.sizes.count) {
         
-        NSImage *cachePhoto;
+//        NSImage *cachePhoto;
         
         int idx = photo.sizes.count == 1 ? 0 : 1;
         
         TGPhotoSize* photoSize =  ((TGPhotoSize *)photo.sizes[idx]);
         
         
-        NSString *path = [photoSize.location squarePath];
+//        NSString *path = [photoSize.location squarePath];
         
 //        if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
 //            
@@ -445,72 +511,50 @@ static const int maxWidth = 120;
    //     }
     
             
-        
-
-        
-        if(cachePhoto && cachePhoto.size.width < photoSize.w) {
-            float scale =  photoSize.w/cachePhoto.size.width;
-            
-            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
-            
-        }
-        
-        
-        if(cachePhoto && cachePhoto.size.height < photoSize.h) {
-            float scale =  photoSize.h/cachePhoto.size.height;
-            
-            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
-            
-        }
-        
-        cachePhoto = cropCenterWithSize(cachePhoto, NSMakeSize(maxWidth, maxWidth));
-        
-        
-       // if(photo.sizes.count > 2)
-        
-        
-//        if(cachePhoto) {
-//            cachePhoto = [ImageUtils imageResize:cachePhoto newSize:NSMakeSize(100, 100)];
+//        
+//
+//        
+//        if(cachePhoto && cachePhoto.size.width < photoSize.w) {
+//            float scale =  photoSize.w/cachePhoto.size.width;
 //            
-//            cachePhoto = [ImageUtils blurImage:cachePhoto blurRadius:90 frameSize:cachePhoto.size];
+//            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
 //            
-//            cachePhoto = decompressedImage(cachePhoto);
-//            
-//          
 //        }
-       
+//        
+//        
+//        if(cachePhoto && cachePhoto.size.height < photoSize.h) {
+//            float scale =  photoSize.h/cachePhoto.size.height;
+//            
+//            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
+//            
+//        }
+//        
+//        cachePhoto = cropCenterWithSize(cachePhoto, NSMakeSize(maxWidth, maxWidth));
+//        
         
+        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random()];
+        imageObject.previewObject = previewObject;
         
-       // else
-          //  photoSize = ((TGPhotoSize *)[photo.sizes lastObject]);
-        
-        
-        
-        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:arc4random()];
-        
-     //   imageObject.delegate = self;
-        
-      //  [imageObject initDownloadItem];
-        
-       
     }
     
     
     return imageObject;
 }
 
--(void)didDownloadImage:(NSImage *)image object:(PhotoCollectionImageObject *)object {
-    [[PhotoCollectionImageView cache] setObject:image forKey:object.location.cacheKey];
-}
-
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
+    [Notification removeObserver:self];
     [self.items removeAllObjects];
     [self.photoCollection removeAllItems:NO];
     [self.photoCollection reloadData];
     [PhotoCollectionImageView clearCache];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
+    [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
 }
 
 @end

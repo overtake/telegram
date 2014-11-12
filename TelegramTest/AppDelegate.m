@@ -42,7 +42,7 @@
 #import "EmojiViewController.h"
 #import "RBLPopover.h"
 #import "NSTextView+EmojiExtension.h"
-
+#import "TGPhotoViewer.h"
 
 @interface NSUserNotification(For107)
 
@@ -301,11 +301,29 @@
                 return result;
             }
             
-            if([result.window isKindOfClass:[QLPreviewPanel class]] || [result.window isKindOfClass:[NSPanel class]]) {
+            if([result.window isKindOfClass:[QLPreviewPanel class]] || [result.window isKindOfClass:[NSPanel class]] || [result.window isKindOfClass:[TGPhotoViewer class]]) {
                  return result;
             }
             
         }
+        
+        if([TGPhotoViewer isVisibility]) {
+            
+            if(incomingEvent.keyCode == 53) {
+                [[TGPhotoViewer viewer] hide];
+            }
+            
+            if(incomingEvent.keyCode == 123) {
+                [TGPhotoViewer prevItem];
+            }
+            
+            if(incomingEvent.keyCode == 124) {
+                [TGPhotoViewer nextItem];
+            }
+            
+            return [[NSEvent alloc] init];
+        }
+        
         
         if([Telegram rightViewController].navigationViewController.isLocked)
             return result;

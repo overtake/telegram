@@ -16,7 +16,7 @@
 #import "LoopingUtils.h"
 #import "PreviewObject.h"
 #import "HistoryFilter.h"
-
+#import "FMDatabaseAdditions.h"
 @implementation Storage
 
 
@@ -1325,19 +1325,17 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(void)media:(void (^)(NSArray *))completeHandler forPeer:(TGPeer *)peer {
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id peer_id:(int)peer_id {
      [queue inDatabase:^(FMDatabase *db) {
          
-         
-         
-         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d order by message_id DESC",peer.peer_id];
+         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id < %d order by message_id DESC LIMIT 100",peer_id,max_id];
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
          while ([result next]) {
              TL_localMessage *message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             
              
-            [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"message_id"] media:message peer_id:peer.peer_id]];
+            [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"message_id"] media:message peer_id:peer_id]];
          }
          
          [LoopingUtils  runOnMainQueueAsync:^{
@@ -1345,6 +1343,19 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                 completeHandler(list);
         }];
      }];
+}
+
+-(int)countOfMedia:(int)peer_id {
+    
+    __block int count = 0;
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+         count = [db intForQuery:@"select count(*) from media where peer_id= ?",@(peer_id)];
+        
+    }];
+    
+    return count;
 }
 
 -(void)pictures:(void (^)(NSArray *))completeHandler forUserId:(int)user_id {

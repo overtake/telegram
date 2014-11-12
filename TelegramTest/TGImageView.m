@@ -33,6 +33,9 @@
 
 -(void)setObject:(TGImageObject *)object {
     
+    if(_object.delegate == self)
+        object.delegate = nil;
+    
     if(_object == object) {
         self.image = self.image;
         return;
@@ -90,7 +93,6 @@
 
 -(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
     if(newImage) {
-        [[[self class] cache] setObject:newImage forKey:object.location.cacheKey];
         if(object.location.hashCacheKey == self.object.location.hashCacheKey) {
             
             if(self.roundSize) {

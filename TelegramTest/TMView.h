@@ -22,6 +22,8 @@ typedef NSUInteger TMViewBorder;
 @property (nonatomic, strong) NSColor *backgroundColor;
 @property (nonatomic) BOOL isDrawn;
 
+@property (nonatomic,copy) dispatch_block_t callback;
+
 @property (nonatomic,assign,getter=flipper) BOOL isFlipped;
 
 - (void)sizeToFit;

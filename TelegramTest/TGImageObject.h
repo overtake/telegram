@@ -19,6 +19,9 @@
 @required
 -(void)didDownloadImage:(NSImage *)image object:(id)object;
 
+
+@optional
+-(void)didUpdatedProgress:(float)progress;
 @end
 
 @interface TGImageObject : NSObject
@@ -37,6 +40,8 @@
 
 
 @property (nonatomic,assign) BOOL isLoaded;
+
+@property (nonatomic,assign) Class imageViewClass;
 
 -(id)initWithLocation:(TGFileLocation *)location;
 -(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder;

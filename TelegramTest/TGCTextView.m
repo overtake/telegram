@@ -162,19 +162,17 @@
 
 - (void) drawRect:(CGRect)rect
 {
-   // [super drawRect: rect];
-    
     
     assert(self.marks.count != 0);
     
    CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
     
-//    CGContextSetAllowsFontSubpixelQuantization(context, true);
-//    CGContextSetShouldSubpixelQuantizeFonts(context, true);
-//    CGContextSetAllowsFontSubpixelPositioning(context, true);
+//    CGContextSetAllowsFontSubpixelQuantization(context, false);
+//    CGContextSetShouldSubpixelQuantizeFonts(context, false);
+//    CGContextSetAllowsFontSubpixelPositioning(context, false);
 //    CGContextSetShouldSubpixelPositionFonts(context, false);
- //   CGContextSetAllowsAntialiasing(context,true);
+    CGContextSetAllowsAntialiasing(context,true);
     CGContextSetShouldSmoothFonts(context, true);
     CGContextSetAllowsFontSmoothing(context,true);
     

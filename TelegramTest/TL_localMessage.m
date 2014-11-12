@@ -52,9 +52,11 @@
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     } else if([message isKindOfClass:[TL_messageForwarded class]]) {
         msg = [TL_localMessageForwarded createWithN_id:message.n_id flags:message.flags fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date from_id:message.from_id to_id:message.to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() fwd_n_id:message.n_id state:DeliveryStateNormal];
-    } else {
+    } else if(![message isKindOfClass:[TL_messageEmpty class]]) {
         msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
-    };
+    } else {
+        return (TL_localMessage *) message;
+    }
     
     return msg;
 }

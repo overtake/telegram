@@ -10,6 +10,6 @@
 #import "TMPreviewPhotoItem.h"
 @interface PhotoCollectionImageObject : TGImageObject
 
-@property (nonatomic,weak) TMPreviewPhotoItem *photoItem;
+@property (nonatomic,strong) PreviewObject *previewObject;
 
 @end

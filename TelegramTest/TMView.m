@@ -114,6 +114,13 @@
     
 }
 
+-(void)mouseDown:(NSEvent*)theEvent {
+    if(self.callback)
+        self.callback();
+    else
+        [super mouseDown:theEvent];
+}
+
 - (void)discardCursorRects {
     self.isDrawn = NO;
     [super discardCursorRects];

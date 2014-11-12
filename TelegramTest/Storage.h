@@ -141,7 +141,10 @@ extern NSString *const FILE_NAMES;
 -(void)insertMedia:(TL_localMessage *)message;
 -(void)insertUserProfilePhoto:(int)user_id media:(TGUserProfilePhoto *)photo;
 -(void)deleteLastUserProfilePhoto:(int)user_id;
--(void)media:(void (^)(NSArray *))completeHandler forPeer:(TGPeer *)peer;
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id peer_id:(int)peer_id;
+
+-(int)countOfMedia:(int)peer_id;
+
 -(void)pictures:(void (^)(NSArray *))completeHandler forUserId:(int)user_id;
 
 - (void) removeContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler;
@@ -188,5 +191,6 @@ extern NSString *const FILE_NAMES;
 -(void)removeSecretInAction:(TGSecretInAction *)action;
 
 -(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
+
 
 @end

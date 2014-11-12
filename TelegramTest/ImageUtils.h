@@ -144,6 +144,11 @@ CACHE_IMAGE(VoicePause)
 
 CACHE_IMAGE(SecretPhotoFire)
 
+CACHE_IMAGE(PhotoViewerLeft)
+CACHE_IMAGE(PhotoViewerRight)
+CACHE_IMAGE(PhotoViewerMore)
+CACHE_IMAGE(PhotoViewerClose)
+
 @interface ImageUtils : NSObject
 
 
@@ -159,7 +164,9 @@ NSImage *previewImageForDocument(NSString *path);
 NSImage* strongResize(NSImage* image, int maxSize);
 NSData* compressImage(NSData *data, float coef);
 NSSize strongsize(NSSize from, float max);
+NSSize convertSize(NSSize from, NSSize maxSize);
 NSSize strongsizeWithMinMax(NSSize from, float min, float max);
+NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max);
 NSImage *prettysize(NSImage *img);
 NSImage *imageFromFile(NSString *filePath);
 NSSize resizeToMaxCorner(NSSize from, float size);

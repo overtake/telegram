@@ -414,8 +414,7 @@
 
 
 - (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class )filter sender:(id)sender  {
-    if(self.navigationViewController.currentController == self.messagesViewController && self.messagesViewController.dialog.peer.peer_id == dialog.peer.peer_id)
-        return NO;
+
     
     [self hideModalView:YES animation:NO];
     

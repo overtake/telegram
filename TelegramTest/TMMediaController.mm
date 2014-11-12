@@ -419,7 +419,7 @@ static TMMediaController* currentController;
         [self->items removeObject:item];
     }
     
-     [[Telegram rightViewController].collectionViewController didDeleteMediaItem:item];
+  //   [[Telegram rightViewController].collectionViewController didDeleteMediaItem:item];
     
 }
 
@@ -446,7 +446,7 @@ static TMMediaController* currentController;
             [list insertObject:item atIndex:0];
     }
     
-    [[Telegram rightViewController].collectionViewController didAddMediaItem:item];
+  //  [[Telegram rightViewController].collectionViewController didAddMediaItem:item];
 }
 
 -(NSMutableArray *)media:(int)hash {
@@ -625,7 +625,7 @@ static TMMediaController* currentController;
             
             if(completionHandler) completionHandler();
             
-        } forPeer:_dialog.peer];
+        } max_id:0 peer_id:_dialog.peer_id];
     } else if(_dialog) {
         self->items = [self media:_dialog.peer.peer_id];
         if(completionHandler) completionHandler();

@@ -8,6 +8,7 @@
 
 #import "PhotoCollectionImageView.h"
 #import "TMMediaController.h"
+#import "TGPhotoViewer.h"
 @implementation PhotoCollectionImageView
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -69,16 +70,12 @@ static CAAnimation *photoAnimation() {
 -(void)mouseDown:(NSEvent *)theEvent {
     PhotoCollectionImageObject *obj = (PhotoCollectionImageObject *) self.object;
     
-    
-    
-    [[TMMediaController controller] show:obj.photoItem];
+    [[TGPhotoViewer viewer] show:obj.previewObject conversation:[Telegram rightViewController].collectionViewController.conversation];
     
 }
 
 -(void)setObject:(PhotoCollectionImageObject *)object {
     [super setObject:object];
-    
-    object.photoItem.previewObject.reservedObject = self;
 }
 
 

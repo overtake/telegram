@@ -148,6 +148,12 @@ CACHE_IMAGE(VoicePause)
 
 CACHE_IMAGE(SecretPhotoFire)
 
+
+CACHE_IMAGE(PhotoViewerLeft)
+CACHE_IMAGE(PhotoViewerRight)
+CACHE_IMAGE(PhotoViewerMore)
+CACHE_IMAGE(PhotoViewerClose)
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -482,6 +488,21 @@ NSSize strongsize(NSSize from, float max)  {
     return from;
 }
 
+NSSize convertSize(NSSize from, NSSize maxSize)  {
+    float scale;
+    if (from.width > maxSize.width) {
+        scale = maxSize.width/from.width;
+        from.width = ceil(from.width * scale);
+        from.height = ceil(from.height * scale);
+    }
+    if(from.height > maxSize.height) {
+        scale =  maxSize.height/from.height;
+        from.width = ceil(from.width * scale);
+        from.height = ceil(from.height * scale);
+    }
+    return from;
+}
+
 NSSize resizeToMaxCorner(NSSize from, float size) {
     NSSize newSize;
     
@@ -508,52 +529,108 @@ NSSize resizeToMaxCorner(NSSize from, float size) {
 NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     float scale;
     
-    if (from.width > max) {
-        scale = max/from.width;
+    NSSize converted = NSMakeSize(from.width, from.height);
+    
+    if (converted.width > max) {
+        scale = max/converted.width;
         if(!scale) {
             DLog(@"");
         }
-        from.width = ceil(from.width * scale);
-        from.height = ceil(from.height * scale);
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
     }
  
-    if(from.height > max) {
-        scale = max/from.height;
+    if(converted.height > max) {
+        scale = max/converted.height;
         if(!scale) {
             DLog(@"");
         }
-        from.width = ceil(from.width * scale);
-        from.height = ceil(from.height * scale);
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
     }
     
-    if(from.width < min) {
-        scale = min / from.width;
+    if(converted.width < min) {
+        scale = min / converted.width;
         if(!scale) {
             DLog(@"");
         }
-        from.width = ceil(from.width * scale);
-        from.height = ceil(from.height * scale);
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
     }
     
-    if(from.height < min) {
-        scale = min / from.height;
+    if(converted.height < min) {
+        scale = min / converted.height;
         if(!scale) {
             DLog(@"");
         }
-        from.width = ceil(from.width * scale);
-        from.height = ceil(from.height * scale);
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
     }
    
-    if(from.width > max)
-        from.width = max;
+    if(converted.width > max)
+        converted.width = max;
     
-    if(from.height > max)
-        from.height = max;
+    if(converted.height > max)
+        converted.height = max;
     
-    if(isnan(from.width) || isnan(from.height)) {
+    if(isnan(converted.width) || isnan(converted.height)) {
         
     }
-    return from;
+    return converted;
+}
+
+
+NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
+    float scale;
+    
+    NSSize converted = NSMakeSize(from.width, from.height);
+    
+    if (converted.width > max.width) {
+        scale = max.width/converted.width;
+        if(!scale) {
+            DLog(@"");
+        }
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
+    }
+    
+    if(converted.height > max.height) {
+        scale = max.height/converted.height;
+        if(!scale) {
+            DLog(@"");
+        }
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
+    }
+    
+    if(converted.width < min.width) {
+        scale = min.width / converted.width;
+        if(!scale) {
+            DLog(@"");
+        }
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
+    }
+    
+    if(converted.height < min.height) {
+        scale = min.height / converted.height;
+        if(!scale) {
+            DLog(@"");
+        }
+        converted.width = ceil(converted.width * scale);
+        converted.height = ceil(converted.height * scale);
+    }
+    
+    if(converted.width > max.width)
+        converted.width = max.width;
+    
+    if(converted.height > max.height)
+        converted.height = max.height;
+    
+    if(isnan(converted.width) || isnan(converted.height)) {
+        
+    }
+    return converted;
 }
 
 

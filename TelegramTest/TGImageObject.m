@@ -11,7 +11,7 @@
 #import "ImageCache.h"
 #import "TGImageView.h"
 #import "ImageUtils.h"
-
+#import "TGFileLocation+Extensions.h"
 @implementation TGImageObject
 
 -(id)initWithLocation:(TGFileLocation *)location {
@@ -45,6 +45,7 @@
         _placeholder = placeHolder;
         _sourceId = sourceId;
         _size = size;
+        _imageViewClass = [TGImageView class];
     }
     
     return self;
@@ -55,9 +56,9 @@
 -(void)initDownloadItem {
     
     
-    if(_downloadItem) {
+    if(_downloadItem )
         return;//[_downloadItem cancel];
-    }
+    
 
     _downloadItem = [[DownloadPhotoItem alloc] initWithObject:_location size:_size];
     
@@ -72,14 +73,26 @@
         
                 
         NSImage *image = [[NSImage alloc] initWithData:item.result];
+        
+        image = decompressedImage(image);
                 
         weakSelf.downloadItem = nil;
+        
+        [[weakSelf.imageViewClass cache] setObject:image forKey:weakSelf.location.cacheKey];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
             [weakSelf.delegate didDownloadImage:image object:weakSelf];
         }];
         
     }];
+    
+    
+    [self.downloadListener setProgressHandler:^(DownloadItem * item) {
+        if([weakSelf.delegate respondsToSelector:@selector(didUpdatedProgress:)]) {
+            [weakSelf.delegate didUpdatedProgress:item.progress];
+        }
+    }];
+    
     
     [_downloadItem start];
 }

@@ -60,6 +60,7 @@
 #import "MessagesTopInfoView.h"
 #import "HackUtils.h"
 #import "SearchMessagesView.h"
+#import "TGPhotoViewer.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -952,7 +953,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self becomeFirstResponder];
     [TMMediaController setCurrentController:[TMMediaController controller]];
-    [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
+  //  [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
+  //  [[TGPhotoViewer viewer] prepare:self.dialog];
     [self tryRead];
 }
 
@@ -1686,7 +1688,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         
-        [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
+       // [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
+     //   [[TGPhotoViewer viewer] prepare:self.dialog];
         [self.typingView setDialog:dialog];
         
         
@@ -2188,23 +2191,7 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         }
         
-        if([message isEqualToString:@"1"] && [UsersManager currentUserId] == 438078) {
-            [Telegram setConnectionState:ConnectingStatusTypeConnecting];
-            return;
-        }
-        
-        if([message isEqualToString:@"2"] && [UsersManager currentUserId] == 438078) {
-            [Telegram setConnectionState:ConnectingStatusTypeNormal];
-            return;
-        }
-        
-        if(([message isEqualToString:@"3"] || [message isEqualToString:@"4"]) && [UsersManager currentUserId] == 438078) {
-            TGUpdate *update = [TL_updateServiceNotification createType:@"" message:@"THIS IS TEST UPDATE NOTIFICATION MESSAGE" media:[TL_messageMediaEmpty create] popup:[message isEqualToString:@"3"]];
-            
-            [[[[MTNetwork instance] updateService] proccessor] addUpdate:update];
-            return;
-        }
-        
+       
         
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];

@@ -12,6 +12,7 @@
 #import "TMCircularProgress.h"
 #import "ImageUtils.h"
 #import "SelfDestructionController.h"
+#import "TGPhotoViewer.h"
 @interface MessageTableCellPhotoView()
 @property (nonatomic,strong) NSImageView *fireImageView;
 @end
@@ -60,19 +61,34 @@ NSImage *fireImage() {
 
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
-            TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:object];
-            if(item) {
-                [[TMMediaController controller] show:item];
+            
+            
+            [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.dialog];
+            
+            if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
                 
-                if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
-                    TL_destructMessage *msg = (TL_destructMessage *) weakSelf.item.message;
-                    
-                    if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
-                        [SelfDestructionController addMessage:msg force:YES];
-                    }
+                TL_destructMessage *msg = (TL_destructMessage *) weakSelf.item.message;
+                
+                if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
+                    [SelfDestructionController addMessage:msg force:YES];
                 }
                 
             }
+            
+//
+//            TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:object];
+//            if(item) {
+//                [[TMMediaController controller] show:item];
+//                
+//                if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
+//                    TL_destructMessage *msg = (TL_destructMessage *) weakSelf.item.message;
+//                    
+//                    if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
+//                        [SelfDestructionController addMessage:msg force:YES];
+//                    }
+//                }
+//                
+//            }
         }];
         
         self.fireImageView = imageViewWithImage(fireImage());
