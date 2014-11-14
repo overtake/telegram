@@ -139,9 +139,13 @@ extern NSString *const FILE_NAMES;
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 -(TGMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
--(void)insertUserProfilePhoto:(int)user_id media:(TGUserProfilePhoto *)photo;
--(void)deleteLastUserProfilePhoto:(int)user_id;
--(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id peer_id:(int)peer_id;
+
+
+-(void)addUserPhoto:(int)user_id media:(TGUserProfilePhoto *)photo;
+-(void)deleteUserPhoto:(int)user_id;
+-(void)countOfUserPhotos:(int)user_id;
+
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit;
 
 -(int)countOfMedia:(int)peer_id;
 

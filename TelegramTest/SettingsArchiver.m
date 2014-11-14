@@ -52,7 +52,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 
 - (void)initialize {
     self.auto_download_limit_size = DownloadLimitSize10;
-    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications;
+    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications | EmojiReplaces;
     self.documents_folder = dp();
     self.defaultSoundNotification = @"DefaultSoundName";
 
@@ -296,13 +296,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
         instance.listeners = [[NSMutableArray alloc] init];
         
         dispatch_async(dispatch_get_current_queue(), ^{
-            if([instance.defaultSoundNotification isEqualTo:@"None"]) {
-                
-                [SettingsArchiver removeSetting:PushNotifications];
-                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-                
-            } else {
-                
+            
                 // HARD CHECK FOR NEW PUSH NOTIFICATION
                 
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -313,7 +307,14 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                     [SettingsArchiver addSetting:PushNotifications];
                 }
                 
+            
+            if (![defaults objectForKey:@"check_emoji_replaces"]) {
+                [defaults setObject:@"once" forKey:@"check_emoji_replaces"];
+                
+                [SettingsArchiver addSetting:EmojiReplaces];
             }
+            
+            
         });
         
     });

@@ -10,11 +10,8 @@
 
 @implementation PreviewObject
 
-@synthesize msg_id = _msg_id;
-@synthesize media = _media;
-@synthesize peerId = _peerId;
 
--(id)initWithMsdId:(int)msg_id media:(id)media peer_id:(int)peer_id {
+-(id)initWithMsdId:(long)msg_id media:(id)media peer_id:(int)peer_id {
     if(self = [super init]) {
         _msg_id = msg_id;
         _media = media;
@@ -23,5 +20,7 @@
     
     return self;
 }
+
+
 
 @end

@@ -13,6 +13,7 @@
 #import "TMMediaUserPictureController.h"
 #import "TMCollectionViewController.h"
 #import "ChatAvatarImageView.h"
+#import "TGPhotoViewer.h"
 @interface UserInfoViewController ()
 
 @property (nonatomic, strong) TMView *containerView;
@@ -104,16 +105,22 @@
         
         weakify();
         [_avatarImageView setTapBlock:^{
-            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:0 media:strongSelf.user.photo.photo_big peer_id:strongSelf.user.n_id];
             
-            previewObject.reservedObject = strongSelf.avatarImageView;
-            
-            TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
-            if(picture) {
-                [[TMMediaUserPictureController controller] prepare:strongSelf.user completionHandler:^{
-                    [[TMMediaUserPictureController controller] show:picture];
-                }];
+            if(![strongSelf.user.phone isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
+                
+                [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
             }
+           
+            
+//            previewObject.reservedObject = strongSelf.avatarImageView;
+//            
+//            TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
+//            if(picture) {
+//                [[TMMediaUserPictureController controller] prepare:strongSelf.user completionHandler:^{
+//                    [[TMMediaUserPictureController controller] show:picture];
+//                }];
+//            }
         }];
         
          [_avatarImageView setSourceType:ChatAvatarSourceUser];
@@ -380,7 +387,7 @@
     
     [self.avatarImageView setUser:user];
     
-    [[TMMediaUserPictureController controller] prepare:user completionHandler:nil];
+   [[TGPhotoViewer viewer] prepareUser:user];
     
     
     [self.editContainer setHidden:YES];

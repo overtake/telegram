@@ -35,12 +35,12 @@
     
     if(_object.delegate == self)
         object.delegate = nil;
-    
-    if(_object == object) {
-        self.image = self.image;
-        return;
-    }
 //    
+//    if(_object == object) {
+//        self.image = self.image;
+//        return;
+//    }
+//
     
      self->_object = object;
     

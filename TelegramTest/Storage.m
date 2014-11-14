@@ -171,7 +171,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
         
-        [db executeUpdate:@"create table if not exists user_profile_photos (id integer primary key autoincrement, user_id integer, serialized blob,date integer)"];
+        
+        
+        [db executeUpdate:@"create table if not exists user_photos (id blob primary key, user_id integer, serialized blob,date integer)"];
+        
+        
         
         [db executeUpdate:@"create table if not exists blocked_users (user_id integer primary key, date integer)"];
         
@@ -1312,23 +1316,35 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)insertUserProfilePhoto:(int)user_id media:(TGUserProfilePhoto *)photo {
-    [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into user_profile_photos (user_id,serialized,date) values (?,?,?)",@(user_id),[[TLClassStore sharedManager] serialize:photo],@([[MTNetwork instance] getTime])];
+
+-(void)countOfUserPhotos:(int)user_id {
+    __block int count = 0;
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        count = [db intForQuery:@"select count(*) from user_photos where user_id = ?",@(user_id)];
+        
     }];
 }
 
--(void)deleteLastUserProfilePhoto:(int)user_id {
+-(void)addUserPhoto:(int)user_id media:(TGUserProfilePhoto *)photo {
     [queue inDatabase:^(FMDatabase *db) {
-     //   [db executeUpdate:@"delete from user_profile_photos where user_id = ? order by id desc limit 1",@(user_id)];
+        [db executeUpdate:@"insert or replace into user_photos (id,user_id,serialized,date) values (?,?,?,?)",@(photo.photo_id),@(user_id),[[TLClassStore sharedManager] serialize:photo],@([[MTNetwork instance] getTime])];
+    }];
+}
+
+-(void)deleteUserPhoto:(int)n_id {
+    [queue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"delete from user_photos where id = ? ",@(n_id)];
     }];
 }
 
 
--(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id peer_id:(int)peer_id {
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit {
      [queue inDatabase:^(FMDatabase *db) {
          
-         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id < %d order by message_id DESC LIMIT 100",peer_id,max_id];
+         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id %@ %d order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
+
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
          while ([result next]) {
@@ -1361,7 +1377,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)pictures:(void (^)(NSArray *))completeHandler forUserId:(int)user_id {
     [queue inDatabase:^(FMDatabase *db) {
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,id from user_profile_photos where user_id = %d order by id DESC",user_id];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,id from user_photos where user_id = %d order by id DESC",user_id];
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *list = [[NSMutableArray alloc] init];
         while ([result next]) {

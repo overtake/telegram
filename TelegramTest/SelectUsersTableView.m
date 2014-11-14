@@ -296,7 +296,7 @@ static NSCache *cacheItems;
     
     
     if(searchString.length > 0) {
-        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.title.string contains[c] %@) OR (self.title.string contains[c] %@) OR (self.title.string contains[c] %@)",searchString,transformed,reversed]];
+        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@)",searchString,transformed,reversed]];
     }
     
     

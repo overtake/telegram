@@ -120,6 +120,14 @@
     
     //audio end
     
+    GeneralSettingsRowItem *emojiReplaces = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
+    } description:NSLocalizedString(@"Settings.EmojiReplaces", nil) height:80 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
+    }];
+    
+    [self.tableView insert:emojiReplaces atIndex:self.tableView.list.count tableRedraw:NO];
+    
     
     
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
@@ -127,7 +135,7 @@
         [SettingsArchiver addOrRemoveSetting:PushNotifications];
         
         
-    } description:NSLocalizedString(@"Settings.MessageNotifications", nil) height:80 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.MessageNotifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
     
@@ -143,6 +151,9 @@
     }];
     
     [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+   
     
 
     

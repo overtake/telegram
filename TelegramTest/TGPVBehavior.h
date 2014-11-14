@@ -12,6 +12,8 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGUser *user;
+@property (nonatomic,assign,readonly) int totalCount;
+
 @property (nonatomic,strong) RPCRequest *request;
 
 
@@ -21,10 +23,12 @@ typedef enum {
     TGPVMediaBehaviorLoadingStateFull = 2
 } TGPVMediaBehaviorLoadingState;
 
-@property (nonatomic,assign) TGPVMediaBehaviorLoadingState state;
+@property (nonatomic,assign,readonly) TGPVMediaBehaviorLoadingState state;
 
 @required
--(void)load:(int)max_id callback:(void (^)(NSArray *previewObjects))callback;
+-(void)load:(long)max_id next:(BOOL)next limit:(int)limit callback:(void (^)(NSArray *))callback;
 -(void)clear;
 -(NSArray *)convertObjects:(NSArray *)list;
+
+
 @end

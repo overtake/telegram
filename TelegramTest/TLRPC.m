@@ -8525,3 +8525,16 @@
 	}
 }
 @end
+
+
+@implementation TGPrivacyKey
+@end
+
+@implementation TGInputPrivacyRule
+@end
+
+@implementation TGPrivacyRule
+@end
+
+@implementation TGInputPrivacyKey
+@end

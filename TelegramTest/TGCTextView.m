@@ -173,8 +173,8 @@
 //    CGContextSetAllowsFontSubpixelPositioning(context, false);
 //    CGContextSetShouldSubpixelPositionFonts(context, false);
     CGContextSetAllowsAntialiasing(context,true);
-    CGContextSetShouldSmoothFonts(context, true);
-    CGContextSetAllowsFontSmoothing(context,true);
+    CGContextSetShouldSmoothFonts(context, !IS_RETINA);
+    CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
     
     

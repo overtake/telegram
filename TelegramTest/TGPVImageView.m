@@ -20,13 +20,8 @@
         self.loader = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
         self.loader.style = TMCircularProgressDarkStyle;
-        
-      //  [self.loader setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
-        
         [self.loader setState:TMLoaderViewStateDownloading];
      
-        self.layer.cornerRadius = 6;
-
     }
     
     return self;
@@ -38,7 +33,7 @@
 
 -(void)setImage:(NSImage *)image {
     [super setImage:image];
-    
+
     if(self.image == nil) {
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8);
         [self.loader setCenterByView:self];

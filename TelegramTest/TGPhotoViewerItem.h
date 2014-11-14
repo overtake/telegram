@@ -12,8 +12,6 @@
 
 @property (nonatomic,strong,readonly) TGImageObject *imageObject;
 @property (nonatomic,strong,readonly) PreviewObject *previewObject;
-@property (nonatomic,strong,readonly) TGUser *user;
-@property (nonatomic,strong,readonly) NSDate *date;
 @property (nonatomic,strong,readonly) NSString *stringDate;
 -(id)initWithImageObject:(TGImageObject *)imageObject previewObject:(PreviewObject *)previewObject;
 

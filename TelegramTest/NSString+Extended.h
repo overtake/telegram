@@ -15,4 +15,5 @@
 - (NSString *)URLDecode;
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSArray *)getEmojiFromString;
+-(NSString *)replaceSmilesToEmoji;
 @end

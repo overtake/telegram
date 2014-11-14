@@ -31,7 +31,8 @@ typedef enum {
     
     AutoGroupPhoto = 1 << 15,
     AutoPrivatePhoto = 1 << 16,
-    PushNotifications = 1 << 17
+    PushNotifications = 1 << 17,
+    EmojiReplaces = 1 << 18
     
 } SettingsMask;
 

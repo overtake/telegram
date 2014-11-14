@@ -348,6 +348,8 @@ NSArray * soundsList() {
     NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.aiff'"];
     
     [list addObject:@"DefaultSoundName"];
+    
+    [list addObject:@"None"];
 
     NSArray *dirContents = [fm contentsOfDirectoryAtPath:@"~/Library/Sounds" error:nil];
     [list addObjectsFromArray:[dirContents filteredArrayUsingPredicate:fltr]];

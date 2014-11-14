@@ -625,7 +625,7 @@ static TMMediaController* currentController;
             
             if(completionHandler) completionHandler();
             
-        } max_id:0 peer_id:_dialog.peer_id];
+        } max_id:0 peer_id:_dialog.peer_id next:YES limit:10000];
     } else if(_dialog) {
         self->items = [self media:_dialog.peer.peer_id];
         if(completionHandler) completionHandler();

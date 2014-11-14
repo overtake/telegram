@@ -321,6 +321,10 @@
                 [TGPhotoViewer nextItem];
             }
             
+            if(incomingEvent.keyCode == 49){
+                [[TGPhotoViewer viewer] hide];
+            }
+            
             return [[NSEvent alloc] init];
         }
         
@@ -442,6 +446,14 @@
             
             return [[NSEvent alloc]init];
         }
+        
+        
+        if(((result.modifierFlags & 1310985) == 1310985) && result.keyCode == 3) {
+
+            
+            return [[NSEvent alloc]init];
+        }
+        
         
         if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 3) {
             

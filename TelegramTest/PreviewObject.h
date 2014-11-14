@@ -10,11 +10,11 @@
 
 @interface PreviewObject : NSObject
 @property (nonatomic, strong, readonly) id media;
-@property (nonatomic, assign, readonly) int msg_id;
+@property (nonatomic, assign, readonly) long msg_id;
 @property (nonatomic, assign, readonly) int peerId;
 
 @property (nonatomic,weak) id reservedObject;
 
 
--(id)initWithMsdId:(int)msg_id media:(id)media peer_id:(int)peer_id;
+-(id)initWithMsdId:(long)msg_id media:(id)media peer_id:(int)peer_id;
 @end

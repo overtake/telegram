@@ -371,6 +371,7 @@
 		C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */; };
 		C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */; };
 		C26752701A13D9F600152D9A /* TGPVUserBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */; };
+		C26752771A15099A00152D9A /* TGPVEmptyBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */; };
 		C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */; };
 		C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */; };
 		C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13819EE9DF9007F836A /* AboutViewController.m */; };
@@ -1425,6 +1426,8 @@
 		C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = phone_numbers_for_OS_X.txt; sourceTree = "<group>"; };
 		C267526E1A13D9F600152D9A /* TGPVUserBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVUserBehavior.h; sourceTree = "<group>"; };
 		C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVUserBehavior.m; sourceTree = "<group>"; };
+		C26752751A15099A00152D9A /* TGPVEmptyBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVEmptyBehavior.h; sourceTree = "<group>"; };
+		C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVEmptyBehavior.m; sourceTree = "<group>"; };
 		C2689F6918B3A1E300272CD4 /* TGNetworkWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGNetworkWorker.h; sourceTree = "<group>"; };
 		C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNetworkWorker.m; sourceTree = "<group>"; };
 		C2689F6D18B3B96300272CD4 /* TGUpdateMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateMessageService.h; sourceTree = "<group>"; };
@@ -3638,6 +3641,8 @@
 				C2C6D96E1A1265D6001EF8A2 /* TGPVBehavior.h */,
 				C267526E1A13D9F600152D9A /* TGPVUserBehavior.h */,
 				C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */,
+				C26752751A15099A00152D9A /* TGPVEmptyBehavior.h */,
+				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -4790,6 +4795,7 @@
 				CEDAEB531881AF85006189A2 /* YapDatabaseFullTextSearch.m in Sources */,
 				0AB8500B18756ABA001A796C /* SearchSeparatorItem.m in Sources */,
 				CEDAEB641881AF85006189A2 /* YapDatabaseViewConnection.m in Sources */,
+				C26752771A15099A00152D9A /* TGPVEmptyBehavior.m in Sources */,
 				0A9EDC5E1897BA0E0037E1BC /* RBLTableCellView.m in Sources */,
 				0ACF9E391921F4BD001F9E1E /* SearchLoaderCell.m in Sources */,
 				0AB6A51318285D890015920A /* TelegramPopover.m in Sources */,

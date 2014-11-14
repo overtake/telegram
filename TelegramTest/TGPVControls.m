@@ -9,6 +9,8 @@
 #import "TGPVControls.h"
 #import "TGPhotoViewer.h"
 #import "MessageTableItem.h"
+#import "TGPVUserBehavior.h"
+#import "TGPVMediaBehavior.h"
 @interface TGPVControls ()
 
 @property (nonatomic,strong) BTRTextField *countTextField;
@@ -36,22 +38,26 @@
         weak();
         
         [self.countTextField addBlock:^(BTRControlEvents events) {
-            
-            weakSelf.countTextField.alphaValue = 1.0;
+            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
+                weakSelf.countTextField.alphaValue = 1.0;
             
         } forControlEvents:BTRControlEventMouseEntered];
         
         [self.countTextField addBlock:^(BTRControlEvents events) {
-            
-            weakSelf.countTextField.alphaValue = 0.7;
+            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
+                weakSelf.countTextField.alphaValue = 0.7;
             
         } forControlEvents:BTRControlEventMouseExited];
         
         [self.countTextField addBlock:^(BTRControlEvents events) {
             
-            [[TGPhotoViewer viewer] hide];
+            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class]) {
+                [[TGPhotoViewer viewer] hide];
+                
+                [[Telegram rightViewController] showCollectionPage:weakSelf.convertsation];
+            }
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.convertsation];
+           
             
         } forControlEvents:BTRControlEventClick];
         
@@ -129,10 +135,18 @@
         } forControlEvents:BTRControlEventMouseExited];
         
         [self.moreButton addBlock:^(BTRControlEvents events) {
-            weakSelf.moreButton.alphaValue = 1;
+            
+            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
+                weakSelf.moreButton.alphaValue = 1;
+            
+            
         } forControlEvents:BTRControlEventMouseEntered];
         [self.moreButton addBlock:^(BTRControlEvents events) {
+            
+        if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
             weakSelf.moreButton.alphaValue = 0.7;
+            
+            
         } forControlEvents:BTRControlEventMouseExited];
         
         
@@ -145,8 +159,8 @@
         } forControlEvents:BTRControlEventClick];
         
         [self.moreButton addBlock:^(BTRControlEvents events) {
-            
-            [weakSelf contextMenu];
+            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
+                [weakSelf contextMenu];
             
         } forControlEvents:BTRControlEventClick];
         

@@ -311,7 +311,405 @@
 	return [stream getOutput];
 }
 
+
 @end
+
+
+
+@implementation TL_userStatusRecently
++ (TL_userStatusRecently *)create {
+    return [[TL_userStatusRecently alloc] init];
+}
+
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+
+@end
+@implementation TL_userStatusLastWeek
++ (TL_userStatusLastWeek *)create {
+    return [[TL_userStatusLastWeek alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+
+@end
+@implementation TL_userStatusLastMonth
++ (TL_userStatusLastMonth *)create {
+    return [[TL_userStatusLastMonth alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+
+
+@implementation TL_inputPrivacyKeyStatusTimestamp
++(TL_inputPrivacyKeyStatusTimestamp *)create {
+    return [[TL_inputPrivacyKeyStatusTimestamp alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+
+@implementation TL_privacyKeyStatusTimestamp
++(TL_privacyKeyStatusTimestamp *)create {
+    return [[TL_privacyKeyStatusTimestamp alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+
+@implementation TL_updatePrivacy : TGUpdate
++(TL_updatePrivacy *)createWithKey:(TGPrivacyKey *)key rules:(NSMutableArray *)rules {
+    TL_updatePrivacy *obj = [[TL_updatePrivacy alloc] init];
+    obj.key = key;
+    obj.rules = rules;
+    return obj;
+}
+
+-(void)serialize:(SerializedData *)stream {
+    [[TLClassStore sharedManager] TLSerialize:self.key stream:stream];
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.rules count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            TGInputPrivacyRule *obj = [self.rules objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    self.key = [[TLClassStore sharedManager] TLDeserialize:stream];
+    
+    [stream readInt];
+    {
+        if(!self.rules)
+            self.rules = [[NSMutableArray alloc] init];
+        int count = [stream readInt];
+        for(int i = 0; i < count; i++) {
+            TGInputPrivacyRule* obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            [self.rules addObject:obj];
+        }
+    }
+}
+@end
+
+
+
+@implementation TL_inputPrivacyValueAllowContacts : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowContacts *)create {
+    return [[TL_inputPrivacyValueAllowContacts alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_inputPrivacyValueAllowAll : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowAll *)create {
+    return [[TL_inputPrivacyValueAllowAll alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_inputPrivacyValueAllowUsers : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowUsers *)create:(NSMutableArray *)users {
+    TL_inputPrivacyValueAllowUsers *obj = [[TL_inputPrivacyValueAllowUsers alloc] init];
+    obj.users = users;
+    return obj;
+}
+-(void)serialize:(SerializedData *)stream {
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.users count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            TGInputUser *obj = [self.users objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+    
+    
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    [stream readInt];
+    {
+        if(!self.users)
+            self.users = [[NSMutableArray alloc] init];
+        int count = [stream readInt];
+        for(int i = 0; i < count; i++) {
+            TGInputUser *obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            [self.users addObject:obj];
+        }
+    }
+}
+@end
+@implementation TL_inputPrivacyValueDisallowContacts : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowContacts *)create {
+    return [[TL_inputPrivacyValueDisallowContacts alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_inputPrivacyValueDisallowAll : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowAll *)create {
+    return [[TL_inputPrivacyValueDisallowAll alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_inputPrivacyValueDisallowUsers : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowUsers *)create:(NSMutableArray *)users {
+    TL_inputPrivacyValueDisallowUsers *obj = [[TL_inputPrivacyValueDisallowUsers alloc] init];
+    obj.users = users;
+    return obj;
+}
+-(void)serialize:(SerializedData *)stream {
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.users count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            TGInputUser *obj = [self.users objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+    
+    
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    [stream readInt];
+    {
+        if(!self.users)
+            self.users = [[NSMutableArray alloc] init];
+        int count = [stream readInt];
+        for(int i = 0; i < count; i++) {
+            TGInputUser *obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            [self.users addObject:obj];
+        }
+    }
+}
+@end
+
+
+@implementation TL_privacyValueAllowContacts : TGPrivacyRule
++(TL_privacyValueAllowContacts *)create {
+    return [[TL_privacyValueAllowContacts alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_privacyValueAllowAll : TGPrivacyRule
++(TL_privacyValueAllowAll *)create {
+return [[TL_privacyValueAllowAll alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_privacyValueAllowUsers : TGPrivacyRule
++(TL_privacyValueAllowUsers *)create:(NSMutableArray *)users {
+    TL_privacyValueAllowUsers *obj = [[TL_privacyValueAllowUsers alloc] init];
+    obj.users = users;
+    return obj;
+}
+- (void)serialize:(SerializedData *)stream {
+    //Serialize ShortVector
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.users count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            NSNumber* obj = [self.users objectAtIndex:i];
+            [stream writeInt:[obj intValue]];
+        }
+    }
+}
+- (void)unserialize:(SerializedData *)stream {
+    //UNS ShortVector
+    [stream readInt];
+    {
+        if(!self.users)
+            self.users = [[NSMutableArray alloc] init];
+        int tl_count = [stream readInt];
+        for(int i = 0; i < tl_count; i++) {
+            int obj = [stream readInt];
+            [self.users addObject:[[NSNumber alloc] initWithInt:obj]];
+        }
+    }
+}
+@end
+@implementation TL_privacyValueDisallowContacts : TGPrivacyRule
++(TL_privacyValueDisallowContacts *)create {
+    return [[TL_privacyValueDisallowContacts alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_privacyValueDisallowAll : TGPrivacyRule
++(TL_privacyValueDisallowAll *)create {
+    return [[TL_privacyValueDisallowAll alloc] init];
+}
+-(void)serialize:(SerializedData *)stream {
+    
+}
+
+-(void)unserialize:(SerializedData *)stream {
+    
+}
+@end
+@implementation TL_privacyValueDisallowUsers : TGPrivacyRule
++(TL_privacyValueDisallowUsers *)create:(NSMutableArray *)users {
+    TL_privacyValueDisallowUsers *obj = [[TL_privacyValueDisallowUsers alloc] init];
+    obj.users = users;
+    return obj;
+}
+- (void)serialize:(SerializedData *)stream {
+    //Serialize ShortVector
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.users count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            NSNumber* obj = [self.users objectAtIndex:i];
+            [stream writeInt:[obj intValue]];
+        }
+    }
+}
+- (void)unserialize:(SerializedData *)stream {
+    //UNS ShortVector
+    [stream readInt];
+    {
+        if(!self.users)
+            self.users = [[NSMutableArray alloc] init];
+        int tl_count = [stream readInt];
+        for(int i = 0; i < tl_count; i++) {
+            int obj = [stream readInt];
+            [self.users addObject:[[NSNumber alloc] initWithInt:obj]];
+        }
+    }
+}
+@end
+
+
+
+@implementation TLAPI_account_getPrivacy
+
+
+
+
++(TLAPI_account_getPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey {
+    TLAPI_account_getPrivacy *obj = [[TLAPI_account_getPrivacy alloc] init];
+    obj.inputPrivacyKey = inputPrivacyKey;
+    return obj;
+}
+
+-(NSData *)getData:(BOOL)isFirstRequest {
+    SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:0xdadbc950 isFirstRequest:isFirstRequest];
+    
+    [[TLClassStore sharedManager] TLSerialize:self.inputPrivacyKey stream:stream];
+    
+    return [stream getOutput];
+}
+
+@end
+
+@implementation TLAPI_account_setPrivacy
+  
++(TLAPI_account_setPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey rules:(NSMutableArray *)rules  {
+    TLAPI_account_setPrivacy *obj = [[TLAPI_account_setPrivacy alloc] init];
+    obj.inputPrivacyKey = inputPrivacyKey;
+    obj.rules = rules;
+    
+    return obj;
+}
+
+-(NSData *)getData:(BOOL)isFirstRequest {
+    SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:0xc9f81ce8 isFirstRequest:isFirstRequest];
+    
+    [[TLClassStore sharedManager] TLSerialize:self.inputPrivacyKey stream:stream];
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.rules count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            id obj = [self.rules objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+    return [stream getOutput];
+}
+  
+@end
+
+
 
 
 

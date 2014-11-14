@@ -14,7 +14,7 @@
 #import "UserInfoShortTextEditView.h"
 #import "UserCardViewController.h"
 #import "TGPeer+Extensions.h"
-
+#import "TGPhotoViewer.h"
 @interface AccountScrollView : NSScrollView
 
 @end
@@ -262,17 +262,24 @@ typedef enum {
     //self.avatarImageView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
     
     [_avatarImageView setTapBlock:^{
-        PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:0 media:[UsersManager currentUser].photo.photo_big peer_id:[UsersManager currentUserId]];
         
-        previewObject.reservedObject = strongSelf.avatarImageView;
-        
-        TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
-        if(picture) {
-            [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:^{
-                 [[TMMediaUserPictureController controller] show:picture];
-            }];
+        if(![[UsersManager currentUser].photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:[UsersManager currentUser].photo.photo_id media:[TL_photoSize createWithType:@"x" location:[UsersManager currentUser].photo.photo_big w:640 h:640 size:0] peer_id:[UsersManager currentUserId]];
+            
+            
+            [[TGPhotoViewer viewer] show:previewObject user:[UsersManager currentUser]];
         }
         
+        
+        
+        
+//        TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
+//        if(picture) {
+//            [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:^{
+//                 [[TMMediaUserPictureController controller] show:picture];
+//            }];
+//        }
+//        
     }];
     
     [_avatarImageView setSourceType:ChatAvatarSourceUser];
@@ -809,7 +816,9 @@ typedef enum {
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self updateUserName];
-    [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
+    
+    [[TGPhotoViewer viewer] prepareUser:[UsersManager currentUser]];
+   // [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
     
     [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
 }

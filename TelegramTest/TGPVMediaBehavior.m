@@ -14,11 +14,12 @@
 @synthesize user = _user;
 @synthesize request = _request;
 @synthesize state = _state;
+@synthesize totalCount = _totalCount;
 
-
--(void)load:(int)max_id callback:(void (^)(NSArray *))callback {
+-(void)load:(long)max_id next:(BOOL)next limit:(int)limit callback:(void (^)(NSArray *))callback {
     
     if(_state == TGPVMediaBehaviorLoadingStateLocal) {
+       
         [[Storage manager] media:^(NSArray *list) {
             
             
@@ -27,29 +28,31 @@
                     callback(list);
                     
                     if(list.count == 0)
-                        _state = TGPVMediaBehaviorLoadingStateRemote;
+                        _state = _conversation.type == DialogTypeSecretChat ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
                     
                 }];
             }
-           
-            
-          
-            
-        } max_id:max_id peer_id:_conversation.peer_id];
+       
+        } max_id:max_id peer_id:_conversation.peer_id next:next limit:limit];
+        
     } else if(_state == TGPVMediaBehaviorLoadingStateRemote) {
         
-        [self loadRemote:max_id callback:callback];
+        [self loadRemote:max_id limit:limit callback:callback];
         
     }
     
 }
 
+-(int)totalCount {
+    return [[Storage manager] countOfMedia:_conversation.peer_id];
+}
 
--(void)loadRemote:(int)max_id callback:(void (^)(NSArray *previewObjects))callback {
+
+-(void)loadRemote:(long)max_id limit:(int)limit callback:(void (^)(NSArray *previewObjects))callback {
     
     [_request cancelRequest];
     
-   _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:_conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:max_id limit:100] successHandler:^(RPCRequest *request, id response) {
+   _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:_conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:(int)max_id limit:limit] successHandler:^(RPCRequest *request, id response) {
        
        if(self == nil)
            return;
@@ -103,15 +106,15 @@
             TGPhoto *photo = [[obj media] media].photo;
             
             
-            TGPhotoSize *photoSize = ((TGPhotoSize *)[photo.sizes lastObject]);
+            TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);
             
             TGImageObject *imgObj = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:_conversation.peer_id size:photoSize.size];
+            
+            imgObj.imageSize = NSMakeSize([photoSize w], [photoSize h]);
             
             TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             
             [converted addObject:item];
-        } else {
-            int i = 0;
         }
         
     }];

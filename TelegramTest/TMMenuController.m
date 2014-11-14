@@ -76,10 +76,6 @@
     //});
 }
 
-//- (id < CAAction >)actionForLayer:(CALayer *)layer forKey:(NSString *)key {
-//    DLog(@"key %@", key);
-//    return [NSNull null];
-//}
 
 - (void)handleStateChange {
     
@@ -89,10 +85,15 @@
         [self.gradientLayer setColors:@[(id)BLUE_COLOR_SELECT.CGColor, (id)BLUE_COLOR_SELECT.CGColor]];
         [self.textLayer setTextColor:[NSColor whiteColor]];
         self.imageLayer.contents = self.item.highlightedImage;
+        
     } else {
         [self.gradientLayer setColors:@[]];
         [self.textLayer setTextColor:[NSColor blackColor]];
         self.imageLayer.contents = self.item.image;
+    }
+    
+    if(self.imageLayer.contents == nil) {
+        [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2))];
     }
 }
 

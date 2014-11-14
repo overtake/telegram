@@ -1781,7 +1781,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!self.dialog)
+    if(!self.dialog || self.dialog.unread_count == 0)
         return;
     
     MessagesManager *manager = [MessagesManager sharedManager];
@@ -2147,14 +2147,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(message.length > 0) {
         
-        
-        
         [self sendMessage:message callback:^{
             [self.bottomView setInputMessageString:@"" disableAnimations:NO];
              self.allowTyping = YES;
         }];
-        
-       
         
     }
 }
@@ -2173,10 +2169,16 @@ static NSTextAttachment *headerMediaIcon() {
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     
+    if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
+        message = [message replaceSmilesToEmoji];
+    
     NSArray *array = [message getEmojiFromString];
     if(array.count > 0) {
         [[EmojiViewController instance] saveEmoji:array];
     }
+    
+    [self readHistory:0];
+    
     [ASQueue dispatchOnStageQueue:^{
         
         Class cs = self.dialog.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];

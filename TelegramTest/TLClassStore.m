@@ -369,8 +369,30 @@
         [self.classes setObject:[TL_sendMessageChooseContactAction class] forKey:[NSNumber numberWithInt:0x628cbc6f]];
         [self.classes setObject:[TL_updateServiceNotification class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
         
-
-    
+        
+        [self.classes setObject:[TL_userStatusRecently class] forKey:[NSNumber numberWithInt:0xe26f42f1]];
+        [self.classes setObject:[TL_userStatusLastWeek class] forKey:[NSNumber numberWithInt:0x7bf09fc]];
+        [self.classes setObject:[TL_userStatusLastMonth class] forKey:[NSNumber numberWithInt:0x77ebc742]];
+        [self.classes setObject:[TL_updatePrivacy class] forKey:[NSNumber numberWithInt:0xee3b272a]];
+        [self.classes setObject:[TL_inputPrivacyKeyStatusTimestamp class] forKey:[NSNumber numberWithInt:0x4f96cb18]];
+        [self.classes setObject:[TL_privacyKeyStatusTimestamp class] forKey:[NSNumber numberWithInt:0xbc2eab30]];
+        
+        [self.classes setObject:[TL_inputPrivacyValueAllowContacts class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueAllowAll class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueAllowUsers class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowContacts class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowAll class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        
+        
+        [self.classes setObject:[TL_privacyValueAllowContacts class] forKey:[NSNumber numberWithInt:0xfffe1bac]];
+        [self.classes setObject:[TL_privacyValueAllowAll class] forKey:[NSNumber numberWithInt:0x65427b82]];
+        [self.classes setObject:[TL_privacyValueAllowUsers class] forKey:[NSNumber numberWithInt:0x4d5bbe0c]];
+        [self.classes setObject:[TL_privacyValueDisallowContacts class] forKey:[NSNumber numberWithInt:0xf888fa1a]];
+        [self.classes setObject:[TL_privacyValueDisallowAll class] forKey:[NSNumber numberWithInt:0x8b73e763]];
+        [self.classes setObject:[TL_privacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:0xc7f49b7]];
+        
+        
         
         
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:(int32_t)0xcb9f372d]];

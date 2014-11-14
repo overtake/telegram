@@ -13,6 +13,8 @@
 #import "TGPVMediaBehavior.h"
 #import "TGPVImageView.h"
 #import "TGFileLocation+Extensions.h"
+#import "TGPVUserBehavior.h"
+#import "TGPVEmptyBehavior.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGUser *user;
@@ -31,6 +33,7 @@
 @property (nonatomic,strong) id <TGPVBehavior> behavior;
 
 @property (nonatomic,assign) BOOL waitRequest;
+@property (nonatomic,assign) int totalCount;
 
 @end
 
@@ -151,6 +154,8 @@ static const int controlsHeight = 75;
             
         }];
         
+        [self resort];
+        
     }];
     
 }
@@ -168,15 +173,22 @@ static const int controlsHeight = 75;
         
         [self resort];
     }];
-
-    self.currentItemId = [self indexOfObject:self.currentItem.previewObject];
 }
 
++(id)behavior {
+    return [[self viewer] behavior];
+}
 
 -(void)resort {
     [ASQueue dispatchOnStageQueue:^{
         
         [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
+        
+        _totalCount = [_behavior totalCount];
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            self.currentItemId = [self indexOfObject:self.currentItem.previewObject];
+        }];
         
     } synchronous:YES];
 }
@@ -287,11 +299,13 @@ static const int controlsHeight = 75;
     _behavior = [[TGPVMediaBehavior alloc] init];
     [_behavior setConversation:_conversation];
     
+    
     _isVisibility = YES;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        self.list = [[self.behavior convertObjects:@[item]] mutableCopy];
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
         
     } synchronous:YES];
     
@@ -299,7 +313,15 @@ static const int controlsHeight = 75;
     
     [self makeKeyAndOrderFront:self];
     
+    _waitRequest = YES;
     
+    
+    [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:NO limit:10000 callback:^(NSArray *previewObjects) {
+        
+        [self insertObjects:previewObjects];
+        
+        _waitRequest = NO;
+    }];
     
 }
 
@@ -307,14 +329,16 @@ static const int controlsHeight = 75;
 -(void)show:(PreviewObject *)item user:(TGUser *)user {
     
     
-    _behavior = [[TGPVMediaBehavior alloc] init];
+    _behavior = [[TGPVUserBehavior alloc] init];
     [_behavior setUser:user];
+    
     
     _isVisibility = YES;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        self.list = [[self.behavior convertObjects:@[item]] mutableCopy];
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
         
     } synchronous:YES];
     
@@ -323,6 +347,27 @@ static const int controlsHeight = 75;
     [self makeKeyAndOrderFront:self];
     
 }
+
+-(void)show:(PreviewObject *)item {
+    
+    _behavior = [[TGPVEmptyBehavior alloc] init];
+    
+    _isVisibility = YES;
+    
+    
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
+        
+    } synchronous:YES];
+    
+    self.currentItemId = 0;
+    
+    [self makeKeyAndOrderFront:self];
+}
+
 
 
 -(NSUInteger)listCount {
@@ -344,11 +389,11 @@ static const int controlsHeight = 75;
     
     NSUInteger count = [self listCount];
     
-    if(count == 1)
-    {
-        [self hide];
-        return;
-    }
+//    if(count == 1)
+//    {
+//        [self hide];
+//        return;
+//    }
     
     if(count > 0) {
         if(self.currentItemId < (count - 1)) {
@@ -363,11 +408,11 @@ static const int controlsHeight = 75;
     
     NSUInteger count = [self listCount];
     
-    if(count == 1)
-    {
-        [self hide];
-        return;
-    }
+//    if(count == 1)
+//    {
+//        [self hide];
+//        return;
+//    }
     
     if(count > 0 && self.currentItemId != 0) {
         [self setCurrentItemId:[self currentItemId]-1];
@@ -391,13 +436,12 @@ static const int controlsHeight = 75;
     if(currentItemId == NSNotFound)
         return;
     
-    
     _currentItemId = currentItemId;
     
     _currentItem = [self itemAtIndex:currentItemId];
     
-    
-    [self.controls setCurrentPosition:_currentItemId+1 ofCount:[self listCount]];
+
+    [self.controls setCurrentPosition:_currentItemId+1 ofCount:_totalCount];
     
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
@@ -405,13 +449,11 @@ static const int controlsHeight = 75;
     if( (_currentItemId + 15 ) >= [self listCount] && !_waitRequest) {
         
         _waitRequest = YES;
-        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] callback:^(NSArray *previewObjects) {
+        
+        
+        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
             
             [self insertObjects:previewObjects];
-            
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                self.currentItemId = [self indexOfObject:self.currentItem.previewObject];
-            }];
             
             _waitRequest = NO;
         }];
@@ -444,16 +486,16 @@ static const int controlsHeight = 75;
     [ASQueue dispatchOnStageQueue:^{
         [self.list addObjectsFromArray:[self.behavior convertObjects:previewObjects]];
         
-        _currentItemId = [self indexOfObject:_currentItem.previewObject];
-        
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            [self.controls setCurrentPosition:_currentItemId+1 ofCount:[self listCount]];
-        }];
+        [self resort];
     }];
 }
 
 
-
+-(void)prepareUser:(TGUser *)user {
+    TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] init];
+    [behavior setUser:user];
+    [behavior load:0 next:YES limit:0 callback:nil];
+}
 
 
 

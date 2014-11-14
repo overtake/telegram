@@ -65,7 +65,7 @@ static NSMutableDictionary * messageKeys;
     self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[self.controller.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterAudio create] min_date:0 max_date:0 offset:0 max_id:self.controller.max_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
         
-        if(callback) {
+        if(callback && self != nil) {
             callback(response);
         }
         

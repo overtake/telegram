@@ -278,7 +278,7 @@ static const int maxWidth = 120;
     
     
     
-    [self.behavior load:INT32_MAX callback:^(NSArray *previewObjects) {
+    [self.behavior load:INT32_MAX next:YES limit:100 callback:^(NSArray *previewObjects) {
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
             int limit = [self visibilityCount];
@@ -335,7 +335,7 @@ static const int maxWidth = 120;
     } else {
         self.locked = YES;
         
-        [self.behavior load:[[[self.items lastObject] previewObject] msg_id] callback:^(NSArray *previewObjects) {
+        [self.behavior load:[[[self.items lastObject] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 if(previewObjects.count > 0) {
                     

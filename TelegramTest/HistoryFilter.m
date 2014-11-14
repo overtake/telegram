@@ -106,7 +106,7 @@ static NSMutableDictionary * messageKeys;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
     [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type] completeHandler:^(NSArray *result) {
         
-        if(callback) {
+        if(callback && self != nil) {
             callback(result);
         }
         
@@ -121,7 +121,7 @@ static NSMutableDictionary * messageKeys;
     self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_controller.conversation inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
 
-        if(callback) {
+        if(callback && self != nil) {
             callback(response);
         }
         

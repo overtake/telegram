@@ -113,21 +113,10 @@ static NSMutableDictionary *cache;
 }
 
 -(void)loadCount:(TGInputPeer *)input peer_id:(int)peer_id {
-    [self.request cancelRequest];
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:0 limit:0] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
-        
-        [self setLocked:NO];
-        self.request = nil;
-        
-        
-        self.count = response.class == TL_messages_messages.class ? (int)response.messages.count : response.n_count;
-       
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self setLocked:NO];
-        self.request = nil;
-        self.count = 0;
-    } timeout:10];
+    [self setLocked:NO];
+    
+    self.count = [[Storage manager] countOfMedia:peer_id];
 }
 
 -(void)setCount:(int)count {
@@ -145,10 +134,6 @@ static NSMutableDictionary *cache;
     
     [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:string.range];
     
-//
-//    [self.field setDrawsBackground:YES];
-//    
-//    [self.field setBackgroundColor:[NSColor redColor]];
     
     [self.field setAttributedStringValue:string];
     

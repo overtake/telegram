@@ -77,14 +77,7 @@
 }
 
 - (NSSize)contentFullSize:(TGPhotoViewerItem *)item {
-   
-    
-    
-    TL_localMessage *msg = item.previewObject.media;
-    
-    TL_photoSize *photoSize = [msg.media.photo.sizes lastObject];
-    
-    return convertSize(NSMakeSize(photoSize.w, photoSize.h), [self maxSize]);
+     return convertSize(item.imageObject.imageSize, [self maxSize]);
 }
 
 static const int bottomHeight = 60;
@@ -92,10 +85,6 @@ static const int bottomHeight = 60;
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     _currentViewerItem = currentViewerItem;
     
-   
-    
-    [self.userNameTextField setUser:currentViewerItem.user];
-    [self.dateTextField setStringValue:currentViewerItem.stringDate];
     self.imageView.object = currentViewerItem.imageObject;
     
     

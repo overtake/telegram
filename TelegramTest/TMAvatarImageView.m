@@ -489,6 +489,9 @@ static CAAnimation *ani2() {
         [self.downloadItem addEvent:self.downloadListener];
         
         [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
+            
+            
+            
 
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
@@ -499,8 +502,10 @@ static CAAnimation *ani2() {
                     return;
                 }
                 
-                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
+                [ASQueue dispatchOnStageQueue:^{
                     __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
+                    
+                    imageOrigin = decompressedImage(imageOrigin);
                     
                     if(!imageOrigin) {
                         [LoopingUtils runOnMainQueueAsync:^{
@@ -536,9 +541,11 @@ static CAAnimation *ani2() {
                         if(weakSelf.isNeedPlaceholder)
                             weakSelf.image =  (BTRImage *)image;
                     });
-                });
+                    
+                    weakSelf.downloadItem = nil;
+                }];
                 
-                weakSelf.downloadItem = nil;
+                
                 
             }];
             

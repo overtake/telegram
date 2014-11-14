@@ -142,7 +142,10 @@
                 
                 if(currentUser.photo.photo_small.hashCacheKey != newUser.photo.photo_small.hashCacheKey) {
                     currentUser.photo = newUser.photo;
-                    [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER: currentUser}];
+                    
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:currentUser.photo.photo_id media:currentUser.photo.photo_big peer_id:currentUser.n_id];
+
+                    [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER: currentUser, KEY_PREVIEW_OBJECT:previewObject}];
                     needUpdateUserInDB = YES;
                 }
                 

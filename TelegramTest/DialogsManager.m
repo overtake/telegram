@@ -136,6 +136,9 @@
     NSArray *deleted = [messages.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
     [ASQueue dispatchOnStageQueue:^{
+        
+        [[Storage manager] deleteMessages:deleted completeHandler:nil];
+        
         NSMutableDictionary *dialogstoUpdate = [[NSMutableDictionary alloc] init];
         
         for (NSNumber *msg_id in deleted) {

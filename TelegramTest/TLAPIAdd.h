@@ -10,7 +10,11 @@
 #import "TLApiObject.h"
 
 @class TGMessageMedia;
-
+@class TGUserStatus;
+@class TGPrivacyKey;
+@class TGPrivacyRule;
+@class TGInputPrivacyRule;
+@class TGInputPrivacyKey;
 
 @interface TL_initConnection : TLObject
 @property int api_id;
@@ -145,6 +149,89 @@
 
 
 
+
+@interface TL_userStatusRecently : TGUserStatus
++ (TL_userStatusRecently *)create;
+@end
+@interface TL_userStatusLastWeek : TGUserStatus
++ (TL_userStatusLastWeek *)create;
+@end
+@interface TL_userStatusLastMonth : TGUserStatus
++ (TL_userStatusLastMonth *)create;
+@end
+
+
+@interface TL_inputPrivacyKeyStatusTimestamp : TGInputPrivacyKey
++(TL_inputPrivacyKeyStatusTimestamp *)create;
+@end
+
+@interface TL_privacyKeyStatusTimestamp : TGPrivacyKey
++(TL_privacyKeyStatusTimestamp *)create;
+@end
+
+@interface TL_updatePrivacy : TGUpdate
+@property (nonatomic,strong) TGPrivacyKey *key;
+@property (nonatomic,strong) NSMutableArray *rules;
++(TL_updatePrivacy *)createWithKey:(TGPrivacyKey *)key rules:(NSMutableArray *)rules;
+@end
+
+
+
+@interface TL_inputPrivacyValueAllowContacts : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowContacts *)create;
+@end
+@interface TL_inputPrivacyValueAllowAll : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowAll *)create;
+@end
+@interface TL_inputPrivacyValueAllowUsers : TGInputPrivacyRule
++(TL_inputPrivacyValueAllowUsers *)create:(NSMutableArray *)users;
+@end
+@interface TL_inputPrivacyValueDisallowContacts : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowContacts *)create;
+@end
+@interface TL_inputPrivacyValueDisallowAll : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowAll *)create;
+@end
+@interface TL_inputPrivacyValueDisallowUsers : TGInputPrivacyRule
++(TL_inputPrivacyValueDisallowUsers *)create:(NSMutableArray *)users;
+@end
+
+
+@interface TL_privacyValueAllowContacts : TGPrivacyRule
++(TL_privacyValueAllowContacts *)create;
+@end
+@interface TL_privacyValueAllowAll : TGPrivacyRule
++(TL_privacyValueAllowAll *)create;
+@end
+@interface TL_privacyValueAllowUsers : TGPrivacyRule
++(TL_privacyValueAllowUsers *)create:(NSMutableArray *)users;
+@end
+@interface TL_privacyValueDisallowContacts : TGPrivacyRule
++(TL_privacyValueDisallowContacts *)create;
+@end
+@interface TL_privacyValueDisallowAll : TGPrivacyRule
++(TL_privacyValueDisallowAll *)create;
+@end
+@interface TL_privacyValueDisallowUsers : TGPrivacyRule
++(TL_privacyValueDisallowUsers *)create:(NSMutableArray *)users;
+@end
+
+
+
+@interface TLAPI_account_getPrivacy : TLApiObject
+
+@property (nonatomic,strong) TGInputPrivacyKey *inputPrivacyKey;
+
++(TLAPI_account_getPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey;
+
+@end
+
+@interface TLAPI_account_setPrivacy : TLApiObject
+@property (nonatomic,strong) TGInputPrivacyKey *inputPrivacyKey;
+@property (nonatomic,strong) NSMutableArray *rules;//TGInputPrivacyRule
++(TLAPI_account_setPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey rules:(NSMutableArray *)rules;
+
+@end
 
 
 

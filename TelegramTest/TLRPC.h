@@ -2262,3 +2262,19 @@
 @interface TL_boolTrue : TLObject
 + (TL_boolTrue *)create;
 @end
+
+@interface TGPrivacyKey : TLObject
+
+@end
+
+@interface TGInputPrivacyRule : TLObject
+@property (nonatomic,strong) NSMutableArray *users; // inputUsers
+@end
+
+@interface TGPrivacyRule : TLObject
+@property (nonatomic,strong) NSMutableArray *users; // int vector
+@end
+
+@interface TGInputPrivacyKey : TLObject
+
+@end

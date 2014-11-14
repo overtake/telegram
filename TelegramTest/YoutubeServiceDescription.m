@@ -85,7 +85,7 @@
 +(NSRegularExpression *)regularExpression {
     NSError *error = NULL;
     NSRegularExpression *regex =
-    [NSRegularExpression regularExpressionWithPattern:@"(?<=v(=|/))([-a-zA-Z0-9_]+)|(?<=youtu.be/)([-a-zA-Z0-9_]+)"
+    [NSRegularExpression regularExpressionWithPattern:@"(?<=youtube.com/watch\\?v=)([-a-zA-Z0-9_]+)|(?<=youtu.be/)([-a-zA-Z0-9_]+)"
                                               options:NSRegularExpressionCaseInsensitive
                                                     error:&error];
     return regex;

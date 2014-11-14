@@ -18,7 +18,7 @@
 #import "PhotoHistoryFilter.h"
 #import "TMSharedMediaButton.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
-
+#import "TGPhotoViewer.h"
 @implementation LineView
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -62,15 +62,18 @@
         [self.avatarImageView setTapBlock:^{
             
             if(strongSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:0 media:strongSelf.fullChat.chat_photo peer_id:strongSelf.fullChat.n_id];
                 
-                previewObject.reservedObject = strongSelf.avatarImageView;
-                
-                
-                TMPreviewChatPicture *picture = [[TMPreviewChatPicture alloc] initWithItem:previewObject];
-                if(picture)
-                    [[TMMediaUserPictureController controller] show:picture];
-            } 
+                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]]) {
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.fullChat.chat_photo.n_id media:[strongSelf.fullChat.chat_photo.sizes lastObject] peer_id:strongSelf.fullChat.n_id];
+                    
+                    [[TGPhotoViewer viewer] show:previewObject];
+                }
+               
+//                
+//                TMPreviewChatPicture *picture = [[TMPreviewChatPicture alloc] initWithItem:previewObject];
+//                if(picture)
+//                    [[TMMediaUserPictureController controller] show:picture];
+            }
             
         }];
         
@@ -266,8 +269,6 @@
         DLog(@"full chat is not loading");
         return;
     }
-    
-    [[TMMediaUserPictureController controller] prepare:nil completionHandler:nil];
     
     [self.avatarImageView setChat:chat];
     [self.avatarImageView rebuild];

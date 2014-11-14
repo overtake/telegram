@@ -8,6 +8,8 @@
 
 #import "PhotoCollectionImageObject.h"
 #import "DownloadPhotoCollectionItem.h"
+#import "TGFileLocation+Extensions.h"
+#import "PhotoCollectionImageView.h"
 @implementation PhotoCollectionImageObject
 
 @synthesize downloadItem = _downloadItem;
@@ -15,6 +17,14 @@
 
 
 static const int width = 180;
+
+-(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
+    if(self = [super initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:size]) {
+        self.imageViewClass = [PhotoCollectionImageView class];
+    }
+    
+    return self;
+}
 
 -(void)initDownloadItem {
     
@@ -53,6 +63,8 @@ static const int width = 180;
         
         
          weakSelf.downloadItem = nil;
+        
+        [[weakSelf.imageViewClass cache] setObject:image forKey:weakSelf.location.cacheKey];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
             [weakSelf.delegate didDownloadImage:image object:weakSelf];
