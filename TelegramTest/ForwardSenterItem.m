@@ -99,6 +99,10 @@
             fake.n_id = stated.n_id;
             fake.dstate = DeliveryStateNormal;
             
+            if([fake.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                [[Storage manager] insertMedia:false];
+            }
+            
             [fake save:i == 0];
         }
         

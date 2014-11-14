@@ -11,7 +11,7 @@
 @interface TGPVControls : TMView
 
 @property (nonatomic,strong) TL_conversation *convertsation;
-
+-(void)update;
 -(void)setCurrentPosition:(NSUInteger)position ofCount:(NSUInteger)count;
 
 @end

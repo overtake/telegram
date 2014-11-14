@@ -81,6 +81,8 @@ static const int controlsHeight = 75;
   //  [CATransaction begin];
     
     
+    [(NSView *)self.contentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
     self.background = [[TMView alloc] initWithFrame:[self.contentView bounds]];
     
     self.background.wantsLayer = YES;
@@ -128,6 +130,7 @@ static const int controlsHeight = 75;
     
     
 }
+
 
 
 -(void)didDeleteMessages:(NSNotification *)notification {
@@ -184,7 +187,7 @@ static const int controlsHeight = 75;
         
         [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
         
-        _totalCount = [_behavior totalCount];
+        _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
             self.currentItemId = [self indexOfObject:self.currentItem.previewObject];
@@ -299,9 +302,6 @@ static const int controlsHeight = 75;
     _behavior = [[TGPVMediaBehavior alloc] init];
     [_behavior setConversation:_conversation];
     
-    
-    _isVisibility = YES;
-    
     [ASQueue dispatchOnStageQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
@@ -332,9 +332,6 @@ static const int controlsHeight = 75;
     _behavior = [[TGPVUserBehavior alloc] init];
     [_behavior setUser:user];
     
-    
-    _isVisibility = YES;
-    
     [ASQueue dispatchOnStageQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
@@ -352,10 +349,6 @@ static const int controlsHeight = 75;
     
     _behavior = [[TGPVEmptyBehavior alloc] init];
     
-    _isVisibility = YES;
-    
-    
-    
     [ASQueue dispatchOnStageQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
@@ -368,7 +361,11 @@ static const int controlsHeight = 75;
     [self makeKeyAndOrderFront:self];
 }
 
-
+-(void)makeKeyAndOrderFront:(id)sender {
+    [super makeKeyAndOrderFront:sender];
+    _isVisibility = YES;
+    [self.controls update];
+}
 
 -(NSUInteger)listCount {
     

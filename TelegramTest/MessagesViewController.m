@@ -769,76 +769,90 @@ static NSTextAttachment *headerMediaIcon() {
     
     MessagesViewController *controller = [Telegram rightViewController].messagesViewController;
     
+    
+    
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.Off",nil) withBlock:^(id sender) {
         if(click) click();
         [controller sendSecretTTL:0 callback:ttlCallback];
     }]];
     
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSecond",nil),1] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:1 callback:ttlCallback];
-    }]];
+    if(controller.dialog.encryptedChat.encryptedParams.layer != 1)
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSecond",nil),1] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:1 callback:ttlCallback];
+        }]];
     
     [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),2] withBlock:^(id sender) {
         if(click) click();
         [controller sendSecretTTL:2 callback:ttlCallback];
     }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),3] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:3 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),4] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:4 callback:ttlCallback];
-    }]];
+    
+    if(controller.dialog.encryptedChat.encryptedParams.layer != 1)
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),3] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:3 callback:ttlCallback];
+        }]];
+    
+    if(controller.dialog.encryptedChat.encryptedParams.layer != 1)
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),4] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:4 callback:ttlCallback];
+        }]];
+
     [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),5] withBlock:^(id sender) {
         if(click) click();
         [controller sendSecretTTL:5 callback:ttlCallback];
     }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),6] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:6 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),7] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:7 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),8] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:8 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),9] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:9 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),10] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:10 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),11] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:11 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),12] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:12 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),13] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:13 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),14] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:14 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),15] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:15 callback:ttlCallback];
-    }]];
-    [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),30] withBlock:^(id sender) {
-        if(click) click();
-        [controller sendSecretTTL:30 callback:ttlCallback];
-    }]];
+    
+    if(controller.dialog.encryptedChat.encryptedParams.layer != 1) {
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),6] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:6 callback:ttlCallback];
+        }]];
+        
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),7] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:7 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),8] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:8 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),9] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:9 callback:ttlCallback];
+        }]];
+        
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),10] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:10 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),11] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:11 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),12] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:12 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),13] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:13 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),14] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:14 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),15] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:15 callback:ttlCallback];
+        }]];
+        [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),30] withBlock:^(id sender) {
+            if(click) click();
+            [controller sendSecretTTL:30 callback:ttlCallback];
+        }]];
+
+    }
     
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.1m",nil) withBlock:^(id sender) {
         if(click) click();

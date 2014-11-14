@@ -30,6 +30,14 @@
     [super drawRect:dirtyRect];
 }
 
+-(void)update {
+     self.countTextField.alphaValue = 0.7;
+    [self.leftButton setAlphaValue:0.7];
+    [self.rightButton setAlphaValue:0.7];
+    [self.closeButton setAlphaValue:0.7];
+    [self.moreButton setAlphaValue:0.7];
+}
+
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         

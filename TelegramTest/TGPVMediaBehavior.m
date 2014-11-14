@@ -27,7 +27,7 @@
                 [ASQueue dispatchOnStageQueue:^{
                     callback(list);
                     
-                    if(list.count == 0)
+                    if(list.count == 0 && next)
                         _state = _conversation.type == DialogTypeSecretChat ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
                     
                 }];
