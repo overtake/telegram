@@ -80,6 +80,26 @@
      return convertSize(item.imageObject.imageSize, [self maxSize]);
 }
 
+-(void)copy:(id)sender {
+    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+    [pasteboard clearContents];
+    [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath(self.currentViewerItem.imageObject.location, @"tiff")]]];
+}
+
+
+
+
+//-(BOOL)respondsToSelector:(SEL)aSelector {
+//    
+//    
+//    if(aSelector == @selector(copy:)) {
+//        return NO;
+//    }
+//    
+//    return [super respondsToSelector:aSelector];
+//}
+
+
 static const int bottomHeight = 60;
 
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {

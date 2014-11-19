@@ -69,9 +69,8 @@
 
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:0 access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
-        self.image = renderedImage(self.image, maxSize);
         
-        [TGCache cacheImage:image forKey:size.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         

@@ -59,7 +59,7 @@
     _behavior = nil;
     [TGCache removeAllCachedImages:@[PVCACHE]];
 
-    
+    [[[NSApp delegate] mainWindow] makeFirstResponder:nil];
 }
 
 
@@ -137,9 +137,7 @@ static const int controlsHeight = 75;
     
 }
 
--(void)copy:(id)sender {
-    
-}
+
 
 -(void)didDeleteMessages:(NSNotification *)notification {
     
@@ -373,13 +371,17 @@ static const int controlsHeight = 75;
     
     [self setFrame:[NSScreen mainScreen].frame display:NO];
     
-    [super makeKeyAndOrderFront:sender];
+    [super makeKeyAndOrderFront:nil];
     
-    [self makeFirstResponder:nil];
     
+    [[[NSApp delegate] mainWindow] makeFirstResponder:self.photoContainer];
+    
+
     _isVisibility = YES;
     [self.controls update];
 }
+
+
 
 -(NSUInteger)listCount {
     

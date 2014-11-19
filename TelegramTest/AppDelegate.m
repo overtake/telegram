@@ -311,21 +311,25 @@
             
             if(incomingEvent.keyCode == 53) {
                 [[TGPhotoViewer viewer] hide];
+                return [[NSEvent alloc] init];
             }
             
             if(incomingEvent.keyCode == 123) {
                 [TGPhotoViewer prevItem];
+                return [[NSEvent alloc] init];
             }
             
             if(incomingEvent.keyCode == 124) {
                 [TGPhotoViewer nextItem];
+                return [[NSEvent alloc] init];
             }
             
-            if(incomingEvent.keyCode == 49){
+            if(incomingEvent.keyCode == 49 ){
                 [[TGPhotoViewer viewer] hide];
+                return [[NSEvent alloc] init];
             }
             
-            return [[NSEvent alloc] init];
+            return result;
         }
         
         
