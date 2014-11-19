@@ -263,18 +263,17 @@
     NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
         
         
+        NSSavePanel *savePanel = [NSSavePanel savePanel];
         
-        [[NSSavePanel savePanel] setNameFieldStringValue:@"image"];
-        
-        [[NSSavePanel savePanel] beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
+        [savePanel setNameFieldStringValue:@"image.jpg"];
+        [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
         {
             if (result == NSFileHandlingPanelOKButton) {
-                NSURL *file = [[NSSavePanel savePanel] URL];
+                NSURL *file = [savePanel URL];
                 
                 NSString *itemUrl = mediaFilePath([[TGPhotoViewer currentItem].previewObject.media media]);
                 
                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
-                    //                    DLog(@"file %@", file);
                     [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
                 }
                 
@@ -294,7 +293,7 @@
     
     NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
         
-        [[Telegram rightViewController] showByDialog:_convertsation withJump:[TGPhotoViewer currentItem].previewObject.msg_id historyFilter:[HistoryFilter class] sender:[TGPhotoViewer viewer]];
+        [[Telegram rightViewController] showByDialog:_convertsation withJump:(int)[TGPhotoViewer currentItem].previewObject.msg_id historyFilter:[HistoryFilter class] sender:[TGPhotoViewer viewer]];
         
         [[TGPhotoViewer viewer] hide];
         
@@ -302,10 +301,6 @@
     
     
     [theMenu addItem:photoGoto];
-    
-   // [photoSave setImage:image_AttachFile()];
-   // [photoSave setHighlightedImage:image_AttachFileHighlighted()];
-    
     
     
     

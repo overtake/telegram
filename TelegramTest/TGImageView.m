@@ -9,6 +9,7 @@
 #import "TGImageView.h"
 #import "ImageCache.h"
 #import "TGFileLocation+Extensions.h"
+#import "TGCache.h"
 @interface TGImageView ()
 @property (nonatomic, strong) NSTrackingArea *trackingArea;
 @property (nonatomic,strong) CALayer *borderLayer;
@@ -25,51 +26,31 @@
     return self;
 }
 
-
-
--(void)dealloc {
-    
+-(NSImage *)cachedImage:(NSString *)key {
+    return [TGCache cachedImage:key group:@[IMGCACHE]];
 }
+
+
+-(NSImage *)cachedThumb:(NSString *)key {
+    return self.object.placeholder;
+}
+
 
 -(void)setObject:(TGImageObject *)object {
     
     if(_object.delegate == self)
         object.delegate = nil;
-//    
-//    if(_object == object) {
-//        self.image = self.image;
-//        return;
-//    }
-//
     
+
      self->_object = object;
     
-  //  self.image = nil;
-    
-    
-    
-    if(self.roundSize) {
-        
-        NSImage *image =  [[[self class] roundedCache] objectForKey:@([self getKeyFromFileLocation:object.location])];;
-        if(image) {
-            self.image = image;
-            return;
-        }
-        self.image = object.placeholder;
-        
-    } else {
-
-        NSImage *image = [[[self class] cache] objectForKey:object.location.cacheKey];
-        if(image) {
-            self.image = image;
-            return;
-        }
-        
-        
-        self.image = object.placeholder;
+    NSImage *image = [self cachedImage:object.location.cacheKey];
+    if(image) {
+        self.image = image;
+        return;
     }
-    
-    
+        
+    self.image = [self cachedThumb:object.location.cacheKey];
   
     object.delegate = self;
     
@@ -78,69 +59,9 @@
 }
 
 
-+(NSCache *)cache {
-    return [ImageCache sharedManager];
-}
-
-+(NSCache *)roundedCache {
-    return [ImageCache roundedCache];
-}
-
-
-+(void)clearCache {
-    [[self cache] removeAllObjects];
-}
-
 -(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
-    if(newImage) {
-        if(object.location.hashCacheKey == self.object.location.hashCacheKey) {
-            
-            if(self.roundSize) {
-                
-                __block NSImage *roundImage;
-                
-                weakify();
-                
-                [ASQueue dispatchOnStageQueue:^{
-                    if([self.object.location hashCacheKey] == [object.location hashCacheKey]) {
-                        
-                        if(!NSSizeNotZero(object.imageSize)) {
-                            object.imageSize = self.frame.size;
-                        }
-                        
-                        
-                        NSImage *img = newImage;
-                        
-                        //crop image if size < realsize and < const
-                        
-                        if(NSSizeNotZero(object.realSize) && NSSizeNotZero(object.imageSize) && object.realSize.width > MIN_IMG_SIZE.width && object.realSize.width > MIN_IMG_SIZE.height && object.imageSize.width == MIN_IMG_SIZE.width && object.imageSize.height == MIN_IMG_SIZE.height) {
-                            
-                            int difference = roundf( (object.realSize.width - object.imageSize.width) /2);
-                            
-                            img = cropImage(newImage,object.imageSize, NSMakePoint(difference, 0));
-                            
-                        }
-                        
-                        roundImage = [self roundedImage:img size:object.imageSize];
-                        
-                        [[[self class] roundedCache] setObject:roundImage forKey:@([self getKeyFromFileLocation:object.location])];
-                        [[ASQueue mainQueue] dispatchOnQueue:^{
-                            
-                            [strongSelf setImage:roundImage];
-                            
-                            strongSelf = nil;
-                        }];
-                    
-                    }
-                    
-                    
-                }];
-                
-            }
-            
-            
-            [self setImage:newImage];
-        } 
+    if(object.location.hashCacheKey == self.object.location.hashCacheKey) {
+        [self setImage:newImage];
     }
 }
 
@@ -154,85 +75,7 @@
 }
 
 
-- (NSImage *) roundedImage:(NSImage *)oldImage size:(NSSize)size {
-    
-    if(!oldImage)
-        return oldImage;
-    
-    static CALayer *layer;
-    if(!layer) {
-        layer = [CALayer layer];
-    }
-    
 
-    [CATransaction begin];
-    
-    NSImage *image = nil;
-    @autoreleasepool {
-        CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
-        
-        size.width *= displayScale;
-        size.height *= displayScale;
-
-        if(self.blurRadius) {
-            oldImage = [ImageUtils blurImage:oldImage blurRadius:self.blurRadius frameSize:size];
-        }
-        
-        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
-        
-        if(source != NULL) {
-            CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
-            CFRelease(source);
-            
-            [layer setContents:(__bridge id)(maskRef)];
-            [layer setFrame:NSMakeRect(0, 0, size.width, size.height)];
-            [layer setBounds:NSMakeRect(0, 0, size.width, size.height)];
-            [layer setMasksToBounds:YES];
-            
-            
-            if(self.borderWidth) {
-               
-               // [layer setBorderColor:self.borderColor.CGColor];
-               // [layer setBorderWidth:self.borderWidth * displayScale];
-
-                
-            } else {
-                [self.borderLayer setBorderWidth:0];
-            }
-            
-            
-            
-            [layer setCornerRadius:self.roundSize * displayScale];
-            
-            
-            
-            CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
-                                                         size.width,
-                                                         size.height,
-                                                         8 /*bitsPerComponent*/,
-                                                         0 /*bytesPerRow - CG will calculate it for you if it's allocating the data.  This might get padded out a bit for better alignment*/,
-                                                         [[NSColorSpace genericRGBColorSpace] CGColorSpace],
-                                                         kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
-            [layer renderInContext:context];
-            
-            
-            CGImageRef cgImage = CGBitmapContextCreateImage(context);
-            
-            
-            CGContextRelease(context);
-            
-            
-            
-            image = [[NSImage alloc] initWithCGImage:cgImage size:size];
-            CGImageRelease(cgImage);
-            CGImageRelease(maskRef);
-        }
-    }
-    
-      [CATransaction commit];
-    
-    return image;
-}
 
 -(BOOL)dragFile:(NSString *)filename fromRect:(NSRect)rect slideBack:(BOOL)aFlag event:(NSEvent *)event {
     return YES;

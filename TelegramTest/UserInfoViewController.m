@@ -54,89 +54,93 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
-        [center setTarget:self selector:@selector(navigationGoBack)];
-        self.centerNavigationBarView = center;
-        center.acceptCursor = NO;
-        FlippedClipView *flippedClipView = [[FlippedClipView alloc] initWithFrame:self.view.bounds];
-        [flippedClipView setAutoresizesSubviews:YES];
-        [flippedClipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        
-        self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 600)];
-        [self.containerView setAutoresizingMask:NSViewWidthSizable];
-        
-        self.normalContainer = [[UserInfoContainerView alloc] initWithFrame:self.containerView.bounds];
-        [self.normalContainer setAutoresizesSubviews:YES];
-        [self.normalContainer setWantsLayer:YES];
-        [self.normalContainer setAutoresizingMask:NSViewWidthSizable];
-        [self.containerView addSubview:self.normalContainer];
-
-        self.editContainer = [[UserInfoEditContainerView alloc] initWithFrame:self.containerView.bounds];
-        [self.editContainer setAutoresizesSubviews:YES];
-        [self.editContainer setWantsLayer:YES];
-        [self.editContainer setAutoresizingMask:NSViewWidthSizable];
-        [self.editContainer setController:self];
-        [self.containerView addSubview:self.editContainer];
-        
-        
-        _centerTextField = [TMTextField defaultTextField];
-        [self.centerTextField setAlignment:NSCenterTextAlignment];
-        [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
-        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-        [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-        [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-        [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.centerTextField setDrawsBackground:NO];
-        
-        [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
-        
-        [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
-        
-        self.centerNavigationBarView = (TMView *) self.centerTextField;
-
-        
-        
-
-        _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
-        
-        [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
-        [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
-        [_containerView addSubview:_avatarImageView];
-        
-        weakify();
-        [_avatarImageView setTapBlock:^{
-            
-            if(![strongSelf.user.phone isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
-                
-                [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
-            }
-           
-            
-//            previewObject.reservedObject = strongSelf.avatarImageView;
-//            
-//            TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
-//            if(picture) {
-//                [[TMMediaUserPictureController controller] prepare:strongSelf.user completionHandler:^{
-//                    [[TMMediaUserPictureController controller] show:picture];
-//                }];
-//            }
-        }];
-        
-         [_avatarImageView setSourceType:ChatAvatarSourceUser];
-        
-        
-        self.scrollView = [[BTRScrollView alloc] initWithFrame:self.view.bounds];
-        [self.scrollView setAutoresizesSubviews:YES];
-        [self.scrollView setContentView:flippedClipView];
-        [self.scrollView setDocumentView:self.containerView];
-        [self.scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        
         [self.view addSubview:self.scrollView];
         
-        [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+      
     }
     return self;
+}
+
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+      [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [Notification removeObserver:self];
+}
+
+
+-(void)loadView {
+    
+    [super loadView];
+    
+    TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
+    [center setTarget:self selector:@selector(navigationGoBack)];
+    self.centerNavigationBarView = center;
+    center.acceptCursor = NO;
+    FlippedClipView *flippedClipView = [[FlippedClipView alloc] initWithFrame:self.view.bounds];
+    [flippedClipView setAutoresizesSubviews:YES];
+    [flippedClipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
+    self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 600)];
+    [self.containerView setAutoresizingMask:NSViewWidthSizable];
+    
+    self.normalContainer = [[UserInfoContainerView alloc] initWithFrame:self.containerView.bounds];
+    [self.normalContainer setAutoresizesSubviews:YES];
+    [self.normalContainer setWantsLayer:YES];
+    [self.normalContainer setAutoresizingMask:NSViewWidthSizable];
+    [self.containerView addSubview:self.normalContainer];
+    
+    self.editContainer = [[UserInfoEditContainerView alloc] initWithFrame:self.containerView.bounds];
+    [self.editContainer setAutoresizesSubviews:YES];
+    [self.editContainer setWantsLayer:YES];
+    [self.editContainer setAutoresizingMask:NSViewWidthSizable];
+    [self.editContainer setController:self];
+    [self.containerView addSubview:self.editContainer];
+    
+    
+    _centerTextField = [TMTextField defaultTextField];
+    [self.centerTextField setAlignment:NSCenterTextAlignment];
+    [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
+    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
+    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [self.centerTextField setDrawsBackground:NO];
+    
+    [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
+    
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
+    
+    self.centerNavigationBarView = (TMView *) self.centerTextField;
+    
+    _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
+    
+    [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
+    [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
+    [_containerView addSubview:_avatarImageView];
+    
+    weakify();
+    [_avatarImageView setTapBlock:^{
+        
+        if(![strongSelf.user.phone isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
+            
+            [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
+        }
+    }];
+    
+    [_avatarImageView setSourceType:ChatAvatarSourceUser];
+    
+    
+    self.scrollView = [[BTRScrollView alloc] initWithFrame:self.view.bounds];
+    [self.scrollView setAutoresizesSubviews:YES];
+    [self.scrollView setContentView:flippedClipView];
+    [self.scrollView setDocumentView:self.containerView];
+    [self.scrollView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 }
 
 
@@ -354,19 +358,6 @@
     }
 }
 
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
--(void)viewDidDisappear:(BOOL)animated {
-    
-    [super viewDidDisappear:animated];
-}
 
 - (BOOL)becomeFirstResponder {
     return YES;

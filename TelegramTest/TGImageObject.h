@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "DownloadItem.h"
-
+#import "TGCache.h"
+#import "TGFileLocation+Extensions.h"
 @class TGImageView;
 
 
@@ -34,14 +35,12 @@
 @property (nonatomic,assign) NSSize realSize;
 
 @property (nonatomic,strong) DownloadItem *downloadItem;
-@property (nonatomic,strong,readonly) DownloadEventListener *downloadListener;
+@property (nonatomic,strong) DownloadEventListener *downloadListener;
 
 @property (nonatomic,weak) id <TGImageObjectDelegate> delegate;
 
 
 @property (nonatomic,assign) BOOL isLoaded;
-
-@property (nonatomic,assign) Class imageViewClass;
 
 -(id)initWithLocation:(TGFileLocation *)location;
 -(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder;

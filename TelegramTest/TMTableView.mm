@@ -377,21 +377,6 @@ static TMTableView *tableStatic;
             } else {
                 pos--;
             }
-//            BOOL neok = YES;
-//            while(neok) {
-//                if(theEvent.keyCode == 125) {
-//                    pos++;
-//                } else {
-//                    pos--;
-//                }
-//                if(self.count > pos && pos < NSNotFound) {
-//                    if([self.tm_delegate isSelectable:pos item:[self.list objectAtIndex:pos]]) {
-//                        neok = NO;
-//                    }
-//                } else {
-//                    neok = NO;
-//                }
-//            }
         }
         
         while(true) {

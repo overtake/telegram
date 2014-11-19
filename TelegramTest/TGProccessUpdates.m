@@ -525,7 +525,7 @@ static NSString *kUpdateState = @"kUpdateState";
         user.photo = [update photo];
         
         if(user) {
-            [[UsersManager sharedManager] add:@[user]];
+            [[Storage manager] insertUser:user completeHandler:nil];
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:user.photo.photo_id media:user.photo.photo_big peer_id:user.n_id];
             [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER:user,KEY_PREVIOUS:@([update previous]), KEY_PREVIEW_OBJECT:previewObject}];
         }

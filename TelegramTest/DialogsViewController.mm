@@ -76,6 +76,7 @@
     
     [[Storage manager] users:^(NSArray *result) {
         
+        
         [[UsersManager sharedManager] addFromDB:result];
     
         [[BroadcastManager sharedManager] loadBroadcastList:^{
@@ -98,6 +99,7 @@
 
 
 -(void)initConversations {
+
     
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
@@ -120,8 +122,6 @@
             [[FullChatManager sharedManager] loadStored];
             
             [TGSecretAction dequeAllStorageActions];
-           
-            
             
         } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
             [self initConversations];

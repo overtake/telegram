@@ -29,8 +29,8 @@
 
 @property (nonatomic,copy) NSImage* (^cropInBackground)(NSImage *image);
 
-+(NSCache *)cache;
+-(NSImage *)cachedImage:(NSString *)key;
+-(NSImage *)cachedThumb:(NSString *)key;
 
-+(void)clearCache;
 
 @end

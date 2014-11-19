@@ -55,7 +55,7 @@ NSImage *fireImage() {
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
-        [self.imageView setRoundSize:4];
+        self.imageView.cornerRadius = 4;
         [self.imageView setBorderColor:NSColorFromRGB(0xf3f3f3)];
         [self.imageView setBorderWidth:1];
 
@@ -75,20 +75,6 @@ NSImage *fireImage() {
                 
             }
             
-//
-//            TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:object];
-//            if(item) {
-//                [[TMMediaController controller] show:item];
-//                
-//                if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
-//                    TL_destructMessage *msg = (TL_destructMessage *) weakSelf.item.message;
-//                    
-//                    if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
-//                        [SelfDestructionController addMessage:msg force:YES];
-//                    }
-//                }
-//                
-//            }
         }];
         
         self.fireImageView = imageViewWithImage(fireImage());
@@ -143,10 +129,9 @@ NSImage *fireImage() {
     [super setCellState:cellState];
     
     BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60;
+
+    [self.imageView setIsAlwaysBlur:cellState == CellStateSending];
     
-    if(cellState == CellStateSending) {
-         [self.imageView setIsAlwaysBlur:YES];
-    }
     
      [self.fireImageView setHidden:YES];
     
@@ -158,10 +143,6 @@ NSImage *fireImage() {
            
          }
     }
-    
-    
-    
-
     
     [self.progressView setState:cellState];
 }
@@ -188,7 +169,7 @@ NSImage *fireImage() {
     
     NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
     [path addClip];
     
     

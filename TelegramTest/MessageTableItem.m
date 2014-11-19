@@ -9,7 +9,6 @@
 #import "MessageTableItem.h"
 #import "MessageTableItemServiceMessage.h"
 #import "MessageTableItemText.h"
-#import "MessageTableItemPVG.h"
 #import "MessageTableItemPhoto.h"
 #import "MessageTableItemVideo.h"
 #import "MessageTableItemDocument.h"

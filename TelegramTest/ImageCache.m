@@ -27,10 +27,10 @@
 
 - (id) init {
     if(self = [super init]) {
-        [self setCountLimit:50];
+        [self setCountLimit:15];
         
         self.roundCache = [[NSCache alloc] init];
-        [self.roundCache setCountLimit:50];
+        [self.roundCache setCountLimit:10];
 //        [self.roundCache setTotalCostLimit:1000000];
     }
     return self;

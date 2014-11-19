@@ -73,6 +73,14 @@
     [[ASQueue globalQueue] dispatchOnQueue:block synchronous:synchronous];
 }
 
++ (void)dispatchOnMainQueue:(dispatch_block_t)block {
+    [[ASQueue mainQueue] dispatchOnQueue:block];
+}
+
++ (void)dispatchOnMainQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous {
+     [[ASQueue mainQueue] dispatchOnQueue:block synchronous:synchronous];
+}
+
 - (dispatch_queue_t)nativeQueue
 {
     return _queue;

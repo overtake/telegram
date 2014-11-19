@@ -18,16 +18,25 @@
 
 -(id)initWithFrame:(NSRect)frame {
     if(self = [super initWithFrame:frame]) {
-        
-         self.headerView = [[BroadcastInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 260)];
-        
-        [Notification removeObserver:self];
-        
-        [Notification addObserver:self selector:@selector(chatStatusNotification:) name:BROADCAST_STATUS];
 
     }
     
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [Notification addObserver:self selector:@selector(chatStatusNotification:) name:BROADCAST_STATUS];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [Notification removeObserver:self];
+}
+
+-(void)loadView {
+    [super loadView];
+     self.headerView = [[BroadcastInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 260)];
 }
 
 

@@ -145,16 +145,16 @@
     
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
-    [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
-    [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
-    [self.navigationViewController pushViewController:self.collectionViewController animated:NO];
-    [self.navigationViewController pushViewController:self.composePickerViewController animated:NO];
-    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:NO];
-    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:NO];
-    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:NO];
-    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:NO];
-    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:NO];
-    [self.navigationViewController clear];
+//    [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.collectionViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.composePickerViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:NO];
+//    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:NO];
+//    [self.navigationViewController clear];
 
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
     [self.navigationViewController.view.window makeFirstResponder:nil];
@@ -447,9 +447,8 @@
     
     [self hideModalView:YES animation:NO];
 
-    
-    [self.userInfoViewController setUser:user conversation:conversation];
     [self.navigationViewController pushViewController:self.userInfoViewController animated:YES];
+    [self.userInfoViewController setUser:user conversation:conversation];
 }
 
 
@@ -464,9 +463,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.collectionViewController setConversation:conversation];
-    
     [self.navigationViewController pushViewController:self.collectionViewController animated:YES];
+    [self.collectionViewController setConversation:conversation];
     
 }
 
@@ -476,8 +474,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.broadcastInfoViewController setBroadcast:broadcast];
     [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:YES];
+    [self.broadcastInfoViewController setBroadcast:broadcast];
 }
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction {
@@ -487,8 +485,9 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.composePickerViewController setAction:composeAction];
+    
     [self.navigationViewController pushViewController:self.composePickerViewController animated:YES];
+    [self.composePickerViewController setAction:composeAction];
 
 }
 
@@ -499,9 +498,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    
-    [self.composeChatCreateViewController setAction:composeAction];
     [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:YES];
+    [self.composeChatCreateViewController setAction:composeAction];
 
 }
 
@@ -513,8 +511,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.composeBroadcastListViewController setAction:composeAction];
     [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];
+    [self.composeBroadcastListViewController setAction:composeAction];
 
 }
 
@@ -528,8 +526,9 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.chatInfoViewController setChat:chat];
+    
     [self.navigationViewController pushViewController:self.chatInfoViewController animated:YES];
+    [self.chatInfoViewController setChat:chat];
 }
 
 - (void)showEncryptedKeyWindow:(TL_encryptedChat *)chat {
@@ -537,9 +536,8 @@
         return;
     [self hideModalView:YES animation:NO];
     
-    [self.encryptedKeyViewController showForChat:chat];
-    
     [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:YES];
+    [self.encryptedKeyViewController showForChat:chat];
     
 }
 
@@ -557,7 +555,6 @@
     
     [self hideModalView:YES animation:NO];
 
-    
     [self.navigationViewController pushViewController:self.blockedUsersViewController animated:YES];
 }
 

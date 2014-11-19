@@ -175,11 +175,21 @@ NSImage *previewImageForDocument(NSString *path) {
     CFStringRef fileExtension = (__bridge CFStringRef) [path pathExtension];
     CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
     
-    if(UTTypeConformsTo(fileUTI, kUTTypeGIF))
+    if(UTTypeConformsTo(fileUTI, kUTTypeGIF)) {
+        CFRelease(fileUTI);
+        CFRelease(fileExtension);
         return thumbIcon;
+    }
+    
 
-    if(!thumbIcon)
+    if(!thumbIcon) {
+        CFRelease(fileUTI);
+        CFRelease(fileExtension);
         return nil;
+    }
+    
+    CFRelease(fileUTI);
+    CFRelease(fileExtension);
     
     NSSize needSize = NSMakeSize(100, 100);
     NSRect rect;
@@ -381,7 +391,7 @@ NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize) {
     [result lockFocus];
     [image drawInRect:NSMakeRect(0, 0, result.size.width, result.size.height)
              fromRect:cropedRect
-            operation:NSCompositeSourceOver
+            operation:NSCompositeCopy
              fraction:1.0];
     [result unlockFocus];
     return result;
@@ -567,11 +577,11 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
         converted.height = ceil(converted.height * scale);
     }
    
-    if(converted.width > max)
-        converted.width = max;
-    
-    if(converted.height > max)
-        converted.height = max;
+//    if(converted.width > max)
+//        converted.width = max;
+//    
+//    if(converted.height > max)
+//        converted.height = max;
     
     if(isnan(converted.width) || isnan(converted.height)) {
         
@@ -682,6 +692,67 @@ NSData *jpegNormalizedData(NSImage *image) {
                                  nil];
     
     return[myBitmapImageRep representationUsingType:NSJPEGFileType properties:jpegOptions];
+}
+
+
+NSImage *renderedImage(NSImage * oldImage, NSSize size) {
+    
+    if(!oldImage)
+        return oldImage;
+    
+    static CALayer *layer;
+    if(!layer) {
+        layer = [CALayer layer];
+    }
+    
+    
+    [CATransaction begin];
+    
+    NSImage *image = nil;
+    @autoreleasepool {
+        CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
+        
+        size.width *= displayScale;
+        size.height *= displayScale;
+        
+        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
+        
+        if(source != NULL) {
+            CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
+            CFRelease(source);
+            
+            [layer setContents:(__bridge id)(maskRef)];
+            [layer setFrame:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setBounds:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setMasksToBounds:YES];
+            
+            
+            CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
+                                                         size.width,
+                                                         size.height,
+                                                         8 /*bitsPerComponent*/,
+                                                         0 /*bytesPerRow - CG will calculate it for you if it's allocating the data.  This might get padded out a bit for better alignment*/,
+                                                         [[NSColorSpace genericRGBColorSpace] CGColorSpace],
+                                                         kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
+            [layer renderInContext:context];
+            
+            
+            CGImageRef cgImage = CGBitmapContextCreateImage(context);
+            
+            
+            CGContextRelease(context);
+            
+            
+            
+            image = [[NSImage alloc] initWithCGImage:cgImage size:size];
+            CGImageRelease(cgImage);
+            CGImageRelease(maskRef);
+        }
+    }
+    
+    [CATransaction commit];
+    
+    return image;
 }
 
 @end

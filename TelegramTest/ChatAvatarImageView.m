@@ -36,9 +36,7 @@
         
         self.sourceType = ChatAvatarSourceGroup;
         
-        
-//        [self.progressContainer.layer setNeedsDisplay];
-//        [self.progressContainer.layer display];
+
     }
     return self;
 }
@@ -104,7 +102,7 @@
                 
             }]];
             
-            if(self.fileLocationSmall) {
+            if(self.fileLocation) {
                 [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.RemovePhoto", nil) withBlock:^(id sender) {
                     [strongSelf updateChatPhoto:nil];
                     

@@ -84,7 +84,7 @@ static NSMutableDictionary *count;
         
         if([obj.media isKindOfClass:[TL_photoSize class]]) {
             
-            TGImageObject *imgObj = [[TGImageObject alloc] initWithLocation:[(TL_photoSize *)obj.media location] placeHolder:nil sourceId:_user.n_id size:0];
+            TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:[(TL_photoSize *)obj.media location] placeHolder:nil sourceId:_user.n_id size:0];
             
             imgObj.imageSize = NSMakeSize([(TL_photoSize *)obj.media w], [(TL_photoSize *)obj.media h]);
             

@@ -37,14 +37,13 @@
         
         if([self isHasThumb]) {
             
-            self.thumbSize = NSMakeSize(100, 100);
-            if(self.message.media.document.thumb.bytes) {
-                self.cachedThumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
-              //  if([self isset])
-                  //  [self doAfterDownload];
+            self.thumbSize = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
+            
+           if(self.message.media.document.thumb.bytes) {
+                NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
+                thumb = renderedImage(thumb, thumb.size);
+                [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
             }
-            
-            
             
             
         } else {

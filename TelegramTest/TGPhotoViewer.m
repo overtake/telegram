@@ -15,6 +15,7 @@
 #import "TGFileLocation+Extensions.h"
 #import "TGPVUserBehavior.h"
 #import "TGPVEmptyBehavior.h"
+#import "TGCache.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGUser *user;
@@ -47,7 +48,8 @@
 
 -(void)orderOut:(id)sender {
     [super orderOut:sender];
-    
+   
+    [_photoContainer setCurrentViewerItem:nil animated:NO];
      _isVisibility = NO;
     _list = nil;
     _currentItem = nil;
@@ -55,6 +57,7 @@
     _waitRequest = NO;
     [_behavior clear];
     _behavior = nil;
+    [TGCache removeAllCachedImages:@[PVCACHE]];
 
     
 }
@@ -77,6 +80,8 @@ static const int controlsHeight = 75;
 
 - (void)initialize {
     
+    
+    [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
 
   //  [CATransaction begin];
     
@@ -88,7 +93,8 @@ static const int controlsHeight = 75;
     self.background.wantsLayer = YES;
     self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
-    weak();
+    
+    weakify();
     
     [self.background setCallback:^ {
         
@@ -96,7 +102,7 @@ static const int controlsHeight = 75;
         
         NSPoint location = [currentEvent locationInWindow];
         
-        NSPoint containerPoint = weakSelf.photoContainer.frame.origin;
+        NSPoint containerPoint = strongSelf.photoContainer.frame.origin;
         
         if(location.x > containerPoint.x)
             [[TGPhotoViewer viewer] hide];
@@ -131,7 +137,9 @@ static const int controlsHeight = 75;
     
 }
 
-
+-(void)copy:(id)sender {
+    
+}
 
 -(void)didDeleteMessages:(NSNotification *)notification {
     
@@ -362,7 +370,13 @@ static const int controlsHeight = 75;
 }
 
 -(void)makeKeyAndOrderFront:(id)sender {
+    
+    [self setFrame:[NSScreen mainScreen].frame display:NO];
+    
     [super makeKeyAndOrderFront:sender];
+    
+    [self makeFirstResponder:nil];
+    
     _isVisibility = YES;
     [self.controls update];
 }
@@ -460,16 +474,16 @@ static const int controlsHeight = 75;
     [ASQueue dispatchOnStageQueue:^{
         
        
-        NSInteger max = MIN(_currentItemId + 10, [self listCount]-1);
+        NSInteger max = MIN(_currentItemId + 5, [self listCount]-1);
         
-        NSInteger min = MAX(_currentItemId - 10, 0);
+        NSInteger min = MAX(_currentItemId - 5, 0);
         
         NSRange range = NSMakeRange(MIN(min, max), abs((int)(max - min)));
         
         
-        [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
+        [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![[TGPVImageView cache] objectForKey:obj.imageObject.location.cacheKey]) {
+            if(![TGCache cachedImage:obj.imageObject.location.cacheKey group:@[PVCACHE]]) {
                  [obj.imageObject initDownloadItem];
             }
             

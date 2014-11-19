@@ -412,12 +412,10 @@ static NSMutableArray *wrong_files;
 
 +(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
     NSPasteboard *pboard;
-    NSDragOperation sourceDragMask;
     
     if(![dialog canSendMessage])
         return NO;
     
-    sourceDragMask = [sender draggingSourceOperationMask];
     pboard = [sender draggingPasteboard];
     
     if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {

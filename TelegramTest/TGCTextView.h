@@ -20,7 +20,7 @@
     
 }
 
-@property (nonatomic,strong) NSAttributedString *attributedString;
+@property (nonatomic,copy) NSAttributedString *attributedString;
 //@property (nonatomic,assign) NSRange selectionRange;
 @property (nonatomic,assign,setter=setEditable:) BOOL isEditable;
 

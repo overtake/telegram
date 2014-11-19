@@ -944,13 +944,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     
     [queue inDatabase:^(FMDatabase *db) {
-        //[db beginTransaction];
-        
+
         NSMutableArray *users = [[NSMutableArray alloc] init];
         
-            
         FMResultSet *result = [db executeQuery:@"select * from users"];
-        
         
         while ([result next]) {
             NSDictionary *row = [result resultDictionary];
@@ -1020,6 +1017,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             [users addObject:user];
         }
+        
         
         [result close];
         

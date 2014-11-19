@@ -16,7 +16,6 @@
 
 -(void)selectSearchTextInRange:(NSRange)range;
 
--(void)cancelSelectSearchText;
 
 -(void)_mouseDragged:(NSEvent *)theEvent;
 -(void)_setStartSelectPosition:(NSPoint)position;

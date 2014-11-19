@@ -89,46 +89,51 @@
     self = [super initWithFrame:frame];
     if(self) {
         
-        _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
-        [_tableView setTm_delegate:self];
-        [_tableView.containerView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [self.view addSubview:_tableView.containerView];
-     
-        _headerItem = [[ChatHeaderItem alloc] init];
-        _bottomItem = [[ChatBottomItem alloc] init];
-
-        self.type = ChatInfoViewControllerNormal;
-        
-        
-        _centerTextField = [TMTextField defaultTextField];
-        [self.centerTextField setAlignment:NSCenterTextAlignment];
-        [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
-        [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-        [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-        [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-        [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.centerTextField setDrawsBackground:NO];
-        
-        [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
-        
-        [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
-        
-        self.centerNavigationBarView = (TMView *) self.centerTextField;
-        
-        
-        _bottomView = [[ChatBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
-//        
-//        TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
-//        [center setTarget:self selector:@selector(navigationGoBack)];
-//        self.centerNavigationBarView = center;
-//        center.acceptCursor = NO;
-        
-        
-        _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
-        
-        [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
     }
     return self;
+}
+
+
+-(void)loadView {
+    [super loadView];
+    
+    
+    
+    _headerItem = [[ChatHeaderItem alloc] init];
+    _bottomItem = [[ChatBottomItem alloc] init];
+    
+    self.type = ChatInfoViewControllerNormal;
+    
+    
+    _centerTextField = [TMTextField defaultTextField];
+    [self.centerTextField setAlignment:NSCenterTextAlignment];
+    [self.centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
+    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
+    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [self.centerTextField setDrawsBackground:NO];
+    
+    [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
+    
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
+    
+    self.centerNavigationBarView = (TMView *) self.centerTextField;
+    
+    
+    _bottomView = [[ChatBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
+
+    
+    
+    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
+    
+
+    _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
+    [_tableView setTm_delegate:self];
+    [_tableView.containerView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [self.view addSubview:_tableView.containerView];
+    
+    
 }
 
 - (void)navigationGoBack {
@@ -152,21 +157,6 @@
             [self buildRightView];
         }];
         [view addSubview:button];
-        
-        
-//        TMTextButton *exitButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:[self isKindOfClass:[BroadcastInfoViewController class]] ? NSLocalizedString(@"Delete", nil) : NSLocalizedString(@"Conversation.DeleteAndExit", nil)];
-//        
-//        
-//        [exitButton setTapBlock:^{
-//            [[[Telegram rightViewController] messagesViewController] deleteDialog:[self isKindOfClass:[BroadcastInfoViewController class]] ? ((BroadcastInfoViewController *)self).broadcast.conversation : self.chat.dialog];
-//        }];
-//        
-//        
-//        [exitButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, exitButton.frame.origin.y)];
-//        
-//        [view addSubview:exitButton];
-
-     //   width = exitButton.frame.size.width+10;
         
     } else {
         
@@ -222,20 +212,14 @@
     block();
 }
 
-- (void)loadView {
-    [super loadView];
-    
-    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
+    [Notification removeObserver:self];
 }
 
 
@@ -245,6 +229,17 @@
     
     if([_headerView.nameTextField becomeFirstResponder])
         [_headerView.nameTextField setCursorToEnd];
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
+
+-(void)_didStackRemoved {
+    self.chat = nil;
+    [self.tableView removeAllItems:NO];
+    [self.tableView reloadData];
 }
 
 - (void)chatStatusNotification:(NSNotification *)notify {

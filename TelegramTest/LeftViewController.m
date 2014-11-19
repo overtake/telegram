@@ -108,10 +108,10 @@ static const int bottomOffset = 58;
     contactsTab.textColor = chatsTab.textColor = settingsTab.textColor = NSColorFromRGB(0x888888);
     contactsTab.selectedTextColor = chatsTab.selectedTextColor = settingsTab.selectedTextColor = BLUE_COLOR_SELECT;
     
-    
     [self.tabController addTab:contactsTab];
     [self.tabController addTab:chatsTab];
     [self.tabController addTab:settingsTab];
+    
     
     [self.tabController setBackgroundColor:NSColorFromRGB(0xfafafa)];
     
@@ -129,12 +129,8 @@ static const int bottomOffset = 58;
     self.tabViewController = [[TMSimpleTabViewController alloc] initWithFrame:NSMakeRect(0, bottomOffset, self.view.bounds.size.width, self.view.bounds.size.height - bottomOffset)];
     [self.view addSubview:self.tabViewController.view];
     
-   
-   //   [self.tabViewController addController:self.searchViewController];
-    
     self.contactsViewController = [[ContactsViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.contactsViewController];
-    
     
     self.dialogsViewController = [[DialogsViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.dialogsViewController];

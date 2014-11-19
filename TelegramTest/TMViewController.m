@@ -168,6 +168,10 @@
 }
 
 
+-(void)_didStackRemoved {
+    
+}
+
 
 - (void)loadView {
     self.view = [[TMView alloc] initWithFrame: self.frameInit];

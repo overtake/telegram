@@ -195,7 +195,7 @@ static NSDictionary *attributes() {
                        
                        stateImage = weakSelf.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
                        
-                       [stateImage drawAtPoint:NSMakePoint(NSWidth(weakSelf.frame) - stateImage.size.width - 13, 9) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                       [stateImage drawAtPoint:NSMakePoint(NSWidth(weakSelf.frame) - stateImage.size.width - 13, 6) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
                        
                    } else if([weakSelf rowItem].lastMessage.dstate == DeliveryStatePending) {
                        

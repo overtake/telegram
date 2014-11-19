@@ -9,7 +9,7 @@
 #import "TMLoaderView.h"
 
 @interface TMLoaderView ()
-@property (nonatomic,strong) id target;
+@property (nonatomic,weak) id target;
 @property (nonatomic,assign) SEL selector;
 @property (nonatomic,strong) NSMutableDictionary *stateImages;
 

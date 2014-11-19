@@ -12,13 +12,13 @@
 #import "TGImageView.h"
 #import "ImageUtils.h"
 #import "TGFileLocation+Extensions.h"
+#import "TGCache.h"
 @implementation TGImageObject
 
 -(id)initWithLocation:(TGFileLocation *)location {
     if(self = [self initWithLocation:location placeHolder:nil sourceId:0 size:0]) {
         
     }
-    
     return self;
 }
 
@@ -26,7 +26,6 @@
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:0 size:0]) {
         
     }
-    
     return self;
 }
 
@@ -35,7 +34,6 @@
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:0]) {
         
     }
-    
     return self;
 }
 
@@ -45,9 +43,7 @@
         _placeholder = placeHolder;
         _sourceId = sourceId;
         _size = size;
-        _imageViewClass = [TGImageView class];
     }
-    
     return self;
 }
 
@@ -70,20 +66,9 @@
     weak();
 
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        
-                
-        NSImage *image = [[NSImage alloc] initWithData:item.result];
-        
-        image = decompressedImage(image);
-                
+        [weakSelf _didDownloadImage:item];
         weakSelf.downloadItem = nil;
-        
-        [[weakSelf.imageViewClass cache] setObject:image forKey:weakSelf.location.cacheKey];
-        
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            [weakSelf.delegate didDownloadImage:image object:weakSelf];
-        }];
-        
+        weakSelf.downloadListener = nil;
     }];
     
     
@@ -97,7 +82,32 @@
     [_downloadItem start];
 }
 
+-(void)_didDownloadImage:(DownloadItem *)item {
+    NSImage *image = [[NSImage alloc] initWithData:item.result];
+    
+    if(NSSizeNotZero(self.realSize) && NSSizeNotZero(self.imageSize) && self.realSize.width > MIN_IMG_SIZE.width && self.realSize.width > MIN_IMG_SIZE.height && self.imageSize.width == MIN_IMG_SIZE.width && self.imageSize.height == MIN_IMG_SIZE.height) {
+        
+        int difference = roundf( (self.realSize.width - self.imageSize.width) /2);
+        
+        image = cropImage(image,self.imageSize, NSMakePoint(difference, 0));
+        
+    }
+    
+    image = renderedImage(image, self.imageSize);
+    
+    [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
+    
+    
+    
+    [[ASQueue mainQueue] dispatchOnQueue:^{
+        [self.delegate didDownloadImage:image object:self];
+    }];
+}
 
+-(void)dealloc {
+    [self.downloadItem removeEvent:self.downloadListener];
+    _downloadItem = nil;
+}
 
 
 @end

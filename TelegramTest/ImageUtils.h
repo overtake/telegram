@@ -180,5 +180,6 @@ NSImageView *imageViewWithImage(NSImage *image);
 NSData *jpegNormalizedData(NSImage *image);
 
 NSImage *decompressedImage(NSImage *image);
+NSImage *renderedImage(NSImage * oldImage, NSSize size);
 
 @end

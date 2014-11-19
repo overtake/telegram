@@ -32,7 +32,9 @@
 }
 
 
-
+-(int)partSize {
+    return self.size == 0 ? 0 : 1024*64;
+}
 
 -(TGInputFileLocation *)input {
     TL_fileLocation *location = self.object;

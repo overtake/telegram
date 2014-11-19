@@ -19,6 +19,10 @@
 
 + (void)dispatchOnStageQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
 
++ (void)dispatchOnMainQueue:(dispatch_block_t)block;
+
++ (void)dispatchOnMainQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
+
 - (dispatch_queue_t)nativeQueue;
 
 - (bool)isCurrentQueue;

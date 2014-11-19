@@ -120,8 +120,6 @@ static int futureUniqueKey = 0;
 -(void)notify:(DownloadItemHandlerType)type {
     [DownloadQueue dispatchOnStageQueue:^{
         
-        
-       
         [self.events enumerateObjectsUsingBlock:^(DownloadEventListener *obj, NSUInteger idx, BOOL *stop) {
             
             switch (type) {
@@ -161,19 +159,16 @@ static int futureUniqueKey = 0;
 }
 
 -(void)clear {
-    self.object = nil;
     [self removeAllEvents];
 }
 
+-(int)partSize {
+    return self.size == 0 ? 0 : 1024*128;
+}
+
+
 -(void)removeAllEvents {
-    [DownloadQueue dispatchOnStageQueue:^{
-        if(self.events) {
-            [self.events enumerateObjectsUsingBlock:^(DownloadEventListener *obj, NSUInteger idx, BOOL *stop) {
-                [obj clear];
-            }];
-        }
-        
-        
+    [DownloadQueue dispatchOnStageQueue:^{   
         [self.events removeAllObjects];
     } synchronous:YES];
     

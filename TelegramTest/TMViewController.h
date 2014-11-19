@@ -42,5 +42,7 @@
 -(void)showModalProgress;
 -(void)hideModalProgress;
 
+-(void)_didStackRemoved;
+
 
 @end

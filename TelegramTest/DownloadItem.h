@@ -28,6 +28,8 @@ typedef void (^DownloadItemHandler)(DownloadItem *item);
 
 -(id)initWithItem:(DownloadItem *)item;
 
+-(void)clear;
+
 @end
 
 
@@ -103,6 +105,8 @@ typedef enum {
 -(void)pause;
 -(void)resetItem;
 -(TGInputFileLocation *)input;
+
+-(int)partSize;
 
 -(id)initWithObject:(id)object size:(int)size;
 @end

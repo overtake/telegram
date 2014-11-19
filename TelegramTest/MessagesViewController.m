@@ -419,7 +419,7 @@
     
     self.historyController = [[ChatHistoryController alloc] initWithConversation:nil controller:self];
     
-     [self.searchMessagesView setHidden:YES];
+    [self.searchMessagesView setHidden:YES];
     
 }
 
@@ -459,16 +459,11 @@
             
             NSUInteger row = [self.messages indexOfObject:searchItem.item];
             
-            id cell = [self.table rowViewAtRow:row makeIfNecessary:NO];
-            
             NSRect rowRect = [self.table rectOfRow:row];
             
             [self.table.scrollView scrollToPoint:rowRect.origin animation:NO];
             
-            MessageTableCellTextView *container = [[cell subviews] objectAtIndex:0];
-            
             [self scrollToRect:rowRect isCenter:YES];
-            
             
         }
     };
@@ -614,6 +609,10 @@
             [cell setEditable:show animation:YES];
         }
     }
+}
+
+-(void)_didStackRemoved {
+    [self flushMessages];
 }
 
 
@@ -2491,9 +2490,8 @@ static NSTextAttachment *headerMediaIcon() {
             cell = [[MessageTableCellTextView alloc] initWithFrame:self.view.bounds];
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
+            
         }
-        
-        // DLog(@"start retain count %ld", CFGetRetainCount((__bridge CFTypeRef)cell));
         
     } else if(item.class == [MessageTableItemPhoto class]) {
         static NSString *const kRowIdentifier = @"photo";
@@ -2599,6 +2597,8 @@ static NSTextAttachment *headerMediaIcon() {
     NSDate *start = [NSDate new];
     
     [cell setItem:item];
+    
+   
     
     if([cell isKindOfClass:[MessageTableCellContainerView class]]) {
         MessageTableCellContainerView *containerView = (MessageTableCellContainerView *)cell;

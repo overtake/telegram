@@ -18,6 +18,8 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <openssl/md5.h>
 #import "ImageUtils.h"
+#import "TGCache.h"
+#import "TMAvaImageObject.h"
 typedef enum {
     TMAvatarTypeUser,
     TMAvatarTypeChat,
@@ -42,98 +44,18 @@ static const TGTwoColors colors[] = {
     { .top = 0xffaf51, .bottom = 0xffaf51 },
 };
 
-
-/*
- 
- ec6a5e - ce5247
- f4d447 - cda322
- 7ccd52 - 5eaf33
- 66aee4 - 468ec4
- c789e1 - ac6bc8
- ffaf51 - e28941
- 
- 
- { .top = 0xff516a, .bottom = 0xff885e },
- { .top = 0xffa85c, .bottom = 0xffcd6a },
- { .top = 0x54cb68, .bottom = 0xa0de7e },
- { .top = 0x2a9ef1, .bottom = 0x72d5fd },
- { .top = 0x6c65f9, .bottom = 0x84b2fd },
- { .top = 0xd575ea, .bottom = 0xe0a8f1 },
- 
- 
- */
-
-@interface TMAvatarImageView()
+@interface TMAvatarImageView()<TGImageObjectDelegate>
 @property (nonatomic, strong) DownloadPhotoItem *downloadItem;
-@property (nonatomic, strong,readonly) DownloadEventListener *downloadListener;
+@property (nonatomic, strong) DownloadEventListener *downloadListener;
 @property (nonatomic) NSUInteger currentHash;
-@property (nonatomic, strong) NSImage *drawImage;
 @property (nonatomic) TMAvatarType type;
-
-@property (nonatomic) BOOL takeBigPhoto;
 @property (nonatomic) BOOL isNeedPlaceholder;
+@property (nonatomic,strong) NSImage *placeholder;
+@property (nonatomic,strong) TMAvaImageObject *imageObject;
 
 @end
 
 @implementation TMAvatarImageView
-
-static NSCache *tableViewCache(NSSize size) {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-        [instance setObject:[TMAvatarImageView placeholderImageBySize:size andColor:NSColorFromRGB(0xfafafa)] forKey:@(-1)];
-    });
-    return instance;
-}
-
-static NSCache *newConverstaionTableViewCache(NSSize size) {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-        [instance setObject:[TMAvatarImageView placeholderImageBySize:size andColor:NSColorFromRGB(0xfafafa)] forKey:@(-1)];
-    });
-    return instance;
-}
-
-static NSCache *userProfileCache(NSSize size) {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-        [instance setObject:[TMAvatarImageView placeholderImageBySize:size andColor:NSColorFromRGB(0xfafafa)] forKey:@(-1)];
-    });
-    return instance;
-}
-
-static NSCache *messageTableViewCache(NSSize size) {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-        [instance setObject:[TMAvatarImageView placeholderImageBySize:size andColor:NSColorFromRGB(0xfafafa)] forKey:@(-1)];
-    });
-    return instance;
-}
-
-static NSCache *photosSmallCache() {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-    });
-    return instance;
-}
-
-static NSCache *photosBigCache() {
-    static NSCache *instance;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        instance = [[NSCache alloc] init];
-    });
-    return instance;
-}
 
 + (NSImage *) placeholderImageBySize:(NSSize)size andColor:(NSColor *)color {
     NSImage *image = [[NSImage alloc] initWithSize:size];
@@ -142,7 +64,6 @@ static NSCache *photosBigCache() {
     NSRectFill(NSMakeRect(0, 0, size.width, size.height));
     [image unlockFocus];
     
-    
     image = [TMImageUtils roundedImage:image size:size];
     
     return image;
@@ -150,21 +71,21 @@ static NSCache *photosBigCache() {
 
 + (instancetype)standartTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((DIALOG_CELL_HEIGHT - 50) / 2.0), 50, 50)];
-    [avatarImageView setCacheDictionary:tableViewCache(avatarImageView.bounds.size)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
     return avatarImageView;
 }
 
 + (instancetype)standartNewConversationTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((60 - 44) / 2.0), 44, 44)];
-    [avatarImageView setCacheDictionary:newConverstaionTableViewCache(avatarImageView.bounds.size)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
     return avatarImageView;
 }
 
 + (instancetype)standartMessageTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
-    [avatarImageView setCacheDictionary:messageTableViewCache(avatarImageView.bounds.size)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     [avatarImageView setOffsetTextY:2];
     return avatarImageView;
@@ -172,10 +93,8 @@ static NSCache *photosBigCache() {
 
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
-    [avatarImageView setCacheDictionary:userProfileCache(avatarImageView.bounds.size)];
-    [avatarImageView setSmallCacheDictionary:tableViewCache(avatarImageView.bounds.size)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:30]];
-    [avatarImageView setTakeBigPhoto:YES];
     return avatarImageView;
 }
 
@@ -228,7 +147,18 @@ static NSCache *photosBigCache() {
 
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
     self.isNeedPlaceholder = YES;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [TGCache setMemoryLimit:5*1024*1024 group:AVACACHE];
+    });
+}
 
+-(void)didDownloadImage:(NSImage *)image object:(TMAvaImageObject *)object {
+    
+    if([self.imageObject.location isEqualTo:object.location]) {
+        self.image = image;
+    }
     
 }
 
@@ -247,7 +177,7 @@ static NSCache *photosBigCache() {
             if([user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
                 rebuild = ![self.text isEqualToString:[NSString stringWithFormat:@"%C", (unichar)(user.fullName.length > 0 ? [user.fullName characterAtIndex:0] : 0)]];
             } else {
-                rebuild = self.fileLocationSmall.hashCacheKey != user.photo.photo_small.hashCacheKey;
+                rebuild = self.fileLocation.hashCacheKey != user.photo.photo_small.hashCacheKey;
             }
             
             if(rebuild) {
@@ -269,7 +199,7 @@ static NSCache *photosBigCache() {
             if([chat.photo isKindOfClass:[TL_chatPhotoEmpty class]]) {
                 rebuild = ![self.text isEqualToString:[NSString stringWithFormat:@"%C", (unichar)(chat.title.length > 0 ? [chat.title characterAtIndex:0] : 0)]];
             } else {
-                rebuild = self.fileLocationSmall.hashCacheKey != chat.photo.photo_small.hashCacheKey;
+                rebuild = self.fileLocation.hashCacheKey != chat.photo.photo_small.hashCacheKey;
             }
             
             if(rebuild) {
@@ -285,9 +215,6 @@ static NSCache *photosBigCache() {
     }
 }
 
-- (void) setCacheDictionary:(NSCache *)cacheDictionary {
-    self->_cacheDictionary = cacheDictionary;
-}
 
 - (void) setUser:(TGUser *)user {
     [self setUser:user animated:NO];
@@ -302,8 +229,10 @@ static NSCache *photosBigCache() {
     self->_text = nil;
     self->_broadcast = nil;
     self.type = TMAvatarTypeUser;
-    self.fileLocationBig = user.photo.photo_big;
-    self.fileLocationSmall = user.photo.photo_small;
+    self.fileLocation = user.photo.photo_small;
+    self.imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:user.n_id];
+    self.imageObject.delegate = self;
+    self.imageObject.imageSize = self.frame.size;
     [self rebuild:animated];
 }
 
@@ -321,8 +250,10 @@ static NSCache *photosBigCache() {
     self->_text = nil;
     self->_broadcast = nil;
     self.type = TMAvatarTypeChat;
-    self.fileLocationBig = chat.photo.photo_big;
-    self.fileLocationSmall = chat.photo.photo_small;
+    self.fileLocation = chat.photo.photo_small;
+    self.imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:chat.n_id];
+    self.imageObject.delegate = self;
+    self.imageObject.imageSize = self.frame.size;
     [self rebuild:animated];
 }
 
@@ -337,8 +268,7 @@ static NSCache *photosBigCache() {
     self->_broadcast = broadcast;
     
     self.type = TMAvatarTypeBroadcast;
-    self.fileLocationBig = nil;
-    self.fileLocationSmall = nil;
+    _fileLocation = nil;
     
     [self rebuild:NO];
 }
@@ -352,8 +282,7 @@ static NSCache *photosBigCache() {
     self->_chat = nil;
     self->_broadcast = nil;
     self.type = TMAvatarTypeText;
-    self.fileLocationBig = nil;
-    self.fileLocationSmall = nil;
+    _fileLocation = nil;
     [self rebuild:NO];
 }
 
@@ -376,9 +305,6 @@ static CAAnimation *ani2() {
     return animation;
 }
 
-- (TGFileLocation *)fileLocation {
-    return self.takeBigPhoto ? self.fileLocationBig : self.fileLocationSmall;
-}
 
 - (void) rebuild:(BOOL)animated {
     
@@ -414,156 +340,31 @@ static CAAnimation *ani2() {
         self.currentHash = [self.text hash];
     }
     
-    __block NSNumber *key = [NSNumber numberWithUnsignedInteger:self.currentHash];
+    __block NSString *key = [NSString stringWithFormat:@"%lu:%@",self.currentHash,NSStringFromSize(self.bounds.size)];
     
     
-    //Пытаемся выбрать из кеша таблицы
-    if(self.cacheDictionary) {
-        NSImage *image = [self.cacheDictionary objectForKey:key];
-        if(image) {
-            if(animated)
-                [self addAnimation:ani() forKey:@"contents"];
-    
-            self.image = image;
-            return;
-        }
-    }
-    
-    //Пытаемся получить изображение с кеша с большими размерами
-    NSCache *cache = self.takeBigPhoto ? photosBigCache() : photosSmallCache();
-    NSImage *image = [cache objectForKey:key];
+
+    NSImage *image = [TGCache cachedImage:key group:@[AVACACHE]];
     if(image) {
-        //Уменьшаем до нужного нам размера
-        image = [TMImageUtils roundedImageNew:image size:self.bounds.size];
         if(animated)
             [self addAnimation:ani() forKey:@"contents"];
+    
         self.image = image;
-        //Записываем в кеш
-        [self.cacheDictionary setObject:image forKey:key];
-        //Профит
         return;
     }
-    
-    
-    BOOL isNeedPlaceholder = self.isNeedPlaceholder;
-    
-    //Попробуем еще глянуть меньшую копию, но грузить уже точно нужно
-    if(self.takeBigPhoto) {
-        NSImage *image = [photosSmallCache() objectForKey:[NSNumber numberWithUnsignedInteger:[self.fileLocationSmall hashCacheKey]]];
-        if(image) {
-            image = [TMImageUtils roundedImageNew:image size:self.bounds.size];
-            if(animated)
-                [self addAnimation:ani() forKey:@"contents"];
-            
-            self.image = (BTRImage *) image;
-            isNeedPlaceholder = NO;
-        }
-    }
-    
-    //Если что Placeholder
-    if(isNeedPlaceholder) {
-        NSImage *image = [self.cacheDictionary objectForKey:[NSNumber numberWithInt:-1]];
-        self.image = (BTRImage *) image;
-    }
-    
-    //Ну, типа останавливаем старые загрузки
-    if(self.fileLocation && self.downloadItem.downloadState != DownloadStateDownloading) {
-        [self.downloadItem cancel];
-        self.downloadItem = nil;
-        _downloadListener = nil;
-    }
-    
+
+
+    self.image = self.placeholder;
     
     if(self.fileLocation) {
-        __block TMAvatarImageView *weakSelf = self;
         
-        INIT_HASH_CHEKER();
-        
-        
-       
-        self.downloadItem = [[DownloadPhotoItem alloc] initWithObject:self.fileLocation size:0];
-        
-        _downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
-        
-        
-        [self.downloadItem addEvent:self.downloadListener];
-        
-        [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-            
-            
-            
-
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                
-                if(!item.result) {
-                    [weakSelf setFileLocationBig:nil];
-                    [weakSelf setFileLocationSmall:nil];
-                    [weakSelf rebuild:animated];
-                    return;
-                }
-                
-                [ASQueue dispatchOnStageQueue:^{
-                    __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
-                    
-                    imageOrigin = decompressedImage(imageOrigin);
-                    
-                    if(!imageOrigin) {
-                        [LoopingUtils runOnMainQueueAsync:^{
-                            [weakSelf setFileLocationBig:nil];
-                            [weakSelf setFileLocationSmall:nil];
-                            [weakSelf rebuild:animated];
-                        }];
-                        return;
-                    }
-                    
-                    __block NSImage *image = [TMImageUtils roundedImageNew:imageOrigin size:weakSelf.bounds.size];
-                    dispatch_async(dispatch_get_main_queue(), ^(void){
-                        if(weakSelf.cacheDictionary)
-                            [weakSelf.cacheDictionary setObject:image forKey:key];
-                        
-                        if(!weakSelf.takeBigPhoto) {
-                            [photosSmallCache() setObject:imageOrigin forKey:key];
-                        } else {
-                            [photosBigCache() setObject:imageOrigin forKey:key];
-                        }
-                        
-                        if(weakSelf.currentHash != hash) return;
-                        
-                        if(animated)
-                            [weakSelf addAnimation:ani() forKey:@"contents"];
-                        else {
-                            // [weakSelf addAnimation:ani2() forKey:@"contents"];
-                        }
-                        
-                        
-                        
-                        
-                        if(weakSelf.isNeedPlaceholder)
-                            weakSelf.image =  (BTRImage *)image;
-                    });
-                    
-                    weakSelf.downloadItem = nil;
-                }];
-                
-                
-                
-            }];
-            
-          
-            
-            
-
-        }];
-        
-        [self.downloadItem start];
+        [self.imageObject initDownloadItem];
         
     } else {
         
-        
-        
         int uid = self.type == TMAvatarTypeChat ? self.chat.n_id : (self.type == TMAvatarTypeBroadcast ? self.broadcast.n_id : self.user.n_id);
         
-        __block int colorMask = 0;// = colorId != -1 ? (colorId) % 6 : -1;
+        __block int colorMask = 0;
         
         
        
@@ -598,22 +399,21 @@ static CAAnimation *ani2() {
         
          __block NSString *text = self->_text;
         
-        weakify();
-            INIT_HASH_CHEKER();
-            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
-                __block NSImage *image = [strongSelf generateTextAvatar:colorMask text:text type:self.type];
-                
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                    if(strongSelf.cacheDictionary)
-                        [strongSelf.cacheDictionary setObject:image forKey:key];
+        [ASQueue dispatchOnStageQueue:^{
+            
+            __block NSImage *image = [self generateTextAvatar:colorMask text:text type:self.type];
+            
+            [[ASQueue mainQueue] dispatchOnQueue:^{
                     
-                    HASH_CHECK();
-                    if(animated)
-                        [strongSelf addAnimation:ani() forKey:@"contents"];
+                [TGCache cacheImage:image forKey:key groups:@[AVACACHE]];
                     
-                    strongSelf.image = (BTRImage *) image;
-                });
-            });
+                if(animated)
+                    [self addAnimation:ani() forKey:@"contents"];
+                    
+                self.image = (BTRImage *) image;
+            }];
+            
+        }];
     }
 }
 
@@ -683,7 +483,7 @@ static CAAnimation *ani2() {
         
         NSDictionary *attributes = @{NSFontAttributeName: self.font, NSForegroundColorAttributeName: color};
         NSSize textSize = [text sizeWithAttributes:attributes];
-        [text drawAtPoint: NSMakePoint(roundf( (self.bounds.size.width - textSize.width) * 0.5 ),roundf( (self.bounds.size.height - textSize.height) * 0.5 + self.offsetTextY) )withAttributes: attributes];
+        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + self.offsetTextY) )withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;

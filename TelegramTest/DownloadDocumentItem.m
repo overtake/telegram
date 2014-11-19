@@ -44,23 +44,6 @@
         
         [[Storage manager] updateMessages:@[self.object]];
         
-        if([self.object media].document.thumb && ![[self.object media].document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-            
-            NSString *thumbLocation = locationFilePath([self.object media].document.thumb.location, @"tiff");
-            
-            
-            NSImage *image = previewImageForDocument([self path]);
-            
-            if(image) {
-                NSData *data = compressImage([image TIFFRepresentation], 0.6);
-                [data writeToFile:thumbLocation atomically:YES];
-                [[ImageCache sharedManager] setImage:image forLocation:[self.object media].document.thumb.location];
-                    
-            }
-            
-                
-        }
-        
     }
     [super setDownloadState:downloadState];
 }

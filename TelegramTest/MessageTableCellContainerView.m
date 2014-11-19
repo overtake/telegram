@@ -53,14 +53,14 @@ static NSImage* image_broadcast() {
     self = [super initWithFrame:frame];
     if (self) {
         
-        
+       
         weak();
         [self setWantsLayer:YES];
         [self.layer disableActions];
         
         assert(self.layer != nil);
         
-       
+      
         
         self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
         [self.rightView setLayer:[CALayer layer]];
@@ -170,11 +170,9 @@ static NSImage* image_broadcast() {
         [self addSubview:self.containerView];
         
         
-        
         _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
         [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
         [self.progressView addTarget:self selector:@selector(checkOperation)];
-        
         
     }
     return self;
@@ -422,7 +420,6 @@ static BOOL dragAction = NO;
     if(NSPointInRect(pos, self.rightView.frame)) {
         if(self.messagesViewController.state != MessagesViewControllerStateEditable) {
             [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
-            
             [self mouseDown:theEvent];
             
             dateEditItem = self.item;
@@ -577,6 +574,8 @@ static BOOL dragAction = NO;
 }
 
 - (void)setItem:(MessageTableItem *)item {
+    
+    
     [super setItem:item];
     
     
@@ -989,6 +988,11 @@ static int offsetEditable = 30;
 
 
 -(void)dealloc {
+    
+    while (self.subviews.count != 0) {
+        [[self subviews][0] removeFromSuperview];
+    }
+    
     self.containerView = nil;
     _progressView = nil;
     self.nameTextField = nil;

@@ -21,5 +21,4 @@
 
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated;
 
-
 @end

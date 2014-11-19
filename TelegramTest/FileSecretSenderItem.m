@@ -16,6 +16,7 @@
 #import "PreviewObject.h"
 #import "SelfDestructionController.h"
 #import "DeleteRandomMessagesSenderItem.h"
+#import "TGCache.h"
 @interface FileSecretSenderItem ()
 //@property (nonatomic,strong) NSImage *thumb;
 //@property (nonatomic,strong) NSData *thumbData;
@@ -60,19 +61,11 @@
         
         image = prettysize(image);
         
+         NSSize maxSize = strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+        
         NSImage *thumb = strongResize(image, 90);
         
-        float coef = 0.4;
-        
-        NSData *thumbData = compressImage([thumb TIFFRepresentation], coef);
-        
-        while (thumbData.length > 5*1024) {
-            coef = coef - 0.05;
-            thumbData = compressImage(thumbData, coef);
-            if(coef <= 0)
-                break;
-        }
-        
+        NSData *thumbData = jpegNormalizedData(thumb);
         
         NSSize origin = image.size;
         
@@ -89,9 +82,11 @@
         
         media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:self.uploader.identify access_hash:0 user_id:0 date:[[MTNetwork instance] getTime] caption:@"photo.jpg" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
-        [[ImageCache sharedManager] setImage:image forLocation:photoSize.location];
+        image = renderedImage(image, maxSize);
         
-        [compressImage([image TIFFRepresentation], 0.83) writeToFile:mediaFilePath(media) atomically:YES];
+        [TGCache cacheImage:image forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
+        
+        [compressImage(jpegNormalizedData(image), 0.83) writeToFile:mediaFilePath(media) atomically:YES];
         
         self.message.media = media;
         
@@ -339,7 +334,7 @@
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
                 
-                [[ImageCache sharedManager] setImage:image forLocation:newLocation];
+                [TGCache cacheImage:image forKey:newLocation.cacheKey groups:@[IMGCACHE]];
                 
                 [[Storage manager] insertMedia:strongSelf.message];
                 

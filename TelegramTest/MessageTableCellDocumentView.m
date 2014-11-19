@@ -412,15 +412,14 @@ static NSImage *attachBackgroundThumb() {
     if(item.isHasThumb) {
         [self.attachButton setBackgroundImage:attachBackgroundThumb() forControlState:BTRControlStateNormal];
         self.thumbView.image = nil;
-        if(item.cachedThumb) {
-            
-            self.thumbView.image = item.cachedThumb;
-            
-        } else {
-            
+        
+        NSImage *thumb = [TGCache cachedImage:item.thumbObject.location.cacheKey group:@[IMGCACHE,THUMBCACHE]];
+        
+        if(thumb)
+            self.thumbView.image = thumb;
+         else
             self.thumbView.object = item.thumbObject;
         
-        }
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
        

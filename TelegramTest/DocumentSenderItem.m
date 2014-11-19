@@ -8,7 +8,8 @@
 
 #import "DocumentSenderItem.h"
 #import "ImageUtils.h"
-#import "ImageCache.h"
+#import "TGCache.h"
+#import "TGFileLocation+Extensions.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -50,8 +51,8 @@
             
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:realSize.width h:realSize.height bytes:self.thumbData];
             
-            [[ImageCache sharedManager] setImage:self.thumbImage forLocation:size.location];
-            
+            [TGCache cacheImage:self.thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
+                        
         } else {
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }

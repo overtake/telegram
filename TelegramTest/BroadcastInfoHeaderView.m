@@ -21,8 +21,6 @@
         
         
         
-        float offsetRight = self.bounds.size.width - 200;
-        
         weakify();
         
         [self.sharedMediaButton.textButton setTapBlock:^ {

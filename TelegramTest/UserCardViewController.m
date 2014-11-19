@@ -77,14 +77,6 @@
     
     
     
-    dispatch_block_t separatorDraw = ^ {
-        [GRAY_BORDER_COLOR set];
-        NSRectFill(NSMakeRect(0, 46, self.importView.frame.size.width, 1));
-    };
-    
-    
-    
-    
     self.exportView = [[TMView alloc] initWithFrame:self.view.bounds];
     
     

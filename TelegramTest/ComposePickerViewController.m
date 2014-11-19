@@ -20,8 +20,6 @@
 
 @implementation ComposePickerViewController
 
-
-
 -(void)loadView {
     [super loadView];
     
@@ -31,7 +29,6 @@
     
    
     self.tableView.selectDelegate = self;
-    [self.tableView ready];
     
 }
 
@@ -41,8 +38,6 @@
     self.tableView.exceptions = action.filter;
     
     [self.tableView ready];
-    
-   
     
     self.tableView.selectLimit = self.action.behavior.limit;
     self.action.behavior.delegate = self;
@@ -82,7 +77,14 @@
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     [self.action.behavior composeDidCancel];
+}
+
+-(void)_didStackRemoved {
+    [self.action.behavior composeDidCancel];
+    [self.tableView removeAllItems:NO];
+    [self.tableView reloadData];
 }
 
 -(void)viewWillAppear:(BOOL)animated {

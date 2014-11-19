@@ -57,6 +57,9 @@
         [self removeTrackingArea:_trackingArea];
     }
     
+    if( self.attributedString.length == 0)
+        return;
+    
     int opts = (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect);
     _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
                                                  options:opts
@@ -163,6 +166,11 @@
 - (void) drawRect:(CGRect)rect
 {
     
+     [self.backgroundColor setFill];
+    
+    if(self.attributedString.length == 0)
+        return;
+    
     assert(self.marks.count != 0);
     
    CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
@@ -178,14 +186,7 @@
     
     
     
-    if(self.backgroundColor) {
-         [self.backgroundColor setFill];
-    } else {
-        
-    //    CGContextSetFillColorWithColor(context, self.layer.backgroundColor);
-        
-       // [NSColorFromRGB(0xffffff) setFill];
-    }
+
     
   //  CGContextSetFillColorWithColor(context, self.layer.backgroundColor);
     
@@ -376,6 +377,7 @@
                 CGContextFillPath(context);
                 CGPathRelease(highlightPath);
                 
+
                 
                 // CFRelease(line);
                 

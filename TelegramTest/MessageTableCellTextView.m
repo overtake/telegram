@@ -18,10 +18,11 @@
 
 
 @interface MessageTableCellTextView() <TMHyperlinkTextFieldDelegate>
-@property (nonatomic,strong) NSTimer *bgTimer;
 @end
 
 @implementation MessageTableCellTextView
+
+
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -52,7 +53,6 @@
 }
 
 - (void) setItem:(MessageTableItemText *)item {
-    
     [super setItem:item];
     
     [self.textView setFrameSize:NSMakeSize(item.blockSize.width , item.blockSize.height)];
@@ -63,7 +63,6 @@
     [self.textView setSelectionRange:[SelectTextManager rangeForItem:item]];
     
     [self.textView addMarks:item.mark.marks];
-
 }
 
 
@@ -78,6 +77,8 @@
     
     return menu;
 }
+
+
 
 
 -(void)_mouseDragged:(NSEvent *)theEvent {
@@ -123,6 +124,7 @@
     [self.textView pop_addAnimation:animation forKey:@"background"];
     
 }
+
 
 
 -(void)_colorAnimationEvent {

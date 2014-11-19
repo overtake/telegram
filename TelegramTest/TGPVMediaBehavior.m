@@ -108,7 +108,7 @@
             
             TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);
             
-            TGImageObject *imgObj = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:_conversation.peer_id size:photoSize.size];
+            TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:_conversation.peer_id size:photoSize.size];
             
             imgObj.imageSize = NSMakeSize([photoSize w], [photoSize h]);
             

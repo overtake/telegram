@@ -47,7 +47,7 @@
         self.poll = [[NSMutableArray alloc] init];
         self.completePoll = [[NSMutableArray alloc] init];
         self.resultData = [[NSMutableData alloc] init];
-        self.partSize = _item.size == 0 ? 0 : 1024*128;
+        self.partSize = [item partSize];
         
         self.max_poll_size = self.partSize == 0 ? 1 : 5;
         
@@ -130,9 +130,11 @@
          [self flush];
          
          _item.errorType = DownloadErrorCantLoad;
-         [self.stream close];
-         [[NSFileManager defaultManager] removeItemAtPath:_item.path error:nil];
-         [self.target performSelectorInBackground:self.selector withObject:self];
+         if(self.item.isRemoteLoaded) {
+             [self.stream close];
+             [[NSFileManager defaultManager] removeItemAtPath:_item.path error:nil];
+             [self.target performSelectorInBackground:self.selector withObject:self];
+         }
      }];
     
 }
@@ -250,7 +252,6 @@
         [DownloadQueue setProgress:(float)self.downloaded/(float)_item.size * 100.0f toOperation:self];
     }
     
-
 }
 
 - (void)fill {

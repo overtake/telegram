@@ -159,7 +159,6 @@
 		0AAAE58518C9F9A500A2F9F1 /* UserInfoShortTextEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE58418C9F9A500A2F9F1 /* UserInfoShortTextEditView.m */; };
 		0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAAE59118CA271600A2F9F1 /* MessagesBottomView.m */; };
 		0AACA3F618B752C000621564 /* TMTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AACA3F518B752C000621564 /* TMTextButton.m */; };
-		0AB1112E189EE986003A515D /* MessageTableItemPVG.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1112D189EE986003A515D /* MessageTableItemPVG.m */; };
 		0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43B8A18D2FBC400FB805A /* RegistrationViewController.m */; };
 		0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43B9118D304C400FB805A /* RegistrationAvatarView.m */; };
 		0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43B9D18D43DC000FB805A /* TMGifImageView.m */; };
@@ -372,6 +371,9 @@
 		C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */; };
 		C26752701A13D9F600152D9A /* TGPVUserBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */; };
 		C26752771A15099A00152D9A /* TGPVEmptyBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */; };
+		C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C26752791A1A7CEF00152D9A /* TGCache.m */; };
+		C267527D1A1B68F500152D9A /* TGPVImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C267527C1A1B68F500152D9A /* TGPVImageObject.m */; };
+		C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C26752801A1CA7CC00152D9A /* TMAvaImageObject.m */; };
 		C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */; };
 		C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */; };
 		C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C13819EE9DF9007F836A /* AboutViewController.m */; };
@@ -1004,8 +1006,6 @@
 		0AAAE59118CA271600A2F9F1 /* MessagesBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesBottomView.m; sourceTree = "<group>"; };
 		0AACA3F418B752C000621564 /* TMTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTextButton.h; sourceTree = "<group>"; };
 		0AACA3F518B752C000621564 /* TMTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTextButton.m; sourceTree = "<group>"; };
-		0AB1112C189EE986003A515D /* MessageTableItemPVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemPVG.h; sourceTree = "<group>"; };
-		0AB1112D189EE986003A515D /* MessageTableItemPVG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemPVG.m; sourceTree = "<group>"; };
 		0AB43B8918D2FBC400FB805A /* RegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationViewController.h; sourceTree = "<group>"; };
 		0AB43B8A18D2FBC400FB805A /* RegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationViewController.m; sourceTree = "<group>"; };
 		0AB43B9018D304C400FB805A /* RegistrationAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationAvatarView.h; sourceTree = "<group>"; };
@@ -1428,6 +1428,12 @@
 		C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVUserBehavior.m; sourceTree = "<group>"; };
 		C26752751A15099A00152D9A /* TGPVEmptyBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVEmptyBehavior.h; sourceTree = "<group>"; };
 		C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVEmptyBehavior.m; sourceTree = "<group>"; };
+		C26752781A1A7CEF00152D9A /* TGCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCache.h; sourceTree = "<group>"; };
+		C26752791A1A7CEF00152D9A /* TGCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCache.m; sourceTree = "<group>"; };
+		C267527B1A1B68F500152D9A /* TGPVImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVImageObject.h; sourceTree = "<group>"; };
+		C267527C1A1B68F500152D9A /* TGPVImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVImageObject.m; sourceTree = "<group>"; };
+		C267527F1A1CA7CC00152D9A /* TMAvaImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMAvaImageObject.h; sourceTree = "<group>"; };
+		C26752801A1CA7CC00152D9A /* TMAvaImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMAvaImageObject.m; sourceTree = "<group>"; };
 		C2689F6918B3A1E300272CD4 /* TGNetworkWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGNetworkWorker.h; sourceTree = "<group>"; };
 		C2689F6A18B3A1E300272CD4 /* TGNetworkWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNetworkWorker.m; sourceTree = "<group>"; };
 		C2689F6D18B3B96300272CD4 /* TGUpdateMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateMessageService.h; sourceTree = "<group>"; };
@@ -2208,8 +2214,6 @@
 				0A613C1618AD7A6B004096DD /* MessageTableItemGeo.m */,
 				0A241AA118AB2FF200C32F45 /* MessageTableItemPhoto.h */,
 				0A241AA218AB2FF200C32F45 /* MessageTableItemPhoto.m */,
-				0AB1112C189EE986003A515D /* MessageTableItemPVG.h */,
-				0AB1112D189EE986003A515D /* MessageTableItemPVG.m */,
 				0AF4F4A8189D5C72004BA4DF /* MessageTableItemServiceMessage.h */,
 				0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */,
 				0A6758E41895507200F4487D /* MessageTableItemText.h */,
@@ -2578,6 +2582,7 @@
 		0AC7F472185DA85300F90558 /* elements */ = {
 			isa = PBXGroup;
 			children = (
+				C267527E1A1CA7B500152D9A /* ava */,
 				C271523819B092C200841C8A /* token */,
 				0A7C78C419476FFB001617DB /* Menu */,
 				0A697E801914F4F3003469CB /* Layers */,
@@ -3170,6 +3175,15 @@
 			name = test_utilites;
 			sourceTree = "<group>";
 		};
+		C267527E1A1CA7B500152D9A /* ava */ = {
+			isa = PBXGroup;
+			children = (
+				C267527F1A1CA7CC00152D9A /* TMAvaImageObject.h */,
+				C26752801A1CA7CC00152D9A /* TMAvaImageObject.m */,
+			);
+			name = ava;
+			sourceTree = "<group>";
+		};
 		C268C13219EE9DE6007F836A /* about */ = {
 			isa = PBXGroup;
 			children = (
@@ -3288,6 +3302,8 @@
 				C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */,
 				C2C6D96F1A12952D001EF8A2 /* TGPVImageView.h */,
 				C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */,
+				C267527B1A1B68F500152D9A /* TGPVImageObject.h */,
+				C267527C1A1B68F500152D9A /* TGPVImageObject.m */,
 			);
 			name = photoviewer;
 			sourceTree = "<group>";
@@ -4021,6 +4037,8 @@
 				C2227751190E564B002AA0F6 /* OnlineNotificationManager.m */,
 				C20D18F61948D1FE0095A906 /* SecretChatAccepter.h */,
 				C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */,
+				C26752781A1A7CEF00152D9A /* TGCache.h */,
+				C26752791A1A7CEF00152D9A /* TGCache.m */,
 			);
 			name = logic;
 			sourceTree = "<group>";
@@ -4890,7 +4908,6 @@
 				0AB8F6511861BE38000E6FF3 /* DialogTableItem.m in Sources */,
 				0A073FDA18C0D01100BAA928 /* NotSelectedDialogsViewController.m in Sources */,
 				0A675895189405D000F4487D /* Chat+Extensions.m in Sources */,
-				0AB1112E189EE986003A515D /* MessageTableItemPVG.m in Sources */,
 				CEDAEB691881AF85006189A2 /* YapDatabaseDefaults.m in Sources */,
 				CEDAEB8C1881AFA6006189A2 /* DDFileLogger.m in Sources */,
 				C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */,
@@ -4952,6 +4969,7 @@
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
 				0A59068718AA32C8002ED7BA /* BTRControlAction.m in Sources */,
+				C267527D1A1B68F500152D9A /* TGPVImageObject.m in Sources */,
 				C248F3D719BE070D00BF658E /* audio-in.c in Sources */,
 				0A0B09BC18B1823700F3FE1B /* TMImageUtils.m in Sources */,
 				C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */,
@@ -4968,6 +4986,7 @@
 				C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */,
 				0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */,
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
+				C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,
 				C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */,
 				0AB850211875C61F001A796C /* TMAttributedString.m in Sources */,
@@ -4981,6 +5000,7 @@
 				C2531F5D196572BA00F7D7A2 /* TMSharedMediaButton.m in Sources */,
 				C256E91418D21A96008FFA04 /* DownloadPhotoItem.m in Sources */,
 				0A59068618AA32C8002ED7BA /* NSView+BTRAdditions.m in Sources */,
+				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
 				C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */,
 				0AB8F64E1861B07C000E6FF3 /* TMRowView.m in Sources */,

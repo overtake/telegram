@@ -7,7 +7,6 @@
 //
 
 #import "MessageTableCellServiceMessage.h"
-#import "MessageTableItemPVG.h"
 #import "MessageTableItemTyping.h"
 #import "MessageTableHeaderItem.h"
 #import "MessageTableCellContainerView.h"

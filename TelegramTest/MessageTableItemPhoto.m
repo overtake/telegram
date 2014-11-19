@@ -46,7 +46,10 @@
                 cachePhoto = cropImage(cachePhoto, imageSize,NSMakePoint((photoSize.w - imageSize.width)/2, 0));
                 
             }
-//
+            
+            cachePhoto = renderedImage(cachePhoto, cachePhoto.size);
+            
+            
             self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
             
             

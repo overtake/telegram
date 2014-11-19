@@ -81,20 +81,12 @@ static NSMutableArray *filters;
         
         [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
         
-        
-      //  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[[NSApp delegate] window]];
 
     }
     
     return self;
 }
 
-
-//-(void)windowBecomeNotification:(NSNotification *)notification {
-//    if([[[NSApp delegate] mainWindow] isKeyWindow]) {
-//        [self markAsReceived:0];
-//    }
-//}
 
 -(void)notificationReceiveMessages:(NSNotification *)notify {
     
@@ -103,12 +95,6 @@ static NSMutableArray *filters;
         
         NSMutableArray *accepted = [[NSMutableArray alloc] init];
         NSMutableArray *ignored = [[NSMutableArray alloc] init];
-        
-        
-      //  if(list.count > 0) {
-        //    [self markAsReceived:[(TL_localMessage *)[list lastObject] n_id]];
-      //  }
-        
         
         list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
         
@@ -150,29 +136,6 @@ static NSMutableArray *filters;
     
 }
 
-
-//-(void)markAsReceived:(int)max_id {
-//    
-//    static TGTimer *timer;
-//    static int saved_max_id;
-//    
-//    if(saved_max_id < max_id)
-//        saved_max_id = max_id;
-//    else
-//        return;
-//    
-//    [timer invalidate];
-//    
-//    timer = [[TGTimer alloc] initWithTimeout:0.2 repeat:NO completion:^{
-//        
-//        if([[[NSApp delegate] mainWindow] isKeyWindow] && saved_max_id > 0) {
-//            [RPCRequest sendRequest:[TLAPI_messages_receivedMessages createWithMax_id:saved_max_id] successHandler:nil errorHandler:nil];
-//        }
-//    } queue:[ASQueue globalQueue].nativeQueue];
-//    
-//    [timer start];
-//    
-//}
 
 - (BOOL)isFiltredAccepted:(int)filterType {
     return  (self.filter.class == HistoryFilter.class || (filterType & [self.filter type]) > 0);
@@ -358,12 +321,9 @@ static NSMutableArray *filters;
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
    
-   
-    
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+   [[ASQueue mainQueue] dispatchOnQueue:^{
         
-
-        long fwd_group_random = 0;
+       long fwd_group_random = 0;
         
         NSMutableArray *fwd = [[NSMutableArray alloc] init];
         

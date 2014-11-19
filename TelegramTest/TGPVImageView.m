@@ -8,6 +8,7 @@
 
 #import "TGPVImageView.h"
 #import "TMLoaderView.h"
+#import "TGCache.h"
 @interface TGPVImageView ()
 @property (nonatomic,strong) TMLoaderView *loader;
 @end
@@ -30,6 +31,15 @@
 -(void)setObject:(TGImageObject *)object {
     [super setObject:object];
 }
+
+-(NSImage *)cachedImage:(NSString *)key {
+    return [TGCache cachedImage:key group:@[PVCACHE]];
+}
+
+-(NSImage *)cachedThumb:(NSString *)key {
+    return [TGCache cachedImage:key group:@[IMGCACHE,AVACACHE,PCCACHE]];
+}
+
 
 -(void)setImage:(NSImage *)image {
     [super setImage:image];

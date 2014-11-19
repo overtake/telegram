@@ -11,12 +11,7 @@
 
 @interface TMAvatarImageView : BTRImageView
 
-@property (nonatomic, strong) NSCache *cacheDictionary;
-@property (nonatomic, strong) NSCache *smallCacheDictionary;
-
-@property (nonatomic, strong) TGFileLocation *fileLocationBig;
-@property (nonatomic, strong) TGFileLocation *fileLocationSmall;
-
+@property (nonatomic,strong) TGFileLocation *fileLocation;
 
 @property (nonatomic, strong) TGUser *user;
 @property (nonatomic, strong) TGChat *chat;

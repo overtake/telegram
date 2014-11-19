@@ -9,6 +9,7 @@
 #import "PhotoCollectionImageView.h"
 #import "TMMediaController.h"
 #import "TGPhotoViewer.h"
+#import "TGCache.h"
 @implementation PhotoCollectionImageView
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -31,22 +32,7 @@
 }
 
 -(void)setImage:(NSImage *)newImage {
-    
-//    if(newImage && newImage.size.width < NSWidth(self.frame) ) {
-//        float scale =  NSWidth(self.frame)/newImage.size.width;
-//        
-//        newImage.size = NSMakeSize(scale*newImage.size.width, scale*newImage.size.height);
-//        
-//    }
-//    
-//    
-//    if(newImage && newImage.size.height < NSHeight(self.frame)) {
-//        float scale =  NSHeight(self.frame)/newImage.size.height;
-//        
-//        newImage.size = NSMakeSize(scale*newImage.size.width, scale*newImage.size.height);
-//        
-//    }
-    
+
     if(!self.image && newImage )
         [self addAnimation:photoAnimation() forKey:@"contents"];
     else
@@ -79,20 +65,8 @@ static CAAnimation *photoAnimation() {
 }
 
 
-+(NSCache *)cache {
-    static NSCache *cache;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        cache = [[NSCache alloc] init];
-        [cache setCountLimit:10000];
-    });
-    
-    return cache;
-}
-
-+(void)clearCache {
-    [[self cache] removeAllObjects];
+-(NSImage *)cachedImage:(NSString *)key {
+    return [TGCache cachedImage:key group:@[PCCACHE]];
 }
 
 @end

@@ -12,7 +12,8 @@
 #import "FileUtils.h"
 #import "ImageUtils.h"
 #import "PreviewObject.h"
-
+#import "TGCache.h"
+#import "TGFileLocation+Extensions.h"
 @interface ImageSenderItem ()
 @property (nonatomic, strong) UploadOperation *uploadOperation;
 @property (nonatomic, strong) NSImage *image;
@@ -52,8 +53,7 @@
             
         }
         
-        
-        NSData *preview = compressImage([image TIFFRepresentation], 0.1);
+        NSData *preview = compressImage(jpegNormalizedData(image), 0.1);
         
         
         TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:realSize.width h:realSize.height bytes:preview];
@@ -69,11 +69,9 @@
 
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:0 access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
+        self.image = renderedImage(self.image, maxSize);
         
-        
-       
-        
-        [[ImageCache sharedManager] setImage:image forLocation:size.location];
+        [TGCache cacheImage:image forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         
@@ -156,10 +154,6 @@
             }
             
            
-            
-           
-            
-            
             strongSelf.uploadOperation = nil;
             
             strongSelf.message.dstate = DeliveryStateNormal;

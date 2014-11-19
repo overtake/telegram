@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "TGPVImageObject.h"
 @protocol TGPVBehavior <NSObject>
 
 @property (nonatomic,strong) TL_conversation *conversation;

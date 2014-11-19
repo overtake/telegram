@@ -12,7 +12,7 @@
 #import "PhotoCollectionTableView.h"
 #import "TGFileLocation+Extensions.h"
 #import "TGPVMediaBehavior.h"
-@interface TMCollectionPageController ()<TMTableViewDelegate,TGImageObjectDelegate>
+@interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
 
@@ -56,26 +56,6 @@
 -(id)initWithFrame:(NSRect)frame {
     if(self = [super initWithFrame:frame]) {
         
-        TMTextField *nameTextField = [TMTextField defaultTextField];
-        [nameTextField setAlignment:NSCenterTextAlignment];
-        [nameTextField setAutoresizingMask:NSViewWidthSizable];
-        [nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        [nameTextField setTextColor:NSColorFromRGB(0x222222)];
-        [[nameTextField cell] setTruncatesLastVisibleLine:YES];
-        [[nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [nameTextField setDrawsBackground:NO];
-        
-        [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -15)];
-        
-        [nameTextField setStringValue:NSLocalizedString(@"Photos", nil)];
-
-
-        self.centerNavigationBarView = (TMView *) nameTextField;
-
-        
-        self.items = [[NSMutableArray alloc] init];
-        
-        self.behavior = [[TGPVMediaBehavior alloc] init];
     }
     
     return self;
@@ -86,8 +66,30 @@
 
 -(void)loadView {
     
+    [TGCache setMemoryLimit:50*1024*1024 group:PCCACHE];
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
+    
+    TMTextField *nameTextField = [TMTextField defaultTextField];
+    [nameTextField setAlignment:NSCenterTextAlignment];
+    [nameTextField setAutoresizingMask:NSViewWidthSizable];
+    [nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [nameTextField setTextColor:NSColorFromRGB(0x222222)];
+    [[nameTextField cell] setTruncatesLastVisibleLine:YES];
+    [[nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [nameTextField setDrawsBackground:NO];
+    
+    [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -15)];
+    
+    [nameTextField setStringValue:NSLocalizedString(@"Photos", nil)];
+    
+    
+    self.centerNavigationBarView = (TMView *) nameTextField;
+    
+    
+    self.items = [[NSMutableArray alloc] init];
+    
+    self.behavior = [[TGPVMediaBehavior alloc] init];
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
     
@@ -548,7 +550,7 @@ static const int maxWidth = 120;
     [self.items removeAllObjects];
     [self.photoCollection removeAllItems:NO];
     [self.photoCollection reloadData];
-    [PhotoCollectionImageView clearCache];
+    [TGCache removeAllCachedImages:@[PCCACHE]];
 }
 
 -(void)viewWillAppear:(BOOL)animated {

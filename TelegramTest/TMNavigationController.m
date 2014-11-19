@@ -123,7 +123,12 @@ static const int navigationOffset = 48;
         return;
     
     TMViewController *controller = [self.viewControllerStack objectAtIndex:self.viewControllerStack.count-2];
-    [self.viewControllerStack removeObjectAtIndex:self.viewControllerStack.count-1];
+    
+    TMViewController *oc = [self.viewControllerStack lastObject];
+    
+    [oc _didStackRemoved];
+    
+    [self.viewControllerStack removeObject:oc];
     self.animationStyle = animated ? TMNavigationControllerStylePop : TMNavigationControllerStyleNone;
     self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     [self setCurrentViewController:controller withAnimation:animated];
