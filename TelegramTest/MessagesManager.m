@@ -214,7 +214,8 @@
             notification.title = title;
             notification.informativeText = msg;
             notification.subtitle = subTitle ? subTitle : @"";
-            notification.soundName = [SettingsArchiver soundNotification];
+            if(![[SettingsArchiver soundNotification] isEqualToString:@"None"])
+                notification.soundName = [SettingsArchiver soundNotification];
             if (floor(NSAppKitVersionNumber) > 1187)
             {
                 if(![message.to_id isSecret])
@@ -234,7 +235,8 @@
         NSUserNotification *notification = [[NSUserNotification alloc] init];
         notification.title = title;
         notification.informativeText = text;
-        notification.soundName = [SettingsArchiver soundNotification];
+        if(![[SettingsArchiver soundNotification] isEqualToString:@"None"])
+            notification.soundName = [SettingsArchiver soundNotification];
         
         [notification setUserInfo:@{@"peer_id":@(peer_id)}];
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
