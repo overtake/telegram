@@ -176,9 +176,7 @@
             return;
         }
         
-        
-        
-        
+
         TL_conversation *dialog = message.dialog;
         
         
