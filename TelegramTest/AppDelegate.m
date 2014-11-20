@@ -583,6 +583,9 @@
 - (void)logoutWithForce:(BOOL)force {
     
     dispatch_block_t block = ^ {
+        
+        [[Telegram rightViewController] hideModalProgress];
+        
         [[Storage manager] drop:^{
             
             [[TMTypingManager sharedManager] drop];
@@ -599,16 +602,21 @@
     };
     
     if([[MTNetwork instance] isAuth] && !force) {
+        
+         [[Telegram rightViewController] showModalProgress];
+        
         [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
             
             block();
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
-            if(error.error_code == 502) {
-                confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
-                    [self logoutWithForce:YES];
-                });
-            }
+            
+            [[Telegram rightViewController] hideModalProgress];
+            
+             confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
+                [self logoutWithForce:YES];
+            });
+            
         } timeout:5];
     } else {
         block();

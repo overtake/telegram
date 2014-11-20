@@ -78,8 +78,21 @@ Online
     if(time == -1)
         return NSLocalizedString(@"Account.Invisible", nil);
     
-    if(time == 0)
-        return NSLocalizedString(@"Account.Offline", nil);
+    if(time == 0) {
+        
+        if(self.status.class == [TL_userStatusRecently class]) {
+            return NSLocalizedString(@"LastSeen.Recently", nil);
+        }
+        if(self.status.class == [TL_userStatusLastWeek class]) {
+            return NSLocalizedString(@"LastSeen.Weekly", nil);
+        }
+        if(self.status.class == [TL_userStatusLastMonth class]) {
+            return NSLocalizedString(@"LastSeen.Monthly", nil);
+        }
+
+        return  NSLocalizedString(@"LastSeen.longTimeAgo", nil);
+    }
+    
     
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     

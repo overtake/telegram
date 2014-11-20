@@ -107,7 +107,10 @@ static NSString *kUpdateState = @"kUpdateState";
        [update isKindOfClass:[TL_messages_sentMessage class]] ||
        [update isKindOfClass:[TL_messages_affectedHistory class]]) {
         
+         NSLog(@"local seqno:%d, sent seqno:%d", _updateState.seq, [update seq]);
+        
         [self addStatefullUpdate:update seq:[update seq] pts:[update pts] date:0 qts:0];
+        
         
     }
     
@@ -591,6 +594,16 @@ static NSString *kUpdateState = @"kUpdateState";
         [MessagesManager addAndUpdateMessage:message];
 
         return;
+    }
+    
+    if([update isKindOfClass:[TL_updatePrivacy class]]) {
+        
+        PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update key].class)];
+        
+        [privacy _save];
+        
+        [Notification perform:PRIVACY_UPDATE data:@{KEY_PRIVACY:privacy}];
+        
     }
     
 }

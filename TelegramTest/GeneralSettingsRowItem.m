@@ -29,6 +29,14 @@
     return self;
 }
 
+-(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description subdesc:(NSString *)subdesc height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback {
+    if(self = [self initWithType:type callback:callback description:description height:height stateback:stateback]) {
+        _subdesc = subdesc;
+    }
+    
+    return self;
+}
+
 
 -(NSUInteger)hash {
     return _rand;

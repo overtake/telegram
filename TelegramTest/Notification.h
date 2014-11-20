@@ -73,6 +73,7 @@ extern NSString *const CHAT_STATUS;
 extern NSString *const BROADCAST_STATUS;
 extern NSString *const PUSHNOTIFICATION_UPDATE;
 
+
 extern NSString *const KEY_PREVIEW_OBJECT;
 
 extern NSString *const KEY_USER;
@@ -97,6 +98,8 @@ extern NSString *const KEY_PEER_ID;
 extern NSString *const KEY_IS_MUTE;
 extern NSString *const KEY_PARTICIPANTS;
 
+extern NSString *const KEY_PRIVACY;
+extern NSString *const PRIVACY_UPDATE;
 extern NSString *const LOGOUT_EVENT;
 
 + (void)addObserver:(id)target selector:(SEL)selector name:(NSString *)name;

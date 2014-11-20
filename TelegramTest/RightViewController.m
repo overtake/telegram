@@ -128,6 +128,7 @@
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
     self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:self.view.bounds];
+    self.privacyViewController = [[PrivacyViewController alloc] initWithFrame:self.view.bounds];
     
     
     self.encryptedKeyViewController = [[EncryptedKeyViewController alloc] initWithFrame:self.view.bounds];
@@ -142,6 +143,10 @@
     self.userNameViewController = [[UserNameViewController alloc] initWithFrame:self.view.bounds];
     
     self.addContactViewController = [[AddContactViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.lastSeenViewController = [[PrivacySettingsViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.privacyUserListController = [[PrivacyUserListController alloc] initWithFrame:self.view.bounds];
     
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
@@ -311,10 +316,7 @@
         
         [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
         
-       
-        
-       
-        
+
     }
     
     [self hideModalView:YES animation:YES];
@@ -486,9 +488,10 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.composePickerViewController animated:YES];
     [self.composePickerViewController setAction:composeAction];
-
+    
+    [self.navigationViewController pushViewController:self.composePickerViewController animated:YES];
+    
 }
 
 - (void)showComposeCreateChat:(ComposeAction *)composeAction {
@@ -606,6 +609,46 @@
     
     
     [self.navigationViewController pushViewController:self.addContactViewController animated:YES];
+}
+
+- (void)showPrivacyController {
+    if(self.navigationViewController.currentController == self.privacyViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.privacyViewController animated:YES];
+
+}
+
+- (void)showLastSeenController {
+    if(self.navigationViewController.currentController == self.lastSeenViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.lastSeenViewController animated:YES];
+    
+    [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusTimestamp]];
+    
+}
+
+-(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback  {
+    if(self.navigationViewController.currentController == self.privacyUserListController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+
+    self.privacyUserListController.privacy = privacy;
+    self.privacyUserListController.arrayKey = arrayKey;
+    self.privacyUserListController.addCallback = addCallback;
+    
+    
+    [self.navigationViewController pushViewController:self.privacyUserListController animated:YES];
+    
 }
 
 

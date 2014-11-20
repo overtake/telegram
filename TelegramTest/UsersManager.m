@@ -212,14 +212,10 @@
 
 - (BOOL)setUserStatus:(TGUserStatus *)status forUser:(TGUser *)currentUser {
     
-    BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online;
+    BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
     
-    currentUser.status.expires = status.expires;
-    currentUser.status.was_online = status.was_online;
-    
-    
+    currentUser.status = status;
     currentUser.lastSeenUpdate = [[MTNetwork instance] getTime];
-    
     
     [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
     
@@ -232,7 +228,7 @@
         if(currentUser) {
             BOOL result = [self setUserStatus:status forUser:currentUser];
             if(result) {
-                [[Storage manager] updateLastSeen:currentUser];
+                [[Storage manager] insertUser:currentUser completeHandler:nil];
             }
         }
     }];

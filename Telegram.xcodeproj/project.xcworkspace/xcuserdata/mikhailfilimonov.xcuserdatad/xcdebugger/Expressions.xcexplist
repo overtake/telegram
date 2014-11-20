@@ -255,6 +255,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__34-[LastSeenViewController loadView]_block_invoke:LastSeenViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesTableView mouseDragged:]:MessagesTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -319,24 +322,24 @@
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
       </ContextState>
       <ContextState
-         contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "-[MessagesViewController loadView]:MessagesViewController.m">
          <PersistentStrings>
-            <PersistentString
-               value = "self.frameInit">
-            </PersistentString>
             <PersistentString
                value = "self.table">
             </PersistentString>
             <PersistentString
                value = "self.view.bounds">
+            </PersistentString>
+            <PersistentString
+               value = "self.frameInit">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -361,24 +364,19 @@
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
-         contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
+         contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
       </ContextState>
       <ContextState
-         contextName = "__open_user_by_name_block_invoke_2:FileUtils.m">
+         contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
       </ContextState>
       <ContextState
-         contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
+         contextName = "__open_user_by_name_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
-         contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "size">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
          contextName = "-[SelectUsersTableView ready]:SelectUsersTableView.m">
@@ -389,7 +387,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
+         contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "size">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__38-[UserNameViewContainer updateChecker]_block_invoke_2:UserNameViewController.m">
@@ -403,6 +406,14 @@
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
+         contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.downloadItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -412,9 +423,6 @@
                value = "self.attributedString">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TGUpdateMessageService processMessages:]:TGUpdateMessageService.m">
       </ContextState>
       <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke_6:TMCircularProgress.m">
@@ -433,6 +441,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGUpdateMessageService processMessages:]:TGUpdateMessageService.m">
+      </ContextState>
+      <ContextState
          contextName = "__44-[TMCollectionPageController convertedRows:]_block_invoke:TMCollectionPageController.m">
          <PersistentStrings>
             <PersistentString
@@ -444,10 +455,10 @@
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
       </ContextState>
       <ContextState
-         contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">
+         contextName = "-[MessagesTableView initWithFrame:]:MessagesTableView.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.downloadItem">
+               value = "frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -464,14 +475,6 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates media:layer:file:]:TGModernEncryptedUpdates.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[MessagesTableView initWithFrame:]:MessagesTableView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "frame">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
@@ -587,6 +590,14 @@
       </ContextState>
       <ContextState
          contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_3:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__41-[PrivacySettingsViewController loadView]_block_invoke192:PrivacySettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.disallowUsersAction">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TL_initConnection getData:]:TLAPIAdd.m">
@@ -1128,6 +1139,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.behavior">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1317,6 +1336,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TLAPI_messages_sendEncryptedService getData:]:TLRPCApi.m">
+      </ContextState>
+      <ContextState
+         contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke_2:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">

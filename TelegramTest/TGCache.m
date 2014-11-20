@@ -21,10 +21,6 @@
 
 @implementation TGCacheRecord
 
-@synthesize date = _date;
-@synthesize object = _object;
-@synthesize size = _size;
-
 - (id)initWithObject:(id)object size:(NSUInteger)size
 {
     self = [super init];

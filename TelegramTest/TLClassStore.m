@@ -159,7 +159,7 @@
 		[self.classes setObject:[TL_contactBlocked class] forKey:[NSNumber numberWithInt:0x561bc879]];
 		[self.classes setObject:[TL_contactFound class] forKey:[NSNumber numberWithInt:0xea879f95]];
 		[self.classes setObject:[TL_contactSuggested class] forKey:[NSNumber numberWithInt:0x3de191a1]];
-		[self.classes setObject:[TL_contactStatus class] forKey:[NSNumber numberWithInt:0xaa77b873]];
+		[self.classes setObject:[TL_contactStatus class] forKey:[NSNumber numberWithInt:0xd3680c61]];
 		[self.classes setObject:[TL_chatLocated class] forKey:[NSNumber numberWithInt:0x3631cf4c]];
 		[self.classes setObject:[TL_contacts_foreignLinkUnknown class] forKey:[NSNumber numberWithInt:0x133421f8]];
 		[self.classes setObject:[TL_contacts_foreignLinkRequested class] forKey:[NSNumber numberWithInt:0xa7801f47]];
@@ -373,16 +373,17 @@
         [self.classes setObject:[TL_userStatusRecently class] forKey:[NSNumber numberWithInt:0xe26f42f1]];
         [self.classes setObject:[TL_userStatusLastWeek class] forKey:[NSNumber numberWithInt:0x7bf09fc]];
         [self.classes setObject:[TL_userStatusLastMonth class] forKey:[NSNumber numberWithInt:0x77ebc742]];
+        
         [self.classes setObject:[TL_updatePrivacy class] forKey:[NSNumber numberWithInt:0xee3b272a]];
         [self.classes setObject:[TL_inputPrivacyKeyStatusTimestamp class] forKey:[NSNumber numberWithInt:0x4f96cb18]];
         [self.classes setObject:[TL_privacyKeyStatusTimestamp class] forKey:[NSNumber numberWithInt:0xbc2eab30]];
         
-        [self.classes setObject:[TL_inputPrivacyValueAllowContacts class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
-        [self.classes setObject:[TL_inputPrivacyValueAllowAll class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
-        [self.classes setObject:[TL_inputPrivacyValueAllowUsers class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
-        [self.classes setObject:[TL_inputPrivacyValueDisallowContacts class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
-        [self.classes setObject:[TL_inputPrivacyValueDisallowAll class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
-        [self.classes setObject:[TL_inputPrivacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:0x382dd3e4]];
+        [self.classes setObject:[TL_inputPrivacyValueAllowContacts class] forKey:[NSNumber numberWithInt:0xd09e07b]];
+        [self.classes setObject:[TL_inputPrivacyValueAllowAll class] forKey:[NSNumber numberWithInt:0x184b35ce]];
+        [self.classes setObject:[TL_inputPrivacyValueAllowUsers class] forKey:[NSNumber numberWithInt:0x131cc67f]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowContacts class] forKey:[NSNumber numberWithInt:0xba52007]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowAll class] forKey:[NSNumber numberWithInt:0xd66b66c9]];
+        [self.classes setObject:[TL_inputPrivacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:0x90110467]];
         
         
         [self.classes setObject:[TL_privacyValueAllowContacts class] forKey:[NSNumber numberWithInt:0xfffe1bac]];
@@ -391,6 +392,7 @@
         [self.classes setObject:[TL_privacyValueDisallowContacts class] forKey:[NSNumber numberWithInt:0xf888fa1a]];
         [self.classes setObject:[TL_privacyValueDisallowAll class] forKey:[NSNumber numberWithInt:0x8b73e763]];
         [self.classes setObject:[TL_privacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:0xc7f49b7]];
+        [self.classes setObject:[TL_account_privacyRules class] forKey:[NSNumber numberWithInt:0x554abb6f]];
         
         
         
@@ -514,8 +516,8 @@
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
     [outputStream open];
     [stream setOuput:outputStream];
-    [stream writeInt:0x1c900537]; //invokeWithLayer
-   
+    [stream writeInt:-627372787]; //invokeWithLayer
+    [stream writeInt:19];
 
     [stream writeInt:constructor];
     

@@ -126,9 +126,10 @@ static const int navigationOffset = 48;
     
     TMViewController *oc = [self.viewControllerStack lastObject];
     
-    [oc _didStackRemoved];
     
     [self.viewControllerStack removeObject:oc];
+    
+    
     self.animationStyle = animated ? TMNavigationControllerStylePop : TMNavigationControllerStyleNone;
     self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     [self setCurrentViewController:controller withAnimation:animated];
@@ -261,6 +262,10 @@ static const int navigationOffset = 48;
         [oldViewController viewDidDisappear:NO];
         [newViewController viewWillAppear:NO];
         [newViewController becomeFirstResponder];
+        
+        if(oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] != NSNotFound)
+            [oldViewController _didStackRemoved];
+        
         return;
     }
     

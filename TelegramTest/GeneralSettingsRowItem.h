@@ -14,7 +14,8 @@ typedef enum
 {
     SettingsRowItemTypeSwitch,
     SettingsRowItemTypeChoice,
-    SettingsRowItemTypeNext
+    SettingsRowItemTypeNext,
+    SettingsRowItemTypeSelected
 } SettingsRowItemType;
 
 
@@ -25,9 +26,13 @@ typedef enum
 
 
 @property (nonatomic,strong,readonly) NSString *description;
-@property (nonatomic,strong,readonly) NSString *subdesc;
-@property (nonatomic,assign,readonly) int height;
+@property (nonatomic,strong) NSString *subdesc;
+@property (nonatomic,assign) int height;
+
+@property (nonatomic,assign) BOOL locked;
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback;
+
+-(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description subdesc:(NSString *)subdesc height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback;
 
 @end

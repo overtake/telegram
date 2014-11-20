@@ -68,7 +68,7 @@
 @property (nonatomic,strong) UserInfoShortButtonView *updatePhotoButton;
 
 
-
+@property (nonatomic,strong) UserInfoShortButtonView *privacy;
 @property (nonatomic,strong) UserInfoShortButtonView *blockedUsers;
 @property (nonatomic,strong) UserInfoShortButtonView *generalSettings;
 @property (nonatomic,strong) UserInfoShortButtonView *userName;
@@ -256,11 +256,7 @@ typedef enum {
     
     
     [container addSubview:self.statusTextField];
-    
-
-    
-    //self.avatarImageView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
-    
+     
     [_avatarImageView setTapBlock:^{
         
         if(![[UsersManager currentUser].photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
@@ -270,16 +266,7 @@ typedef enum {
             [[TGPhotoViewer viewer] show:previewObject user:[UsersManager currentUser]];
         }
         
-        
-        
-        
-//        TMPreviewUserPicture *picture = [[TMPreviewUserPicture alloc] initWithItem:previewObject];
-//        if(picture) {
-//            [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:^{
-//                 [[TMMediaUserPictureController controller] show:picture];
-//            }];
-//        }
-//        
+
     }];
     
     [_avatarImageView setSourceType:ChatAvatarSourceUser];
@@ -319,6 +306,8 @@ typedef enum {
     
     [Notification addObserver:self selector:@selector(didChangedUserName:) name:USER_UPDATE_NAME];
     
+
+    
 }
 
 
@@ -349,8 +338,6 @@ typedef enum {
 -(void)willChangedController:(TMViewController *)controller {
     
     
-    
-    
     if([controller isKindOfClass:[GeneralSettingsViewController class]]) {
         [self selectController:self.generalSettings];
         return;
@@ -379,6 +366,12 @@ typedef enum {
         [self selectController:self.userName];
         return;
     }
+    
+    if([controller isKindOfClass:[PrivacyViewController class]] || [controller isKindOfClass:[PrivacyUserListController class]] || [controller isKindOfClass:[PrivacySettingsViewController class]]) {
+        [self selectController:self.privacy];
+        return;
+    }
+    
     
     [self selectController:nil];
 }
@@ -502,7 +495,6 @@ typedef enum {
             return;
         }
         
-       // [self selectController:self.generalSettings];
         
         [[Telegram rightViewController] showGeneralSettings];
         
@@ -519,7 +511,7 @@ typedef enum {
     
     
     
-    currentY+=38;
+ //   currentY+=38;
     
     self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
         
@@ -541,7 +533,7 @@ typedef enum {
     [self.blockedUsers.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.blockedUsers.textButton.frame))];
     
     
-    [container addSubview:self.blockedUsers];
+  //  [container addSubview:self.blockedUsers];
     
     
     currentY+=38;
@@ -576,7 +568,29 @@ typedef enum {
     [container addSubview:self.userName];
     
     
+    currentY+=38;
     
+    self.privacy = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.Privacy",nil) tapBlock:^{
+        
+        if([Telegram rightViewController].navigationViewController.isLocked)
+        {
+            //NSBeep();
+            return;
+        }
+        
+        // [self selectController:self.blockedUsers];
+        
+        [[Telegram rightViewController] showPrivacyController];
+    }];
+    
+    
+    [self.privacy setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+    
+    [self.privacy.textButton setFrameSize:NSMakeSize(NSWidth(self.privacy.frame), NSHeight(self.privacy.textButton.frame))];
+    [self.privacy.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.privacy.textButton.frame))];
+    
+    
+    [container addSubview:self.privacy];
     
     
     currentY+=75;
@@ -691,10 +705,10 @@ typedef enum {
     [container addSubview:self.askQuestion];
     
     
-    self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
+    self.privacy.autoresizingMask = self.privacy.textButton.autoresizingMask = self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
     
     
-    self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
+    self.privacy.textButton.textColor = self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
     
     [container setAutoresizingMask:NSViewWidthSizable];
     
@@ -707,6 +721,7 @@ typedef enum {
     self.about.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.faq.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.askQuestion.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.privacy.rightContainer = imageViewWithImage(image_ArrowGrey());
     
     self.userName.rightContainerOffset = NSMakePoint(-10, 0);
     self.blockedUsers.rightContainerOffset = NSMakePoint(-10, 0);
@@ -714,6 +729,7 @@ typedef enum {
     self.about.rightContainerOffset = NSMakePoint(-10, 0);
     self.faq.rightContainerOffset = NSMakePoint(-10, 0);
     self.askQuestion.rightContainerOffset = NSMakePoint(-10, 0);
+    self.privacy.rightContainerOffset = NSMakePoint(-10, 0);
     
     [self.userName setSelectedColor:BLUE_COLOR_SELECT];
     [self.blockedUsers setSelectedColor:BLUE_COLOR_SELECT];
@@ -721,6 +737,7 @@ typedef enum {
     [self.about setSelectedColor:BLUE_COLOR_SELECT];
     [self.faq setSelectedColor:BLUE_COLOR_SELECT];
     [self.askQuestion setSelectedColor:BLUE_COLOR_SELECT];
+    [self.privacy setSelectedColor:BLUE_COLOR_SELECT];
     
     return container;
 }

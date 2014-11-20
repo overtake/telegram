@@ -2206,7 +2206,6 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         }
         
-       
         
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];

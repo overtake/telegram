@@ -25,6 +25,8 @@
     @try {
         uint8_t buffer[4];
         memcpy(buffer, &num, 4);
+        
+        
         [self.ouput write:buffer maxLength:4];
     } @catch(NSException *exception) {
         ELog(@"Write int exception");

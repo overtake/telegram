@@ -399,7 +399,7 @@
         NSInteger tl_count = [self.rules count];
         [stream writeInt:(int)tl_count];
         for(int i = 0; i < (int)tl_count; i++) {
-            TGInputPrivacyRule *obj = [self.rules objectAtIndex:i];
+            id obj = [self.rules objectAtIndex:i];
             [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
         }
     }
@@ -415,7 +415,7 @@
             self.rules = [[NSMutableArray alloc] init];
         int count = [stream readInt];
         for(int i = 0; i < count; i++) {
-            TGInputPrivacyRule* obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            id obj = [[TLClassStore sharedManager] TLDeserialize:stream];
             [self.rules addObject:obj];
         }
     }
@@ -631,19 +631,19 @@ return [[TL_privacyValueAllowAll alloc] init];
     return obj;
 }
 - (void)serialize:(SerializedData *)stream {
-    //Serialize ShortVector
+    
     [stream writeInt:0x1cb5c415];
     {
         NSInteger tl_count = [self.users count];
         [stream writeInt:(int)tl_count];
         for(int i = 0; i < (int)tl_count; i++) {
-            NSNumber* obj = [self.users objectAtIndex:i];
-            [stream writeInt:[obj intValue]];
+            id obj = [self.users objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
         }
     }
 }
 - (void)unserialize:(SerializedData *)stream {
-    //UNS ShortVector
+   
     [stream readInt];
     {
         if(!self.users)
@@ -657,6 +657,66 @@ return [[TL_privacyValueAllowAll alloc] init];
 }
 @end
 
+//account.privacyRules#554abb6f rules:Vector<PrivacyRule> users:Vector<User> = account.PrivacyRules;
+
+@implementation TL_account_privacyRules
++(TL_account_privacyRules *)createWithRules:(NSMutableArray *)rules users:(NSMutableArray *)users {
+    TL_account_privacyRules *obj = [[TL_account_privacyRules alloc] init];
+    obj.rules = rules;
+    obj.users = users;
+    return obj;
+}
+
+- (void)serialize:(SerializedData *)stream {
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.rules count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            id obj = [self.rules objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+    
+    [stream writeInt:0x1cb5c415];
+    {
+        NSInteger tl_count = [self.users count];
+        [stream writeInt:(int)tl_count];
+        for(int i = 0; i < (int)tl_count; i++) {
+            id obj = [self.users objectAtIndex:i];
+            [[TLClassStore sharedManager] TLSerialize:obj stream:stream];
+        }
+    }
+}
+- (void)unserialize:(SerializedData *)stream {
+    
+    
+    [stream readInt];
+    {
+        if(!self.rules)
+            self.rules = [[NSMutableArray alloc] init];
+        int count = [stream readInt];
+        for(int i = 0; i < count; i++) {
+            id obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            [self.rules addObject:obj];
+        }
+    }
+    
+    [stream readInt];
+    {
+        if(!self.users)
+            self.users = [[NSMutableArray alloc] init];
+        int count = [stream readInt];
+        for(int i = 0; i < count; i++) {
+            id obj = [[TLClassStore sharedManager] TLDeserialize:stream];
+            [self.users addObject:obj];
+        }
+    }
+}
+
+@end
+
 
 
 @implementation TLAPI_account_getPrivacy
@@ -664,16 +724,16 @@ return [[TL_privacyValueAllowAll alloc] init];
 
 
 
-+(TLAPI_account_getPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey {
++(TLAPI_account_getPrivacy *)createWithKey:(TGInputPrivacyKey *)key {
     TLAPI_account_getPrivacy *obj = [[TLAPI_account_getPrivacy alloc] init];
-    obj.inputPrivacyKey = inputPrivacyKey;
+    obj.key = key;
     return obj;
 }
 
 -(NSData *)getData:(BOOL)isFirstRequest {
     SerializedData *stream = [[TLClassStore sharedManager] streamWithConstuctor:0xdadbc950 isFirstRequest:isFirstRequest];
     
-    [[TLClassStore sharedManager] TLSerialize:self.inputPrivacyKey stream:stream];
+    [[TLClassStore sharedManager] TLSerialize:self.key stream:stream];
     
     return [stream getOutput];
 }

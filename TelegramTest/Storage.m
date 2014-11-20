@@ -104,7 +104,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t80"; // 61
+    NSString *dbName = @"t83"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -121,8 +121,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         
         [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
-        
-        
         
         
         [db executeUpdate:@"CREATE INDEX if not exists peer_id_index ON messages(peer_id)"];
@@ -147,7 +145,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         
-        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, type TINYINT, first_name STRING, last_name STRING, user_name STRING, phone STRING, access_hash BIGINT, lastseen INTEGER, lastseen_update INTEGER, photo BLOB)"];
+        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer)"];
         
         [db executeUpdate:@"create table if not exists contacts (user_id INTEGER PRIMARY KEY,mutual integer)"];
         
@@ -339,10 +337,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         
         NSString *tableName = @"messages";
-        
-        
-       
-        
         
         NSString *sql = [NSString stringWithFormat:@"select serialized,flags from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
         
@@ -950,71 +944,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select * from users"];
         
         while ([result next]) {
-            NSDictionary *row = [result resultDictionary];
-            TGUserType type = [[row objectForKey:@"type"] intValue];
-            
-            int user_id = [[row objectForKey:@"n_id"] intValue];
-            long access_hash = [[row objectForKey:@"access_hash"] longValue];
-            
-            NSString *first_name = [row objectForKey:@"first_name"];
-            if(![first_name isKindOfClass:[NSString class]])
-                first_name = [NSString stringWithFormat:@"%@", first_name];
-            
-            NSString *last_name = [row objectForKey:@"last_name"];
-            if(![last_name isKindOfClass:[NSString class]])
-                last_name = [NSString stringWithFormat:@"%@", last_name];
-            
-            NSString *user_name = [row objectForKey:@"user_name"];
-            if(![user_name isKindOfClass:[NSString class]])
-                user_name = [NSString stringWithFormat:@"%@", user_name];
-            
-            NSString *phone = [row objectForKey:@"phone"];
-            if(![phone isKindOfClass:[NSString class]])
-                phone = [NSString stringWithFormat:@"%@", phone];            
-            
-            NSData *photoData = [row objectForKey:@"photo"];
-            TGUserProfilePhoto *photo = nil;
-            if([photoData isKindOfClass:[NSData class]]) {
-                photo = [[TLClassStore sharedManager] deserialize:photoData];
-            }
-            
-            int lastSeen = [[row objectForKey:@"lastseen"] intValue];
-            int lastSeenUpdate = [[row objectForKey:@"lastseen_update"] intValue];
-            
-            TGUserStatus *status = lastSeen > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:lastSeen] : [TL_userStatusOffline createWithWas_online:lastSeen];
-            
-            TGUser *user = nil;
-            switch (type) {
-                case TGUserTypeContact:
-                    user = [TL_userContact createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash phone:phone photo:photo status:status];
-                    break;
-                    
-                case TGUserTypeDeleted:
-                    user = [TL_userDeleted createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name];
-                    break;
-                    
-                case TGUserTypeEmpty:
-                    user = [TL_userEmpty createWithN_id:user_id];
-                    break;
-                    
-                case TGUserTypeForeign:
-                    user = [TL_userForeign createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash photo:photo status:status];
-                    break;
-                    
-                case TGUserTypeRequest:
-                    user = [TL_userRequest createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name access_hash:access_hash phone:phone photo:photo status:status];
-                    break;
-                    
-                case TGUserTypeSelf:
-                    user = [TL_userSelf createWithN_id:user_id first_name:first_name last_name:last_name user_name:user_name phone:phone photo:photo status:status inactive:NO];
-                    break;
-                    
-                default:
-                    break;
-            }
-            
-            [user setLastSeenUpdate:lastSeenUpdate];
-            
+            TGUser *user = [[TLClassStore sharedManager] deserialize:[result dataForColumn:@"serialized"]];
+            user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
             [users addObject:user];
         }
         
@@ -1037,28 +968,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabase:^(FMDatabase *db) {
         for (TGUser *user in users) {
-            if(!user)
-                continue;
-            
-            NSData *photoSerialize = nil;
-            if(user.photo) {
-                photoSerialize = [[TLClassStore sharedManager] serialize:user.photo];
-            }
-            
-            if(!user.first_name)
-                user.first_name = @"";
-            
-            if(!user.last_name)
-                user.last_name = @"";
-            
-            if(!user.phone)
-                user.phone = @"";
-            
-            if(!user.user_name)
-                user.user_name = @"";
-            
-            
-            [db executeUpdate:@"insert or replace into users (n_id, type, first_name, last_name, user_name, phone, access_hash, lastseen, lastseen_update, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?)", @(user.n_id), @(user.type), user.first_name, user.last_name, user.user_name, user.phone, @(user.access_hash), @(user.lastSeenTime), @(user.lastSeenUpdate), photoSerialize];
+            [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [[TLClassStore sharedManager] serialize:user],@(user.lastSeenUpdate)];
         }
         
         if(completeHandler) {
@@ -1069,11 +979,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
-- (void)updateLastSeen:(TGUser *)user {
-    [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"update users set lastseen = (?), lastseen_update = (?) where n_id = (?)", @(user.status.lastSeenTime), @(user.lastSeenUpdate), @(user.n_id)];
-    }];
-}
 
 
 

@@ -3045,19 +3045,19 @@
 @end
 
 @implementation TL_contactStatus
-+ (TL_contactStatus *)createWithUser_id:(int)user_id expires:(int)expires {
++ (TL_contactStatus *)createWithUser_id:(int)user_id status:(TGUserStatus *)status {
 	TL_contactStatus *obj = [[TL_contactStatus alloc] init];
 	obj.user_id = user_id;
-	obj.expires = expires;
+	obj.status = status;
 	return obj;
 }
 - (void)serialize:(SerializedData *)stream {
 	[stream writeInt:self.user_id];
-	[stream writeInt:self.expires];
+    [[TLClassStore sharedManager] TLSerialize:self.status stream:stream];
 }
 - (void)unserialize:(SerializedData *)stream {
 	self.user_id = [stream readInt];
-	self.expires = [stream readInt];
+    self.status = [[TLClassStore sharedManager] TLDeserialize:stream];
 }
 @end
 

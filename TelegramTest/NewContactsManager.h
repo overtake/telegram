@@ -29,4 +29,6 @@ typedef enum {
 - (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TGUser *user))callback;
 
 - (void) deleteContact:(TGUser *)user completeHandler:(void (^)(BOOL result))compleHandler;
+
+-(void)getStatuses:(dispatch_block_t)callback;
 @end

@@ -1098,11 +1098,11 @@
 	
 @interface TGContactStatus : TLObject
 @property (nonatomic) int user_id;
-@property (nonatomic) int expires;
+@property (nonatomic) TGUserStatus *status;
 @end
 
 @interface TL_contactStatus : TGContactStatus
-+ (TL_contactStatus *)createWithUser_id:(int)user_id expires:(int)expires;
++ (TL_contactStatus *)createWithUser_id:(int)user_id status:(TGUserStatus *)status;
 @end
 	
 @interface TGChatLocated : TLObject

@@ -105,6 +105,9 @@ NSString *const KEY_PARTICIPANTS = @"participants";
 
 NSString *const LOGOUT_EVENT = @"logout";
 
+NSString *const KEY_PRIVACY = @"key_privacy";
+NSString *const PRIVACY_UPDATE = @"privacy_update";
+
 
 +(NSNotificationCenter *)center {
     static NSNotificationCenter *center;

@@ -38,7 +38,7 @@
 }
 
 - (void)protocolUpdated:(NSNotification *)notify {
-    [self getStatuses];
+    [self getStatuses:nil];
 }
 
 
@@ -147,15 +147,24 @@
     
 }
 
--(void)getStatuses {
+-(void)getStatuses:(dispatch_block_t)callback {
     [RPCRequest sendRequest:[TLAPI_contacts_getStatuses create] successHandler:^(RPCRequest *request, id response) {
-        for (TGContactStatus *status in response) {
+        
+        for (TL_contactStatus *contactStatus in response) {
             
-            TGUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
+         //   TGUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
             
-            [[UsersManager sharedManager] setUserStatus:userStatus forUid:status.user_id];            
+            [[UsersManager sharedManager] setUserStatus:contactStatus.status forUid:contactStatus.user_id];
         }
-    } errorHandler:nil];
+        
+        if(callback) {
+            [ASQueue dispatchOnMainQueue:^{
+                callback();
+            }];
+        }
+        
+        
+    } errorHandler:nil timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 - (void) remoteCheckContacts {

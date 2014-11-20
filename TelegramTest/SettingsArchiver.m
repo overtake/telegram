@@ -59,6 +59,8 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     
 }
 
+
+
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInt32:_mask forKey:@"settings_mask"];
     [aCoder encodeObject:self.documents_folder forKey:@"documents_folder"];

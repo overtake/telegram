@@ -218,11 +218,19 @@
 
 
 
+@interface TL_account_privacyRules : TGObject
+@property (nonatomic,strong) NSMutableArray *rules;
+@property (nonatomic,strong) NSMutableArray *users;
++(TL_account_privacyRules *)createWithRules:(NSMutableArray *)rules users:(NSMutableArray *)users;
+@end
+
+
+
 @interface TLAPI_account_getPrivacy : TLApiObject
 
-@property (nonatomic,strong) TGInputPrivacyKey *inputPrivacyKey;
+@property (nonatomic,strong) TGInputPrivacyKey *key;
 
-+(TLAPI_account_getPrivacy *)createWithInputPrivacyKey:(TGInputPrivacyKey *)inputPrivacyKey;
++(TLAPI_account_getPrivacy *)createWithKey:(TGInputPrivacyKey *)key;
 
 @end
 

@@ -322,6 +322,11 @@
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
+		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
+		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
+		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
+		C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358E1A1E1C6C00F9BB38 /* PrivacyUserListItem.m */; };
+		C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435911A1E1C7E00F9BB38 /* PrivacyUserListItemView.m */; };
 		C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015819839A4B007AB338 /* TGTimerTarget.m */; };
 		C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C247C47B18C0D05200726C91 /* TGProccessUpdates.m */; };
@@ -414,6 +419,8 @@
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
+		C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C270D2F01A1CD8BA00522FB0 /* PrivacyViewController.m */; };
+		C270D2F91A1CE12000522FB0 /* PrivacySettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C270D2F81A1CE12000522FB0 /* PrivacySettingsViewController.m */; };
 		C271523F19B0936C00841C8A /* TokenItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C271523E19B0936C00841C8A /* TokenItem.m */; };
 		C271524A19B0D8C700841C8A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C271524919B0D8C700841C8A /* Images.xcassets */; };
 		C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271524C19B4893400841C8A /* ComposeChatCreateViewController.m */; };
@@ -1329,6 +1336,16 @@
 		C23536AC19CC64330044978E /* LoginBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginBottomView.m; sourceTree = "<group>"; };
 		C23536C419D453720044978E /* EncryptedKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedKeyViewController.h; sourceTree = "<group>"; };
 		C23536C519D453720044978E /* EncryptedKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedKeyViewController.m; sourceTree = "<group>"; };
+		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
+		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
+		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
+		C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionCustomBehavior.m; sourceTree = "<group>"; };
+		C24435891A1E159900F9BB38 /* PrivacyUserListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyUserListController.h; sourceTree = "<group>"; };
+		C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyUserListController.m; sourceTree = "<group>"; };
+		C244358D1A1E1C6C00F9BB38 /* PrivacyUserListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyUserListItem.h; sourceTree = "<group>"; };
+		C244358E1A1E1C6C00F9BB38 /* PrivacyUserListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyUserListItem.m; sourceTree = "<group>"; };
+		C24435901A1E1C7E00F9BB38 /* PrivacyUserListItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyUserListItemView.h; sourceTree = "<group>"; };
+		C24435911A1E1C7E00F9BB38 /* PrivacyUserListItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyUserListItemView.m; sourceTree = "<group>"; };
 		C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationBlockDelegate.h; sourceTree = "<group>"; };
 		C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAnimationBlockDelegate.m; sourceTree = "<group>"; };
 		C247015719839A4B007AB338 /* TGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTimerTarget.h; sourceTree = "<group>"; };
@@ -1528,6 +1545,10 @@
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
 		C270C5AF18A13F9F005D80E0 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
 		C270C5B118A13FB9005D80E0 /* mime-types.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mime-types.txt"; sourceTree = "<group>"; };
+		C270D2EF1A1CD8BA00522FB0 /* PrivacyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyViewController.h; sourceTree = "<group>"; };
+		C270D2F01A1CD8BA00522FB0 /* PrivacyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyViewController.m; sourceTree = "<group>"; };
+		C270D2F71A1CE12000522FB0 /* PrivacySettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacySettingsViewController.h; sourceTree = "<group>"; };
+		C270D2F81A1CE12000522FB0 /* PrivacySettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacySettingsViewController.m; sourceTree = "<group>"; };
 		C271523D19B0936C00841C8A /* TokenItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenItem.h; sourceTree = "<group>"; };
 		C271523E19B0936C00841C8A /* TokenItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TokenItem.m; sourceTree = "<group>"; };
 		C271524919B0D8C700841C8A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -2868,6 +2889,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C270D2EA1A1CD73500522FB0 /* pravicy */,
 				C268C13A19EEB56C007F836A /* username */,
 				C268C13219EE9DE6007F836A /* about */,
 				C297955219EC29CA00BE893E /* general */,
@@ -2917,6 +2939,8 @@
 				C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */,
 				C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */,
 				C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */,
+				C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */,
+				C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -3084,6 +3108,19 @@
 				C23536A719CB1A430044978E /* FFYDaemonController.m */,
 			);
 			name = daemon;
+			sourceTree = "<group>";
+		};
+		C244358C1A1E1B8F00F9BB38 /* privacyuserlist */ = {
+			isa = PBXGroup;
+			children = (
+				C24435891A1E159900F9BB38 /* PrivacyUserListController.h */,
+				C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */,
+				C244358D1A1E1C6C00F9BB38 /* PrivacyUserListItem.h */,
+				C244358E1A1E1C6C00F9BB38 /* PrivacyUserListItem.m */,
+				C24435901A1E1C7E00F9BB38 /* PrivacyUserListItemView.h */,
+				C24435911A1E1C7E00F9BB38 /* PrivacyUserListItemView.m */,
+			);
+			name = privacyuserlist;
 			sourceTree = "<group>";
 		};
 		C247C47D18C0D0C000726C91 /* tgupdates */ = {
@@ -3352,6 +3389,18 @@
 			name = constructors;
 			sourceTree = "<group>";
 		};
+		C270D2EA1A1CD73500522FB0 /* pravicy */ = {
+			isa = PBXGroup;
+			children = (
+				C244358C1A1E1B8F00F9BB38 /* privacyuserlist */,
+				C270D2EF1A1CD8BA00522FB0 /* PrivacyViewController.h */,
+				C270D2F01A1CD8BA00522FB0 /* PrivacyViewController.m */,
+				C270D2F71A1CE12000522FB0 /* PrivacySettingsViewController.h */,
+				C270D2F81A1CE12000522FB0 /* PrivacySettingsViewController.m */,
+			);
+			name = pravicy;
+			sourceTree = "<group>";
+		};
 		C271523819B092C200841C8A /* token */ = {
 			isa = PBXGroup;
 			children = (
@@ -3541,6 +3590,8 @@
 				C2A5C00618E17C630021BE68 /* SettingsWindowController.xib */,
 				C20B228B18E98A2C007BCCD6 /* SettingsArchiver.h */,
 				C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */,
+				C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */,
+				C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */,
 			);
 			name = settings;
 			sourceTree = "<group>";
@@ -4689,6 +4740,7 @@
 				C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */,
+				C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
@@ -4717,9 +4769,11 @@
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */,
+				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
 				C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */,
 				CEAE5D2E181E4C6F00C17645 /* TGFileLocation+Extensions.m in Sources */,
+				C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */,
 				CEAE5D56181ECDD300C17645 /* Storage.m in Sources */,
 				0AAAE58518C9F9A500A2F9F1 /* UserInfoShortTextEditView.m in Sources */,
 				C209322B1938BB9C00DFF3EC /* TL_inputMessagesFilterAudio.m in Sources */,
@@ -4919,6 +4973,7 @@
 				0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
+				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,
 				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C2233DAC1A07F2460056594F /* YoutubeServiceDescription.m in Sources */,
@@ -4938,6 +4993,7 @@
 				CE4CC6EA1829B4DF00B532CC /* WhiteTitleButton.m in Sources */,
 				C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */,
 				C2201A0A192E4AAA00C0E441 /* TMBlueInputTextField.m in Sources */,
+				C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */,
 				0AA7E1C318CCF08D0064EFC7 /* ChatInfoViewController.m in Sources */,
 				C22421CA19EBCFA80030078A /* BlockedUserRowItem.m in Sources */,
 				0A6D098B19535E8500A9AC64 /* NSBezierPathCategory.m in Sources */,
@@ -4979,6 +5035,7 @@
 				0AB43BC518D8A4AC00FB805A /* CNGridViewItemLayout.m in Sources */,
 				C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */,
 				0AB43BC718D8A4AC00FB805A /* NSView+CNGridView.m in Sources */,
+				C270D2F91A1CE12000522FB0 /* PrivacySettingsViewController.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
 				C268C14019EFF70E007F836A /* GLView.m in Sources */,
 				0A9EDC511897BA0E0037E1BC /* NSObject+RBObjectSizzlingAdditions.m in Sources */,
@@ -5066,6 +5123,7 @@
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
+				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TGUserCategory.m in Sources */,
 				CEDAEB601881AF85006189A2 /* YapDatabaseViewChange.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,

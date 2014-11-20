@@ -24,7 +24,9 @@
 #import "AboutViewController.h"
 #import "UserNameViewController.h"
 #import "AddContactViewController.h"
-
+#import "PrivacyViewController.h"
+#import "PrivacySettingsViewController.h"
+#import "PrivacyUserListController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -42,6 +44,9 @@
 @property (nonatomic, strong) AboutViewController *aboutViewController;
 @property (nonatomic, strong) UserNameViewController *userNameViewController;
 @property (nonatomic, strong) AddContactViewController *addContactViewController;
+@property (nonatomic, strong) PrivacyViewController *privacyViewController;
+@property (nonatomic, strong) PrivacySettingsViewController *lastSeenViewController;
+@property (nonatomic, strong) PrivacyUserListController *privacyUserListController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -74,7 +79,10 @@
 - (void)showAbout;
 - (void)showUserNameController;
 
--(void)showAddContactController;
+- (void)showAddContactController;
+- (void)showPrivacyController;
+- (void)showLastSeenController;
 
+-(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback;
 
 @end

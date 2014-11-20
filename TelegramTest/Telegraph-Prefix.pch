@@ -53,6 +53,7 @@
 #import "SettingsArchiver.h"
 #import "Application.h"
 #import "TGMessage+Extensions.h"
+#import "PrivacyArchiver.h"
 #define TGOUTMESSAGE 0x2
 #define TGUNREADMESSAGE 0x1
 #define TGOUTUNREADMESSAGE 0x3

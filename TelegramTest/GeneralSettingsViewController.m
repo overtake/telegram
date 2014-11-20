@@ -142,8 +142,6 @@
     [self.tableView insert:soundEffects atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    
-
     GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
         
     } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
@@ -152,21 +150,17 @@
     
     [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
-    
-   
-    
 
     
-    
-    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
-        
-        [[Telegram rightViewController] showSecuritySettings];
-        
-    } description:NSLocalizedString(@"Settings.SecuritySettings", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return nil;
-    }];
-    
-    [self.tableView insert:securitySettings atIndex:self.tableView.list.count tableRedraw:NO];
+//    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+//        
+//        [[Telegram rightViewController] showSecuritySettings];
+//        
+//    } description:NSLocalizedString(@"Settings.SecuritySettings", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return nil;
+//    }];
+//    
+//    [self.tableView insert:securitySettings atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     
@@ -179,8 +173,6 @@
     }];
     
     [self.tableView insert:advancedSettings atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
     
     [self.tableView reloadData];
     
