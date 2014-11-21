@@ -294,19 +294,6 @@
     
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
-    all = [all sortedArrayUsingComparator:^NSComparisonResult(TL_contact* obj1, TL_contact* obj2) {
-        int first = obj1.user.lastSeenTime;
-        int second = obj2.user.lastSeenTime;
-        
-        if ( first > second ) {
-            return (NSComparisonResult)NSOrderedAscending;
-        } else if ( first < second ) {
-            return (NSComparisonResult)NSOrderedDescending;
-        } else {
-            return (NSComparisonResult)NSOrderedSame;
-        }
-        
-    }];
     
 
     

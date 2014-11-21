@@ -130,26 +130,26 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
     switch (self.allowType) {
         case PrivacyAllowTypeEverbody:
             
-            [rules addObject:[TL_inputPrivacyValueAllowAll create]];
-            
-            if(self.disallowUsers.count > 0)
+            if(disallow.count > 0)
                 [rules addObject:[TL_inputPrivacyValueDisallowUsers create:disallow]];
             
+            [rules addObject:[TL_inputPrivacyValueAllowAll create]];
+             
             break;
         case PrivacyAllowTypeContacts:
             
-            [rules addObject:[TL_inputPrivacyValueAllowContacts create]];
-            
-            if(self.disallowUsers.count > 0)
+            if(disallow.count > 0)
                 [rules addObject:[TL_inputPrivacyValueDisallowUsers create:disallow]];
             
-            if(self.allowUsers.count > 0)
+            if(allow.count > 0)
                 [rules addObject:[TL_inputPrivacyValueAllowUsers create:allow]];
+            
+            [rules addObject:[TL_inputPrivacyValueAllowContacts create]];
             
             break;
         case PrivacyAllowTypeNobody:
             
-            if(self.allowUsers.count > 0)
+            if(allow.count > 0)
                 [rules addObject:[TL_inputPrivacyValueAllowUsers create:allow]];
             
             break;

@@ -598,11 +598,16 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updatePrivacy class]]) {
         
+        
+        
         PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update key].class)];
         
         [privacy _save];
         
-        [Notification perform:PRIVACY_UPDATE data:@{KEY_PRIVACY:privacy}];
+        
+        [[NewContactsManager sharedManager] getStatuses:^{
+            [Notification perform:PRIVACY_UPDATE data:@{KEY_PRIVACY:privacy}];
+        }];
         
     }
     

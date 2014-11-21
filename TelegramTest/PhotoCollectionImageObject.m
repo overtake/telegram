@@ -37,7 +37,7 @@ static const int width = 180;
         
     }
     
-    image = renderedImage(image, image.size);
+    image = decompressedImage(image);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[PCCACHE]];
     

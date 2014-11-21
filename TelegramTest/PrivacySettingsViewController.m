@@ -52,6 +52,12 @@
         
         strongSelf.changedPrivacy.allowUsers = [strongSelf.changedPrivacy.allowUsers arrayByAddingObjectsFromArray:added];
         
+        NSMutableArray *cleared = [strongSelf.changedPrivacy.disallowUsers mutableCopy];
+        
+        [cleared removeObjectsInArray:added];
+        
+        strongSelf.changedPrivacy.disallowUsers = cleared;
+        
          strongSelf.changedPrivacy = strongSelf.changedPrivacy;
         
         [strongSelf.navigationViewController goBackWithAnimation:YES];
@@ -66,6 +72,12 @@
         }];
         
         strongSelf.changedPrivacy.disallowUsers = [strongSelf.changedPrivacy.disallowUsers arrayByAddingObjectsFromArray:added];
+        
+        NSMutableArray *cleared = [strongSelf.changedPrivacy.allowUsers mutableCopy];
+        
+        [cleared removeObjectsInArray:added];
+        
+        strongSelf.changedPrivacy.allowUsers = cleared;
         
         strongSelf.changedPrivacy = strongSelf.changedPrivacy;
         
@@ -92,7 +104,6 @@
     [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
-    
     
     
     TMView *rightView = [[TMView alloc] init];
@@ -223,6 +234,8 @@
         [[NewContactsManager sharedManager] getStatuses:^ {
            
             [self hideModalProgress];
+            
+            [self.navigationViewController goBackWithAnimation:YES];
             
         }];
         
