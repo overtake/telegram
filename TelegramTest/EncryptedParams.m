@@ -34,6 +34,7 @@ static NSMutableDictionary *cached;
         _isAdmin = isAdmin;
         _prev_layer = 1;
         _out_seq_no = 1;
+        _in_seq_no = 1;
     }
     return self;
 }

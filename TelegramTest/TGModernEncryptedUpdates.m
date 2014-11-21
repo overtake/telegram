@@ -213,7 +213,7 @@ Class convertClass(NSString *c, int layer) {
     
     NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
-    if(params.in_seq_no * 2 + [params in_x] < [layerMessage.out_seq_no intValue])
+    if([layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;
     
     
@@ -246,6 +246,8 @@ Class convertClass(NSString *c, int layer) {
             
             
             [list enumerateObjectsUsingBlock:^(TGSecretInAction *action, NSUInteger idx, BOOL *stop) {
+                
+                NSLog(@"in:%d,  local:%d",action.in_seq_no, params.in_seq_no * 2 + [params in_x]);
                 
                 if(action.in_seq_no == params.in_seq_no * 2 + [params in_x]) {
                     
