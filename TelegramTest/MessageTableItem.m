@@ -249,6 +249,9 @@
 
 +(Class)socialClass:(NSString *)message {
     
+    if(message == nil)
+        return [NSNull class];
+    
     NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
     
     
