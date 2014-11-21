@@ -137,6 +137,32 @@ static const int controlsHeight = 75;
     
 }
 
+-(void)mouseMoved:(NSEvent *)theEvent {
+    
+ //
+    
+    NSPoint point = [theEvent locationInWindow];
+    
+    TGPVControlHighlightType highlight;
+    
+    if(![self.controls hitTest:point]) {
+        if([self.photoContainer hitTest:point]) {
+            highlight = TGPVControlHighLightNext;
+        } else if(point.x > NSMinX(self.photoContainer.frame)) {
+            highlight = TGPVControlHighLightPrev;
+        } else  {
+            highlight = TGPVControlHighLightClose;
+        }
+        
+        [self.controls highlightControl:highlight];
+    } else {
+       [self.controls mouseMoved:theEvent];
+    }
+    
+   
+    
+   
+}
 
 
 -(void)didDeleteMessages:(NSNotification *)notification {
@@ -318,6 +344,8 @@ static const int controlsHeight = 75;
     self.currentItemId = 0;
     
     [self makeKeyAndOrderFront:self];
+    
+    [self mouseEntered:[NSApp currentEvent]];
     
     _waitRequest = YES;
     

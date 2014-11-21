@@ -45,17 +45,6 @@
         
         weak();
         
-        [self.countTextField addBlock:^(BTRControlEvents events) {
-            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
-                weakSelf.countTextField.alphaValue = 1.0;
-            
-        } forControlEvents:BTRControlEventMouseEntered];
-        
-        [self.countTextField addBlock:^(BTRControlEvents events) {
-            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
-                weakSelf.countTextField.alphaValue = 0.7;
-            
-        } forControlEvents:BTRControlEventMouseExited];
         
         [self.countTextField addBlock:^(BTRControlEvents events) {
             
@@ -117,47 +106,7 @@
         [self.closeButton setImage:image_PhotoViewerClose() forControlState:BTRControlStateNormal];
         [self.closeButton setCenterByView:self];
         [self.closeButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 60, NSMinY(self.closeButton.frame))];
-        
-        
-        [self.leftButton addBlock:^(BTRControlEvents events) {
-            weakSelf.leftButton.alphaValue = 1;
-        } forControlEvents:BTRControlEventMouseEntered];
-        
-        [self.leftButton addBlock:^(BTRControlEvents events) {
-            weakSelf.leftButton.alphaValue = 0.7;
-        } forControlEvents:BTRControlEventMouseExited];
-
-        
-        [self.rightButton addBlock:^(BTRControlEvents events) {
-            weakSelf.rightButton.alphaValue = 1;
-        } forControlEvents:BTRControlEventMouseEntered];
-        [self.rightButton addBlock:^(BTRControlEvents events) {
-            weakSelf.rightButton.alphaValue = 0.7;
-        } forControlEvents:BTRControlEventMouseExited];
-        
-        [self.closeButton addBlock:^(BTRControlEvents events) {
-            weakSelf.closeButton.alphaValue = 1;
-        } forControlEvents:BTRControlEventMouseEntered];
-        [self.closeButton addBlock:^(BTRControlEvents events) {
-            weakSelf.closeButton.alphaValue = 0.7;
-        } forControlEvents:BTRControlEventMouseExited];
-        
-        [self.moreButton addBlock:^(BTRControlEvents events) {
-            
-            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
-                weakSelf.moreButton.alphaValue = 1;
-            
-            
-        } forControlEvents:BTRControlEventMouseEntered];
-        [self.moreButton addBlock:^(BTRControlEvents events) {
-            
-        if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
-            weakSelf.moreButton.alphaValue = 0.7;
-            
-            
-        } forControlEvents:BTRControlEventMouseExited];
-        
-        
+    
         [self.leftButton addBlock:^(BTRControlEvents events) {
             [TGPhotoViewer prevItem];
         } forControlEvents:BTRControlEventClick];
@@ -179,11 +128,7 @@
         } forControlEvents:BTRControlEventClick];
         
         
-        [self.leftButton setAlphaValue:0.7];
-        [self.rightButton setAlphaValue:0.7];
-        [self.closeButton setAlphaValue:0.7];
-        [self.moreButton setAlphaValue:0.7];
-        
+        [self reset];
         
         [self addSubview:self.leftButton];
         [self addSubview:self.rightButton];
@@ -195,6 +140,53 @@
     return self;
 }
 
+- (void)reset {
+   [self.leftButton setAlphaValue:0.7];
+    [self.rightButton setAlphaValue:0.7];
+    [self.closeButton setAlphaValue:0.7];
+    [self.moreButton setAlphaValue:0.7];
+    [self.countTextField setAlphaValue:0.7];
+}
+
+-(void)highlightControl:(TGPVControlHighlightType)type {
+
+
+    [self reset];
+    
+    switch (type) {
+        case TGPVControlHighLightClose:
+            [self.leftButton setAlphaValue:1];
+            break;
+        case TGPVControlHighLightNext:
+            [self.rightButton setAlphaValue:1];
+            break;
+        case TGPVControlHighLightPrev:
+            [self.closeButton setAlphaValue:1];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+-(void)mouseMoved:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    [self reset];
+    
+    
+    NSArray *items = @[self.leftButton,self.rightButton,self.countTextField,self.closeButton,self.moreButton];
+    
+    [items enumerateObjectsUsingBlock:^(BTRView *obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj hitTest:point]) {
+            [obj setAlphaValue:1.0];
+            *stop = YES;
+        }
+        
+    }];
+}
 
 - (void) contextMenu {
     
@@ -299,13 +291,27 @@
         
     }];
     
+     [theMenu addItem:photoGoto];
     
-    [theMenu addItem:photoGoto];
+    NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.CopyToClipboard", nil) withBlock:^(id sender) {
+        
+        NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+        [pasteboard clearContents];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff")]]];
+
+        
+    }];
+    
+    
+    
+    [theMenu addItem:copy];
     
     
     
     return theMenu;
 }
+
+
 
 -(void)mouseDown:(NSEvent *)theEvent {
     

@@ -14,4 +14,13 @@
 -(void)update;
 -(void)setCurrentPosition:(NSUInteger)position ofCount:(NSUInteger)count;
 
+
+typedef enum  {
+    TGPVControlHighLightPrev,
+    TGPVControlHighLightNext,
+    TGPVControlHighLightClose
+} TGPVControlHighlightType;
+
+-(void)highlightControl:(TGPVControlHighlightType)type;
+
 @end

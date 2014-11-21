@@ -497,9 +497,9 @@ static TMMediaController* currentController;
         
         if(index != NSNotFound) {
             if(index == self->items.count-1) {
-                if([self remoteLoad:self.dialog completionHandler:nil])
-                    return;
-                else
+              //  if([self remoteLoad:self.dialog completionHandler:nil])
+                //    return;
+              //  else
                     index = 0;
                 
             } else
@@ -545,62 +545,62 @@ static TMMediaController* currentController;
 
 - (BOOL)remoteLoad:(TL_conversation *)conversation completionHandler:(void (^)(NSArray *))completionHandler {
     
-    
-    if(self.request || self.itsFull[@(conversation.peer.peer_id)] != nil)
-        return NO;
-    
-    id <TMPreviewItem> lastItem = [items lastObject];
-
-    int max_id = [lastItem previewObject].msg_id;
-    
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:self.dialog.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:max_id limit:100] successHandler:^(RPCRequest *request, id response) {
-        
-        NSMutableArray *messages = [response messages];
-        
-        [TL_localMessage convertReceivedMessages:messages];
-        
-        NSMutableArray *cache = [self media:conversation.peer.peer_id];
-        
-        
-        NSMutableArray *added = [[NSMutableArray alloc] init];
-        
-        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            
-            PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
-            
-            id<TMPreviewItem> item = [self convert:preview];
-            
-            if(item) {
-                [[Storage manager] insertMedia:obj];
-                [cache addObject:item];
-                [added addObject:item];
-            }
-            
-        }];
-        
-        if(messages.count == 0) {
-            self.itsFull[@(conversation.peer.peer_id)] = @(YES);
-        }
-        
-        self.request = nil;
-        
-        if([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])  {
-            [_panel reloadData];
-            
-            [self nextItem];
-        }
-        
-        if(completionHandler)
-            completionHandler(added);
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        self.request = nil;
-        
-     //   [self remoteLoad:conversation];
-        
-    } timeout:10];
-    
+//    
+//    if(self.request || self.itsFull[@(conversation.peer.peer_id)] != nil)
+//        return NO;
+//    
+//    id <TMPreviewItem> lastItem = [items lastObject];
+//
+//    int max_id = [lastItem previewObject].msg_id;
+//    
+//    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:self.dialog.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:max_id limit:100] successHandler:^(RPCRequest *request, id response) {
+//        
+//        NSMutableArray *messages = [response messages];
+//        
+//        [TL_localMessage convertReceivedMessages:messages];
+//        
+//        NSMutableArray *cache = [self media:conversation.peer.peer_id];
+//        
+//        
+//        NSMutableArray *added = [[NSMutableArray alloc] init];
+//        
+//        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+//            
+//            PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
+//            
+//            id<TMPreviewItem> item = [self convert:preview];
+//            
+//            if(item) {
+//                [[Storage manager] insertMedia:obj];
+//                [cache addObject:item];
+//                [added addObject:item];
+//            }
+//            
+//        }];
+//        
+//        if(messages.count == 0) {
+//            self.itsFull[@(conversation.peer.peer_id)] = @(YES);
+//        }
+//        
+//        self.request = nil;
+//        
+//        if([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])  {
+//            [_panel reloadData];
+//            
+//            [self nextItem];
+//        }
+//        
+//        if(completionHandler)
+//            completionHandler(added);
+//        
+//    } errorHandler:^(RPCRequest *request, RpcError *error) {
+//        
+//        self.request = nil;
+//        
+//     //   [self remoteLoad:conversation];
+//        
+//    } timeout:10];
+//    
     return YES;
 }
 

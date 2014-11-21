@@ -53,9 +53,8 @@ static NSImage *playImage() {
         
         weak();
         
-        self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
-        [self.imageView setRoundSize:4];
-        [self.imageView setBlurRadius:60];
+        self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+        [self.imageView setIsAlwaysBlur:YES];
         
         [self.imageView setTapBlock:^{
            
@@ -161,6 +160,7 @@ static NSImage *playImage() {
    
     
      [self.imageView setFrameSize:item.blockSize];
+    
     
     self.imageView.object = item.imageObject;
     
