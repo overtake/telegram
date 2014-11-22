@@ -15,9 +15,6 @@
 @property (nonatomic, strong) NSString *mimeType;
 @property (nonatomic, strong) UploadOperation *uploader;
 @property (nonatomic, strong) UploadOperation *uploaderThumb;
-@property (nonatomic, strong) NSImage *thumbImage;
-@property (nonatomic, strong) NSData *thumbData;
-
 @property (nonatomic) BOOL isThumbUploaded;
 @property (nonatomic) BOOL isFileUploaded;
 
@@ -39,19 +36,18 @@
         self.filePath = path;
         self.conversation = conversation;
         
-        self.thumbImage = previewImageForDocument(self.filePath);
+        NSImage *thumbImage = previewImageForDocument(self.filePath);
         
         long randomId = rand_long();
         
         TGPhotoSize *size;
-        if(self.thumbImage) {
-            self.thumbData = [self.thumbImage TIFFRepresentation];
+        if(thumbImage) {
+            NSData *thumbData = jpegNormalizedData(thumbImage);
             
-            NSSize realSize = strongsize(self.thumbImage.size, 90);
             
-            size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:realSize.width h:realSize.height bytes:self.thumbData];
+            size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:thumbImage.size.width h:thumbImage.size.height bytes:thumbData];
             
-            [TGCache cacheImage:self.thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
+            [TGCache cacheImage:thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
                         
         } else {
             size = [TL_photoSizeEmpty createWithType:@"x"];
@@ -202,7 +198,7 @@
         
         if(![message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
            
-            [self.thumbData writeToFile:locationFilePath(message.media.document.thumb.location, @"tiff") atomically:NO];
+            [message.media.document.thumb.bytes writeToFile:locationFilePath(message.media.document.thumb.location, @"tiff") atomically:NO];
         }
         
         self.uploader = nil;

@@ -209,8 +209,8 @@ static int offsetEditable = 30;
 }
 
 - (void)needUpdateSelectType {
-    [self setEditable:[self isEditable] animation:YES];
-    [self setSelected:[self rowItem].isSelected animation:YES];
+    [self setEditable:[self isEditable] animation:NO];
+    [self setSelected:[self rowItem].isSelected animation:NO];
 }
 
 - (void)setSelected:(BOOL)isSelected {

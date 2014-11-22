@@ -177,19 +177,17 @@ NSImage *previewImageForDocument(NSString *path) {
     
     if(UTTypeConformsTo(fileUTI, kUTTypeGIF)) {
         CFRelease(fileUTI);
-        CFRelease(fileExtension);
         return thumbIcon;
     }
     
 
     if(!thumbIcon) {
         CFRelease(fileUTI);
-        CFRelease(fileExtension);
+      //  CFRelease(fileExtension);
         return nil;
     }
     
     CFRelease(fileUTI);
-    CFRelease(fileExtension);
     
     NSSize needSize = NSMakeSize(100, 100);
     NSRect rect;

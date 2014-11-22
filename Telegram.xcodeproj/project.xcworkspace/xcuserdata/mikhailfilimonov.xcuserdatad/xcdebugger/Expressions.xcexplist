@@ -73,6 +73,9 @@
          contextName = "__32+[TGSecretAction _resendActions]_block_invoke_2:TGSecretAction.m">
       </ContextState>
       <ContextState
+         contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__45-[SelfDestructionController didReadMessages:]_block_invoke:SelfDestructionController.m">
       </ContextState>
       <ContextState
@@ -217,6 +220,17 @@
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
+         contextName = "-[SelectUserRowView redrawRow]:SelectUserRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self rowItem].table">
+            </PersistentString>
+            <PersistentString
+               value = "[[self rowItem].table selectLimit]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TelegramFirstController validateMenuItem:]:TelegramFirstController.m">
          <PersistentStrings>
             <PersistentString
@@ -328,10 +342,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1224,6 +1238,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[PrivacyArchiver rules]:PrivacyArchiver.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMBackButton updateBackButton]:TMBackButton.m">
          <PersistentStrings>
             <PersistentString
@@ -1269,6 +1286,9 @@
       </ContextState>
       <ContextState
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__44-[PrivacySettingsViewController savePrivacy]_block_invoke:PrivacySettingsViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController setItems:conversation:]:TMCollectionPageController.m">

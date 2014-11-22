@@ -66,7 +66,6 @@
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.action.behavior composeDidCancel];
-    self.action = nil;
 }
 
 -(void)_didStackRemoved {
@@ -80,10 +79,12 @@
     
     self.tableView.exceptions = self.action.filter;
     
-    [self.tableView ready];
-    
     self.tableView.selectLimit = self.action.behavior.limit;
     self.action.behavior.delegate = self;
+    
+    [self.tableView ready];
+    
+   
     
     [self.tableView scrollToBeginningOfDocument:self];
     
