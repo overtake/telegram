@@ -62,12 +62,15 @@
     [self.tableView insert:self.blockedUsersRowIten atIndex:self.tableView.list.count tableRedraw:NO];
     
     
+    
+    
+    
     self.lastSeenRowItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         if(!self.lastSeenRowItem.locked)
             [[Telegram rightViewController] showLastSeenController];
         
-    } description:NSLocalizedString(@"PrivacyAndSecurity.LastSeen", nil) height:42 stateback:nil];
+    } description:NSLocalizedString(@"PrivacyAndSecurity.LastSeen", nil) subdesc:@"" height:42 stateback:nil];
     
     [self.tableView insert:self.lastSeenRowItem atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -127,6 +130,8 @@
 }
 
 
+
+
 - (void)terminateSessions {
     
     confirm(NSLocalizedString(@"Confirm", nil), NSLocalizedString(@"Confirm.TerminateSessions", nil), ^ {
@@ -157,8 +162,59 @@
     
 }
 
+-(void)updatePrivacyDescription:(NSNotification *)notification {
+    
+    
+    
+    PrivacyArchiver *lsPrivacy = [PrivacyArchiver privacyForType:kStatusTimestamp];
+    
+    
+    NSString * subdesc = @"";
+    
+    NSString *adc = @"";
+    
+    if(lsPrivacy.disallowUsers.count > 0) {
+        adc = [adc stringByAppendingFormat:@" (-%lu",lsPrivacy.disallowUsers.count];
+    }
+    
+    if(lsPrivacy.allowUsers.count > 0) {
+        adc = [adc stringByAppendingFormat:@"%@+%lu",adc.length > 0 ? @", " : @" (", lsPrivacy.allowUsers.count];
+    }
+    
+    if(adc.length > 0)
+        adc = [adc stringByAppendingString:@")"];
+    
+    switch (lsPrivacy.allowType) {
+        case PrivacyAllowTypeContacts:
+            
+            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.MyContacts", nil),adc];
+            break;
+        case PrivacyAllowTypeEverbody:
+            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Everbody", nil),adc];
+            break;
+        case PrivacyAllowTypeNobody:
+            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Nobody", nil),adc];
+            break;
+            
+        default:
+            break;
+    }
+    
+    self.lastSeenRowItem.subdesc = subdesc;
+
+    [self.tableView reloadData];
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    [self updatePrivacyDescription:nil];
+    
+    [Notification addObserver:self selector:@selector(updatePrivacyDescription:) name:PRIVACY_UPDATE];
+    
+    
     
     if([PrivacyArchiver privacyForType:kStatusTimestamp] == nil && !self.lastSeenRowItem.locked) {
         
@@ -182,6 +238,11 @@
         }];
         
     }
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [Notification removeObserver:self];
 }
 
 
