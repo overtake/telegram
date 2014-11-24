@@ -85,18 +85,20 @@
 -(void)_didDownloadImage:(DownloadItem *)item {
     NSImage *image = [[NSImage alloc] initWithData:item.result];
     
-    if(NSSizeNotZero(self.realSize) && NSSizeNotZero(self.imageSize) && self.realSize.width > MIN_IMG_SIZE.width && self.realSize.width > MIN_IMG_SIZE.height && self.imageSize.width == MIN_IMG_SIZE.width && self.imageSize.height == MIN_IMG_SIZE.height) {
+    
+    if(image != nil) {
+        if(NSSizeNotZero(self.realSize) && NSSizeNotZero(self.imageSize) && self.realSize.width > MIN_IMG_SIZE.width && self.realSize.width > MIN_IMG_SIZE.height && self.imageSize.width == MIN_IMG_SIZE.width && self.imageSize.height == MIN_IMG_SIZE.height) {
+            
+            int difference = roundf( (self.realSize.width - self.imageSize.width) /2);
+            
+            image = cropImage(image,self.imageSize, NSMakePoint(difference, 0));
+            
+        }
         
-        int difference = roundf( (self.realSize.width - self.imageSize.width) /2);
+        image = renderedImage(image, self.imageSize);
         
-        image = cropImage(image,self.imageSize, NSMakePoint(difference, 0));
-        
+        [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
     }
-    
-    image = renderedImage(image, self.imageSize);
-    
-    [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
-    
     
     
     [[ASQueue mainQueue] dispatchOnQueue:^{
