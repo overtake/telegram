@@ -7,8 +7,7 @@
 //
 
 #import "MessageSenderItem.h"
-#import "TGPeer+Extensions.h"
-#import "TGDialog+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "MessageTableItem.h"
 @interface MessageSenderItem ()
 @end

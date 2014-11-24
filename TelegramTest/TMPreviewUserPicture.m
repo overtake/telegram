@@ -7,7 +7,7 @@
 //
 
 #import "TMPreviewUserPicture.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "FileUtils.h"
 #import "DownloadQueue.h"
 #import "TMMediaController.h"

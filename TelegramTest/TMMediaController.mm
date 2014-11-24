@@ -8,9 +8,9 @@
 
 #import "TMMediaController.h"
 #import "FileUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "ImageCache.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
 #include <map>
 #include <set>
@@ -257,7 +257,7 @@ static NSMutableDictionary *twoFingersTouches;
                 
                 TL_localMessage *msg = previewItem.previewObject.media;
                 
-                [[Telegram rightViewController] showByDialog:msg.dialog sender:controller];
+                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
                 [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
                 [[Telegram rightViewController].messagesViewController unSelectAll:NO];
                 
@@ -277,7 +277,7 @@ static NSMutableDictionary *twoFingersTouches;
                 
                 TL_localMessage *msg = previewItem.previewObject.media;
                 
-                [[Telegram rightViewController] showByDialog:msg.dialog sender:controller];
+                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
                 
                 [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
                 [[Telegram rightViewController].messagesViewController unSelectAll:NO];
@@ -296,7 +296,7 @@ static NSMutableDictionary *twoFingersTouches;
                 
                 TL_localMessage *msg = previewItem.previewObject.media;
                 
-                [[Telegram rightViewController] showByDialog:msg.dialog withJump:msg.n_id historyFilter:[HistoryFilter class] sender:controller];
+                [[Telegram rightViewController] showByDialog:msg.conversation withJump:msg.n_id historyFilter:[HistoryFilter class] sender:controller];
             
             }]];
             

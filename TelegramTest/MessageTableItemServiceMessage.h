@@ -22,9 +22,9 @@ typedef enum {
 
 @property (nonatomic) MessageTableItemServiceMessageType type;
 
-@property (nonatomic, strong) TGPhoto *photo;
+@property (nonatomic, strong) TLPhoto *photo;
 @property (nonatomic) NSSize photoSize;
-@property (nonatomic, strong) TGFileLocation *photoLocation;
+@property (nonatomic, strong) TLFileLocation *photoLocation;
 @property (nonatomic, strong) NSImage *cachePhoto;
 
 @property (nonatomic,strong) TGImageObject *imageObject;

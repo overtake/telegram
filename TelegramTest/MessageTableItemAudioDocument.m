@@ -10,7 +10,7 @@
 #import "DownloadDocumentItem.h"
 @implementation MessageTableItemAudioDocument
 
-- (id)initWithObject:(TGMessage *)object {
+- (id)initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         self.blockSize = NSMakeSize(200, 60);

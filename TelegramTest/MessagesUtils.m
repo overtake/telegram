@@ -13,9 +13,9 @@
 
 @implementation MessagesUtils
 
-+(NSString *)serviceMessage:(TGMessage *)message forAction:(TGMessageAction *)action {
++(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
     
-    TGUser *user = [[UsersManager sharedManager] find:message.from_id];
+    TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupName", nil), [user fullName], action.title];
@@ -24,7 +24,7 @@
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
-        TGUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
+        TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
         if(action.user_id != message.from_id) {
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
         } else {
@@ -35,7 +35,7 @@
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil), [user fullName],action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         if(action.user_id != message.from_id) {
-            TGUser *userDelete = [[UsersManager sharedManager] find:action.user_id];
+            TLUser *userDelete = [[UsersManager sharedManager] find:action.user_id];
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.KickedGroup", nil), [user fullName], [userDelete fullName]];
         } else {
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.LeftGroup", nil), [user fullName]];
@@ -101,7 +101,7 @@
 
 
 
-+(NSMutableAttributedString *)conversationLastText:(TGMessage *)message conversation:(TL_conversation *)conversation {
++(NSMutableAttributedString *)conversationLastText:(TL_localMessage *)message conversation:(TL_conversation *)conversation {
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
     [messageText setSelectionColor:NSColorFromRGB(0xfffff1) forColor:DARK_BLACK];
@@ -143,13 +143,13 @@
     if(message) {
         
         NSString *msgText = @"";
-        TGUser *userSecond = nil;
-        TGUser *userLast;
+        TLUser *userSecond = nil;
+        TLUser *userLast;
         NSString *chatUserNameString;
         
         
         
-        if(message.dialog.type == DialogTypeChat && !message.action ) {
+        if(message.conversation.type == DialogTypeChat && !message.action ) {
             
             if(!message.n_out) {
                 userLast = [[UsersManager sharedManager] find:message.from_id];
@@ -168,10 +168,10 @@
             // if(userLast == [UsersManager currentUser])
             //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
             //  else
-            if(message.dialog.type != DialogTypeSecretChat)
+            if(message.conversation.type != DialogTypeSecretChat)
                 chatUserNameString = userLast ? userLast.dialogFullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
             
-            TGMessageAction *action = message.action;
+            TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
                 msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
             } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
@@ -257,12 +257,12 @@
     return messageText;
 }
 
-+ (NSAttributedString *) serviceAttributedMessage:(TGMessage *)message forAction:(TGMessageAction *)action {
++ (NSAttributedString *) serviceAttributedMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
     
-    TGUser *user = [[UsersManager sharedManager] find:message.from_id];
+    TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
-    TGUser *user2;
+    TLUser *user2;
     NSString *actionText;
     
     NSString *title;
@@ -390,7 +390,7 @@
     return  NSColorFromRGB(color);
 }
 
-+ (NSString *) mediaMessage:(TGMessage *)message {
++ (NSString *) mediaMessage:(TLMessage *)message {
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         return NSLocalizedString(@"ChatMedia.Photo", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {

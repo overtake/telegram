@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "DownloadItem.h"
 #import "TGCache.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @class TGImageView;
 
 
@@ -26,7 +26,7 @@
 @end
 
 @interface TGImageObject : NSObject
-@property (nonatomic,strong,readonly) TGFileLocation *location;
+@property (nonatomic,strong,readonly) TLFileLocation *location;
 @property (nonatomic,assign,readonly) int size;
 @property (nonatomic,strong,readonly) NSImage *placeholder;
 @property (nonatomic,assign,readonly) int sourceId;
@@ -42,10 +42,10 @@
 
 @property (nonatomic,assign) BOOL isLoaded;
 
--(id)initWithLocation:(TGFileLocation *)location;
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder;
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId;
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size;
+-(id)initWithLocation:(TLFileLocation *)location;
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder;
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId;
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size;
 
 
 -(void)initDownloadItem;

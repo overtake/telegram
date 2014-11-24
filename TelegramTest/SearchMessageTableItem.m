@@ -16,7 +16,7 @@
     if(self = [super init]) {
         
         self.lastMessage = message;
-        self.dialog = message.dialog;
+        self.dialog = message.conversation;
         self.selectString = selectedText;
         
         [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
@@ -37,7 +37,7 @@
             }
                 
             case DialogTypeSecretChat: {
-                TGEncryptedChat *chat = self.dialog.encryptedChat;
+                TLEncryptedChat *chat = self.dialog.encryptedChat;
                 self.user = [chat peerUser];
                 break;
             }

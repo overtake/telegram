@@ -8,7 +8,7 @@
 
 #import "DownloadPhotoItem.h"
 #import "FileUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @implementation DownloadPhotoItem
 
 
@@ -36,7 +36,7 @@
     return self.size == 0 ? 0 : 1024*64;
 }
 
--(TGInputFileLocation *)input {
+-(TLInputFileLocation *)input {
     TL_fileLocation *location = self.object;
     if(self.isEncrypted)
         return [TL_inputEncryptedFileLocation createWithN_id:location.volume_id access_hash:location.secret];

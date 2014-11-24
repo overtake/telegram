@@ -34,7 +34,7 @@
         NSMutableArray *fakes = [[NSMutableArray alloc] init];
         NSMutableArray *copy = [msgs mutableCopy];
         
-        [copy sortUsingComparator:^NSComparisonResult(TGMessage * obj1, TGMessage * obj2) {
+        [copy sortUsingComparator:^NSComparisonResult(TLMessage * obj1, TLMessage * obj2) {
             return [@(obj1.n_id) compare:@(obj2.n_id)];
         }];
         
@@ -42,7 +42,7 @@
         
         for (int i = 0; i < copy.count; i++) {
             
-            TGMessage *f = copy[i];
+            TLMessage *f = copy[i];
             
             [ids addObject:@([f n_id])];
             
@@ -93,7 +93,7 @@
         for(int i = 0; i < messages.count; i++) {
             
             TL_localMessageForwarded *fake = self.fakes[i];
-            TGMessage *stated = messages[i];
+            TLMessage *stated = messages[i];
             
             fake.date = stated.date;
             fake.n_id = stated.n_id;

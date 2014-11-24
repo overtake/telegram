@@ -14,7 +14,7 @@
 
 @implementation MessageTableItemContact
 
-- (id) initWithObject:(TGMessage *)object  {
+- (id) initWithObject:(TLMessage *)object  {
     self = [super initWithObject:object];
     if(self) {
         

@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableNavigationTitleView.h"
-#import "TGEncryptedChat+Extensions.h"
+#import "TLEncryptedChat+Extensions.h"
 #import "TGTimer.h"
 #import "ImageUtils.h"
 #import "TGAnimationBlockDelegate.h"
@@ -90,11 +90,11 @@
     
     
     if(self.dialog.type == DialogTypeChat) {
-        TGChat *chat = self.dialog.chat;
+        TLChat *chat = self.dialog.chat;
         [self.nameTextField setChat:chat];
         [self.statusTextField setChat:chat];
     } else if(self.dialog.type == DialogTypeSecretChat) {
-        TGUser *user = self.dialog.encryptedChat.peerUser;
+        TLUser *user = self.dialog.encryptedChat.peerUser;
         [self.nameTextField setUser:user isEncrypted:YES];
         [self.statusTextField setUser:user];
     } else if(self.dialog.type == DialogTypeBroadcast) {
@@ -105,7 +105,7 @@
         [self.statusTextField setBroadcast:broadcast];
         
     } else {
-        TGUser *user = self.dialog.user;
+        TLUser *user = self.dialog.user;
         [self.nameTextField setUser:user isEncrypted:NO];
         [self.statusTextField setUser:user];
     }

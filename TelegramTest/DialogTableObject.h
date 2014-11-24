@@ -12,8 +12,8 @@
 @property (nonatomic,strong) NSString *title;
 @property (nonatomic,strong) TL_conversation *dialog;
 @property (nonatomic,assign) int n_id;
-@property (nonatomic,strong) TGFileLocation *location;
-@property (nonatomic,strong) TGMessage *lastMessage;
+@property (nonatomic,strong) TLFileLocation *location;
+@property (nonatomic,strong) TL_localMessage *lastMessage;
 @property (nonatomic,strong) NSAttributedString *message;
 -(id)initWithDialog:(TL_conversation *)dialog;
 @end

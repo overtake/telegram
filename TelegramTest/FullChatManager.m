@@ -19,13 +19,13 @@
 
 
 @property (nonatomic, strong) NSMutableArray *uids;
-@property (nonatomic, strong) TGChatFull *chatFull;
+@property (nonatomic, strong) TLChatFull *chatFull;
 
 @end
 
 @implementation FullChatMembersChecker
 
-- (id) initWithFullChat:(TGChatFull *)chatFull {
+- (id) initWithFullChat:(TLChatFull *)chatFull {
     self = [super init];
     if(self) {
         self.chat_id = chatFull.n_id;
@@ -43,7 +43,7 @@
     
     [ASQueue dispatchOnStageQueue:^{
         [self.uids removeAllObjects];
-        for(TGChatParticipant *participant in self.chatFull.participants.participants) {
+        for(TLChatParticipant *participant in self.chatFull.participants.participants) {
             int user_id = participant.user_id;
             [self.uids addObject:@(user_id)];
         }
@@ -63,11 +63,11 @@
         self.onlineCount = 0;
         self.allCount = self.chatFull.participants.participants.count;
         
-        for(TGChatParticipant *participant in self.chatFull.participants.participants) {
+        for(TLChatParticipant *participant in self.chatFull.participants.participants) {
             int user_id = participant.user_id;
             
             
-            if(((TGUser *)[[UsersManager sharedManager] find:user_id]).isOnline)
+            if(((TLUser *)[[UsersManager sharedManager] find:user_id]).isOnline)
                 self.onlineCount++;
         }
         
@@ -169,7 +169,7 @@
     [ASQueue dispatchOnStageQueue:^{
         NSArray *array =[[ChatsManager sharedManager] all];
         NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
-        for(TGChat *chat in array) {
+        for(TLChat *chat in array) {
             if([chat isKindOfClass:[TL_chat class]]) {
                 if(![self find:chat.n_id]) {
                     [needToLoad addObject:@(chat.n_id)];
@@ -193,7 +193,7 @@
     if(!self.isLoad)
         return;
     
-    TGChatFull *chat = [self find:chat_id];
+    TLChatFull *chat = [self find:chat_id];
     if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime])
         [self loadFullChatByChatId:chat_id];
 }
@@ -247,7 +247,7 @@
         
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
-            TGChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
+            TLChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
             if(chatFull) {
                 checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull];
                 [self.membersCheker setObject:checker forKey:@(chat_id)];
@@ -265,9 +265,9 @@
 - (void) add:(NSArray *)all {
     
     [ASQueue dispatchOnStageQueue:^{
-        for (TGChatFull *newChatFull in all) {
+        for (TLChatFull *newChatFull in all) {
             
-            TGChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];
+            TLChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];
             if(currentChat) {
                 if(currentChat.participants.participants.count != newChatFull.participants.participants.count) {
                     currentChat.participants = newChatFull.participants;
@@ -293,7 +293,7 @@
             NSArray *copy = [currentChat.participants.participants copy];
             
             for (TL_chatParticipant *user in copy) {
-                TGUser *find = [[UsersManager sharedManager] find:user.user_id];
+                TLUser *find = [[UsersManager sharedManager] find:user.user_id];
                 
                 if([find isKindOfClass:[TL_userEmpty class]] || !find) {
                     [currentChat.participants.participants removeObject:user];

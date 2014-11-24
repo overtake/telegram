@@ -8,7 +8,7 @@
 
 #import "UsersManager.h"
 #import "UploadOperation.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "ImageUtils.h"
 #import "TGTimer.h"
 
@@ -46,9 +46,9 @@
     [self.lastSeenRequest cancelRequest];
     
     NSMutableArray *needUsersUpdate = [[NSMutableArray alloc] init];
-    for(TGUser *user in list) {
+    for(TLUser *user in list) {
         if(user.lastSeenUpdate + 300 < [[MTNetwork instance] getTime]) {
-            if(user.type == TGUserTypeForeign || user.type == TGUserTypeRequest) {
+            if(user.type == TLUserTypeForeign || user.type == TLUserTypeRequest) {
                 [needUsersUpdate addObject:user.inputUser];
             }
         }
@@ -94,7 +94,7 @@
 }
 
 +(NSArray *)findUsersByName:(NSString *)userName {
-    return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_name BEGINSWITH[c] %@",userName]];
+    return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
 }
 
 - (void)addFromDB:(NSArray *)array {
@@ -111,8 +111,8 @@
         
         NSMutableArray *usersToUpdate = [NSMutableArray array];
         
-        for (TGUser *newUser in all) {
-            TGUser *currentUser = [keys objectForKey:[newUser valueForKey:key]];
+        for (TLUser *newUser in all) {
+            TLUser *currentUser = [keys objectForKey:[newUser valueForKey:key]];
             
             BOOL needUpdateUserInDB = NO;
             if(currentUser) {
@@ -127,12 +127,12 @@
                     needUpdateUserInDB = YES;
                 }
                 
-                if(currentUser.type != TGUserTypeEmpty) {
-                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.user_name isEqualToString:currentUser.user_name]) {
+                if(currentUser.type != TLUserTypeEmpty) {
+                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.username isEqualToString:currentUser.username]) {
                         
                         currentUser.first_name = newUser.first_name;
                         currentUser.last_name = newUser.last_name;
-                        currentUser.user_name = newUser.user_name;
+                        currentUser.username = newUser.username;
                         
                         isNeedRebuildNames = YES;
                         
@@ -166,11 +166,11 @@
                 
             } else {
                 
-                if(newUser.type == TGUserTypeEmpty) {
+                if(newUser.type == TLUserTypeEmpty) {
                     newUser.first_name = @"Deleted";
                     newUser.last_name = @"";
                     newUser.phone = @"";
-                    newUser.user_name = @"";
+                    newUser.username = @"";
                 }
                 
                 [self->list addObject:newUser];
@@ -191,7 +191,7 @@
                 needUpdateUserInDB = YES;
             }
             
-            if(currentUser.type == TGUserTypeSelf)
+            if(currentUser.type == TLUserTypeSelf)
                 _userSelf = currentUser;
             
             BOOL result = [self setUserStatus:newUser.status forUser:currentUser];
@@ -210,7 +210,7 @@
     
 }
 
-- (BOOL)setUserStatus:(TGUserStatus *)status forUser:(TGUser *)currentUser {
+- (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser {
     
     BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
     
@@ -222,9 +222,9 @@
     return result;
 }
 
-- (void)setUserStatus:(TGUserStatus *)status forUid:(int)uid {
+- (void)setUserStatus:(TLUserStatus *)status forUid:(int)uid {
     [ASQueue dispatchOnStageQueue:^{
-        TGUser *currentUser = [keys objectForKey:@(uid)];
+        TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
             BOOL result = [self setUserStatus:status forUser:currentUser];
             if(result) {
@@ -240,7 +240,7 @@
 }
 
 
-+ (TGUser *)currentUser {
++ (TLUser *)currentUser {
     return [[UsersManager sharedManager] userSelf];
 }
 
@@ -248,19 +248,19 @@
 
 
 
--(void)updateUserName:(NSString *)userName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
+-(void)updateUserName:(NSString *)userName completeHandler:(void (^)(TLUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
     
-    if([userName isEqualToString:self.userSelf.user_name] )
+    if([userName isEqualToString:self.userSelf.username] )
     {
         completeHandler(self.userSelf);
         
         return;
     }
     
-    [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TGUser *response) {
+    [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
         
         [ASQueue dispatchOnStageQueue:^{
-            if(response.type == TGUserTypeSelf) {
+            if(response.type == TLUserTypeSelf) {
                 [self add:@[response]];
             }
             
@@ -284,7 +284,7 @@
 
 
 
--(void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
+-(void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TLUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
     
     firstName = firstName.length > 30 ? [firstName substringToIndex:30] : firstName;
     
@@ -307,9 +307,9 @@
     [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
     
     
-    [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFirst_name:firstName last_name:lastName] successHandler:^(RPCRequest *request, TGUser *response) {
+    [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFirst_name:firstName last_name:lastName] successHandler:^(RPCRequest *request, TLUser *response) {
         
-        if(response.type == TGUserTypeSelf) {
+        if(response.type == TLUserTypeSelf) {
             [self add:@[response]];
         }
         
@@ -324,7 +324,7 @@
     } timeout:10];
 }
 
--(void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TGUser *user))completeHandler progressHandler:(void (^)(float))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {
+-(void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {
     UploadOperation *operation = [[UploadOperation alloc] init];
     
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
@@ -355,7 +355,7 @@
     [operation ready:UploadImageType];
 }
 
--(void)updateAccountPhotoByNSImage:(NSImage *)image completeHandler:(void (^)(TGUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {
+-(void)updateAccountPhotoByNSImage:(NSImage *)image completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {
     
     UploadOperation *operation = [[UploadOperation alloc] init];
     

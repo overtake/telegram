@@ -13,7 +13,6 @@
 #import "PhotoVideoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
-#import "TGMessage+Extensions.h"
 #import "MessageTableItem.h"
 @interface HistoryFilter ()
 

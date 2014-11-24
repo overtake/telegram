@@ -12,17 +12,17 @@
 {
     if(!message)
         return nil;
-    if([message respondsToSelector:@selector(getData:)])
-        return  [message getData:NO];
-    return [[TLClassStore sharedManager] serialize:message];
+    if([message respondsToSelector:@selector(getData)])
+        return  [message getData];
+    return [TLClassStore serialize:message];
 }
 
 - (id)parseMessage:(NSInputStream *)is responseParsingBlock:(int32_t (^)(int64_t, bool *))responseParsingBlock
 {
     
-    id obj = [[TLClassStore sharedManager] constructObject:is];
+    id obj = [TLClassStore constructObject:is];
     if([obj isKindOfClass:[TL_gzip_packed class]]) {
-        obj = [[TLClassStore sharedManager] deserialize:[[obj packed_data] gzipInflate]];
+        obj = [TLClassStore deserialize:[[obj packed_data] gzipInflate]];
     }
     
     return obj;
@@ -65,7 +65,7 @@
 
 - (NSData *)resPqNonce:(id)message
 {
-    return [message nonce];
+    return [(TL_resPQ *)message nonce];
 }
 
 - (NSData *)resPqServerNonce:(id)message
@@ -90,7 +90,7 @@
 
 - (NSData *)serverDhParamsNonce:(id)message
 {
-    return [message nonce];
+    return [(TL_server_DH_params_ok *)message nonce];
 }
 
 - (NSData *)serverDhParamsServerNonce:(id)message
@@ -115,7 +115,7 @@
 
 - (NSData *)serverDhInnerDataNonce:(id)message
 {
-    return [message nonce];
+    return [(TL_server_DH_inner_data *)message nonce];
 }
 
 - (NSData *)serverDhInnerDataServerNonce:(id)message
@@ -161,7 +161,7 @@
 
 - (NSData *)setClientDhParamsNonce:(id)message
 {
-    return [message nonce];
+    return [(TLSet_client_DH_params_answer *)message nonce];
 }
 
 - (NSData *)setClientDhParamsServerNonce:(id)message
@@ -287,7 +287,7 @@
 {
     TL_invokeAfter *invoke = [[TL_invokeAfter alloc] init];
     invoke.msg_id = messageId;
-    invoke.query = query;
+    invoke.query = [query getData];
     return invoke;
 }
 
@@ -377,7 +377,7 @@
             *requestMessageId = ((TL_rpc_result *)message).req_msg_id;
         TL_rpc_result *rpc = message;
         if([rpc.result isKindOfClass:[TL_gzip_packed class]])
-            return  [[TLClassStore sharedManager] deserialize:[[rpc.result packed_data] gzipInflate]];
+            return  [TLClassStore deserialize:[[rpc.result packed_data] gzipInflate]];
         return rpc.result;
     }
     
@@ -474,7 +474,7 @@
 
 - (bool)isMessageBadMsgNotification:(id)message
 {
-    return [message isKindOfClass:[TGBadMsgNotification class]];
+    return [message isKindOfClass:[TLBadMsgNotification class]];
 }
 
 - (int64_t)badMessageBadMessageId:(id)message

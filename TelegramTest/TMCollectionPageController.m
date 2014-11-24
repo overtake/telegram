@@ -10,7 +10,7 @@
 #import "TMCollectionViewController.h"
 #import "TMMediaController.h"
 #import "PhotoCollectionTableView.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "TGPVMediaBehavior.h"
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
@@ -475,7 +475,7 @@ static const int maxWidth = 120;
 
 -(PhotoCollectionImageObject *)imageObjectWithPreview:(PreviewObject *)previewObject {
     
-    TGPhoto *photo = [(TL_localMessage *)previewObject.media media].photo;
+    TLPhoto *photo = [(TL_localMessage *)previewObject.media media].photo;
     
     PhotoCollectionImageObject *imageObject;
     
@@ -485,14 +485,14 @@ static const int maxWidth = 120;
         
         int idx = photo.sizes.count == 1 ? 0 : 1;
         
-        TGPhotoSize* photoSize =  ((TGPhotoSize *)photo.sizes[idx]);
+        TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
         
         
 //        NSString *path = [photoSize.location squarePath];
         
 //        if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
 //            
-//            for(TGPhotoSize *photoSize in photo.sizes) {
+//            for(TLPhotoSize *photoSize in photo.sizes) {
 //                if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
 //                    cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
 //                    break;

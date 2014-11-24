@@ -79,7 +79,7 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
     __block NSArray *allowUsers = [[NSArray alloc] init];
     __block PrivacyAllowType allowType = PrivacyAllowTypeNobody;
     
-    [rules enumerateObjectsUsingBlock:^(TGPrivacyRule *rule, NSUInteger idx, BOOL *stop) {
+    [rules enumerateObjectsUsingBlock:^(TLPrivacyRule *rule, NSUInteger idx, BOOL *stop) {
         
         if([rule isKindOfClass:[TL_privacyValueAllowUsers class]]) {
             allowUsers = [rule users];
@@ -113,7 +113,7 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
     
     [self.allowUsers enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
         
-        TGUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+        TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
         
         [allow addObject:user.inputUser];
         
@@ -121,7 +121,7 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
     
     [self.disallowUsers enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
         
-        TGUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+        TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
         
         [disallow addObject:user.inputUser];
         
@@ -131,7 +131,7 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
         case PrivacyAllowTypeEverbody:
             
             if(disallow.count > 0)
-                [rules addObject:[TL_inputPrivacyValueDisallowUsers create:disallow]];
+                [rules addObject:[TL_inputPrivacyValueDisallowUsers createWithUsers:disallow]];
             
             [rules addObject:[TL_inputPrivacyValueAllowAll create]];
              
@@ -139,10 +139,10 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
         case PrivacyAllowTypeContacts:
             
             if(disallow.count > 0)
-                [rules addObject:[TL_inputPrivacyValueDisallowUsers create:disallow]];
+                [rules addObject:[TL_inputPrivacyValueDisallowUsers createWithUsers:disallow]];
             
             if(allow.count > 0)
-                [rules addObject:[TL_inputPrivacyValueAllowUsers create:allow]];
+                [rules addObject:[TL_inputPrivacyValueAllowUsers createWithUsers:allow]];
             
             [rules addObject:[TL_inputPrivacyValueAllowContacts create]];
             
@@ -150,7 +150,7 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
         case PrivacyAllowTypeNobody:
             
             if(allow.count > 0)
-                [rules addObject:[TL_inputPrivacyValueAllowUsers create:allow]];
+                [rules addObject:[TL_inputPrivacyValueAllowUsers createWithUsers:allow]];
             
             break;
             

@@ -15,7 +15,7 @@
 
 @property (nonatomic,strong) UserInfoViewController *controller;
 
-@property (nonatomic, strong) TGUser *user;
+@property (nonatomic, strong) TLUser *user;
 + (NSDictionary *)attributsForInfoPlaceholderString;
 - (void)setState:(UserInfoViewControllerType)state animation:(BOOL)animation;
 - (void)buildPage;

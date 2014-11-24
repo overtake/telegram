@@ -80,7 +80,7 @@
             
             
             
-            TGMessage *msg;
+            TLMessage *msg;
             
             
             if(weakSelf.conversation.type != DialogTypeBroadcast)  {
@@ -99,7 +99,7 @@
             
             
             
-            TGPhotoSize *newSize = [[msg media].photo.sizes lastObject];
+            TLPhotoSize *newSize = [[msg media].photo.sizes lastObject];
             
             if(weakSelf.message.media.photo.sizes.count > 1) {
                 TL_photoSize *size = weakSelf.message.media.photo.sizes[1];

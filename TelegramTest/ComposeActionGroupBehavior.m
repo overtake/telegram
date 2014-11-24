@@ -10,7 +10,6 @@
 #import "ComposeChatCreateViewController.h"
 #import "ComposePickerViewController.h"
 #import "SelectUserItem.h"
-
 @interface ComposeActionGroupBehavior ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -70,7 +69,7 @@
 
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for(SelectUserItem* item in selected) {
-        if(!item.contact.user.type != TGUserTypeSelf) {
+        if(!item.contact.user.type != TLUserTypeSelf) {
             TL_inputUserContact *_contact = [TL_inputUserContact createWithUser_id:item.contact.user.n_id];
             [array addObject:_contact];
         }
@@ -82,11 +81,11 @@
         
         [MessagesManager statedMessage:response];
         
-        [[FullChatManager sharedManager] performLoad:response.message.dialog.chat.n_id callback:^{
+        [[FullChatManager sharedManager] performLoad:((TL_localMessage *)response.message).conversation.chat.n_id callback:^{
             
             [self.delegate behaviorDidEndRequest:response];
             
-            [[Telegram sharedInstance] showMessagesFromDialog:response.message.dialog sender:self];
+            [[Telegram sharedInstance] showMessagesFromDialog:((TL_localMessage *)response.message).conversation sender:self];
         }];
         
         

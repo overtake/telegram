@@ -56,8 +56,8 @@ int maxChatUsers();
 - (void)setAccountOffline:(BOOL)force;
 
 
-- (void)showMessagesFromDialog:(TGDialog *)dialog sender:(id)sender;
+- (void)showMessagesFromDialog:(TLDialog *)dialog sender:(id)sender;
 - (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversaion sender:(id)sender;
-- (void)showMessagesWidthUser:(TGUser *)user sender:(id)sender;
+- (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender;
 - (void)showNotSelectedDialog;
 @end

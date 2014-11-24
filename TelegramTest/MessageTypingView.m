@@ -106,13 +106,13 @@ const NSTimeInterval typingIntervalSecond = 0.14;
 
          [self _beginTypingAnimation:YES];
         if(users.count == 1) {
-            TGUser *user = [[UsersManager sharedManager] find:[[users objectAtIndex:0] integerValue]];
+            TLUser *user = [[UsersManager sharedManager] find:[[users objectAtIndex:0] integerValue]];
             if(user)
                 string =[NSString stringWithFormat:NSLocalizedString(@"Typing.IsTyping", nil),user.fullName];
         } else {
             NSMutableArray *usersStrings = [[NSMutableArray alloc] init];
             for(NSNumber *uid in users) {
-                TGUser *user = [[UsersManager sharedManager] find:[uid integerValue]];
+                TLUser *user = [[UsersManager sharedManager] find:[uid integerValue]];
                 if(user) {
                     [usersStrings addObject:user.fullName];
                 }

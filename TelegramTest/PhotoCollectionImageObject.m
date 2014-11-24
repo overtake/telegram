@@ -8,7 +8,7 @@
 
 #import "PhotoCollectionImageObject.h"
 #import "DownloadPhotoCollectionItem.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "PhotoCollectionImageView.h"
 #import "TGCache.h"
 @implementation PhotoCollectionImageObject
@@ -16,7 +16,7 @@
 
 static const int width = 180;
 
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
     if(self = [super initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:size]) {
     }
     

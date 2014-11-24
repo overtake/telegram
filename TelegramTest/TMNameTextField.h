@@ -31,8 +31,8 @@ typedef enum {
 @property (nonatomic) TMNameTextFieldType type;
 @property (nonatomic, strong) id<TMNameTextFieldProtocol> nameDelegate;
 
-@property (nonatomic, strong) TGUser *user;
-@property (nonatomic, strong) TGChat *chat;
+@property (nonatomic, strong) TLUser *user;
+@property (nonatomic, strong) TLChat *chat;
 @property (nonatomic, strong) TL_broadcast *broadcast;
 
 @property (nonatomic) SEL selector;
@@ -40,7 +40,7 @@ typedef enum {
 
 @property (nonatomic) BOOL selected;
 
-- (void) setUser:(TGUser *)user isEncrypted:(BOOL)isEncrypted;
+- (void) setUser:(TLUser *)user isEncrypted:(BOOL)isEncrypted;
 
 - (void)update;
 @end

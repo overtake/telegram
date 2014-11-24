@@ -10,7 +10,7 @@
 #import "FileUtils.h"
 @implementation DownloadAudioItem
 
--(id)initWithObject:(TGMessage *)object {
+-(id)initWithObject:(TLMessage *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
         self.n_id = object.media.audio.n_id;
@@ -22,8 +22,8 @@
     return self;
 }
 
--(TGInputFileLocation *)input {
-    TGMessage *message = self.object;
+-(TLInputFileLocation *)input {
+    TLMessage *message = self.object;
     if(self.isEncrypted)
         return [TL_inputEncryptedFileLocation createWithN_id:message.media.audio.n_id access_hash:message.media.audio.access_hash];
     

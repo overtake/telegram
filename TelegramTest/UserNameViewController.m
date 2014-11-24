@@ -121,7 +121,7 @@
 
 
 - (void)performEnter {
-    if(self.isRemoteChecked && ![[UsersManager currentUser].user_name isEqualToString:self.checkedUserName]) {
+    if(self.isRemoteChecked && ![[UsersManager currentUser].username isEqualToString:self.checkedUserName]) {
         [self.textView.textView resignFirstResponder];
         self.controller.doneButton.tapBlock();
     }
@@ -129,7 +129,7 @@
 
 -(void)updateSaveButton {
     
-    if([[UsersManager currentUser].user_name isEqualToString:self.textView.textView.stringValue]) {
+    if([[UsersManager currentUser].username isEqualToString:self.textView.textView.stringValue]) {
         [self.controller.doneButton setDisable:YES];
         
         return;
@@ -176,7 +176,7 @@
 
 -(void)updateChecker {
     
-    if([self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].user_name]) {
+    if([self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].username]) {
         [self.progressView setHidden:YES];
         [self.progressView stopAnimation:self];
         [self.successView setHidden:NO];
@@ -188,7 +188,7 @@
         if(!self.timer) {
             
             self.isSuccessChecked = NO;
-            self.isRemoteChecked = [self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].user_name];
+            self.isRemoteChecked = [self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].username];
             [self updateSaveButton];
             
             self.timer = [[TGTimer alloc] initWithTimeout:0.2 repeat:NO completion:^{
@@ -308,7 +308,7 @@
         
         
         [strongSelf showModalProgress];
-        [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TGUser *user) {
+        [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TLUser *user) {
             
             [strongSelf hideModalProgress];
             
@@ -342,7 +342,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [((UserNameViewContainer *)self.view).textView.textView setStringValue:[UsersManager currentUser].user_name];
+    [((UserNameViewContainer *)self.view).textView.textView setStringValue:[UsersManager currentUser].username];
     [((UserNameViewContainer *)self.view) controlTextDidChange:nil];
     
 }

@@ -13,12 +13,12 @@
 #import "SearchTableCell.h"
 #import "Telegram.h"
 #import "DialogTableView.h"
-#import "TGEncryptedChatCategory.h"
-#import "TGEncryptedChat+Extensions.h"
+#import "TLEncryptedChatCategory.h"
+#import "TLEncryptedChat+Extensions.h"
 #import "DialogTableItemView.h"
 #import "SearchLoadMoreCell.h"
 #import "HackUtils.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "SearchMessageCellView.h"
 #import "SearchMessageTableItem.h"
 typedef enum {
@@ -657,7 +657,7 @@ static int insertCount = 3;
             //Chats
             NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@))", searchString, transform, transformReverse]];
         
-            for(TGChat *chat in searchChats) {
+            for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
                 if(dialog && !dialog.fake)
                     [dialogs addObject:dialog];
@@ -668,7 +668,7 @@ static int insertCount = 3;
             //Users
             NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) ",searchString, searchString, transform, transform, transformReverse, transformReverse]];
             
-            searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TGUser *obj1, TGUser *obj2) {
+            searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
                 if(obj1.lastSeenTime > obj2.lastSeenTime) {
                     return NSOrderedAscending;
                 } else {
@@ -676,7 +676,7 @@ static int insertCount = 3;
                 }
             }];
             
-            for(TGUser *user in searchUsers) {
+            for(TLUser *user in searchUsers) {
                 TL_conversation *dialog = user.dialog;
                 if(dialog && !dialog.fake)
                     [dialogs addObject:dialog];
@@ -728,10 +728,10 @@ static int insertCount = 3;
                 searchParams.users = [NSMutableArray array];
                 searchParams.contacts = [NSMutableArray array];
                 
-                for(TGUser *user in searchUsers) {
+                for(TLUser *user in searchUsers) {
                     id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                     
-                    [(user.type == TGUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
+                    [(user.type == TLUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
                 }
                 
             }
@@ -742,7 +742,7 @@ static int insertCount = 3;
                 
                 NSArray *filtred = [UsersManager findUsersByName:searchString];
                 
-                [filtred enumerateObjectsUsingBlock:^(TGUser *obj, NSUInteger idx, BOOL *stop) {
+                [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
                     
                     SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
                     

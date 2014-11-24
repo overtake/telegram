@@ -1,14 +1,14 @@
 //
-//  TGUserStatusCategory.m
+//  TLUserStatusCategory.m
 //  Telegram
 //
 //  Created by Dmitry Kondratyev on 6/19/14.
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TGUserStatusCategory.h"
+#import "TLUserStatusCategory.h"
 
-@implementation TGUserStatus (Category)
+@implementation TLUserStatus (Category)
 
 - (int)lastSeenTime {
     if([self isKindOfClass:[TL_userStatusEmpty class]])

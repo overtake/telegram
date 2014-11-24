@@ -14,10 +14,10 @@
 
 
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation;
--(void)show:(PreviewObject *)item user:(TGUser *)user;
+-(void)show:(PreviewObject *)item user:(TLUser *)user;
 -(void)show:(PreviewObject *)item;
 
--(void)prepareUser:(TGUser *)user;
+-(void)prepareUser:(TLUser *)user;
 
 
 +(id<TGPVBehavior>)behavior;

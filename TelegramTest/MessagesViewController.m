@@ -9,12 +9,10 @@
 
 #import "MessagesViewController.h"
 #import "MessageTableCellGifView.h"
-#import "TGDialog+Extensions.h"
 #import "NSString+Size.h"
 #import "MessageSender.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "MessagesBottomView.h"
-#import "TGMessage+Extensions.h"
 #import "CMath.h"
 #import "ImageCache.h"
 #import "SpacemanBlocks.h"
@@ -33,7 +31,6 @@
 #import "MessageTypingView.h"
 #import "MessageTableElements.h"
 
-#import "TGDialog+Extensions.h"
 #import "FileUtils.h"
 #import "SelfDestructionController.h"
 #import "MessageTableNavigationTitleView.h"
@@ -284,7 +281,7 @@
     [self.normalNavigationCenterView setTapBlock:^{
         switch (strongSelf.dialog.type) {
             case DialogTypeChat:
-                if(strongSelf.dialog.chat.type == TGChatTypeNormal && !strongSelf.dialog.chat.left)
+                if(strongSelf.dialog.chat.type == TLChatTypeNormal && !strongSelf.dialog.chat.left)
                     [[Telegram rightViewController] showChatInfoPage:strongSelf.dialog.chat];
                 break;
                 
@@ -316,7 +313,7 @@
         NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
         if(strongSelf.dialog.type == DialogTypeChat) {
             
-            if(strongSelf.dialog.chat.type == TGChatTypeNormal) {
+            if(strongSelf.dialog.chat.type == TLChatTypeNormal) {
                 [theMenu addItem:[NSMenuItem menuItemWithTitle:strongSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
                     [strongSelf leaveOrReturn:strongSelf.dialog];
                 }]];
@@ -663,7 +660,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)updateChat:(NSNotification *)notify {
-    TGChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
+    TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
     
     if(self.dialog.type == DialogTypeChat && self.dialog.peer.chat_id == chat.n_id) {
         [self.bottomView setStateBottom:MessagesBottomViewNormalState];
@@ -725,13 +722,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(self.dialog.type == DialogTypeChat) {
-        if(self.dialog.chat.type == TGChatTypeNormal && !self.dialog.chat.left)
+        if(self.dialog.chat.type == TLChatTypeNormal && !self.dialog.chat.left)
             [[Telegram rightViewController] showChatInfoPage:self.dialog.chat];
     } else if(self.dialog.type == DialogTypeSecretChat) {
-        TGUser *user = self.dialog.encryptedChat.peerUser;
+        TLUser *user = self.dialog.encryptedChat.peerUser;
         [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.dialog sender:self];
     } else {
-        TGUser *user = self.dialog.user;
+        TLUser *user = self.dialog.user;
         [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.dialog sender:self];
     }
 }
@@ -894,7 +891,7 @@ static NSTextAttachment *headerMediaIcon() {
 //        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
 //        if(weakSelf.dialog.type == DialogTypeChat) {
 //            
-//            if(weakSelf.dialog.chat.type == TGChatTypeNormal) {
+//            if(weakSelf.dialog.chat.type == TLChatTypeNormal) {
 //                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
 //                    [weakSelf leaveOrReturn:weakSelf.dialog];
 //                }]];
@@ -1248,7 +1245,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         id request = nil;
         if(self.dialog.type == DialogTypeSecretChat) {
-            request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TGInputEncryptedChat *)[self.dialog.encryptedChat inputPeer] typing:YES];
+            request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[self.dialog.encryptedChat inputPeer] typing:YES];
         } else {
             request = [TLAPI_messages_setTyping createWithPeer:[self.dialog inputPeer]action:[TL_sendMessageTypingAction create]];
         }
@@ -2002,7 +1999,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input{
     NSMutableArray *array = [NSMutableArray array];
-    for(TGMessage *message in input) {
+    for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
             [item makeSizeByWidth:self.table.containerSize.width];
@@ -2358,7 +2355,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
-- (void)shareContact:(TGUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
+- (void)shareContact:(TLUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
     
     if(!self.dialog.canSendMessage) return;
     
@@ -2656,7 +2653,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)leaveOrReturn:(TL_conversation *)dialog {
-    TGInputUser *input = [[UsersManager currentUser] inputUser];
+    TLInputUser *input = [[UsersManager currentUser] inputUser];
     
     id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
     
@@ -2699,7 +2696,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TGChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();
@@ -2707,7 +2704,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }];
     
-    NSString *buttonText = dialog.type == DialogTypeChat && dialog.chat.type == TGChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil);
+    NSString *buttonText = dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil);
     
     [alert addButtonWithTitle:buttonText];
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];

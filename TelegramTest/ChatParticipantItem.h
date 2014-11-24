@@ -10,11 +10,11 @@
 
 @interface ChatParticipantItem : TMRowItem
 
-- (id)initWithObject:(TGChatParticipant *)object;
+- (id)initWithObject:(TLChatParticipant *)object;
 
-- (id)initWithUser:(TGUser *)user;
+- (id)initWithUser:(TLUser *)user;
 
-@property (nonatomic, strong) TGUser *user;
+@property (nonatomic, strong) TLUser *user;
 @property (nonatomic, strong) ChatInfoViewController *viewController;
 
 @property (nonatomic) BOOL isBlocking;

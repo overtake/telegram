@@ -7,9 +7,9 @@
 //
 
 #import "TL_conversation.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 @implementation TL_conversation
-+(TL_conversation *)createWithPeer:(TGPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TGPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date {
++(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date {
     TL_conversation *dialog = [[TL_conversation alloc] init];
     dialog.peer = peer;
     dialog.top_message = top_message;
@@ -26,11 +26,11 @@
 }
 
 -(void)serialize:(SerializedData*)stream {
-    [[TLClassStore sharedManager] TLSerialize:self.peer stream:stream];
+    [TLClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.top_message];
 	[stream writeInt:self.unread_count];
     [stream writeInt:self.last_message_date];
-    [[TLClassStore sharedManager] TLSerialize:self.notify_settings stream:stream];
+    [TLClassStore TLSerialize:self.notify_settings stream:stream];
     [stream writeInt:self.last_marked_message];
     [stream writeInt:self.top_message_fake];
     [stream writeInt:self.last_marked_date];
@@ -39,11 +39,11 @@
 
 }
 -(void)unserialize:(SerializedData*)stream {
-    self.peer = [[TLClassStore sharedManager] TLDeserialize:stream];
+    self.peer = [TLClassStore TLDeserialize:stream];
     self.top_message = [stream readInt];
 	self.unread_count = [stream readInt];
 	self.last_message_date = [stream readInt];
-    self.notify_settings = [[TLClassStore sharedManager] TLDeserialize:stream];
+    self.notify_settings = [TLClassStore TLDeserialize:stream];
     self.last_marked_message = [stream readInt];
     self.top_message_fake = [stream readInt];
     self.last_marked_date = [stream readInt];
@@ -63,7 +63,7 @@
     }
     
     if(self.type == DialogTypeChat) {
-        return !(self.chat.type != TGChatTypeNormal || self.chat.left);
+        return !(self.chat.type != TLChatTypeNormal || self.chat.left);
     }
     
     return YES;
@@ -84,14 +84,14 @@
         
         if(params.state == EncryptedWaitOnline) {
             NSString *format = NSLocalizedString(@"MessageAction.Secret.WaitingToGetOnline", nil);
-            TGUser *user = self.encryptedChat.peerUser;
+            TLUser *user = self.encryptedChat.peerUser;
             return [NSString stringWithFormat:format, user.first_name ? user.first_name : user.dialogFullName];
         }
         
     }
     
     if(self.type == DialogTypeChat) {
-        if(self.chat.type == TGChatTypeForbidden) {
+        if(self.chat.type == TLChatTypeForbidden) {
             return NSLocalizedString(@"Conversation.Action.YouKickedGroup", nil);
         }
         
@@ -189,9 +189,106 @@
     return self.peer.peer_id;
 }
 
-- (void)updateNotifySettings:(TGPeerNotifySettings *)notify_settings {
+- (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings {
     self.notify_settings = notify_settings;
     [Notification perform:PUSHNOTIFICATION_UPDATE data:@{KEY_PEER_ID: @(self.peer.peer_id), KEY_IS_MUTE: @(self.isMute)}];
+}
+
+
+-(id)inputPeer {
+    id input;
+    if(self.peer.chat_id != 0) {
+        // if([self.peer isKindOfClass:[TL_peerSecret class]]) {
+        //  TLEncryptedChat *chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
+        //}
+        input = [TL_inputPeerChat createWithChat_id:self.peer.chat_id];
+    } else {
+        TLUser *user = [[UsersManager sharedManager] find:self.peer.user_id];
+        input = [user inputPeer];
+    }
+    if(!input)
+        return [TL_inputPeerEmpty create];
+    return input;
+}
+
+-(void)setUnreadCount:(int)unread_count {
+    self.unread_count = unread_count  < 0 ? 0 : unread_count;
+    
+}
+
+-(void)addUnread {
+    self.unread_count++;
+}
+
+
+-(void)subUnread {
+    self.unread_count = self.unread_count-1 < 0 ? 0 : self.unread_count-1;
+}
+
+-(NSPredicate *)predicateForPeer {
+    //    int peer_id = ;
+    //    DLog(@"")
+    //    int a = 1;
+    NSPredicate* pred = [NSPredicate predicateWithFormat:@"peer.peer_id == %d",self.peer.peer_id];
+    return pred;
+}
+
+
+
+
+
+
+static void *kType;
+
+- (DialogType) type {
+    NSNumber *typeNumber = objc_getAssociatedObject(self, &kType);
+    if(typeNumber) {
+        return [typeNumber intValue];
+    } else {
+        DialogType type = DialogTypeUser;
+        if(self.peer.chat_id) {
+            if(self.peer.class == [TL_peerChat class])
+                type = DialogTypeChat;
+            else if(self.peer.class == [TL_peerSecret class])
+                type = DialogTypeSecretChat;
+            else
+                type = DialogTypeBroadcast;
+            
+            
+        }
+        
+        objc_setAssociatedObject(self, kType, [NSNumber numberWithInt:type], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return type;
+    }
+}
+
+
+
+- (NSUInteger) cacheHash {
+    return [[self cacheKey] hash];
+}
+
+- (NSString *)cacheKey {
+    return [NSString stringWithFormat:@"%d_%d_%d", self.type, self.peer.chat_id, self.peer.user_id];
+}
+
+- (TLChat *) chat {
+    if(self.peer.chat_id) {
+        return [[ChatsManager sharedManager] find:self.peer.chat_id];
+    }
+    return nil;
+}
+
+
+- (TL_encryptedChat *) encryptedChat {
+    return (TL_encryptedChat *)[self chat];
+}
+
+- (TLUser *) user {
+    if(self.peer.user_id) {
+        return  [[UsersManager sharedManager] find:self.peer.user_id];
+    }
+    return nil;
 }
 
 @end

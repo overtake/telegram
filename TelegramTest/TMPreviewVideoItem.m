@@ -8,7 +8,7 @@
 
 #import "TMPreviewVideoItem.h"
 #import "FileUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "ImageCache.h"
 
 @implementation TMPreviewVideoItem
@@ -35,7 +35,7 @@
 
 -(NSImage *)previewImage {
     
-//    TGPhotoSize *thumb = ((TL_messageMediaVideo *)_previewObject.media).video.thumb;
+//    TLPhotoSize *thumb = ((TL_messageMediaVideo *)_previewObject.media).video.thumb;
 //    
 //    if([thumb isKindOfClass:[TL_photoCachedSize class]]) {
 //        _previewImage = [[NSImage alloc] initWithData:thumb.bytes];

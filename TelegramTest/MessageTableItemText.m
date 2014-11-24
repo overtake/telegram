@@ -22,7 +22,7 @@
 
 @implementation MessageTableItemText
 
-- (id) initWithObject:(TGMessage *)object {
+- (id) initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
@@ -73,7 +73,7 @@
     if([object isKindOfClass:[TL_messageForwarded class]] || [object isKindOfClass:[TL_localMessageForwarded class]] ) {
         self.forwardAttributedString = [[NSMutableAttributedString alloc] init];
         NSRange range1 = [self.forwardAttributedString appendString:@"Message.ForwardedFrom" withColor:NSColorFromRGB(0x6da2cb)];
-        TGUser *user = [[UsersManager sharedManager] find:object.fwd_from_id];
+        TLUser *user = [[UsersManager sharedManager] find:object.fwd_from_id];
         NSRange range2 = [self.forwardAttributedString appendString:user.fullName withColor:NSColorFromRGB(0x57a4e1)];
         
         [self.forwardAttributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:range2];

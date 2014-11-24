@@ -18,13 +18,13 @@
 @property (nonatomic, strong) SenderItem *messageSender;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
-@property (nonatomic, strong) TGUser *user;
+@property (nonatomic, strong) TLUser *user;
 @property (nonatomic, strong) NSString *headerName;
 @property (nonatomic, strong) NSColor *headerColor;
 @property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
 @property (nonatomic, strong) NSString *dateStr;
 
-@property (nonatomic, strong) TGUser *fwd_user;
+@property (nonatomic, strong) TLUser *fwd_user;
 
 @property (nonatomic) BOOL isForwadedMessage;
 @property (nonatomic) BOOL isSelected;

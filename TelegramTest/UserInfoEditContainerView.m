@@ -80,7 +80,7 @@
 }
 
 - (void)buildPage {
-    if(self.type != UserInfoViewControllerAddContact && self.user.type != TGUserTypeSelf) {
+    if(self.type != UserInfoViewControllerAddContact && self.user.type != TLUserTypeSelf) {
         [self.clearChatHistoryButton setHidden:NO];
         [self.deleteContactButton setHidden:NO];
 
@@ -112,7 +112,7 @@
 }
 
 - (void)userBlockChanged:(NSNotification *)notify {
-    TGContact *user = notify.userInfo[KEY_USER];
+    TLContact *user = notify.userInfo[KEY_USER];
     
     if(user.user_id == self.user.n_id) {
         [self.blockContactButton.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"User.Unlock", nil) : NSLocalizedString(@"User.Block", nil)];
@@ -121,7 +121,7 @@
 }
 
 - (void)userNameChangedNotification:(NSNotification *)notify {
-    TGUser *user = [notify.userInfo objectForKey:KEY_USER];
+    TLUser *user = [notify.userInfo objectForKey:KEY_USER];
     if(user.n_id == self.user.n_id) {
         [self setUser:user];
     }
@@ -143,13 +143,13 @@
     [self setUser:self->_user];
 }
 
-- (void)setUser:(TGUser *)user {
+- (void)setUser:(TLUser *)user {
     self->_user = user;
     
     [self.blockContactButton.textButton setStringValue:user.isBlocked ? NSLocalizedString(@"User.Unlock", nil) : NSLocalizedString(@"User.Block", nil)];
     [self.blockContactButton.textButton sizeToFit];
     
-    [self.blockContactButton setHidden:user.type == TGUserTypeSelf];
+    [self.blockContactButton setHidden:user.type == TLUserTypeSelf];
     
     [self.firstNameView.textView setStringValue:user.first_name ? user.first_name : @""];
     [self.lastNameView.textView setStringValue:user.last_name ? user.last_name : @""];

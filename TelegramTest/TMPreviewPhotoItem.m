@@ -8,7 +8,7 @@
 
 #import "TMPreviewPhotoItem.h"
 #import "FileUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
 #import "TMMediaController.h"
 #import "ImageCache.h"

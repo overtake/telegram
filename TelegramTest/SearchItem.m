@@ -30,7 +30,7 @@
     [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
 }
 
-- (id)initWithUserItem:(TGUser*)user searchString:(NSString*)searchString {
+- (id)initWithUserItem:(TLUser*)user searchString:(NSString*)searchString {
     self = [super init];
     if(self) {
         [self initialize];
@@ -51,7 +51,7 @@
 }
 
 
-- (id)initWithGlobalItem:(TGUser*)user searchString:(NSString *)searchString {
+- (id)initWithGlobalItem:(TLUser*)user searchString:(NSString *)searchString {
     self = [super init];
     if(self) {
         [self initialize];
@@ -68,7 +68,7 @@
         
         
         
-        [self.status appendString:[NSString stringWithFormat:@"@%@",user.user_name] withColor:NSColorFromRGB(0x999999)];
+        [self.status appendString:[NSString stringWithFormat:@"@%@",user.username] withColor:NSColorFromRGB(0x999999)];
         
         [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x999999)];
         
@@ -78,7 +78,7 @@
     return self;
 }
 
-- (id)initWithChatItem:(TGChat *)chat searchString:(NSString *)searchString {
+- (id)initWithChatItem:(TLChat *)chat searchString:(NSString *)searchString {
     self = [super init];
     if(self) {
         [self initialize];
@@ -119,7 +119,7 @@
     return self;
 }
 
-- (id)initWithMessageItem:(TGMessage *)message searchString:(NSString *)searchString {
+- (id)initWithMessageItem:(TL_localMessage *)message searchString:(NSString *)searchString {
     self = [super init];
     if(self) {
         [self initialize];
@@ -127,7 +127,7 @@
         self.type = SearchItemMessage;
         self.message = message;
         
-        self.dialog = message.dialog;
+        self.dialog = message.conversation;
         
         
         
@@ -165,7 +165,7 @@
         
         if(self.dialog.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
             
-            TGUser *user = [[UsersManager sharedManager] find:self.message.from_id];
+            TLUser *user = [[UsersManager sharedManager] find:self.message.from_id];
             
             NSString *name = user.n_id == [UsersManager currentUserId] ? NSLocalizedString(@"Profile.You", nil) : user.dialogFullName;
             
@@ -211,10 +211,10 @@
     } else {
         if([object isKindOfClass:[TL_conversation class]]) {
             hashStr = [Notification notificationNameByDialog:(TL_conversation *)object action:@"hash"];
-        } else if([object isKindOfClass:[TGUser class]]) {
-            hashStr = [NSString stringWithFormat:@"user_%d", ((TGUser *)object).n_id];
-        } else if([object isKindOfClass:[TGChat class]]) {
-            hashStr = [NSString stringWithFormat:@"chat_%d", ((TGChat *)object).n_id];
+        } else if([object isKindOfClass:[TLUser class]]) {
+            hashStr = [NSString stringWithFormat:@"user_%d", ((TLUser *)object).n_id];
+        } else if([object isKindOfClass:[TLChat class]]) {
+            hashStr = [NSString stringWithFormat:@"chat_%d", ((TLChat *)object).n_id];
         }
     }
  

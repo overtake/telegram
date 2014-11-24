@@ -13,12 +13,12 @@
 
 +(RPCRequest *)sendStatedMessage:(id)request successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler;
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TGMessageMedia *)media dialog:(TL_conversation *)dialog;
++(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media dialog:(TL_conversation *)dialog;
 +(int)getFutureMessageId;
 +(int)getFakeMessageId;
 +(void)drop;
-+(void)insertEncryptedServiceMessage:(NSString *)title chat:(TGEncryptedChat *)chat;
-+(void)startEncryptedChat:(TGUser *)user callback:(dispatch_block_t)callback;
++(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat;
++(void)startEncryptedChat:(TLUser *)user callback:(dispatch_block_t)callback;
 +(RPCRequest *)setTTL:(int)ttl toConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 +(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
 +(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;

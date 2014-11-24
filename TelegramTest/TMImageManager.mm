@@ -41,11 +41,11 @@
     delete self.cacheDisk;
 }
 
-- (NSImage *) getImageFromCache:(TGFileLocation*)location {
+- (NSImage *) getImageFromCache:(TLFileLocation*)location {
     return [self getImageFromCache:location round:0];
 }
 
-- (NSImage *) getImageFromCache:(TGFileLocation*)location round:(int)roundSize {
+- (NSImage *) getImageFromCache:(TLFileLocation*)location round:(int)roundSize {
     __block NSImage *imageCache = nil;
     runOnMainQueueWithoutDeadlocking(^{
         

@@ -12,7 +12,7 @@
 
 
 
-+ (TL_secretServiceMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date action:(TGMessageAction *)action fakeId:(int)fakeId randomId:(long)randomId out_seq_no:(int)out_seq_no dstate:(DeliveryState)dstate {
++ (TL_secretServiceMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id date:(int)date action:(TLMessageAction *)action fakeId:(int)fakeId randomId:(long)randomId out_seq_no:(int)out_seq_no dstate:(DeliveryState)dstate {
     TL_secretServiceMessage *msg = [[TL_secretServiceMessage alloc] init];
     msg.flags = flags;
     msg.n_id = n_id == 0 ? fakeId : n_id;
@@ -31,9 +31,9 @@
     [stream writeInt:self.flags];
     [stream writeInt:self.n_id];
     [stream writeInt:self.from_id];
-    [[TLClassStore sharedManager] TLSerialize:self.to_id stream:stream];
+    [TLClassStore TLSerialize:self.to_id stream:stream];
     [stream writeInt:self.date];
-    [[TLClassStore sharedManager] TLSerialize:self.action stream:stream];
+    [TLClassStore TLSerialize:self.action stream:stream];
     [stream writeInt:self.fakeId];
     [stream writeInt:self.out_seq_no];
     [stream writeInt:self.dstate];
@@ -42,9 +42,9 @@
     self.flags = [stream readInt];
     self.n_id = [stream readInt];
     self.from_id = [stream readInt];
-    self.to_id = [[TLClassStore sharedManager] TLDeserialize:stream];
+    self.to_id = [TLClassStore TLDeserialize:stream];
     self.date = [stream readInt];
-    self.action = [[TLClassStore sharedManager] TLDeserialize:stream];
+    self.action = [TLClassStore TLDeserialize:stream];
     self.fakeId = [stream readInt];
     self.out_seq_no = [stream readInt];
     self.dstate = [stream readInt];

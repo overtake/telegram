@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
-@property (nonatomic, strong) TGUser *contactUser;
+@property (nonatomic, strong) TLUser *contactUser;
 @property (nonatomic, strong) NSString *contactText;
 @property (nonatomic, strong) NSString *contactName;
 @property (nonatomic, strong) NSAttributedString *contactNumber;

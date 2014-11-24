@@ -1,5 +1,5 @@
 //
-//  TGContactCategory.h
+//  TLContactCategory.h
 //  Telegram
 //
 //  Created by Dmitry Kondratyev on 6/19/14.
@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TGContact (Category)
+@interface TLContact (Category)
 
-- (TGUser *)user;
+- (TLUser *)user;
 
 @end

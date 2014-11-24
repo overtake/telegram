@@ -8,9 +8,8 @@
 
 #import "TMSharedMediaButton.h"
 #import "TMMediaController.h"
-#import "TGChatCategory.h"
-#import "TGPeer+Extensions.h"
-#import "TGDialog+Extensions.h"
+#import "TLChatCategory.h"
+#import "TLPeer+Extensions.h"
 @interface TMSharedMediaButton ()
 @property (nonatomic,strong) TMTextField *field;
 @property (nonatomic,assign) int count;
@@ -112,7 +111,7 @@ static NSMutableDictionary *cache;
     
 }
 
--(void)loadCount:(TGInputPeer *)input peer_id:(int)peer_id {
+-(void)loadCount:(TLInputPeer *)input peer_id:(int)peer_id {
     
     [self setLocked:NO];
     

@@ -12,7 +12,7 @@
 #import "SelfDestructionController.h"
 #import "TGUpdateContainer.h"
 #import "AppDelegate.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "PreviewObject.h"
 #import "SecretChatAccepter.h"
 #import "MessagesUtils.h"
@@ -76,7 +76,7 @@ static NSString *kUpdateState = @"kUpdateState";
     int stateQts = 0;
     
     
-    for(TGUpdate *update in updates) {
+    for(TLUpdate *update in updates) {
         if ([update date] > stateDate)
             stateDate = [update date];
         
@@ -124,7 +124,7 @@ static NSString *kUpdateState = @"kUpdateState";
             
             [SharedManager proccessGlobalResponse:update];
             
-            for (TGUpdate *one in combined.updates) {
+            for (TLUpdate *one in combined.updates) {
                 [self proccessUpdate:one];
             }
             
@@ -305,7 +305,7 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([container.update isKindOfClass:[NSArray class]]) {
-        for (TGUpdate *update in container.update) {
+        for (TLUpdate *update in container.update) {
             [self proccessUpdate:update];
         }
     }
@@ -320,7 +320,7 @@ static NSString *kUpdateState = @"kUpdateState";
     [self proccessUpdate:shortUpdate.update];
 }
 
--(void)proccessUpdate:(TGUpdate *)update {
+-(void)proccessUpdate:(TLUpdate *)update {
     
     
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
@@ -349,12 +349,12 @@ static NSString *kUpdateState = @"kUpdateState";
     if([update isKindOfClass:[TL_updateUserName class]]) {
         
         
-        TGUser *user = [[UsersManager sharedManager] find:update.user_id];
+        TLUser *user = [[UsersManager sharedManager] find:update.user_id];
         
         if(user) {
             user.first_name = update.first_name;
             user.last_name = update.last_name;
-            user.user_name = update.user_name;
+            user.username = update.username;
             
             [user rebuildNames];
             [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:user}];
@@ -372,7 +372,7 @@ static NSString *kUpdateState = @"kUpdateState";
         TL_updateServiceNotification *updateNotification = (TL_updateServiceNotification *)update;
         
         TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-        TGUser *user = [[UsersManager sharedManager] find:777000];
+        TLUser *user = [[UsersManager sharedManager] find:777000];
         if(!conversation) {
             conversation = [[DialogsManager sharedManager] createDialogForUser:user];
             [conversation save];
@@ -406,9 +406,9 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([update isKindOfClass:[TL_updateChatParticipants class]]) {
-        TGChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
+        TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
         
-        TGChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
+        TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
         if(!fullChat) {
             [[FullChatManager sharedManager] loadIfNeed:chatParticipants.chat_id];
             return;
@@ -508,7 +508,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
         
-        [_encryptedUpdates proccessUpdate:[update encrypted_message]];
+        [_encryptedUpdates proccessUpdate:[update message]];
         
 
        
@@ -524,7 +524,7 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([update isKindOfClass:[TL_updateUserPhoto class]]) {
-        TGUser *user = [[UsersManager sharedManager] find:update.user_id];
+        TLUser *user = [[UsersManager sharedManager] find:update.user_id];
         user.photo = [update photo];
         
         if(user) {
@@ -566,7 +566,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         
         TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-        TGUser *user = [[UsersManager sharedManager] find:777000];
+        TLUser *user = [[UsersManager sharedManager] find:777000];
         if(!conversation) {
             conversation = [[DialogsManager sharedManager] createDialogForUser:user];
             [conversation save];
@@ -585,7 +585,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updateContactRegistered class]]) {
         
-        TGUser *user = [[UsersManager sharedManager] find:[update user_id]];
+        TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
         
         NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
         
@@ -687,7 +687,7 @@ static NSString *kUpdateState = @"kUpdateState";
         }
         
         
-        TGupdates_State * intstate;
+        TLupdates_State * intstate;
         if([response isKindOfClass:[TL_updates_differenceSlice class]]) {
             intstate = [response intermediate_state];
             
@@ -699,7 +699,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         
         for (TL_encryptedMessage *enmsg in [updates n_encrypted_messages]) {
-            TGMessage *msg = [MessagesManager defaultMessage:enmsg];
+            TLMessage *msg = [MessagesManager defaultMessage:enmsg];
             if(msg) [[updates n_messages] addObject:msg];
         }
         
@@ -758,7 +758,7 @@ static NSString *kUpdateState = @"kUpdateState";
         [SharedManager proccessGlobalResponse:updates];
         
         
-        for (TGUpdate *update in [updates other_updates]) {
+        for (TLUpdate *update in [updates other_updates]) {
             [self proccessUpdate:update];
         }
         

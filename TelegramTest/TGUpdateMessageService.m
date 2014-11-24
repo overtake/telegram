@@ -128,7 +128,7 @@
 
 - (void)mtProto:(MTProto *)__unused mtProto receivedMessage:(MTIncomingMessage *)incomingMessage
 {
-    if ([incomingMessage.body isKindOfClass:[TGUpdates class]])
+    if ([incomingMessage.body isKindOfClass:[TLUpdates class]])
         [self addMessageToQueueAndScheduleProcessing:incomingMessage];
     
 
@@ -184,7 +184,7 @@
     if([incomingMessage.body isKindOfClass:[TL_rpc_result class]]) {
         TL_rpc_result *rpc = incomingMessage.body;
         if([[rpc result] isKindOfClass:[TL_gzip_packed class]]) {
-            rpc.result = [[TLClassStore sharedManager] deserialize:[[rpc.result packed_data] gzipInflate]];
+            rpc.result = [TLClassStore deserialize:[[rpc.result packed_data] gzipInflate]];
         }
         
         if([[rpc result] isKindOfClass:[TL_messages_statedMessage class]] ||

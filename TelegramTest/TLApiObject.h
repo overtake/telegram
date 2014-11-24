@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface TLApiObject : NSObject
-- (NSData *)getData:(BOOL)isFirstRequest;
+- (NSData*)getData;
 @end

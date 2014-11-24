@@ -8,8 +8,7 @@
 //
 
 #import "Storage.h"
-#import "TGMessage+Extensions.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "SSKeychain.h"
 #import "SSKeychainQuery.h"
 #import "Crypto.h"
@@ -276,7 +275,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         if(results) {
             while ([results next]) {
-                TGMessage *msg = [[TLClassStore sharedManager] deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
+                TLMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
                 [messages addObject:msg];
             }
         }
@@ -296,7 +295,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         id file = nil;
         
         if([result next]) {
-            file = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            file = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
         }
         [result close];
         
@@ -317,7 +316,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select serialized from files where hash = ?", pathHash];
         
         if([result next]) {
-            file = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            file = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
         }
         [result close];
     }];
@@ -327,11 +326,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [[TLClassStore sharedManager] serialize:file isCacheSerialize:NO]];
+        [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO]];
     }];
 }
 
--(void)messages:(TGPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
+-(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
     
     int peer_id = [peer peer_id];
     [queue inDatabase:^(FMDatabase *db) {
@@ -345,7 +344,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TGMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -390,7 +389,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
        
         while ([result next]) {
-            TL_localMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TL_localMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -404,15 +403,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(TGMessage *)messageById:(int)msgId {
-    __block TGMessage *message;
+-(TLMessage *)messageById:(int)msgId {
+    __block TLMessage *message;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where n_id = %d",msgId];
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         while ([result next]) {
-            message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             message.flags = [result intForColumn:@"flags"];
         }
         [result close];
@@ -439,7 +438,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TGMessage *msg = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -469,7 +468,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 
--(void)lastMessageForPeer:(TGPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler {
+-(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler {
     
     int peer_id = [peer peer_id];
     [queue inDatabase:^(FMDatabase *db) {
@@ -488,7 +487,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             
             if([result next]) {
-                message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
                 message.flags = [result intForColumn:@"flags"];
             }
             
@@ -534,7 +533,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             if([obj isKindOfClass:[TL_destructMessage class]])
                 destructTime = [(TL_destructMessage *)obj destruction_time];
             
-             [db executeUpdate:@"update messages set message_text = ?, flags = ?, from_id = ?, peer_id = ?, date = ?, serialized = ?, random_id = ?, destruct_time = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",obj.message,@(obj.flags),@(obj.from_id),@(obj.peer_id),@(obj.date),[[TLClassStore sharedManager] serialize:obj],@(obj.randomId), @(destructTime), @(obj.filterType),@(obj.fakeId),@(obj.dstate),@(obj.n_id),nil];
+             [db executeUpdate:@"update messages set message_text = ?, flags = ?, from_id = ?, peer_id = ?, date = ?, serialized = ?, random_id = ?, destruct_time = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",obj.message,@(obj.flags),@(obj.from_id),@(obj.peer_id),@(obj.date),[TLClassStore serialize:obj],@(obj.randomId), @(destructTime), @(obj.filterType),@(obj.fakeId),@(obj.dstate),@(obj.n_id),nil];
             
         }];
     
@@ -542,7 +541,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(void)insertMessage:(TGMessage *)message completeHandler:(dispatch_block_t)completeHandler {
+-(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler {
     [self insertMessages:@[message] completeHandler:completeHandler];
 }
 
@@ -653,7 +652,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  @(message.from_id),
                  @(message.flags),
                  @(peer_id),
-                 [[TLClassStore sharedManager] serialize:message isCacheSerialize:NO],
+                 [TLClassStore serialize:message isCacheSerialize:NO],
                  @(destruct_time),
                  message.message,
                  @(mask),
@@ -698,7 +697,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
      @(dialog.last_message_date),
      @(dialog.unread_count),
      @(dialog.type),
-     [[TLClassStore sharedManager] serialize:dialog.notify_settings],
+     [TLClassStore serialize:dialog.notify_settings],
      @(dialog.last_marked_message),
      @(dialog.sync_message_id),
      @(dialog.last_marked_date),
@@ -721,14 +720,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
          NSMutableArray *chats = [[NSMutableArray alloc] init];
         FMResultSet *secretResult = [db executeQuery:@"select * from encrypted_chats"];
         while ([secretResult next]) {
-            [chats addObject:[[TLClassStore sharedManager] deserialize:[secretResult dataForColumn:@"serialized"]]];
+            [chats addObject:[TLClassStore deserialize:[secretResult dataForColumn:@"serialized"]]];
         }
         [secretResult close];
         
         
         FMResultSet *chatResult = [db executeQuery:@"select * from chats"];
         while ([chatResult next]) {
-            [chats addObject:[[TLClassStore sharedManager] deserialize:[chatResult dataForColumn:@"serialized"]]];
+            [chats addObject:[TLClassStore deserialize:[chatResult dataForColumn:@"serialized"]]];
         }
         
         [chatResult close];
@@ -745,7 +744,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         id serializedMessage =[[result resultDictionary] objectForKey:@"serialized_message"];
         TL_localMessage *message;
         if(![serializedMessage isKindOfClass:[NSNull class]]) {
-            message = [[TLClassStore sharedManager] deserialize:serializedMessage];
+            message = [TLClassStore deserialize:serializedMessage];
             message.flags = [result intForColumn:@"flags"];
             if(message)
                 [messages addObject:message];
@@ -768,7 +767,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         id notifyObject = [result dataForColumn:@"notify_settings"];
         
         if(notifyObject != nil && ![notifyObject isKindOfClass:[NSNull class]]) {
-            dialog.notify_settings = [[TLClassStore sharedManager] deserialize:notifyObject];
+            dialog.notify_settings = [TLClassStore deserialize:notifyObject];
         }
         
         dialog.unread_count = [result intForColumn:@"unread_count"];
@@ -783,7 +782,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }
 }
 
-- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TGDialog *dialog, TGMessage *message))completeHandler {
+- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TLDialog *dialog, TLMessage *message))completeHandler {
     [self searchDialogsByPeers:[NSArray arrayWithObject:@(peer)] needMessages:NO searchString:nil completeHandler:^(NSArray *dialogs, NSArray *messages, NSArray *searchMessages) {
         
         if(completeHandler) {
@@ -857,11 +856,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(void)insertChat:(TGChat *)chat completeHandler:(void (^)(BOOL))completeHandler {
+-(void)insertChat:(TLChat *)chat completeHandler:(void (^)(BOOL))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        BOOL result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [[TLClassStore sharedManager] serialize:chat]];
+        BOOL result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(result);
@@ -904,8 +903,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         __block BOOL result;
         //[db beginTransaction];
-        for (TGChat *chat in chats) {
-            result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [[TLClassStore sharedManager] serialize:chat]];
+        for (TLChat *chat in chats) {
+            result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
         }
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -923,7 +922,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         //[db beginTransaction];
       FMResultSet *result = [db executeQuery:@"select * from chats"];
         while ([result next]) {
-            TGChat *chat = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLChat *chat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             [chats addObject:chat];
         }
         [result close];
@@ -944,7 +943,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select * from users"];
         
         while ([result next]) {
-            TGUser *user = [[TLClassStore sharedManager] deserialize:[result dataForColumn:@"serialized"]];
+            TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
             [users addObject:user];
         }
@@ -960,15 +959,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
-- (void)insertUser:(TGUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
+- (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
     [self insertUsers:@[user] completeHandler:completeHandler];
 }
 
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
-        for (TGUser *user in users) {
-            [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [[TLClassStore sharedManager] serialize:user],@(user.lastSeenUpdate)];
+        for (TLUser *user in users) {
+            [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate)];
         }
         
         if(completeHandler) {
@@ -982,7 +981,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 
-- (void) insertContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler {
+- (void) insertContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler {
     
     
     [queue inDatabase:^(FMDatabase *db) {
@@ -996,7 +995,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
-- (void) removeContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler {
+- (void) removeContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"delete from contacts where user_id = ?", [NSNumber numberWithInt:contact.user_id]];
         [LoopingUtils runOnMainQueueAsync:^{
@@ -1009,7 +1008,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 - (void) replaceContacts:(NSArray *) contacts completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        for (TGContact *contact in contacts) {
+        for (TLContact *contact in contacts) {
             [db executeUpdate:@"insert or replace into contacts (user_id,mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id], [NSNumber numberWithBool:contact.mutual]];
         }
         //[db commit];
@@ -1025,7 +1024,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        for (TGContact *contact in contacts) {
+        for (TLContact *contact in contacts) {
             [db executeUpdate:@"insert or replace into contacts (user_id,mutual) values (?,?)",[NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]];
         }
         //[db commit];
@@ -1054,7 +1053,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *contacts = [[NSMutableArray alloc] init];
         FMResultSet *result = [db executeQuery:@"select * from contacts"];
         while ([result next]) {
-            TGContact *contact = [[TGContact alloc] init];
+            TLContact *contact = [[TLContact alloc] init];
             contact.user_id = [[[result resultDictionary] objectForKey:@"user_id"] intValue];
             contact.mutual = [[[result resultDictionary] objectForKey:@"mutual"] boolValue];
             [contacts addObject:contact];
@@ -1110,7 +1109,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         //[db beginTransaction];
         FMResultSet *result = [db executeQuery:@"select * from chats_full_new"];
         while ([result next]) {
-            TGChatFull *fullChat = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLChatFull *fullChat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             [chats addObject:fullChat];
         }
         [result close];
@@ -1122,9 +1121,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 }
 
--(void)insertFullChat:(TGChatFull *)fullChat completeHandler:(void (^)(void))completeHandler {
+-(void)insertFullChat:(TLChatFull *)fullChat completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into chats_full_new (n_id, last_update_time, serialized) values (?,?,?)",@(fullChat.n_id), @([[MTNetwork instance] getTime]), [[TLClassStore sharedManager]serialize:fullChat]];
+        [db executeUpdate:@"insert or replace into chats_full_new (n_id, last_update_time, serialized) values (?,?,?)",@(fullChat.n_id), @([[MTNetwork instance] getTime]), [TLClassStore serialize:fullChat]];
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler();
@@ -1132,13 +1131,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)chatFull:(int)n_id completeHandler:(void (^)(TGChatFull *chat))completeHandler {
+-(void)chatFull:(int)n_id completeHandler:(void (^)(TLChatFull *chat))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
         FMResultSet *result = [db executeQuery:@"select * from chats_full where n_id = ?",[NSNumber numberWithInt:n_id]];
         [result next];
         if([result resultDictionary]) {
-             TGChatFull *fullChat = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+             TLChatFull *fullChat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(completeHandler) completeHandler(fullChat);
             });
@@ -1170,7 +1169,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         while ([result next]) {
             int user_id = [[[result resultDictionary] objectForKey:@"user_id"] intValue];
             long client_id = [[[result resultDictionary] objectForKey:@"client_id"] longValue];
-            TGImportedContact *contact = [TL_importedContact createWithUser_id:user_id client_id:client_id];
+            TLImportedContact *contact = [TL_importedContact createWithUser_id:user_id client_id:client_id];
             [contacts setObject:contact forKey:[NSNumber numberWithLong:client_id]];
         }
         [result close];
@@ -1207,7 +1206,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)insertEncryptedChat:(TL_encryptedChat *)chat {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        [db executeUpdate:@"insert or replace into encrypted_chats (chat_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id],[[TLClassStore sharedManager] serialize:chat]];
+        [db executeUpdate:@"insert or replace into encrypted_chats (chat_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id],[TLClassStore serialize:chat]];
         //[db commit];
     }];
 }
@@ -1215,7 +1214,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertMedia:(TL_localMessage *)message {
     [queue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"insert or replace into media (message_id,peer_id,serialized,date) values (?,?,?,?)",@(message.n_id),@(message.peer_id),[[TLClassStore sharedManager] serialize:message],@([[MTNetwork instance] getTime])];
+            [db executeUpdate:@"insert or replace into media (message_id,peer_id,serialized,date) values (?,?,?,?)",@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime])];
     }];
 }
 
@@ -1230,9 +1229,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)addUserPhoto:(int)user_id media:(TGUserProfilePhoto *)photo {
+-(void)addUserPhoto:(int)user_id media:(TLUserProfilePhoto *)photo {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into user_photos (id,user_id,serialized,date) values (?,?,?,?)",@(photo.photo_id),@(user_id),[[TLClassStore sharedManager] serialize:photo],@([[MTNetwork instance] getTime])];
+        [db executeUpdate:@"insert or replace into user_photos (id,user_id,serialized,date) values (?,?,?,?)",@(photo.photo_id),@(user_id),[TLClassStore serialize:photo],@([[MTNetwork instance] getTime])];
     }];
 }
 
@@ -1251,7 +1250,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
          while ([result next]) {
-             TL_localMessage *message = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+             TL_localMessage *message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             
              
             [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"message_id"] media:message peer_id:peer_id]];
@@ -1284,7 +1283,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *list = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TGUserProfilePhoto *photo = [[TLClassStore sharedManager] deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLUserProfilePhoto *photo = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             
              [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"id"] media:photo peer_id:user_id]];
         }
@@ -1423,7 +1422,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         for (NSString *key in params.allKeys) {
             id tl = [params objectForKey:key];
             
-            id serialized = [[TLClassStore sharedManager] serialize:tl];
+            id serialized = [TLClassStore serialize:tl];
             
             if(serialized) {
                 accepted[key] = serialized;
@@ -1455,7 +1454,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             NSMutableDictionary *accepted = [[NSMutableDictionary alloc] init];
             
             for (NSString *key in params.allKeys) {
-                id tl = [[TLClassStore sharedManager] deserialize:params[key]];
+                id tl = [TLClassStore deserialize:params[key]];
                 
                 if(tl)
                     accepted[key] = tl;
@@ -1478,7 +1477,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(TL_conversation *)selectConversation:(TGPeer *)peer {
+-(TL_conversation *)selectConversation:(TLPeer *)peer {
     __block TL_conversation *conversation;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
@@ -1504,7 +1503,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             id notifyObject = [result dataForColumn:@"notify_settings"];
             
             if(notifyObject != nil && ![notifyObject isKindOfClass:[NSNull class]]) {
-                conversation.notify_settings = [[TLClassStore sharedManager] deserialize:notifyObject];
+                conversation.notify_settings = [TLClassStore deserialize:notifyObject];
             }
             
             
@@ -1529,7 +1528,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertBroadcast:(TL_broadcast *)broadcast {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into broadcasts (n_id, serialized, title,date) values (?,?,?,?)",@(broadcast.n_id),[[TLClassStore sharedManager] serialize:broadcast],broadcast.title,@(broadcast.date)];
+        [db executeUpdate:@"insert or replace into broadcasts (n_id, serialized, title,date) values (?,?,?,?)",@(broadcast.n_id),[TLClassStore serialize:broadcast],broadcast.title,@(broadcast.date)];
     }];
 }
 
@@ -1547,7 +1546,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         FMResultSet *result = [db executeQuery:@"select * from broadcasts where 1=1 order by date"];
         while ([result next]) {
-            TL_broadcast *broadcast = [[TLClassStore sharedManager] deserialize:[result dataForColumn:@"serialized"]];
+            TL_broadcast *broadcast = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             
             [list addObject:broadcast];
         }

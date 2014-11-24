@@ -368,7 +368,7 @@
     [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:5 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         
         
-        [self.bottomView setIsAppCodeSent:[response isKindOfClass:[TL_sentAppCode class]]];
+        [self.bottomView setIsAppCodeSent:[response isKindOfClass:[TL_auth_sentAppCode class]]];
             
         self.bottomView.timeToCall = response.send_call_timeout;
      
@@ -404,7 +404,7 @@
     self.bottomView.isAppCodeSent = NO;
     [self startTimer:self.bottomView.timeToCall];
     
-   [RPCRequest sendRequest:[TLAPI_auth_sendSms createWithPhoneNumber:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
+   [RPCRequest sendRequest:[TLAPI_auth_sendSms createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
        
        
        if([response isKindOfClass:[TL_boolTrue class]])

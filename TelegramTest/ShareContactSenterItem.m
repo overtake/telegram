@@ -18,7 +18,7 @@
 }
 
 
--(id)initWithContact:(TGUser *)contact forConversation:(TL_conversation *)conversation {
+-(id)initWithContact:(TLUser *)contact forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         self.conversation = conversation;
         TL_messageMediaContact *media = [TL_messageMediaContact createWithPhone_number:contact.phone  first_name:contact.first_name last_name:contact.last_name user_id:contact.n_id];
@@ -37,7 +37,7 @@
     
     id request;
     
-    TGInputMedia *media = [TL_inputMediaContact createWithPhone_number:self.message.media.phone_number first_name:self.message.media.first_name last_name:self.message.media.last_name];
+    TLInputMedia *media = [TL_inputMediaContact createWithPhone_number:self.message.media.phone_number first_name:self.message.media.first_name last_name:self.message.media.last_name];
     
     if(self.conversation.type != DialogTypeBroadcast) {
         request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer media:media random_id:rand_long()];

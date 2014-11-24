@@ -9,9 +9,10 @@
 #import "TL_localMessage.h"
 #import "TL_localMessageService.h"
 #import "TL_localMessageForwarded.h"
+#import "HistoryFilter.h"
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -44,7 +45,7 @@
 }
 
 
-+(TL_localMessage *)convertReceivedMessage:(TGMessage *)message {
++(TL_localMessage *)convertReceivedMessage:(TLMessage *)message {
     
     TL_localMessage *msg;
     
@@ -72,7 +73,7 @@
 - (void)save:(BOOL)updateConversation {
     [[Storage manager] insertMessage:self completeHandler:nil];
     [[MessagesManager sharedManager] TGsetMessage:self];
-    if(updateConversation && self.n_id != self.dialog.top_message) {
+    if(updateConversation && self.n_id != self.conversation.top_message) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
     }
 }
@@ -81,10 +82,10 @@
     [stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
-	[[TLClassStore sharedManager] TLSerialize:self.to_id stream:stream];
+	[TLClassStore TLSerialize:self.to_id stream:stream];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
-	[[TLClassStore sharedManager] TLSerialize:self.media stream:stream];
+	[TLClassStore TLSerialize:self.media stream:stream];
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
@@ -93,13 +94,115 @@
     self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
-	self.to_id = [[TLClassStore sharedManager] TLDeserialize:stream];
+	self.to_id = [TLClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 	self.message = [stream readString];
-	self.media = [[TLClassStore sharedManager] TLDeserialize:stream];
+	self.media = [TLClassStore TLDeserialize:stream];
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
 }
+
+-(int)peer_id {
+    int peer_id;
+    if([self.to_id chat_id] != 0) {
+        if(self.to_id.class == [TL_peerSecret class] || self.to_id.class == [TL_peerBroadcast class])
+            peer_id = self.to_id.chat_id;
+        else
+            peer_id = -self.to_id.chat_id;
+    }
+    else
+        if([self n_out])
+            peer_id = self.to_id.user_id;
+        else
+            peer_id = self.from_id;
+    return peer_id;
+}
+
+-(TLPeer *)peer {
+    
+    if([self.to_id chat_id] != 0)
+        return self.to_id;
+    else {
+        if([self n_out])
+            return [TL_peerUser createWithUser_id:self.to_id.user_id];
+        else
+            return [TL_peerUser createWithUser_id:self.from_id];
+        
+    }
+}
+
+
+
+-(BOOL)n_out {
+    return (self.flags & TGOUTMESSAGE) == TGOUTMESSAGE;
+}
+
+
+-(BOOL)unread {
+    return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
+}
+
+
+DYNAMIC_PROPERTY(DDialog);
+
+- (TL_conversation *)conversation {
+    
+    TL_conversation *dialog = [self getDDialog];
+    
+    if(!dialog) {
+        dialog = [[DialogsManager sharedManager] find:self.peer_id];
+        [self setDDialog:dialog];
+    }
+    
+    
+    
+    if(!dialog) {
+        dialog = [[Storage manager] selectConversation:self.peer];
+        
+        if(!dialog)
+            dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
+        else
+            [[DialogsManager sharedManager] add:@[dialog]];
+        
+        [self setDDialog:dialog];
+    }
+    
+    
+    
+    return dialog;
+}
+
+-(int)filterType {
+    int mask = HistoryFilterNone;
+    
+    if([self.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        mask|=HistoryFilterText;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaAudio class]]) {
+        mask|=HistoryFilterAudio;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        mask|=HistoryFilterDocuments;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
+        mask|=HistoryFilterVideo;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaContact class]]) {
+        mask|=HistoryFilterContact;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        mask|=HistoryFilterPhoto;
+    }
+    
+    return mask;
+    
+}
+
 
 @end

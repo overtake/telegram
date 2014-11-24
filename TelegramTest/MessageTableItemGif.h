@@ -9,8 +9,8 @@
 #import "MessageTableItemDocument.h"
 #import "TGImageObject.h"
 @interface MessageTableItemGif : MessageTableItemDocument
-@property (nonatomic, strong) TGDocument *document;
-@property (nonatomic, strong) TGFileLocation *previewLocation;
+@property (nonatomic, strong) TLDocument *document;
+@property (nonatomic, strong) TLFileLocation *previewLocation;
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 @end

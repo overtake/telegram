@@ -22,13 +22,13 @@ typedef enum {
 
 - (void) remoteCheckContacts;
 
-- (void) insertContact:(TGContact *)contact insertToDB:(BOOL)insertToDB;
+- (void) insertContact:(TLContact *)contact insertToDB:(BOOL)insertToDB;
 
-- (void) removeContact:(TGContact *)contact removeFromDB:(BOOL)removeFromDB;
+- (void) removeContact:(TLContact *)contact removeFromDB:(BOOL)removeFromDB;
 
-- (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TGUser *user))callback;
+- (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TLUser *user))callback;
 
-- (void) deleteContact:(TGUser *)user completeHandler:(void (^)(BOOL result))compleHandler;
+- (void) deleteContact:(TLUser *)user completeHandler:(void (^)(BOOL result))compleHandler;
 
 -(void)getStatuses:(dispatch_block_t)callback;
 @end

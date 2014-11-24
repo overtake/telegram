@@ -7,10 +7,7 @@
 //
 
 #import "DialogsManager.h"
-#import "TGDialog+Extensions.h"
-#import "TGMessage+Extensions.h"
-#import "FakeDialog.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "Telegram.h"
 #import "PreviewObject.h"
 #import "SenderHeader.h"
@@ -51,25 +48,25 @@
         [ASQueue dispatchOnStageQueue:^{
             NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
             int total = 0;
-            for (TGMessage *message in messages) {
-                TGMessage *local = [manager find:message.n_id];
+            for (TL_localMessage *message in messages) {
+                TLMessage *local = [manager find:message.n_id];
                 local.flags&= ~TGUNREADMESSAGE;
-                if(message.unread && message.dialog) {
+                if(message.unread && message.conversation) {
                     if(!message.n_out) {
-                        if(message.dialog.unread_count != 0)
+                        if(message.conversation.unread_count != 0)
                             ++total;
-                        message.dialog.unread_count--;
+                        message.conversation.unread_count--;
                         
                     }
                     
                     
                     
-                    if(message.n_id > message.dialog.last_marked_message) {
-                        message.dialog.last_marked_message = message.n_id;
-                        message.dialog.last_marked_date = message.date;
+                    if(message.n_id > message.conversation.last_marked_message) {
+                        message.conversation.last_marked_message = message.n_id;
+                        message.conversation.last_marked_date = message.date;
                     }
                     
-                    [updateDialogs setObject:message.dialog forKey:@(message.dialog.peer.peer_id)];
+                    [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
                 }
                 
             }
@@ -102,7 +99,7 @@
   
 }
 
-- (TL_conversation *)createDialogForUser:(TGUser *)user {
+- (TL_conversation *)createDialogForUser:(TLUser *)user {
     TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0];
     dialog.fake = YES;
     [self add:@[dialog]];
@@ -110,21 +107,21 @@
     return dialog;
 }
 
-- (TL_conversation *)createDialogForChat:(TGChat *)chat {
+- (TL_conversation *)createDialogForChat:(TLChat *)chat {
     TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0];
     dialog.fake = YES;
     [self add:@[dialog]];
     return dialog;
 }
 
-- (TL_conversation *)createDialogEncryptedChat:(TGEncryptedChat *)chat {
+- (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat {
     TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0];
     dialog.fake = YES;
     [self add:@[dialog]];
     return dialog;
 }
 
-- (TL_conversation *)createDialogForMessage:(TGMessage *)message {
+- (TL_conversation *)createDialogForMessage:(TL_localMessage *)message {
     TL_conversation *dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date];
     dialog.fake = YES;
     [self add:@[dialog]];
@@ -142,9 +139,9 @@
         NSMutableDictionary *dialogstoUpdate = [[NSMutableDictionary alloc] init];
         
         for (NSNumber *msg_id in deleted) {
-            TGMessage *message = [[MessagesManager sharedManager] find:[msg_id intValue]];
-            if(message.dialog)
-                [dialogstoUpdate setObject:message.dialog forKey:@(message.dialog.peer.peer_id)];
+            TL_localMessage *message = [[MessagesManager sharedManager] find:[msg_id intValue]];
+            if(message.conversation)
+                [dialogstoUpdate setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
         }
         
         
@@ -253,7 +250,7 @@
         return;
     }
     
-    if(dialog.type == DialogTypeChat && !dialog.chat.left && dialog.chat.type == TGChatTypeNormal) {
+    if(dialog.type == DialogTypeChat && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
         [MessageSender sendStatedMessage:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.peer.chat_id user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
             newBlock();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -336,9 +333,9 @@
     }];
 }
 
-- (void)updateTop:(TGMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
+- (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
     MessagesManager *manager = [MessagesManager sharedManager];
-    TL_conversation *dialog = message.dialog;
+    TL_conversation *dialog = message.conversation;
     if(dialog.top_message != 0 && dialog.top_message != -1 && ((dialog.top_message > message.n_id && dialog.top_message < TGMINFAKEID)))
         return;
     
@@ -407,7 +404,7 @@
         int totalUnread = 0;
         MessagesManager *manager = [MessagesManager sharedManager];
         for (TL_localMessage *message in messages) {
-            TL_conversation *dialog = message.dialog;
+            TL_conversation *dialog = message.conversation;
             
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
@@ -437,7 +434,7 @@
                 
             } else {
                 [self updateTop:message needUpdate:NO update_real_date:NO];
-                dialog = message.dialog;
+                dialog = message.conversation;
             }
             
             if(dialog) {

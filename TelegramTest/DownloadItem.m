@@ -102,7 +102,7 @@ static int futureUniqueKey = 0;
     [DownloadQueue resetItem:self];
 }
 
--(TGInputFileLocation *)input {
+-(TLInputFileLocation *)input {
     return nil;
 }
 

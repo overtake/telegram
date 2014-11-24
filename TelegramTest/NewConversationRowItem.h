@@ -20,8 +20,8 @@
 @property (nonatomic,assign) NSPoint avatarPoint;
 @property (nonatomic,assign) NewConversationAction action;
 @property (nonatomic,assign) BOOL animated;
-@property (nonatomic,strong) TGFileLocation *location;
-@property (nonatomic,strong) TGUser *user;
+@property (nonatomic,strong) TLFileLocation *location;
+@property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) NewConversationViewController *controller;
 -(BOOL)canSelect;
 

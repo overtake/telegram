@@ -7,12 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TGMessage+Extensions.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "FileUtils.h"
-#import "TGDialog+Extensions.h"
 #import "SenderListener.h"
-#import "TGMessageCategory.h"
 
 @interface SenderItem : NSObject {
     

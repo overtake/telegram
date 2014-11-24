@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 #import "SenderListener.h"
 @class SecretSenderItem;
 

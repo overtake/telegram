@@ -1,5 +1,5 @@
 //
-//  TGUserStatusCategory.h
+//  TLUserStatusCategory.h
 //  Telegram
 //
 //  Created by Dmitry Kondratyev on 6/19/14.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TGUserStatus (Category)
+@interface TLUserStatus (Category)
 
 - (int)lastSeenTime;
 

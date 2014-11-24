@@ -9,7 +9,7 @@
 #import "TLApiObject.h"
 
 @implementation TLApiObject
-- (NSData *)getData:(BOOL)isFirstRequest {
+- (NSData*)getData {
     DLog(@"");
     [NSException raise:@"Error" format:@"Not implemented"];
     return nil;

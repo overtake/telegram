@@ -64,7 +64,7 @@
             int user_id = [participant intValue];
             
             
-            if(((TGUser *)[[UsersManager sharedManager] find:user_id]).isOnline)
+            if(((TLUser *)[[UsersManager sharedManager] find:user_id]).isOnline)
                 self.onlineCount++;
         }
         

@@ -7,8 +7,7 @@
 //
 
 #import "TMTypingManager.h"
-#import "TGDialog+Extensions.h"
-#import "TGEncryptedChat+Extensions.h"
+#import "TLEncryptedChat+Extensions.h"
 
 @interface TMTypingManager()
 @property (nonatomic, strong) NSMutableDictionary *objects;
@@ -41,12 +40,12 @@
 }
 
 - (void) newMessageNotification:(NSNotification *)notify {
-    TGMessage *message = [notify.userInfo objectForKey:KEY_MESSAGE];
+    TL_localMessage *message = [notify.userInfo objectForKey:KEY_MESSAGE];
     [ASQueue dispatchOnStageQueue:^{
         if(!message)
             return ELog(@"Message is nil");
         
-        TL_conversation *dialog = message.dialog;
+        TL_conversation *dialog = message.conversation;
         if(!dialog)
             return ELog(@"Dialog is nil");
         

@@ -11,7 +11,7 @@
 
 @interface UserInfoEditContainerView : TMView
 
-@property (nonatomic, strong) TGUser *user;
+@property (nonatomic, strong) TLUser *user;
 
 @property (nonatomic) UserInfoViewControllerType type;
 @property (nonatomic, strong) UserInfoViewController *controller;

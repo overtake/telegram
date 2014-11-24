@@ -8,7 +8,7 @@
 //
 
 #import "FileUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "Crypto.h"
 #import "TMMediaController.h"
 @interface FileUtils ()
@@ -21,7 +21,7 @@
 
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"telegram://import?card=";
-NSString *const TGUserNamePrefix = @"@";
+NSString *const TLUserNamePrefix = @"@";
 
 -(id)init {
     if(self = [super init]) {
@@ -51,7 +51,7 @@ NSString *const TGUserNamePrefix = @"@";
     return self;
 }
 
-BOOL fileExists(TGFileLocation *location) {
+BOOL fileExists(TLFileLocation *location) {
     return [[NSFileManager defaultManager] fileExistsAtPath:locationFilePath(location, @"tiff")];
 }
 
@@ -145,15 +145,15 @@ BOOL checkFileSize(NSString *path, int size) {
     [self showPanelWithTypes:types completionHandler:handler forWindow:[[NSApp delegate] window]];
 }
 
-NSString* locationFilePath(TGFileLocation *location, NSString *extension) {
+NSString* locationFilePath(TLFileLocation *location, NSString *extension) {
     return [NSString stringWithFormat:@"%@/%@.%@",path(),location.cacheKey,extension];
 }
 
-NSString* locationFilePathWithPrefix(TGFileLocation *location, NSString *prefix, NSString *extension) {
+NSString* locationFilePathWithPrefix(TLFileLocation *location, NSString *prefix, NSString *extension) {
     return [NSString stringWithFormat:@"%@/%@_%@.%@",path(),location.cacheKey,prefix,extension];
 }
 
-NSString* mediaFilePath(TGMessageMedia *media) {
+NSString* mediaFilePath(TLMessageMedia *media) {
     if([media isKindOfClass:[TL_messageMediaAudio class]]) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),media.audio.n_id,media.audio.access_hash];
     }
@@ -173,7 +173,7 @@ NSString* mediaFilePath(TGMessageMedia *media) {
     return nil;
 }
 
-NSString* documentPath(TGDocument *document) {
+NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;
     
     if([document isKindOfClass:[TL_outDocument class]]) {
@@ -253,11 +253,11 @@ NSString* path() {
 }
 
 
-+(NSString *)documentName:(TGDocument *)document {
++(NSString *)documentName:(TLDocument *)document {
     return [self documentName:document number:0];
 }
 
-+(NSString *)documentName:(TGDocument *)document number:(int)number {
++(NSString *)documentName:(TLDocument *)document number:(int)number {
     NSString *doc = documentPath(document);
     NSString *pathExtension = [doc pathExtension];
     NSString *name = [doc stringByDeletingPathExtension];
@@ -419,7 +419,7 @@ void open_card(NSString *link) {
         
         [[Telegram rightViewController] showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_contactsImportCard createWithExportCard:card] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_importCard createWithExport_card:[card mutableCopy]] successHandler:^(RPCRequest *request, id response) {
             
             [[Telegram rightViewController] hideModalProgress];
             
@@ -427,7 +427,7 @@ void open_card(NSString *link) {
                 if(![response isKindOfClass:[TL_userEmpty class]]) {
                     [[UsersManager sharedManager] add:@[response]];
                     
-                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:[(TGUser *)response n_id]]];
+                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:[(TLUser *)response n_id]]];
                 } else {
                     alert(NSLocalizedString(@"CardImport.ErrorTextUserNotExist", nil), NSLocalizedString(@"CardImport.ErrorDescUserNotExist", nil));
                 }
@@ -471,7 +471,7 @@ void open_user_by_name(NSString * userName) {
                 
                 if(response.users.count == 1) {
                     
-                    TGUser *user = response.users[0];
+                    TLUser *user = response.users[0];
                     
                     [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:NO];
                     
@@ -518,8 +518,8 @@ void open_link(NSString *link) {
     }
     
     
-    if([link hasPrefix:TGUserNamePrefix]) {
-        open_user_by_name([link substringFromIndex:TGUserNamePrefix.length]);
+    if([link hasPrefix:TLUserNamePrefix]) {
+        open_user_by_name([link substringFromIndex:TLUserNamePrefix.length]);
         return;
     }
     

@@ -10,9 +10,7 @@
 #import "Destructor.h"
 #import "SpacemanBlocks.h"
 #import "TGTimer.h"
-#import "TGMessage+Extensions.h"
-#import "TGDialog+Extensions.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "SenderHeader.h"
 @interface SelfDestructionController ()
 {

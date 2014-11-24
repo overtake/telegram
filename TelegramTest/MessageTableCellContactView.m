@@ -83,9 +83,9 @@
     [self.titleTextButton setTextColor:item.contactUser ? LINK_COLOR : NSColorFromRGB(0x222222)];
     [self.titleTextButton setDisable:!item.contactUser];
     
-    [self.addButton setHidden:item.contactUser.type != TGUserTypeForeign && item.contactUser.type != TGUserTypeRequest];
+    [self.addButton setHidden:item.contactUser.type != TLUserTypeForeign && item.contactUser.type != TLUserTypeRequest];
     
-    if(item.contactUser.type == TGUserTypeForeign || item.contactUser.type == TGUserTypeRequest) {
+    if(item.contactUser.type == TLUserTypeForeign || item.contactUser.type == TLUserTypeRequest) {
         
         self.addButton.phoneNumber = item.contactNumberString;
         self.addButton.contact = item.contactUser;

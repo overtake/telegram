@@ -16,7 +16,7 @@
 
 @implementation OnlineNotificationManager
 
-- (void)addUser:(TGUser *)user {
+- (void)addUser:(TLUser *)user {
     if(user && [_users indexOfObject:user] == NSNotFound) {
         [_users addObject:user];
     }
@@ -24,7 +24,7 @@
     [self checkAndStart];
 }
 
-- (void)removeUser:(TGUser *)user {
+- (void)removeUser:(TLUser *)user {
     [_users removeObject:user];
     
     [self checkAndStart];
@@ -50,19 +50,19 @@
 }
 
 - (void)notify {
-    for (TGUser *user in _users) {
+    for (TLUser *user in _users) {
         [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(user.n_id)}];
     }
 }
 
-+ (void)addUser:(TGUser *)user {
++ (void)addUser:(TLUser *)user {
     [ASQueue dispatchOnStageQueue:^{
         [[self instance] addUser:user];
     }];
     
 }
 
-+ (void)removeUser:(TGUser *)user {
++ (void)removeUser:(TLUser *)user {
     [ASQueue dispatchOnStageQueue:^{
        [[self instance] removeUser:user];
     }];

@@ -11,13 +11,13 @@
 #import "NSAttributedString+Hyperlink.h"
 
 @interface NewConversationRowItem ()
-@property (nonatomic, strong) TGContact * object;
+@property (nonatomic, strong) TLContact * object;
 
 @end
 
 @implementation NewConversationRowItem
 
-- (id)initWithObject:(TGContact *)object {
+- (id)initWithObject:(TLContact *)object {
     if(self = [super initWithObject:object]) {
         self.object = object;
         self.animated = NO;
@@ -58,7 +58,7 @@
     return self.object;
 }
 
-+ (NSUInteger) hash:(TGContact *)object {
++ (NSUInteger) hash:(TLContact *)object {
     return [ @(object.user.n_id) hash];
 }
 

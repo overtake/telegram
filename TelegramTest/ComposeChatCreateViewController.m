@@ -84,7 +84,7 @@
 
 @interface CreateChatHeaderView : TMRowView <NSTextFieldDelegate>
 @property (nonatomic,strong) TMTextField *textView;
-@property (nonatomic,strong) TGChat *chat;
+@property (nonatomic,strong) TLChat *chat;
 @property (nonatomic,strong) TMTextField *nameField;
 
 @property (nonatomic,strong) ComposeChatCreateViewController *controller;

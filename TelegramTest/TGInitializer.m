@@ -16,7 +16,7 @@
 #import "Crypto.h"
 #import "CMath.h"
 #import "RPCRequest.h"
-#import "TLRPCApi.h"
+#import "TLApi.h"
 #import "DialogsHistoryController.h"
 @implementation TGInitializer
 

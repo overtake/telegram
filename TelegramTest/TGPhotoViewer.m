@@ -12,13 +12,13 @@
 #import "TGPVBehavior.h"
 #import "TGPVMediaBehavior.h"
 #import "TGPVImageView.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "TGPVUserBehavior.h"
 #import "TGPVEmptyBehavior.h"
 #import "TGCache.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) TGUser *user;
+@property (nonatomic,strong) TLUser *user;
 
 
 @property (nonatomic,strong) TGPVContainer *photoContainer;
@@ -360,7 +360,7 @@ static const int controlsHeight = 75;
 }
 
 
--(void)show:(PreviewObject *)item user:(TGUser *)user {
+-(void)show:(PreviewObject *)item user:(TLUser *)user {
     
     
     _behavior = [[TGPVUserBehavior alloc] init];
@@ -532,7 +532,7 @@ static const int controlsHeight = 75;
 }
 
 
--(void)prepareUser:(TGUser *)user {
+-(void)prepareUser:(TLUser *)user {
     TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] init];
     [behavior setUser:user];
     [behavior load:0 next:YES limit:0 callback:nil];

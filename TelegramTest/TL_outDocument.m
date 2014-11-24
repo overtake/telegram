@@ -9,7 +9,7 @@
 #import "TL_outDocument.h"
 
 @implementation TL_outDocument
-+(TL_outDocument *)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date file_name:(NSString *)file_name mime_type:(NSString *)mime_type size:(int)size thumb:(TGPhotoSize *)thumb dc_id:(int)dc_id file_path:(NSString *)file_path {
++(TL_outDocument *)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date file_name:(NSString *)file_name mime_type:(NSString *)mime_type size:(int)size thumb:(TLPhotoSize *)thumb dc_id:(int)dc_id file_path:(NSString *)file_path {
     TL_outDocument *document = [[TL_outDocument alloc] init];
     document.n_id = n_id;
     document.access_hash = access_hash;
@@ -38,7 +38,7 @@
 	[stream writeString:self.file_name];
 	[stream writeString:self.mime_type];
 	[stream writeInt:self.size];
-	[[TLClassStore sharedManager] TLSerialize:self.thumb stream:stream];
+	[TLClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.dc_id];
     [stream writeString:self.file_path];
 }
@@ -52,7 +52,7 @@
 	self.file_name = [stream readString];
 	self.mime_type = [stream readString];
 	self.size = [stream readInt];
-	self.thumb = [[TLClassStore sharedManager] TLDeserialize:stream];
+	self.thumb = [TLClassStore TLDeserialize:stream];
 	self.dc_id = [stream readInt];
     self.file_path = [stream readString];
     

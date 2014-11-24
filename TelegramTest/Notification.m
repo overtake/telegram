@@ -8,7 +8,6 @@
 
 #import "Notification.h"
 #import "NSNotificationCenter+MainThread.h"
-#import "TGDialog+Extensions.h"
 
 @implementation Notification
 
@@ -144,7 +143,7 @@ NSString *const PRIVACY_UPDATE = @"privacy_update";
     return [NSString stringWithFormat:@"%@_%d_%d_%d", action, dialog.type, dialog.peer.chat_id, dialog.peer.user_id];
 }
 
-+ (NSString *)notificationForUser:(TGUser *)user action:(NSString *)action {
++ (NSString *)notificationForUser:(TLUser *)user action:(NSString *)action {
      return [NSString stringWithFormat:@"user_%@_%d", action, user.n_id];
 }
 

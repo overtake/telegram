@@ -7,10 +7,10 @@
 //
 
 #import "SelectUserItem.h"
-#import "TGUserCategory.h"
+#import "TLUserCategory.h"
 @implementation SelectUserItem
 
-- (id)initWithObject:(TGContact *)object {
+- (id)initWithObject:(TLContact *)object {
     if(self = [super initWithObject:object]) {
         self.title = [[NSMutableAttributedString alloc] init];
         self.lastSeen = [[NSMutableAttributedString alloc] init];
@@ -44,7 +44,7 @@
     return self.contact;
 }
 
-+ (NSUInteger) hash:(TGContact *)object {
++ (NSUInteger) hash:(TLContact *)object {
     return object.user_id;
 }
 

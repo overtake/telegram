@@ -1,18 +1,18 @@
 //
-//  TGChatCategory.m
+//  TLChatCategory.m
 //  Messenger for Telegram
 //
 //  Created by Dmitry Kondratyev on 2/26/14.
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TGChatCategory.h"
+#import "TLChatCategory.h"
 
-@implementation TGChat (Category)
+@implementation TLChat (Category)
 
 DYNAMIC_PROPERTY(DType);
 
-- (TGChatType) type {
+- (TLChatType) type {
     NSNumber *type = [self getDType];
     if(!type)
         type = [NSNumber numberWithInt:[self rebuildType]];
@@ -23,20 +23,20 @@ DYNAMIC_PROPERTY(DType);
     return [[DialogsManager sharedManager] findByChatId:self.n_id];
 }
 
-- (void) setType:(TGChatType)type {
+- (void) setType:(TLChatType)type {
     [self setDType:[NSNumber numberWithInt:type]];
 }
 
 
-- (TGChatType)rebuildType {
+- (TLChatType)rebuildType {
     int type;
     
     if([self isKindOfClass:[TL_chatForbidden class]])
-        type = TGChatTypeForbidden;
+        type = TLChatTypeForbidden;
     else if([self isKindOfClass:[TL_chatEmpty class]])
-        type = TGChatTypeEmpty;
+        type = TLChatTypeEmpty;
     else
-        type = TGChatTypeNormal;
+        type = TLChatTypeNormal;
    
     
     [self setType:type];

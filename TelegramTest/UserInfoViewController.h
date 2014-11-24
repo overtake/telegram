@@ -16,10 +16,10 @@ typedef enum {
 
 @interface UserInfoViewController : TMViewController
 @property (nonatomic,assign, readonly) BOOL isSecretProfile;
-@property (nonatomic, strong, readonly) TGUser *user;
+@property (nonatomic, strong, readonly) TLUser *user;
 @property (nonatomic, strong, readonly) TL_conversation *conversation;
 @property (nonatomic,strong, readonly) ChatAvatarImageView *avatarImageView;
--(void)setUser:(TGUser *)user conversation:(TL_conversation *)conversation;
+-(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation;
 
 - (void)successDeleteContact;
 

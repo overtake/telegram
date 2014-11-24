@@ -11,7 +11,7 @@
 #import "ImageCache.h"
 #import "ImageStorage.h"
 #import "NSMutableData+Extension.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "TGOpusAudioPlayerAU.h"
 #import "PreviewObject.h"
 #import "SelfDestructionController.h"
@@ -51,7 +51,7 @@
     self.filePath = filePath;
     self.uploadType = uploadType;
     
-    TGMessageMedia *media;
+    TLMessageMedia *media;
     
     int ttl = self.params.ttl;
     
@@ -125,7 +125,7 @@
             thumbData = compressImage([ thumb TIFFRepresentation], 0.4);
         }
         
-        TGPhotoSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:thumb.size.width h:thumb.size.height bytes:thumbData];
+        TLPhotoSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:thumb.size.width h:thumb.size.height bytes:thumbData];
         
         if(!thumbData) {
             size = [TL_photoSizeEmpty createWithType:@"x"];
@@ -276,9 +276,9 @@
             ((TL_destructMessage *)strongSelf.message).n_id = [MessageSender getFutureMessageId];
             
             
-            TGPhotoSize *size = strongSelf.uploadType == UploadImageType ? [((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] : ((TL_destructMessage *)strongSelf.message).media.video.thumb;
+            TLPhotoSize *size = strongSelf.uploadType == UploadImageType ? [((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] : ((TL_destructMessage *)strongSelf.message).media.video.thumb;
             
-            TGFileLocation *newLocation = [TL_fileLocation createWithDc_id:[response.file dc_id] volume_id:[response.file n_id] local_id:size.location.local_id secret:response.file.access_hash];
+            TLFileLocation *newLocation = [TL_fileLocation createWithDc_id:[response.file dc_id] volume_id:[response.file n_id] local_id:size.location.local_id secret:response.file.access_hash];
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [transaction setObject:@{@"key":strongSelf.key,@"iv":strongSelf.iv} forKey:[NSString stringWithFormat:@"%lu",[response.file n_id]] inCollection:ENCRYPTED_IMAGE_COLLECTION];

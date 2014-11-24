@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 #import "TL_conversation.h"
 @interface TL_localMessage : TL_message
 
@@ -16,7 +16,7 @@ typedef enum {
     MessageOutStateError = 2
 } MessageOutState;
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TGPeer *)to_id date:(int)date message:(NSString *)message media:(TGMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
 @property (nonatomic,assign) int fakeId;
 @property (nonatomic,assign) long randomId;
 @property (nonatomic,assign) DeliveryState dstate;
@@ -24,6 +24,17 @@ typedef enum {
 
 -(void)save:(BOOL)updateConversation;
 
-+(TL_localMessage *)convertReceivedMessage:(TGMessage *)msg;
++(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;
 +(void)convertReceivedMessages:(NSMutableArray *)messages;
+
+
+-(int)peer_id;
+-(TLPeer *)peer;
+
+
+-(BOOL)n_out;
+-(BOOL)unread;
+
+- (TL_conversation *)conversation;
+-(int)filterType;
 @end

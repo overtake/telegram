@@ -104,7 +104,7 @@ typedef enum {
 -(void)cancel;
 -(void)pause;
 -(void)resetItem;
--(TGInputFileLocation *)input;
+-(TLInputFileLocation *)input;
 
 -(int)partSize;
 

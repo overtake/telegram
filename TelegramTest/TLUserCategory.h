@@ -1,27 +1,27 @@
 //
-//  TGUser.h
+//  TLUser.h
 //  Telegram P-Edition
 //
 //  Created by Dmitry Kondratyev on 2/18/14.
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 
 typedef enum {
-    TGUserTypeContact,
-    TGUserTypeEmpty,
-    TGUserTypeDeleted,
-    TGUserTypeForeign,
-    TGUserTypeSelf,
-    TGUserTypeRequest
-} TGUserType;
+    TLUserTypeContact,
+    TLUserTypeEmpty,
+    TLUserTypeDeleted,
+    TLUserTypeForeign,
+    TLUserTypeSelf,
+    TLUserTypeRequest
+} TLUserType;
 
-@interface TGUser (Category)
+@interface TLUser (Category)
 
-- (TGUserType)type;
-- (void)setType:(TGUserType)type;
-- (TGUserType)rebuildType;
+- (TLUserType)type;
+- (void)setType:(TLUserType)type;
+- (TLUserType)rebuildType;
 - (BOOL)isOnline;
 - (BOOL)isBlocked;
 - (void)rebuildNames;
@@ -56,8 +56,8 @@ typedef enum {
 
 
 - (NSString *)dialogFullName;
-- (TGInputPeer *)inputPeer;
-- (TGInputUser *)inputUser;
+- (TLInputPeer *)inputPeer;
+- (TLInputUser *)inputUser;
 - (NSString *)shortLastSeen;
 - (NSString *)lastSeen;
 - (int)lastSeenTime;

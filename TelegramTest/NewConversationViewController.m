@@ -14,7 +14,7 @@
 #import "Telegram.h"
 #import "TMImageView.h"
 #import "NSString+Extended.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "SelectUsersTableView.h"
 #import "AddContactView.h"
 
@@ -142,7 +142,7 @@
     weakify();
     [self.tableView setMultipleCallback:^(NSArray *contacts) {
         
-        TGContact *contact = contacts[0];
+        TLContact *contact = contacts[0];
         if(strongSelf.currentAction == NewConversationActionCreateSecretChat) {
             [MessageSender startEncryptedChat:contact.user callback:^{
                 
@@ -154,9 +154,9 @@
             
             [strongSelf.popover close];
             
-            TGDialog *dialog = contact.user.dialog;
+            TLDialog *dialog = contact.user.dialog;
             if(!dialog) {
-                [[Storage manager] dialogByPeer:contact.user.n_id completeHandler:^(TGDialog *dialog, TGMessage *message) {
+                [[Storage manager] dialogByPeer:contact.user.n_id completeHandler:^(TLDialog *dialog, TLMessage *message) {
                     
                     if(dialog)
                         [[DialogsManager sharedManager] add:@[dialog]];
@@ -645,7 +645,7 @@
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for(SelectUserItem* item in selected) {
-        if(!item.contact.user.type != TGUserTypeSelf) {
+        if(!item.contact.user.type != TLUserTypeSelf) {
             TL_inputUserContact *_contact = [TL_inputUserContact createWithUser_id:item.contact.user.n_id];
             [array addObject:_contact];
         }
@@ -659,8 +659,8 @@
         
         [MessagesManager statedMessage:response];
         
-        [[FullChatManager sharedManager] performLoad:response.message.dialog.chat.n_id callback:^{
-            [[Telegram sharedInstance] showMessagesFromDialog:response.message.dialog sender:self];
+        [[FullChatManager sharedManager] performLoad:((TL_localMessage *)response.message).conversation.chat.n_id callback:^{
+            [[Telegram sharedInstance] showMessagesFromDialog:((TL_localMessage *)response.message).conversation sender:self];
         }];
         
         

@@ -18,7 +18,6 @@
 #import "MessageTableItemGif.h"
 #import "MessagetableitemUnreadMark.h"
 #import "MessageTableItemAudioDocument.h"
-#import "TGDialog+Extensions.h"
 #import "MessageTableItemServiceMessage.h"
 #import "TGDateUtils.h"
 #import "PreviewObject.h"
@@ -43,7 +42,7 @@
             object.flags&= ~TGUNREADMESSAGE;
         
         self.isForwadedMessage = [self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]];
-        self.isChat = self.message.dialog.type == DialogTypeChat;
+        self.isChat = self.message.conversation.type == DialogTypeChat;
         
         if(self.message) {
            
@@ -128,7 +127,7 @@
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
 //        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
-        TGUser *user = [[UsersManager sharedManager] find:self.message.fwd_from_id];
+        TLUser *user = [[UsersManager sharedManager] find:self.message.fwd_from_id];
         
         NSRange rangeUser = NSMakeRange(0, 0);
         if(user) {
@@ -183,12 +182,12 @@
     self.viewSize = NSMakeSize(blockSize.width, blockSize.height);
 }
 
-+ (id) messageItemFromObject:(TGMessage *)object {
++ (id) messageItemFromObject:(TLMessage *)object {
     id objectReturn = nil;
 
     
     if(object.class == [TL_localMessage class] || object.class == [TL_localMessageForwarded class] || object.class == [TL_destructMessage class]) {
-        TGMessage *message = object;
+        TLMessage *message = object;
         
         
         
@@ -216,7 +215,7 @@
             
         } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
             
-            TGDocument *document = message.media.document;
+            TLDocument *document = message.media.document;
             
             if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                 objectReturn = [[MessageTableItemGif alloc] initWithObject:object];

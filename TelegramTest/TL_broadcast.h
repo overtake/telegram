@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 @class TL_conversation;
-@interface TL_broadcast : TGObject
+@interface TL_broadcast : TLObject
 
 @property (nonatomic,assign) int n_id;
 @property (nonatomic,strong) NSString *title;

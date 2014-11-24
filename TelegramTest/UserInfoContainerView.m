@@ -332,7 +332,7 @@
 
 
 - (void)userNameChangedNotification:(NSNotification *)notify {
-    TGUser *user = [notify.userInfo objectForKey:KEY_USER];
+    TLUser *user = [notify.userInfo objectForKey:KEY_USER];
     if(user.n_id == self.user.n_id) {
         [self setUser:user];
     }
@@ -345,7 +345,7 @@
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
    
-    [self.userNameView setHidden:self.user.user_name.length == 0];
+    [self.userNameView setHidden:self.user.username.length == 0];
     
     if(!self.userNameView.isHidden) {
         offset-=62;
@@ -363,11 +363,11 @@
         
         
         
-        [self.setProfilePhotoButton setHidden:self.user.type != TGUserTypeSelf];
-        [self.importContacts setHidden:self.user.type != TGUserTypeSelf];
+        [self.setProfilePhotoButton setHidden:self.user.type != TLUserTypeSelf];
+        [self.importContacts setHidden:self.user.type != TLUserTypeSelf];
         
         
-        if(self.user.type == TGUserTypeContact || self.user.type == TGUserTypeSelf) {
+        if(self.user.type == TLUserTypeContact || self.user.type == TLUserTypeSelf) {
             offset -= self.shareContactButton.bounds.size.height;
             [self.shareContactButton setFrameOrigin:NSMakePoint(100, offset)];
             [self.shareContactButton setHidden:NO];
@@ -376,7 +376,7 @@
         }
         
         
-        if(self.user.type != TGUserTypeSelf) {
+        if(self.user.type != TLUserTypeSelf) {
             offset -= self.blockContact.bounds.size.height;
             [self.blockContact setFrameOrigin:NSMakePoint(100, offset)];
             [self.blockContact setHidden:NO];
@@ -392,7 +392,7 @@
         [self.importContacts setHidden:YES];
     }
 
-    if(self.user.type != TGUserTypeSelf && !self.controller.isSecretProfile) {
+    if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile) {
         
          offset -= 62;
         
@@ -404,7 +404,7 @@
     
     
 
-    if(self.user.type != TGUserTypeSelf) {
+    if(self.user.type != TLUserTypeSelf) {
         offset-=62;
         
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(100, offset)];
@@ -478,10 +478,10 @@
 #define DEFAULT_FONT [NSFont fontWithName:@"HelveticaNeue" size:13]
 #define DEFAULT_COLOR NSColorFromRGB(0xa1a1a1)
 
-- (void)setUser:(TGUser *)user {
+- (void)setUser:(TLUser *)user {
     self->_user = user;
     
-    [self.userNameView setString:[NSString stringWithFormat:@"@%@",user.user_name]];
+    [self.userNameView setString:[NSString stringWithFormat:@"@%@",user.username]];
     
     [self.sharedMediaButton setConversation:self.controller.conversation];
     
@@ -503,7 +503,7 @@
     [self.phoneView setString:self.user.phoneWithFormat ? self.user.phoneWithFormat : NSLocalizedString(@"User.Hidden", nil)];
     
     
-    if(self.user.type != TGUserTypeSelf) {
+    if(self.user.type != TLUserTypeSelf) {
         [self.notificationView setHidden:self.controller.isSecretProfile];
         
         TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];

@@ -1,14 +1,14 @@
 //
-//  TGFileLocation+Extensions.h
+//  TLFileLocation+Extensions.h
 //  TelegramTest
 //
 //  Created by keepcoder on 28.10.13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 
-@interface TGFileLocation (Extensions)
+@interface TLFileLocation (Extensions)
 - (BOOL) isEncrypted;
 - (NSString *) cacheKey;
 - (NSUInteger) hashCacheKey;

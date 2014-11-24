@@ -12,7 +12,7 @@
 
 
 
--(id)initWithObject:(TGMessage *)object {
+-(id)initWithObject:(TLMessage *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
         self.n_id = object.media.video.n_id;
@@ -25,8 +25,8 @@
 }
 
 
--(TGInputFileLocation *)input {
-    TGMessage *message = [self object];
+-(TLInputFileLocation *)input {
+    TLMessage *message = [self object];
     if(self.isEncrypted)
         return [TL_inputEncryptedFileLocation createWithN_id:self.n_id access_hash:message.media.video.access_hash];
     return [TL_inputVideoFileLocation createWithN_id:self.n_id access_hash:message.media.video.access_hash];

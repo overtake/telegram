@@ -1,18 +1,18 @@
 //
-//  TGPeer+Extensions.h
+//  TLPeer+Extensions.h
 //  TelegramTest
 //
 //  Created by keepcoder on 28.10.13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 
-@interface TGPeer (Extensions)
+@interface TLPeer (Extensions)
 -(int)peer_id;
 -(BOOL)isChat;
-+(TGPeer *)peerForId:(int)peer_id;
--(TGPeer *)peerOut;
++(TLPeer *)peerForId:(int)peer_id;
+-(TLPeer *)peerOut;
 -(BOOL)isSecret;
 -(BOOL)isBroadcast;
 @end

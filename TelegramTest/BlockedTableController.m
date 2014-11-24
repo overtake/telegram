@@ -132,7 +132,7 @@
     
     TL_contactBlocked *contact = _blockedList[row];
     
-    TGUser *user = [[UsersManager sharedManager] find:[contact user_id]];
+    TLUser *user = [[UsersManager sharedManager] find:[contact user_id]];
     
     if([tableColumn.identifier isEqualToString:@"initials"]) {
         return user.fullName;

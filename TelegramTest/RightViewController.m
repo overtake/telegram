@@ -266,7 +266,7 @@
     }
     
     if(self.modalView == [self shareContactModalView]) {
-        TGUser *modalObject = self.modalObject;
+        TLUser *modalObject = self.modalObject;
         
         if(modalObject && modalObject.phone) {
             
@@ -286,7 +286,7 @@
         for(MessageTableItem *item in messages)
             [ids addObject:item.message];
         
-        [ids sortUsingComparator:^NSComparisonResult(TGMessage * a, TGMessage * b) {
+        [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
             return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
         }];
         
@@ -323,7 +323,7 @@
 }
 
 
-- (void)showShareContactModalView:(TGUser *)user {
+- (void)showShareContactModalView:(TLUser *)user {
     [self hideModalView:YES animation:NO];
     
     [self.navigationViewController.view setAcceptsTouchEvents:NO];
@@ -442,7 +442,7 @@
     return YES;
 }
 
-- (void)showUserInfoPage:(TGUser *)user conversation:(TL_conversation *)conversation {
+- (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation {
     if(self.navigationViewController.currentController == self.userInfoViewController && self.userInfoViewController.user.n_id == user.n_id)
         return;
     
@@ -455,7 +455,7 @@
 
 
 
-- (void)showUserInfoPage:(TGUser *)user  {
+- (void)showUserInfoPage:(TLUser *)user  {
     [self showUserInfoPage:user conversation:user.dialog];
 }
 
@@ -519,11 +519,11 @@
 
 }
 
-- (void)showChatInfoPage:(TGChat *)chat {
+- (void)showChatInfoPage:(TLChat *)chat {
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)
         return;
     
-    if(chat.type != TGChatTypeNormal)
+    if(chat.type != TLChatTypeNormal)
         return;
     
     

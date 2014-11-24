@@ -182,7 +182,7 @@ int maxBroadcastUsers() {
     [[Telegram rightViewController] showByDialog:d sender:(id)sender];
 }
 
-- (void)showMessagesWidthUser:(TGUser *)user sender:(id)sender {
+- (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender {
     if(user == nil)
         return ELog(@"User nil");
     TL_conversation *dn = [[DialogsManager sharedManager] findByUserId:user.n_id];
@@ -195,7 +195,7 @@ int maxBroadcastUsers() {
 }
 
 - (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversation sender:(id)sender {
-    TGUser  *user = [[UsersManager sharedManager] find:userID];
+    TLUser  *user = [[UsersManager sharedManager] find:userID];
     [self showUserInfoWithUser:user conversation:conversation sender:sender];
 }
 
@@ -211,7 +211,7 @@ int maxBroadcastUsers() {
 }
 
 
-- (void)showUserInfoWithUser:(TGUser *)user conversation:(TL_conversation *)conversation sender:(id)sender {
+- (void)showUserInfoWithUser:(TLUser *)user conversation:(TL_conversation *)conversation sender:(id)sender {
     if(user == nil)
         return ELog(@"User nil");
     

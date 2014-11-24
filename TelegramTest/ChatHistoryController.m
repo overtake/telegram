@@ -7,7 +7,7 @@
 //
 
 #import "ChatHistoryController.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "MessageTableItem.h"
 #import "SelfDestructionController.h"
 #import "NSArray+BlockFiltering.h"
@@ -215,7 +215,7 @@ static NSMutableArray *filters;
 -(void)notificationDeleteObjectMessage:(NSNotification *)notification {
     
     [ASQueue dispatchOnStageQueue:^{
-        TGMessage *msg = [notification.userInfo objectForKey:KEY_MESSAGE];
+        TLMessage *msg = [notification.userInfo objectForKey:KEY_MESSAGE];
         
         [messageItems enumerateObjectsUsingBlock:^(MessageTableItem * obj, NSUInteger idx, BOOL *stop) {
             if(obj.message == msg) {
@@ -231,7 +231,7 @@ static NSMutableArray *filters;
 -(void)notificationReceiveMessage:(NSNotification *)notification {
     
     [ASQueue dispatchOnStageQueue:^{
-        TGMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
+        TL_localMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
         
        // [self markAsReceived:[message n_id]];
         
@@ -330,7 +330,7 @@ static NSMutableArray *filters;
         dispatch_block_t fwd_block = ^ {
             ForwardSenterItem *sender = [[ForwardSenterItem alloc] init];
             MessageTableItem *msg = fwd[0];
-            sender.conversation = msg.message.dialog;
+            sender.conversation = msg.message.conversation;
             
             NSMutableArray *fakes = [[NSMutableArray alloc] init];
             NSMutableArray *ids = [[NSMutableArray alloc] init];
@@ -751,7 +751,7 @@ static NSMutableArray *filters;
 }
 
 
--(int)posAtMessage:(TGMessage *)message {
+-(int)posAtMessage:(TLMessage *)message {
     
    
     NSArray *memoryItems = [self selectAllItems];

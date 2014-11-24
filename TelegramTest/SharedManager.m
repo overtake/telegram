@@ -8,7 +8,7 @@
 
 #import "SharedManager.h"
 #import "RPCRequest.h"
-#import "TLRPCApi.h"
+#import "TLApi.h"
 #import "MessagesUtils.h"
 @interface SharedManager ()
 

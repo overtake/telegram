@@ -10,11 +10,11 @@
 
 @implementation MessageTableItemGeo
 
-- (id) initWithObject:(TGMessage *)object {
+- (id) initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         
-        TGGeoPoint *geoPoint = object.media.geo;
+        TLGeoPoint *geoPoint = object.media.geo;
         self.geoUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", geoPoint.lat,  geoPoint.n_long, [NSScreen mainScreen].backingScaleFactor == 2 ? @"500x260" : @"250x130"]];
         
         self.blockSize = NSMakeSize(250, 130);

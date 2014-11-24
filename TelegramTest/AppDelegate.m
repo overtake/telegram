@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "CMath.h"
 #import "DialogsManager.h"
-#import "TGDialog+Extensions.h"
 //#import "AFnetworkActivityIndicatorManager.h"
 #import "SSKeychain.h"
 #import "TGSecretAction.h"
@@ -120,8 +119,8 @@
                     number = [number substringFromIndex:1];
                 
                 NSArray *users = [[UsersManager sharedManager] all];
-                TGUser *searchUser = nil;
-                for(TGUser *user in users) {
+                TLUser *searchUser = nil;
+                for(TLUser *user in users) {
                     if([user.phone isEqualToString:number]) {
                         searchUser = user;
                         break;
@@ -659,7 +658,7 @@
     if(returnCode == NSOKButton){
         NSImage *outputImage = [pictureTaker outputImage];
         
-        [[UsersManager sharedManager] updateAccountPhotoByNSImage:outputImage completeHandler:^(TGUser *user) {
+        [[UsersManager sharedManager] updateAccountPhotoByNSImage:outputImage completeHandler:^(TLUser *user) {
             
         } progressHandler:^(float progress) {
             

@@ -45,7 +45,7 @@ extern NSString *const FILE_NAMES;
 -(void)saveUpdateState:(TGUpdateState *)state;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync;
--(void)insertMessage:(TGMessage *)message completeHandler:(dispatch_block_t)completeHandler;
+-(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler;
 
 
 -(void)insertMessages:(NSArray *)messages completeHandler:(dispatch_block_t)completeHandler;
@@ -54,7 +54,7 @@ extern NSString *const FILE_NAMES;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
 
 -(void)markMessagesAsRead:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
--(void)lastMessageForPeer:(TGPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
+-(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 
@@ -82,7 +82,7 @@ extern NSString *const FILE_NAMES;
 -(void)loadChats:(void (^)(NSArray *chats))completeHandler;
 
 
-- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TGDialog *dialog, TGMessage *message))completeHandler;
+- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TLDialog *dialog, TLMessage *message))completeHandler;
 
 - (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs, NSArray *messages, NSArray *searchMessages))completeHandler;
 
@@ -92,17 +92,17 @@ extern NSString *const FILE_NAMES;
 -(void)updateTopMessage:(TL_conversation *)dialog completeHandler:(void (^)(BOOL result))completeHandler;
 
 -(void)insertChats:(NSArray *)chats completeHandler:(void (^)(BOOL result))completeHandler;
--(void)insertChat:(TGChat *)chat completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)insertChat:(TLChat *)chat completeHandler:(void (^)(BOOL result))completeHandler;
 
 
 -(void)chats:(void (^)(NSArray *result))completeHandler;
 // END MESSAGE AND DIALOGS PROCEDURES!!!
 
 
-- (void)insertUser:(TGUser *)user completeHandler:(void (^)(BOOL result))completeHandler;
+- (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler;
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler;
 - (void)users:(void (^)(NSArray *result))completeHandler;
-- (void)updateLastSeen:(TGUser *)user;
+- (void)updateLastSeen:(TLUser *)user;
 
 -(void)insertContacst:(NSArray *)contacts completeHandler:(void (^)(void))completeHandler;
 
@@ -117,8 +117,8 @@ extern NSString *const FILE_NAMES;
 
 
 -(void)fullChats:(void (^)(NSArray *chats))completeHandler;
--(void)insertFullChat:(TGChatFull *)fullChat completeHandler:(void (^)(void))completeHandler;
--(void)chatFull:(int)n_id completeHandler:(void (^)(TGChatFull *chat))completeHandler;
+-(void)insertFullChat:(TLChatFull *)fullChat completeHandler:(void (^)(void))completeHandler;
+-(void)chatFull:(int)n_id completeHandler:(void (^)(TLChatFull *chat))completeHandler;
 
 
 
@@ -131,17 +131,17 @@ extern NSString *const FILE_NAMES;
 
 -(void)markAllInDialog:(TL_conversation *)dialog;
 
--(void)insertEncryptedChat:(TGEncryptedChat *)chat;
+-(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 
 
--(void)messages:(TGPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
+-(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
--(TGMessage *)messageById:(int)msgId;
+-(TLMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
 
 
--(void)addUserPhoto:(int)user_id media:(TGUserProfilePhoto *)photo;
+-(void)addUserPhoto:(int)user_id media:(TLUserProfilePhoto *)photo;
 -(void)deleteUserPhoto:(int)user_id;
 -(void)countOfUserPhotos:(int)user_id;
 
@@ -151,9 +151,9 @@ extern NSString *const FILE_NAMES;
 
 -(void)pictures:(void (^)(NSArray *))completeHandler forUserId:(int)user_id;
 
-- (void) removeContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler;
+- (void) removeContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler;
 - (void) replaceContacts:(NSArray *) contacts completeHandler:(void (^)(void))completeHandler;
-- (void) insertContact:(TGContact *) contact completeHandler:(void (^)(void))completeHandler;
+- (void) insertContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler;
 
 //-(void)notifySettings:(void (^)(NSDictionary *))completeHandler;
 //-(void)addNotifySetting:(int)peer_id mute_until:(int)mute_until;
@@ -177,7 +177,7 @@ extern NSString *const FILE_NAMES;
 -(void)removeTask:(id<ITaskRequest>)task;
 -(void)selectTasks:(void (^)(NSArray *tasks))completeHandler;
 
--(TL_conversation *)selectConversation:(TGPeer *)peer;
+-(TL_conversation *)selectConversation:(TLPeer *)peer;
 - (id)fileInfoByPathHash:(NSString *)pathHash;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;

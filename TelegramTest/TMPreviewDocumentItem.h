@@ -9,5 +9,5 @@
 #import "TMPreviewPhotoItem.h"
 
 @interface TMPreviewDocumentItem : NSObject<TMPreviewItem>
-- (TGDocument *)document;
+- (TLDocument *)document;
 @end

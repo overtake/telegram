@@ -79,14 +79,14 @@
                 NSString *userName = @"";
                 
                 if([obj.message isKindOfClass:[TL_localMessageForwarded class]]) {
-                    if(obj.fwd_user.user_name.length > 0) {
-                        userName = [NSString stringWithFormat:@"@%@",obj.fwd_user.user_name];
+                    if(obj.fwd_user.username.length > 0) {
+                        userName = [NSString stringWithFormat:@"@%@",obj.fwd_user.username];
                     } else {
                         userName = obj.fwd_user.first_name;
                     }
                 } else {
-                    if(obj.user.user_name.length > 0) {
-                        userName = [NSString stringWithFormat:@"@%@",obj.user.user_name];
+                    if(obj.user.username.length > 0) {
+                        userName = [NSString stringWithFormat:@"@%@",obj.user.username];
                     } else {
                         userName = obj.user.first_name;
                     }

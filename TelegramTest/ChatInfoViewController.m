@@ -248,7 +248,7 @@
     }
 }
 
-- (void)setChat:(TGChat *)chat {
+- (void)setChat:(TLChat *)chat {
     self->_chat = chat;
     
     if(chat)
@@ -284,7 +284,7 @@
     [MessageSender sendStatedMessage:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
         
         
-        TGChatParticipants *participants = strongSelf.fullChat.participants;
+        TLChatParticipants *participants = strongSelf.fullChat.participants;
         
         
         NSArray *participant = [participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",item.user.n_id]];
@@ -331,12 +331,12 @@
         self.notNeedToUpdate = NO;
         return;
     }
-    TGChatParticipants *participants = self.fullChat.participants;
+    TLChatParticipants *participants = self.fullChat.participants;
 
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     int selfId = UsersManager.currentUserId;
-    for(TGChatParticipant *participant in participants.participants) {
+    for(TLChatParticipant *participant in participants.participants) {
         ChatParticipantItem *item = [[ChatParticipantItem alloc] initWithObject:participant];
         item.isBlocking = ((ChatParticipantItem *)[_tableView itemByHash:item.hash]).isBlocking;
         item.isCanKicked = (participant.inviter_id == selfId || self.fullChat.participants.admin_id == selfId) && participant.user_id != selfId;

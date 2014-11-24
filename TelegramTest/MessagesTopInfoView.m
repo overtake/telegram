@@ -7,7 +7,7 @@
 //
 
 #import "MessagesTopInfoView.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 @interface MessagesTopInfoView () <TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TMHyperlinkTextField *field;
 @property (nonatomic,strong) NSProgressIndicator *progress;
@@ -95,14 +95,14 @@ static NSMutableDictionary *cache;
 }
 
 - (void)didChangeUserType:(NSNotification *)notification {
-    TGUser *user = notification.userInfo[KEY_USER];
+    TLUser *user = notification.userInfo[KEY_USER];
     
      MessagesTopInfoAction newAction = MessagesTopInfoActionNone;
     
-    if(user.type == TGUserTypeRequest)
+    if(user.type == TLUserTypeRequest)
         newAction = MessagesTopInfoActionAddContact;
     
-    if(user.type == TGUserTypeForeign) {
+    if(user.type == TLUserTypeForeign) {
         newAction = MessagesTopInfoActionShareContact;
     }
     
@@ -152,14 +152,14 @@ static NSMutableDictionary *cache;
     
     
     
-    TGUser *user = conversation.user;
+    TLUser *user = conversation.user;
     
     MessagesTopInfoAction newAction = MessagesTopInfoActionNone;
     
-    if(user.type == TGUserTypeRequest)
+    if(user.type == TLUserTypeRequest)
         newAction = MessagesTopInfoActionAddContact;
     
-    if(user.type == TGUserTypeForeign) {
+    if(user.type == TLUserTypeForeign) {
         newAction = MessagesTopInfoActionShareContact;
     }
     
@@ -254,7 +254,7 @@ static NSMutableDictionary *cache;
     
     if(self.action == MessagesTopInfoActionAddContact) {
         self.locked = YES;
-        [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:self.controller.dialog.user.phone first_name:self.controller.dialog.user.first_name last_name:self.controller.dialog.user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+        [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:self.controller.dialog.user.phone first_name:self.controller.dialog.user.first_name last_name:self.controller.dialog.user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
             cache[@(self.action)][@(self.conversation.peer.peer_id)] = @(self.conversation.peer.peer_id);
             [self hide:YES];
             self.locked = NO;

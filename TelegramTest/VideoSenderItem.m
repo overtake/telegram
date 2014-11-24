@@ -34,7 +34,7 @@
         
         NSImage *thumbImage = [params objectForKey:@"image"];
         
-        TGPhotoSize *cachedSize;
+        TLPhotoSize *cachedSize;
         NSData *imageData = nil;
         if(thumbImage) {
             imageData = [thumbImage TIFFRepresentation];
@@ -78,7 +78,7 @@
     weakify();
     [self.uploader setUploadComplete:^(UploadOperation *video, id input) {
         
-        __block BOOL isFirstSend = [input isKindOfClass:[TGInputFile class]];
+        __block BOOL isFirstSend = [input isKindOfClass:[TLInputFile class]];
         __block id media = nil;
 
         dispatch_block_t block = ^{
@@ -99,7 +99,7 @@
                 [SharedManager proccessGlobalResponse:response];
                 
                 
-                TGMessage *msg;
+                TLMessage *msg;
                 
                 
                 if(strongSelf.conversation.type != DialogTypeBroadcast)  {
@@ -146,8 +146,8 @@
         };
 
         if(!isFirstSend) {
-            TGVideo *video = input;
-            media = [TL_inputMediaVideo createWithVideo_id:[TL_inputVideo createWithN_id:video.n_id access_hash:video.access_hash]];
+            TLVideo *video = input;
+            media = [TL_inputMediaVideo createWithN_id:[TL_inputVideo createWithN_id:video.n_id access_hash:video.access_hash]];
             block();
         } else {
             

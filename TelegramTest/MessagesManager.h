@@ -14,14 +14,13 @@
 
 -(TL_destructMessage *)findWithRandomId:(long)random_id;
 
--(void)addMessage:(TGMessage *)message;
--(void)TGsetMessage:(TGMessage *)message;
+-(void)addMessage:(TLMessage *)message;
+-(void)TGsetMessage:(TLMessage *)message;
 
--(NSArray *)markAllInDialog:(TGDialog*)dialog;
+-(NSArray *)markAllInDialog:(TLDialog*)dialog;
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
--(TGMessageMedia *)mediaFromEncryptedMessage:(TGDecryptedMessageMedia *)media file:(TGEncryptedFile *)file;
 +(void)statedMessage:(TL_messages_statedMessage*)response;
-+(TGMessage *)defaultMessage:(TL_encryptedMessage *)message;
-+(void)addAndUpdateMessage:(TGMessage *)message;
-+(void)notifyMessage:(TGMessage *)message update_real_date:(BOOL)update_real_date;
++(TLMessage *)defaultMessage:(TL_encryptedMessage *)message;
++(void)addAndUpdateMessage:(TLMessage *)message;
++(void)notifyMessage:(TLMessage *)message update_real_date:(BOOL)update_real_date;
 @end

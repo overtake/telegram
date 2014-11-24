@@ -1,19 +1,19 @@
 //
-//  TGUserCategory.m
+//  TLUserCategory.m
 //  Telegram P-Edition
 //
 //  Created by Dmitry Kondratyev on 2/18/14.
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TGUserCategory.h"
+#import "TLUserCategory.h"
 #import "NSString+Extended.h"
 #import "RMPhoneFormat.h"
-#import "TGUserStatusCategory.h"
+#import "TLUserStatusCategory.h"
 #import "TGDateUtils.h"
 
 
-@implementation TGUser (Category)
+@implementation TLUser (Category)
 
 /*
       TYPE
@@ -22,31 +22,31 @@
 
 DYNAMIC_PROPERTY(DType);
 
-- (TGUserType)type {
+- (TLUserType)type {
     NSNumber *type = [self getDType];
     if(!type)
         type = [NSNumber numberWithInt:[self rebuildType]];
     return [type intValue];
 }
 
-- (void)setType:(TGUserType)type {
+- (void)setType:(TLUserType)type {
     [self setDType:[NSNumber numberWithInt:type]];
 }
 
-- (TGUserType)rebuildType {
+- (TLUserType)rebuildType {
     int type;
     if([self isKindOfClass:[TL_userContact class]])
-        type = TGUserTypeContact;
+        type = TLUserTypeContact;
     else if([self isKindOfClass:[TL_userDeleted class]])
-        type = TGUserTypeDeleted;
+        type = TLUserTypeDeleted;
     else if([self isKindOfClass:[TL_userEmpty class]])
-        type = TGUserTypeEmpty;
+        type = TLUserTypeEmpty;
     else if([self isKindOfClass:[TL_userForeign class]])
-        type = TGUserTypeForeign;
+        type = TLUserTypeForeign;
     else if([self isKindOfClass:[TL_userSelf class]])
-        type = TGUserTypeSelf;
+        type = TLUserTypeSelf;
     else
-        type = TGUserTypeRequest;
+        type = TLUserTypeRequest;
     [self setType:type];
     
     return type;
@@ -126,12 +126,12 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     NSString *fullNameOrPhone = fullName;
     
     NSColor *colorByNameOrPhone;
-    if(self.type == TGUserTypeRequest) {
+    if(self.type == TLUserTypeRequest) {
         fullNameOrPhone = self.phoneWithFormat;
         colorByNameOrPhone = BLUE_UI_COLOR;
-    } else if(self.type == TGUserTypeForeign || self.type == TGUserTypeDeleted || self.type == TGUserTypeEmpty) {
+    } else if(self.type == TLUserTypeForeign || self.type == TLUserTypeDeleted || self.type == TLUserTypeEmpty) {
         colorByNameOrPhone = BLUE_UI_COLOR;
-    } else if(self.type == TGUserTypeSelf) {
+    } else if(self.type == TLUserTypeSelf) {
         colorByNameOrPhone = BLUE_UI_COLOR;
     } else {
         colorByNameOrPhone = NSColorFromRGB(0x333333);
@@ -168,7 +168,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
     
-    [userNameTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:NSColorFromRGB(0x999999)];
+    [userNameTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:NSColorFromRGB(0x999999)];
     [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
     
     [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];
@@ -177,7 +177,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *userNameProfileTitle = [[NSMutableAttributedString alloc] init];
     
-    [userNameProfileTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:NSColorFromRGB(0x333333)];
+    [userNameProfileTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:NSColorFromRGB(0x333333)];
     [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     
     
@@ -188,7 +188,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *userNameSearchTitle = [[NSMutableAttributedString alloc] init];
     
-    [userNameSearchTitle appendString:[NSString stringWithFormat:@"@%@",self.user_name] withColor:BLUE_UI_COLOR];
+    [userNameSearchTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:BLUE_UI_COLOR];
     [userNameSearchTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
     
     
@@ -470,22 +470,22 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
 }
 
 
-- (TGInputUser *)inputUser {
+- (TLInputUser *)inputUser {
     switch (self.type) {
-        case TGUserTypeContact:
+        case TLUserTypeContact:
             return [TL_inputUserContact createWithUser_id:self.n_id];
             break;
-        case TGUserTypeDeleted:
+        case TLUserTypeDeleted:
             return [TL_inputUserEmpty create];
             break;
-        case TGUserTypeEmpty:
+        case TLUserTypeEmpty:
             return [TL_inputUserEmpty create];
             break;
-        case TGUserTypeForeign:
+        case TLUserTypeForeign:
             return [TL_inputUserForeign createWithUser_id:self.n_id access_hash:self.access_hash];
-        case TGUserTypeRequest:
+        case TLUserTypeRequest:
             return [TL_inputUserForeign createWithUser_id:self.n_id access_hash:self.access_hash];
-        case TGUserTypeSelf:
+        case TLUserTypeSelf:
             return [TL_inputUserSelf create];
         default:
             return [TL_inputUserEmpty create];
@@ -493,7 +493,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     }
 }
 
--(TGInputPeer *)inputPeer {
+-(TLInputPeer *)inputPeer {
     if([self isKindOfClass:[TL_userContact class]]) {
         return [TL_inputPeerContact createWithUser_id:self.n_id];
     }

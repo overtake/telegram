@@ -11,10 +11,10 @@
 
 @interface TMAvatarImageView : BTRImageView
 
-@property (nonatomic,strong) TGFileLocation *fileLocation;
+@property (nonatomic,strong) TLFileLocation *fileLocation;
 
-@property (nonatomic, strong) TGUser *user;
-@property (nonatomic, strong) TGChat *chat;
+@property (nonatomic, strong) TLUser *user;
+@property (nonatomic, strong) TLChat *chat;
 @property (nonatomic, strong) TL_broadcast *broadcast;
 @property (nonatomic, strong) NSString *text;
 

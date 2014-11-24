@@ -8,7 +8,7 @@
 //
 
 #import "TMPreviewChatPicture.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
 #import "TMMediaController.h"
 #import "DownloadPhotoItem.h"

@@ -11,12 +11,12 @@
 
 @implementation MessageTableItemGif
 
-- (id)initWithObject:(TGMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         self.document = self.message.media.document;
         
-        TGPhotoSize *thumb = self.document.thumb;
+        TLPhotoSize *thumb = self.document.thumb;
         
         self.previewLocation = thumb.location;
         
@@ -43,7 +43,7 @@
             
             self.cachedThumb = [ImageUtils roundCorners:self.cachedThumb size:NSMakeSize(3, 3)];
         } else {
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.previewLocation placeHolder:self.cachedThumb sourceId:object.peer.peer_id size:thumb.size];
+            self.imageObject = [[TGImageObject alloc] initWithLocation:self.previewLocation placeHolder:self.cachedThumb sourceId:object.peer_id size:thumb.size];
         }
         
         self.imageObject.imageSize = size;

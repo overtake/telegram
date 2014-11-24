@@ -9,7 +9,7 @@
 #import "ImageCache.h"
 #import "ImageStorage.h"
 #import "ImageUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @interface ImageCache()
 @property (nonatomic, strong) NSCache *roundCache;
 @end
@@ -44,7 +44,7 @@
 }
 
 
-- (void) editCacheKey:(TGFileLocation *)old withLocation:(TGFileLocation *)location {
+- (void) editCacheKey:(TLFileLocation *)old withLocation:(TLFileLocation *)location {
     NSImage *image = [self imageFromMemory:old];
     if(image) {
         [self removeFromCache:location];
@@ -61,19 +61,19 @@
     return [[self sharedManager] roundCache];
 }
 
--(void) removeFromCache:(TGFileLocation *)location {
+-(void) removeFromCache:(TLFileLocation *)location {
      [self removeObjectForKey:[location cacheKey]];
 }
 
-- (void) setImage:(NSImage *)image forLocation:(TGFileLocation *)location {
+- (void) setImage:(NSImage *)image forLocation:(TLFileLocation *)location {
     [self setObject:image forKey:location.cacheKey];
 }
 
-- (NSImage *) imageFromMemory:(TGFileLocation *)location {
+- (NSImage *) imageFromMemory:(TLFileLocation *)location {
     return [self objectForKey:[location cacheKey]];
 }
 
-- (NSImage*) imageFromMemory:(TGFileLocation*)location round:(int)round {
+- (NSImage*) imageFromMemory:(TLFileLocation*)location round:(int)round {
     return [self imageFromMemory:location];
    return [self objectForKey:[[location cacheKey] stringByAppendingFormat:@"_%d",round]];
 }

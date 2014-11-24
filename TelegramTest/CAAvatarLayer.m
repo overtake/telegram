@@ -8,7 +8,7 @@
 
 #import "CAAvatarLayer.h"
 
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
 
 #import "DownloadPhotoItem.h"
@@ -25,7 +25,7 @@ typedef enum {
 @interface CAAvatarLayer()
 
 @property (nonatomic) CAAvatarLayerType type;
-@property (nonatomic, strong) TGFileLocation *fileLocation;
+@property (nonatomic, strong) TLFileLocation *fileLocation;
 @property (nonatomic, strong) NSImage *drawImage;
 
 @property (nonatomic, strong) DownloadPhotoItem *downloadItem;
@@ -56,14 +56,14 @@ typedef enum {
     return [super defaultValueForKey:key];
 }
 
-- (void) setUser:(TGUser *)user {
+- (void) setUser:(TLUser *)user {
     self->_user = user;
     self.type = CAAvatarLayerUser;
     self.fileLocation = user.photo.photo_small;
     [self rebuild];
 }
 
-- (void) setChat:(TGChat *)chat {
+- (void) setChat:(TLChat *)chat {
     [self redraw];
     self->_chat = chat;
     self.type = CAAvatarLayerChat;

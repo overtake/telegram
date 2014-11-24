@@ -1,5 +1,5 @@
 //
-//  TGEncryptedChatCategory.h
+//  TLEncryptedChatCategory.h
 //  Messenger for Telegram
 //
 //  Created by Dmitry Kondratyev on 3/11/14.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TGEncryptedChat (Category)
+@interface TLEncryptedChat (Category)
 
 - (EncryptedParams *)encryptedParams;
 - (TL_conversation *)dialog;

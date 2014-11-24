@@ -13,6 +13,6 @@
 @interface BlockedUserRowItem : TMRowItem
 
 @property (nonatomic,strong,readonly) TL_contact *contact;
-@property (nonatomic,strong,readonly) TGUser *user;
+@property (nonatomic,strong,readonly) TLUser *user;
 
 @end

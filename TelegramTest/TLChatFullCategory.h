@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TGChatFull (Category)
+@interface TLChatFull (Category)
 
 - (int)lastUpdateTime;
 - (void)setLastUpdateTime:(int)lastUpdateTime;

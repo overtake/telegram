@@ -148,7 +148,7 @@
         
         [DownloadQueue dispatchOnDownloadQueue:^{
             
-            TGupload_File *obj = response;
+            TLupload_File *obj = response;
             
             part.resultData = obj.bytes;
             

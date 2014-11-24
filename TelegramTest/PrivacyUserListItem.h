@@ -11,7 +11,7 @@
 @class PrivacyUserListController;
 
 @interface PrivacyUserListItem : TMRowItem
-@property (nonatomic,strong,readonly) TGUser *user;
+@property (nonatomic,strong,readonly) TLUser *user;
 
 @property (nonatomic,weak) PrivacyUserListController *controller;
 @end

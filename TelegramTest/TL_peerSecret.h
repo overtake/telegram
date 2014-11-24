@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 
 @interface TL_peerSecret : TL_peerChat
 +(TL_peerSecret *)createWithChat_id:(int)chat_id;

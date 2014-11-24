@@ -16,7 +16,7 @@
 #import "SelectUserRowView.h"
 #import "NewConversationViewController.h"
 #import "RBLPopover.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "AddContactViewController.h"
 @interface ContactFirstItem : TMRowItem
 
@@ -312,7 +312,7 @@
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
     for(TL_contact *contact in all) {
         
-        if(contact.user.type != TGUserTypeEmpty && contact.user.type != TGUserTypeDeleted) {
+        if(contact.user.type != TLUserTypeEmpty && contact.user.type != TLUserTypeDeleted) {
             ContactUserItem *item = [[ContactUserItem alloc] initWithObject:contact];
             [contacts addObject:item];
         }

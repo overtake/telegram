@@ -1,5 +1,5 @@
 //
-//  TGChatCategory.h
+//  TLChatCategory.h
 //  Messenger for Telegram
 //
 //  Created by Dmitry Kondratyev on 2/26/14.
@@ -8,20 +8,20 @@
 
 #import "TMTextField.h"
 
-@interface TGChat (Category)
+@interface TLChat (Category)
 
 typedef enum {
-    TGChatTypeNormal,
-    TGChatTypeForbidden,
-    TGChatTypeEmpty
-} TGChatType;
+    TLChatTypeNormal,
+    TLChatTypeForbidden,
+    TLChatTypeEmpty
+} TLChatType;
 
 - (NSAttributedString *)dialogTitle;
 - (NSAttributedString *)titleForMessage;
 - (NSAttributedString *)titleForChatInfo;
 
-- (TGChatType) type;
-- (void) setType:(TGChatType)type;
+- (TLChatType) type;
+- (void) setType:(TLChatType)type;
 
 -(TL_conversation *)dialog;
 

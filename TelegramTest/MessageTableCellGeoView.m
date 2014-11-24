@@ -39,7 +39,7 @@
         __block dispatch_block_t block = ^{
             MessageTableItemGeo *geoItem = (MessageTableItemGeo *)weakSelf.item;
             
-            TGUser *user = [[UsersManager sharedManager] find:geoItem.message.from_id];
+            TLUser *user = [[UsersManager sharedManager] find:geoItem.message.from_id];
             
             NSString *fullName = user.fullName ? [weakSelf urlEncoded:user.fullName] : @"";
             

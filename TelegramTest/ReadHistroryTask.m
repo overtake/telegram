@@ -9,7 +9,7 @@
 #import "ReadHistroryTask.h"
 #import "TMTaskRequest.h"
 @interface ReadHistroryTask ()
-@property (nonatomic,strong) TGPeer *peer;
+@property (nonatomic,strong) TLPeer *peer;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
 

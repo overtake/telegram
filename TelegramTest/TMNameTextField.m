@@ -69,7 +69,7 @@
     if(self.type != TMNameTextFieldChat)
         return;
 
-    TGChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
+    TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
     if(chat.n_id == self.chat.n_id) {
         self->_chat = nil;
         [self setChat:chat];
@@ -91,7 +91,7 @@
     if(self.type == TMNameTextFieldChat)
         return;
     
-    TGUser *user = [notify.userInfo objectForKey:KEY_USER];
+    TLUser *user = [notify.userInfo objectForKey:KEY_USER];
     if(self.user.n_id != user.n_id)
         return;
     
@@ -99,11 +99,11 @@
     [self setUser:user isEncrypted:self.type == TMNameTextFieldEncryptedChat];
 }
 
-- (void)setUser:(TGUser *)user {
+- (void)setUser:(TLUser *)user {
     [self setUser:user isEncrypted:NO];
 }
 
-- (void)setUser:(TGUser *)user isEncrypted:(BOOL)isEncrypted {
+- (void)setUser:(TLUser *)user isEncrypted:(BOOL)isEncrypted {
     TMNameTextFieldType type = isEncrypted ? TMNameTextFieldEncryptedChat : TMNameTextFieldUser;
     
     if(self->_user.n_id == user.n_id && self.type == type)
@@ -117,7 +117,7 @@
     self.attributedStringValue = [user performSelector:isEncrypted ? self.encryptedSelector : self.selector withObject:nil];
 }
 
-- (void)setChat:(TGChat *)chat {
+- (void)setChat:(TLChat *)chat {
     if(self->_chat.n_id == chat.n_id)
         return;
     
@@ -167,8 +167,8 @@
 }
 
 - (void)update {
-    TGChat *chat = self.chat;
-    TGUser *user = self.user;
+    TLChat *chat = self.chat;
+    TLUser *user = self.user;
     TL_broadcast *broadcast = self.broadcast;
     
     self.chat = nil;

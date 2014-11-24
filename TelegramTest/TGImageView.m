@@ -8,7 +8,7 @@
 
 #import "TGImageView.h"
 #import "ImageCache.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "TGCache.h"
 @interface TGImageView ()
 @property (nonatomic, strong) NSTrackingArea *trackingArea;
@@ -69,7 +69,7 @@
 
 
 
-- (NSUInteger) getKeyFromFileLocation:(TGFileLocation *)fileLocation {
+- (NSUInteger) getKeyFromFileLocation:(TLFileLocation *)fileLocation {
     NSString *string = [NSString stringWithFormat:@"%d_%f_%lu", self.roundSize, [self.borderColor redComponent], fileLocation.hashCacheKey];
     return [string hash];
 }

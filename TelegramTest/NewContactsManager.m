@@ -55,11 +55,11 @@
         [ASQueue dispatchOnStageQueue:^{
             HASH_CHECK();
             [self->list addObjectsFromArray:contacts];
-            for(TGContact *contact in contacts)
+            for(TLContact *contact in contacts)
                 [self insertContact:contact insertToDB:NO];
             
             
-            [self->list sortUsingComparator:^NSComparisonResult(TGContact *obj1, TGContact *obj2) {
+            [self->list sortUsingComparator:^NSComparisonResult(TLContact *obj1, TLContact *obj2) {
                 return [obj1.user.first_name compare:obj2.user.first_name options:NSWidthInsensitiveSearch];
             }];
             
@@ -99,7 +99,7 @@
             ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
             long client_id = [person hash];
             
-            TGImportedContact *k = [imported objectForKey:[NSNumber numberWithLong:client_id]];
+            TLImportedContact *k = [imported objectForKey:[NSNumber numberWithLong:client_id]];
             TL_inputPhoneContact *contact = [TL_inputPhoneContact createWithClient_id:client_id phone:[phones valueAtIndex:0] first_name:[person valueForProperty:kABFirstNameProperty] last_name:[person valueForProperty:kABLastNameProperty]];
             if(!k) {
                 [import addObject:contact];
@@ -117,7 +117,7 @@
                     [SharedManager proccessGlobalResponse:response];
                     
                     NSMutableArray *newContacts = [[NSMutableArray alloc] init];
-                    for (TGImportedContact *imported in [contacts imported]) {
+                    for (TLImportedContact *imported in [contacts imported]) {
                         [newContacts addObject:[TL_contact createWithUser_id:imported.user_id mutual:YES]];
                         [toImportCheck removeObjectForKey:[NSNumber numberWithLong:imported.client_id]];
                     }
@@ -152,7 +152,7 @@
         
         for (TL_contactStatus *contactStatus in response) {
             
-         //   TGUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
+         //   TLUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
             
             [[UsersManager sharedManager] setUserStatus:contactStatus.status forUid:contactStatus.user_id];
         }
@@ -204,7 +204,7 @@
                 
                 [self->list addObjectsFromArray:result.contacts];
                 
-                [needSave enumerateObjectsUsingBlock:^(TGContact *obj, NSUInteger idx, BOOL *stop) {
+                [needSave enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
                       [self->keys setObject:obj forKey:[NSNumber numberWithInt:obj.user_id]];
                 }];
                 
@@ -215,7 +215,7 @@
     
 }
 
-- (void) insertContact:(TGContact *)contact insertToDB:(BOOL)insertToDB {
+- (void) insertContact:(TLContact *)contact insertToDB:(BOOL)insertToDB {
     
     [ASQueue dispatchOnStageQueue:^{
         [self->keys setObject:contact forKey:[NSNumber numberWithInt:contact.user_id]];
@@ -225,13 +225,13 @@
     }];
 }
 
-- (void) deleteContact:(TGUser *)user completeHandler:(void (^)(BOOL result))compleHandler {
+- (void) deleteContact:(TLUser *)user completeHandler:(void (^)(BOOL result))compleHandler {
     [RPCRequest sendRequest:[TLAPI_contacts_deleteContact createWithN_id:[user inputUser]] successHandler:^(RPCRequest *request, TL_contacts_link *response) {
         
-        TGUser *user = response.user;
+        TLUser *user = response.user;
         [[UsersManager sharedManager] add:[NSArray arrayWithObject:user]];
         
-        TGContact *contact = [TL_contact createWithUser_id:user.n_id mutual:NO];
+        TLContact *contact = [TL_contact createWithUser_id:user.n_id mutual:NO];
         [self removeContact:contact removeFromDB:YES];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
@@ -245,7 +245,7 @@
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
-- (void) removeContact:(TGContact *)contact removeFromDB:(BOOL)removeFromDB {
+- (void) removeContact:(TLContact *)contact removeFromDB:(BOOL)removeFromDB {
     [ASQueue dispatchOnStageQueue:^{
         [self->keys removeObjectForKey:[NSNumber numberWithInt:contact.user_id]];
         [self->list removeObject:contact];
@@ -256,7 +256,7 @@
     }];
 }
 
-- (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TGUser *user))callback {
+- (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TLUser *user))callback {
     
     INIT_HASH_CHEKER();
     [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:(NSMutableArray *)[NSArray arrayWithObject:contact] replace:NO] successHandler:^(RPCRequest *request, TL_contacts_importedContacts *response) {
@@ -271,13 +271,13 @@
         
         TL_importedContact *importedContact = [response.imported objectAtIndex:0];
         
-        TGUser *userContact = nil;
-        for(TGUser *user in response.users) {
+        TLUser *userContact = nil;
+        for(TLUser *user in response.users) {
             if(user.n_id == importedContact.user_id)
                 userContact = user;
         }
         
-        TGContact *contact = [TL_contact createWithUser_id:userContact.n_id mutual:NO];
+        TLContact *contact = [TL_contact createWithUser_id:userContact.n_id mutual:NO];
         [self insertContact:contact insertToDB:YES];
         
         [self add:@[contact] withCustomKey:@"user_id"];

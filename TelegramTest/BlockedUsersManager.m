@@ -78,7 +78,7 @@
 
 - (void)add:(NSArray *)all {
     [ASQueue dispatchOnStageQueue:^{
-        for (TGContactBlocked *blockedContact in all) {
+        for (TLContactBlocked *blockedContact in all) {
             [self->keys setObject:blockedContact forKey:@(blockedContact.user_id)];
         }
     }];
@@ -118,7 +118,7 @@
 }
 
 - (void)block:(BOOL)isBlock user_id:(int)user_id completeHandler:(BlockedHandler)block {
-    TGUser *user = [[UsersManager sharedManager] find:user_id];
+    TLUser *user = [[UsersManager sharedManager] find:user_id];
     if(!user) {
         block(NO);
         return;

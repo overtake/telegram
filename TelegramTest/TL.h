@@ -8,6 +8,6 @@
 //
 
 #import "RPCRequest.h"
-#import "TLRPCApi.h"
-#import "TLRPC.h"
+#import "TLApi.h"
+#import "MTProto.h"
 #import "TLClassStore.h"

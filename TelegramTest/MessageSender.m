@@ -9,12 +9,11 @@
 #import "MessageSender.h"
 #import "CMath.h"
 #import "Notification.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "UploadOperation.h"
 #import "ImageCache.h"
 #import "ImageStorage.h"
 #import "ImageUtils.h"
-#import "TGDialog+Extensions.h"
 #import <QTKit/QTKit.h>
 #import "Crypto.h"
 #import "FileUtils.h"
@@ -27,8 +26,7 @@
 #import "TGUpdateMessageService.h"
 #import "NSArray+BlockFiltering.h"
 #import "MessagesUtils.h"
-#import "TGMessage+Extensions.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "Telegram.h"
 #import "TGTimer.h"
 @implementation MessageSender
@@ -154,7 +152,7 @@
 
 
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TGMessageMedia *)media dialog:(TL_conversation *)dialog {
++(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media dialog:(TL_conversation *)dialog {
     return  [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[dialog.peer peerOut] date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
 }
 
@@ -201,38 +199,15 @@
     return fullData;;
 }
 
-+(void)insertEncryptedServiceMessage:(NSString *)title chat:(TGEncryptedChat *)chat {
++(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat {
     
     TL_localMessageService *msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] flags:TGNOFLAGSMESSAGE from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
     [MessagesManager addAndUpdateMessage:msg];
 }
 
-+(id)requestForDeleteEncryptedMessages:(NSMutableArray *)ids dialog:(TL_conversation *)dialog {
-    
-    TGEncryptedChat *chat = [[ChatsManager sharedManager] find:dialog.peer.chat_id];
-    TL_decryptedMessageService *msg = [TL_decryptedMessageService createWithRandom_id:rand_long() random_bytes:[[NSMutableData alloc] initWithRandomBytes:256] action:[TL_decryptedMessageActionDeleteMessages createWithRandom_ids:ids]];
-    
-    NSData *messageData = [[TLClassStore sharedManager] serialize:msg];
-    
-    TLAPI_messages_sendEncryptedService *request = [TLAPI_messages_sendEncryptedService createWithPeer:[chat inputPeer] random_id:rand_long() data:[self getEncrypted:dialog messageData:messageData]];
-    
-    return request;
-    
-}
 
-+(id)requestForFlushEncryptedHistory:(TL_conversation *)dialog {
-    
-    TGEncryptedChat *chat = [[ChatsManager sharedManager] find:dialog.peer.chat_id];
-    
-    TL_decryptedMessageService *msg = [TL_decryptedMessageService createWithRandom_id:rand_long() random_bytes:[[NSMutableData alloc] initWithRandomBytes:256] action:[TL_decryptedMessageActionFlushHistory create]];
-    
-    NSData *messageData = [[TLClassStore sharedManager] serialize:msg];
-    
-    TLAPI_messages_sendEncryptedService *request = [TLAPI_messages_sendEncryptedService createWithPeer:[chat inputPeer] random_id:rand_long() data:[self getEncrypted:dialog messageData:messageData]];
-    
-    return request;
-    
-}
+
+
 
 
 
@@ -271,7 +246,7 @@
     return (int) msgId;
 }
 
-+(void)startEncryptedChat:(TGUser *)user callback:(dispatch_block_t)callback {
++(void)startEncryptedChat:(TLUser *)user callback:(dispatch_block_t)callback {
     
     [RPCRequest sendRequest:[TLAPI_messages_getDhConfig createWithVersion:1 random_length:256] successHandler:^(RPCRequest *request, TL_messages_dhConfig * response) {
         
@@ -286,7 +261,7 @@
         
         
         
-        TGInputUser *inputUser = user.inputUser;
+        TLInputUser *inputUser = user.inputUser;
         
         [RPCRequest sendRequest:[TLAPI_messages_requestEncryption createWithUser_id:inputUser random_id:params.n_id g_a:g_a] successHandler:^(RPCRequest *request, id response) {
             

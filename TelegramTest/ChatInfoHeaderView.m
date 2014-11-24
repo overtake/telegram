@@ -31,7 +31,7 @@
 @end
 
 @interface ChatInfoHeaderView()
-@property (nonatomic, strong) TGChatFull *fullChat;
+@property (nonatomic, strong) TLChatFull *fullChat;
 
 
 
@@ -259,7 +259,7 @@
 
 - (void)reload {
     
-    TGChat *chat = self.controller.chat;
+    TLChat *chat = self.controller.chat;
     
     [self.statusTextField setChat:chat];
     [self.statusTextField sizeToFit];

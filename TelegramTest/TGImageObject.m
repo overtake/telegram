@@ -11,18 +11,18 @@
 #import "ImageCache.h"
 #import "TGImageView.h"
 #import "ImageUtils.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "TGCache.h"
 @implementation TGImageObject
 
--(id)initWithLocation:(TGFileLocation *)location {
+-(id)initWithLocation:(TLFileLocation *)location {
     if(self = [self initWithLocation:location placeHolder:nil sourceId:0 size:0]) {
         
     }
     return self;
 }
 
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder {
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder {
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:0 size:0]) {
         
     }
@@ -30,14 +30,14 @@
 }
 
 
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId {
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId {
     if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:0]) {
         
     }
     return self;
 }
 
--(id)initWithLocation:(TGFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
+-(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
     if(self = [super init]) {
         _location = location;
         _placeholder = placeHolder;

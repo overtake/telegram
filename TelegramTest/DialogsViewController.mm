@@ -9,8 +9,7 @@
 #import "DialogsViewController.h"
 #import "Telegram.h"
 #import "DialogsManager.h"
-#import "TGPeer+Extensions.h"
-#import "FakeDialog.h"
+#import "TLPeer+Extensions.h"
 #import "Telegram.h"
 #import "DialogTableObject.h"
 #import "ImageUtils.h"
@@ -360,8 +359,8 @@
 + (void)showPopupMenuForDialog:(TL_conversation *)dialog withEvent:(NSEvent *)theEvent forView:(NSView *)view {
     NSMenu *menu = [[NSMenu alloc] init];
     
-    __block TGUser *user = dialog.type == DialogTypeSecretChat ? dialog.encryptedChat.peerUser : dialog.user;
-    __block TGChat *chat = dialog.chat;
+    __block TLUser *user = dialog.type == DialogTypeSecretChat ? dialog.encryptedChat.peerUser : dialog.user;
+    __block TLChat *chat = dialog.chat;
     
     NSMenuItem *openConversationMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.OpenConversation", nil) withBlock:^(id sender) {
         [[Telegram rightViewController] showByDialog:dialog sender:self];
@@ -397,7 +396,7 @@
         [menu addItem:muteMenuItem];
         
         
-        if(user.type == TGUserTypeRequest) {
+        if(user.type == TLUserTypeRequest) {
             [menu addItem:[NSMenuItem separatorItem]];
             __block BOOL isBlocked = [[BlockedUsersManager sharedManager] isBlocked:user.n_id];
             NSMenuItem *blockUser = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:isBlocked ? NSLocalizedString(@"User.UnlockUser", nil) : NSLocalizedString(@"User.BlockUser", nil), user.dialogFullName] withBlock:^(id sender) {
@@ -411,7 +410,7 @@
             [menu addItem:blockUser];
             
             NSMenuItem *addToContacts = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"User.AddToContacts", nil) withBlock:^(id sender) {
-                [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:user.phone first_name:user.first_name last_name:user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+                [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:user.phone first_name:user.first_name last_name:user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
                     
                 }];
             }];
@@ -451,7 +450,7 @@
             
         }
         
-        if(chat.type != TGChatTypeNormal || chat.left)
+        if(chat.type != TLChatTypeNormal || chat.left)
             showСhatProfile.target = nil;
         
         [menu addItem:showСhatProfile];
@@ -470,7 +469,7 @@
         
         if(dialog.type == DialogTypeChat) {
             
-           NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TGChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+           NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];
@@ -478,7 +477,7 @@
             NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
             }];
-            if(chat.type != TGChatTypeNormal)
+            if(chat.type != TLChatTypeNormal)
                 leaveFromGroupItem.target = nil;
             
             [menu addItem:leaveFromGroupItem];

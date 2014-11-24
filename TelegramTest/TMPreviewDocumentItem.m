@@ -35,13 +35,13 @@
     return ((TL_messageMediaDocument *)[_previewObject.media media]).document.file_name;
 }
 
-- (TGDocument *)document {
+- (TLDocument *)document {
     return ((TL_messageMediaDocument *)[_previewObject.media media]).document;
 }
 
 -(NSImage *)previewImage {
     if(!_previewImage) {
-        TGPhotoSize *thumb = ((TL_messageMediaDocument *)[_previewObject.media media]).document.thumb;
+        TLPhotoSize *thumb = ((TL_messageMediaDocument *)[_previewObject.media media]).document.thumb;
         
         if([thumb isKindOfClass:[TL_photoCachedSize class]]) {
             _previewImage = [[NSImage alloc] initWithData:thumb.bytes];

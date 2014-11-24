@@ -96,7 +96,7 @@ typedef enum {
 - (void)sendMessage:(NSString *)message ;
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates;
 - (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-- (void)shareContact:(TGUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)shareContact:(TLUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendSecretTTL:(int)ttl;
 
 - (void)sendSecretTTL:(int)ttl callback:(dispatch_block_t)callback;

@@ -11,7 +11,7 @@
 @protocol TGPVBehavior <NSObject>
 
 @property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) TGUser *user;
+@property (nonatomic,strong) TLUser *user;
 @property (nonatomic,assign,readonly) int totalCount;
 
 @property (nonatomic,strong) RPCRequest *request;

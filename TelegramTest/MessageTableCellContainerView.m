@@ -800,7 +800,7 @@ static int offsetEditable = 30;
     
     item.messageSender = nil;
     [[Storage manager] deleteMessages:@[@(item.message.n_id)] completeHandler:nil];
-    [[DialogsManager sharedManager] updateLastMessageForDialog:item.message.dialog];
+    [[DialogsManager sharedManager] updateLastMessageForDialog:item.message.conversation];
     [self.messagesViewController deleteItem:item];
     [Notification perform:DELETE_MESSAGE
                      data:@{KEY_MESSAGE:item.message}];

@@ -9,11 +9,10 @@
 #import "DialogTableItem.h"
 #import "NS(Attributed)String+Geometrics.h"
 #import "MessagesUtils.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "NSNumber+NumberFormatter.h"
 #import "TMElements.h"
 #import "NSDate-Utilities.h"
-#import "TGDialog+Extensions.h"
 #import "RMPhoneFormat.h"
 #import "DownloadOperation.h"
 #import "NSString+Extended.h"
@@ -51,7 +50,7 @@
         }
         
         case DialogTypeSecretChat: {
-            TGEncryptedChat *chat = dialog.encryptedChat;
+            TLEncryptedChat *chat = dialog.encryptedChat;
             self.user = [chat peerUser];
             break;
         }
@@ -103,7 +102,7 @@
             int maxSize = 15;
             
             if(array.count == 1) {
-                TGUser *user = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
+                TLUser *user = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
                 string = user.dialogFullName;
                 
                 if(string.length > maxSize)
@@ -111,8 +110,8 @@
                 
                 string = [NSString stringWithFormat:NSLocalizedString(@"Typing.IsTyping", nil), string];
             } else if(array.count == 2) {
-                TGUser *user1 = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
-                TGUser *user2 = [[UsersManager sharedManager] find:[[array objectAtIndex:1] intValue]];
+                TLUser *user1 = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
+                TLUser *user2 = [[UsersManager sharedManager] find:[[array objectAtIndex:1] intValue]];
                 
                 string = [NSString stringWithFormat:@"%@, %@", user1.dialogFullName, user2.dialogFullName];
                 if(string.length > maxSize) {

@@ -11,24 +11,24 @@
 
 @implementation MessageTableItemPhoto
 
-- (id) initWithObject:(TGMessage *)object {
+- (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         NSSize imageSize = NSZeroSize;
-        TGPhoto *photo = object.media.photo;
+        TLPhoto *photo = object.media.photo;
         
         NSImage *cachePhoto;
         
         if(photo.sizes.count) {
             //Find cacheImage;
-            for(TGPhotoSize *photoSize in photo.sizes) {
+            for(TLPhotoSize *photoSize in photo.sizes) {
                 if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
                     cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
                     break;
                 }
             }
             
-            TGPhotoSize *photoSize = ((TGPhotoSize *)[photo.sizes lastObject]);
+            TLPhotoSize *photoSize = ((TLPhotoSize *)[photo.sizes lastObject]);
             
             self.photoLocation = photoSize.location;
             self.photoSize = photoSize.size;

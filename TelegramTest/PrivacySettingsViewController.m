@@ -223,7 +223,7 @@
     
     [self showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_account_setPrivacy createWithInputPrivacyKey:pk rules:[[self.changedPrivacy rules] mutableCopy]] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_account_setPrivacy createWithKey:pk rules:[[self.changedPrivacy rules] mutableCopy]] successHandler:^(RPCRequest *request, id response) {
         
         self.privacy = self.changedPrivacy;
         [self.privacy _save];

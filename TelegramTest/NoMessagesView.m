@@ -82,7 +82,7 @@
     [subParagraphStyle2 setParagraphSpacing:3];
   
     
-    TGEncryptedChat *chat = self.conversation.encryptedChat;
+    TLEncryptedChat *chat = self.conversation.encryptedChat;
     
     
     NSString *descFormat = chat.admin_id == [UsersManager currentUserId] ?  NSLocalizedString(@"Secret.join.description", nil) :  NSLocalizedString(@"Secret.join.invitedDescription", nil);

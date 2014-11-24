@@ -57,7 +57,7 @@
 }
 
 - (void)chatUpdateTypeNotification:(NSNotification *)notify {
-    TGChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
+    TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
     if(chat.n_id == self.chat.n_id) {
         self->_chat = nil;
         [self setChat:chat];
@@ -97,7 +97,7 @@
 - (void) chatUpdateStatusNotification:(NSNotification *)notify {
     int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
     if(chat_id == self.chat.n_id) {
-        TGChat *chat = self.chat;
+        TLChat *chat = self.chat;
         self->_chat = nil;
         [self setChat:chat];
     }
@@ -106,13 +106,13 @@
 - (void) userUpdateStatusNotification:(NSNotification *)notify {
     int user_id = [[notify.userInfo objectForKey:KEY_USER_ID] intValue];
     if(user_id == self.user.n_id) {
-        TGUser *user = self.user;
+        TLUser *user = self.user;
         self->_user = nil;
         [self setUser:user];
     }
 }
 
-- (void)setUser:(TGUser *)user {
+- (void)setUser:(TLUser *)user {
     if(self->_user.n_id == user.n_id)
         return;
         
@@ -142,8 +142,8 @@
 }
 
 - (void)update {
-    TGChat *chat = self.chat;
-    TGUser *user = self.user;
+    TLChat *chat = self.chat;
+    TLUser *user = self.user;
     TL_broadcast *broadcast = self.broadcast;
     
     self.chat = nil;
@@ -158,7 +158,7 @@
         self.broadcast = broadcast;
 }
 
-- (void)setChat:(TGChat *)chat {
+- (void)setChat:(TLChat *)chat {
     if(self->_chat.n_id == chat.n_id)
         return;
     
@@ -169,7 +169,7 @@
     if(chat == nil || self.lock)
         return;
     
-    if(self.chat.type == TGChatTypeNormal && !self.chat.left) {
+    if(self.chat.type == TLChatTypeNormal && !self.chat.left) {
         self.attributedStringValue = [chat performSelector:self.selector withObject:nil];
     } else {
         self.attributedStringValue = [[NSAttributedString alloc] init];

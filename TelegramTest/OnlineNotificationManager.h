@@ -10,8 +10,8 @@
 
 @interface OnlineNotificationManager : NSObject
 
-+(void) addUser:(TGUser *)user;
++(void) addUser:(TLUser *)user;
 
-+(void)removeUser:(TGUser *)user;
++(void)removeUser:(TLUser *)user;
 
 @end

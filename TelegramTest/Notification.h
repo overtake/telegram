@@ -108,7 +108,7 @@ extern NSString *const LOGOUT_EVENT;
 
 + (NSString *) notificationNameByDialog:(TL_conversation *)dialog action:(NSString *) action;
 
-+ (NSString *)notificationForUser:(TGUser *)user action:(NSString *)action;
++ (NSString *)notificationForUser:(TLUser *)user action:(NSString *)action;
 //+ (NSString *) notificationNameForStatusUserId:(int)user_id;
 //+ (NSString *) notificationNameForStatusChatId:(int)chat_id;
 

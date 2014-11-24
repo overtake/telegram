@@ -7,7 +7,7 @@
 //
 
 #import "TMMediaUserPictureController.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #include <set>
 #include <map>
 
@@ -17,7 +17,7 @@
 
 @property (nonatomic) std::map<NSUInteger, bool> *listCacheHash;
 
-@property (nonatomic,strong) TGUser *user;
+@property (nonatomic,strong) TLUser *user;
 
 @end
 
@@ -103,7 +103,7 @@
 }
 
 
--(void)prepare:(TGUser *)user completionHandler:(dispatch_block_t)completionHandler {
+-(void)prepare:(TLUser *)user completionHandler:(dispatch_block_t)completionHandler {
 
     
     if(user == nil) {

@@ -9,7 +9,7 @@
 #import "MessageTableCellVideoView.h"
 #import "TMCircularProgress.h"
 #import "TGTimer.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "TMMediaController.h"
 #import "TMPreviewVideoItem.h"
 #import "FileUtils.h"

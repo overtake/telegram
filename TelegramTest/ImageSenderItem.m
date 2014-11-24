@@ -13,7 +13,7 @@
 #import "ImageUtils.h"
 #import "PreviewObject.h"
 #import "TGCache.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @interface ImageSenderItem ()
 @property (nonatomic, strong) UploadOperation *uploadOperation;
 @property (nonatomic, strong) NSImage *image;
@@ -95,14 +95,14 @@
         
     
         
-        __block BOOL isFirstSend = [input isKindOfClass:[TGInputFile class]];
+        __block BOOL isFirstSend = [input isKindOfClass:[TLInputFile class]];
         
         id media = nil;
         if(isFirstSend) {
             media = [TL_inputMediaUploadedPhoto createWithFile:input];
         } else {
-            TGPhoto *photo = input;
-            media = [TL_inputMediaPhoto createWithPhoto_id:[TL_inputPhoto createWithN_id:photo.n_id access_hash:photo.access_hash]];
+            TLPhoto *photo = input;
+            media = [TL_inputMediaPhoto createWithN_id:[TL_inputPhoto createWithN_id:photo.n_id access_hash:photo.access_hash]];
         }
         
         
@@ -120,7 +120,7 @@
             
             [SharedManager proccessGlobalResponse:response];
             
-            TGMessage *msg;
+            TLMessage *msg;
             
           
             if(strongSelf.conversation.type != DialogTypeBroadcast)  {
@@ -143,7 +143,7 @@
             }
             
             
-            TGPhotoSize *newSize = [msg.media.photo.sizes lastObject];
+            TLPhotoSize *newSize = [msg.media.photo.sizes lastObject];
             
             if(strongSelf.message.media.photo.sizes.count > 1) {
                 TL_photoSize *size =strongSelf.message.media.photo.sizes[1];

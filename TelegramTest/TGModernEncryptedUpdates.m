@@ -117,8 +117,8 @@
                         [ids addObject:@(message.n_id)];
                     }
                     
-                    if(message && message.dialog) {
-                        [update setObject:message.dialog forKey:@(message.dialog.peer.peer_id)];
+                    if(message && message.conversation) {
+                        [update setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
                     }
                     
                 }
@@ -194,7 +194,7 @@ Class convertClass(NSString *c, int layer) {
         
         Secret1_DecryptedMessage_decryptedMessage *msg = (Secret1_DecryptedMessage_decryptedMessage *) message;
         
-        TGMessageMedia *media = [self media:msg.media layer:1 file:encryptedMessage.file];
+        TLMessageMedia *media = [self media:msg.media layer:1 file:encryptedMessage.file];
         
         int ttl = params.ttl;
         
@@ -226,7 +226,7 @@ Class convertClass(NSString *c, int layer) {
          media = [self media:[layerMessage.message valueForKey:@"media"] layer:17 file:encryptedMessage.file];
      }
     
-    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret17__Environment serializeObject:layerMessage.message]  fileData:[[TLClassStore sharedManager] serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue]];
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret17__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue]];
     
     
     [[Storage manager] insertSecretInAction:action];
@@ -254,7 +254,7 @@ Class convertClass(NSString *c, int layer) {
                     
                     id messageObject = [Secret17__Environment parseObject:action.messageData];
                     
-                    id media = [[TLClassStore sharedManager] deserialize:action.fileData];
+                    id media = [TLClassStore deserialize:action.fileData];
                     
                     BOOL isProccessed = [self proccessServiceMessage:messageObject withLayer:17 params:params conversation:conversation];
                     
@@ -287,7 +287,7 @@ Class convertClass(NSString *c, int layer) {
 }
 
 
--(TGMessageMedia *)media:(id)media layer:(int)layer file:(TGEncryptedFile *)file {
+-(TLMessageMedia *)media:(id)media layer:(int)layer file:(TLEncryptedFile *)file {
     
     
     if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaEmpty", layer)])
@@ -334,7 +334,7 @@ Class convertClass(NSString *c, int layer) {
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaDocument", layer)]) {
         
-        TGPhotoSize *size = [TL_photoSizeEmpty createWithType:@"jpeg"];
+        TLPhotoSize *size = [TL_photoSizeEmpty createWithType:@"jpeg"];
         
         
         if( ((NSData *)[media valueForKey:@"thumb"]).length > 0) {

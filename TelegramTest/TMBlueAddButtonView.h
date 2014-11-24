@@ -11,6 +11,6 @@
 @interface TMBlueAddButtonView : BTRButton
 
 @property (nonatomic,strong) NSString *string;
-@property (nonatomic,strong) TGUser *contact;
+@property (nonatomic,strong) TLUser *contact;
 @property (nonatomic,strong) NSString *phoneNumber;
 @end

@@ -10,6 +10,6 @@
 
 
 
-@interface TL_messageActionEncryptedChat : TGMessageAction
+@interface TL_messageActionEncryptedChat : TLMessageAction
 +(TL_messageActionEncryptedChat*)createWithTitle:(NSString*)title;
 @end

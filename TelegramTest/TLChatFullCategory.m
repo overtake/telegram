@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TGFullChatCategory.h"
+#import "TLChatFullCategory.h"
 
-@implementation TGChatFull (Category)
+@implementation TLChatFull (Category)
 
 DYNAMIC_PROPERTY(LASTUPDATETIME);
 DYNAMIC_PROPERTY(Conversation);

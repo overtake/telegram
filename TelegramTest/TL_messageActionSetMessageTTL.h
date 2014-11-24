@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TLRPC.h"
+#import "MTProto.h"
 
-@interface TL_messageActionSetMessageTTL : TGMessageAction
+@interface TL_messageActionSetMessageTTL : TLMessageAction
 
 @property (nonatomic,assign) int ttl;
 

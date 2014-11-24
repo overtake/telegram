@@ -9,7 +9,7 @@
 #import "TMAvatarImageView.h"
 #import "TMImageUtils.h"
 
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
 #import "DialogTableItemView.h"
 #import "DownloadPhotoItem.h"
@@ -168,7 +168,7 @@ static const TGTwoColors colors[] = {
 
 - (void) notificationUserChange:(NSNotification *)notification {
     if(self.type == TMAvatarTypeUser) {
-        TGUser *user = [notification.userInfo objectForKey:KEY_USER];
+        TLUser *user = [notification.userInfo objectForKey:KEY_USER];
         
         if(self.user.n_id == user.n_id) {
             
@@ -192,7 +192,7 @@ static const TGTwoColors colors[] = {
 
 - (void) notificationChatChange:(NSNotification *)notification {
     if(self.type == TMAvatarTypeChat) {
-        TGChat *chat = [notification.userInfo objectForKey:KEY_CHAT];
+        TLChat *chat = [notification.userInfo objectForKey:KEY_CHAT];
         if(self.chat.n_id == chat.n_id) {
             BOOL rebuild = NO;
             
@@ -216,11 +216,11 @@ static const TGTwoColors colors[] = {
 }
 
 
-- (void) setUser:(TGUser *)user {
+- (void) setUser:(TLUser *)user {
     [self setUser:user animated:NO];
 }
 
-- (void) setUser:(TGUser *)user animated:(BOOL)animated {
+- (void) setUser:(TLUser *)user animated:(BOOL)animated {
     if(self.user.n_id == user.n_id)
         return;
     
@@ -236,12 +236,12 @@ static const TGTwoColors colors[] = {
     [self rebuild:animated];
 }
 
-- (void) setChat:(TGChat *)chat {
+- (void) setChat:(TLChat *)chat {
     [self setChat:chat animated:NO];
 }
 
 
-- (void) setChat:(TGChat *)chat animated:(BOOL)animated {
+- (void) setChat:(TLChat *)chat animated:(BOOL)animated {
     if(self.chat.n_id == chat.n_id)
         return;
     

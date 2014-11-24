@@ -9,7 +9,7 @@
 #import "DocumentSenderItem.h"
 #import "ImageUtils.h"
 #import "TGCache.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -40,7 +40,7 @@
         
         long randomId = rand_long();
         
-        TGPhotoSize *size;
+        TLPhotoSize *size;
         if(thumbImage) {
             NSData *thumbData = jpegNormalizedData(thumbImage);
             
@@ -93,7 +93,7 @@
     [self.uploader setFileName:self.message.media.document.file_name];
     [self.uploader ready:UploadDocumentType];
     
-    TGPhotoSize *size = [self.message.media.document thumb];
+    TLPhotoSize *size = [self.message.media.document thumb];
     
     if([size isKindOfClass:[TL_photoCachedSize class]]) {
         self.uploaderThumb = [[UploadOperation alloc] init];
@@ -122,17 +122,17 @@
     
     id media;
     
-    __block BOOL isNewDocument = [self.inputFile isKindOfClass:[TGInputFile class]];
+    __block BOOL isNewDocument = [self.inputFile isKindOfClass:[TLInputFile class]];
     
     if(isNewDocument) {
-        if([self.thumbFile isKindOfClass:[TGInputFile class]]) {
+        if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
             media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile file_name:self.uploader.fileName mime_type:self.mimeType];
         } else {
             media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile file_name:self.uploader.fileName mime_type:self.mimeType];
         }
     } else {
-        TGDocument *document = (TGDocument *)self.inputFile;
-        media = [TL_inputMediaDocument createWithDocument_id:[TL_inputDocument createWithN_id:document.n_id access_hash:document.access_hash]];
+        TLDocument *document = (TLDocument *)self.inputFile;
+        media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:document.n_id access_hash:document.access_hash]];
     }
     
     
@@ -151,7 +151,7 @@
         
         [SharedManager proccessGlobalResponse:obj];
         
-        TGMessage *msg;
+        TLMessage *msg;
         
         
         if(strongSelf.conversation.type != DialogTypeBroadcast)  {

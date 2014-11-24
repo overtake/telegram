@@ -7,7 +7,7 @@
 //
 
 #import "ChatsManager.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 #import "Crypto.h"
 #import <MTProtoKit/MTEncryption.h>
 #import "SecretChatAccepter.h"
@@ -30,12 +30,12 @@
             if([obj isKindOfClass:[TL_chatEmpty class]])
                 continue;
             
-            if([obj isKindOfClass:[TGChat class]]) {
-                TGChat *newChat = (TGChat *)obj;
+            if([obj isKindOfClass:[TLChat class]]) {
+                TLChat *newChat = (TLChat *)obj;
                 
                 [[FullChatManager sharedManager] loadIfNeed:newChat.n_id];
                 
-                TGChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
+                TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {
                     
                     
@@ -77,8 +77,8 @@
             } else {
                 //ECRYPTED CHAT
                 
-                TGEncryptedChat *newChat = (TGEncryptedChat *)obj;
-                TGEncryptedChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
+                TLEncryptedChat *newChat = (TLEncryptedChat *)obj;
+                TLEncryptedChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {
                     
                     currentChat.date = newChat.date;

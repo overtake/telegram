@@ -85,7 +85,7 @@
     self.locker = YES;
 
     
-    [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:rand_long() phone:self.phoneNumber first_name:self.contact.first_name last_name:self.contact.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+    [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:rand_long() phone:self.phoneNumber first_name:self.contact.first_name last_name:self.contact.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
         
         self.locker = NO;
         
@@ -110,7 +110,7 @@
     [self.containerView setHidden:self.locker];
 }
 
--(void)setContact:(TGUser *)contact {
+-(void)setContact:(TLUser *)contact {
     self->_contact = contact;
     
     self.locker = self.locker;

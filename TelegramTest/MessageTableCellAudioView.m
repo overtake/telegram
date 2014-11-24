@@ -9,7 +9,7 @@
 #import "MessageTableCellAudioView.h"
 #import <Quartz/Quartz.h>
 #import "TMMediaController.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
 #import "DownloadAudioItem.h"
 #import "TMCircularProgress.h"

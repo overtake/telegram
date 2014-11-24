@@ -105,7 +105,7 @@
     }
     
     
-    item.conversation = msg.dialog;
+    item.conversation = msg.conversation;
     item.message = msg;
    
     

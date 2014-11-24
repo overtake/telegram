@@ -14,7 +14,7 @@
 extern NSString *const TGImagePType;
 
 extern NSString *const TGImportCardPrefix;
-extern NSString *const TGUserNamePrefix;
+extern NSString *const TLUserNamePrefix;
 
 +(NSString*)mimetypefromExtension:(NSString *)extension;
 unsigned long fileSize(NSString *path);
@@ -25,15 +25,15 @@ unsigned long fileSize(NSString *path);
 NSString* path();
 +(NSString *)path;
 BOOL checkFileSize(NSString *path, int size);
-BOOL fileExists(TGFileLocation *location);
-NSString *locationFilePath(TGFileLocation *location,NSString *extension);
-NSString* locationFilePathWithPrefix(TGFileLocation *location, NSString *prefix, NSString *extension);
-NSString *mediaFilePath(TGMessageMedia *media);
-NSString *documentPath(TGDocument *document);
+BOOL fileExists(TLFileLocation *location);
+NSString *locationFilePath(TLFileLocation *location,NSString *extension);
+NSString* locationFilePathWithPrefix(TLFileLocation *location, NSString *prefix, NSString *extension);
+NSString *mediaFilePath(TLMessageMedia *media);
+NSString *documentPath(TLDocument *document);
 BOOL isPathExists(NSString *path);
 NSString* dp();
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize;
-+(NSString *)documentName:(TGDocument *)document;
++(NSString *)documentName:(TLDocument *)document;
 + (NSString *)dataMD5:(NSData *)data;
 + (NSString *)fileMD5:(NSString*)path;
 BOOL check_file_size(NSString *path);

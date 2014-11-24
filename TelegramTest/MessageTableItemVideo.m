@@ -11,11 +11,11 @@
 #import "NSStringCategory.h"
 @implementation MessageTableItemVideo
 
-- (id) initWithObject:(TGMessage *)object {
+- (id) initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        TGVideo *video = object.media.video;
-        TGPhotoSize *photoSize = video.thumb;
+        TLVideo *video = object.media.video;
+        TLPhotoSize *photoSize = video.thumb;
         if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
             self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
         }

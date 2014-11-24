@@ -24,13 +24,12 @@
 #import "NSTextFieldCategory.h"
 #import "NSViewCategory.h"
 
-#import "TGChatCategory.h"
-#import "TGContactCategory.h"
-#import "TGEncryptedChatCategory.h"
-#import "TGFullChatCategory.h"
-#import "TGMessageCategory.h"
-#import "TGUserCategory.h"
-#import "TGUserStatusCategory.h"
+#import "TLChatCategory.h"
+#import "TLContactCategory.h"
+#import "TLEncryptedChatCategory.h"
+#import "TLChatFullCategory.h"
+#import "TLUserCategory.h"
+#import "TLUserStatusCategory.h"
 
 
 

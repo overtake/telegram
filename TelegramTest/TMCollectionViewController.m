@@ -10,7 +10,6 @@
 #import "MediaCollectionItem.h"
 #import "TMPreviewPhotoItem.h"
 #import "MediaCollectionItemView.h"
-#import "TGMessage+Extensions.h"
 @implementation TMCollectionView
 
 - (NSCollectionViewItem *)newItemForRepresentedObject:(MediaCollectionItem *)object {

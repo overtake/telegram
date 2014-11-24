@@ -231,7 +231,7 @@
         
         TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
-        [[Telegram rightViewController] showByDialog:msg.dialog sender:[TGPhotoViewer viewer]];
+        [[Telegram rightViewController] showByDialog:msg.conversation sender:[TGPhotoViewer viewer]];
         [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
         [[Telegram rightViewController].messagesViewController unSelectAll:NO];
         

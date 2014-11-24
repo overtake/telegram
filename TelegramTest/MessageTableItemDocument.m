@@ -11,7 +11,7 @@
 #import "TMAttributedString.h"
 #import "FileUtils.h"
 #import "Telegram.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "ImageCache.h"
 #import "ImageUtils.h"
@@ -25,7 +25,7 @@
     return self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
 }
 
-- (id)initWithObject:(TGMessage *)object {
+- (id)initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         self.fileName = self.message.media.document.file_name;

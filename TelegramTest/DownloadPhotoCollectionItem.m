@@ -7,7 +7,7 @@
 //
 
 #import "DownloadPhotoCollectionItem.h"
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 @implementation DownloadPhotoCollectionItem
 
 

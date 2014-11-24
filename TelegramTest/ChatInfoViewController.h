@@ -29,7 +29,7 @@ typedef enum {
 
 @interface ChatInfoViewController : TMViewController<TMTableViewDelegate>
 
-@property (nonatomic, strong) TGChat *chat;
+@property (nonatomic, strong) TLChat *chat;
 @property (nonatomic) ChatInfoViewControllerType type;
 
 @property (nonatomic,strong,readonly) ChatBottomView *bottomView;
@@ -39,7 +39,7 @@ typedef enum {
 @property (nonatomic, strong,readonly) ChatHeaderItem *headerItem;
 @property (nonatomic, strong,readonly) ChatBottomItem *bottomItem;
 
-@property (nonatomic, strong) TGChatFull *fullChat;
+@property (nonatomic, strong) TLChatFull *fullChat;
 
 @property (nonatomic) BOOL notNeedToUpdate;
 

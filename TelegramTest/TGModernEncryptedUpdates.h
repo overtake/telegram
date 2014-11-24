@@ -10,7 +10,7 @@
 
 @interface TGModernEncryptedUpdates : NSObject
 
--(void)proccessUpdate:(TGEncryptedMessage *)update;
+-(void)proccessUpdate:(TLEncryptedMessage *)update;
 
 
 @end

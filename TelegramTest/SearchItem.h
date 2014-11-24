@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "TMElements.h"
-#import "TGDialog+Extensions.h"
 
 typedef enum {
     SearchItemChat,
@@ -25,18 +24,18 @@ typedef enum {
 
 @property (nonatomic, strong) NSMutableAttributedString *date;
 @property (nonatomic) NSSize dateSize;
-@property (nonatomic, strong) TGMessage *message;
-@property (nonatomic, strong) TGUser *user;
-@property (nonatomic, strong) TGChat *chat;
-@property (nonatomic, strong) TGEncryptedChat *encryptedChat;
+@property (nonatomic, strong) TL_localMessage *message;
+@property (nonatomic, strong) TLUser *user;
+@property (nonatomic, strong) TLChat *chat;
+@property (nonatomic, strong) TLEncryptedChat *encryptedChat;
 
 @property (nonatomic, strong) NSMutableAttributedString *title;
 @property (nonatomic, strong) NSMutableAttributedString *status;
 
 
-- (id)initWithUserItem:(TGUser *)user searchString:(NSString *)searchString;
-- (id)initWithGlobalItem:(TGUser*)user searchString:(NSString *)searchString;
-- (id)initWithChatItem:(TGChat *)chat searchString:(NSString *)searchString;
-- (id)initWithMessageItem:(TGMessage *)message searchString:(NSString *)searchString;
+- (id)initWithUserItem:(TLUser *)user searchString:(NSString *)searchString;
+- (id)initWithGlobalItem:(TLUser*)user searchString:(NSString *)searchString;
+- (id)initWithChatItem:(TLChat *)chat searchString:(NSString *)searchString;
+- (id)initWithMessageItem:(TLMessage *)message searchString:(NSString *)searchString;
 - (id)initWithDialogItem:(TL_conversation *)dialog searchString:(NSString *)searchString;
 @end

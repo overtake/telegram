@@ -96,7 +96,7 @@
         }]];
     } else {
         
-        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup || (self.sourceType == ChatAvatarSourceUser && self.user.type == TGUserTypeSelf)) {
+        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.UpdatePhoto", nil) withBlock:^(id sender) {
                 [strongSelf showUpdateChatPhotoBox];
                 

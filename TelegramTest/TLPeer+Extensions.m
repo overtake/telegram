@@ -1,14 +1,14 @@
 //
-//  TGPeer+Extensions.m
+//  TLPeer+Extensions.m
 //  TelegramTest
 //
 //  Created by keepcoder on 28.10.13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "TL_peerSecret.h"
-@implementation TGPeer (Extensions)
+@implementation TLPeer (Extensions)
 
 - (int)peer_id {
     return  self.chat_id != 0 ? ([self isSecret] || ([self isBroadcast]) ? self.chat_id : -self.chat_id) : self.user_id;
@@ -29,7 +29,7 @@
 
 
 
--(TGPeer *)peerOut {
+-(TLPeer *)peerOut {
     if(self.chat_id == 0)
         return [TL_peerUser createWithUser_id:self.user_id];
     else
@@ -38,7 +38,7 @@
     return [TL_peerChat createWithChat_id:self.chat_id];
 }
 
-+(TGPeer *)peerForId:(int)peer_id {
++(TLPeer *)peerForId:(int)peer_id {
     if(peer_id < 0)
         return [TL_peerChat createWithChat_id:-peer_id];
     return [TL_peerUser createWithUser_id:peer_id];

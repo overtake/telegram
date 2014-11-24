@@ -23,13 +23,13 @@
         
         NSRange range  = NSMakeRange(0, 0);
         if([dialog peer].chat_id == 0) {
-            TGUser *user = [[UsersManager sharedManager] find:[dialog peer].user_id];
+            TLUser *user = [[UsersManager sharedManager] find:[dialog peer].user_id];
             self.n_id = user.n_id;
             self.title = [user fullName];
             self.location = user.photo.photo_small;
         } else {
-            TGUser *user = [[UsersManager sharedManager] find:self.lastMessage.from_id];
-            TGChat *chat =  [[ChatsManager sharedManager] find:dialog.peer.chat_id];
+            TLUser *user = [[UsersManager sharedManager] find:self.lastMessage.from_id];
+            TLChat *chat =  [[ChatsManager sharedManager] find:dialog.peer.chat_id];
             self.n_id = chat.n_id;
             self.title = chat.title;
             self.location = chat.photo.photo_small;

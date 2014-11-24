@@ -11,17 +11,17 @@
 
 @interface ImageCache : NSCache
 +(ImageCache *)sharedManager;
-//- (NSImage*)imageFromMemory:(TGFileLocation*)location round:(int)round;
-- (NSImage *) imageFromMemory:(TGFileLocation *)location;
-- (void) editCacheKey:(TGFileLocation *)old withLocation:(TGFileLocation *)location;
-- (void) setImage:(NSImage *)image forLocation:(TGFileLocation *)location;
-- (NSImage *) imageFromMemory:(TGFileLocation*)location round:(int)round;
+//- (NSImage*)imageFromMemory:(TLFileLocation*)location round:(int)round;
+- (NSImage *) imageFromMemory:(TLFileLocation *)location;
+- (void) editCacheKey:(TLFileLocation *)old withLocation:(TLFileLocation *)location;
+- (void) setImage:(NSImage *)image forLocation:(TLFileLocation *)location;
+- (NSImage *) imageFromMemory:(TLFileLocation*)location round:(int)round;
 
 - (NSImage *)roundImageFromMemoryByHash:(NSUInteger)hash;
 - (void)setRoundImageToMemory:(NSImage *)image hash:(NSUInteger)hash;
 
 
--(void)removeFromCache:(TGFileLocation *)location;
+-(void)removeFromCache:(TLFileLocation *)location;
 
 - (void) clear;
 

@@ -25,7 +25,7 @@
 @property (nonatomic) NSPoint noSelectTitlePoint;
 @property (nonatomic) NSPoint noSelectAvatarPoint;
 
-@property (nonatomic, strong) TGContact *contact;
+@property (nonatomic, strong) TLContact *contact;
 
 @property (nonatomic) BOOL isSelected;
 

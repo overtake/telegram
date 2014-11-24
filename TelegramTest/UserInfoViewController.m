@@ -158,7 +158,7 @@
     
     weakify();
     
-    if(self.user.type == TGUserTypeSelf) {
+    if(self.user.type == TLUserTypeSelf) {
         if(self.state == UserInfoViewControllerNormal) {
             TMTextButton *editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
             [editButton setTapBlock:^{
@@ -174,7 +174,7 @@
                 
                 dispatch_block_t block = ^{
                     
-                    [[UsersManager sharedManager] updateAccount:contact.first_name lastName:contact.last_name completeHandler:^(TGUser *user) {
+                    [[UsersManager sharedManager] updateAccount:contact.first_name lastName:contact.last_name completeHandler:^(TLUser *user) {
                         
                         [self.normalContainer buildPage];
                         
@@ -211,7 +211,7 @@
     
   
     
-    if(self.user.type == TGUserTypeContact) {
+    if(self.user.type == TLUserTypeContact) {
         
         if(self.state == UserInfoViewControllerNormal) {
             TMTextButton *editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
@@ -236,7 +236,7 @@
                 if(!contact) {
                     block();
                 } else {
-                    [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+                    [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
                         block();
                     }];
                 }
@@ -257,13 +257,13 @@
         
         
         
-    } else if(self.user.type == TGUserTypeRequest) {
+    } else if(self.user.type == TLUserTypeRequest) {
         
         if(self.state == UserInfoViewControllerAddContact) {
             TMTextButton *doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Done", nil)];
             [doneButton setTapBlock:^{
                 TL_inputPhoneContact *contact = [self.editContainer newContact];
-                [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+                [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
                     self.state = UserInfoViewControllerNormal;
                 }];
             }];
@@ -291,13 +291,13 @@
     
     if(self.state == UserInfoViewControllerNormal) {
         
-//        TGContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:self.user.n_id];
+//        TLContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:self.user.n_id];
 //        
 //        TMTextButton *blockButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:blocked ? NSLocalizedString(@"User.Unlock", nil) : NSLocalizedString(@"User.Block", nil)];
 //        weakify();
 //        [blockButton setTapBlock:^{
 //            int user_id = strongSelf.user.n_id;
-//            TGContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:user_id];
+//            TLContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:user_id];
 //            
 //            BlockedHandler handlerBlock = ^(BOOL result) {
 //                if(result)
@@ -352,7 +352,7 @@
 }
 
 - (void)userNameChangedNotification:(NSNotification *)notify {
-    TGUser *user = [notify.userInfo objectForKey:KEY_USER];
+    TLUser *user = [notify.userInfo objectForKey:KEY_USER];
     if(user.n_id == self.user.n_id) {
         [self setRightNavigationBarView:[self generateRightHeaderButtons] animated:YES];
     }
@@ -363,11 +363,11 @@
     return YES;
 }
 
-- (void) setUser:(TGUser *)user {
+- (void) setUser:(TLUser *)user {
     [self setUser:user conversation:nil];
 }
 
--(void)setUser:(TGUser *)user conversation:(TL_conversation *)conversation  {
+-(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation  {
     
     
     

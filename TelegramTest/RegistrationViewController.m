@@ -163,7 +163,7 @@
         [[Telegram sharedInstance] onAuthSuccess];
         
         if(self.avatarImageView.photo) {
-            [[UsersManager sharedManager] updateAccountPhotoByNSImage:self.avatarImageView.photo completeHandler:^(TGUser *user) {
+            [[UsersManager sharedManager] updateAccountPhotoByNSImage:self.avatarImageView.photo completeHandler:^(TLUser *user) {
                 
             } progressHandler:^(float progress) {
                 

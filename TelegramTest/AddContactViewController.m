@@ -15,7 +15,7 @@
 @property (nonatomic,strong) UserInfoShortTextEditView *lastNameView;
 @property (nonatomic,strong) UserInfoShortTextEditView *phoneNumberView;
 @property (nonatomic,strong) TMAvatarImageView *avatarImage;
-@property (nonatomic,strong) TGUser *user;
+@property (nonatomic,strong) TLUser *user;
 
 @property (nonatomic,strong) TMTextButton *doneButton;
 @end
@@ -60,7 +60,7 @@
     
     
     
-    self.user = [TL_userContact createWithN_id:-1 first_name:@"" last_name:@"" user_name:@"" access_hash:0 phone:0 photo:[TL_userProfilePhotoEmpty create] status:[TL_userStatusEmpty create]];
+    self.user = [TL_userContact createWithN_id:-1 first_name:@"" last_name:@"" username:@"" access_hash:0 phone:0 photo:[TL_userProfilePhotoEmpty create] status:[TL_userStatusEmpty create]];
     
     
     int offsetY = 30;
@@ -177,15 +177,15 @@
     
     
     if(failFields.count == 0) {
-        [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TGUser *user) {
+        [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
             
             if(isAdd) {
                 
-                TGDialog *dialog = user.dialog;
+                TLDialog *dialog = user.dialog;
                 if(dialog) {
                     [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
                 } else {
-                    [[Storage manager] dialogByPeer:user.n_id completeHandler:^(TGDialog *dialog, TGMessage *message) {
+                    [[Storage manager] dialogByPeer:user.n_id completeHandler:^(TLDialog *dialog, TLMessage *message) {
                         
                         if(dialog) {
                             [[DialogsManager sharedManager] add:@[dialog]];

@@ -83,7 +83,7 @@
     
     NSUInteger supportUserId = [SettingsArchiver supportUserId];
     
-    __block TGUser *supportUser;
+    __block TLUser *supportUser;
     
     
     dispatch_block_t block = ^ {

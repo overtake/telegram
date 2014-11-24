@@ -51,7 +51,7 @@
     NSMutableArray *input = [[NSMutableArray alloc] init];
     
     [self.participants enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        TGUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+        TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
         [input addObject:user.inputUser];
     }];
     
@@ -211,7 +211,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     NSMutableArray *names = [[NSMutableArray alloc] init];
     
     [self.participants enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        TGUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+        TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
         
         NSString *name = user.first_name.length == 0 ? user.last_name : user.first_name;
         

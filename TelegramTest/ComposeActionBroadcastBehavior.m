@@ -65,7 +65,7 @@
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for(SelectUserItem* item in selected) {
-        if(!item.contact.user.type != TGUserTypeSelf) {
+        if(!item.contact.user.type != TLUserTypeSelf) {
             TL_inputUserContact *_contact = [TL_inputUserContact createWithUser_id:item.contact.user.n_id];
             [array addObject:_contact];
         }

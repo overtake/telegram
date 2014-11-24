@@ -10,7 +10,7 @@
 
 @implementation ChatParticipantItem
 
-- (id)initWithObject:(TGChatParticipant *)object {
+- (id)initWithObject:(TLChatParticipant *)object {
     self = [super initWithObject:object];
     if(self) {
         self.user = [[UsersManager sharedManager] find:object.user_id];
@@ -18,7 +18,7 @@
     return self;
 }
 
--(id)initWithUser:(TGUser *)user {
+-(id)initWithUser:(TLUser *)user {
     if(self = [super init]) {
         self.user = user;
     }

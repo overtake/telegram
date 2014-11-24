@@ -178,7 +178,7 @@
     
     if(!self.exportCard && !self.request){
         
-        self.request = [RPCRequest sendRequest:[TLAPI_contactsExportCard create] successHandler:^(RPCRequest *request, id response) {
+        self.request = [RPCRequest sendRequest:[TLAPI_contacts_exportCard create] successHandler:^(RPCRequest *request, id response) {
             self.exportCard = decodeCard(response);
             self.request = nil;;
            

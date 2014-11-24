@@ -13,15 +13,15 @@
 @property (nonatomic,strong) id <ContentDelegate> delegate;
 
 
-- (void)updateTop:(TGMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date;
+- (void)updateTop:(TLMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date;
 
 - (TL_conversation *)findByUserId:(int)user_id;
 - (TL_conversation *)findByChatId:(int)user_id;
 - (TL_conversation *)findBySecretId:(int)chat_id;
-- (TL_conversation *)createDialogForMessage:(TGMessage *)message;
-- (TL_conversation *)createDialogForUser:(TGUser *)user;
-- (TL_conversation *)createDialogForChat:(TGChat *)chat;
-- (TL_conversation *)createDialogEncryptedChat:(TGEncryptedChat *)chat;
+- (TL_conversation *)createDialogForMessage:(TLMessage *)message;
+- (TL_conversation *)createDialogForUser:(TLUser *)user;
+- (TL_conversation *)createDialogForChat:(TLChat *)chat;
+- (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat;
 
 - (void) insertDialog:(TL_conversation *)dialog;
 - (void) markAllMessagesAsRead:(TL_conversation *)dialog;

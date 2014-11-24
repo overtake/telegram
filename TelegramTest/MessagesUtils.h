@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 
 @interface MessagesUtils : NSObject
-+(NSString *)serviceMessage:(TGMessage *)message forAction:(TGMessageAction *)action;
-+(NSAttributedString *)serviceAttributedMessage:(TGMessage *)message forAction:(TGMessageAction *)action;
-+(NSString *)mediaMessage:(TGMessage *)message;
++(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action;
++(NSAttributedString *)serviceAttributedMessage:(TLMessage *)message forAction:(TLMessageAction *)action;
++(NSString *)mediaMessage:(TLMessage *)message;
 +(NSColor *)colorForUserId:(int)uid;
 +(NSImage *)dialogPhotoForUid:(int)uid;
 +(NSImage *)messagePhotoForUid:(int)uid;
 +(NSString *)selfDestructTimer:(int)ttl;
 +(NSString *)shortTTL:(int)ttl;
-+(NSMutableAttributedString *)conversationLastText:(TGMessage *)message conversation:(TL_conversation *)conversation;
++(NSMutableAttributedString *)conversationLastText:(TLMessage *)message conversation:(TL_conversation *)conversation;
 
 
 

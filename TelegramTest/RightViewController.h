@@ -54,7 +54,7 @@
 - (void)navigationGoBack;
 - (void)hideModalView:(BOOL)isHide animation:(BOOL)animated;
 
-- (void)showShareContactModalView:(TGUser *)user;
+- (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
 
 - (void)showByDialog:(TL_conversation *)dialog sender:(id)sender;
@@ -64,10 +64,10 @@
 - (void)showComposeWithAction:(ComposeAction *)composeAction;
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
-- (void)showUserInfoPage:(TGUser *)user conversation:(TL_conversation *)conversation;
-- (void)showUserInfoPage:(TGUser *)user;
+- (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation;
+- (void)showUserInfoPage:(TLUser *)user;
 - (void)showCollectionPage:(TL_conversation *)conversation;
-- (void)showChatInfoPage:(TGChat *)chat;
+- (void)showChatInfoPage:(TLChat *)chat;
 - (void)showBroadcastInfoPage:(TL_broadcast *)broadcast;
 - (void)showNotSelectedDialog;
 

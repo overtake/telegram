@@ -24,8 +24,8 @@
 
 @property (nonatomic) BOOL selected;
 
-@property (nonatomic, strong) TGUser *user;
-@property (nonatomic, strong) TGChat *chat;
+@property (nonatomic, strong) TLUser *user;
+@property (nonatomic, strong) TLChat *chat;
 @property (nonatomic, strong) TL_broadcast *broadcast;
 @property (nonatomic,assign) BOOL lock;
 

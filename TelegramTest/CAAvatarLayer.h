@@ -10,8 +10,8 @@
 
 @interface CAAvatarLayer : CALayer
 
-@property (nonatomic, strong) TGUser *user;
-@property (nonatomic, strong) TGChat *chat;
+@property (nonatomic, strong) TLUser *user;
+@property (nonatomic, strong) TLChat *chat;
 @property (nonatomic, strong) NSString *text;
 
 @property (nonatomic, strong) NSCache *cacheDictionary;

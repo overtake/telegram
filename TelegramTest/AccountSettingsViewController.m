@@ -13,7 +13,7 @@
 #import "UserInfoShortButtonView.h"
 #import "UserInfoShortTextEditView.h"
 #import "UserCardViewController.h"
-#import "TGPeer+Extensions.h"
+#import "TLPeer+Extensions.h"
 #import "TGPhotoViewer.h"
 @interface AccountScrollView : NSScrollView
 
@@ -313,7 +313,7 @@ typedef enum {
 
 -(void)didChangedUserName:(NSNotification *)notification {
     
-    TGUser *user = notification.userInfo[KEY_USER];
+    TLUser *user = notification.userInfo[KEY_USER];
     
     if(user != [UsersManager currentUser])
         return;
@@ -651,7 +651,7 @@ typedef enum {
         
         NSUInteger supportUserId = [SettingsArchiver supportUserId];
         
-        __block TGUser *supportUser;
+        __block TLUser *supportUser;
         
         
         dispatch_block_t block = ^ {
@@ -765,7 +765,7 @@ typedef enum {
     
     
     if(self.state == AccountSettingsStateEditable) {
-        [[UsersManager sharedManager] updateAccount:self.firstNameView.textView.stringValue lastName:self.lastNameView.textView.stringValue completeHandler:^(TGUser *user) {
+        [[UsersManager sharedManager] updateAccount:self.firstNameView.textView.stringValue lastName:self.lastNameView.textView.stringValue completeHandler:^(TLUser *user) {
             
         } errorHandler:^(NSString *description) {
             

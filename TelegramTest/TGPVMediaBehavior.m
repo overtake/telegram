@@ -103,7 +103,7 @@
         
         
         if([[obj.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
-            TGPhoto *photo = [[obj media] media].photo;
+            TLPhoto *photo = [[obj media] media].photo;
             
             
             TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);

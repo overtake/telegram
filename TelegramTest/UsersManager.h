@@ -10,10 +10,10 @@
 
 @interface UsersManager : SharedManager
 
-@property (nonatomic, strong, readonly) TGUser *userSelf;
+@property (nonatomic, strong, readonly) TLUser *userSelf;
 
 + (int)currentUserId;
-+ (TGUser *)currentUser;
++ (TLUser *)currentUser;
 
 +(NSArray *)findUsersByName:(NSString *)userName;
 
@@ -24,12 +24,12 @@
 
 - (void)loadUsers:(NSArray *)users completeHandler:(void (^)())completeHandler;
 
-- (void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TGUser *user))completeHandler errorHandler:(void (^)(NSString *description))errorHandler;
-- (void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TGUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler;
-- (void)updateAccountPhotoByNSImage:(NSImage *)image completeHandler:(void (^)(TGUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler;
+- (void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TLUser *user))completeHandler errorHandler:(void (^)(NSString *description))errorHandler;
+- (void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler;
+- (void)updateAccountPhotoByNSImage:(NSImage *)image completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float progress))progressHandler errorHandler:(void (^)(NSString *description))errorHandler;
 
-- (void)setUserStatus:(TGUserStatus *)status forUid:(int)uid;
+- (void)setUserStatus:(TLUserStatus *)status forUid:(int)uid;
 
--(void)updateUserName:(NSString *)userName completeHandler:(void (^)(TGUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler;
+-(void)updateUserName:(NSString *)userName completeHandler:(void (^)(TLUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler;
 
 @end

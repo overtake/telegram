@@ -40,7 +40,7 @@
     return self;
 }
 
-- (id)initWithObject:(TGMessage *)object {
+- (id)initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         self.messageAttributedString = [MessagesUtils serviceAttributedMessage:object forAction:object.action];
@@ -58,14 +58,14 @@
             
             if(self.photo.sizes.count) {
                 //Find cacheImage;
-                for(TGPhotoSize *photoSize in self.photo.sizes) {
+                for(TLPhotoSize *photoSize in self.photo.sizes) {
                     if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
                         self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
                         break;
                     }
                 }
                 
-                TGPhotoSize *photoSize = ((TGPhotoSize *)[self.photo.sizes objectAtIndex:MIN(2, self.photo.sizes.count) - 1]);
+                TLPhotoSize *photoSize = ((TLPhotoSize *)[self.photo.sizes objectAtIndex:MIN(2, self.photo.sizes.count) - 1]);
                 self.photoLocation = photoSize.location;
                 self.photoSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), 40, 250);
             }

@@ -1,14 +1,14 @@
 //
-//  TGFileLocation+Extensions.m
+//  TLFileLocation+Extensions.m
 //  TelegramTest
 //
 //  Created by keepcoder on 28.10.13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "TGFileLocation+Extensions.h"
+#import "TLFileLocation+Extensions.h"
 
-@implementation TGFileLocation (Extensions)
+@implementation TLFileLocation (Extensions)
 
 -(BOOL)isEqual:(id)object {
     return [object local_id] == self.local_id && [object volume_id] == self.volume_id && [object secret] == self.secret;
@@ -72,7 +72,7 @@ DYNAMIC_PROPERTY(HashCacheKey);
     return [[self cacheKey] hash];
 }
 
--(BOOL)isEqualTo:(TGFileLocation *)object {
+-(BOOL)isEqualTo:(TLFileLocation *)object {
     return object.volume_id == self.volume_id && object.local_id == self.local_id && object.secret == self.secret;
 }
 
