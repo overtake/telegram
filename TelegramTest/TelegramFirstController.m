@@ -131,6 +131,7 @@
     [[Telegram leftViewController] showUserSettings];
 }
 - (IBAction)showMedia:(id)sender {
+    [[Telegram rightViewController] showCollectionPage:[Telegram rightViewController].messagesViewController.dialog];
   //  [[TGPhotoViewer viewer] show:nil conversation:[Telegram rightViewController].messagesViewController.dialog];
 }
 
