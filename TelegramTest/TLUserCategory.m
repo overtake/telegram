@@ -401,7 +401,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0xaeaeae)];
-         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
+         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
         
         NSString *string = self.lastSeen;
         NSRange range;

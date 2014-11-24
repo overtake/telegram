@@ -71,7 +71,7 @@
 
 -(void)checkSelected:(BOOL)isSelected {
     self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
-    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : BLUE_UI_COLOR];
+    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -294,8 +294,6 @@
     
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
-    
-
     
     if(all.count > 100) {
         [self insertAll:[all subarrayWithRange:NSMakeRange(0, 20)]];

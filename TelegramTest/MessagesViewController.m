@@ -870,79 +870,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     return submenu;
 }
-//
-//- (BTRButton *) rightButton {
-//    if(self->_rightButton)
-//        return self->_rightButton;
-//    
-//    self->_rightButton = [[BTRButton alloc] initWithFrame:self.normalNavigationRightView.bounds];
-//    
-//    [self.rightButton setBackgroundImage:image_actions() forControlState:BTRControlStateNormal];
-//    [self.rightButton setBackgroundImage:image_actionsHover() forControlState:BTRControlStateHover];
-//    [self.rightButton setBackgroundImage:image_actionsActive() forControlState:BTRControlStateHighlighted];
-//    
-//    __block MessagesViewController *weakSelf = self;
-//    
-//    [self.rightButton addBlock:^(BTRControlEvents events) {
-//        NSMenuItem *filterItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Conversation.ShowMedia",nil) action:nil keyEquivalent:@""];
-//        [filterItem setSubmenu:weakSelf.filterMenu];
-//        
-//        
-//        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
-//        if(weakSelf.dialog.type == DialogTypeChat) {
-//            
-//            if(weakSelf.dialog.chat.type == TLChatTypeNormal) {
-//                [theMenu addItem:[NSMenuItem menuItemWithTitle:weakSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
-//                    [weakSelf leaveOrReturn:weakSelf.dialog];
-//                }]];
-//            }
-//            
-//            [theMenu addItem:filterItem];
-//            
-//            
-//            [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteAndExit", nil) withBlock:^(id sender) {
-//                [weakSelf deleteDialog:weakSelf.dialog];
-//            }]];
-//            
-//            
-//            
-//        } else {
-//            if(weakSelf.dialog.type != DialogTypeSecretChat) {
-//                
-//                [theMenu addItem:filterItem];
-//            }
-//            
-//            
-//            
-//            if(weakSelf.dialog.type != DialogTypeSecretChat) {
-//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
-//                    [weakSelf deleteDialog:weakSelf.dialog];
-//                }]];
-//                
-//                
-//                
-//            } else {
-//                
-//                [theMenu addItem:filterItem];
-//                
-//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ClearMessageHistory", nil) withBlock:^(id sender) {
-//                    [weakSelf clearHistory:weakSelf.dialog];
-//                }]];
-//                
-//                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) withBlock:^(id sender) {
-//                    [weakSelf deleteDialog:weakSelf.dialog];
-//                }]];
-//                
-//            }
-//        }
-//        
-//        [theMenu popUpForView:weakSelf.rightButton];
-//        
-//        
-//    } forControlEvents:BTRControlEventLeftClick];
-//    
-//    return self.rightButton;
-//}
 
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force {
@@ -1560,8 +1487,7 @@ static NSTextAttachment *headerMediaIcon() {
             }
         }
         
-        //Можно попробовать впихнуть в выше, если будет лагать
-        __block NSInteger row = 0;
+        __block NSInteger row = self.messages.count - 1;
         __block MessageTableItem *backItem = nil;
         [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL *stop) {
             BOOL isHeaderMessage = item.isHeaderMessage;
@@ -1572,7 +1498,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.table reloadDataForRowIndexes:indexSet columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             }
             backItem = item;
-            row++;
+            row--;
         }];
         
         
@@ -1696,10 +1622,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.jumpToBottomButton setHidden:YES];
         
-        
-        
-       // [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
-     //   [[TGPhotoViewer viewer] prepare:self.dialog];
         [self.typingView setDialog:dialog];
         
         
@@ -2021,39 +1943,33 @@ static NSTextAttachment *headerMediaIcon() {
     if(pos == 0)
         pos++;
     
-    MessageTableItem *backItem;
     
-    if(pos < self.messages.count)
-        backItem = [self.messages objectAtIndex:pos];
     
-    MessageTableItem *current = nil;
-    for(int i = (int)array.count-1; i >= 0; i--) {
-        current = array[i];
-        
+    [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
+
+    __block MessageTableItem *backItem;
+    
+    
+    NSRange range = NSMakeRange(0, MIN(pos + array.count + 1, self.messages.count ) );
+    
+    [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
+    
         current.isSelected = NO;
         [self isHeaderMessage:current prevItem:backItem];
         [current makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
+        
+    }];
+    
+    
+
+    if(needCheckLastMessage && pos > 1) {
+        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos-1)];
+        [self.table noteHeightOfRowsWithIndexesChanged:set];
+        [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
     
-    //Фикс при вставке в средину
-    if(needCheckLastMessage) {
-        current = pos > 1 ? [self.messages objectAtIndex:pos-1] : nil;
-        if(current != nil) {
-            BOOL isHeaderMessage = current.isHeaderMessage;
-            [self isHeaderMessage:current prevItem:backItem];
-            if(isHeaderMessage != current.isHeaderMessage) {
-                NSIndexSet *set = [NSIndexSet indexSetWithIndex:pos];
-                [self.table noteHeightOfRowsWithIndexesChanged:set];
-                [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-            }
-        }
-    }
-    
-    
-    
-    [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
-    
+   
     
     
     [self tryRead];

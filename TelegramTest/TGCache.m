@@ -166,7 +166,10 @@ NSString *const AVACACHE = @"AVACACHE";
 
 -(void)cacheImage:(NSImage *)image forKey:(NSString *)key groups:(NSArray *)groups {
     
-    assert(image != nil && key != nil && groups != nil);
+    assert(image != nil);
+    assert(key != nil);
+    assert(groups != nil);
+    
     
     NSUInteger size = image.size.width * image.size.height * 4;
     

@@ -14,7 +14,6 @@
 @interface TLClassStore()
 @property (nonatomic, strong) NSMutableDictionary *classes;
 @property (nonatomic, strong) NSMutableDictionary *constuctors;
-@property BOOL lol;
 @end
 
 @implementation TLClassStore

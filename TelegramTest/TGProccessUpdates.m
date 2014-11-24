@@ -219,9 +219,6 @@ static NSString *kUpdateState = @"kUpdateState";
     }];
     
    
-    
-   
-    
     NSMutableArray *successful = [[NSMutableArray alloc] init];
     
     
@@ -252,19 +249,17 @@ static NSString *kUpdateState = @"kUpdateState";
     
     
     for (TGUpdateContainer *successUpdate in successful) {
-        [self proccessStatefulMessage:successUpdate needSave:NO];
+        BOOL success = [self proccessStatefulMessage:successUpdate needSave:YES];
         [_statefulUpdates removeObject:successUpdate];
+        
+        if(!success)
+            return;
     }
-    
-    [self applyUpdate:lastUpdate];
-    
     
     if (_statefulUpdates.count == 0)
     {
         [self cancelSequenceTimer];
     }
-    
-    
 }
 
 -(void)applyUpdate:(TGUpdateContainer *)container {
@@ -281,15 +276,16 @@ static NSString *kUpdateState = @"kUpdateState";
 }
 
 
--(void)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
-    
-    if(needSave)
-        [self applyUpdate:container];
-    
+-(BOOL)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
     
     if([container.update isKindOfClass:[TL_updateShortChatMessage class]]) {
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
+        
+        if(![[UsersManager sharedManager] find:[shortMessage from_id]] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+            [self failSequence];
+            return NO;
+        }
         
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
@@ -299,16 +295,26 @@ static NSString *kUpdateState = @"kUpdateState";
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
+        if(![[UsersManager sharedManager] find:[shortMessage from_id]]) {
+            [self failSequence];
+            return NO;
+        }
+        
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
+    
+    if(needSave)
+        [self applyUpdate:container];
     
     if([container.update isKindOfClass:[NSArray class]]) {
         for (TLUpdate *update in container.update) {
             [self proccessUpdate:update];
         }
     }
+    
+    return YES;
     
 }
 

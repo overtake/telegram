@@ -20,6 +20,14 @@
          contextName = "-[PhotoTableItemView redrawRow]:PhotoTableItemView.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController deleteMessages:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
          <PersistentStrings>
             <PersistentString
@@ -40,6 +48,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPVContainer initWithFrame:]:TGPVContainer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.message.n_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[UserInfoViewController viewWillAppear:]:UserInfoViewController.m">
@@ -67,6 +83,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "memory">
+            </PersistentString>
+            <PersistentString
+               value = "sync">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessUpdate:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -74,6 +101,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "__45-[SelfDestructionController didReadMessages:]_block_invoke:SelfDestructionController.m">
@@ -745,6 +775,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "current.isHeaderMessage">
+            </PersistentString>
+            <PersistentString
+               value = "self.messages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
@@ -1362,6 +1403,20 @@
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.message.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "_conversation">
+            </PersistentString>
+            <PersistentString
+               value = "_conversation.top_message">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[DialogsManager createDialogForMessage:]:DialogsManager.m">

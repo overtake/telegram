@@ -11,6 +11,7 @@
 #import "TMMediaController.h"
 #import "AboutViewControllerWindowController.h"
 #import "Rebel/Rebel.h"
+#import "TGPhotoViewer.h"
 
 @interface TelegramFirstController ()
 @property (nonatomic,strong) AboutViewControllerWindowController *aboutViewController;
@@ -130,7 +131,7 @@
     [[Telegram leftViewController] showUserSettings];
 }
 - (IBAction)showMedia:(id)sender {
-     [[TMMediaController getCurrentController] show:nil];
+  //  [[TGPhotoViewer viewer] show:nil conversation:[Telegram rightViewController].messagesViewController.dialog];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
