@@ -136,12 +136,9 @@ NSImage *fireImage() {
      [self.fireImageView setHidden:YES];
     
     if(cellState == CellStateNormal) {
-         [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
-         [self.fireImageView setHidden:!isNeedSecretBlur];
-         if(isNeedSecretBlur) {
-            [self.fireImageView setCenterByView:self.imageView];
-           
-         }
+        [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
+        [self.fireImageView setHidden:!isNeedSecretBlur];
+        [self.fireImageView setCenterByView:self.imageView];
     }
     
     [self.progressView setState:cellState];

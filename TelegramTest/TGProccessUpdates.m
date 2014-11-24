@@ -705,8 +705,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         
         for (TL_encryptedMessage *enmsg in [updates n_encrypted_messages]) {
-            TLMessage *msg = [MessagesManager defaultMessage:enmsg];
-            if(msg) [[updates n_messages] addObject:msg];
+            [self.encryptedUpdates proccessUpdate:enmsg];
         }
         
         NSMutableArray *copy = [[response n_messages] mutableCopy];

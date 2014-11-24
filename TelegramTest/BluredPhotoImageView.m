@@ -58,9 +58,7 @@ static CAAnimation *ani() {
     
     if(self.isAlwaysBlur) {
         
-        [super setImage:nil];
-        
-        [ASQueue dispatchOnStageQueue:^{
+       [ASQueue dispatchOnStageQueue:^{
             NSImage *blured = [self blur:image];
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 [super setImage:blured];

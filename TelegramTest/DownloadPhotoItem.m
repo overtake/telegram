@@ -20,12 +20,12 @@
         if (!object) 
             return nil;
         
-       self.isEncrypted = object.local_id == -1;
-       self.path = [object path];
-       self.fileType = DownloadFileImage;
-       self.size = size;
-       self.dc_id = object.dc_id;
-       self.n_id = object.secret;
+        self.isEncrypted = object.local_id == -1;
+        self.path = [object path];
+        self.fileType = DownloadFileImage;
+        self.size = size;
+        self.dc_id = object.dc_id;
+        self.n_id = self.isEncrypted ? object.volume_id : object.secret;
         
     }
     return self;
