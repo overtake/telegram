@@ -36,8 +36,10 @@
     _state = state;
     
     if(state == MessageTableCellSending) {
-         self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 4, 15, 15)];
-        [self.layer addSublayer:self.progressView.layer];
+        if(!self.progressView) {
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 4, 15, 15)];
+            [self.layer addSublayer:self.progressView.layer];
+        }
         [self.progressView startAnimating];
     } else {
         [self.progressView stopAnimating];
@@ -47,9 +49,13 @@
     
     
     if(state == MessageTableCellSendingError) {
-        self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
-        [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
-        [self addSubview:self.errorView];
+        
+        if(!self.errorView) {
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
+            [self addSubview:self.errorView];
+        }
+        
         
         weak();
         
@@ -59,7 +65,7 @@
         
         
     } else {
-        [self.errorView.layer removeFromSuperlayer];
+        [self.errorView removeFromSuperview];
         self.errorView = nil;
     }
     

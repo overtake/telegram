@@ -227,7 +227,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:self.view.window];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidResignKeyNotification object:[[NSApp delegate] window]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidResignKeyNotification object:self.view.window];
     
     [Notification addObserver:self selector:@selector(changeDialogSelectionNotification:) name:@"ChangeDialogSelection"];
     [Notification addObserver:self selector:@selector(updateChat:) name:CHAT_UPDATE_TYPE];
@@ -1959,11 +1959,14 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
+    
+    
+    NSInteger max = MIN(pos + array.count + 1, self.messages.count );
 
-    __block MessageTableItem *backItem;
+    __block MessageTableItem *backItem = self.messages[max-1];
     
     
-    NSRange range = NSMakeRange(0, MIN(pos + array.count + 1, self.messages.count ) );
+    NSRange range = NSMakeRange(0, max-1);
     
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
     

@@ -336,7 +336,8 @@ NSImage *selectCheckActiveImage() {
     else
         [self deallocSelectButton];
     
-    [self.selectButton setSelected:!self.selectButton.isSelected];
+    
+    [self.selectButton setSelected:isSelected];
     
     if(self.selectButton.layer.anchorPoint.x != 0.5) {
         CGPoint point = self.selectButton.layer.position;

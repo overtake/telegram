@@ -766,7 +766,6 @@ static NSString *kUpdateState = @"kUpdateState";
         if(intstate != nil) {
             [self uptodate:statePts qts:stateQts date:stateDate];
         } else {
-            [[NSApp delegate] setConnectionStatus:nil];
             [Notification perform:PROTOCOL_UPDATED data:nil];
             [Telegram setConnectionState:ConnectingStatusTypeNormal];
         }
@@ -777,7 +776,6 @@ static NSString *kUpdateState = @"kUpdateState";
         if(error.error_code == 502) {
             [self uptodate:pts qts:qts date:date];
         } else {
-            [[NSApp delegate] setConnectionStatus:@"updating failed"];
             [self updateDifference:YES];
         }
     } timeout:10 queue:[ASQueue globalQueue].nativeQueue];

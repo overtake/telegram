@@ -59,7 +59,7 @@
     _behavior = nil;
     [TGCache removeAllCachedImages:@[PVCACHE]];
 
-    [[[NSApp delegate] mainWindow] makeFirstResponder:nil];
+    [[NSApp mainWindow] makeFirstResponder:nil];
 }
 
 
@@ -402,7 +402,7 @@ static const int controlsHeight = 75;
     [super makeKeyAndOrderFront:nil];
     
     
-    [[[NSApp delegate] mainWindow] makeFirstResponder:self.photoContainer];
+    [[NSApp mainWindow] makeFirstResponder:self.photoContainer];
     
 
     _isVisibility = YES;

@@ -99,7 +99,6 @@
 
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString {
     self->_placeholderAttributedString = placeholderAttributedString;
-    
     self.placeholderView.placeholderAttributedString = placeholderAttributedString;
 }
 

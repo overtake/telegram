@@ -6,6 +6,9 @@
          contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
       </ContextState>
       <ContextState
+         contextName = "+[SearchItem hash:]:SearchItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -506,6 +509,14 @@
       </ContextState>
       <ContextState
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView setSelected:animation:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesTableView initWithFrame:]:MessagesTableView.m">
@@ -1412,9 +1423,6 @@
       </ContextState>
       <ContextState
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke_2:MessagesViewController.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">
