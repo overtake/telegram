@@ -356,7 +356,7 @@ static CAAnimation *ani2() {
     } else {
         
         
-        int colorMask = [TMAvatarImageView colorMask:TMAvatarTypeChat ? self.chat : (self.type == TMAvatarTypeBroadcast ? self.broadcast : self.user)];
+        int colorMask = [TMAvatarImageView colorMask:self.type == TMAvatarTypeChat ? self.chat : (self.type == TMAvatarTypeBroadcast ? self.broadcast : self.user)];
 
         
          __block NSString *text = self->_text;

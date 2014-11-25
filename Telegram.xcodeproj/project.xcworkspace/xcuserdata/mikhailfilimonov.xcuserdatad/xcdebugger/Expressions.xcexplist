@@ -991,7 +991,16 @@
          contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.type">
+            </PersistentString>
+            <PersistentString
+               value = "self.chat">
+            </PersistentString>
+            <PersistentString
                value = "self.broadcast.n_id ">
+            </PersistentString>
+            <PersistentString
+               value = "self.user">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1251,6 +1260,9 @@
       </ContextState>
       <ContextState
          contextName = "__40-[TMCollectionPageController reloadData]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
