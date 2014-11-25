@@ -1963,7 +1963,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSInteger max = MIN(pos + array.count + 1, self.messages.count );
 
-    __block MessageTableItem *backItem = self.messages[max-1];
+    __block MessageTableItem *backItem = nil;
     
     
     NSRange range = NSMakeRange(0, max);
