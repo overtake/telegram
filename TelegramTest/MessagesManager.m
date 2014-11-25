@@ -14,6 +14,8 @@
 #import "Crypto.h"
 #import "SelfDestructionController.h"
 #import "MessagesUtils.h"
+#import "TGCache.h"
+#import "TLFileLocation+Extensions.h"
 @interface NSUserNotification(Extensions)
 
 @property (nonatomic)  BOOL hasReplyButton;
@@ -85,7 +87,9 @@
         if(result)
             return;
         
-        NSString *title = [[[UsersManager sharedManager] find:message.from_id] fullName];
+        TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
+        
+        NSString *title = [fromUser fullName];
         NSString *msg = message.message;
         if(message.action) {
             msg = [MessagesUtils serviceMessage:message forAction:message.action];
@@ -98,6 +102,9 @@
         
         NSString *subTitle;
         
+        
+        NSImage *image = [TGCache cachedImage:[fromUser.photo.photo_small cacheKey]];
+        
         if(message.to_id.chat_id != 0) {
             if(![message.to_id isSecret]) {
                 subTitle = title;
@@ -106,6 +113,8 @@
                 title = message.conversation.encryptedChat.peerUser.fullName;
             }
         }
+        
+        
         
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
@@ -119,6 +128,7 @@
             {
                 if(![message.to_id isSecret])
                     notification.hasReplyButton = YES;
+                notification.contentImage = image;
             }
             
             [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];

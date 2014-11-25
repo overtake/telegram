@@ -56,6 +56,8 @@ NSImage *fireImage() {
         [self.imageView setBorderColor:NSColorFromRGB(0xf3f3f3)];
         [self.imageView setBorderWidth:1];
 
+        [self.imageView setContentMode:BTRViewContentModeCenter];
+        
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             

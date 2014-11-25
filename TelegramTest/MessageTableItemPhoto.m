@@ -34,7 +34,10 @@
             self.photoSize = photoSize.size;
             
             
-            imageSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+            imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.width);
+            
+            imageSize.width = MAX(MIN_IMG_SIZE.width,imageSize.width);
+            imageSize.height = MAX(MIN_IMG_SIZE.height,imageSize.height);
             
             cachePhoto.size = imageSize;
             
@@ -52,7 +55,7 @@
             
             self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
             
-            
+            self.imageObject.imageSize = imageSize;
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             

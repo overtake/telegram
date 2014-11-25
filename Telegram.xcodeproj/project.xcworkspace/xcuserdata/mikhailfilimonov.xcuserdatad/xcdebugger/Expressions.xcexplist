@@ -376,6 +376,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.blockSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController loadView]:MessagesViewController.m">
