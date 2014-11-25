@@ -89,6 +89,9 @@
         
         TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
         
+        TLChat *chat = [[ChatsManager sharedManager] find:message.to_id.chat_id];
+    
+        
         NSString *title = [fromUser fullName];
         NSString *msg = message.message;
         if(message.action) {
@@ -103,12 +106,58 @@
         NSString *subTitle;
         
         
-        NSImage *image = [TGCache cachedImage:[fromUser.photo.photo_small cacheKey]];
+        NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
+        
+        if(message.to_id.chat_id != 0) {
+            cacheKey = [chat.photo.photo_small cacheKey];
+        }
+        
+         NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
+        
+        
+        NSImage *image = [TGCache cachedImage:p group:@[AVACACHE]];
+        
+       
+        
+        if(!image) {
+           
+            NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
+        
+            
+            if(data.length > 0) {
+                image = [[NSImage alloc] initWithData:data];
+                
+                image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
+                
+                [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+            }
+
+        }
+        
+        
+        if(!image) {
+            
+            p = [NSString stringWithFormat:@"notification_%d",chat ? chat.n_id : fromUser.n_id];
+            
+            image = [TGCache cachedImage:p];
+            
+            if(!image) {
+                int colorMask = [TMAvatarImageView colorMask:chat ? chat : fromUser];
+                
+                NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
+                
+                image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30]];
+                
+                [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+            }
+            
+        }
+       
         
         if(message.to_id.chat_id != 0) {
             if(![message.to_id isSecret]) {
                 subTitle = title;
-                title = [[[ChatsManager sharedManager] find:message.to_id.chat_id] title];
+                title = [chat title];
             } else {
                 title = message.conversation.encryptedChat.peerUser.fullName;
             }

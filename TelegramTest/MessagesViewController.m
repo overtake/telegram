@@ -1966,7 +1966,7 @@ static NSTextAttachment *headerMediaIcon() {
     __block MessageTableItem *backItem = self.messages[max-1];
     
     
-    NSRange range = NSMakeRange(0, max-1);
+    NSRange range = NSMakeRange(0, max);
     
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
     
@@ -1984,8 +1984,6 @@ static NSTextAttachment *headerMediaIcon() {
         [self.table noteHeightOfRowsWithIndexesChanged:set];
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
-    
-   
     
     
     [self tryRead];

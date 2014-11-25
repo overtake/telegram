@@ -11,6 +11,13 @@
 
 @interface TMAvatarImageView : BTRImageView
 
+typedef enum {
+    TMAvatarTypeUser,
+    TMAvatarTypeChat,
+    TMAvatarTypeText,
+    TMAvatarTypeBroadcast
+} TMAvatarType;
+
 @property (nonatomic,strong) TLFileLocation *fileLocation;
 
 @property (nonatomic, strong) TLUser *user;
@@ -29,5 +36,10 @@ typedef void (^TapTMAvatarImageView)(void);
 + (instancetype)standartUserInfoAvatar;
 + (instancetype)standartMessageTableAvatar;
 + (instancetype)standartNewConversationTableAvatar;
+
++ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font;
+
++(int)colorMask:(NSObject *)object;
++(NSString *)text:(NSObject *)object;
 
 @end

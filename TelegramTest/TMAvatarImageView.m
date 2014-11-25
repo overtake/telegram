@@ -20,12 +20,7 @@
 #import "ImageUtils.h"
 #import "TGCache.h"
 #import "TMAvaImageObject.h"
-typedef enum {
-    TMAvatarTypeUser,
-    TMAvatarTypeChat,
-    TMAvatarTypeText,
-    TMAvatarTypeBroadcast
-} TMAvatarType;
+
 
 
 typedef struct
@@ -334,23 +329,7 @@ static CAAnimation *ani2() {
     if(self.fileLocation) {
         self.currentHash = [self.fileLocation hashCacheKey];
     } else {
-        if(self.type == TMAvatarTypeUser) {
-            if(self.user.first_name.length == 0 && self.user.last_name.length == 0) {
-                self->_text = [NSString stringWithFormat:@"A"];
-            } else {
-                self->_text = [NSString stringWithFormat:@"%C%C", (unichar)(self.user.first_name.length ? [self.user.first_name characterAtIndex:0] : 0), (unichar)(self.user.last_name.length ? [self.user.last_name characterAtIndex:0] : 0)];
-            }
-            
-        } else if(self.type == TMAvatarTypeChat) {
-            self->_text = [NSString stringWithFormat:@"%C", (unichar)(self.chat.title.length > 0 ? [self.chat.title characterAtIndex:0] : self.chat.n_id)];
-        } else if(self.type == TMAvatarTypeBroadcast) {
-            if(self.broadcast.title.length > 0 ) {
-                self->_text = [NSString stringWithFormat:@"%C", (unichar)([self.broadcast.title characterAtIndex:0])];
-            } else {
-                self->_text = [NSString stringWithFormat:@"%d",self.broadcast.n_id];
-            }
-            
-        }
+        _text = [TMAvatarImageView text:self.chat ? self.chat : (self.broadcast ? self.broadcast : self.user)];
         self.currentHash = [self.text hash];
     }
     
@@ -376,46 +355,15 @@ static CAAnimation *ani2() {
         
     } else {
         
-        int uid = self.type == TMAvatarTypeChat ? self.chat.n_id : (self.type == TMAvatarTypeBroadcast ? self.broadcast.n_id : self.user.n_id);
         
-        __block int colorMask = 0;
-        
-        
-       
-        
-        static NSMutableDictionary *cacheColorIds;
-    
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            cacheColorIds = [[NSMutableDictionary alloc] init];
-        });
-        
-        
-        if(cacheColorIds[@(uid)]) {
-            colorMask = [cacheColorIds[@(uid)] intValue];
-        } else {
-            const int numColors = 8;
-            
-            if(uid != -1) {
-                char buf[16];
-                snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
-                unsigned char digest[CC_MD5_DIGEST_LENGTH];
-                CC_MD5(buf, (unsigned) strlen(buf), digest);
-                colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
-            } else {
-                colorMask = -1;
-            }
-            
-            cacheColorIds[@(uid)] = @(colorMask);
-        }
-        
-        
+        int colorMask = [TMAvatarImageView colorMask:TMAvatarTypeChat ? self.chat : (self.type == TMAvatarTypeBroadcast ? self.broadcast : self.user)];
+
         
          __block NSString *text = self->_text;
         
         [ASQueue dispatchOnStageQueue:^{
             
-            __block NSImage *image = [self generateTextAvatar:colorMask text:text type:self.type];
+            __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font];
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                     
@@ -431,9 +379,73 @@ static CAAnimation *ani2() {
     }
 }
 
-- (NSImage *)generateTextAvatar:(int)colorMask text:(NSString *)text type:(TMAvatarType)type {
++(NSString *)text:(NSObject *)object {
     
-    NSSize size = self.bounds.size;
+    NSString *text;
+    
+    
+    if([object isKindOfClass:[TLUser class]]) {
+        if([[object valueForKey:@"first_name"] length] == 0 && [[object valueForKey:@"last_name"] length] == 0) {
+            text = [NSString stringWithFormat:@"A"];
+        } else {
+            text = [NSString stringWithFormat:@"%C%C", (unichar)([[object valueForKey:@"first_name"] length] ? [[object valueForKey:@"first_name"] characterAtIndex:0] : 0), (unichar)([[object valueForKey:@"last_name"] length] ? [[object valueForKey:@"last_name"] characterAtIndex:0] : 0)];
+        }
+        
+    } else if([object isKindOfClass:[TLChat class]]) {
+        text = [NSString stringWithFormat:@"%C", (unichar)([[object valueForKey:@"title"] length] > 0 ? [[object valueForKey:@"title"] characterAtIndex:0] : [[object valueForKey:@"n_id"] intValue])];
+                                                           
+    } else if([object isKindOfClass:[TL_broadcast class]]) {
+        if([[object valueForKey:@"title"] length] > 0 ) {
+            text = [NSString stringWithFormat:@"%C", (unichar)([[object valueForKey:@"title"] characterAtIndex:0])];
+        } else {
+            text = [NSString stringWithFormat:@"%d",[[object valueForKey:@"n_id"] intValue]];
+        }
+    }
+    
+    return text;
+}
+
++(int)colorMask:(NSObject *)object {
+    
+    
+    int uid = [[object valueForKey:@"n_id"] intValue];
+    
+    __block int colorMask = 0;
+    
+    
+    static NSMutableDictionary *cacheColorIds;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cacheColorIds = [[NSMutableDictionary alloc] init];
+    });
+    
+    
+    if(cacheColorIds[@(uid)]) {
+        colorMask = [cacheColorIds[@(uid)] intValue];
+    } else {
+        const int numColors = 8;
+        
+        if(uid != -1) {
+            char buf[16];
+            snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
+            unsigned char digest[CC_MD5_DIGEST_LENGTH];
+            CC_MD5(buf, (unsigned) strlen(buf), digest);
+            colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
+        } else {
+            colorMask = -1;
+        }
+        
+        cacheColorIds[@(uid)] = @(colorMask);
+    }
+    
+    return colorMask;
+    
+
+}
+
++ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font {
+    
     NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
     
@@ -471,11 +483,6 @@ static CAAnimation *ani2() {
         CFRelease(gradient);
     }
 
-    
-        
-
-
-    
     if(type != TMAvatarTypeBroadcast) {
         NSColor *color = [NSColor whiteColor];
         text = [text uppercaseString];
@@ -495,9 +502,9 @@ static CAAnimation *ani2() {
             color = NSColorFromRGB(0x999999);
         }
         
-        NSDictionary *attributes = @{NSFontAttributeName: self.font, NSForegroundColorAttributeName: color};
+        NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
         NSSize textSize = [text sizeWithAttributes:attributes];
-        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + self.offsetTextY) )withAttributes: attributes];
+        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 ) )withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;
@@ -510,19 +517,16 @@ static CAAnimation *ani2() {
             largeAvatar = [NSImage imageNamed:@"BroadcastLargeAvatarIcon"];
         });
         
-        NSImage *img = self.bounds.size.width > 50.0 ? largeAvatar : smallAvatar;
+        NSImage *img = size.width > 50.0 ? largeAvatar : smallAvatar;
         
         
-        [img drawInRect:NSMakeRect(roundf( (self.bounds.size.width - img.size.width) * 0.5 ),roundf( (self.bounds.size.height - img.size.height) * 0.5 ), img.size.width, img.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [img drawInRect:NSMakeRect(roundf( (size.width - img.size.width) * 0.5 ),roundf( (size.height - img.size.height) * 0.5 ), img.size.width, img.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
     
     
     [image unlockFocus];
     
-    
-    
-    
-    image = [TMImageUtils roundedImageNew:image size:self.bounds.size];
+    image = [TMImageUtils roundedImageNew:image size:size];
     return image;
 }
 
