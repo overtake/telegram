@@ -416,7 +416,6 @@ static int unreadOffsetRight = 13;
     
     [self setNeedsDisplay:YES];
     
-    
 }
 
 - (void)setNeedsDisplay:(BOOL)flag {
