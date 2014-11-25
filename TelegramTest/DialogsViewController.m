@@ -16,7 +16,6 @@
 #import "TMElements.h"
 #import "DialogTableItem.h"
 #import "DialogTableItemView.h"
-#include "map"
 #import "TGSecretAction.h"
 #import "SearchSeparatorItem.h"
 #import "SearchSeparatorTableCell.h"
@@ -72,19 +71,18 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
-    
     [[Storage manager] users:^(NSArray *result) {
         
-        
         [[UsersManager sharedManager] addFromDB:result];
-    
+        
         [[BroadcastManager sharedManager] loadBroadcastList:^{
         
             [[Storage manager] loadChats:^(NSArray *chats) {
                 [[ChatsManager sharedManager] add:chats];
-            
-                [self initConversations];
-            
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [self initConversations];
+                }];
             }];
         }];
         
@@ -177,7 +175,7 @@
             [self loadhistory:limit];
         }
         
-    } usersCallback:^(NSArray *) {
+    } usersCallback:^(NSArray *users) {
         
     }];
 }

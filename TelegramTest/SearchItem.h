@@ -11,6 +11,7 @@
 
 typedef enum {
     SearchItemChat,
+    SearchItemConversation,
     SearchItemUser,
     SearchItemMessage,
     SearchItemGlobalUser

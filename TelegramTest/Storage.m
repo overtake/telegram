@@ -732,10 +732,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [chatResult close];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler)
+         if(completeHandler)
                 completeHandler(chats);
-        });
     }];
 }
 
@@ -952,9 +950,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [result close];
         
         if(completeHandler) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                completeHandler(users);
-            }];
+            completeHandler(users);
         }
     }];
 }

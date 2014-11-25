@@ -103,7 +103,7 @@
     if(self) {
         [self initialize];
         
-        self.type = SearchItemChat;
+        self.type = SearchItemConversation;
         
         self.dialog = dialog;
         
@@ -198,8 +198,6 @@
 + (NSUInteger)hash:(SearchItem *)item {
     NSString *hashStr;
     
-    NSObject *object = item.dialog;
-    
 //    if(object == nil) {
 //        DLog(@"log");
 //    }
@@ -209,12 +207,12 @@
     } else if(item.type ==SearchItemGlobalUser) {
         hashStr = [NSString stringWithFormat:@"global_user_%d", item.user.n_id];
     } else {
-        if([object isKindOfClass:[TL_conversation class]]) {
-            hashStr = [Notification notificationNameByDialog:(TL_conversation *)object action:@"hash"];
-        } else if([object isKindOfClass:[TLUser class]]) {
-            hashStr = [NSString stringWithFormat:@"user_%d", ((TLUser *)object).n_id];
-        } else if([object isKindOfClass:[TLChat class]]) {
-            hashStr = [NSString stringWithFormat:@"chat_%d", ((TLChat *)object).n_id];
+        if(item.type == SearchItemConversation ) {
+            hashStr = [Notification notificationNameByDialog:item.dialog action:@"hash"];
+        } else if(item.type == SearchItemUser) {
+            hashStr = [NSString stringWithFormat:@"user_%d", item.user.n_id];
+        } else if(item.type == SearchItemChat) {
+            hashStr = [NSString stringWithFormat:@"chat_%d", item.chat.n_id];
         }
     }
  

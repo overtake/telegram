@@ -64,7 +64,7 @@
 		0A62CC91181F00360098720C /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CC90181F00360098720C /* MainViewController.m */; };
 		0A62CC95181F1ADD0098720C /* LeftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CC93181F1ADD0098720C /* LeftViewController.m */; };
 		0A62CC9A181F24270098720C /* RightViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CC98181F24270098720C /* RightViewController.m */; };
-		0A62CC9F181FD71C0098720C /* DialogsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CC9D181FD71C0098720C /* DialogsViewController.mm */; };
+		0A62CC9F181FD71C0098720C /* DialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CC9D181FD71C0098720C /* DialogsViewController.m */; };
 		0A62CCAF182021D00098720C /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A62CCAE182021D00098720C /* MessagesViewController.m */; };
 		0A6758881892798500F4487D /* SJExpandingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6758871892798500F4487D /* SJExpandingTextView.m */; };
 		0A67588B18928F1A00F4487D /* TMGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67588A18928F1A00F4487D /* TMGrowingTextView.m */; };
@@ -478,12 +478,13 @@
 		C2ADB45B191BBA2500305CC8 /* MediaCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB45A191BBA2500305CC8 /* MediaCollectionItem.m */; };
 		C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB460191BD90F00305CC8 /* MediaCollectionItemView.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
-		C2B325F71A2489100012DE34 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2B325F81A2489160012DE34 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2B325F91A2489200012DE34 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2B325FA1A2489200012DE34 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2B325FF1A24C9660012DE34 /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325FC1A24C9660012DE34 /* MTProto.m */; };
 		C2B326001A24C9660012DE34 /* TLApi.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325FE1A24C9660012DE34 /* TLApi.m */; };
+		C2B326011A24EF310012DE34 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B326021A24EF370012DE34 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B326031A24EF3E0012DE34 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2B326041A24EF3E0012DE34 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
 		C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */; };
 		C2C6D9691A124F70001EF8A2 /* TGPVControls.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9681A124F70001EF8A2 /* TGPVControls.m */; };
@@ -668,8 +669,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2B325F81A2489160012DE34 /* Sparkle.framework in Copy Files (6 items) */,
-				C2B325F71A2489100012DE34 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2B326021A24EF370012DE34 /* Sparkle.framework in Copy Files (6 items) */,
+				C2B326011A24EF310012DE34 /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -810,7 +811,7 @@
 		0A62CC97181F24270098720C /* RightViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightViewController.h; sourceTree = "<group>"; };
 		0A62CC98181F24270098720C /* RightViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightViewController.m; sourceTree = "<group>"; };
 		0A62CC9C181FD71C0098720C /* DialogsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogsViewController.h; sourceTree = "<group>"; };
-		0A62CC9D181FD71C0098720C /* DialogsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DialogsViewController.mm; sourceTree = "<group>"; };
+		0A62CC9D181FD71C0098720C /* DialogsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogsViewController.m; sourceTree = "<group>"; };
 		0A62CCAD182021D00098720C /* MessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
 		0A62CCAE182021D00098720C /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
 		0A6758861892798500F4487D /* SJExpandingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJExpandingTextView.h; sourceTree = "<group>"; };
@@ -1668,6 +1669,8 @@
 		C2B325FC1A24C9660012DE34 /* MTProto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTProto.m; sourceTree = "<group>"; };
 		C2B325FD1A24C9660012DE34 /* TLApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLApi.h; sourceTree = "<group>"; };
 		C2B325FE1A24C9660012DE34 /* TLApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApi.m; sourceTree = "<group>"; };
+		C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeAlertController.h; sourceTree = "<group>"; };
+		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
 		C2C6D9641A111B3E001EF8A2 /* TGPhotoViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoViewerItem.h; sourceTree = "<group>"; };
@@ -2001,8 +2004,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2B325F91A2489200012DE34 /* Sparkle.framework in Frameworks */,
-				C2B325FA1A2489200012DE34 /* HockeySDK.framework in Frameworks */,
+				C2B326031A24EF3E0012DE34 /* Sparkle.framework in Frameworks */,
+				C2B326041A24EF3E0012DE34 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2732,7 +2735,7 @@
 				0A5B3EA31881BA4700BC918C /* cells */,
 				0A5B3EA21881BA3D00BC918C /* items */,
 				0A62CC9C181FD71C0098720C /* DialogsViewController.h */,
-				0A62CC9D181FD71C0098720C /* DialogsViewController.mm */,
+				0A62CC9D181FD71C0098720C /* DialogsViewController.m */,
 				C297FBA91833917B00714B3C /* DialogTableObject.h */,
 				C297FBAA1833917B00714B3C /* DialogTableObject.m */,
 				0A241A9518AAF5B900C32F45 /* DialogTableView.h */,
@@ -2861,6 +2864,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C2B326051A24F7200012DE34 /* phonechange */,
 				C270D2EA1A1CD73500522FB0 /* pravicy */,
 				C268C13A19EEB56C007F836A /* username */,
 				C268C13219EE9DE6007F836A /* about */,
@@ -3659,6 +3663,15 @@
 				C2B325ED1A237A420012DE34 /* TLApiObject.m */,
 			);
 			name = serialization;
+			sourceTree = "<group>";
+		};
+		C2B326051A24F7200012DE34 /* phonechange */ = {
+			isa = PBXGroup;
+			children = (
+				C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */,
+				C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */,
+			);
+			name = phonechange;
 			sourceTree = "<group>";
 		};
 		C2C2491819EBC680006BB1AB /* BlockedUsers */ = {
@@ -4901,7 +4914,7 @@
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
 				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,
 				CE84548E1822C41D00E73DF7 /* ImageStorage.m in Sources */,
-				0A62CC9F181FD71C0098720C /* DialogsViewController.mm in Sources */,
+				0A62CC9F181FD71C0098720C /* DialogsViewController.m in Sources */,
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,
 				0AAAE57D18C8CBB600A2F9F1 /* TMAnimations.m in Sources */,
 				C2201A0D1934E6D600C0E441 /* DownloadPart.m in Sources */,
@@ -5091,6 +5104,7 @@
 				0AB8F2AF194866050074E4E7 /* MapPanel.m in Sources */,
 				C233FB3118B61618008C9A96 /* NewConversationRowView.m in Sources */,
 				C268C18619F0519C007F836A /* POPAnimation.mm in Sources */,
+				C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */,
 				C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */,
 				CE84549A18244F1600E73DF7 /* TelegramWindow.m in Sources */,
 				C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */,
