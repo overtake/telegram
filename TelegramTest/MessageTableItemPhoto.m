@@ -36,7 +36,7 @@
             
             imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.width);
             
-            imageSize.width = MAX(MIN_IMG_SIZE.width,imageSize.width);
+          //  imageSize.width = MAX(MIN_IMG_SIZE.width,imageSize.width);
             imageSize.height = MAX(MIN_IMG_SIZE.height,imageSize.height);
             
             cachePhoto.size = imageSize;
