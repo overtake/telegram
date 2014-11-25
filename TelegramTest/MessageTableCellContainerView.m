@@ -17,7 +17,6 @@
 @property (nonatomic, strong) TMTextButton *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
-@property (nonatomic, strong) NSImageView *broadcastImageView;
 
 
 @property (nonatomic, strong) TMView *fwdContainer;
@@ -38,29 +37,15 @@
 
 @implementation MessageTableCellContainerView
 
-static NSImage* image_broadcast() {
-    static NSImage *broadcast;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        broadcast = [NSImage imageNamed:@"broadcastSendingGray"];
-    });
-    
-    return broadcast;
-}
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         
-       
-        weak();
         [self setWantsLayer:YES];
         [self.layer disableActions];
         
         assert(self.layer != nil);
-        
-      
         
         self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
         [self.rightView setLayer:[CALayer layer]];
@@ -69,12 +54,7 @@ static NSImage* image_broadcast() {
         [self.rightView setAutoresizingMask:NSViewMinXMargin];
         [self addSubview:self.rightView];
         
-        self.forwardMessagesTextLayer = [TMTextLayer layer];
-        [self.forwardMessagesTextLayer disableActions];
-        [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
-        [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [self.forwardMessagesTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
-        [self.layer addSublayer:self.forwardMessagesTextLayer];
+       
         
         self.dateLayer = [TMTextLayer layer];
         [self.dateLayer disableActions];
@@ -92,45 +72,38 @@ static NSImage* image_broadcast() {
         [self.rightView addSubview:self.stateLayer];
         
         
-        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.rightView.bounds.size.width - image_checked().size.width - 6, 0, image_checked().size.width, image_checked().size.height)];
-        [self.selectButton setAutoresizingMask:NSViewMinXMargin];
-        [self.selectButton setHidden:NO];
-        
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHighlighted];
-        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateSelected];
+        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
+        [self.containerView setWantsLayer:YES];
+        [self.containerView setAutoresizingMask:NSViewWidthSizable];
+        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
+        [self addSubview:self.containerView];
         
         
+        _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+        [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+        [self.progressView addTarget:self selector:@selector(checkOperation)];
         
-        self.broadcastImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_broadcast().size.width, image_broadcast().size.height)];
         
-        self.broadcastImageView.image = image_broadcast();
-        
-        [self.broadcastImageView setHidden:YES];
-       
-        [self addSubview:self.broadcastImageView];
+    }
+    return self;
+}
+
+-(void)initForwardContainer {
     
-        [self.selectButton setUserInteractionEnabled:NO];
-
-
-        [self.rightView addSubview:self.selectButton];
-        
-        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
-        [self.avatarImageView setTapBlock:^{
-            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
-        }];
-        [self addSubview:self.avatarImageView];
-        
-        self.nameTextField = [[TMTextButton alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
-        [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
-        [self.nameTextField setDrawsBackground:NO];
-        [self.nameTextField setTapBlock:^{
-            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
-        }];
-        [self addSubview:self.nameTextField];
-        
+    weak();
+    
+    
+    
+    if(!self.forwardMessagesTextLayer) {
+        self.forwardMessagesTextLayer = [TMTextLayer layer];
+        [self.forwardMessagesTextLayer disableActions];
+        [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
+        [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
+        [self.forwardMessagesTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.layer addSublayer:self.forwardMessagesTextLayer];
+    }
+    
+    if(!self.fwdContainer) {
         self.fwdContainer = [[TMView alloc] initWithFrame:NSZeroRect];
         [self.fwdContainer setDrawBlock:^{
             [GRAY_BORDER_COLOR set];
@@ -143,40 +116,105 @@ static NSImage* image_broadcast() {
                 NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset));
             }
         }];
-
+        
         [self.fwdContainer setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [self.fwdContainer setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
         [self addSubview:self.fwdContainer];
-        
-        
+    }
+    
+    if(!self.fwdName) {
         self.fwdName = [[TMHyperlinkTextField alloc] init];
         [self.fwdName setBordered:NO];
         [self.fwdName setDrawsBackground:NO];
         [self.fwdContainer addSubview:self.fwdName];
-        
-
-        
+    }
+    
+    if(!self.fwdAvatar) {
         self.fwdAvatar = [TMAvatarImageView standartMessageTableAvatar];
         [self.fwdAvatar setTapBlock:^{
             [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.fwd_user.n_id conversation:weakSelf.item.fwd_user.dialog sender:weakSelf];
         }];
         [self.fwdContainer addSubview:self.fwdAvatar];
-        
-        
-        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
-        [self.containerView setWantsLayer:YES];
-        [self.containerView setAutoresizingMask:NSViewWidthSizable];
-        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
-        [self addSubview:self.containerView];
-        
-        
-        _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
-        [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-        [self.progressView addTarget:self selector:@selector(checkOperation)];
-        
     }
-    return self;
+    
+    
 }
+
+-(void)deallocForwardContainer {
+    [self.fwdAvatar removeFromSuperview];
+    self.fwdAvatar = nil;
+    
+    [self.forwardMessagesTextLayer removeFromSuperlayer];
+    self.forwardMessagesTextLayer = nil;
+    
+    [self.fwdContainer removeFromSuperview];
+    self.fwdContainer = nil;
+    
+    [self.fwdName removeFromSuperview];
+    self.fwdName = nil;
+    
+
+}
+
+
+-(void)initSelectButton {
+    
+    if(!self.selectButton) {
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.rightView.bounds.size.width - image_checked().size.width - 6, 0, image_checked().size.width, image_checked().size.height)];
+        [self.selectButton setAutoresizingMask:NSViewMinXMargin];
+        [self.selectButton setHidden:NO];
+        
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateSelected];
+        
+        
+        [self.selectButton setUserInteractionEnabled:NO];
+        
+        
+        [self.rightView addSubview:self.selectButton];
+    }
+   
+}
+
+-(void)deallocSelectButton {
+    [self.selectButton removeFromSuperview];
+    self.selectButton = nil;
+}
+
+-(void)initHeader {
+    
+    weak();
+    
+    if(!self.avatarImageView) {
+        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
+        [self.avatarImageView setTapBlock:^{
+            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
+        }];
+        [self addSubview:self.avatarImageView];
+    }
+    
+    if(!self.nameTextField) {
+        self.nameTextField = [[TMTextButton alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
+        [self.nameTextField setBordered:NO];
+        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setDrawsBackground:NO];
+        [self.nameTextField setTapBlock:^{
+            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
+        }];
+        [self addSubview:self.nameTextField];
+    }
+}
+
+-(void)deallocHeader {
+    [self.avatarImageView removeFromSuperview];
+    self.avatarImageView = nil;
+    
+    [self.nameTextField removeFromSuperview];
+    self.nameTextField = nil;
+}
+
 
 -(void)checkOperation {
     if(self.item.messageSender) {
@@ -292,6 +330,11 @@ NSImage *selectCheckActiveImage() {
     
     self.item.isSelected = isSelected;
     _isSelected = isSelected;
+    
+    if(isSelected)
+        [self initSelectButton];
+    else
+        [self deallocSelectButton];
     
     [self.selectButton setSelected:!self.selectButton.isSelected];
     
@@ -575,7 +618,6 @@ static BOOL dragAction = NO;
 
 - (void)setItem:(MessageTableItem *)item {
     
-    
     [super setItem:item];
     
     
@@ -583,10 +625,9 @@ static BOOL dragAction = NO;
     
     float offsetContainerView;
     
-    
-    
-    
     if(item.isForwadedMessage) {
+        
+        [self initForwardContainer];
         
         float minus = 0;
         
@@ -638,10 +679,12 @@ static BOOL dragAction = NO;
         [self.fwdName setHidden:YES];
         [self.fwdContainer setHidden:YES];
         offsetContainerView = 79;
+        [self deallocForwardContainer];
     }
 
     
     if(item.isHeaderMessage) {
+        [self initHeader];
         [self.avatarImageView setHidden:NO];
         [self.nameTextField setHidden:NO];
         [self.nameTextField setTextColor:item.headerColor];
@@ -654,6 +697,7 @@ static BOOL dragAction = NO;
         [self.avatarImageView setHidden:YES];
         [self.nameTextField setHidden:YES];
         [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
+        [self deallocHeader];
     }
     
     [self.containerView setFrameSize:NSMakeSize(self.containerView.bounds.size.width, item.blockSize.height)];
@@ -691,7 +735,6 @@ static BOOL dragAction = NO;
     
     
     [self setNeedsDisplay:YES];
-    
 
 }
 
@@ -706,11 +749,6 @@ static int offsetEditable = 30;
     
     if(editable)
         position.x -= offsetEditable;
-    
-    int offset = editable ? offsetEditable : 0;
-    
-    
-    [self.broadcastImageView setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 53 - offset, self.item.viewSize.height - self.broadcastImageView.bounds.size.height - (self.item.isHeaderMessage ? 29 : 5) )];
     
     
     [self.rightView.layer setFrameOrigin:position];
@@ -761,17 +799,7 @@ static int offsetEditable = 30;
     [self.rightView.layer pop_addAnimation:position forKey:@"slide"];
     
     
-    from = self.broadcastImageView.layer.frame.origin.x;
-    to = self.broadcastImageView.layer.frame.origin.x + (editable ? -offsetEditable : offsetEditable);
-    
-    POPBasicAnimation *broadcastPos = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-    broadcastPos.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    broadcastPos.fromValue = @(from);
-    broadcastPos.toValue = @(to);
-    broadcastPos.duration = duration;
-    
-    
-    [self.broadcastImageView.layer pop_addAnimation:broadcastPos forKey:@"slide"];
+
     
     POPBasicAnimation *opacityAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     opacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -984,23 +1012,6 @@ static int offsetEditable = 30;
     
     if(!self.stateLayer.isHidden)
         [self.stateLayer setState:state];
-}
-
-
--(void)dealloc {
-    
-    while (self.subviews.count != 0) {
-        [[self subviews][0] removeFromSuperview];
-    }
-    
-    self.containerView = nil;
-    _progressView = nil;
-    self.nameTextField = nil;
-    self.avatarImageView = nil;
-    self.fwdContainer = nil;
-    self.fwdName = nil;
-    self.fwdAvatar = nil;
-    self.dateLayer = nil;
 }
 
 

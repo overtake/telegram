@@ -58,13 +58,27 @@ static const TGTwoColors colors[] = {
 @implementation TMAvatarImageView
 
 + (NSImage *) placeholderImageBySize:(NSSize)size andColor:(NSColor *)color {
-    NSImage *image = [[NSImage alloc] initWithSize:size];
-    [image lockFocus];
-    [color set];
-    NSRectFill(NSMakeRect(0, 0, size.width, size.height));
-    [image unlockFocus];
     
-    image = [TMImageUtils roundedImage:image size:size];
+    static NSMutableDictionary *placeHolderCache;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        placeHolderCache = [[NSMutableDictionary alloc] init];
+    });
+    
+    NSImage *image = placeHolderCache[NSStringFromSize(size)];
+    
+    if(!image) {
+        image = [[NSImage alloc] initWithSize:size];
+        [image lockFocus];
+        [color set];
+        NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+        [image unlockFocus];
+        
+        image = [TMImageUtils roundedImage:image size:size];
+        
+        [placeHolderCache setObject:image forKey:NSStringFromSize(size)];
+    }
     
     return image;
 }

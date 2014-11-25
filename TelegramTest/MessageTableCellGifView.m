@@ -234,6 +234,7 @@ static NSImage *playImage() {
     self.animatedPlayer = nil;
     
     
+    
     [self.imageView setFrameSize:item.blockSize];
     
     if(item.cachedThumb) {

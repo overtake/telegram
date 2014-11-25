@@ -50,9 +50,6 @@ NSImage *fireImage() {
         weak();
         
      
-        
-        
-        
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
         self.imageView.cornerRadius = 4;
@@ -77,11 +74,6 @@ NSImage *fireImage() {
             
         }];
         
-        self.fireImageView = imageViewWithImage(fireImage());
-        
-        [self.fireImageView setHidden:YES];
-        
-        [self.imageView addSubview:self.fireImageView];
         
         
         
@@ -125,6 +117,23 @@ NSImage *fireImage() {
     return menu;
 }
 
+
+- (void)initFireImage {
+    if(!self.fireImageView) {
+        self.fireImageView = imageViewWithImage(fireImage());
+        
+        [self.fireImageView setHidden:YES];
+        
+        [self.imageView addSubview:self.fireImageView];
+
+    }
+}
+
+- (void)deallocFireImage {
+    [self.fireImageView removeFromSuperview];
+    self.fireImageView = nil;
+}
+
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
@@ -133,9 +142,13 @@ NSImage *fireImage() {
     [self.imageView setIsAlwaysBlur:cellState == CellStateSending];
     
     
-     [self.fireImageView setHidden:YES];
+    [self deallocFireImage];
     
     if(cellState == CellStateNormal) {
+        
+        if(isNeedSecretBlur)
+            [self initFireImage];
+        
         [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
@@ -145,16 +158,15 @@ NSImage *fireImage() {
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {
+    
     [super setItem:item];
-//    
+    
     [self.imageView setFrameSize:item.blockSize];
-    
-    
     
     [self updateCellState];
     
-    
     self.imageView.object = item.imageObject;
+    
 }
 
 

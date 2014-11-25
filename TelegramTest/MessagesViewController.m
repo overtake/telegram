@@ -1593,6 +1593,19 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
     
+    // begin test;
+    
+//    
+//    for (int i = 0; i < 10000; i++) {
+//        MessageTableCellContainerView *container = [[MessageTableCellContainerView alloc] initWithFrame:self.view.bounds];
+//    }
+//   
+//    
+//    
+//    return;
+//    
+//    
+    
     [self hideSearchBox:NO];
     
     if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [self.dialog.peer peer_id] != [dialog.peer peer_id])) {
@@ -2519,7 +2532,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     double time = ABS([start timeIntervalSinceNow]);
     if(time > 0.005) {
-        DLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
+        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
     }
     
     return cell;

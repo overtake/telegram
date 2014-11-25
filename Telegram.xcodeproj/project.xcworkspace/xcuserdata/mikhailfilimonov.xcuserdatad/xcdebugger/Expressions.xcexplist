@@ -109,6 +109,9 @@
          contextName = "__45-[SelfDestructionController didReadMessages:]_block_invoke:SelfDestructionController.m">
       </ContextState>
       <ContextState
+         contextName = "__open_user_by_name_block_invoke386:FileUtils.m">
+      </ContextState>
+      <ContextState
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
@@ -136,6 +139,9 @@
       <ContextState
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.item.message">
+            </PersistentString>
             <PersistentString
                value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
@@ -176,6 +182,9 @@
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageObject initDownloadItem]:TGImageObject.m">
       </ContextState>
       <ContextState
          contextName = "__37-[DialogTableItemView initWithFrame:]_block_invoke120:DialogTableItemView.m">
@@ -645,6 +654,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_initConnection getData:]:TLAPIAdd.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
