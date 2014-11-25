@@ -118,11 +118,7 @@
         block();
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(error.error_code == 502) {
-            alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(error.error_msg, nil));
-        }
-        
-        
+
     } timeout:5];
 
 }

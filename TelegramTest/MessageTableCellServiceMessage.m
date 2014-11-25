@@ -10,6 +10,7 @@
 #import "NS(Attributed)String+Geometrics.h"
 #import "TMMediaController.h"
 #import "TGImageView.h"
+#import "TGPhotoViewer.h"
 @interface MessageTableCellServiceMessage()
 
 @property (nonatomic, strong) TMHyperlinkTextField *textField;
@@ -35,6 +36,15 @@
         [self.photoImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
         [self.photoImageView setRoundSize:4];
         [self addSubview:self.photoImageView];
+        
+        weak();
+        
+        [self.photoImageView setTapBlock:^ {
+            PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:[weakSelf.item.message.action.photo.sizes lastObject] peer_id:weakSelf.item.message.peer_id];
+            
+            [[TGPhotoViewer viewer] show:preview];
+        }];
+        
     }
     return self;
 }

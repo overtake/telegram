@@ -80,7 +80,7 @@
     if(url) {
         
         if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
-            open_card([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
+            open_user_by_name([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
             return;
         }
         

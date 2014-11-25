@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 24.11.14..
+//  Auto created by Mikhail Filimonov on 25.11.14..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1678,6 +1678,49 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:608323678];
 	[TLClassStore TLSerialize:self.ttl stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_contacts_resolveUsername
++(TLAPI_contacts_resolveUsername*)createWithUsername:(NSString*)username {
+    TLAPI_contacts_resolveUsername* obj = [[TLAPI_contacts_resolveUsername alloc] init];
+    obj.username = username;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:200282908];
+	[stream writeString:self.username];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_sendChangePhoneCode
++(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number {
+    TLAPI_account_sendChangePhoneCode* obj = [[TLAPI_account_sendChangePhoneCode alloc] init];
+    obj.phone_number = phone_number;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1543001868];
+	[stream writeString:self.phone_number];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_changePhone
++(TLAPI_account_changePhone*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code {
+    TLAPI_account_changePhone* obj = [[TLAPI_account_changePhone alloc] init];
+    obj.phone_number = phone_number;
+	obj.phone_code_hash = phone_code_hash;
+	obj.phone_code = phone_code;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1891839707];
+	[stream writeString:self.phone_number];
+	[stream writeString:self.phone_code_hash];
+	[stream writeString:self.phone_code];
 	return [stream getOutput];
 }
 @end

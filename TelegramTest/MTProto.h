@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 24.11.14.
+//  Auto created by Dmitry Kondratyev on 25.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -324,6 +324,9 @@
 @interface TLAccountDaysTTL : TLObject
 @end
 	
+@interface TLaccount_SentChangePhoneCode : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -383,6 +386,7 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
+	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -1476,6 +1480,7 @@
 @property Boolean popup;
 @property (nonatomic, strong) TLPrivacyKey* key;
 @property (nonatomic, strong) NSMutableArray* rules;
+@property (nonatomic, strong) NSString* phone;
 @end
 
 @interface TL_updateNewMessage : TLUpdate
@@ -1558,6 +1563,9 @@
 @end
 @interface TL_updatePrivacy : TLUpdate
 +(TL_updatePrivacy*)createWithKey:(TLPrivacyKey*)key rules:(NSMutableArray*)rules;
+@end
+@interface TL_updateUserPhone : TLUpdate
++(TL_updateUserPhone*)createWithUser_id:(int)user_id phone:(NSString*)phone;
 @end
 	
 @interface TLupdates_State()
@@ -2110,6 +2118,15 @@
 
 @interface TL_accountDaysTTL : TLAccountDaysTTL
 +(TL_accountDaysTTL*)createWithDays:(int)days;
+@end
+	
+@interface TLaccount_SentChangePhoneCode()
+@property (nonatomic, strong) NSString* phone_code_hash;
+@property int send_call_timeout;
+@end
+
+@interface TL_account_sentChangePhoneCode : TLaccount_SentChangePhoneCode
++(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout;
 @end
 	
 @interface TLProtoMessage()

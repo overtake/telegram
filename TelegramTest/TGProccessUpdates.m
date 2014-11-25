@@ -514,7 +514,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
         
-        [_encryptedUpdates proccessUpdate:[update message]];
+        [_encryptedUpdates proccessUpdate:(TLEncryptedMessage *)[update message]];
         
 
        
@@ -713,15 +713,10 @@ static NSString *kUpdateState = @"kUpdateState";
         
         
         NSMutableArray *ids = [[NSMutableArray alloc] init];
-        NSMutableArray *randomIds = [[NSMutableArray alloc] init];
         
         
-        [copy enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            if([obj isKindOfClass:[TL_destructMessage class]]) {
-                [randomIds addObject:@(obj.randomId)];
-            } else {
-                [ids addObject:@(obj.n_id)];
-            }
+        [copy enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
+            [ids addObject:@(obj.n_id)];
         }];
         
         if(ids.count > 0) {
@@ -739,23 +734,7 @@ static NSString *kUpdateState = @"kUpdateState";
                 }
             } forIds:ids random:NO sync:YES];
         }
-        
-        
-        if(randomIds.count > 0) {
-            [[Storage manager] messages:^(NSArray *res) {
-                if(res.count > 0) {
-                    [randomIds removeAllObjects];
-                    
-                    [res enumerateObjectsUsingBlock:^(TL_destructMessage *obj, NSUInteger idx, BOOL *stop) {
-                        [randomIds addObject:@(obj.randomId)];
-                    }];
-                    
-                    NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.randomId IN %@",randomIds]];
-                    
-                    [copy removeObjectsInArray:f];
-                }
-            } forIds:randomIds random:YES sync:YES];
-        }
+    
         
         
         [response setN_messages:copy];

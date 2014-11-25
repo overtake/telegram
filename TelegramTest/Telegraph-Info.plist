@@ -26,11 +26,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>telegram</string>
+				<string>tg</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8936</string>
+	<string>8963</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>

@@ -25,7 +25,6 @@
         self.classes = [[NSMutableDictionary alloc] init];
         self.constuctors = [[NSMutableDictionary alloc] init];
         
-        
         [self.classes setObject:[TL_boolFalse class] forKey:[NSNumber numberWithInt:-1132882121]];
         [self.classes setObject:[TL_boolTrue class] forKey:[NSNumber numberWithInt:-1720552011]];
 
@@ -315,6 +314,8 @@
         [self.classes setObject:[TL_privacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:209668535]];
         [self.classes setObject:[TL_account_privacyRules class] forKey:[NSNumber numberWithInt:1430961007]];
         [self.classes setObject:[TL_accountDaysTTL class] forKey:[NSNumber numberWithInt:-1194283041]];
+        [self.classes setObject:[TL_account_sentChangePhoneCode class] forKey:[NSNumber numberWithInt:-1527411636]];
+        [self.classes setObject:[TL_updateUserPhone class] forKey:[NSNumber numberWithInt:314130811]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

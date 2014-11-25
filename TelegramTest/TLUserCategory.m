@@ -76,7 +76,7 @@ Online
     
     int time = self.lastSeenTime;
     if(time == -1)
-        return NSLocalizedString(@"Account.Invisible", nil);
+        return  NSLocalizedString(@"LastSeen.longTimeAgo", nil);
     
     if(time == 0) {
         

@@ -20,7 +20,7 @@
 
 
 NSString *const TGImagePType = @"TGImagePasteType";
-NSString *const TGImportCardPrefix = @"telegram://import?card=";
+NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
 NSString *const TLUserNamePrefix = @"@";
 
 -(id)init {
@@ -441,8 +441,6 @@ void open_card(NSString *link) {
             dispatch_after_seconds(0.2, ^{
                 if(error.error_code == 400) {
                     alert(NSLocalizedString(@"CardImport.ErrorTextUserNotExist", nil), NSLocalizedString(@"CardImport.ErrorDescUserNotExist", nil));
-                } else if(error.error_code == 502) {
-                    alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
                 }
             });
             
@@ -463,19 +461,17 @@ void open_user_by_name(NSString * userName) {
     } else {
         [[Telegram rightViewController] showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:1] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
             
             [[Telegram rightViewController] hideModalProgress];
             
             dispatch_after_seconds(0.2,^ {
                 
-                if(response.users.count == 1) {
+                if(![response isKindOfClass:[TL_userEmpty class]]) {
                     
-                    TLUser *user = response.users[0];
+                    [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:NO];
                     
-                    [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:NO];
-                    
-                    [[Telegram rightViewController] showUserInfoPage:user];
+                    [[Telegram rightViewController] showUserInfoPage:response];
                 } else {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }
@@ -488,8 +484,11 @@ void open_user_by_name(NSString * userName) {
             [[Telegram rightViewController] hideModalProgress];
             
             dispatch_after_seconds(0.2, ^{
-                alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
+                if(error.error_code == 400) {
+                    alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
+                }
             });
+           
             
         } timeout:4];
     }

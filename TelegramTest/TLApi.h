@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 24.11.14.
+//  Auto created by Mikhail Filimonov on 25.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -727,5 +727,25 @@
 @property (nonatomic, strong) TLAccountDaysTTL* ttl;
 
 +(TLAPI_account_setAccountTTL*)createWithTtl:(TLAccountDaysTTL*)ttl;
+@end
+
+@interface TLAPI_contacts_resolveUsername : TLApiObject
+@property (nonatomic, strong) NSString* username;
+
++(TLAPI_contacts_resolveUsername*)createWithUsername:(NSString*)username;
+@end
+
+@interface TLAPI_account_sendChangePhoneCode : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+
++(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number;
+@end
+
+@interface TLAPI_account_changePhone : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+@property (nonatomic, strong) NSString* phone_code_hash;
+@property (nonatomic, strong) NSString* phone_code;
+
++(TLAPI_account_changePhone*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code;
 @end
 

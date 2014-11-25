@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 24.11.14.
+//  Auto created by Mikhail Filimonov on 25.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -5038,6 +5038,23 @@
 }
 @end
 
+@implementation TL_updateUserPhone
++(TL_updateUserPhone*)createWithUser_id:(int)user_id phone:(NSString*)phone {
+	TL_updateUserPhone* obj = [[TL_updateUserPhone alloc] init];
+	obj.user_id = user_id;
+	obj.phone = phone;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeString:self.phone];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+	self.phone = [stream readString];
+}
+@end
+
 
 
 @implementation TLupdates_State
@@ -7643,6 +7660,28 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.days = [stream readInt];
+}
+@end
+
+
+
+@implementation TLaccount_SentChangePhoneCode
+@end
+
+@implementation TL_account_sentChangePhoneCode
++(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout {
+	TL_account_sentChangePhoneCode* obj = [[TL_account_sentChangePhoneCode alloc] init];
+	obj.phone_code_hash = phone_code_hash;
+	obj.send_call_timeout = send_call_timeout;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.phone_code_hash];
+	[stream writeInt:self.send_call_timeout];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.phone_code_hash = [stream readString];
+	self.send_call_timeout = [stream readInt];
 }
 @end
 

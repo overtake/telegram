@@ -513,12 +513,6 @@
                 current = dialog;
             }
             
-            
-            if(current.peer.user_id == 431401) {
-                DLog(@"log");
-            }
-            
-            
             if(!current.notify_settings) {
                 current.notify_settings = [TL_peerNotifySettingsEmpty create];
                 [current save];

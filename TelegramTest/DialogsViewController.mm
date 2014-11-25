@@ -273,9 +273,7 @@
         }
     } synchronous:YES];
     
-    
-   // [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
-    
+        
     [self.tableView insert:dialogs startIndex:0 tableRedraw:NO];
     [self.tableView reloadData];
 }
@@ -329,17 +327,12 @@
 
 - (NSView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     
-    if([item isKindOfClass:[SearchSeparatorItem class]]) {
-        return [self.tableView cacheViewForClass:[SearchSeparatorTableCell class] identifier:@"separatorItem"];
-    } else if([item isKindOfClass:[DialogTableItem class]]) {
-        DialogTableItemView *view = (DialogTableItemView *)[self.tableView cacheViewForClass:[DialogTableItemView class] identifier:@"dialogItem" withSize:NSMakeSize(200, DIALOG_CELL_HEIGHT)];
-        view.tableView = self.tableView;
-        return view;
-    } else if([item isKindOfClass:[SearchItem class]]) {
-        return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"searchItem"];
-    }
+    DialogTableItemView *view = (DialogTableItemView *)[self.tableView cacheViewForClass:[DialogTableItemView class] identifier:@"dialogItem" withSize:NSMakeSize(200, DIALOG_CELL_HEIGHT)];
     
-    return nil;
+    view.tableView = self.tableView;
+    return view;
+
+
 }
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
