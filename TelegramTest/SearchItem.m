@@ -198,10 +198,6 @@
 + (NSUInteger)hash:(SearchItem *)item {
     NSString *hashStr;
     
-//    if(object == nil) {
-//        DLog(@"log");
-//    }
-    
     if(item.type == SearchItemMessage) {
         hashStr = [NSString stringWithFormat:@"message_%d", item.message.n_id];
     } else if(item.type ==SearchItemGlobalUser) {
