@@ -317,7 +317,7 @@ NSString *const AVACACHE = @"AVACACHE";
         if(record)
         {
             obj[nKey] = record;
-            [obj removeObjectForKey:key];
+           // [obj removeObjectForKey:key];
         }
         
     }];
