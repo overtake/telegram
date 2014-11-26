@@ -2531,7 +2531,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     double time = ABS([start timeIntervalSinceNow]);
-    if(time > 0.001) {
+    if(time > 0.010) {
         NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
     }
     

@@ -100,7 +100,7 @@
             fake.dstate = DeliveryStateNormal;
             
             if([fake.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-                [[Storage manager] insertMedia:false];
+                [[Storage manager] insertMedia:fake];
             }
             
             [fake save:i == 0];

@@ -163,13 +163,17 @@ NSImage *fireImage() {
 
 - (void) setItem:(MessageTableItemPhoto *)item {
     
+
+    
     [super setItem:item];
+    
     
     [self.imageView setFrameSize:item.blockSize];
     
     [self updateCellState];
     
     self.imageView.object = item.imageObject;
+
     
 }
 

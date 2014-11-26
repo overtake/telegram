@@ -50,15 +50,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TGPVContainer initWithFrame:]:TGPVContainer.m">
-      </ContextState>
-      <ContextState
          contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
                value = "item.message.n_id">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPVContainer initWithFrame:]:TGPVContainer.m">
       </ContextState>
       <ContextState
          contextName = "-[UserInfoViewController viewWillAppear:]:UserInfoViewController.m">
@@ -75,7 +75,15 @@
          contextName = "+[SenderItem sendingDequeue]:SenderItem.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "sync">
+            </PersistentString>
+            <PersistentString
+               value = "memory">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "_POPAnimationState::handleDidStop(signed char):POPAnimationInternal.h">
@@ -86,18 +94,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "memory">
-            </PersistentString>
-            <PersistentString
-               value = "sync">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGModernEncryptedUpdates proccessUpdate:]:TGModernEncryptedUpdates.m">
+         contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "__32+[TGSecretAction _resendActions]_block_invoke_2:TGSecretAction.m">
@@ -106,13 +106,13 @@
          contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
+         contextName = "__open_user_by_name_block_invoke386:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "__45-[SelfDestructionController didReadMessages:]_block_invoke:SelfDestructionController.m">
       </ContextState>
       <ContextState
-         contextName = "__open_user_by_name_block_invoke386:FileUtils.m">
+         contextName = "-[TGModernEncryptedUpdates proccessUpdate:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
@@ -143,10 +143,10 @@
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -259,9 +259,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
-      </ContextState>
-      <ContextState
          contextName = "-[SelectUserRowView redrawRow]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
@@ -271,6 +268,9 @@
                value = "[[self rowItem].table selectLimit]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
          contextName = "-[TelegramFirstController validateMenuItem:]:TelegramFirstController.m">
@@ -397,10 +397,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -494,6 +494,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellContainerView setSelected:animation:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke_6:TMCircularProgress.m">
          <PersistentStrings>
             <PersistentString
@@ -522,14 +530,6 @@
       </ContextState>
       <ContextState
          contextName = "__33+[DownloadQueue addAndStartItem:]_block_invoke:DownloadQueue.mm">
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableCellContainerView setSelected:animation:]:MessageTableCellContainerView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.item">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesTableView initWithFrame:]:MessagesTableView.m">
@@ -814,10 +814,10 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "current.isHeaderMessage">
+               value = "self.messages">
             </PersistentString>
             <PersistentString
-               value = "self.messages">
+               value = "current.isHeaderMessage">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1279,6 +1279,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.rightView">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText makeSizeByWidth:]:MessageTableItemText.m">
@@ -1464,10 +1469,10 @@
                value = "item.message.n_id">
             </PersistentString>
             <PersistentString
-               value = "_conversation">
+               value = "_conversation.top_message">
             </PersistentString>
             <PersistentString
-               value = "_conversation.top_message">
+               value = "_conversation">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

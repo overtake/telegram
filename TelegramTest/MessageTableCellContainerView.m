@@ -97,16 +97,16 @@
     if(!self.forwardMessagesTextLayer) {
         self.forwardMessagesTextLayer = [TMTextLayer layer];
         [self.forwardMessagesTextLayer disableActions];
+        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(180, 20)];
         [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
         [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.forwardMessagesTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
         [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
-        [self.forwardMessagesTextLayer sizeToFit];
         [self.layer addSublayer:self.forwardMessagesTextLayer];
     }
     
     if(!self.fwdContainer) {
-        self.fwdContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(68, 0, self.bounds.size.width - 160, self.bounds.size.height)];
         [self.fwdContainer setDrawBlock:^{
             [GRAY_BORDER_COLOR set];
             
@@ -120,12 +120,11 @@
         }];
         
         [self.fwdContainer setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [self.fwdContainer setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
         [self addSubview:self.fwdContainer];
     }
     
     if(!self.fwdName) {
-        self.fwdName = [[TMHyperlinkTextField alloc] init];
+        self.fwdName = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 25)];
         [self.fwdName setBordered:NO];
         [self.fwdName setDrawsBackground:NO];
         [self.fwdContainer addSubview:self.fwdName];
@@ -625,6 +624,8 @@ static BOOL dragAction = NO;
     [super setItem:item];
     
     
+    test_start_group(@"test");
+    
     self.stateLayer.container = self;
     
     float offsetContainerView;
@@ -652,7 +653,7 @@ static BOOL dragAction = NO;
             [CATransaction commit];
         }
         
-        [self.fwdContainer setFrameOrigin:NSMakePoint(68, 0)];
+        
         [self.fwdAvatar setUser:item.fwd_user];
         
         if(self.item.isHeaderMessage) {
@@ -665,9 +666,8 @@ static BOOL dragAction = NO;
         
         
         [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
-        [self.fwdName sizeToFit];
-        
         offsetContainerView = 129;
+        
         
     } else {
         [CATransaction begin];
@@ -680,15 +680,17 @@ static BOOL dragAction = NO;
         
     }
 
+    
+    
+    
     if(item.isHeaderMessage) {
         [self initHeader];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(77, item.viewSize.height - 24)];
-        //[self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 10)];
     } else {
-     //   [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
         [self deallocHeader];
     }
+   
     
     [self.containerView setFrame:NSMakeRect(offsetContainerView, 10, self.containerView.bounds.size.width, item.blockSize.height)];
     
@@ -714,13 +716,12 @@ static BOOL dragAction = NO;
     
     [self.dateLayer setString:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + 32, MAX(item.dateSize.height, image_checked().size.width))];
-    
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + 32, 18)];
     
     [self.rightView setToolTip:self.item.fullDate];
     
-    
     [self setNeedsDisplay:YES];
+    
 
 }
 
