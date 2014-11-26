@@ -82,11 +82,10 @@
         
         media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:self.uploader.identify access_hash:0 user_id:0 date:[[MTNetwork instance] getTime] caption:@"photo.jpg" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
-        image = renderedImage(image, maxSize);
         
-        [TGCache cacheImage:image forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:renderedImage(image, maxSize) forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
         
-        [compressImage(jpegNormalizedData(image), 0.83) writeToFile:mediaFilePath(media) atomically:YES];
+        [jpegNormalizedData(image) writeToFile:mediaFilePath(media) atomically:YES];
         
         self.message.media = media;
         
@@ -279,6 +278,9 @@
             TLPhotoSize *size = strongSelf.uploadType == UploadImageType ? [((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] : ((TL_destructMessage *)strongSelf.message).media.video.thumb;
             
             TLFileLocation *newLocation = [TL_fileLocation createWithDc_id:[response.file dc_id] volume_id:[response.file n_id] local_id:size.location.local_id secret:response.file.access_hash];
+            
+            
+            [TGCache changeKey:size.location.cacheKey withKey:newLocation.cacheKey];
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [transaction setObject:@{@"key":strongSelf.key,@"iv":strongSelf.iv} forKey:[NSString stringWithFormat:@"%lu",[response.file n_id]] inCollection:ENCRYPTED_IMAGE_COLLECTION];
