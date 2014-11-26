@@ -12,7 +12,7 @@
 @interface TMMenuController : TMViewController
 
 @property (nonatomic, weak) TMMenuPopover *popover;
-@property (nonatomic, strong) NSMenu *menu;
+@property (nonatomic, strong) NSMenu *menuController;
 - (id)initWithMenu:(NSMenu *)menu;
 - (void)close;
 

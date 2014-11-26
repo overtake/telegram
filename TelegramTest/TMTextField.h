@@ -23,7 +23,11 @@
 
 @interface TMTextField : NSTextField
 
-@property (nonatomic, strong) NSAttributedString *placeholderAttributedString;
+@property (nonatomic, strong,readonly) NSAttributedString *placeholder;
+
+-(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString;
+
+
 @property (nonatomic) NSPoint placeholderPoint;
 
 @property (nonatomic,assign) NSSize textOffset;

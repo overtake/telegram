@@ -222,7 +222,7 @@
         
         [self.tableView reloadData];
         
-        [RPCRequest sendRequest:[TLAPI_account_getPrivacy createWithKey:[TL_inputPrivacyKeyStatusTimestamp create]] successHandler:^(RPCRequest *request, TL_account_privacyRules *response) {
+        [RPCRequest sendRequest:[TLAPI_account_getPrivacy createWithN_key:[TL_inputPrivacyKeyStatusTimestamp create]] successHandler:^(RPCRequest *request, TL_account_privacyRules *response) {
             
             [SharedManager proccessGlobalResponse:response];
             

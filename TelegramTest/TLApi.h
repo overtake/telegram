@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.11.14.
+//  Auto created by Mikhail Filimonov on 26.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -168,9 +168,9 @@
 @end
 
 @interface TLAPI_contacts_getContacts : TLApiObject
-@property (nonatomic, strong) NSString* hash;
+@property (nonatomic, strong) NSString* n_hash;
 
-+(TLAPI_contacts_getContacts*)createWithHash:(NSString*)hash;
++(TLAPI_contacts_getContacts*)createWithN_hash:(NSString*)n_hash;
 @end
 
 @interface TLAPI_contacts_importContacts : TLApiObject
@@ -699,16 +699,16 @@
 @end
 
 @interface TLAPI_account_getPrivacy : TLApiObject
-@property (nonatomic, strong) TLInputPrivacyKey* key;
+@property (nonatomic, strong) TLInputPrivacyKey* n_key;
 
-+(TLAPI_account_getPrivacy*)createWithKey:(TLInputPrivacyKey*)key;
++(TLAPI_account_getPrivacy*)createWithN_key:(TLInputPrivacyKey*)n_key;
 @end
 
 @interface TLAPI_account_setPrivacy : TLApiObject
-@property (nonatomic, strong) TLInputPrivacyKey* key;
+@property (nonatomic, strong) TLInputPrivacyKey* n_key;
 @property (nonatomic, strong) NSMutableArray* rules;
 
-+(TLAPI_account_setPrivacy*)createWithKey:(TLInputPrivacyKey*)key rules:(NSMutableArray*)rules;
++(TLAPI_account_setPrivacy*)createWithN_key:(TLInputPrivacyKey*)n_key rules:(NSMutableArray*)rules;
 @end
 
 @interface TLAPI_account_deleteAccount : TLApiObject

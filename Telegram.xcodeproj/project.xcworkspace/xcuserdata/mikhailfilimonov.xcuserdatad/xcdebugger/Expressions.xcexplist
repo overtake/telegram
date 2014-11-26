@@ -825,6 +825,14 @@
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController tableView:viewForTableColumn:row:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
       </ContextState>
       <ContextState

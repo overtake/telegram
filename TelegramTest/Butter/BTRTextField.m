@@ -147,9 +147,9 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 
 - (BTRControlState)state {
 	BTRControlState state = BTRControlStateNormal;
-	if (self.highlighted) state |= BTRControlStateHighlighted;
+	if (self.isHighlighted) state |= BTRControlStateHighlighted;
 	if (![self isEnabled]) state |= BTRControlStateDisabled;
-	if (self.mouseHover && !self.highlighted) state |= BTRControlStateHover;
+	if (self.mouseHover && !self.isHighlighted) state |= BTRControlStateHover;
 	return state;
 }
 
@@ -353,8 +353,8 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	[self updateStateWithOld:&_mouseHover new:mouseHover];
 }
 
-- (void)setHighlighted:(BOOL)highlighted {
-	[self updateStateWithOld:&_highlighted new:highlighted];
+- (void)setBtrHighlighted:(BOOL)highlighted {
+	[self updateStateWithOld:&_btrHighlighted new:highlighted];
 }
 
 - (void)updateStateWithOld:(BOOL *)old new:(BOOL)new {
@@ -417,7 +417,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	self.mouseHover = YES;
 	[self sendActionsForControlEvents:BTRControlEventMouseEntered];
 	if (self.mouseDown)
-		self.highlighted = YES;
+		self.btrHighlighted = YES;
 }
 
 - (void)mouseExited:(NSEvent *)event {
@@ -425,7 +425,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	self.mouseInside = NO;
 	self.mouseHover = NO;
 	[self sendActionsForControlEvents:BTRControlEventMouseExited];
-	self.highlighted = NO;
+	self.btrHighlighted = NO;
 }
 
 - (void)handleMouseDown:(NSEvent *)event {
@@ -437,7 +437,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	
 	[self sendActionsForControlEvents:events];
 	
-	self.highlighted = YES;
+	self.btrHighlighted = YES;
 }
 
 - (void)handleMouseUp:(NSEvent *)event {
@@ -461,7 +461,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	
 	[self sendActionsForControlEvents:events];
 	
-	self.highlighted = NO;
+	self.btrHighlighted = NO;
 }
 
 - (void)sendActionsForControlEvents:(BTRControlEvents)events {
@@ -486,7 +486,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 - (BOOL)becomeFirstResponder {
 	//[self.layer addAnimation:[self shadowOpacityAnimation] forKey:nil];
 //	self.layer.shadowOpacity = 1.f;
-	self.highlighted = YES;
+	self.btrHighlighted = YES;
 	return [super becomeFirstResponder];
 }
 
@@ -495,7 +495,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	//[self.layer addAnimation:[self shadowOpacityAnimation] forKey:nil];
 	//self.layer.shadowOpacity = 0.f;
 	[super textDidEndEditing:notification];
-	self.highlighted = NO;
+	self.btrHighlighted = NO;
 }
 
 - (void)textDidChange:(NSNotification *)notification {
@@ -537,7 +537,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 	NSRect integralFrame = NSIntegralRect(cellFrame);
 	BTRTextField *textField = (BTRTextField *)controlView;
 	[textField drawBackgroundInRect:integralFrame];
-	if (textField.highlighted && ![textField.stringValue length]) {
+	if (textField.btrHighlighted && ![textField.stringValue length]) {
 		NSRect placeholderRect = [self drawingRectForBounds:cellFrame];
 		placeholderRect.origin.x += 2.f;
 		//[self.placeholderAttributedString drawInRect:placeholderRect];

@@ -13,11 +13,13 @@
 	BOOL drawFlag;
 }
 
+
+
 #pragma mark Properties
 
 - (void)setFlipped:(BOOL)flipped {
-	if (_flipped != flipped) {
-		_flipped = flipped;
+	if (_btrFlipped != flipped) {
+		_btrFlipped = flipped;
 		self.needsLayout = YES;
 		self.needsDisplay = YES;
 	}

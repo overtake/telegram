@@ -168,7 +168,6 @@
 }
 
 - (void) remoteCheckContacts {
-    
 
     [ASQueue dispatchOnStageQueue:^{
         NSArray *allKeys = [[self->keys allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -177,7 +176,7 @@
         NSString *md5Hash = [[allKeys componentsJoinedByString:@","] md5];
         
         INIT_HASH_CHEKER();
-        [RPCRequest sendRequest:[TLAPI_contacts_getContacts createWithHash:md5Hash] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_getContacts createWithN_hash:md5Hash] successHandler:^(RPCRequest *request, id response) {
             HASH_CHECK();
             
             if([response isKindOfClass:[TL_contacts_contacts class]]) {
@@ -284,16 +283,29 @@
         
         ABAddressBook *book = [ABAddressBook sharedAddressBook];
         if(book) {
-            ABPerson* person = [[ABPerson alloc] init];
-            [person setValue:userContact.first_name forProperty:kABFirstNameProperty];
-            [person setValue:userContact.last_name forProperty:kABLastNameProperty];
-            ABMutableMultiValue *phone = [[ABMutableMultiValue alloc] init];
-            [phone addValue:userContact.phone withLabel:kABPhoneMobileLabel];
             
-            [person setValue:phone forProperty:kABPhoneProperty];
+             NSArray *all = [[ABAddressBook sharedAddressBook] people];
             
-            [book addRecord:person];
+            [all enumerateObjectsUsingBlock:^(ABPerson *person, NSUInteger idx, BOOL *stop) {
+                ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
+                
+                NSString *phone = [phones valueAtIndex:0];
+                
+                for (int i = 0; i < [phones count]; i++) {
+                     phone = [phone stringByTrimmingCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet]];
+                    
+                    if([phone isEqualToString:userContact.phone]) {
+                        
+                        [person setValue:userContact.first_name forProperty:kABFirstNameProperty];
+                        [person setValue:userContact.last_name forProperty:kABLastNameProperty];
+                        
+                    }
+                }
+            }];
+            
             [book save];
+            
+        
         }
        
         [[ASQueue mainQueue] dispatchOnQueue:^{

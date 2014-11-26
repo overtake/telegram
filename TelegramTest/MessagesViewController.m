@@ -2519,7 +2519,7 @@ static NSTextAttachment *headerMediaIcon() {
         return self.typingView;
     }
     
-    NSDate *start = [NSDate new];
+  //  NSDate *start = [NSDate new];
     
     [cell setItem:item];
     
@@ -2530,10 +2530,10 @@ static NSTextAttachment *headerMediaIcon() {
         [containerView setEditable:self.state == MessagesViewControllerStateEditable animation:NO];
     }
     
-    double time = ABS([start timeIntervalSinceNow]);
-    if(time > 0.005) {
-        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
-    }
+//    double time = ABS([start timeIntervalSinceNow]);
+//    if(time > 0.001) {
+//        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
+//    }
     
     return cell;
 }

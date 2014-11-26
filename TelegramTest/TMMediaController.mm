@@ -642,7 +642,7 @@ static TMMediaController* currentController;
 - (void)show:(id<TMPreviewItem>)showItem {
     [TMMediaController setCurrentController:self];
     _currentItemPosition = 0;
-    [[[NSApp delegate] window] makeFirstResponder:nil];
+    [[NSApp mainWindow] makeFirstResponder:nil];
     [_panel updateController];
     
     if(showItem) {
@@ -804,7 +804,7 @@ static TMMediaController* currentController;
             return NSZeroRect;
         
         NSRect viewFrameInWindowCoords = [reserved convertRect:reserved.bounds toView:nil];
-        return [[[NSApp delegate] mainWindow] convertRectToScreen:viewFrameInWindowCoords];
+        return [[NSApp mainWindow] convertRectToScreen:viewFrameInWindowCoords];
     }
     
     MessagesViewController *controller = [Telegram rightViewController].messagesViewController;

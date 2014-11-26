@@ -20,7 +20,7 @@
     
     NSSize menuSize = self.size;
     NSSize screenSize = [NSScreen mainScreen].frame.size;
-    NSRect windowRect = [[NSApp delegate] window].frame;
+    NSRect windowRect = [NSApp mainWindow].frame;
     
     //Фикс бага когда окно находится слева и не может отрисоваться. Его нужно отрисовывать справа
     if(windowRect.origin.x + wc.origin.x + menuSize.width > screenSize.width) {
@@ -60,7 +60,7 @@
     
     NSSize menuSize = self.size;
     NSSize screenSize = [NSScreen mainScreen].frame.size;
-    NSRect windowRect = [[NSApp delegate] window].frame;
+    NSRect windowRect = [NSApp mainWindow].frame;
     
     //Фикс бага когда окно находится слева и не может отрисоваться. Его нужно отрисовывать справа
     if(windowRect.origin.x + wc.origin.x + menuSize.width > screenSize.width) {

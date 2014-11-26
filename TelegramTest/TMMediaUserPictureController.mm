@@ -81,7 +81,7 @@
         return NSZeroRect;
     
     NSRect viewFrameInWindowCoords = [reserved convertRect:reserved.bounds toView:nil];
-    return [[[NSApp delegate] mainWindow] convertRectToScreen:viewFrameInWindowCoords];
+    return [[NSApp mainWindow] convertRectToScreen:viewFrameInWindowCoords];
 }
 
 -(id)previewPanel:(QLPreviewPanel *)panel transitionImageForPreviewItem:(id<TMPreviewItem>)item contentRect:(NSRect *)contentRect {

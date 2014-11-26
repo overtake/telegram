@@ -151,24 +151,24 @@ static void BTRPopupButtonCommonInit(BTRPopUpButton *self) {
 
 #pragma mark - Accessors
 
-- (void)setMenu:(NSMenu *)menu {
-	if (_menu != menu) {
+- (void)setBtrMenu:(NSMenu *)menu {
+	if (_btrMenu != menu) {
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		if (self.notificationObserver) {
 			[nc removeObserver:self.notificationObserver];
 			self.notificationObserver = nil;
 		}
 		self.selectedItem = nil;
-		_menu = menu;
-		if (_menu) {
-			_menu.autoenablesItems = self.autoenablesItems;
+		_btrMenu = menu;
+		if (_btrMenu) {
+			_btrMenu.autoenablesItems = self.autoenablesItems;
 			// Register for notifications for when the menu closes. This is important
 			// because mouseUp: and mouseExited: are not normally called if the menu is closed
 			// when the cursor is outside the pop up button. This ensures that the proper
 			// state is restored once the menu is closed.
 			__weak BTRPopUpButton *weakSelf = self;
 			
-			self.notificationObserver = [nc addObserverForName:NSMenuDidEndTrackingNotification object:_menu queue:nil usingBlock:^(NSNotification *note) {
+			self.notificationObserver = [nc addObserverForName:NSMenuDidEndTrackingNotification object:_btrMenu queue:nil usingBlock:^(NSNotification *note) {
 				BTRPopUpButton *strongSelf = weakSelf;
 				
 				[strongSelf mouseUp:nil];

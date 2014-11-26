@@ -13,8 +13,8 @@
 #import "TMClockProgressView.h"
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
-@interface MessageTableCellContainerView() <NSMenuDelegate>
-@property (nonatomic, strong) TMTextButton *nameTextField;
+@interface MessageTableCellContainerView() <NSMenuDelegate,TMHyperlinkTextFieldDelegate>
+@property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 
@@ -100,6 +100,8 @@
         [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
         [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.forwardMessagesTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
+        [self.forwardMessagesTextLayer sizeToFit];
         [self.layer addSublayer:self.forwardMessagesTextLayer];
     }
     
@@ -186,9 +188,13 @@
 -(void)initHeader {
     
     weak();
-    
     if(!self.avatarImageView) {
+        
+       
+        
         self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
+        
+       
         [self.avatarImageView setTapBlock:^{
             [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
         }];
@@ -196,16 +202,18 @@
     }
     
     if(!self.nameTextField) {
-        self.nameTextField = [[TMTextButton alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
+        self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         [self.nameTextField setBordered:NO];
         [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
         [self.nameTextField setDrawsBackground:NO];
-        [self.nameTextField setTapBlock:^{
-            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
-        }];
+        
+        
         [self addSubview:self.nameTextField];
     }
 }
+
+
+
 
 -(void)deallocHeader {
     [self.avatarImageView removeFromSuperview];
@@ -261,7 +269,7 @@ NSImage *selectCheckActiveImage() {
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Delete", nil)];
     
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Ignore", nil)];
-    [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
+    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
     
 
 }
@@ -629,9 +637,6 @@ static BOOL dragAction = NO;
         
         if(self.item.isHeaderForwardedMessage) {
             minus = FORWARMESSAGE_TITLE_HEIGHT;
-            [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
-            [self.forwardMessagesTextLayer sizeToFit];
-            
             
             float minus = item.isHeaderMessage ? 30 : 12;
             [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(80, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
@@ -647,9 +652,6 @@ static BOOL dragAction = NO;
             [CATransaction commit];
         }
         
-        
-        [self.fwdName setHidden:NO];
-        [self.fwdContainer setHidden:NO];
         [self.fwdContainer setFrameOrigin:NSMakePoint(68, 0)];
         [self.fwdAvatar setUser:item.fwd_user];
         
@@ -666,38 +668,29 @@ static BOOL dragAction = NO;
         [self.fwdName sizeToFit];
         
         offsetContainerView = 129;
+        
     } else {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.forwardMessagesTextLayer setHidden:YES];
         [CATransaction commit];
         
-        [self.fwdName setHidden:YES];
-        [self.fwdContainer setHidden:YES];
         offsetContainerView = 79;
         [self deallocForwardContainer];
+        
     }
 
-    
     if(item.isHeaderMessage) {
         [self initHeader];
-        [self.avatarImageView setHidden:NO];
-        [self.nameTextField setHidden:NO];
-        [self.nameTextField setTextColor:item.headerColor];
-        [self.nameTextField setStringValue:item.headerName];
-        [self.nameTextField sizeToFit];
-        
+        [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(77, item.viewSize.height - 24)];
-        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 10)];
+        //[self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 10)];
     } else {
-        [self.avatarImageView setHidden:YES];
-        [self.nameTextField setHidden:YES];
-        [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
+     //   [self.containerView setFrameOrigin:NSMakePoint(offsetContainerView, 8)];
         [self deallocHeader];
     }
     
-    [self.containerView setFrameSize:NSMakeSize(self.containerView.bounds.size.width, item.blockSize.height)];
-   // [self.progressView setHidden:YES];
+    [self.containerView setFrame:NSMakeRect(offsetContainerView, 10, self.containerView.bounds.size.width, item.blockSize.height)];
     
     if(item.messageSender)  {
         
@@ -717,15 +710,12 @@ static BOOL dragAction = NO;
 
     [self checkActionState:YES];
     
-    
-    //Layers ;)
+  //  Layers ;)
     
     [self.dateLayer setString:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
     [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + 32, MAX(item.dateSize.height, image_checked().size.width))];
     
-    
-   
     
     [self.rightView setToolTip:self.item.fullDate];
     

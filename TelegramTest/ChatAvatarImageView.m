@@ -123,7 +123,7 @@
     //    IKPictureTaker *pictureTaker = [IKPictureTaker pictureTaker];
     [pictureTaker setValue:[NSNumber numberWithBool:YES] forKey:IKPictureTakerShowEffectsKey];
     [pictureTaker setValue:[NSValue valueWithSize:NSMakeSize(640, 640)] forKey:IKPictureTakerOutputImageMaxSizeKey];
-    [pictureTaker beginPictureTakerSheetForWindow:[[NSApp delegate] mainWindow] withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
+    [pictureTaker beginPictureTakerSheetForWindow:[NSApp mainWindow] withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
 }
 
 - (void) pictureTakerValidated:(IKPictureTaker*) pictureTaker code:(int) returnCode contextInfo:(void*) ctxInf {

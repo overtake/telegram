@@ -20,7 +20,7 @@
     if(self = [super init]) {
         _type = type;
         _callback = callback;
-        _description = description;
+        _desc = description;
         _height = height;
         _rand = arc4random();
         _stateback = stateback;

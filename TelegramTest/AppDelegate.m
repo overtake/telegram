@@ -541,6 +541,8 @@
     [mainWindow makeKeyAndOrderFront:nil];
     
     
+    [[NewContactsManager sharedManager] syncContacts:nil];
+    
     [self releaseWindows];
     [self initializeSounds];
     

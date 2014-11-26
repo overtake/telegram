@@ -38,13 +38,13 @@
         
         [self.ticker start];
         [Notification addObserver:self selector:@selector(didReadMessages:) name:MESSAGE_READ_EVENT];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[[NSApp delegate] window]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[NSApp mainWindow]];
     }
     return self;
 }
 
 - (void)windowBecomeNotification:(NSNotification *)notification {
-    if([[[NSApp delegate] window] isKeyWindow]) {
+    if([[NSApp mainWindow] isKeyWindow]) {
         [ASQueue dispatchOnStageQueue:^{
             for (TL_destructMessage *msg in _keyWindowWaiting) {
                 [self addMessage:msg force:NO];
@@ -139,7 +139,7 @@
            (message.from_id == UsersManager.currentUserId && message.unread))
             return;
         
-        if(![[[NSApp delegate] window] isKeyWindow] && !force) {
+        if(![[NSApp mainWindow] isKeyWindow] && !force) {
             [_keyWindowWaiting addObject:message];
             return;
         }

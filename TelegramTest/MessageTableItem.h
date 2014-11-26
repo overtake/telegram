@@ -19,8 +19,7 @@
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
 @property (nonatomic, strong) TLUser *user;
-@property (nonatomic, strong) NSString *headerName;
-@property (nonatomic, strong) NSColor *headerColor;
+@property (nonatomic, strong) NSAttributedString *headerName;
 @property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
 @property (nonatomic, strong) NSString *dateStr;
 

@@ -25,7 +25,7 @@ typedef enum
 @property (nonatomic,strong,readonly) id (^stateback)(GeneralSettingsRowItem *item);
 
 
-@property (nonatomic,strong,readonly) NSString *description;
+@property (nonatomic,strong,readonly,getter=description) NSString *desc;
 @property (nonatomic,strong) NSString *subdesc;
 @property (nonatomic,assign) int height;
 

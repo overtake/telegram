@@ -108,7 +108,7 @@
 - (id)initWithMenu:(NSMenu *)menu {
     self = [super initWithFrame:NSMakeRect(0, 0, 200, menu.itemArray.count * 36 + 12)];
     if(self) {
-        self.menu = menu;
+        self.menuController = menu;
     }
     return self;
 }
@@ -121,8 +121,8 @@
 - (void)loadView {
     [super loadView];
     
-    int count = (int)self.menu.itemArray.count - 1;
-    for(NSMenuItem *item in self.menu.itemArray) {
+    int count = (int)self.menuController.itemArray.count - 1;
+    for(NSMenuItem *item in self.menuController.itemArray) {
         TMMenuItemView *itemView = [[TMMenuItemView alloc] initWithMenuItem:item];
         itemView.controller = self;
         [itemView setFrameOrigin:NSMakePoint(0, count * 36 + 6)];

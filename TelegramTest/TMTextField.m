@@ -98,7 +98,7 @@
 }
 
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString {
-    self->_placeholderAttributedString = placeholderAttributedString;
+    _placeholder = placeholderAttributedString;
     self.placeholderView.placeholderAttributedString = placeholderAttributedString;
 }
 
@@ -127,16 +127,16 @@
         NSTextView *textView = self.textView;
         if(textView) {
             [self placeholderView:[[PlaceholderTextView alloc] initWithFrame:self.bounds]];
-            self.placeholderView.placeholderAttributedString = self.placeholderAttributedString;
+            self.placeholderView.placeholderAttributedString = self.placeholder;
             [textView addSubview:self.placeholderView];
         }
     }
     
     
-    self.placeholderView.placeholderAttributedString = self.placeholderAttributedString;
+    self.placeholderView.placeholderAttributedString = self.placeholder;
     self.placeholderView.placeholderPoint = self.placeholderPoint;
     
-    [self.placeholderView setHidden:!self.placeholderAttributedString || self.stringValue.length != 0];
+    [self.placeholderView setHidden:!self.placeholder || self.stringValue.length != 0];
     return result;
 }
 
@@ -144,7 +144,7 @@
     [super setStringValue:aString ? aString : @""];
     
     if(self.textView.superview.superview == self) {
-        [self.placeholderView setHidden:!self.placeholderAttributedString || self.stringValue.length != 0];
+        [self.placeholderView setHidden:!self.placeholder || self.stringValue.length != 0];
     }
     
     if(self.fieldDelegate) {

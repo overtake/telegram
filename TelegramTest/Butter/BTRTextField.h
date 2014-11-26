@@ -44,7 +44,7 @@
 
 // State
 @property (nonatomic, readonly) BTRControlState state;
-@property (nonatomic, getter = isHighlighted) BOOL highlighted;
+@property (nonatomic, getter = isHighlighted) BOOL btrHighlighted;
 @property (nonatomic, readonly) NSInteger clickCount;
 
 - (void)addBlock:(void (^)(BTRControlEvents events))block forControlEvents:(BTRControlEvents)events;

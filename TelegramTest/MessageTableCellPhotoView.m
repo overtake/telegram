@@ -157,6 +157,8 @@ NSImage *fireImage() {
     }
     
     [self.progressView setState:cellState];
+    
+    [self.progressView setCenterByView:self.imageView];
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {

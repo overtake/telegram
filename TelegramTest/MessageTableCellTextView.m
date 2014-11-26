@@ -30,6 +30,7 @@
         
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
         [self.containerView addSubview:self.textView];
+        _textView.wantsLayer = YES;
         
         
     }
@@ -53,7 +54,10 @@
 }
 
 - (void) setItem:(MessageTableItemText *)item {
+    
+ 
     [super setItem:item];
+    
     
     [self.textView setFrameSize:NSMakeSize(item.blockSize.width , item.blockSize.height)];
     [self.textView setAttributedString:item.textAttributed];
@@ -63,6 +67,7 @@
     [self.textView setSelectionRange:[SelectTextManager rangeForItem:item]];
     
     [self.textView addMarks:item.mark.marks];
+    
 }
 
 

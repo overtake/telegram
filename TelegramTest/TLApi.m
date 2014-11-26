@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.11.14..
+//  Auto created by Mikhail Filimonov on 26.11.14..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -364,14 +364,14 @@
 @end
 
 @implementation TLAPI_contacts_getContacts
-+(TLAPI_contacts_getContacts*)createWithHash:(NSString*)hash {
++(TLAPI_contacts_getContacts*)createWithN_hash:(NSString*)n_hash {
     TLAPI_contacts_getContacts* obj = [[TLAPI_contacts_getContacts alloc] init];
-    obj.hash = hash;
+    obj.n_hash = n_hash;
     return obj;
 }
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:583445000];
-	[stream writeString:self.hash];
+	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
 @end
@@ -1607,28 +1607,28 @@
 @end
 
 @implementation TLAPI_account_getPrivacy
-+(TLAPI_account_getPrivacy*)createWithKey:(TLInputPrivacyKey*)key {
++(TLAPI_account_getPrivacy*)createWithN_key:(TLInputPrivacyKey*)n_key {
     TLAPI_account_getPrivacy* obj = [[TLAPI_account_getPrivacy alloc] init];
-    obj.key = key;
+    obj.n_key = n_key;
     return obj;
 }
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:-623130288];
-	[TLClassStore TLSerialize:self.key stream:stream];
+	[TLClassStore TLSerialize:self.n_key stream:stream];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_account_setPrivacy
-+(TLAPI_account_setPrivacy*)createWithKey:(TLInputPrivacyKey*)key rules:(NSMutableArray*)rules {
++(TLAPI_account_setPrivacy*)createWithN_key:(TLInputPrivacyKey*)n_key rules:(NSMutableArray*)rules {
     TLAPI_account_setPrivacy* obj = [[TLAPI_account_setPrivacy alloc] init];
-    obj.key = key;
+    obj.n_key = n_key;
 	obj.rules = rules;
     return obj;
 }
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:-906486552];
-	[TLClassStore TLSerialize:self.key stream:stream];
+	[TLClassStore TLSerialize:self.n_key stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{

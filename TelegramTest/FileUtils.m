@@ -142,7 +142,7 @@ BOOL checkFileSize(NSString *path, int size) {
 
 
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler {
-    [self showPanelWithTypes:types completionHandler:handler forWindow:[[NSApp delegate] window]];
+    [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp mainWindow]];
 }
 
 NSString* locationFilePath(TLFileLocation *location, NSString *extension) {
@@ -304,7 +304,7 @@ void alert(NSString *text, NSString *info) {
     [alert setAlertStyle:NSInformationalAlertStyle];
     [alert setMessageText:text];
     [alert setInformativeText:info];
-    [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 + (NSString *)dataMD5:(NSData *)data {

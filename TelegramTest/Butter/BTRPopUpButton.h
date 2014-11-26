@@ -11,7 +11,7 @@
 @interface BTRPopUpButton : BTRControl
 
 // The pop up button's menu.
-@property (nonatomic, copy) IBOutlet NSMenu *menu;
+@property (nonatomic, copy) IBOutlet NSMenu *btrMenu;
 
 // The selected item whose title is being currently displayed in
 // the pop up button.

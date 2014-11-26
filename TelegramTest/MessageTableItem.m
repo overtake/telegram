@@ -92,10 +92,12 @@
     
     NSColor *nameColor = LINK_COLOR;
     
+    
+    int uid = self.user.n_id;
+    
     if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
         
-        int uid = self.user.n_id;
-        int colorMask = 0;
+       int colorMask = 0;
         
         if(cacheColorIds[@(uid)]) {
             colorMask = [cacheColorIds[@(uid)] intValue];
@@ -115,8 +117,17 @@
         
     }
     
-    self.headerName = name;
-    self.headerColor = nameColor;
+    NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
+    
+    [header appendString:name withColor:nameColor];
+    
+    [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
+    
+    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:uid] range:header.range];
+    
+    self.headerName = header;
+    
+  //  self.headerSize = [self.headerName sizeForTextFieldForWidth:<#(int)#>]
     
 //    NSRange range = [self.headerString appendString:name withColor:nameColor];
 //    [self.headerString addAttribute:NSParagraphStyleAttributeName value:style range:range];

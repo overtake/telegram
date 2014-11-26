@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.11.14.
+//  Auto created by Mikhail Filimonov on 26.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -5003,14 +5003,14 @@
 @end
 
 @implementation TL_updatePrivacy
-+(TL_updatePrivacy*)createWithKey:(TLPrivacyKey*)key rules:(NSMutableArray*)rules {
++(TL_updatePrivacy*)createWithN_key:(TLPrivacyKey*)n_key rules:(NSMutableArray*)rules {
 	TL_updatePrivacy* obj = [[TL_updatePrivacy alloc] init];
-	obj.key = key;
+	obj.n_key = n_key;
 	obj.rules = rules;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.key stream:stream];
+	[TLClassStore TLSerialize:self.n_key stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -5023,7 +5023,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.key = [TLClassStore TLDeserialize:stream];
+	self.n_key = [TLClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -8495,7 +8495,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 @implementation TL_gzip_packed

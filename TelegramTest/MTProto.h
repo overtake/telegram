@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 25.11.14.
+//  Auto created by Dmitry Kondratyev on 26.11.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1478,7 +1478,7 @@
 @property (nonatomic, strong) NSString* type;
 @property (nonatomic, strong) TLMessageMedia* media;
 @property Boolean popup;
-@property (nonatomic, strong) TLPrivacyKey* key;
+@property (nonatomic, strong) TLPrivacyKey* n_key;
 @property (nonatomic, strong) NSMutableArray* rules;
 @property (nonatomic, strong) NSString* phone;
 @end
@@ -1562,7 +1562,7 @@
 +(TL_updateServiceNotification*)createWithType:(NSString*)type message:(NSString*)message media:(TLMessageMedia*)media popup:(Boolean)popup;
 @end
 @interface TL_updatePrivacy : TLUpdate
-+(TL_updatePrivacy*)createWithKey:(TLPrivacyKey*)key rules:(NSMutableArray*)rules;
++(TL_updatePrivacy*)createWithN_key:(TLPrivacyKey*)n_key rules:(NSMutableArray*)rules;
 @end
 @interface TL_updateUserPhone : TLUpdate
 +(TL_updateUserPhone*)createWithUser_id:(int)user_id phone:(NSString*)phone;

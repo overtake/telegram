@@ -34,13 +34,13 @@
 // Whether the view's drawing completely fills its bounds with opaque content.
 //
 // Defaults to NO.
-@property (nonatomic, assign, getter = isOpaque) BOOL opaque;
+@property (atomic, assign, getter = isOpaque) BOOL opaque;
 
 // Whether the view's drawing and layout uses a flipped (top-left origin)
 // coordinate system.
 //
 // Defaults to NO.
-@property (nonatomic, assign, getter = isFlipped) BOOL flipped;
+@property (atomic, assign, getter = isFlipped) BOOL btrFlipped;
 
 // Whether the content is redrawn with a default animation applied.
 //
