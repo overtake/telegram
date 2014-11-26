@@ -1963,14 +1963,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSInteger max = MIN(pos + array.count + 1, self.messages.count );
 
-    __block MessageTableItem *backItem = nil;
+    __block MessageTableItem *backItem = max == self.messages.count ? nil : self.messages[max - 1];
     
     
-    NSRange range = NSMakeRange(0, max);
+    NSRange range = NSMakeRange(0, backItem ? max - 1 : max);
     
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
     
-        current.isSelected = NO;
         [self isHeaderMessage:current prevItem:backItem];
         [current makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
@@ -2344,10 +2343,10 @@ static NSTextAttachment *headerMediaIcon() {
         NSData *imageData;
         
         if(data) {
-            imageData = compressImage(data, 0.7);
+            imageData = jpegNormalizedData([[NSImage alloc] initWithData:imageData]);
         } else {
-            NSImage *image = strongResize(imageFromFile(file_path), 800);
-            imageData = compressImage([image TIFFRepresentation], 0.7);
+            NSImage *image = imageFromFile(file_path);
+            imageData = jpegNormalizedData(image);
         }
         
         

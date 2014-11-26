@@ -161,6 +161,16 @@ NSString *const AVACACHE = @"AVACACHE";
     }];
 }
 
++(void)changeKey:(NSString *)key withKey:(NSString *)nkey {
+    
+    [[self cache].queue dispatchOnQueue:^{
+        
+        [[self cache] changeKey:key withKey:nkey];
+        
+    }];
+    
+}
+
 
 // local methods its
 
@@ -297,5 +307,20 @@ NSString *const AVACACHE = @"AVACACHE";
     _groupMemoryLimit[group] = @(limit);
 }
 
+
+-(void)changeKey:(NSString *)key withKey:(NSString *)nKey {
+    
+    [_groups enumerateKeysAndObjectsUsingBlock:^(NSString *groupKey, NSMutableDictionary *obj, BOOL *stop) {
+        
+        TGCacheRecord *record = obj[key];
+        
+        if(record)
+        {
+            obj[nKey] = record;
+            [obj removeObjectForKey:key];
+        }
+        
+    }];
+}
 
 @end

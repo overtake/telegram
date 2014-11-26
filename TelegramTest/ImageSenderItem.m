@@ -42,9 +42,6 @@
         else
             self.image = image;
         
-        
-        
-        NSLog(@"%@",NSStringFromSize(self.image.size));
         if(realSize.width > MIN_IMG_SIZE.width && realSize.height > MIN_IMG_SIZE.height && maxSize.width == MIN_IMG_SIZE.width && maxSize.height == MIN_IMG_SIZE.height) {
             
             int difference = roundf( (realSize.width - maxSize.width) /2);
@@ -74,7 +71,7 @@
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         
-        [compressImage([self.image TIFFRepresentation], 0.83) writeToFile:mediaFilePath(self.message.media) atomically:YES];
+        [jpegNormalizedData(image) writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
         
         
@@ -147,7 +144,9 @@
             
             if(strongSelf.message.media.photo.sizes.count > 1) {
                 TL_photoSize *size =strongSelf.message.media.photo.sizes[1];
+                [TGCache changeKey:size.location.cacheKey withKey:newSize.location.cacheKey];
                 size.location = newSize.location;
+                
             } else {
                 ((TL_localMessage *)strongSelf.message).media = msg.media;
             }
@@ -162,6 +161,8 @@
             [[Storage manager] insertMedia:strongSelf.message];
             
             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+            
+           
             
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
             
