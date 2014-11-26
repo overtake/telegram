@@ -331,11 +331,6 @@ NSImage *selectCheckActiveImage() {
     self.item.isSelected = isSelected;
     _isSelected = isSelected;
     
-    if(isSelected)
-        [self initSelectButton];
-    else
-        [self deallocSelectButton];
-    
     
     [self.selectButton setSelected:isSelected];
     
@@ -775,6 +770,11 @@ static int offsetEditable = 30;
         
         return;
     }
+    
+    if(_isEditable)
+        [self initSelectButton];
+    else
+        [self deallocSelectButton];
     
     [self setRightLayerToEditablePosition:!editable];
     

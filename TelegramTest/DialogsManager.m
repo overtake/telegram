@@ -49,8 +49,6 @@
             NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
             int total = 0;
             for (TL_localMessage *message in messages) {
-                TLMessage *local = [manager find:message.n_id];
-                local.flags&= ~TGUNREADMESSAGE;
                 if(message.unread && message.conversation) {
                     if(!message.n_out) {
                         if(message.conversation.unread_count != 0)
