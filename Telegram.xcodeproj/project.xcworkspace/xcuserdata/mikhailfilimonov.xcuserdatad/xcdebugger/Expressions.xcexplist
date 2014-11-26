@@ -372,6 +372,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__67-[MessagesViewController sendImage:file_data:addCompletionHandler:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "filePath">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke:DialogsHistoryController.m">
       </ContextState>
       <ContextState

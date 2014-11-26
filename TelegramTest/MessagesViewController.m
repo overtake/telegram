@@ -2343,7 +2343,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSData *imageData;
         
         if(data) {
-            imageData = jpegNormalizedData([[NSImage alloc] initWithData:imageData]);
+            imageData = jpegNormalizedData([[NSImage alloc] initWithData:data]);
         } else {
             NSImage *image = imageFromFile(file_path);
             imageData = jpegNormalizedData(image);
