@@ -623,9 +623,7 @@ static BOOL dragAction = NO;
     
     [super setItem:item];
     
-    
-    test_start_group(@"test");
-    
+        
     self.stateLayer.container = self;
     
     float offsetContainerView;
