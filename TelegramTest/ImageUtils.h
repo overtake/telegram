@@ -149,6 +149,8 @@ CACHE_IMAGE(PhotoViewerRight)
 CACHE_IMAGE(PhotoViewerMore)
 CACHE_IMAGE(PhotoViewerClose)
 
+CACHE_IMAGE(ChangenumberAlertIcon);
+
 @interface ImageUtils : NSObject
 
 

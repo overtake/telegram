@@ -606,7 +606,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         
         
-        PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update key].class)];
+        PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update n_key].class)];
         
         [privacy _save];
         

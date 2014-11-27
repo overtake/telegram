@@ -99,6 +99,11 @@ NSString *const AVACACHE = @"AVACACHE";
 // global methods
 
 +(void)cacheImage:(NSImage *)image forKey:(NSString *)key groups:(NSArray *)groups {
+    
+#ifdef TGDEBUG
+    assert(image != nil);
+#endif
+    
     [[self cache].queue dispatchOnQueue:^{
         [[self cache] cacheImage:image forKey:key groups:groups];
     }];
@@ -176,10 +181,8 @@ NSString *const AVACACHE = @"AVACACHE";
 
 -(void)cacheImage:(NSImage *)image forKey:(NSString *)key groups:(NSArray *)groups {
     
-    assert(image != nil);
-    assert(key != nil);
-    assert(groups != nil);
-    
+    if(!image || !key || !groups)
+        return;
     
     NSUInteger size = image.size.width * image.size.height * 4;
     

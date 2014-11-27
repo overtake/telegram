@@ -241,7 +241,9 @@ static const int controlsHeight = 75;
         
         
         if(_list.count == 0) {
-            [self hide];
+            [ASQueue dispatchOnMainQueue:^{
+                [self hide];
+            }];
         } else {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{

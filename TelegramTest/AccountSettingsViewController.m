@@ -72,6 +72,7 @@
 @property (nonatomic,strong) UserInfoShortButtonView *blockedUsers;
 @property (nonatomic,strong) UserInfoShortButtonView *generalSettings;
 @property (nonatomic,strong) UserInfoShortButtonView *userName;
+@property (nonatomic,strong) UserInfoShortButtonView *phoneNumber;
 
 @property (nonatomic,strong) UserInfoShortButtonView *about;
 @property (nonatomic,strong) UserInfoShortButtonView *faq;
@@ -568,6 +569,23 @@ typedef enum {
     [container addSubview:self.userName];
     
     
+//    currentY+=38;
+//    
+//    
+//    self.phoneNumber = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.PhoneNumber",nil) tapBlock:^{
+//        
+//        [[Telegram rightViewController] showPhoneChangeAlerController];
+//    }];
+//    
+//    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+//    
+//    [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
+//    [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
+//    
+//    
+//    [container addSubview:self.phoneNumber];
+    
+    
     currentY+=38;
     
     self.privacy = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.Privacy",nil) tapBlock:^{
@@ -701,10 +719,10 @@ typedef enum {
     [container addSubview:self.askQuestion];
     
     
-    self.privacy.autoresizingMask = self.privacy.textButton.autoresizingMask = self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
+    self.phoneNumber.autoresizingMask = self.phoneNumber.textButton.autoresizingMask = self.privacy.autoresizingMask = self.privacy.textButton.autoresizingMask = self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
     
     
-    self.privacy.textButton.textColor = self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
+    self.phoneNumber.textButton.textColor = self.privacy.textButton.textColor = self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
     
     [container setAutoresizingMask:NSViewWidthSizable];
     
@@ -718,6 +736,7 @@ typedef enum {
     self.faq.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.askQuestion.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.privacy.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.phoneNumber.rightContainer = imageViewWithImage(image_ArrowGrey());
     
     self.userName.rightContainerOffset = NSMakePoint(-10, 0);
     self.blockedUsers.rightContainerOffset = NSMakePoint(-10, 0);
@@ -726,6 +745,7 @@ typedef enum {
     self.faq.rightContainerOffset = NSMakePoint(-10, 0);
     self.askQuestion.rightContainerOffset = NSMakePoint(-10, 0);
     self.privacy.rightContainerOffset = NSMakePoint(-10, 0);
+    self.phoneNumber.rightContainerOffset = NSMakePoint(-10, 0);
     
     [self.userName setSelectedColor:BLUE_COLOR_SELECT];
     [self.blockedUsers setSelectedColor:BLUE_COLOR_SELECT];
@@ -734,6 +754,7 @@ typedef enum {
     [self.faq setSelectedColor:BLUE_COLOR_SELECT];
     [self.askQuestion setSelectedColor:BLUE_COLOR_SELECT];
     [self.privacy setSelectedColor:BLUE_COLOR_SELECT];
+    [self.phoneNumber setSelectedColor:BLUE_COLOR_SELECT];
     
     return container;
 }

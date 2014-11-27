@@ -154,6 +154,8 @@ CACHE_IMAGE(PhotoViewerRight)
 CACHE_IMAGE(PhotoViewerMore)
 CACHE_IMAGE(PhotoViewerClose)
 
+CACHE_IMAGE(ChangenumberAlertIcon);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

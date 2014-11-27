@@ -149,6 +149,9 @@
     self.privacyUserListController = [[PrivacyUserListController alloc] initWithFrame:self.view.bounds];
     
     
+    self.phoneChangeAlertController = [[PhoneChangeAlertController alloc] initWithFrame:self.view.bounds];
+    self.phoneChangeController = [[PhoneChangeController alloc] initWithFrame:self.view.bounds];
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
 //    [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
 //    [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
@@ -651,5 +654,25 @@
     
 }
 
+- (void)showPhoneChangeAlerController {
+    if(self.navigationViewController.currentController == self.phoneChangeAlertController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.phoneChangeAlertController animated:YES];
+    
+}
+
+- (void)showPhoneChangeController {
+    if(self.navigationViewController.currentController == self.phoneChangeController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.phoneChangeController animated:YES];
+}
 
 @end

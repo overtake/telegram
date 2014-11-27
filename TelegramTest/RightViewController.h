@@ -27,6 +27,8 @@
 #import "PrivacyViewController.h"
 #import "PrivacySettingsViewController.h"
 #import "PrivacyUserListController.h"
+#import "PhoneChangeAlertController.h"
+#import "PhoneChangeController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -47,6 +49,8 @@
 @property (nonatomic, strong) PrivacyViewController *privacyViewController;
 @property (nonatomic, strong) PrivacySettingsViewController *lastSeenViewController;
 @property (nonatomic, strong) PrivacyUserListController *privacyUserListController;
+@property (nonatomic, strong) PhoneChangeAlertController *phoneChangeAlertController;
+@property (nonatomic, strong) PhoneChangeController *phoneChangeController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -83,6 +87,8 @@
 - (void)showPrivacyController;
 - (void)showLastSeenController;
 
--(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback;
+- (void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback;
+- (void)showPhoneChangeAlerController;
+- (void)showPhoneChangeController;
 
 @end

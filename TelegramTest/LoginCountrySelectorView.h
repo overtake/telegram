@@ -12,7 +12,10 @@
 
 @interface LoginCountrySelectorView : TMView<NSTextFieldDelegate, NSMenuDelegate>
 
-@property (nonatomic, strong) NewLoginViewController *loginController;
+//@property (nonatomic, strong) NewLoginViewController *loginController;
+
+@property (nonatomic,strong) dispatch_block_t nextCallback;
+@property (nonatomic,strong) dispatch_block_t backCallback;
 
 - (void)performShake;
 

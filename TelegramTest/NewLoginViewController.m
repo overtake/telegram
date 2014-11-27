@@ -111,13 +111,23 @@
     [SMSCodeViewContainer addSubview:self.SMSCodeView];
     [self.containerView addSubview:SMSCodeViewContainer];
     
+     weakify();
+    
     //COUTRYVIew
     self.countrySelectorView = [[LoginCountrySelectorView alloc] initWithFrame:NSMakeRect(0, offsetY, self.containerView.bounds.size.width, 90)];
-    self.countrySelectorView.loginController = self;
+    
+    [self.countrySelectorView setNextCallback:^{
+        [strongSelf getSMSCode];
+    }];
+    
+    [self.countrySelectorView setBackCallback:^{
+        [strongSelf performBackEditAnimation:0.08];
+    }];
+    
     [self.containerView addSubview:self.countrySelectorView];
     
     
-    weakify();
+   
     
     
     self.startMessagingView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(120, 12, self.view.bounds.size.width - 110, 50)];

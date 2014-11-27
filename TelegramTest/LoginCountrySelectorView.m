@@ -85,7 +85,8 @@
         [self.editTextButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.editTextButton.bounds.size.width - 10, 16)];
         [self.editTextButton setHidden:YES];
         [self.editTextButton setTapBlock:^{
-            [strongSelf.loginController performBackEditAnimation:0.08];
+            if(strongSelf.backCallback) strongSelf.backCallback();
+           // [strongSelf.loginController performBackEditAnimation:0.08];
         }];
         [self addSubview:self.editTextButton];
         
@@ -161,7 +162,7 @@
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {
     if(control == self.numberTextField) {
         if(commandSelector == @selector(insertNewline:)) {
-            [self.loginController getSMSCode];
+            if(_nextCallback)_nextCallback();
             return YES;
         }
         

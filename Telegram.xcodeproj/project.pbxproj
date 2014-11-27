@@ -451,6 +451,11 @@
 		C297FBA31832997B00714B3C /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA518329F3500714B3C /* TGDcAuth.m */; };
 		C297FBAB1833917B00714B3C /* DialogTableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBAA1833917B00714B3C /* DialogTableObject.m */; };
+		C2A3FAFF1A2753E700DE791B /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A3FB041A2753EC00DE791B /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A3FB051A2753F400DE791B /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2A3FB061A2753F400DE791B /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
 		C2A5BFBF18DC80620021BE68 /* internal.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB418DC80620021BE68 /* internal.c */; };
 		C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB618DC80620021BE68 /* opusfile.c */; };
@@ -480,10 +485,6 @@
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B325FF1A24C9660012DE34 /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325FC1A24C9660012DE34 /* MTProto.m */; };
 		C2B326001A24C9660012DE34 /* TLApi.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325FE1A24C9660012DE34 /* TLApi.m */; };
-		C2B326011A24EF310012DE34 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2B326021A24EF370012DE34 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2B326031A24EF3E0012DE34 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2B326041A24EF3E0012DE34 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
 		C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */; };
@@ -669,8 +670,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2B326021A24EF370012DE34 /* Sparkle.framework in Copy Files (6 items) */,
-				C2B326011A24EF310012DE34 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2A3FB041A2753EC00DE791B /* Sparkle.framework in Copy Files (6 items) */,
+				C2A3FAFF1A2753E700DE791B /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -1611,6 +1612,8 @@
 		C297FBA518329F3500714B3C /* TGDcAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDcAuth.m; sourceTree = "<group>"; };
 		C297FBA91833917B00714B3C /* DialogTableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogTableObject.h; sourceTree = "<group>"; };
 		C297FBAA1833917B00714B3C /* DialogTableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogTableObject.m; sourceTree = "<group>"; };
+		C2A3FB071A278E2700DE791B /* PhoneChangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeController.h; sourceTree = "<group>"; };
+		C2A3FB081A278E2700DE791B /* PhoneChangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeController.m; sourceTree = "<group>"; };
 		C2A5BF9D18DC800E0021BE68 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopus.a; path = ../../libopus.a; sourceTree = "<group>"; };
 		C2A5BFA218DC80620021BE68 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		C2A5BFA318DC80620021BE68 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
@@ -2004,8 +2007,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2B326031A24EF3E0012DE34 /* Sparkle.framework in Frameworks */,
-				C2B326041A24EF3E0012DE34 /* HockeySDK.framework in Frameworks */,
+				C2A3FB051A2753F400DE791B /* Sparkle.framework in Frameworks */,
+				C2A3FB061A2753F400DE791B /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3670,6 +3673,8 @@
 			children = (
 				C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */,
 				C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */,
+				C2A3FB071A278E2700DE791B /* PhoneChangeController.h */,
+				C2A3FB081A278E2700DE791B /* PhoneChangeController.m */,
 			);
 			name = phonechange;
 			sourceTree = "<group>";
@@ -4894,6 +4899,7 @@
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
 				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
+				C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */,
 				CEDAEB5B1881AF85006189A2 /* YapDatabaseSecondaryIndexConnection.m in Sources */,
 				CEB7ADF11812E31F005CB6A1 /* ImageCache.m in Sources */,
 				0A5F0FF818DC0F5C00CCFA60 /* ChatInfoNotificationView.m in Sources */,
