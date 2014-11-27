@@ -97,21 +97,8 @@
     
     if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
         
-       int colorMask = 0;
         
-        if(cacheColorIds[@(uid)]) {
-            colorMask = [cacheColorIds[@(uid)] intValue];
-        } else {
-            const int numColors = 8;
-            
-            char buf[16];
-            snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
-            unsigned char digest[CC_MD5_DIGEST_LENGTH];
-            CC_MD5(buf, (unsigned) strlen(buf), digest);
-            colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
-            
-            cacheColorIds[@(uid)] = @(colorMask);
-        }
+       int colorMask = [TMAvatarImageView colorMask:self.user];
         
         nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
         
