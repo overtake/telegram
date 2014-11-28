@@ -272,6 +272,10 @@
     if(self.phoneNumber) {
         [self performBackEditAnimation:0];
     }
+    [self.bottomView setHidden:YES];
+    [self.startMessagingView setHasImage:NO];
+    
+    
 }
 
 
@@ -385,7 +389,7 @@
         self.phone_code_hash = response.phone_code_hash;
         self.isPhoneRegistered = response.phone_registered;
         
-        
+        [self.startMessagingView setHasImage:YES];
         [self.getSMSCodeView loadingSuccess];
         
         if(!self.bottomView.isAppCodeSent) {

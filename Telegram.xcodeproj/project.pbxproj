@@ -456,6 +456,7 @@
 		C2A3FB051A2753F400DE791B /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2A3FB061A2753F400DE791B /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
+		C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
 		C2A5BFBF18DC80620021BE68 /* internal.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB418DC80620021BE68 /* internal.c */; };
 		C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB618DC80620021BE68 /* opusfile.c */; };
@@ -1614,6 +1615,8 @@
 		C297FBAA1833917B00714B3C /* DialogTableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogTableObject.m; sourceTree = "<group>"; };
 		C2A3FB071A278E2700DE791B /* PhoneChangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeController.h; sourceTree = "<group>"; };
 		C2A3FB081A278E2700DE791B /* PhoneChangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeController.m; sourceTree = "<group>"; };
+		C2A3FB0B1A28A6B200DE791B /* TGHashContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashContact.h; sourceTree = "<group>"; };
+		C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHashContact.m; sourceTree = "<group>"; };
 		C2A5BF9D18DC800E0021BE68 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopus.a; path = ../../libopus.a; sourceTree = "<group>"; };
 		C2A5BFA218DC80620021BE68 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		C2A5BFA318DC80620021BE68 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
@@ -3473,6 +3476,17 @@
 			name = security;
 			sourceTree = "<group>";
 		};
+		C2A3FB0A1A28A68300DE791B /* contacts */ = {
+			isa = PBXGroup;
+			children = (
+				0A6E13D018A8F3CB004D1BC7 /* NewContactsManager.h */,
+				0A6E13D118A8F3CB004D1BC7 /* NewContactsManager.m */,
+				C2A3FB0B1A28A6B200DE791B /* TGHashContact.h */,
+				C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */,
+			);
+			name = contacts;
+			sourceTree = "<group>";
+		};
 		C2A5BF9F18DC80620021BE68 /* opus */ = {
 			isa = PBXGroup;
 			children = (
@@ -3770,6 +3784,7 @@
 		CEAE5D1C181C37D800C17645 /* managers */ = {
 			isa = PBXGroup;
 			children = (
+				C2A3FB0A1A28A68300DE791B /* contacts */,
 				CEA589411815704E00462DF0 /* SharedManager.h */,
 				CEA589421815704E00462DF0 /* SharedManager.m */,
 				CEAE5D19181C296600C17645 /* DialogsManager.h */,
@@ -3782,8 +3797,6 @@
 				CE8454901822EE2000E73DF7 /* ChatsManager.m */,
 				CEC22DF61827CC10008817D0 /* FullChatManager.h */,
 				CEC22DF71827CC10008817D0 /* FullChatManager.m */,
-				0A6E13D018A8F3CB004D1BC7 /* NewContactsManager.h */,
-				0A6E13D118A8F3CB004D1BC7 /* NewContactsManager.m */,
 				0A6E13D618A921A9004D1BC7 /* Managers.h */,
 				0A46150F18E87A7800899641 /* BlockedUsersManager.h */,
 				0A46151018E87A7800899641 /* BlockedUsersManager.m */,
@@ -5128,6 +5141,7 @@
 				C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */,
 				CEA589431815704E00462DF0 /* SharedManager.m in Sources */,
 				0AA7E1D318CD392A0064EFC7 /* UIImageView+AFNetworking.m in Sources */,
+				C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */,
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,

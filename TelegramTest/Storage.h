@@ -122,8 +122,8 @@ extern NSString *const FILE_NAMES;
 
 
 
--(void)importedContacts:(void (^)(NSDictionary *imported))completeHandler;
--(void)insertImportedContacts:(NSArray *)result completeHandler:(void (^)(void))completeHandler;
+-(void)importedContacts:(void (^)(NSSet *imported))completeHandler;
+-(void)insertImportedContacts:(NSSet *)result completeHandler:(void (^)(void))completeHandler;
 
 
 

@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "TL.h"
-
+#import "ASQueue.h"
 @interface SharedManager : NSObject {
     NSMutableArray *list;
     NSMutableDictionary *keys;
 }
+
+@property (nonatomic,strong) ASQueue *queue;
+
+
 -(void)drop;
 +(void)drop;
 -(void)save:(id)object;

@@ -83,9 +83,7 @@
     
     [descriptionTextField setFrameSize:NSMakeSize(NSWidth(self.view.frame) - 200, NSHeight(self.view.frame) - 270)];
     
-    
-    descriptionTextField.hardYOffset = 30;
-    
+
     
     [descriptionTextField setCenterByView:self.view];
     

@@ -74,7 +74,7 @@
     [[Storage manager] users:^(NSArray *result) {
         
         [[UsersManager sharedManager] addFromDB:result];
-        
+                
         [[BroadcastManager sharedManager] loadBroadcastList:^{
         
             [[Storage manager] loadChats:^(NSArray *chats) {
@@ -102,9 +102,11 @@
         
         [[MTNetwork instance] startNetwork];
         
+       
+        
         [[BlockedUsersManager sharedManager] remoteLoad];
         
-        if(result.count != 0) {
+        if(result.count != 0 || [DialogsHistoryController sharedController].state == DialogsHistoryStateEnd) {
             
             [TMTaskRequest executeAll];
             
@@ -119,6 +121,7 @@
             [[FullChatManager sharedManager] loadStored];
             
             [TGSecretAction dequeAllStorageActions];
+            
             
         } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
             [self initConversations];

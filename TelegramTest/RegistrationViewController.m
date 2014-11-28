@@ -19,7 +19,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-    
+    [super drawRect:dirtyRect];
     int width = 322;
     
     [NSColorFromRGB(0xe6e6e6) set];
@@ -62,12 +62,14 @@
     [self.view addSubview:self.containerView];
     
     
-    TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Profile.Back", nil)];
+    TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:[NSString stringWithFormat:@"  %@",NSLocalizedString(@"Profile.Back", nil)]];
     [backButton setFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
     [backButton.imageView setFrameOrigin:NSMakePoint(0, 4)];
     [backButton sizeToFit];
-    [backButton setFrameOrigin:NSMakePoint(6, 260)];
+    [backButton setFrameOrigin:NSMakePoint(4, 260)];
     [backButton setTarget:self selector:@selector(backButtonClick)];
+    [backButton setBackgroundColor:[NSColor blueColor]];
+    //[backButton updateBackButton];
     [self.containerView addSubview:backButton];
     
     self.avatarImageView = [[RegistrationAvatarView alloc] initWithFrame:NSMakeRect(6, 120, 100, 100)];
@@ -93,7 +95,7 @@
     
     NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Registartion.FirstName", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)}];
     [self.firstNameTextField.cell setPlaceholderAttributedString:placeHolder];
-    [self.firstNameTextField setPlaceholderAttributedString:placeHolder];
+  //  [self.firstNameTextField setPlaceholderAttributedString:placeHolder];
     [self.firstNameTextField setPlaceholderPoint:NSMakePoint(2, 1)];
     
     [[self.firstNameTextField cell] setTruncatesLastVisibleLine:YES];
@@ -157,8 +159,6 @@
     }
     
     [RPCRequest sendRequest:[TLAPI_auth_signUp createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash phone_code:self.phone_code first_name:self.firstNameTextField.stringValue last_name:self.lastNameTextField.stringValue] successHandler:^(RPCRequest *request, id response) {
-
-        [[NewContactsManager sharedManager] syncContacts:nil];
         
         [[Telegram sharedInstance] onAuthSuccess];
         

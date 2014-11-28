@@ -11,7 +11,7 @@
 
 
 @interface TMBackButton ()
-@property (nonatomic,strong) id target;
+@property (nonatomic,weak) id target;
 @property (nonatomic,assign) SEL selector;
 @end
 
@@ -32,12 +32,16 @@
         self.imageView.image = backImage;
         
         [self addSubview:self.imageView];
+        
+        [self setStringValue:string];
 
         [self setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
 
         [self setFrameOrigin:NSMakePoint(0, 0)];
         
         [self setTextColor:BLUE_UI_COLOR];
+        
+    
            
         [self setTarget:self selector:@selector(click)];
     }

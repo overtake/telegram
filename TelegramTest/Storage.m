@@ -16,6 +16,7 @@
 #import "PreviewObject.h"
 #import "HistoryFilter.h"
 #import "FMDatabaseAdditions.h"
+#import "TGHashContact.h"
 @implementation Storage
 
 
@@ -103,7 +104,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t83"; // 61
+    NSString *dbName = @"t111"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -155,7 +156,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists chats_full_new (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)"];
         
-        [db executeUpdate:@"create table if not exists imported_contacts (user_id integer primary key,client_id)"];
+        [db executeUpdate:@"create table if not exists imported_contacts (hash blob primary key, hashObject string, user_id integer)"];
         
         
         [db executeUpdate:@"create table if not exists dc_options (dc_id integer primary key, ip_address string, port integer)"];
@@ -1055,10 +1056,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [contacts addObject:contact];
         }
         [result close];
-        dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler)
                 completeHandler(contacts);
-        });
     }];
 }
 
@@ -1144,12 +1143,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)insertImportedContacts:(NSArray *)result completeHandler:(void (^)(void))completeHandler {
+-(void)insertImportedContacts:(NSSet *)result completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        for (TL_importedContact *contact in result) {
-            [db executeUpdate:@"insert or replace into imported_contacts (user_id,client_id) values (?,?)",[NSNumber numberWithInt:contact.user_id],[NSNumber numberWithLongLong:contact.client_id]];
-        }
+       [result enumerateObjectsUsingBlock:^(TGHashContact *contact, BOOL *stop) {
+           [db executeUpdate:@"insert or replace into imported_contacts (hash,hashObject,user_id) values (?,?,?)",@(contact.hash),contact.hashObject,@(contact.user_id)];
+       }];
+        
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler();
@@ -1157,22 +1157,23 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)importedContacts:(void (^)(NSDictionary *imported))completeHandler {
+-(void)importedContacts:(void (^)(NSSet *imported))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
-        NSMutableDictionary *contacts = [[NSMutableDictionary alloc] init];
+        NSMutableSet *contacts = [[NSMutableSet alloc] init];
         //[db beginTransaction];
         FMResultSet *result = [db executeQuery:@"select * from imported_contacts"];
         while ([result next]) {
-            int user_id = [[[result resultDictionary] objectForKey:@"user_id"] intValue];
-            long client_id = [[[result resultDictionary] objectForKey:@"client_id"] longValue];
-            TLImportedContact *contact = [TL_importedContact createWithUser_id:user_id client_id:client_id];
-            [contacts setObject:contact forKey:[NSNumber numberWithLong:client_id]];
+            
+           
+            TGHashContact *contact = [[TGHashContact alloc] initWithHash:[result stringForColumn:@"hashObject"] user_id:[result intForColumn:@"user_id"]];
+            
+            [contacts addObject:contact];
+            
+            
         }
         [result close];
         //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(contacts);
-        });
+        if(completeHandler) completeHandler(contacts);
     }];
 
 }
@@ -1241,7 +1242,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit {
      [queue inDatabase:^(FMDatabase *db) {
          
-         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id %@ %d order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
+         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id %@ %ld order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
 
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];

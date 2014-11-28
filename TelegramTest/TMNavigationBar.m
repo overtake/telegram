@@ -87,7 +87,6 @@ static const float duration = 0.2;
         connectionAnimation.delegate = connectionDelegate;
         connectionAnimation.removedOnCompletion = YES;
         
-        self.connectionView.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue]);
         
         [connectionDelegate setCompletion:^(BOOL isFinished) {
             [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];

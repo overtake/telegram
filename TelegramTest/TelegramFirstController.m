@@ -69,9 +69,7 @@
     [[Telegram delegate] logoutWithForce:NO];
 }
 
-- (IBAction)importContacts:(id)sender {
-    [[NewContactsManager sharedManager] syncContacts:nil];
-}
+
 - (IBAction)openSettings:(id)sender {
     [[Telegram rightViewController] showGeneralSettings];
     

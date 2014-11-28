@@ -22,7 +22,7 @@ static NSMutableArray *managers;
 
 //clear manager
 -(void)drop {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         [self->list removeAllObjects];
         [self->keys removeAllObjects];
 
@@ -36,14 +36,15 @@ static NSMutableArray *managers;
             [manager drop];
         }
     }];
-    
 }
 
 -(id)init {
     if(self = [super init]) {
         self->list = [[NSMutableArray alloc]init];
         self->keys = [[NSMutableDictionary alloc] init];
-        [ASQueue dispatchOnStageQueue:^{
+        _queue = [ASQueue globalQueue];
+        
+        [_queue dispatchOnQueue:^{
           
             [managers addObject:self];
         
@@ -58,7 +59,7 @@ static NSMutableArray *managers;
 }
 
 -(void)add:(NSArray *)all withCustomKey:(NSString*)key {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         for (id obj in all) {
             id current = [keys objectForKey:[obj valueForKey:key]];
             if(current == nil) {
@@ -78,7 +79,7 @@ static NSMutableArray *managers;
 }
 
 -(void)remove:(NSArray*)all withCustomKey:(NSString*)key {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         for (id obj in all) {
             [self removeObjectWithKey:[obj valueForKey:key]];
         }
@@ -108,7 +109,7 @@ static NSMutableArray *managers;
 -(id)find:(NSInteger)_id withCustomKey:(NSString*)key {
     __block id object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         object = [self->keys objectForKey:[NSNumber numberWithInteger:_id]];
     } synchronous:YES];
 
@@ -120,7 +121,7 @@ static NSMutableArray *managers;
 -(NSArray*)all {
     __block NSArray *object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         object = self->list;
     } synchronous:YES];
     

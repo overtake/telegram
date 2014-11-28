@@ -10,11 +10,12 @@
 #import "Storage.h"
 #import <AddressBook/AddressBook.h>
 #import <zlib.h>
+
+#import "TGHashContact.h"
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.contactsHash;
 #define HASH_CHECK() if(self.contactsHash != hash) return;
 
 @interface NewContactsManager()
-@property (nonatomic) NSUInteger contactsHash;
 @end
 
 @implementation NewContactsManager
@@ -33,6 +34,7 @@
     self = [super init];
     if(self) {
         [Notification addObserver:self selector:@selector(protocolUpdated:) name:PROTOCOL_UPDATED];
+        self.queue = [[ASQueue alloc] initWithName:"ContactsQueue"];
     }
     return self;
 }
@@ -43,106 +45,166 @@
 
 
 - (void) fullReload {
-    DLog(@"");
-    [self->keys removeAllObjects];
-    self->keys = [[NSMutableDictionary alloc] init];
-    self->list = [[NSMutableArray alloc] init];
-    self.contactsHash = [[NSString randStringWithLength:10] hash];
-
-    INIT_HASH_CHEKER();
-    [[Storage manager] contacts:^(NSArray *contacts) {
+    
+    [self.queue dispatchOnQueue:^{
+        [self->keys removeAllObjects];
+        [self->list removeAllObjects];
         
-        [ASQueue dispatchOnStageQueue:^{
-            HASH_CHECK();
-            [self->list addObjectsFromArray:contacts];
-            for(TLContact *contact in contacts)
-                [self insertContact:contact insertToDB:NO];
+        [[Storage manager] contacts:^(NSArray *contacts) {
             
+            [self add:contacts withCustomKey:@"user_id"];
             
-            [self->list sortUsingComparator:^NSComparisonResult(TLContact *obj1, TLContact *obj2) {
-                return [obj1.user.first_name compare:obj2.user.first_name options:NSWidthInsensitiveSearch];
+            [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
+            
+            [self remoteCheckContacts:^{
+                
+                [[Storage manager] importedContacts:^(NSSet *imported) {
+                    
+                    [self.queue dispatchOnQueue:^{
+                        
+                        [self importCloudContacts:imported];
+                    }];
+                    
+                }];
+                
+                
             }];
             
-            [Notification perform:CONTACTS_MODIFIED data:@{KEY_CONTACTS : self->list}];
-            
-            [self remoteCheckContacts];
         }];
+        
+        
+        
         
     }];
 }
 
 
+
 -(void)drop
 {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self->list removeAllObjects];
         [Notification perform:CONTACTS_MODIFIED data:@{KEY_CONTACTS:self->list}];
     }];
 }
 
--(void)syncContacts:(void (^)(void))callback {
-    [[Storage manager] importedContacts:^(NSDictionary *imported) {
-        [self importCloudContacts:imported callback:callback];
-    }];
 
-}
 
--(void)importCloudContacts:(NSDictionary *)imported callback:(void (^)(void))callback {
+-(void)importCloudContacts:(NSSet *)importedSet {
     
     
-    [ASQueue dispatchOnStageQueue:^{
-        NSArray *all = [[ABAddressBook sharedAddressBook] people];
-        NSMutableArray *import = [[NSMutableArray alloc] init];
-        NSMutableDictionary *toImportCheck = [[NSMutableDictionary alloc] init];
+    
+    [self.queue dispatchOnQueue:^{
+        
+         NSArray *all = [[ABAddressBook sharedAddressBook] people];
+        
+        NSMutableSet *abset = [[NSMutableSet alloc] init];
+        
+        
         for (ABPerson *person in all) {
             
             ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
-            long client_id = [person hash];
             
-            TLImportedContact *k = [imported objectForKey:[NSNumber numberWithLong:client_id]];
-            TL_inputPhoneContact *contact = [TL_inputPhoneContact createWithClient_id:client_id phone:[phones valueAtIndex:0] first_name:[person valueForProperty:kABFirstNameProperty] last_name:[person valueForProperty:kABLastNameProperty]];
-            if(!k) {
-                [import addObject:contact];
-                [toImportCheck setObject:contact forKey:[NSNumber numberWithLong:client_id]];
+            for (int i = 0; i < phones.count; i++) {
+                
+                NSString *phoneNumber = [phones valueAtIndex:i];
+                NSString *firstName = [person valueForProperty:kABFirstNameProperty];
+                NSString *lastName = [person valueForProperty:kABLastNameProperty];
+                
+                phoneNumber = [phoneNumber stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [phoneNumber length])];
+                
+                TGHashContact *contact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",firstName,lastName,phoneNumber]];
+                
+                [abset addObject:contact];
             }
+            
         }
         
-        if(import.count > 0) {
-            [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:import replace:NO] successHandler:^(RPCRequest *request, id response) {
-                TL_contacts_importedContacts *contacts = response;
-                
-                
-                [ASQueue dispatchOnStageQueue:^{
-                    [[Storage manager] insertImportedContacts:[contacts imported] completeHandler:nil];
-                    [SharedManager proccessGlobalResponse:response];
-                    
-                    NSMutableArray *newContacts = [[NSMutableArray alloc] init];
-                    for (TLImportedContact *imported in [contacts imported]) {
-                        [newContacts addObject:[TL_contact createWithUser_id:imported.user_id mutual:YES]];
-                        [toImportCheck removeObjectForKey:[NSNumber numberWithLong:imported.client_id]];
-                    }
-                    [[Storage manager] insertContacst:newContacts completeHandler:nil];
-                    [self add:newContacts withCustomKey:@"user_id"];
-                    
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
-                        if(callback)
-                            callback();
-                    }];
+        NSMutableSet *changedSet = [abset mutableCopy];
+        [changedSet minusSet:importedSet];
+        
+        
+        NSMutableSet *deleteSet = [importedSet mutableCopy];
+        [deleteSet minusSet:abset];
+        
+        
+        NSMutableArray *import = [[NSMutableArray alloc] init];
+        [changedSet enumerateObjectsUsingBlock:^(TGHashContact *obj, BOOL *stop) {
+            
+            NSArray *params = [[obj hashObject] componentsSeparatedByString:@":tg-itemQ:"];
 
+            [import addObject:[TL_inputPhoneContact createWithClient_id:[obj hash] phone:params[2] first_name:params[0] last_name:params[1]]];
+        }];
+        
+        
+        if(import.count > 0) {
+            [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:import replace:NO] successHandler:^(RPCRequest *request, TL_contacts_importedContacts *contacts) {
+                
+                [SharedManager proccessGlobalResponse:contacts];
+                
+                NSMutableArray *addedContacts = [[NSMutableArray alloc] init];
+                
+                [[contacts imported] enumerateObjectsUsingBlock:^(TLImportedContact *importedContact, NSUInteger idx, BOOL *stop) {
+                    
+                    [addedContacts addObject:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
+                    
+                    [changedSet enumerateObjectsUsingBlock:^(TGHashContact *contact, BOOL *stop) {
+                        
+                        if(contact.hash == importedContact.client_id) {
+                            
+                            contact.user_id = importedContact.user_id;
+                        }
+                        
+                    }];
+                    
+                }];
+                
+                [[Storage manager] insertImportedContacts:changedSet completeHandler:nil];
+                
+                [[Storage manager] insertContacst:addedContacts completeHandler:nil];
+                
+                [self add:addedContacts withCustomKey:@"user_id"];
+                
+                
+                [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+               
+            } timeout:10 queue:self.queue.nativeQueue];
+        }
+        
+        if(deleteSet.count > 0) {
+            
+            NSMutableArray *delete = [[NSMutableArray alloc] init];
+            NSMutableArray *contacts = [[NSMutableArray alloc] init];
+            [deleteSet enumerateObjectsUsingBlock:^(TGHashContact *obj, BOOL *stop) {
+                if(obj.user) {
+                    [delete addObject:obj.user.inputUser];
+                    TL_contact *contact = [self find:obj.user.n_id withCustomKey:@"user_id"];
+                    if(contact)
+                        [contacts addObject:contact];
+                }
+                
+                
+            }];
+            
+            [RPCRequest sendRequest:[TLAPI_contacts_deleteContacts createWithN_id:delete] successHandler:^(RPCRequest *request, id response) {
+                
+                [self remove:contacts withCustomKey:@"user_id"];
+                
+                [contacts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [[Storage manager] removeContact:obj completeHandler:nil];
                 }];
                 
                 
-                
             } errorHandler:^(RPCRequest *request, RpcError *error) {
-                DLog(@"error import %@", error.error_msg);
-                if(callback)
-                    callback();
-            } timeout:10];
-        } else {
-            if(callback)
-                callback();
+                
+                
+                
+            } timeout:10 queue:self.queue.nativeQueue];
+            
         }
-
+        
     }];
     
 }
@@ -151,8 +213,6 @@
     [RPCRequest sendRequest:[TLAPI_contacts_getStatuses create] successHandler:^(RPCRequest *request, id response) {
         
         for (TL_contactStatus *contactStatus in response) {
-            
-         //   TLUserStatus *userStatus =  status.expires > [[MTNetwork instance] getTime] ? [TL_userStatusOnline createWithExpires:status.expires] : [TL_userStatusOffline createWithWas_online:status.expires];
             
             [[UsersManager sharedManager] setUserStatus:contactStatus.status forUid:contactStatus.user_id];
         }
@@ -164,60 +224,52 @@
         }
         
         
-    } errorHandler:nil timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } errorHandler:nil timeout:0 queue:self.queue.nativeQueue];
 }
 
-- (void) remoteCheckContacts {
-
-    [ASQueue dispatchOnStageQueue:^{
+- (void) remoteCheckContacts:(dispatch_block_t)callback {
+    
+    [self.queue dispatchOnQueue:^{
+        
         NSArray *allKeys = [[self->keys allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             return [obj1 intValue] > [obj2 intValue];
         }];
         NSString *md5Hash = [[allKeys componentsJoinedByString:@","] md5];
         
-        INIT_HASH_CHEKER();
+
         [RPCRequest sendRequest:[TLAPI_contacts_getContacts createWithN_hash:md5Hash] successHandler:^(RPCRequest *request, id response) {
-            HASH_CHECK();
             
             if([response isKindOfClass:[TL_contacts_contacts class]]) {
-                TL_contacts_contacts* result = response;
                 
                 [SharedManager proccessGlobalResponse:response];
+
                 
-                
-                NSMutableArray *needSave = [[NSMutableArray alloc] init];
-                
-                [result.contacts enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
-                    TL_contact *local = self->keys[@(obj.user_id)];
-                    
-                    if(local.mutual != obj.mutual) {
-                        [needSave addObject:obj];
-                    }
-                }];
-                
-                [[Storage manager] replaceContacts:needSave completeHandler:nil];
-                
+                [[Storage manager] insertContacst:[response contacts] completeHandler:nil];
                 
                 [self->keys removeAllObjects];
                 [self->list removeAllObjects];
                 
-                [self->list addObjectsFromArray:result.contacts];
+               
+                [self add:[response contacts] withCustomKey:@"user_id"];
                 
-                [needSave enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
-                      [self->keys setObject:obj forKey:[NSNumber numberWithInt:obj.user_id]];
-                }];
-                
-                [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->keys}];
+                [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
             }
-        } errorHandler:nil timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            
+            callback();
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            callback();
+        } timeout:10 queue:self.queue.nativeQueue];
     }];
     
 }
 
 - (void) insertContact:(TLContact *)contact insertToDB:(BOOL)insertToDB {
     
-    [ASQueue dispatchOnStageQueue:^{
-        [self->keys setObject:contact forKey:[NSNumber numberWithInt:contact.user_id]];
+    [self.queue dispatchOnQueue:^{
+        [self add:@[contact] withCustomKey:@"user_id"];
+        [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
+        
         if(insertToDB) {
             [[Storage manager] insertContact:contact completeHandler:nil];
         }
@@ -241,28 +293,24 @@
             compleHandler(NO);
         }];
         
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:10 queue:self.queue.nativeQueue];
 }
 
 - (void) removeContact:(TLContact *)contact removeFromDB:(BOOL)removeFromDB {
-    [ASQueue dispatchOnStageQueue:^{
-        [self->keys removeObjectForKey:[NSNumber numberWithInt:contact.user_id]];
-        [self->list removeObject:contact];
+    [self.queue dispatchOnQueue:^{
+        [self remove:@[contact] withCustomKey:@"user_id"];
+        [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
         if(removeFromDB) {
             [[Storage manager] removeContact:contact completeHandler:nil];
         }
-
+        
     }];
 }
 
 - (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TLUser *user))callback {
     
-    INIT_HASH_CHEKER();
     [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:(NSMutableArray *)[NSArray arrayWithObject:contact] replace:NO] successHandler:^(RPCRequest *request, TL_contacts_importedContacts *response) {
-        HASH_CHECK();
         
-        
-
         if(!response.imported.count)
             return callback(NO, nil, nil);
         
@@ -276,15 +324,18 @@
                 userContact = user;
         }
         
-        TLContact *contact = [TL_contact createWithUser_id:userContact.n_id mutual:NO];
-        [self insertContact:contact insertToDB:YES];
+        TGHashContact *contact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
         
-        [self add:@[contact] withCustomKey:@"user_id"];
+        [[Storage manager] insertContact:[TL_contact createWithUser_id:importedContact.user_id mutual:YES] completeHandler:nil];
+        
+        [self add:@[contact] withCustomKey:@"hash"];
         
         ABAddressBook *book = [ABAddressBook sharedAddressBook];
         if(book) {
             
-             NSArray *all = [[ABAddressBook sharedAddressBook] people];
+            NSArray *all = [[ABAddressBook sharedAddressBook] people];
+            
+            __block BOOL needCreate = YES;
             
             [all enumerateObjectsUsingBlock:^(ABPerson *person, NSUInteger idx, BOOL *stop) {
                 ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
@@ -292,35 +343,48 @@
                 NSString *phone = [phones valueAtIndex:0];
                 
                 for (int i = 0; i < [phones count]; i++) {
-                     phone = [phone stringByTrimmingCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet]];
+                    phone = [phone stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [phone length])];
                     
                     if([phone isEqualToString:userContact.phone]) {
                         
                         [person setValue:userContact.first_name forProperty:kABFirstNameProperty];
                         [person setValue:userContact.last_name forProperty:kABLastNameProperty];
                         
+                        needCreate = NO;
+                        
                     }
                 }
             }];
             
+            if (needCreate) {
+                ABPerson* person = [[ABPerson alloc] init];
+                [person setValue:userContact.first_name forProperty:kABFirstNameProperty];
+                [person setValue:userContact.last_name forProperty:kABLastNameProperty];
+                ABMutableMultiValue *phone = [[ABMutableMultiValue alloc] init];
+                [phone addValue:userContact.phone withLabel:kABPhoneMobileLabel];
+                
+                [person setValue:phone forProperty:kABPhoneProperty];
+                
+                [book addRecord:person];
+            }
+            
             [book save];
             
-        
+            
         }
-       
+        
         [[ASQueue mainQueue] dispatchOnQueue:^{
             callback(YES, importedContact, userContact);
         }];
         
         [Notification perform:@"NEW_CONTACT" data:@{@"contact": contact, @"user": userContact}];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        HASH_CHECK();
-
+        
         [[ASQueue mainQueue] dispatchOnQueue:^{
             callback(NO, nil, nil);
         }];
         
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:self.queue.nativeQueue];
 }
 
 @end

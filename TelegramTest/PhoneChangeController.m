@@ -8,19 +8,78 @@
 
 #import "PhoneChangeController.h"
 #import "LoginCountrySelectorView.h"
-@interface PhoneChangeController ()
-@property (nonatomic,strong) TMTextField *centerTextField;
+
+
+@interface ControllerView : TMView
 @property (nonatomic,strong) LoginCountrySelectorView *changerView;
 @property (nonatomic,strong) TMTextField *descriptionField;
+@end
+
+
+@implementation ControllerView
+
+
+-(id)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        self.changerView = [[LoginCountrySelectorView alloc] initWithFrame:NSMakeRect(0, 0, 432, 90)];
+        
+        //[self.changerView setBackgroundColor:[NSColor blueColor]];
+        
+        
+        
+        [self addSubview:self.changerView];
+        
+        //  [self.changerView setCenterByView:self.view];
+        
+        
+        [self.changerView setFrame:self.changerView.frame];
+        
+        self.descriptionField = [TMTextField defaultTextField];
+        
+        [self.descriptionField setStringValue:NSLocalizedString(@"PhoneChangeController.Description", nil)];
+        
+        [self.descriptionField sizeToFit];
+        
+        
+       
+        
+        self.descriptionField.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        
+        [self addSubview:self.descriptionField];
+        
+        [self setFrame:self.frame];
+
+    }
+    
+    return self;
+}
+
+-(void)setFrame:(NSRect)frameRect {
+    [super setFrame:frameRect];
+    
+    float x = roundf((NSWidth(self.frame) - NSWidth(self.changerView.frame) - 100) / 2);
+    
+    [self.changerView setFrameOrigin:NSMakePoint(x, 50)];
+    [self.descriptionField setFrameOrigin:NSMakePoint(NSMinX(self.changerView.frame) + 110, 150)];
+}
+
+@end
+
+
+@interface PhoneChangeController ()
+@property (nonatomic,strong) TMTextField *centerTextField;
+
 @end
 
 @implementation PhoneChangeController
 
 -(void)loadView {
-    [super loadView];
     
+    self.view = [[ControllerView alloc] initWithFrame:self.frameInit];
     
     self.view.isFlipped = YES;
+    
+
     
     self.centerTextField = [TMTextField defaultTextField];
     [self.centerTextField setAlignment:NSCenterTextAlignment];
@@ -49,44 +108,6 @@
     [self setRightNavigationBarView:(TMView *)doneButton animated:NO];
     
     
-    self.changerView = [[LoginCountrySelectorView alloc] initWithFrame:NSMakeRect(0, 0, 432, 90)];
-    
-    //[self.changerView setBackgroundColor:[NSColor blueColor]];
-    
-    [self.view addSubview:self.changerView];
-    
-    [self.changerView setCenterByView:self.view];
-    [self.changerView setFrameOrigin:NSMakePoint(NSMinX(self.changerView.frame) - 50, 50)];
-    
-    self.changerView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
-    
-    weakify();
-    
-    [self.changerView setNextCallback:^{
-        
-        [strongSelf sendSmsCode];
-        
-    }];
-    
-    
-    self.descriptionField = [TMTextField defaultTextField];
-    
-    [self.descriptionField setStringValue:NSLocalizedString(@"PhoneChangeController.Description", nil)];
-    
-    [self.descriptionField sizeToFit];
-    
-    
-    [self.descriptionField setFrameOrigin:NSMakePoint(NSMinX(self.changerView.frame) + 110, 150)];
-    
-    [self.view addSubview:self.descriptionField];
-    
-    /*
-     "PhoneChangeAlertController.Description" = "You can change your phone number here. All your cloud data - messages, files, groups, contacts, etc. will be moved to the new number. \n \n%1$@Important:%2$@ note thet your new number will added to your contact for all your Telegram contacts who have your old number (except when you blocked then im Telegram). Your old number will be disconnected from the Telegram account.\nThis action cannot be undone, please be careful.";
-     "PhoneChangeAlertController.ChangePhone" = "Change Number";
-     "PhoneChangeController.Header" = "Change Number";
-     "PhoneChangeController.Next" = "Next";
-     "PhoneChangeController.Description" = "We will send an SMS with a confirmation code to\nyour new number.";
-     */
     
 }
 

@@ -15,7 +15,6 @@ typedef enum {
 
 @interface NewContactsManager : SharedManager
 
--(void)syncContacts:(void (^)(void))callback;
 
 - (void) fullReload;
 

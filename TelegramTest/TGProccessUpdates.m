@@ -106,9 +106,7 @@ static NSString *kUpdateState = @"kUpdateState";
        [update isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
        [update isKindOfClass:[TL_messages_sentMessage class]] ||
        [update isKindOfClass:[TL_messages_affectedHistory class]]) {
-        
-         NSLog(@"local seqno:%d, sent seqno:%d", _updateState.seq, [update seq]);
-        
+                
         [self addStatefullUpdate:update seq:[update seq] pts:[update pts] date:0 qts:0];
         
         

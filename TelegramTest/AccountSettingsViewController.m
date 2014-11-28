@@ -569,21 +569,21 @@ typedef enum {
     [container addSubview:self.userName];
     
     
-//    currentY+=38;
-//    
-//    
-//    self.phoneNumber = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.PhoneNumber",nil) tapBlock:^{
-//        
-//        [[Telegram rightViewController] showPhoneChangeAlerController];
-//    }];
-//    
-//    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
-//    
-//    [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
-//    [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
-//    
-//    
-//    [container addSubview:self.phoneNumber];
+    currentY+=38;
+    
+    
+    self.phoneNumber = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.PhoneNumber",nil) tapBlock:^{
+        
+        [[Telegram rightViewController] showPhoneChangeAlerController];
+    }];
+    
+    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+    
+    [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
+    [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
+    
+    
+    [container addSubview:self.phoneNumber];
     
     
     currentY+=38;

@@ -94,7 +94,7 @@
         [self addOneMoreDatacenter];
         
         __weak TGDatacenterWatchdogActor *weakSelf = self;
-        _addOneMoreDatacenterTimer = [[MTTimer alloc] initWithTimeout:10.0 repeat:true completion:^
+        _addOneMoreDatacenterTimer = [[MTTimer alloc] initWithTimeout:50 repeat:true completion:^
         {
             __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
             [strongSelf addOneMoreDatacenter];
