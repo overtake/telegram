@@ -113,7 +113,11 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
  */
 
 
+
+
 - (void) rebuildNames {
+    
+    
     //Fullname
     NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
     NSString *fullNameFull = fullName;

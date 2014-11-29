@@ -16,6 +16,7 @@
 @property (nonatomic) NSUInteger allCount;
 @property (nonatomic) int chat_id;
 @property (nonatomic) BOOL isFirstCall;
+@property (nonatomic,strong) ASQueue *queue;
 
 
 @property (nonatomic, strong) NSMutableArray *uids;
@@ -25,9 +26,10 @@
 
 @implementation FullChatMembersChecker
 
-- (id) initWithFullChat:(TLChatFull *)chatFull {
+- (id) initWithFullChat:(TLChatFull *)chatFull queue:(ASQueue *)queue {
     self = [super init];
     if(self) {
+        self.queue = queue;
         self.chat_id = chatFull.n_id;
         self.uids = [[NSMutableArray alloc] init];
         self.chatFull = chatFull;
@@ -41,7 +43,7 @@
 
 - (void) reloadParticipants {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self.uids removeAllObjects];
         for(TLChatParticipant *participant in self.chatFull.participants.participants) {
             int user_id = participant.user_id;
@@ -56,7 +58,7 @@
 
 
 - (void)calcOnline {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         int oldOnline = self.oldOnlineCount;
         NSUInteger oldAllCount = self.allCount;
         
@@ -79,7 +81,7 @@
 - (void) changeOnline:(NSNotification *)notification {
     int user_id = [[notification.userInfo objectForKey:KEY_USER_ID] intValue];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         if([self.uids indexOfObject:@(user_id)] == NSNotFound)
             return;
         
@@ -111,8 +113,8 @@
 
 @implementation FullChatManager
 
-- (id)init {
-    self = [super init];
+- (id)initWithQueue:(ASQueue *)queue {
+    self = [super initWithQueue:queue];
     if(self) {
         self.membersCheker = [[NSMutableDictionary alloc] init];
         [Notification addObserver:self selector:@selector(updateParticipantsNotification:) name:CHAT_UPDATE_PARTICIPANTS];
@@ -124,7 +126,7 @@
     static FullChatManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FullChatManager alloc] init];
+        instance = [[FullChatManager alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }
@@ -132,7 +134,7 @@
 - (void)updateParticipantsNotification:(NSNotification *)notify {
     int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(checker) {
             [checker reloadParticipants];
@@ -146,7 +148,7 @@
     
     __block id object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = [self.membersCheker objectForKey:@(chatId)];
     } synchronous:YES];
     
@@ -166,7 +168,7 @@
 }
 
 - (void)loadChatFull {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         NSArray *array =[[ChatsManager sharedManager] all];
         NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
         for(TLChat *chat in array) {
@@ -207,7 +209,7 @@
         
         [SharedManager proccessGlobalResponse:result];
         
-        [ASQueue dispatchOnStageQueue:^{
+        [self.queue dispatchOnQueue:^{
             
             [self add:[[NSArray alloc] initWithObjects:[result full_chat], nil]];
             
@@ -243,13 +245,13 @@
     
     __block int count;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
             TLChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
             if(chatFull) {
-                checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull];
+                checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull queue:self.queue];
                 [self.membersCheker setObject:checker forKey:@(chat_id)];
             }
         }
@@ -264,7 +266,7 @@
 
 - (void) add:(NSArray *)all {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         for (TLChatFull *newChatFull in all) {
             
             TLChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];

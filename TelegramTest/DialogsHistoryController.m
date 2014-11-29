@@ -8,12 +8,18 @@
 
 #import "DialogsHistoryController.h"
 #import "TLPeer+Extensions.h"
+
+@interface DialogsHistoryController ()
+@property (nonatomic,strong) ASQueue *queue;
+@end
+
 @implementation DialogsHistoryController
 
 
 -(id)init {
     if(self = [super init]) {
         self.state = DialogsHistoryStateNeedLocal;
+        self.queue = [(DialogsManager *)[DialogsManager sharedManager] queue];
     }
     return self;
 }
@@ -34,7 +40,7 @@
 
 -(void)next:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback usersCallback:(void (^)(NSArray *))usersCallback  {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         self.isLoading = YES;
         if(self.state == DialogsHistoryStateNeedLocal) {
             [self loadlocal:offset limit:limit callback:callback];
@@ -120,7 +126,7 @@
             return;
         }
         
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:10 queue:self.queue.nativeQueue];
 
 }
 

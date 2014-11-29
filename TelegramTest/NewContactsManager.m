@@ -24,17 +24,16 @@
     static NewContactsManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NewContactsManager alloc] init];
+        instance = [[NewContactsManager alloc] initWithQueue:[[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]]];
     });
     return instance;
 }
 
 
-- (id) init {
-    self = [super init];
+- (id) initWithQueue:(ASQueue *)queue {
+    self = [super initWithQueue:queue];
     if(self) {
         [Notification addObserver:self selector:@selector(protocolUpdated:) name:PROTOCOL_UPDATED];
-        self.queue = [[ASQueue alloc] initWithName:"ContactsQueue"];
     }
     return self;
 }
@@ -110,6 +109,11 @@
                 NSString *phoneNumber = [phones valueAtIndex:i];
                 NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                 NSString *lastName = [person valueForProperty:kABLastNameProperty];
+                
+                if(!firstName)
+                    firstName = @"";
+                if(!lastName)
+                    lastName = @"";
                 
                 phoneNumber = [phoneNumber stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [phoneNumber length])];
                 
@@ -264,15 +268,15 @@
     
 }
 
-- (void) insertContact:(TLContact *)contact insertToDB:(BOOL)insertToDB {
+- (void) insertContact:(TLContact *)contact {
     
     [self.queue dispatchOnQueue:^{
-        [self add:@[contact] withCustomKey:@"user_id"];
-        [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-        
-        if(insertToDB) {
+        if(![self find:contact.user_id withCustomKey:@"user_id"]) {
+            [self add:@[contact] withCustomKey:@"user_id"];
+            [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
             [[Storage manager] insertContact:contact completeHandler:nil];
         }
+        
     }];
 }
 
@@ -283,7 +287,7 @@
         [[UsersManager sharedManager] add:[NSArray arrayWithObject:user]];
         
         TLContact *contact = [TL_contact createWithUser_id:user.n_id mutual:NO];
-        [self removeContact:contact removeFromDB:YES];
+        [self removeContact:contact];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
             compleHandler(YES);
@@ -296,14 +300,13 @@
     } timeout:10 queue:self.queue.nativeQueue];
 }
 
-- (void) removeContact:(TLContact *)contact removeFromDB:(BOOL)removeFromDB {
+- (void) removeContact:(TLContact *)contact {
     [self.queue dispatchOnQueue:^{
-        [self remove:@[contact] withCustomKey:@"user_id"];
-        [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-        if(removeFromDB) {
+        if([self find:contact.user_id withCustomKey:@"user_id"]) {
+            [self remove:@[contact] withCustomKey:@"user_id"];
+            [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
             [[Storage manager] removeContact:contact completeHandler:nil];
         }
-        
     }];
 }
 
@@ -377,7 +380,7 @@
             callback(YES, importedContact, userContact);
         }];
         
-        [Notification perform:@"NEW_CONTACT" data:@{@"contact": contact, @"user": userContact}];
+        [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         [[ASQueue mainQueue] dispatchOnQueue:^{

@@ -69,6 +69,9 @@ static const float duration = 0.2;
 
 -(void)changeConnection:(BOOL)show animated:(BOOL)animated {
     
+    [self.connectionView.layer removeAllAnimations];
+    [self.centerViewBlock.layer removeAllAnimations];
+    
     if(animated) {
         
         [self.connectionView setHidden:NO];
@@ -119,7 +122,7 @@ static const float duration = 0.2;
         
         
     } else {
-        
+       
         [self.connectionView setHidden:!show];
         
         [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];

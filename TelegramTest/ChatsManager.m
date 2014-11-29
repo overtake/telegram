@@ -16,7 +16,7 @@
     static id instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }
@@ -25,7 +25,7 @@
 - (void)add:(NSArray *)all withCustomKey:(NSString*)key {
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         for (id obj in all) {
             if([obj isKindOfClass:[TL_chatEmpty class]])
                 continue;
@@ -101,7 +101,7 @@
     
     NSMutableArray *filtred = [[NSMutableArray alloc ] init];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         for (id current in self->list) {
             if([current class] == [TL_encryptedChat class]) {
                 [filtred addObject:current];

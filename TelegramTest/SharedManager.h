@@ -16,6 +16,7 @@
 
 @property (nonatomic,strong) ASQueue *queue;
 
+-(id)initWithQueue:(ASQueue *)queue;
 
 -(void)drop;
 +(void)drop;

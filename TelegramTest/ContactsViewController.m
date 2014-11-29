@@ -316,6 +316,8 @@
         }
     }
     
+    NSLog(@"test");
+    
     NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;

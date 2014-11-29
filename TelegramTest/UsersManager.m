@@ -20,8 +20,8 @@
 @implementation UsersManager
 
 
-- (id)init {
-    if(self = [super init]) {
+- (id)initWithQueue:(ASQueue *)queue {
+    if(self = [super initWithQueue:queue]) {
         [Notification addObserver:self selector:@selector(protocolUpdated:) name:PROTOCOL_UPDATED];
         [Notification addObserver:self selector:@selector(logoutNotification) name:LOGOUT_EVENT];
     }
@@ -29,13 +29,13 @@
 }
 
 - (void)protocolUpdated:(NSNotification *)notify {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self.lastSeenUpdater invalidate];
         [self.lastSeenRequest cancelRequest];
         
         self.lastSeenUpdater = [[TGTimer alloc] initWithTimeout:300 repeat:YES completion:^{
             [self statusUpdater];
-        } queue:[ASQueue globalQueue].nativeQueue];
+        } queue:self.queue.nativeQueue];
         
         [self.lastSeenUpdater start];
         [self statusUpdater];
@@ -65,7 +65,7 @@
 }
 
 - (void)logoutNotification {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self.lastSeenRequest cancelRequest];
         [self.lastSeenUpdater invalidate];
         self.lastSeenUpdater = nil;
@@ -73,7 +73,7 @@
 }
 
 -(void)drop {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self->list removeAllObjects];
         [self->keys removeAllObjects];
     }];
@@ -107,7 +107,7 @@
 
 - (void)add:(NSArray *)all withCustomKey:(NSString *)key update:(BOOL)isNeedUpdateDB {
 
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         
         NSMutableArray *usersToUpdate = [NSMutableArray array];
         
@@ -225,7 +225,7 @@
 }
 
 - (void)setUserStatus:(TLUserStatus *)status forUid:(int)uid {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
             BOOL result = [self setUserStatus:status forUser:currentUser];
@@ -261,7 +261,7 @@
     
     [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
         
-        [ASQueue dispatchOnStageQueue:^{
+        [self.queue dispatchOnQueue:^{
             if(response.type == TLUserTypeSelf) {
                 [self add:@[response]];
             }
@@ -395,7 +395,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }

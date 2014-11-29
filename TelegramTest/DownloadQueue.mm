@@ -58,7 +58,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        queue = [[ASQueue alloc] initWithName:"DowloadQueue"];
+        queue = [[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]];
     });
     
     return queue;
@@ -69,7 +69,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        queue = [[ASQueue alloc] initWithName:"downloaderQueue"];
+        queue = [[ASQueue alloc] initWithName:"DownloadOperationQueue"];
     });
     
     return queue;

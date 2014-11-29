@@ -40,19 +40,29 @@ static NSMutableArray *managers;
 
 -(id)init {
     if(self = [super init]) {
-        self->list = [[NSMutableArray alloc]init];
-        self->keys = [[NSMutableDictionary alloc] init];
-        _queue = [ASQueue globalQueue];
         
-        [_queue dispatchOnQueue:^{
-          
-            [managers addObject:self];
-        
-        }];
+        [NSException raise:@"user initWithQueue" format:@""];
         
     }
     return self;
 }
+
+-(id)initWithQueue:(ASQueue *)queue {
+    if(self = [super init]) {
+        self->list = [[NSMutableArray alloc]init];
+        self->keys = [[NSMutableDictionary alloc] init];
+        self->_queue = queue;
+        
+        [ASQueue dispatchOnStageQueue:^{
+            
+            [managers addObject:self];
+            
+        }];
+    }
+    return self;
+}
+
+
 
 -(void)add:(NSArray *)all {
     [self add:all withCustomKey:@"n_id"];
@@ -163,7 +173,7 @@ static NSMutableArray *managers;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
         managers = [[NSMutableArray alloc] init];
     });
     return instance;

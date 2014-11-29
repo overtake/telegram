@@ -39,6 +39,8 @@
 
 
 static NSMutableArray *filters;
+static ASQueue *queue;
+
 
 -(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller {
     if(self = [self initWithConversation:conversation controller:controller historyFilter:[HistoryFilter class]]) {
@@ -48,20 +50,17 @@ static NSMutableArray *filters;
     return self;
 }
 
+
+
 -(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
-        _conversation = conversation;
-        _controller = controller;
-        
-        self.semaphore = dispatch_semaphore_create(1);
-        
-        _selectLimit = 50;
-        self.filter = [[historyFilter alloc] initWithController:self];
-        _need_save_to_db = YES;
         
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
+            
+            queue = [[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]];
+            
             filters = [[NSMutableArray alloc] init];
             [filters addObject:[HistoryFilter class]];
             [filters addObject:[PhotoHistoryFilter class]];
@@ -70,6 +69,19 @@ static NSMutableArray *filters;
             [filters addObject:[VideoHistoryFilter class]];
             [filters addObject:[AudioHistoryFilter class]];
         });
+
+        
+        _conversation = conversation;
+        _controller = controller;
+        
+        
+        self.semaphore = dispatch_semaphore_create(1);
+        
+        _selectLimit = 50;
+        self.filter = [[historyFilter alloc] initWithController:self];
+        _need_save_to_db = YES;
+        
+        
         
         [Notification addObserver:self selector:@selector(notificationReceiveMessages:) name:MESSAGE_LIST_RECEIVE];
         
@@ -90,7 +102,7 @@ static NSMutableArray *filters;
 
 -(void)notificationReceiveMessages:(NSNotification *)notify {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         NSArray *list = notify.object;
         
         NSMutableArray *accepted = [[NSMutableArray alloc] init];
@@ -161,7 +173,7 @@ static NSMutableArray *filters;
     
     self.isProccessing = YES;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         NSArray *msgs = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
         
@@ -192,7 +204,7 @@ static NSMutableArray *filters;
     
     self.isProccessing = YES;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
        
         TL_conversation *dialog = [notification.userInfo objectForKey:KEY_DIALOG];
         
@@ -214,7 +226,7 @@ static NSMutableArray *filters;
 
 -(void)notificationDeleteObjectMessage:(NSNotification *)notification {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         TLMessage *msg = [notification.userInfo objectForKey:KEY_MESSAGE];
         
         [messageItems enumerateObjectsUsingBlock:^(MessageTableItem * obj, NSUInteger idx, BOOL *stop) {
@@ -230,7 +242,7 @@ static NSMutableArray *filters;
 
 -(void)notificationReceiveMessage:(NSNotification *)notification {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         TL_localMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
         
        // [self markAsReceived:[message n_id]];
@@ -422,7 +434,7 @@ static NSMutableArray *filters;
     _maxDate = [[MTNetwork instance] getTime];
     _minDate = _conversation.last_marked_date;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         NSArray *items = [self selectAllItems];
         
         if(items.count > 0) {
@@ -444,7 +456,7 @@ static NSMutableArray *filters;
 
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         if([self checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
             return;
@@ -565,7 +577,7 @@ static NSMutableArray *filters;
                 
                 [_filter remoteRequest:next callback:^(id response) {
                     
-                    [ASQueue dispatchOnStageQueue:^{
+                    [queue dispatchOnQueue:^{
                         
                         if(!_conversation)
                             return;
@@ -789,7 +801,7 @@ static NSMutableArray *filters;
     
     
     dispatch_block_t block = ^ {
-        [ASQueue dispatchOnStageQueue:^{
+        [queue dispatchOnQueue:^{
             
             [item.messageSender addEventListener:self];
             
@@ -827,7 +839,7 @@ static NSMutableArray *filters;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback {
     
     dispatch_block_t block = ^ {
-        [ASQueue dispatchOnStageQueue:^{
+        [queue dispatchOnQueue:^{
             
             NSArray *filtred =  [self filterAndAdd:items isLates:YES];
             
@@ -878,7 +890,7 @@ static NSMutableArray *filters;
         void (^checkItem)(MessageTableItem *checkItem) = ^(MessageTableItem *checkItem) {
             
             
-            [ASQueue dispatchOnStageQueue:^{
+            [queue dispatchOnQueue:^{
                 
                 if(_conversation.last_marked_message > TGMINFAKEID || _conversation.last_marked_message < checkItem.message.n_id) {
                     
@@ -897,7 +909,7 @@ static NSMutableArray *filters;
             } synchronous:YES];
             
             
-            [ASQueue dispatchOnStageQueue:^{
+            [queue dispatchOnQueue:^{
                 playSentMessage(YES);
             }];
             
@@ -936,7 +948,7 @@ static NSMutableArray *filters;
 -(void)drop:(BOOL)dropMemory {
     
     if(dropMemory) {
-        [ASQueue dispatchOnStageQueue:^{
+        [queue dispatchOnQueue:^{
             [self removeAllItems];
         } synchronous:YES];
     }

@@ -29,8 +29,8 @@
 
 @implementation MessagesManager
 
--(id)init {
-    if(self = [super init]) {
+-(id)initWithQueue:(ASQueue *)queue {
+    if(self = [super initWithQueue:queue]) {
         self.messages = [[NSMutableDictionary alloc] init];
         self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
     }
@@ -64,7 +64,7 @@
 
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [[(MessagesManager *)[self sharedManager] queue] dispatchOnQueue:^{
         if(!message)
             return;
         
@@ -220,7 +220,7 @@
 -(TL_destructMessage *)findWithRandomId:(long)random_id {
     __block TL_destructMessage *object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = [self.messages_with_random_ids objectForKey:@(random_id)];
     } synchronous:YES];
     
@@ -236,7 +236,7 @@
 }
 
 -(void)add:(NSArray *)all {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         for (TLMessage *message in all) {
             assert([message isKindOfClass:[TL_localMessage class]]);
             [self TGsetMessage:message];
@@ -259,7 +259,7 @@
 
 -(void)TGsetMessage:(TLMessage *)message {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         if(!message || message.n_id == 0) return;
         
         [self.messages setObject:message forKey:@(message.n_id)];
@@ -274,7 +274,7 @@
     
     __block id object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = [self.messages objectForKey:@(_id)];
     } synchronous:YES];
     
@@ -286,7 +286,7 @@
     
     __block NSMutableArray *marked = [[NSMutableArray alloc] init];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         NSArray *copy = [[self.messages allValues] copy];
         copy = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d",dialog.peer.peer_id]];
         for (TL_localMessage *msg in copy) {
@@ -316,11 +316,11 @@
    
    }
 
-+(id)sharedManager {
++(MessagesManager *)sharedManager {
     static id instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }

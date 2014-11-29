@@ -14,23 +14,16 @@
     static BlockedUsersManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[BlockedUsersManager alloc] init];
+        instance = [[BlockedUsersManager alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }
 
-- (id)init {
-    self = [super init];
-    if(self) {
-        
-    }
-    return self;
-}
 
 -(NSArray *)all {
     __block NSArray *object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = self->keys.allValues;
     } synchronous:YES];
     
@@ -77,7 +70,7 @@
 }
 
 - (void)add:(NSArray *)all {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         for (TLContactBlocked *blockedContact in all) {
             [self->keys setObject:blockedContact forKey:@(blockedContact.user_id)];
         }
@@ -90,7 +83,7 @@
 
 -(void)updateBlocked:(int)user_id isBlocked:(BOOL)isBlocked {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         TL_contactBlocked *contact;
         if(isBlocked) {
             contact = [TL_contactBlocked createWithUser_id:user_id date:[[MTNetwork instance] getTime]];
@@ -144,7 +137,7 @@
 -(id)find:(NSInteger)_id withCustomKey:(NSString *)key {
     __block id object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = [self->keys objectForKey:@(_id)];
     } synchronous:YES];
     

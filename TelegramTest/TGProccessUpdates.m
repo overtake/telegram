@@ -438,9 +438,9 @@ static NSString *kUpdateState = @"kUpdateState";
         DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
         
         if(isContact) {
-            [[NewContactsManager sharedManager] insertContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO] insertToDB:YES];
+            [[NewContactsManager sharedManager] insertContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
         } else {
-            [[NewContactsManager sharedManager] removeContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO] removeFromDB:YES];
+            [[NewContactsManager sharedManager] removeContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
         }
         return;
     }

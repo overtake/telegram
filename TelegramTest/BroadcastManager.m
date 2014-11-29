@@ -19,13 +19,15 @@
 
 @property (nonatomic, strong) NSMutableArray *uids;
 @property (nonatomic, strong) TL_broadcast *broadcast;
+@property (nonatomic,strong) ASQueue *queue;
 @end
 
 @implementation BroadcastMemberChecker
 
-- (id) initWithBroadcast:(TL_broadcast *)broadcast {
+- (id) initWithBroadcast:(TL_broadcast *)broadcast queue:(ASQueue *)queue {
     self = [super init];
     if(self) {
+        self.queue = queue;
         self.broadcast = broadcast;
 
         
@@ -38,7 +40,7 @@
 
 - (void) reloadParticipants {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self.uids removeAllObjects];
         for(NSNumber *participant in self.broadcast.participants) {
             int user_id = [participant intValue];
@@ -53,7 +55,7 @@
 
 
 - (void)calcOnline {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         int oldOnline = self.oldOnlineCount;
         NSUInteger oldAllCount = self.allCount;
         
@@ -78,7 +80,7 @@
 - (void) changeOnline:(NSNotification *)notification {
     int user_id = [[notification.userInfo objectForKey:KEY_USER_ID] intValue];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         if([self.uids indexOfObject:@(user_id)] == NSNotFound)
             return;
         
@@ -112,8 +114,8 @@
 @implementation BroadcastManager
 
 
--(id)init {
-    if(self = [super init]) {
+-(id)initWithQueue:(ASQueue *)queue {
+    if(self = [super initWithQueue:queue]) {
         self.membersChecker = [[NSMutableDictionary alloc] init];
     }
     
@@ -121,7 +123,7 @@
 }
 
 -(void)loadBroadcastList:(dispatch_block_t)callback {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self add:[[Storage manager] broadcastList]];
         
         if(callback)
@@ -138,13 +140,13 @@
     
     __block int count;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         
         BroadcastMemberChecker *checker = [self.membersChecker objectForKey:@(broadcast_id)];
         if(!checker) {
             TL_broadcast *broadcast = [self find:broadcast_id];
             if(broadcast) {
-                checker = [[BroadcastMemberChecker alloc] initWithBroadcast:broadcast];
+                checker = [[BroadcastMemberChecker alloc] initWithBroadcast:broadcast queue:self.queue];
                 [self.membersChecker setObject:checker forKey:@(broadcast_id)];
             }
         }
@@ -163,7 +165,7 @@
     
     __block id object;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         object = [self.membersChecker objectForKey:@(broadcastId)];
     } synchronous:YES];
     
@@ -176,7 +178,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }

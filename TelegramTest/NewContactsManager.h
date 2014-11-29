@@ -15,15 +15,11 @@ typedef enum {
 
 @interface NewContactsManager : SharedManager
 
-
 - (void) fullReload;
 
+- (void) insertContact:(TLContact *)contact;
 
-- (void) remoteCheckContacts;
-
-- (void) insertContact:(TLContact *)contact insertToDB:(BOOL)insertToDB;
-
-- (void) removeContact:(TLContact *)contact removeFromDB:(BOOL)removeFromDB;
+- (void) removeContact:(TLContact *)contact;
 
 - (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TLUser *user))callback;
 

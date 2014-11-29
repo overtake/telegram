@@ -19,11 +19,8 @@
 @implementation DialogsManager
 
 
--(id)init {
-    if(self = [super init]) {
-        self->list = [[NSMutableArray alloc] init];
-        self->keys = [[NSMutableDictionary alloc] init];
-        
+-(id)initWithQueue:(ASQueue *)queue {
+    if(self = [super initWithQueue:queue]) {
         [Notification addObserver:self selector:@selector(setTopMessageToDialog:) name:MESSAGE_UPDATE_TOP_MESSAGE];
         [Notification addObserver:self selector:@selector(setTopMessagesToDialogs:) name:MESSAGE_LIST_UPDATE_TOP];
         [Notification addObserver:self selector:@selector(deleteMessages:) name:MESSAGE_DELETE_EVENT];
@@ -45,7 +42,7 @@
     [[Storage manager] messages:^(NSArray *messages) {
         
         
-        [ASQueue dispatchOnStageQueue:^{
+        [self.queue dispatchOnQueue:^{
             NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
             int total = 0;
             for (TL_localMessage *message in messages) {
@@ -88,7 +85,7 @@
 
 
 - (void)drop {
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [self->list removeAllObjects];
         [self->keys removeAllObjects];
         
@@ -130,7 +127,7 @@
     
     NSArray *deleted = [messages.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         
         [[Storage manager] deleteMessages:deleted completeHandler:nil];
         
@@ -154,7 +151,7 @@
     
     [[Storage manager] lastMessageForPeer:dialog.peer completeHandler:^(TL_localMessage *lastMessage) {
         
-        [ASQueue dispatchOnStageQueue:^{
+        [self.queue dispatchOnQueue:^{
             
             if(lastMessage) {
                 
@@ -205,7 +202,7 @@
         
         dispatch_block_t block = ^{
             [[Storage manager] deleteDialog:dialog completeHandler:^{
-                [ASQueue dispatchOnStageQueue:^{
+                [self.queue dispatchOnQueue:^{
                     [self->list removeObject:dialog];
                     [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
                     
@@ -318,7 +315,7 @@
     
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
             [[Storage manager] insertMedia:message];
             
@@ -398,7 +395,7 @@
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         int totalUnread = 0;
         MessagesManager *manager = [MessagesManager sharedManager];
         for (TL_localMessage *message in messages) {
@@ -496,7 +493,7 @@
 - (void)add:(NSArray *)all {
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer.peer_id)];
             if(current) {
@@ -526,7 +523,7 @@
     
     __block TL_conversation *dialog;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         dialog = [self->keys objectForKey:@(user_id)];
     } synchronous:YES];
     
@@ -536,7 +533,7 @@
 -(id)find:(NSInteger)_id {
     __block TL_conversation *dialog;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         dialog = [self->keys objectForKey:@(_id)];
     } synchronous:YES];
     
@@ -547,7 +544,7 @@
     
     __block TL_conversation *dialog;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         dialog = [self->keys objectForKey:@(-ABS(chat_id))];
     } synchronous:YES];
     
@@ -557,7 +554,7 @@
 - (TL_conversation *)findBySecretId:(int)chat_id {
     __block TL_conversation *dialog;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [self.queue dispatchOnQueue:^{
         dialog = [self->keys objectForKey:@(chat_id)];
     } synchronous:YES];
     
@@ -571,7 +568,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        instance = [[[self class] alloc] init];
+        instance = [[[self class] alloc] initWithQueue:[[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]]];
     });
     return instance;
 }
