@@ -622,10 +622,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController.viewControllerStack removeAllObjects];
-    [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
-    
-    [self.navigationViewController pushViewController:self.privacyViewController animated:NO];
+    [self.navigationViewController pushViewController:self.privacyViewController animated:YES];
 
 }
 
@@ -634,12 +631,6 @@
         return;
     
     [self hideModalView:YES animation:NO];
-    
-    [self.navigationViewController.viewControllerStack removeAllObjects];
-    [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
-    
-    [self.navigationViewController pushViewController:self.privacyViewController animated:NO];
-    
     
     [self.navigationViewController pushViewController:self.lastSeenViewController animated:YES];
     

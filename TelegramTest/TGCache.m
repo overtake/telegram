@@ -246,11 +246,11 @@ NSString *const AVACACHE = @"AVACACHE";
             
              _groupMemoryTaken[obj] = @([_groupMemoryTaken[obj] integerValue] - record.size);
             
-            [self checkMemory];
-            
         }
         
     }];
+    
+    [self checkMemory];
     
 }
 

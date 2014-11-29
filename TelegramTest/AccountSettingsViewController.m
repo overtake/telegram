@@ -584,27 +584,43 @@ typedef enum {
     [container addSubview:self.userName];
     
     
-    currentY+=38;
+//    currentY+=38;
+//    
+//    
+//    self.phoneNumber = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.PhoneNumber",nil) tapBlock:^{
+//        
+//        [[Telegram rightViewController] showPhoneChangeAlerController];
+//    }];
+//    
+//    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+//    
+//    [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
+//    [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
+//    
+//    self.phoneNumberTextField = [TMNameTextField defaultTextField];
+//    
+//    
+//    [self.phoneNumber addSubview:self.phoneNumberTextField];
+//    
+//    
+//    [container addSubview:self.phoneNumber];
+//
     
-    
-    self.phoneNumber = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.PhoneNumber",nil) tapBlock:^{
-        
-        [[Telegram rightViewController] showPhoneChangeAlerController];
-    }];
-    
-    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
-    
-    [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
-    [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
-    
-    self.phoneNumberTextField = [TMNameTextField defaultTextField];
-    
-    
-    [self.phoneNumber addSubview:self.phoneNumberTextField];
-    
-    
-    [container addSubview:self.phoneNumber];
-    
+    /*
+     "PhoneChangeAlertController.Description" = "You can change your phone number here. All your cloud data - messages, files, groups, contacts, etc. will be moved to the new number. \n \n%1$@Important:%2$@ note thet your new number will added to your contact for all your Telegram contacts who have your old number (except when you blocked then im Telegram). Your old number will be disconnected from the Telegram account.\nThis action cannot be undone, please be careful.";
+     "PhoneChangeAlertController.ChangePhone" = "Change Number";
+     "PhoneChangeController.Header" = "Change Number";
+     "PhoneChangeController.Next" = "Next";
+     "PhoneChangeController.Description" = "We will send an SMS with a confirmation code to\nyour new number.";
+     "Account.PhoneNumber" = "Phone Number";
+     "PhoneChangeControlller.AlertHeader" = "Changing error";
+     "PHONE_NUMBER_OCCUPIED"	= "An error occurred. Please try again later.";
+     "PHONE_NUMBER_INVALID" = "Invalid phone number. Please try again.";
+     "PhoneChangeController.SmsPlaceholder" = "Code";
+     "PhoneChangeConfirmController.SentCodeDescription" = "We have sent you an SMS with the code";
+     "PhoneChangeConfirmController.sendCall" = "Telegram will call you in %@";
+     "PhoneChangeConfirmController.phoneDialed" = "Telegram dialed your number";
+     */
     
     currentY+=38;
     
