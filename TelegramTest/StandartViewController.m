@@ -222,10 +222,12 @@
     }
     
     
-    if(!hide) {
+    if(hide) {
         [self.searchViewController viewDidDisappear:NO];
+        [self viewDidAppear:NO];
     } else {
         [self.searchViewController viewDidAppear:NO];
+        [self viewDidDisappear:NO];
     }
 
 }
