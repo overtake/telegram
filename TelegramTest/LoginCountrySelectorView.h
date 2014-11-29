@@ -25,4 +25,6 @@
 - (BOOL)isValidPhoneNumber;
 - (NSString *)phoneNumber;
 
+-(void)clear;
+
 @end

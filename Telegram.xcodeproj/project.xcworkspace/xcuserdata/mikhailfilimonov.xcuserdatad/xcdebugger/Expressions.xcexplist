@@ -259,6 +259,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ContactsViewController selectionDidChange:item:]:ContactsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -785,6 +788,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[PhoneChangeController loadView]_block_invoke103:PhoneChangeController.m">
+      </ContextState>
+      <ContextState
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
@@ -1142,6 +1148,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[TGProccessUpdates uptodate:qts:date:]_block_invoke:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "_POPAnimationState::handleDidStop(signed char):POPAnimationInternal.h">
          <PersistentStrings>
             <PersistentString
@@ -1196,6 +1205,17 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40-[PhoneChangeConfirmController loadView]_block_invoke_2:PhoneChangeConfirmController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TMNavigationController pushViewController:animated:]:TMNavigationController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "oldViewController">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellSocialView setItem:]:MessageTableCellSocialView.m">
@@ -1307,6 +1327,9 @@
                value = "changedSet.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
@@ -1458,6 +1481,9 @@
       </ContextState>
       <ContextState
          contextName = "__41-[TGPVMediaBehavior loadRemote:callback:]_block_invoke:TGPVMediaBehavior.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke123:NewContactsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[MainViewController loadView]:MainViewController.m">

@@ -172,7 +172,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
     
-    [userNameTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:NSColorFromRGB(0x999999)];
+    [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username] withColor:NSColorFromRGB(0x999999)];
     [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
     
     [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];

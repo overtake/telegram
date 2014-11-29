@@ -611,6 +611,17 @@ static NSDictionary *defaultLeftStringsAttributes() {
     return dictionary;
 }
 
-
+-(void)clear {
+    [self.numberTextField setStringValue:@""];
+    
+    NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
+    if(countryCode) {
+        CountryItem *item = [[_ountriesManager sharedManager] itemBySmallCountryName:countryCode];
+        if(item) {
+            [self changeCountry:[[NSMenuItem alloc] initWithTitle:item.fullCountryName action:NULL keyEquivalent:@""]];
+        }
+    }
+    
+}
 
 @end

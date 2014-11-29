@@ -75,7 +75,10 @@
 
 -(void)loadView {
     
-    self.view = [[ControllerView alloc] initWithFrame:self.frameInit];
+    
+    ControllerView *view = [[ControllerView alloc] initWithFrame:self.frameInit];
+    
+    self.view = view;
     
     self.view.isFlipped = YES;
     
@@ -100,7 +103,29 @@
     
     
     [doneButton setTapBlock:^{
-        [[Telegram rightViewController] showPhoneChangeController];
+        
+        
+        [self showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_account_sendChangePhoneCode createWithPhone_number:view.changerView.phoneNumber] successHandler:^(RPCRequest *request, id response) {
+            
+             [self hideModalProgress];
+            
+            [[Telegram rightViewController] showPhoneChangeConfirmController:response phone:view.changerView.phoneNumber];
+            
+           
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [self hideModalProgress];
+            
+            if(error.error_code == 400) {
+                
+               alert(NSLocalizedString(@"PhoneChangeControlller.AlertHeader", nil), NSLocalizedString(error.error_msg, nil));
+            }
+            
+        } timeout:10];
+        
+        //[[Telegram rightViewController] showConF];
     }];
     
     
@@ -108,7 +133,12 @@
     [self setRightNavigationBarView:(TMView *)doneButton animated:NO];
     
     
+}
+
+-(void)_didStackRemoved {
+    ControllerView *view = (ControllerView *) self.view;
     
+    [view.changerView clear];
 }
 
 -(void)sendSmsCode {

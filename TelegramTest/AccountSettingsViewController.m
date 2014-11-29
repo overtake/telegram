@@ -107,6 +107,8 @@
 
 
 @property (nonatomic,strong) TMTextField *userNameTextField;
+@property (nonatomic,strong) TMTextField *phoneNumberTextField;
+
 
 typedef enum {
     AccountSettingsStateNormal,
@@ -332,6 +334,14 @@ typedef enum {
     
     [self.userNameTextField sizeToFit];
     [self.userNameTextField setFrameOrigin:NSMakePoint(NSWidth(self.userName.frame) - NSWidth(self.userNameTextField.frame) - NSWidth(self.userName.rightContainer.frame) - abs(self.userName.rightContainerOffset.x) - 5, 11)];
+    
+    attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]}];
+    
+    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999) range:attr.range];
+    self.phoneNumberTextField.attributedStringValue = attr;
+    
+    [self.phoneNumberTextField sizeToFit];
+    [self.phoneNumberTextField setFrameOrigin:NSMakePoint(NSWidth(self.userName.frame) - NSWidth(self.phoneNumberTextField.frame) - NSWidth(self.userName.rightContainer.frame) - abs(self.userName.rightContainerOffset.x) - 5, 11)];
 
 }
 
@@ -371,6 +381,10 @@ typedef enum {
     if([controller isKindOfClass:[PrivacyViewController class]] || [controller isKindOfClass:[PrivacyUserListController class]] || [controller isKindOfClass:[PrivacySettingsViewController class]]) {
         [self selectController:self.privacy];
         return;
+    }
+    
+    if([controller isKindOfClass:[PhoneChangeAlertController class]] || [controller isKindOfClass:[PhoneChangeConfirmController class]] || [controller isKindOfClass:[PhoneChangeController class]]) {
+        [self selectController:self.phoneNumber];
     }
     
     
@@ -581,6 +595,11 @@ typedef enum {
     
     [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
     [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
+    
+    self.phoneNumberTextField = [TMNameTextField defaultTextField];
+    
+    
+    [self.phoneNumber addSubview:self.phoneNumberTextField];
     
     
     [container addSubview:self.phoneNumber];

@@ -152,6 +152,8 @@
     self.phoneChangeAlertController = [[PhoneChangeAlertController alloc] initWithFrame:self.view.bounds];
     self.phoneChangeController = [[PhoneChangeController alloc] initWithFrame:self.view.bounds];
     
+    self.phoneChangeConfirmController = [[PhoneChangeConfirmController alloc] initWithFrame:self.view.bounds];
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
 //    [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
 //    [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
@@ -673,6 +675,37 @@
     
     
     [self.navigationViewController pushViewController:self.phoneChangeController animated:YES];
+}
+
+- (void)showPhoneChangeConfirmController:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone {
+    if(self.navigationViewController.currentController == self.phoneChangeConfirmController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.phoneChangeConfirmController setChangeParams:params phone:phone];
+    
+    
+    [self.navigationViewController pushViewController:self.phoneChangeConfirmController animated:YES];
+}
+
+- (void)showAboveController:(TMViewController *)lastController {
+    NSUInteger idx = [self.navigationViewController.viewControllerStack indexOfObject:lastController];
+    
+     [self hideModalView:YES animation:NO];
+    
+    if(idx != NSNotFound && idx != 0) {
+        
+        TMViewController *above = self.navigationViewController.viewControllerStack[idx-1];
+        
+        [self.navigationViewController.viewControllerStack removeObjectsInRange:NSMakeRange(idx, self.navigationViewController.viewControllerStack.count - idx)];
+       
+        [self.navigationViewController pushViewController:above animated:YES];
+        
+    } else {
+        [self.navigationViewController.viewControllerStack removeAllObjects];
+        [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:YES];
+    }
 }
 
 @end

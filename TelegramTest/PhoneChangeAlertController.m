@@ -91,7 +91,7 @@
     
     NSImageView *imageView = imageViewWithImage(image_ChangenumberAlertIcon());
     
-    [imageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.view.frame) - NSWidth(imageView.frame)) /2), 30)];
+    [imageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.view.frame) - NSWidth(imageView.frame)) /2), 40)];
     
     imageView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
     

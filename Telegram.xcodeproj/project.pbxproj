@@ -488,6 +488,7 @@
 		C2B326001A24C9660012DE34 /* TLApi.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325FE1A24C9660012DE34 /* TLApi.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
+		C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */; };
 		C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */; };
 		C2C6D9691A124F70001EF8A2 /* TGPVControls.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9681A124F70001EF8A2 /* TGPVControls.m */; };
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
@@ -1679,6 +1680,8 @@
 		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
+		C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeConfirmController.h; sourceTree = "<group>"; };
+		C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeConfirmController.m; sourceTree = "<group>"; };
 		C2C6D9641A111B3E001EF8A2 /* TGPhotoViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoViewerItem.h; sourceTree = "<group>"; };
 		C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewerItem.m; sourceTree = "<group>"; };
 		C2C6D9671A124F70001EF8A2 /* TGPVControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVControls.h; sourceTree = "<group>"; };
@@ -3689,6 +3692,8 @@
 				C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */,
 				C2A3FB071A278E2700DE791B /* PhoneChangeController.h */,
 				C2A3FB081A278E2700DE791B /* PhoneChangeController.m */,
+				C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */,
+				C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */,
 			);
 			name = phonechange;
 			sourceTree = "<group>";
@@ -4679,6 +4684,7 @@
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
 				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
 				C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */,
+				C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */,
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
 				CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */,

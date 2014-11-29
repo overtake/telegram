@@ -29,6 +29,7 @@
 #import "PrivacyUserListController.h"
 #import "PhoneChangeAlertController.h"
 #import "PhoneChangeController.h"
+#import "PhoneChangeConfirmController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -51,6 +52,7 @@
 @property (nonatomic, strong) PrivacyUserListController *privacyUserListController;
 @property (nonatomic, strong) PhoneChangeAlertController *phoneChangeAlertController;
 @property (nonatomic, strong) PhoneChangeController *phoneChangeController;
+@property (nonatomic, strong) PhoneChangeConfirmController *phoneChangeConfirmController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -90,5 +92,8 @@
 - (void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback;
 - (void)showPhoneChangeAlerController;
 - (void)showPhoneChangeController;
+- (void)showPhoneChangeConfirmController:(id)params phone:(NSString *)phone;
+
+- (void)showAboveController:(TMViewController *)lastController;
 
 @end
