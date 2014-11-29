@@ -104,6 +104,9 @@
     
     [doneButton setTapBlock:^{
         
+        [[Telegram rightViewController] showPhoneChangeConfirmController:nil phone:view.changerView.phoneNumber];
+    
+        return;
         
         [self showModalProgress];
         
@@ -125,12 +128,12 @@
             
         } timeout:10];
         
-        //[[Telegram rightViewController] showConF];
     }];
     
     
     
     [self setRightNavigationBarView:(TMView *)doneButton animated:NO];
+    
     
     
 }

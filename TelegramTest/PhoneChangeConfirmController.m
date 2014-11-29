@@ -133,13 +133,20 @@
 
 
 -(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     [self.callTimer invalidate];
     self.callTimer = nil;
 }
 
--(void)viewWillAppear:(BOOL)animated {
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.view.window makeFirstResponder:self.smsCodeView.textView];
+    
     [self.smsCodeView.textView becomeFirstResponder];
 }
+
+
 
 
 -(void)startTimer {

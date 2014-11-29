@@ -230,6 +230,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)drop:(void (^)())completeHandler {
     [self->queue inDatabase:^(FMDatabase *db) {
         [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[Storage path] error:nil];
         [self open:completeHandler];
     }];
     

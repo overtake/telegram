@@ -62,14 +62,17 @@
     [self notifyMessage:message update_real_date:NO];
 }
 
-+(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
-    
-    [[(MessagesManager *)[self sharedManager] queue] dispatchOnQueue:^{
+
+-(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
+    [self.queue dispatchOnQueue:^{
         if(!message)
             return;
         
         
-        [[MessagesManager sharedManager] addMessage:message];
+        [self addMessage:message];
+        
+        
+        TL_conversation *dialog = message.conversation;
         
         [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
@@ -79,8 +82,8 @@
             return;
         }
         
-
-        TL_conversation *dialog = message.conversation;
+        
+       
         
         
         BOOL result = dialog.isMute;
@@ -90,7 +93,7 @@
         TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
         
         TLChat *chat = [[ChatsManager sharedManager] find:message.to_id.chat_id];
-    
+        
         
         NSString *title = [fromUser fullName];
         NSString *msg = message.message;
@@ -112,17 +115,17 @@
             cacheKey = [chat.photo.photo_small cacheKey];
         }
         
-         NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
+        NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
         
         
         NSImage *image = [TGCache cachedImage:p group:@[AVACACHE]];
         
-       
+        
         
         if(!image) {
-           
+            
             NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
-        
+            
             
             if(data.length > 0) {
                 image = [[NSImage alloc] initWithData:data];
@@ -131,7 +134,7 @@
                 
                 [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
             }
-
+            
         }
         
         
@@ -152,7 +155,7 @@
             }
             
         }
-       
+        
         
         if(message.to_id.chat_id != 0) {
             if(![message.to_id isSecret]) {
@@ -183,9 +186,12 @@
             [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
         }
-
     }];
+}
+
++(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
     
+    [[MessagesManager sharedManager] notifyMessage:message update_real_date:update_real_date];
 }
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text {

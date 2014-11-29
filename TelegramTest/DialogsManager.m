@@ -54,8 +54,6 @@
                         
                     }
                     
-                    
-                    
                     if(message.n_id > message.conversation.last_marked_message) {
                         message.conversation.last_marked_message = message.n_id;
                         message.conversation.last_marked_date = message.date;
@@ -491,7 +489,6 @@
 }
 
 - (void)add:(NSArray *)all {
-    
     
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
