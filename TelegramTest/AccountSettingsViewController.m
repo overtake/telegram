@@ -385,6 +385,7 @@ typedef enum {
     
     if([controller isKindOfClass:[PhoneChangeAlertController class]] || [controller isKindOfClass:[PhoneChangeConfirmController class]] || [controller isKindOfClass:[PhoneChangeController class]]) {
         [self selectController:self.phoneNumber];
+        return;
     }
     
     
