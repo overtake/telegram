@@ -107,6 +107,10 @@
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
+            if(error.error_code == 400) {
+                
+            }
+            
             [self hideModalProgress];
             
         } timeout:10];
