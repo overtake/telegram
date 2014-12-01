@@ -22,6 +22,9 @@
          contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
+         contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke_2:TGEnterPasswordPanel.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController scrollViewDocumentOffsetChangingNotificationHandler:]:TMCollectionPageController.m">
          <PersistentStrings>
             <PersistentString
@@ -398,6 +401,14 @@
       </ContextState>
       <ContextState
          contextName = "+[MessageTableItem socialClass:]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "range">
+            </PersistentString>
+            <PersistentString
+               value = "message.length">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[AccountSettingsViewController enterClick]:AccountSettingsViewController.m">
@@ -540,12 +551,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[ChatAvatarImageView progressContainer]:ChatAvatarImageView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.frame">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
@@ -556,7 +562,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke:NewContactsManager.m">
+         contextName = "-[ChatAvatarImageView progressContainer]:ChatAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
@@ -581,16 +592,16 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "deleteSet">
+               value = "changeSet.count">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "deleteSet">
             </PersistentString>
             <PersistentString
                value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "changeSet.count">
+               value = "abset.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -722,10 +733,10 @@
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
-               value = "sync">
+               value = "memory">
             </PersistentString>
             <PersistentString
-               value = "memory">
+               value = "sync">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -828,6 +839,9 @@
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke198:UsersManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke191:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
@@ -988,6 +1002,9 @@
          contextName = "-[TLAPI_messages_sendEncryptedService getData:]:TLRPCApi.m">
       </ContextState>
       <ContextState
+         contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">
       </ContextState>
       <ContextState
@@ -1005,10 +1022,10 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.messages">
+               value = "current.isHeaderMessage">
             </PersistentString>
             <PersistentString
-               value = "current.isHeaderMessage">
+               value = "self.messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1098,6 +1115,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DownloadOperation initWithItem:]:DownloadOperation.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatParticipantRowView initWithFrame:]:ChatParticipantRowView.m">
       </ContextState>
       <ContextState
@@ -1110,9 +1130,6 @@
                value = "self.listSelectedElementHash">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[DownloadOperation initWithItem:]:DownloadOperation.m">
       </ContextState>
       <ContextState
          contextName = "-[UsersManager setUserStatus:forUser:]:UsersManager.m">
@@ -1148,15 +1165,15 @@
          contextName = "__40+[TGSecretAction dequeAllStorageActions]_block_invoke_2:TGSecretAction.m">
       </ContextState>
       <ContextState
+         contextName = "__39-[TGProccessUpdates uptodate:qts:date:]_block_invoke:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString
                value = "self.isHidden">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__39-[TGProccessUpdates uptodate:qts:date:]_block_invoke:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "_POPAnimationState::handleDidStop(signed char):POPAnimationInternal.h">
@@ -1226,6 +1243,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DialogsManager updateTop:needUpdate:update_real_date:]:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellSocialView setItem:]:MessageTableCellSocialView.m">
          <PersistentStrings>
             <PersistentString
@@ -1235,9 +1255,6 @@
       </ContextState>
       <ContextState
          contextName = "-[MTNetwork sendRequest:]:MTNetwork.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[DialogsManager updateTop:needUpdate:update_real_date:]:DialogsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
@@ -1298,10 +1315,10 @@
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1326,19 +1343,19 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "import">
+               value = "changedSet.count">
             </PersistentString>
             <PersistentString
                value = "count">
+            </PersistentString>
+            <PersistentString
+               value = "import">
             </PersistentString>
             <PersistentString
                value = "abset.count">
             </PersistentString>
             <PersistentString
                value = "importedSet.count">
-            </PersistentString>
-            <PersistentString
-               value = "changedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1392,10 +1409,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__39-[TGPhotoViewer convertPreviewObjects:]_block_invoke:TGPhotoViewer.m">
+         contextName = "-[TL_localMessage conversation]:TL_localMessage.m">
       </ContextState>
       <ContextState
-         contextName = "-[TL_localMessage conversation]:TL_localMessage.m">
+         contextName = "__39-[TGPhotoViewer convertPreviewObjects:]_block_invoke:TGPhotoViewer.m">
       </ContextState>
       <ContextState
          contextName = "__32-[Storage insertSecretInAction:]_block_invoke:Storage.m">
@@ -1477,6 +1494,9 @@
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
       </ContextState>
       <ContextState
+         contextName = "__29-[RPCRequest completeHandler]_block_invoke:RPCRequest.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -1489,10 +1509,10 @@
                value = "item.message.n_id">
             </PersistentString>
             <PersistentString
-               value = "_conversation.top_message">
+               value = "_conversation">
             </PersistentString>
             <PersistentString
-               value = "_conversation">
+               value = "_conversation.top_message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1525,10 +1545,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

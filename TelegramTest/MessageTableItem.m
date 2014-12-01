@@ -260,7 +260,7 @@
     
     NSRange range = [results[0] range];
     
-    if(range.location != 0 && range.length != message.length)
+    if(range.location != 0 || range.length != message.length)
         return [NSNull class];
 
     // youtube checker
