@@ -14,14 +14,14 @@
     NSMutableDictionary *keys;
 }
 
-@property (nonatomic,strong) ASQueue *queue;
+@property (nonatomic,strong,readonly) ASQueue *queue;
 
 -(id)initWithQueue:(ASQueue *)queue;
 
 -(void)drop;
 +(void)drop;
 -(void)save:(id)object;
-+(id)sharedManager;
++(instancetype)sharedManager;
 -(id)find:(NSInteger)_id;
 -(id)find:(NSInteger)_id withCustomKey:(NSString*)key;
 -(void)add:(NSArray *)all;

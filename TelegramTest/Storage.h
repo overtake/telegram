@@ -104,10 +104,10 @@ extern NSString *const FILE_NAMES;
 - (void)users:(void (^)(NSArray *result))completeHandler;
 - (void)updateLastSeen:(TLUser *)user;
 
--(void)insertContacst:(NSArray *)contacts completeHandler:(void (^)(void))completeHandler;
+-(void)insertContacst:(NSArray *)contacts;
 
 -(void)contacts:(void (^)(NSArray *))completeHandler;
--(void)dropContacts:(void (^)(void))completeHandler;
+-(void)dropContacts;
 
 -(void)insertSession:(NSData*)session completeHandler:(void (^)(void))completeHandler;
 
@@ -123,8 +123,8 @@ extern NSString *const FILE_NAMES;
 
 
 -(void)importedContacts:(void (^)(NSSet *imported))completeHandler;
--(void)insertImportedContacts:(NSSet *)result completeHandler:(void (^)(void))completeHandler;
-
+-(void)insertImportedContacts:(NSSet *)result;
+-(void)deleteImportedContacts:(NSSet *)result;
 
 
 -(void)unreadCount:(void (^)(int count))completeHandler;
@@ -151,9 +151,8 @@ extern NSString *const FILE_NAMES;
 
 -(void)pictures:(void (^)(NSArray *))completeHandler forUserId:(int)user_id;
 
-- (void) removeContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler;
-- (void) replaceContacts:(NSArray *) contacts completeHandler:(void (^)(void))completeHandler;
-- (void) insertContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler;
+- (void) removeContact:(TLContact *) contact ;
+- (void) insertContact:(TLContact *) contact;
 
 //-(void)notifySettings:(void (^)(NSDictionary *))completeHandler;
 //-(void)addNotifySetting:(int)peer_id mute_until:(int)mute_until;

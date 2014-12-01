@@ -991,32 +991,19 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
-- (void) removeContact:(TLContact *) contact completeHandler:(void (^)(void))completeHandler {
+- (void) removeContact:(TLContact *) contact {
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"delete from contacts where user_id = ?", [NSNumber numberWithInt:contact.user_id]];
-        [LoopingUtils runOnMainQueueAsync:^{
-            if(completeHandler)
-                completeHandler();
-        }];
-    }];
-}
-
-- (void) replaceContacts:(NSArray *) contacts completeHandler:(void (^)(void))completeHandler {
-    [queue inDatabase:^(FMDatabase *db) {
-        //[db beginTransaction];
-        for (TLContact *contact in contacts) {
-            [db executeUpdate:@"insert or replace into contacts (user_id,mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id], [NSNumber numberWithBool:contact.mutual]];
-        }
-        //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler)
-                completeHandler();
-        });
+        
     }];
 }
 
 
--(void)insertContacst:(NSArray *)contacts completeHandler:(void (^)(void))completeHandler {
+- (void) insertContact:(TLContact *) contact {
+    [self insertContacst:@[contact]];
+}
+
+-(void)insertContacst:(NSArray *)contacts  {
     
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
@@ -1024,21 +1011,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [db executeUpdate:@"insert or replace into contacts (user_id,mutual) values (?,?)",[NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]];
         }
         //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler();
-        });
     }];
 }
 
 
--(void)dropContacts:(void (^)(void))completeHandler {
+-(void)dropContacts {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
         [db executeUpdate:@"delete from contacts where 1 = 1"];
         //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler();
-        });
         
     }];
 }
@@ -1142,17 +1123,24 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)insertImportedContacts:(NSSet *)result completeHandler:(void (^)(void))completeHandler {
+-(void)insertImportedContacts:(NSSet *)result {
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
        [result enumerateObjectsUsingBlock:^(TGHashContact *contact, BOOL *stop) {
            [db executeUpdate:@"insert or replace into imported_contacts (hash,hashObject,user_id) values (?,?,?)",@(contact.hash),contact.hashObject,@(contact.user_id)];
        }];
         
+    }];
+}
+
+-(void)deleteImportedContacts:(NSSet *)result {
+    [queue inDatabase:^(FMDatabase *db) {
+        //[db beginTransaction];
+        [result enumerateObjectsUsingBlock:^(TGHashContact *contact, BOOL *stop) {
+            [db executeUpdate:@"delete from imported_contacts where hash = ?",@(contact.hash)];
+        }];
+        
         //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler();
-        });
     }];
 }
 

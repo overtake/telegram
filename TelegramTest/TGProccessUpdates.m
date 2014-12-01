@@ -356,14 +356,14 @@ static NSString *kUpdateState = @"kUpdateState";
         TLUser *user = [[UsersManager sharedManager] find:update.user_id];
         
         if(user) {
-            user.first_name = update.first_name;
-            user.last_name = update.last_name;
-            user.username = update.username;
             
-            [user rebuildNames];
-            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:user}];
+            TLUser *copy = [user copy];
             
-            [[Storage manager] insertUser:user completeHandler:nil];
+            copy.first_name = update.first_name;
+            copy.last_name = update.last_name;
+            copy.username = update.username;
+            [[UsersManager sharedManager] add:@[copy]];
+            
         }
        
         

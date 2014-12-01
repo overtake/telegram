@@ -57,7 +57,9 @@
 
 - (void) userTypingNotification:(NSNotification *)notify {
     
-    [ASQueue dispatchOnStageQueue:^{
+    
+    
+    [[(DialogsManager *)[DialogsManager sharedManager] queue] dispatchOnQueue:^{
         TL_conversation *dialog = nil;
         NSUInteger user_id = 0;
         

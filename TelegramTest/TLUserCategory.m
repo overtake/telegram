@@ -497,6 +497,29 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     }
 }
 
+-(id)copy {
+    switch (self.type) {
+        case TLUserTypeContact:
+            return [TL_userContact createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username access_hash:self.access_hash phone:self.phone photo:self.photo status:self.status];
+            break;
+        case TLUserTypeDeleted:
+            return [TL_userDeleted createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username];
+            break;
+        case TLUserTypeEmpty:
+            return [TL_userEmpty createWithN_id:self.n_id];
+            break;
+        case TLUserTypeForeign:
+            return [TL_userForeign createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username access_hash:self.access_hash photo:self.photo status:self.status];
+        case TLUserTypeRequest:
+            return [TL_userRequest createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username access_hash:self.access_hash phone:self.phone photo:self.photo status:self.status];
+        case TLUserTypeSelf:
+            return [TL_userSelf createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username phone:self.phone photo:self.photo status:self.status inactive:self.inactive];
+        default:
+            return [TL_userEmpty createWithN_id:self.n_id];
+            break;
+    }
+}
+
 -(TLInputPeer *)inputPeer {
     if([self isKindOfClass:[TL_userContact class]]) {
         return [TL_inputPeerContact createWithUser_id:self.n_id];

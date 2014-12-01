@@ -11,7 +11,7 @@
 #import "TLFileLocation+Extensions.h"
 #import "ImageUtils.h"
 #import "TGTimer.h"
-
+#import <AddressBook/AddressBook.h>
 @interface UsersManager ()
 @property (nonatomic, strong) TGTimer *lastSeenUpdater;
 @property (nonatomic, strong) RPCRequest *lastSeenRequest;
@@ -130,6 +130,7 @@
                 if(currentUser.type != TLUserTypeEmpty) {
                     if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.username isEqualToString:currentUser.username] || ![newUser.phone isEqualToString:currentUser.phone]) {
                         
+            
                         currentUser.first_name = newUser.first_name;
                         currentUser.last_name = newUser.last_name;
                         currentUser.username = newUser.username;
@@ -401,3 +402,54 @@
     return instance;
 }
 @end
+
+/*
+ 
+ //                        ABAddressBook *book = [ABAddressBook sharedAddressBook];
+ //                        if(book) {
+ //                            NSArray *all = [[ABAddressBook sharedAddressBook] people];
+ //
+ //                            [all enumerateObjectsUsingBlock:^(ABPerson *person, NSUInteger idx, BOOL *stop) {
+ //                                ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
+ //
+ //
+ //
+ //                                NSUInteger count = [phones count];
+ //
+ //                                BOOL savePerson = NO;
+ //
+ //                                 ABMutableMultiValue *ps = [[ABMutableMultiValue alloc] init];
+ //
+ //                                for (int i = 0; i < count; i++) {
+ //
+ //                                    NSString *phone = [phones valueAtIndex:i];
+ //                                    phone = [phone stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [phone length])];
+ //
+ //                                    if([phone isEqualToString:currentUser.phone]) {
+ //
+ //                                        savePerson = YES;
+ //
+ //                                    }
+ //
+ //                                    [ps addValue:phone withLabel:[phones labelAtIndex:i]];
+ //                                }
+ //
+ //                                if(savePerson) {
+ //                                    [person setValue:newUser.first_name forProperty:kABFirstNameProperty];
+ //                                    [person setValue:newUser.last_name forProperty:kABLastNameProperty];
+ //
+ //
+ //                                    [ps addValue:newUser.phone withLabel:kABPhoneMobileLabel];
+ //
+ //                                    [person setValue:ps forKey:kABPhoneProperty];
+ //
+ //                                    [book save];
+ //                                }
+ //
+ //
+ //
+ //                            }];
+ //                        }
+ 
+ 
+ */

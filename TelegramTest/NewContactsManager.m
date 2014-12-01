@@ -165,9 +165,9 @@
                     
                 }];
                 
-                [[Storage manager] insertImportedContacts:changedSet completeHandler:nil];
+                [[Storage manager] insertImportedContacts:changedSet];
                 
-                [[Storage manager] insertContacst:addedContacts completeHandler:nil];
+                [[Storage manager] insertContacst:addedContacts];
                 
                 [self add:addedContacts withCustomKey:@"user_id"];
                 
@@ -199,9 +199,10 @@
                 [self remove:contacts withCustomKey:@"user_id"];
                 
                 [contacts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    [[Storage manager] removeContact:obj completeHandler:nil];
+                    [[Storage manager] removeContact:obj ];
                 }];
                 
+                [[Storage manager] deleteImportedContacts:deleteSet];
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
@@ -249,8 +250,8 @@
                 
                 [SharedManager proccessGlobalResponse:response];
 
-                
-                [[Storage manager] insertContacst:[response contacts] completeHandler:nil];
+                [[Storage manager] dropContacts];
+                [[Storage manager] insertContacst:[response contacts]];
                 
                 [self->keys removeAllObjects];
                 [self->list removeAllObjects];
@@ -276,7 +277,7 @@
         if(![self find:contact.user_id withCustomKey:@"user_id"]) {
             [self add:@[contact] withCustomKey:@"user_id"];
             [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-            [[Storage manager] insertContact:contact completeHandler:nil];
+            [[Storage manager] insertContact:contact];
         }
         
     }];
@@ -307,12 +308,14 @@
         if([self find:contact.user_id withCustomKey:@"user_id"]) {
             [self remove:@[contact] withCustomKey:@"user_id"];
             [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-            [[Storage manager] removeContact:contact completeHandler:nil];
+            [[Storage manager] removeContact:contact];
         }
     }];
 }
 
 - (void) importContact:(TL_inputPhoneContact *)contact callback:(void (^)(BOOL isAdd, TL_importedContact *contact, TLUser *user))callback {
+    
+
     
     [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:(NSMutableArray *)[NSArray arrayWithObject:contact] replace:NO] successHandler:^(RPCRequest *request, TL_contacts_importedContacts *response) {
         
@@ -331,7 +334,7 @@
         
         TGHashContact *contact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
         
-        [[Storage manager] insertContact:[TL_contact createWithUser_id:importedContact.user_id mutual:YES] completeHandler:nil];
+        [[Storage manager] insertContact:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
         
         [self add:@[contact] withCustomKey:@"hash"];
         
@@ -345,9 +348,10 @@
             [all enumerateObjectsUsingBlock:^(ABPerson *person, NSUInteger idx, BOOL *stop) {
                 ABMutableMultiValue * phones = [person valueForKey:kABPhoneProperty];
                 
-                NSString *phone = [phones valueAtIndex:0];
+               
                 
                 for (int i = 0; i < [phones count]; i++) {
+                    NSString *phone = [phones valueAtIndex:0];
                     phone = [phone stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [phone length])];
                     
                     if([phone isEqualToString:userContact.phone]) {

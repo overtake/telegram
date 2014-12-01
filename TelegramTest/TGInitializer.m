@@ -55,27 +55,6 @@
     
     
 
-    [[Storage manager] users:^(NSArray *result) {
-
-        [[UsersManager sharedManager] addFromDB:result];
-        [[Storage manager] loadChats:^(NSArray *chats) {
-            [[ChatsManager sharedManager] add:chats];
-            [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
-            
-                [[NewContactsManager sharedManager] fullReload];
-                [[FullChatManager sharedManager] loadStored];
-            
-                [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:result}];
-                [Notification perform:APP_RUN object:nil];
-//                [PushNotificationsManager sharedManager];
-            
-            } usersCallback:nil];
-         }];
-    
-        [[Storage manager] unreadCount:^(int count) {
-            [[MessagesManager sharedManager] setUnreadCount:count];
-        }];
-    }];
     
 }
 
