@@ -10,5 +10,4 @@
 #import "TGWindowArchiver.h"
 @interface MainWindow : TelegramWindow
 
-@property (nonatomic,assign,getter = isAcceptEvents) BOOL acceptEvents;
 @end

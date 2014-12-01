@@ -9,5 +9,4 @@
 #import "TelegramWindow.h"
 
 @interface LoginWindow : TelegramWindow<NSWindowDelegate>
-
 @end

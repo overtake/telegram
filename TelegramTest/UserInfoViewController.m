@@ -126,7 +126,7 @@
     weakify();
     [_avatarImageView setTapBlock:^{
         
-        if(![strongSelf.user.phone isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+        if(![strongSelf.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
             
             [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];

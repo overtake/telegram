@@ -417,11 +417,11 @@ void open_card(NSString *link) {
     
     if(card) {
         
-        [[Telegram rightViewController] showModalProgress];
+        [TMViewController showModalProgress];
         
         [RPCRequest sendRequest:[TLAPI_contacts_importCard createWithExport_card:[card mutableCopy]] successHandler:^(RPCRequest *request, id response) {
             
-            [[Telegram rightViewController] hideModalProgress];
+            [TMViewController hideModalProgress];
             
             dispatch_after_seconds(0.2,^ {
                 if(![response isKindOfClass:[TL_userEmpty class]]) {
@@ -436,7 +436,7 @@ void open_card(NSString *link) {
           
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
-             [[Telegram rightViewController] hideModalProgress];
+             [TMViewController hideModalProgress];
             
             dispatch_after_seconds(0.2, ^{
                 if(error.error_code == 400) {
@@ -459,11 +459,11 @@ void open_user_by_name(NSString * userName) {
     if(users.count == 1) {
         [[Telegram rightViewController] showUserInfoPage:users[0]];
     } else {
-        [[Telegram rightViewController] showModalProgress];
+        [TMViewController showModalProgress];
         
         [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
             
-            [[Telegram rightViewController] hideModalProgress];
+            [TMViewController hideModalProgress];
             
             dispatch_after_seconds(0.2,^ {
                 
@@ -481,7 +481,7 @@ void open_user_by_name(NSString * userName) {
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
-            [[Telegram rightViewController] hideModalProgress];
+            [TMViewController hideModalProgress];
             
             dispatch_after_seconds(0.2, ^{
                 if(error.error_code == 400) {

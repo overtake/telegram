@@ -9,6 +9,7 @@
 #import "Telegram.h"
 #import "DialogsManager.h"
 #import "TGTimer.h"
+#import "TGEnterPasswordPanel.h"
 
 #define ONLINE_EXPIRE 55
 #define OFFLINE_AFTER 40
@@ -252,5 +253,24 @@ NSString * appName() {
 
 - (BOOL)isModalViewActive {
     return [[Telegram rightViewController] isModalViewActive];
+}
+
++(void)showEnterPasswordPanel {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        static TGEnterPasswordPanel *panel;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            panel = [[TGEnterPasswordPanel alloc] initWithFrame:[[[NSApp mainWindow] contentView] bounds]];
+        });
+        
+        if(panel.superview)
+            return;
+        
+        [[NSApp mainWindow].contentView addSubview:panel];
+        [panel prepare];
+    }];
+    
+    
 }
 @end

@@ -606,10 +606,7 @@ typedef enum {
     [container addSubview:self.phoneNumber];
 //
     
-    /*
 
-     */
-    
     currentY+=38;
     
     self.privacy = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.Privacy",nil) tapBlock:^{

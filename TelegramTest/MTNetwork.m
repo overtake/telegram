@@ -237,10 +237,14 @@ static int MAX_WORKER_POLL = 5;
     blockedRequest.mtrequest = mtrequest;
     
     
+   
+    static NSArray *dependsOnPwd;
     static NSArray *sequentialMessageClasses = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
                   {
+         dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
+                      
         sequentialMessageClasses = @[
             [TLAPI_messages_sendMessage class],
             [TLAPI_messages_sendMedia class],
@@ -250,6 +254,10 @@ static int MAX_WORKER_POLL = 5;
             [TLAPI_messages_sendEncryptedService class]
         ];
     });
+    
+    if([dependsOnPwd containsObject:[request.object class]]) {
+        mtrequest.dependsOnPasswordEntry = NO;
+    }
     
     for (Class sequentialClass in sequentialMessageClasses)
     {
@@ -286,11 +294,11 @@ static int MAX_WORKER_POLL = 5;
 -(void)sendRequest:(RPCRequest *)request {
     
     [ASQueue dispatchOnStageQueue:^{
-        static NSMutableArray *noAuthClasses;
+        static NSArray *noAuthClasses;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            noAuthClasses = [[NSMutableArray alloc] initWithObjects:[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], nil];
+            noAuthClasses = @[[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
         });
         
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {
@@ -342,6 +350,21 @@ static int MAX_WORKER_POLL = 5;
 }
 - (void)contextDatacenterAuthTokenUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authToken:(id)authToken {
     DLog(@"");
+}
+
+- (void)contextIsPasswordRequiredUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId
+{
+    if (context == _context && datacenterId == _mtProto.datacenterId)
+    {
+        bool passwordRequired = [context isPasswordInputRequiredForDatacenterWithId:datacenterId];
+        if(passwordRequired) {
+            [[Telegram delegate] logoutWithForce:YES];
+          //  [Telegram showEnterPasswordPanel];
+        }
+        
+
+      
+    }
 }
 
 @end

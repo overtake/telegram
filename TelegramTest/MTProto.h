@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 26.11.14.
+//  Auto created by Dmitry Kondratyev on 01.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -327,6 +327,9 @@
 @interface TLaccount_SentChangePhoneCode : TLObject
 @end
 	
+@interface TLaccount_Password : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -483,7 +486,7 @@
 	
 @interface TLInputMedia()
 @property (nonatomic, strong) TLInputFile* file;
-@property (nonatomic, strong) TLInputDocument* n_id;
+@property (nonatomic, strong) TLInputMedia* n_id;
 @property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* phone_number;
 @property (nonatomic, strong) NSString* first_name;
@@ -2127,6 +2130,19 @@
 
 @interface TL_account_sentChangePhoneCode : TLaccount_SentChangePhoneCode
 +(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout;
+@end
+	
+@interface TLaccount_Password()
+@property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSData* current_salt;
+@property (nonatomic, strong) NSString* hint;
+@end
+
+@interface TL_account_noPassword : TLaccount_Password
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
+@end
+@interface TL_account_password : TLaccount_Password
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint;
 @end
 	
 @interface TLProtoMessage()

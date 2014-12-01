@@ -245,7 +245,8 @@
         [self initializeMainWindow];
     } else {
         //[self initializeLoginWindow];
-        [self logoutWithForce:NO];
+        
+       [self logoutWithForce:NO];
     }
 
 }
@@ -559,6 +560,8 @@
     [self releaseWindows];
     
     self.loginWindow = loginWindow;
+    
+    
 }
 
 - (void)releaseWindows {
@@ -585,7 +588,7 @@
     
     dispatch_block_t block = ^ {
         
-        [[Telegram rightViewController] hideModalProgress];
+        [TMViewController hideModalProgress];
         
         [[Storage manager] drop:^{
             
@@ -604,7 +607,7 @@
     
     if([[MTNetwork instance] isAuth] && !force) {
         
-         [[Telegram rightViewController] showModalProgress];
+         [TMViewController showModalProgress];
         
         [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
             
@@ -612,7 +615,7 @@
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
-            [[Telegram rightViewController] hideModalProgress];
+            [TMViewController hideModalProgress];
             
              confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
                 [self logoutWithForce:YES];

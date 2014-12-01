@@ -115,30 +115,29 @@
 }
 
 
--(void)showModalProgress {
+static TMProgressModalView *progressView;
+
++(void)showModalProgress {
     
-    if(!self.view)
-        return;
-    
-    if(!self.progressView) {
-        self.progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+    if(!progressView) {
+        progressView = [[TMProgressModalView alloc] initWithFrame:[[NSApp mainWindow].contentView bounds]];
         
-        self.progressView.layer.opacity = 0;
+        progressView.layer.opacity = 0;
         
-        [self.progressView setCenterByView:self.view.window.contentView];
+        [progressView setCenterByView:[NSApp mainWindow].contentView];
         
-        [self.view.window.contentView addSubview:self.progressView];
+        [[NSApp mainWindow].contentView addSubview:progressView];
     }
     
-    [(MainWindow *)self.view.window setAcceptEvents:NO];
+    [(MainWindow *)[NSApp mainWindow] setAcceptEvents:NO];
     
-    POPBasicAnimation *anim = [self popAnimationForProgress:self.progressView.layer.opacity to:0.8];
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0.8];
     
-    [self.progressView.layer pop_addAnimation:anim forKey:@"fade"];
+    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
     
 }
 
--(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to {
++(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to {
     POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     anim.fromValue = @(from);
@@ -150,21 +149,28 @@
 }
 
 
--(void)hideModalProgress {
++(void)hideModalProgress {
     
-    self.progressView.layer.opacity = 0.8;
+    progressView.layer.opacity = 0.8;
     
-    [(MainWindow *)self.view.window setAcceptEvents:YES];
+    [(MainWindow *)[NSApp mainWindow] setAcceptEvents:YES];
     
-    POPBasicAnimation *anim = [self popAnimationForProgress:self.progressView.layer.opacity to:0];
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
     
     [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
-        [self.progressView removeFromSuperview];
-        self.progressView = nil;
+        [progressView removeFromSuperview];
+        progressView = nil;
     }];
     
-    [self.progressView.layer pop_addAnimation:anim forKey:@"fade"];
+    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
 
+}
+
+-(void)showModalProgress {
+    [TMViewController showModalProgress];
+}
+-(void)hideModalProgress {
+    [TMViewController hideModalProgress];
 }
 
 

@@ -104,10 +104,6 @@
     
     [doneButton setTapBlock:^{
         
-        [[Telegram rightViewController] showPhoneChangeConfirmController:nil phone:view.changerView.phoneNumber];
-    
-        return;
-        
         [self showModalProgress];
         
         [RPCRequest sendRequest:[TLAPI_account_sendChangePhoneCode createWithPhone_number:view.changerView.phoneNumber] successHandler:^(RPCRequest *request, id response) {

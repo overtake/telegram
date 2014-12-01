@@ -108,7 +108,7 @@
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
             if(error.error_code == 400) {
-                
+                alert(NSLocalizedString(@"PhoneChangeControlller.AlertHeader", nil), NSLocalizedString(error.error_msg, nil));
             }
             
             [self hideModalProgress];

@@ -15,4 +15,6 @@
 - (void)realClose;
 - (void)initialize;
 - (void)initialize:(TGWindowArchiver *)archiver;
+
+@property (nonatomic,assign,getter = isAcceptEvents) BOOL acceptEvents;
 @end

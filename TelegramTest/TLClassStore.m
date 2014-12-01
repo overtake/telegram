@@ -27,7 +27,7 @@
         
         [self.classes setObject:[TL_boolFalse class] forKey:[NSNumber numberWithInt:-1132882121]];
         [self.classes setObject:[TL_boolTrue class] forKey:[NSNumber numberWithInt:-1720552011]];
-
+        
         [self.classes setObject:[TL_inputPeerEmpty class] forKey:[NSNumber numberWithInt:2134579434]];
         [self.classes setObject:[TL_inputPeerSelf class] forKey:[NSNumber numberWithInt:2107670217]];
         [self.classes setObject:[TL_inputPeerContact class] forKey:[NSNumber numberWithInt:270785512]];
@@ -316,6 +316,8 @@
         [self.classes setObject:[TL_accountDaysTTL class] forKey:[NSNumber numberWithInt:-1194283041]];
         [self.classes setObject:[TL_account_sentChangePhoneCode class] forKey:[NSNumber numberWithInt:-1527411636]];
         [self.classes setObject:[TL_updateUserPhone class] forKey:[NSNumber numberWithInt:314130811]];
+        [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
+        [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:1939758962]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -481,7 +483,7 @@
     [outputStream open];
     [stream setOuput:outputStream];
     [stream writeInt:-627372787]; //invokeWithLayer
-    [stream writeInt:19];
+    [stream writeInt:20];
 
     [stream writeInt:constructor];
     

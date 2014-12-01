@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/TLClassStore.m"
-            timestampString = "438726330.830949"
+            timestampString = "439123631.110749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "428"
-            endingLineNumber = "428"
+            startingLineNumber = "430"
+            endingLineNumber = "430"
             landmarkName = "+TLSerialize:stream:"
             landmarkType = "5">
          </BreakpointContent>

@@ -409,8 +409,12 @@
         
         if( rpc_error.error_code == 401)
         {
-            [[Telegram delegate] logoutWithForce:YES];
             
+            if(![rpc_error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
+                
+                 [[Telegram delegate] logoutWithForce:YES];
+            
+            }
         } else if( rpc_error.error_code == 303 ) {
             
             [[MTNetwork instance] setDatacenter:rpc_error.resultId];

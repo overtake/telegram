@@ -39,6 +39,9 @@
 - (void)rightButtonAction;
 
 
++(void)showModalProgress;
++(void)hideModalProgress;
+
 -(void)showModalProgress;
 -(void)hideModalProgress;
 

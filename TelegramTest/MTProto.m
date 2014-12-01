@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 26.11.14.
+//  Auto created by Mikhail Filimonov on 01.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7687,6 +7687,45 @@
 
 
 
+@implementation TLaccount_Password
+@end
+
+@implementation TL_account_noPassword
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt {
+	TL_account_noPassword* obj = [[TL_account_noPassword alloc] init];
+	obj.n_salt = n_salt;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeByteArray:self.n_salt];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_salt = [stream readByteArray];
+}
+@end
+
+@implementation TL_account_password
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint {
+	TL_account_password* obj = [[TL_account_password alloc] init];
+	obj.current_salt = current_salt;
+	obj.n_salt = n_salt;
+	obj.hint = hint;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeByteArray:self.current_salt];
+	[stream writeByteArray:self.n_salt];
+	[stream writeString:self.hint];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.current_salt = [stream readByteArray];
+	self.n_salt = [stream readByteArray];
+	self.hint = [stream readString];
+}
+@end
+
+
+
 @implementation TLProtoMessage
 @end
 
@@ -8495,6 +8534,8 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
+
+
 
 
 @implementation TL_gzip_packed

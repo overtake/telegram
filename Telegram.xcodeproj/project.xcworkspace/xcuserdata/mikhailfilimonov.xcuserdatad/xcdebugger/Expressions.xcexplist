@@ -203,6 +203,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TMNavigationBar buildSizes]:TMNavigationBar.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.connectionView">
+            </PersistentString>
+            <PersistentString
+               value = "self.connectionView.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
@@ -1229,6 +1237,9 @@
          contextName = "-[MTNetwork sendRequest:]:MTNetwork.m">
       </ContextState>
       <ContextState
+         contextName = "-[DialogsManager updateTop:needUpdate:update_real_date:]:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
@@ -1309,6 +1320,9 @@
          contextName = "-[DownloadPhotoCollectionItem initWithObject:size:]:DownloadPhotoCollectionItem.m">
       </ContextState>
       <ContextState
+         contextName = "__50-[MessagesManager notifyMessage:update_real_date:]_block_invoke:MessagesManager.m">
+      </ContextState>
+      <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -1379,6 +1393,9 @@
       </ContextState>
       <ContextState
          contextName = "__39-[TGPhotoViewer convertPreviewObjects:]_block_invoke:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_localMessage conversation]:TL_localMessage.m">
       </ContextState>
       <ContextState
          contextName = "__32-[Storage insertSecretInAction:]_block_invoke:Storage.m">
