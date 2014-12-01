@@ -2087,45 +2087,45 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    if([message hasPrefix:@"/changePass"]) {
-        
-        NSString *pass = [message substringFromIndex:@"/changePass".length + 1];
-        
-        
-        [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, TL_account_noPassword *response) {
-            
-            
-            NSMutableData *newsalt = [response.n_salt mutableCopy];
-            
-            [newsalt addRandomBytes:16];
-            
-            
-            NSMutableData *hashData = [NSMutableData dataWithData:newsalt];
-            
-            [hashData appendData:[pass dataUsingEncoding:NSUTF8StringEncoding]];
-            
-            [hashData appendData:newsalt];
-            
-            NSData *passhash =  MTSha256(hashData);
-            
-            
-            [RPCRequest sendRequest:[TLAPI_account_setPassword createWithCurrent_password_hash:[[NSData alloc] init] n_salt:newsalt n_password_hash:passhash hint:@"12345"] successHandler:^(RPCRequest *request, id response) {
-                
-                
-                
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-            }];
-            
-            
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-        
-        return;
-    }
+//    if([message hasPrefix:@"/changePass"]) {
+//        
+//        NSString *pass = [message substringFromIndex:@"/changePass".length + 1];
+//        
+//        
+//        [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, TL_account_noPassword *response) {
+//            
+//            
+//            NSMutableData *newsalt = [response.n_salt mutableCopy];
+//            
+//            [newsalt addRandomBytes:16];
+//            
+//            
+//            NSMutableData *hashData = [NSMutableData dataWithData:newsalt];
+//            
+//            [hashData appendData:[pass dataUsingEncoding:NSUTF8StringEncoding]];
+//            
+//            [hashData appendData:newsalt];
+//            
+//            NSData *passhash =  MTSha256(hashData);
+//            
+//            
+//            [RPCRequest sendRequest:[TLAPI_account_setPassword createWithCurrent_password_hash:[[NSData alloc] init] n_salt:newsalt n_password_hash:passhash hint:@"12345"] successHandler:^(RPCRequest *request, id response) {
+//                
+//                
+//                
+//                
+//            } errorHandler:^(RPCRequest *request, RpcError *error) {
+//                
+//            }];
+//            
+//            
+//            
+//        } errorHandler:^(RPCRequest *request, RpcError *error) {
+//            
+//        }];
+//        
+//        return;
+//    }
     
     
     if(message.length > 0) {

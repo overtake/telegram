@@ -301,19 +301,26 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
             
                 // HARD CHECK FOR NEW PUSH NOTIFICATION
                 
-                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            
+            if (![defaults objectForKey:@"check_push_once"]) {
+                [defaults setObject:@"once" forKey:@"check_push_once"];
                 
-                if (![defaults objectForKey:@"check_push_once"]) {
-                    [defaults setObject:@"once" forKey:@"check_push_once"];
-                    
-                    [SettingsArchiver addSetting:PushNotifications];
-                }
-                
+                [SettingsArchiver addSetting:PushNotifications];
+            }
+            
             
             if (![defaults objectForKey:@"check_emoji_replaces"]) {
                 [defaults setObject:@"once" forKey:@"check_emoji_replaces"];
                 
                 [SettingsArchiver addSetting:EmojiReplaces];
+            }
+            
+            if(![defaults objectForKey:@"icloud_sync_once"]) {
+                [defaults setObject:@"once" forKey:@"icloud_sync_once"];
+                
+                [SettingsArchiver addSetting:iCloudSynch];
+
             }
             
             

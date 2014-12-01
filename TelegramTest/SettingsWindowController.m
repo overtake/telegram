@@ -131,7 +131,7 @@
    
     
     [self.sound_effects_checkbox setTitle:NSLocalizedString(@"Settings.SoundEffects", nil)];
-    [self.launch_on_startup setTitle:NSLocalizedString(@"Settings.LaunchOnStartup", nil)];
+  //  [self.launch_on_startup setTitle:NSLocalizedString(@"Settings.LaunchOnStartup", nil)];
     
     
     [self.online_when_desc setStringValue:NSLocalizedString(@"Settings.online_when_desc", nil)];
@@ -244,7 +244,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     [self.send_message_as selectCellWithTag:[SettingsArchiver contain:SendEnter | SendCmdEnter]];
     [self.online_settings selectCellWithTag:[SettingsArchiver contain:OnlineForever | OnlineFocused]];
     
-    [self.launch_on_startup setState:[SettingsArchiver isLaunchAtStartup]];
+    [self.launch_on_startup setState:[SettingsArchiver checkMaskedSetting:iCloudSynch]];
     
     [self.auto_download_limit selectItemAtIndex:[self indexForAutoDowloadSize]];
     
@@ -345,7 +345,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     return limit;
 }
 - (IBAction)launchOnStartup:(id)sender {
-    [SettingsArchiver toggleLaunchAtStartup];
+    [SettingsArchiver addOrRemoveSetting:iCloudSynch];
     
     [self updateUI];
 }
