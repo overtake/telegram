@@ -57,6 +57,7 @@
             
             [self remoteCheckContacts:^{
                 
+                
                 [[Storage manager] importedContacts:^(NSSet *imported) {
                     
                     [self.queue dispatchOnQueue:^{
@@ -150,7 +151,8 @@
                 
                 [[contacts imported] enumerateObjectsUsingBlock:^(TLImportedContact *importedContact, NSUInteger idx, BOOL *stop) {
                     
-                    [addedContacts addObject:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
+                    if(![self find:importedContact.user_id withCustomKey:@"user_id"])
+                        [addedContacts addObject:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
                     
                     [changedSet enumerateObjectsUsingBlock:^(TGHashContact *contact, BOOL *stop) {
                         
