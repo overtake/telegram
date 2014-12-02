@@ -58,18 +58,6 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         [self.textField setSelectable:NO];
         
         [[self.textField cell] setTruncatesLastVisibleLine:YES];
-//        
-//        static BTRImage *typingGif;
-//        if(typingGif == nil) {
-//            typingGif = [BTRImage animatedImage:@"typingGIF"];
-//        }
-//        
-//        self.imageView = [[BTRImageView alloc] initWithFrame:NSMakeRect(0, 0, typingGif.size.width, typingGif.size.height)];
-//        [self.imageView setImage:typingGif];
-//        [self.imageView setFrameOrigin:NSMakePoint(36, 14)];
-//        [self.imageView setHidden:YES];
-//        [self addSubview:self.imageView];
-//        
 
         [self addSubview:self.textField];
         

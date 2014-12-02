@@ -128,7 +128,7 @@
                 }
                 
                 if(currentUser.type != TLUserTypeEmpty) {
-                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.username isEqualToString:currentUser.username] || ![newUser.phone isEqualToString:currentUser.phone]) {
+                    if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.username isEqualToString:currentUser.username] || ( newUser.phone && ![newUser.phone isEqualToString:currentUser.phone])) {
                         
             
                         currentUser.first_name = newUser.first_name;
