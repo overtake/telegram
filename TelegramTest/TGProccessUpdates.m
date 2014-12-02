@@ -514,8 +514,6 @@ static NSString *kUpdateState = @"kUpdateState";
         
         [_encryptedUpdates proccessUpdate:(TLEncryptedMessage *)[update message]];
         
-
-       
         return;
     }
     

@@ -2086,7 +2086,6 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    
 //    if([message hasPrefix:@"/changePass"]) {
 //        
 //        NSString *pass = [message substringFromIndex:@"/changePass".length + 1];
@@ -2393,15 +2392,15 @@ static NSTextAttachment *headerMediaIcon() {
             imageData = jpegNormalizedData(image);
         }
         
-        
+        NSLog(@"1");
         NSImage *image = [[NSImage alloc] initWithData:imageData];
-        
+        NSLog(@"2");
         SenderItem *sender;
         
         if(self.dialog.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithImage:image uploadType:UploadImageType forConversation:self.dialog];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:image forConversation:self.dialog];
+            sender = [[ImageSenderItem alloc] initWithImage:image jpegData:imageData forConversation:self.dialog];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

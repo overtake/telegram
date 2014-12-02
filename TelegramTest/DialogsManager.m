@@ -565,7 +565,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        instance = [[[self class] alloc] initWithQueue:[[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]]];
+        instance = [[[self class] alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }

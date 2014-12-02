@@ -678,7 +678,7 @@ NSData *jpegNormalizedData(NSImage *image) {
       //this will get a bitmap from the image at 1 point == 1 pixel, which is probably what you want
         NSSize imageSize = [image size];
         [image lockFocus];
-        NSRect imageRect = NSMakeRect(0, 0, imageSize.width, imageSize.height);
+        NSRect imageRect = NSMakeRect(0, 0, imageSize.width , imageSize.height);
         myBitmapImageRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:imageRect];
         [image unlockFocus];
     

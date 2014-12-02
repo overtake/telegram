@@ -206,11 +206,6 @@
 }
 
 
-
-
-
-
-
 +(int)getFutureMessageId {
     
     static NSInteger msgId;

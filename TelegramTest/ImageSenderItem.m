@@ -25,7 +25,7 @@
     [super setState:state];
 }
 
-- (id)initWithImage:(NSImage *)image forConversation:(TL_conversation *)conversation {
+- (id)initWithImage:(NSImage *)image jpegData:(NSData *)jpegData forConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         
         self.conversation = conversation;
@@ -33,7 +33,7 @@
         
         image = prettysize(image);
         
-        NSSize realSize = image.size;
+        NSSize realSize = strongsizeWithSizes(image.size, MIN_IMG_SIZE, NSMakeSize(2000, 1000));
         NSSize maxSize = strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
         
         
@@ -50,7 +50,7 @@
             
         }
         
-        NSData *preview = compressImage(jpegNormalizedData(image), 0.1);
+        NSData *preview = compressImage(jpegData, 0.1);
         
         
         TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:realSize.width h:realSize.height bytes:preview];
@@ -71,7 +71,7 @@
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         
-        [jpegNormalizedData(image) writeToFile:mediaFilePath(self.message.media) atomically:YES];
+        [jpegData writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
         
         

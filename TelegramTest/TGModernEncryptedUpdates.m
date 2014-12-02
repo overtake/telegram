@@ -39,9 +39,39 @@
         
         decrypted = [decrypted subdataWithRange:NSMakeRange(4, decrypted.length-4)];
         
-        Class DeserializeClass = NSClassFromString([NSString stringWithFormat:@"Secret%d__Environment",params.layer]);
         
-        SEL proccessMethod = NSSelectorFromString([NSString stringWithFormat:@"proccess%dLayer:params:conversation:encryptedMessage:",params.layer]);
+        int layer = MIN_ENCRYPTED_LAYER;
+        if (decrypted.length >= 4)
+        {
+            
+            int32_t possibleLayerSignature = 0;
+            [decrypted getBytes:&possibleLayerSignature length:4];
+            if (possibleLayerSignature == (int32_t)0x1be31789)
+            {
+                if (decrypted.length >= 4 + 1)
+                {
+                    uint8_t randomBytesLength = 0;
+                    [decrypted getBytes:&randomBytesLength range:NSMakeRange(4, 1)];
+                    while ((randomBytesLength + 1) % 4 != 0)
+                    {
+                        randomBytesLength++;
+                    }
+                    
+                    if (decrypted.length >= 4 + 1 + randomBytesLength + 4 + 4 + 4)
+                    {
+                        int32_t value = 0;
+                        [decrypted getBytes:&value range:NSMakeRange(4 + 1 + randomBytesLength, 4)];
+                        layer = value;
+                        
+                    }
+                }
+            }
+        }
+        
+        
+        Class DeserializeClass = NSClassFromString([NSString stringWithFormat:@"Secret%d__Environment",layer]);
+        
+        SEL proccessMethod = NSSelectorFromString([NSString stringWithFormat:@"proccess%dLayer:params:conversation:encryptedMessage:",layer]);
         
         IMP imp = [self methodForSelector:proccessMethod];
         void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
@@ -67,7 +97,7 @@
             
             int layer = [[action valueForKey:@"layer"] intValue];
             
-            if(layer >= MAX_ENCRYPTED_LAYER) {
+            if(layer >= MAX_ENCRYPTED_LAYER && params.layer != MAX_ENCRYPTED_LAYER && params.layer != layer) {
                 [self upgradeLayer:params conversation:conversation];
             }
             
@@ -213,7 +243,7 @@ Class convertClass(NSString *c, int layer) {
     
     NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
-    if([layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
+    if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;
     
     
