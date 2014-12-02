@@ -256,8 +256,7 @@ static const int navigationOffset = 48;
     __block TMView *oldView = oldViewController.view;
     __block TMView *newView = newViewController.view;
     
-    if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
-        [oldViewController _didStackRemoved];
+    
     
     if(oldView == newView) {
         [oldViewController viewWillDisappear:NO];
@@ -323,6 +322,9 @@ static const int navigationOffset = 48;
             if([obj respondsToSelector:@selector(didChangedController:)])
                 [obj didChangedController:newViewController];
         }];
+        
+        if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+            [oldViewController _didStackRemoved];
         
     } else {
         // Animate
@@ -407,6 +409,10 @@ static const int navigationOffset = 48;
                 if([obj respondsToSelector:@selector(didChangedController:)])
                     [obj didChangedController:newViewController];
             }];
+            
+            
+            if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+                [oldViewController _didStackRemoved];
         };
         
         

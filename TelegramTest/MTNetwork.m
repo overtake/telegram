@@ -357,6 +357,9 @@ static int MAX_WORKER_POLL = 5;
     if (context == _context && datacenterId == _mtProto.datacenterId)
     {
         bool passwordRequired = [context isPasswordInputRequiredForDatacenterWithId:datacenterId];
+        
+        
+        
         if(passwordRequired) {
             [[Telegram delegate] logoutWithForce:YES];
           //  [Telegram showEnterPasswordPanel];
