@@ -19,7 +19,7 @@
 }
 
 -(float)progressWidth {
-    return MAX(200, MIN(250, self.item.message.media.audio.duration * 30));
+    return MAX(150, MIN(200, self.item.message.media.audio.duration * 30));
 }
 
 
