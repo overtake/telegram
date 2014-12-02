@@ -65,21 +65,23 @@ NSString *const AVACACHE = @"AVACACHE";
 -(id)init {
     if(self = [super init]) {
         
-        _groups = [[NSMutableDictionary alloc] init];
-        _groupMemoryTaken = [[NSMutableDictionary alloc] init];
-        _groupMemoryLimit = [[NSMutableDictionary alloc] init];
-        
-        NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
-        
-        [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            _groupMemoryLimit[obj] = @(defaultMemoryLimit);
-            _groupMemoryTaken[obj] = @(0);
-            _groups[obj] = [[NSMutableDictionary alloc] init];
-            
-        }];
-        
         _queue = [[ASQueue alloc] initWithName:"tgcachequeue"];
+        
+        [_queue dispatchOnQueue:^{
+            _groups = [[NSMutableDictionary alloc] init];
+            _groupMemoryTaken = [[NSMutableDictionary alloc] init];
+            _groupMemoryLimit = [[NSMutableDictionary alloc] init];
+            
+            NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
+            
+            [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                _groupMemoryLimit[obj] = @(defaultMemoryLimit);
+                _groupMemoryTaken[obj] = @(0);
+                _groups[obj] = [[NSMutableDictionary alloc] init];
+                
+            }];
+        } synchronous:YES];
         
     }
     return self;
