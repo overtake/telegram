@@ -73,8 +73,6 @@
 
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     
-    if(!self.mainWindow.isKeyWindow)
-        return;
     
     NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
     if(url) {
@@ -82,6 +80,7 @@
         if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
             open_user_by_name([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
             [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+            [self.mainWindow deminiaturize:self];
             return;
         }
         
@@ -146,16 +145,17 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-#ifdef TGDEBUG
     
+    NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
+    [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    
+    
+#ifdef TGDEBUG
     
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
-    
-    NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
-    [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
     
 #else 
     

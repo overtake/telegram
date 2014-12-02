@@ -331,6 +331,13 @@ NSImage *selectCheckActiveImage() {
 }
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
+    
+    if([self isEditable])
+        [self initSelectButton];
+    else
+        [self deallocSelectButton];
+    
+    
     if(self.isSelected == isSelected)
         return;
     
@@ -338,7 +345,7 @@ NSImage *selectCheckActiveImage() {
     self.item.isSelected = isSelected;
     _isSelected = isSelected;
     
-    
+
     [self.selectButton setSelected:isSelected];
     
     if(self.selectButton.layer.anchorPoint.x != 0.5) {
@@ -741,6 +748,13 @@ static int offsetEditable = 30;
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
+    
+    if(editable)
+        [self initSelectButton];
+    else
+        [self deallocSelectButton];
+    
+    
     if(self.isEditable == editable && animation)
         return;
     _isEditable = editable;
@@ -760,10 +774,7 @@ static int offsetEditable = 30;
         return;
     }
     
-    if(_isEditable)
-        [self initSelectButton];
-    else
-        [self deallocSelectButton];
+    
     
     [self setRightLayerToEditablePosition:!editable];
     
