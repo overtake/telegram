@@ -58,14 +58,28 @@ static CAAnimation *ani() {
     
     if(self.isAlwaysBlur) {
         
-       [ASQueue dispatchOnStageQueue:^{
-            NSImage *blured = [self blur:image];
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [super setImage:blured];
+        NSString *key = [NSString stringWithFormat:@"%@blured",self.object.location.cacheKey];
+        
+        __block NSImage *blured = [TGCache cachedImage:key];
+        
+        if(!blured) {
+            [ASQueue dispatchOnStageQueue:^{
+                
+                blured = [self blur:image];
+                
+                [TGCache cacheImage:blured forKey:key groups:@[IMGCACHE]];
+                
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [super setImage:blured];
+                }];
+                
             }];
             
-        }];
+        } else {
+            [super setImage:blured];
+        }
         
+       
         return;
     }
     

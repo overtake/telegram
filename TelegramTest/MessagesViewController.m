@@ -2392,9 +2392,7 @@ static NSTextAttachment *headerMediaIcon() {
             imageData = jpegNormalizedData(image);
         }
         
-        NSLog(@"1");
         NSImage *image = [[NSImage alloc] initWithData:imageData];
-        NSLog(@"2");
         SenderItem *sender;
         
         if(self.dialog.type == DialogTypeSecretChat) {
