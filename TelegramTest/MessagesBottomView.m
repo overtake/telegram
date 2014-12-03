@@ -462,7 +462,7 @@
     
     self.recordTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
         
-        [self.messagesViewController sendTyping];
+        [self.messagesViewController sendTypingWithAction:[TL_sendMessageRecordAudioAction create]];
         
         weakSelf.recordTime++;
         [weakSelf.recordDurationLayer setString:[NSString durationTransformedValue:weakSelf.recordTime]];
@@ -693,7 +693,7 @@
     
     
     if([self.inputMessageTextField.stringValue trim].length > 0) {
-        [self.messagesViewController sendTyping];
+        [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
         
         [self.sendButton setTextColor:LINK_COLOR forState:TMButtonNormalState];

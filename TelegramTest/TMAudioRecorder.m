@@ -57,7 +57,6 @@ typedef enum {
 }
 
 double mappingRange(double x, double in_min, double in_max, double out_min, double out_max) {
-    //Math from http://stackoverflow.com/a/5732390/447697
     double slope = 1.0 * (out_max - out_min) / (in_max - in_min);
     return out_min + slope * (x - in_min);
 }
@@ -68,6 +67,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         [self.recorder stop];
         [self removeFile];
     }
+    
     
     [self.timer invalidate];
     self.timer = [[TGTimer alloc] initWithTimeout:1.f/10.f repeat:YES completion:^{
@@ -111,14 +111,12 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
 - (void)stopRecord:(BOOL)send {
     [self.timer invalidate];
 
-    
     if(!self.recorder.isRecording)
         return;
     
     if(self.recorder.currentTime < 0.5)
         send = NO;
     
-    DLog(@"audio stop. Need send %@", send ? @"YES" : @"NO");
     [self.recorder stop];
     
     if(!send) {
@@ -128,39 +126,14 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     [ASQueue dispatchOnStageQueue:^{
         
-       	
-        NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
+       	NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
         
         char *c_op = strdup([opusPath UTF8String]);
         char *c_fp = strdup([self.filePath UTF8String]);
         
         char *argv[] = {"opusenc",c_fp,c_op,"--downmix-mono"};
 
-        
-        
-        
-      // char myntcs[] = "some text";
-        
-        
-//        NSTask *task = [[NSTask alloc] init];
-//        [task setLaunchPath: self.opusEncoderPath];
-//        [task setArguments: @[self.filePath, opusPath, @"--downmix-mono"]];
-//        
-     //   NSPipe *pipe = [NSPipe pipe];
-      //  [task setStandardOutput: pipe];
-        
-      //  NSFileHandle *file = [pipe fileHandleForReading];
-        
-     //   const char *cfilename= [[self.filePath stringByAppendingFormat:@" %@ %@",opusPath,@"--downmix-mono"] UTF8String];
-        
-      //  const char *argv[3] = { [self.filePath cStringUsingEncoding:NSUTF8StringEncoding], [opusPath cStringUsingEncoding:NSUTF8StringEncoding], "--downmix-mono" };
-        
         opusEncoder(3, argv);
-        
-       // [task launch];
-        
-        
-       // [file readDataToEndOfFile];
         
         [self removeFile];
         

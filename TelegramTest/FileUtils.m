@@ -286,12 +286,13 @@ void alert_bad_files(NSArray *bad_files) {
     alert(NSLocalizedString(@"App.MaxFileSize", nil),[NSString stringWithFormat:localize, bad_string]);
 }
 
-void confirm(NSString *text, NSString *info, void (^block)(void)) {
+void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void)) {
     
     NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
-        if([result intValue] == 1000) {
+        if([result intValue] == 1000)
             block();
-        }
+         else if(cancelBlock)
+            cancelBlock();
     }];
     [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];

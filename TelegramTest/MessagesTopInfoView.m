@@ -27,7 +27,7 @@
         
         
         
-        [self.field setAutoresizingMask:NSViewMaxXMargin | NSViewMinXMargin];
+       
         
         self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         
@@ -77,6 +77,13 @@ static NSMutableDictionary *cache;
     if(self.progress.isHidden)
         [self.progress stopAnimation:self];
     else [self.progress startAnimation:self];
+}
+
+-(void)setFrame:(NSRect)frameRect {
+    [super setFrame:frameRect];
+    
+    [self.progress setCenterByView:self];
+    [self.field setCenterByView:self];
 }
 
 

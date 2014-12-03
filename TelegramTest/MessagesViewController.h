@@ -41,7 +41,7 @@ typedef enum {
 
 @property (nonatomic,copy) dispatch_block_t didUpdatedTable;
 
-- (void)sendTyping;
+- (void)sendTypingWithAction:(TLSendMessageAction *)action;
 - (void)sendMessage;
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated;
 - (void)setSelectedMessage:(MessageTableItem *)item selected:(BOOL)selected;

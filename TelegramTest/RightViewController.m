@@ -286,45 +286,50 @@
         
     } else {
         
-        NSMutableArray *messages = [self.messagesViewController selectedMessages];
-        NSMutableArray *ids = [[NSMutableArray alloc] init];
-        for(MessageTableItem *item in messages)
-            [ids addObject:item.message];
-        
-        [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
-            return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
-        }];
-        
-        [self.messagesViewController cancelSelectionAndScrollToBottom];
-        weakify();
-        
-        
-        
-        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
-        dialog.last_marked_message = dialog.top_message;
-        
-        [dialog save];
-        
-        self.messagesViewController.didUpdatedTable = ^ {
+        confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
             
-            strongSelf.messagesViewController.didUpdatedTable = nil;
+            NSMutableArray *messages = [self.messagesViewController selectedMessages];
+            NSMutableArray *ids = [[NSMutableArray alloc] init];
+            for(MessageTableItem *item in messages)
+                [ids addObject:item.message];
             
-            [strongSelf.messagesViewController forwardMessages:ids conversation:dialog callback:^{
-                    
-                
+            [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
+                return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
             }];
-        };
+            
+            [self.messagesViewController cancelSelectionAndScrollToBottom];
+            weakify();
+            
+            
+            
+            dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
+            dialog.last_marked_message = dialog.top_message;
+            
+            [dialog save];
+            
+            self.messagesViewController.didUpdatedTable = ^ {
+                
+                strongSelf.messagesViewController.didUpdatedTable = nil;
+                
+                [strongSelf.messagesViewController forwardMessages:ids conversation:dialog callback:^{
+                    
+                    
+                }];
+            };
+            
+            if(self.messagesViewController.dialog == dialog) {
+                self.messagesViewController.didUpdatedTable();
+            }
+            [self hideModalView:YES animation:YES];
+            
+            [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+            
+            
+        },nil);
         
-        if(self.messagesViewController.dialog == dialog) {
-            self.messagesViewController.didUpdatedTable();
-        }
-        
-        [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-        
-
     }
     
-    [self hideModalView:YES animation:YES];
+    
 }
 
 

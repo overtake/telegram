@@ -620,7 +620,7 @@
             
              confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
                 [self logoutWithForce:YES];
-            });
+            },nil);
             
         } timeout:5];
     } else {

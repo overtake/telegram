@@ -29,7 +29,7 @@
 #import "SearchViewController.h"
 #import "TMTaskRequest.h"
 #import "SelfDestructionController.h"
-
+#import "TGModernTypingManager.h"
 @interface DialogsViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
@@ -116,7 +116,8 @@
             [SelfDestructionController initialize];
             [TMTypingManager sharedManager];
             
-        
+            [TGModernTypingManager initialize];
+            
             [[NewContactsManager sharedManager] fullReload];
             [[FullChatManager sharedManager] loadStored];
             

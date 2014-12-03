@@ -39,7 +39,8 @@ NSString* dp();
 BOOL check_file_size(NSString *path);
 void alert(NSString *text, NSString *info);
 void alert_bad_files(NSArray *bad_files);
-void confirm(NSString *text, NSString *info, void (^block)(void));
+void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void));
+
 NSArray *mediaTypes();
 NSArray *videoTypes();
 NSArray *imageTypes();

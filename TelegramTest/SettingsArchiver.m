@@ -223,7 +223,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
             confirm(NSLocalizedString(@"App.startupAtLaunch", nil), NSLocalizedString(@"App.startupAtLaunchDesc", nil), ^{
                 if(![self isLaunchAtStartup])
                     [self toggleLaunchAtStartup];
-            });
+            },nil);
         }
         
         [defaults setBool:YES forKey:@"startAtLaunchNotified"];

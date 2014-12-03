@@ -59,6 +59,12 @@
     return self;
 }
 
+-(void)setFrame:(NSRect)frameRect {
+    [super setFrame:frameRect];
+    
+    [self.progress setCenterByView:self];
+}
+
 
 - (NSAttributedString *)buildSecretString {
     

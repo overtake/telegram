@@ -406,7 +406,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
             alert(NSLocalizedString(@"Alert.Error", nil), NSLocalizedString(@"Auth.CheckConnection", nil));
             
         } timeout:5];
-    });
+    },nil);
     
     
 }
@@ -414,7 +414,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     confirm(NSLocalizedString(@"Confirm", nil),NSLocalizedString(@"Confirm.ConfirmLogout", nil), ^ {
         [self.window close];
         [[Telegram delegate] logoutWithForce:NO];
-    });
+    },nil);
     
 }
 - (IBAction)editDocumentsFolder:(NSPopUpButton *)sender {

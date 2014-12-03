@@ -492,10 +492,12 @@
 		C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C725D91860E05200094EC7 /* EncryptedParams.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
-		C2D235AF1A2E193B00765BA1 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D235B01A2E194000765BA1 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D235B11A2E194800765BA1 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D235B21A2E194800765BA1 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2D235B31A2F1CD000765BA1 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D235B41A2F1CD500765BA1 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D235B51A2F1CDD00765BA1 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2D235B61A2F1CDD00765BA1 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
+		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
@@ -673,8 +675,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D235B01A2E194000765BA1 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D235AF1A2E193B00765BA1 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2D235B41A2F1CD500765BA1 /* Sparkle.framework in Copy Files (6 items) */,
+				C2D235B31A2F1CD000765BA1 /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -1698,6 +1700,10 @@
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
 		C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEnterPasswordPanel.m; sourceTree = "<group>"; };
+		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
+		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
+		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
+		C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSendTypingManager.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -2016,8 +2022,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D235B11A2E194800765BA1 /* Sparkle.framework in Frameworks */,
-				C2D235B21A2E194800765BA1 /* HockeySDK.framework in Frameworks */,
+				C2D235B51A2F1CDD00765BA1 /* Sparkle.framework in Frameworks */,
+				C2D235B61A2F1CDD00765BA1 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2761,6 +2767,10 @@
 			children = (
 				0AF4F4A0189ABDCC004BA4DF /* MessageTypingView.h */,
 				0AF4F4A1189ABDCC004BA4DF /* MessageTypingView.m */,
+				C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */,
+				C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */,
+				C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */,
+				C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */,
 			);
 			name = typingView;
 			sourceTree = "<group>";
@@ -5032,6 +5042,7 @@
 				C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */,
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
+				C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */,
 				0A59068718AA32C8002ED7BA /* BTRControlAction.m in Sources */,
 				C267527D1A1B68F500152D9A /* TGPVImageObject.m in Sources */,
 				C248F3D719BE070D00BF658E /* audio-in.c in Sources */,
@@ -5053,6 +5064,7 @@
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
 				C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,
+				C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */,
 				C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */,
 				0AB850211875C61F001A796C /* TMAttributedString.m in Sources */,
 				C2AA4EFF18A8ED5500E20C68 /* TGDateUtils.mm in Sources */,

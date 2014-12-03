@@ -151,14 +151,14 @@
              [self hideModalProgress];
             
         } timeout:5];
-    });
+    },nil);
     
     
 }
 - (void)logOut {
     confirm(NSLocalizedString(@"Confirm", nil),NSLocalizedString(@"Confirm.ConfirmLogout", nil), ^ {
         [[Telegram delegate] logoutWithForce:NO];
-    });
+    },nil);
     
 }
 

@@ -93,7 +93,8 @@
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableDictionary *cacheTextForPeer;
 @property (nonatomic, assign) BOOL locked;
-@property (nonatomic, assign) BOOL allowTyping;
+
+@property (nonatomic,strong) NSMutableDictionary *typingReservation;
 @property (nonatomic, strong) ChatHistoryController *historyController;
 @property (nonatomic, strong) SelfDestructionController *destructionController;
 @property (nonatomic, strong) RPCRequest *typingRequest;
@@ -217,6 +218,8 @@
 
 - (void)loadView {
     [super loadView];
+    
+    self.typingReservation = [[NSMutableDictionary alloc] init];
     
     self.locked = NO;
     self.cacheTextForPeer = [[Storage manager] inputTextForPeers];
@@ -1161,31 +1164,42 @@ static NSTextAttachment *headerMediaIcon() {
     }
 }
 
-- (void)sendTyping {
-    if(self.allowTyping) {
+- (void)sendTypingWithAction:(TLSendMessageAction *)action {
+    
+    NSMutableDictionary *list = [_typingReservation objectForKey:@(self.dialog.peer_id)];
+    
+    
+    if(!list)
+    {
+        list = [[NSMutableDictionary alloc] init];
+        [_typingReservation setObject:list forKey:@(self.dialog.peer_id)];
+    }
+    
+    if(list[NSStringFromClass(action.class)] == nil) {
+        
+        [list setObject:action forKey:NSStringFromClass(action.class)];
         
         if(self.dialog.type == DialogTypeBroadcast)
             return;
         
-        self.allowTyping = NO;
         
         [self.typingRequest cancelRequest];
         
-        id request = nil;
-        if(self.dialog.type == DialogTypeSecretChat) {
+        id request;
+        
+        if(self.dialog.type == DialogTypeSecretChat)
             request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[self.dialog.encryptedChat inputPeer] typing:YES];
-        } else {
-            request = [TLAPI_messages_setTyping createWithPeer:[self.dialog inputPeer]action:[TL_sendMessageTypingAction create]];
-        }
+         else
+            request = [TLAPI_messages_setTyping createWithPeer:[self.dialog inputPeer] action:action];
+    
         
-        
-        weakify();
         self.typingRequest = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-            double delayInSeconds = 4.0;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                strongSelf.allowTyping = YES;
+
+            dispatch_after_seconds(4, ^{
+                [list removeObjectForKey:NSStringFromClass(action.class)];
             });
+            
+            
         } errorHandler:nil];
     }
 }
@@ -1593,20 +1607,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
-    
-    // begin test;
-    
-//    
-//    for (int i = 0; i < 10000; i++) {
-//        MessageTableCellContainerView *container = [[MessageTableCellContainerView alloc] initWithFrame:self.view.bounds];
-//    }
-//   
-//    
-//    
-//    return;
-//    
-//    
-    
+
     [self hideSearchBox:NO];
     
     if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [self.dialog.peer peer_id] != [dialog.peer peer_id])) {
@@ -1618,9 +1619,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
         
-        self.allowTyping = NO;
         [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
-        self.allowTyping = YES;
         
         [self.noMessagesView setConversation:dialog];
         
@@ -1678,8 +1677,7 @@ static NSTextAttachment *headerMediaIcon() {
         self.state = MessagesViewControllerStateNone;
         
         
-        
-        self.allowTyping = YES;
+        [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
         [self flushMessages];
@@ -2131,7 +2129,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self sendMessage:message callback:^{
             [self.bottomView setInputMessageString:@"" disableAnimations:NO];
-             self.allowTyping = YES;
+            [_typingReservation removeAllObjects];
         }];
         
     }

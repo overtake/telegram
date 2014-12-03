@@ -17,6 +17,7 @@
 #import "DownloadOperation.h"
 #import "NSString+Extended.h"
 #import "TGDateUtils.h"
+#import "TMTypingObject.h"
 @interface DialogTableItem()
 @property (nonatomic) BOOL isNotRead;
 @end
@@ -102,7 +103,10 @@
             int maxSize = 15;
             
             if(array.count == 1) {
-                TLUser *user = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
+                
+                TGActionTyping *action = [array objectAtIndex:0];
+                
+                TLUser *user = [[UsersManager sharedManager] find:[action user_id]];
                 string = user.dialogFullName;
                 
                 if(string.length > maxSize)
@@ -110,8 +114,13 @@
                 
                 string = [NSString stringWithFormat:NSLocalizedString(@"Typing.IsTyping", nil), string];
             } else if(array.count == 2) {
-                TLUser *user1 = [[UsersManager sharedManager] find:[[array objectAtIndex:0] intValue]];
-                TLUser *user2 = [[UsersManager sharedManager] find:[[array objectAtIndex:1] intValue]];
+                
+                
+                TGActionTyping *action1 = array[0];
+                TGActionTyping *action2 = array[1];
+                
+                TLUser *user1 = [[UsersManager sharedManager] find:[action1 user_id]];
+                TLUser *user2 = [[UsersManager sharedManager] find:[action2 user_id]];
                 
                 string = [NSString stringWithFormat:@"%@, %@", user1.dialogFullName, user2.dialogFullName];
                 if(string.length > maxSize) {

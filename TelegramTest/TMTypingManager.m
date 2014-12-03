@@ -35,8 +35,8 @@
 - (void) drop {
     [Notification removeObserver:self];
     self.objects = [NSMutableDictionary dictionary];
-    [Notification addObserver:self selector:@selector(userTypingNotification:) name:USER_TYPING];
-    [Notification addObserver:self selector:@selector(newMessageNotification:) name:MESSAGE_RECEIVE_EVENT];
+   // [Notification addObserver:self selector:@selector(userTypingNotification:) name:USER_TYPING];
+   // [Notification addObserver:self selector:@selector(newMessageNotification:) name:MESSAGE_RECEIVE_EVENT];
 }
 
 - (void) newMessageNotification:(NSNotification *)notify {
@@ -59,7 +59,7 @@
     
     
     
-    [[(DialogsManager *)[DialogsManager sharedManager] queue] dispatchOnQueue:^{
+    [ASQueue dispatchOnStageQueue:^{
         TL_conversation *dialog = nil;
         NSUInteger user_id = 0;
         
@@ -84,10 +84,9 @@
         }
         
         if(dialog) {
-            //        DLog(@"typing object2 %@", object);
             
             TMTypingObject *object = [self typeObjectForDialog:dialog];
-            [object addMember:user_id];
+            [object addMember:user_id withAction:nil];
         }
     }];
 }

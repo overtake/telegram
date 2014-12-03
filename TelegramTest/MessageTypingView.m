@@ -12,6 +12,7 @@
 #import "TMTypingManager.h"
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
+#import "TGModernTypingManager.h"
 @interface MessageTypingView() {
     NSArray *_typingDots;
     NSTimer *_typingDotTimer;
@@ -73,7 +74,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     [Notification addObserver:self selector:@selector(typingRedrawNotification:) name:[Notification notificationNameByDialog:dialog action:@"typing"]];
     
     
-    [self redrawByArray:[[[TMTypingManager sharedManager] typeObjectForDialog:dialog] writeArray]];
+    [self redrawByArray:[[TGModernTypingManager typingForConversation:dialog] currentActions]];
 }
 
 - (void) typingRedrawNotification:(NSNotification *)notification {
@@ -82,38 +83,39 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     [self redrawByArray:users];
 }
 
-- (void) redrawByArray:(NSArray *)users {
+- (void) redrawByArray:(NSArray *)actions {
     [[self.attributedString mutableString] setString:@""];
     
     
     
     NSString *string = nil;
-    if(users.count) {
-      //  [self.imageView setHidden:NO];
-      //  [self.imageView startGifAnimation];
+    if(actions.count) {
 
          [self _beginTypingAnimation:YES];
-        if(users.count == 1) {
-            TLUser *user = [[UsersManager sharedManager] find:[[users objectAtIndex:0] integerValue]];
+        if(actions.count == 1) {
+            
+            
+            TGActionTyping *action = actions[0];
+            
+            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
             if(user)
-                string =[NSString stringWithFormat:NSLocalizedString(@"Typing.IsTyping", nil),user.fullName];
+                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.fullName];
         } else {
+            
             NSMutableArray *usersStrings = [[NSMutableArray alloc] init];
-            for(NSNumber *uid in users) {
-                TLUser *user = [[UsersManager sharedManager] find:[uid integerValue]];
+            for(TGActionTyping *action in actions) {
+                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
                 if(user) {
                     [usersStrings addObject:user.fullName];
                 }
             }
             
             string = [NSString stringWithFormat:NSLocalizedString(@"Typing.AreTyping", nil), [usersStrings componentsJoinedByString:@", "]];
+            
         }
         
         [self.attributedString appendString:string withColor:[NSColor grayColor]];
     } else {
-      //  [self.imageView stopGifAnimation];
-       // [self.imageView setHidden:YES];
-
         [self _endTypingAnimation:YES];
         
         self.needDots = 0;
