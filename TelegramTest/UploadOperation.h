@@ -42,7 +42,7 @@ typedef enum {
 @property (nonatomic, copy) void (^uploadStarted)(UploadOperation *uploader, NSData *fileData);
 @property (nonatomic, copy) void (^uploadComplete)(UploadOperation *uploader, id inputPhoto);
 @property (nonatomic, copy) void (^uploadCancelled)(UploadOperation *uploader);
-
+@property (nonatomic, copy) void (^uploadTypingNeed)(UploadOperation *uploader);
 
 - (void)cancel;
 - (void)ready:(UploadType)type;

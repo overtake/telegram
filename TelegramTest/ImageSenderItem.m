@@ -14,6 +14,8 @@
 #import "PreviewObject.h"
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
+#import "TGSendTypingManager.h"
+#import "TGTimer.h"
 @interface ImageSenderItem ()
 @property (nonatomic, strong) UploadOperation *uploadOperation;
 @property (nonatomic, strong) NSImage *image;
@@ -183,6 +185,14 @@
         strongSelf.progress = ((float)current/(float)total) * 100.0f;
     }];
     
+    [self.uploadOperation setUploadTypingNeed:^(UploadOperation *operation) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction create] forConversation:strongSelf.conversation];
+    }];
+    
+    [self.uploadOperation setUploadStarted:^(UploadOperation *operation, NSData *data) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction create] forConversation:strongSelf.conversation];
+    }];
+    
     
     [self.uploadOperation setFilePath:self.filePath];
     [self.uploadOperation setFileName:@"photo.jpeg"];
@@ -194,5 +204,7 @@
     [self.uploadOperation cancel];
     [super cancel];
 }
+
+
 
 @end

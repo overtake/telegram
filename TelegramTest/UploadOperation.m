@@ -14,14 +14,14 @@
 #import "QueueManager.h"
 #import "FileUtils.h"
 #import "NSMutableData+Extension.h"
-
+#import "TGTimer.h"
 #define CONCURENT 3
 
 @interface UploadOperation () {
     int fingerprint;
     NSData *originKeyIv;
 }
-
+@property (nonatomic,strong) TGTimer *typingTimer;
 @property (nonatomic, assign) UploadType uploadType;
 @property (nonatomic, strong) NSInputStream *buffer;
 @property (nonatomic, assign) int part_size;
@@ -189,6 +189,15 @@
     [[ASQueue mainQueue] dispatchOnQueue:^{
         if(self.uploadStarted)
             self.uploadStarted(self, self.fileData);
+        
+        self.typingTimer = [[TGTimer alloc] initWithTimeout:4 repeat:YES completion:^{
+            
+            if(self.uploadTypingNeed && self.uploadState == UploadExecuting)
+                self.uploadTypingNeed(self);
+            
+        } queue:[ASQueue globalQueue].nativeQueue];
+        
+        [self.typingTimer start];
     }];
     
     
@@ -336,6 +345,8 @@
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 if(self.uploadComplete)
                     self.uploadComplete(self, inputFile);
+                [self.typingTimer invalidate];
+                self.typingTimer = nil;
             }];
             
             [self removeAllObjects];

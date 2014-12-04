@@ -10,6 +10,7 @@
 #import "ImageCache.h"
 #import "ImageStorage.h"
 #import "ImageUtils.h"
+#import "TGSendTypingManager.h"
 @interface VideoSenderItem ()
 @property (nonatomic,strong) NSString *path_for_file;
 @property (nonatomic,strong) UploadOperation *uploader;
@@ -176,6 +177,14 @@
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
         strongSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
+    }];
+    
+    [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction create] forConversation:strongSelf.conversation];
+    }];
+    
+    [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction create] forConversation:strongSelf.conversation];
     }];
     
     

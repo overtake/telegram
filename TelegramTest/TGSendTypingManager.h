@@ -9,5 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface TGSendTypingManager : NSObject
-
++(void)addAction:(TLSendMessageAction *)action forConversation:(TL_conversation *)conversation;
++(void)clear:(TL_conversation *)conversation;
 @end

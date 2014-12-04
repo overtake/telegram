@@ -10,6 +10,7 @@
 #import "ImageUtils.h"
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
+#import "TGSendTypingManager.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -89,6 +90,16 @@
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
         strongSelf.progress = (float)current/ (float)total * 100.0f;
     }];
+    
+    [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction create] forConversation:strongSelf.conversation];
+    }];
+    
+    [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction create] forConversation:strongSelf.conversation];
+    }];
+    
+    
     [self.uploader setFilePath:self.filePath];
     [self.uploader setFileName:self.message.media.document.file_name];
     [self.uploader ready:UploadDocumentType];

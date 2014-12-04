@@ -21,7 +21,7 @@
 #import "POPLayerExtras.h"
 
 #import "TMAudioRecorder.h"
-
+#import "TGSendTypingManager.h"
 
 @interface MessagesBottomView()
 
@@ -462,7 +462,9 @@
     
     self.recordTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
         
-        [self.messagesViewController sendTypingWithAction:[TL_sendMessageRecordAudioAction create]];
+        
+        [TGSendTypingManager addAction:[TL_sendMessageRecordAudioAction create] forConversation:self.dialog];
+        
         
         weakSelf.recordTime++;
         [weakSelf.recordDurationLayer setString:[NSString durationTransformedValue:weakSelf.recordTime]];
@@ -693,7 +695,11 @@
     
     
     if([self.inputMessageTextField.stringValue trim].length > 0) {
-        [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
+        
+        
+        if(self.dialog)
+            [TGSendTypingManager addAction:[TL_sendMessageTypingAction create] forConversation:self.dialog];
+       // [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
         
         [self.sendButton setTextColor:LINK_COLOR forState:TMButtonNormalState];

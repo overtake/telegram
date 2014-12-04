@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@interface TLSendMessageAction (Extension)
+-(NSComparisonResult)compare:(TLSendMessageAction *)anotherObject;
+@end
+
 @interface TGActionTyping : NSObject
 @property (nonatomic,strong,readonly) TLSendMessageAction *action;
 @property (nonatomic,assign,readonly) NSUInteger time;

@@ -6,7 +6,7 @@
 //  Created by Dmitry Kondratyev on 10/29/13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
-
+#import "TGSendTypingManager.h"
 #import "MessagesViewController.h"
 #import "MessageTableCellGifView.h"
 #import "NSString+Size.h"
@@ -1165,6 +1165,8 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)sendTypingWithAction:(TLSendMessageAction *)action {
+    
+    
     
     NSMutableDictionary *list = [_typingReservation objectForKey:@(self.dialog.peer_id)];
     
