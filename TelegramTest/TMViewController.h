@@ -11,9 +11,9 @@
 
 @class TMPopover;
 @class TMNavigationController;
-@interface TMViewController : NSViewController
+@interface TMViewController : NSObject
 @property (nonatomic) NSRect frameInit;
-
+@property (nonatomic,strong) TMView *view;
 @property (nonatomic, strong) TMView *leftNavigationBarView;
 @property (nonatomic, strong) TMView *centerNavigationBarView;
 @property (nonatomic, strong) TMView *rightNavigationBarView;
@@ -47,5 +47,8 @@
 
 -(void)_didStackRemoved;
 
+-(BOOL)becomeFirstResponder;
+
+-(void)loadView;
 
 @end

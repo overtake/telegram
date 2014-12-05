@@ -65,7 +65,6 @@
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.action.behavior composeDidCancel];
 }
 
 -(void)_didStackRemoved {
@@ -82,7 +81,19 @@
     self.tableView.selectLimit = self.action.behavior.limit;
     self.action.behavior.delegate = self;
     
+    
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    
+    [self.action.result.multiObjects enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        [ids addObject:@(obj.contact.user_id)];
+    }];
+    
+    self.tableView.selectedItems = ids;
+    
     [self.tableView ready];
+    
+    
     
    
     

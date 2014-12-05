@@ -79,7 +79,7 @@
 
 - (void)showForChat:(TL_encryptedChat *)chat {
     
-    self.view = self.view;
+    [self view];
     
     EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
     

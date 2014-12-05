@@ -74,7 +74,7 @@ static const float duration = 0.2;
     
     if(animated) {
         
-     //   [self.connectionView setHidden:NO];
+        [self.connectionView setHidden:NO];
         
         TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
         
@@ -123,10 +123,13 @@ static const float duration = 0.2;
         
     } else {
        
-      //  [self.connectionView setHidden:!show];
+        [self.connectionView setHidden:!show];
         
         [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];
         [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+        
+        [self.connectionView.layer setFrameOrigin:self.connectionView.frame.origin];
+        [self.centerViewBlock.layer setFrameOrigin:self.centerViewBlock.frame.origin];
     }
     
 }

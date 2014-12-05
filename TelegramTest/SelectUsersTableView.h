@@ -27,7 +27,7 @@
 @property (nonatomic,copy) void (^multipleCallback)(NSArray *contacts);
 
 
-@property (nonatomic,strong, readonly) NSArray *selectedItems;
+@property (nonatomic,strong) NSArray *selectedItems;
 
 @property (nonatomic,assign) NSUInteger selectLimit;
 

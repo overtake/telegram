@@ -239,7 +239,10 @@ static NSImage *attachBackgroundThumb() {
         self.thumbView = [[DocumentThumbImageView alloc] initWithFrame:NSMakeRect(1, 1, 48, 48)];
         [self.thumbView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
        // [self.thumbView setCornerRadius:4];
+        
+        [self.thumbView setCornerRadius:4];
 
+        [self.thumbView setContentMode:BTRViewContentModeCenter];
         
         NSMutableArray *subviews = [self.attachButton.subviews mutableCopy];
         [subviews insertObject:self.thumbView atIndex:1];
@@ -334,7 +337,7 @@ static NSImage *attachBackgroundThumb() {
     
     switch (self.item.state) {
         case DocumentStateDownloaded:
-            [self.thumbView setIsAlwaysBlur:NO];
+            //[self.thumbView setIsAlwaysBlur:NO];
             self.thumbView.object = self.item.thumbObject;
             
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachDownloadedBackground() forControlState:BTRControlStateNormal];
@@ -342,20 +345,20 @@ static NSImage *attachBackgroundThumb() {
            break;
             
         case DocumentStateDownloading:
-            [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
+          //  [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
             [self setProgressStringValue:self.item.downloadItem.progress format:NSLocalizedString(@"Document.Downloading", nil)];
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
             [self.progressView setState:TMLoaderViewStateDownloading];
             break;
             
         case DocumentStateUploading:
-            [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
+           // [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
             [self.progressView setState:TMLoaderViewStateUploading];
             break;
             
         case DocumentStateWaitingDownload:
-            [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
+          //  [self.thumbView setIsAlwaysBlur:self.item.isHasThumb];
             [self.attachButton setBackgroundImage:self.item.isHasThumb ? attachBackgroundThumb() : attachBackground() forControlState:BTRControlStateNormal];
             [self.progressView setState:TMLoaderViewStateNeedDownload];
             [self.progressView setProgress:0 animated:NO];
@@ -404,8 +407,6 @@ static NSImage *attachBackgroundThumb() {
     item.cell = self;
     
     [self.attachButton setFrameSize:item.thumbSize];
-    
-    [self.thumbView setIsAlwaysBlur:NO];
     
     [self setProgressFrameSize:NSMakeSize(48, 48)];
     

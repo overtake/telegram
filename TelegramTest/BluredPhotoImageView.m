@@ -36,7 +36,7 @@ static CAAnimation *ani() {
 }
 
 - (void)setIsAlwaysBlur:(BOOL)isAlwaysBlur {
-  //  if(self->_isAlwaysBlur == isAlwaysBlur)
+  //  if(self->_isAlwaysBlur == isAlwaysBlur && self.image == self.originImage)
     //    return;
     
     self->_isAlwaysBlur = isAlwaysBlur;

@@ -294,6 +294,9 @@
         [[UsersManager sharedManager] add:[NSArray arrayWithObject:user]];
         
         TLContact *contact = [TL_contact createWithUser_id:user.n_id mutual:NO];
+        
+        
+        
         [self removeContact:contact];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
@@ -309,10 +312,11 @@
 
 - (void) removeContact:(TLContact *)contact {
     [self.queue dispatchOnQueue:^{
-        if([self find:contact.user_id withCustomKey:@"user_id"]) {
-            [self remove:@[contact] withCustomKey:@"user_id"];
+        id f = [self find:contact.user_id withCustomKey:@"user_id"];
+        if(f) {
+            [self remove:@[f] withCustomKey:@"user_id"];
             [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-            [[Storage manager] removeContact:contact];
+            [[Storage manager] removeContact:f];
         }
     }];
 }

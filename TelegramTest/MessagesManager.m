@@ -149,7 +149,7 @@
                 
                 NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
                 
-                image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30]];
+                image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30] offsetY:0];
                 
                 [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
             }

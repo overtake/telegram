@@ -37,7 +37,7 @@ typedef void (^TapTMAvatarImageView)(void);
 + (instancetype)standartMessageTableAvatar;
 + (instancetype)standartNewConversationTableAvatar;
 
-+ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font;
++ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font offsetY:(int)offset;
 
 +(int)colorMask:(NSObject *)object;
 +(NSString *)text:(NSObject *)object;

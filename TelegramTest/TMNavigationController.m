@@ -48,12 +48,7 @@
 
 #pragma mark -
 #pragma mark Initialise
-- (id)initWithCoder:(NSCoder *)coder {
-    if (self = [super initWithCoder:coder]) {
-        [self initNavigationController];
-    }
-    return self;
-}
+
 
 - (id)initWithFrame:(NSRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -138,6 +133,7 @@ static const int navigationOffset = 48;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated {
     if(_isLocked)
         return;
+    
     
     if([self.viewControllerStack indexOfObject:viewController] == NSNotFound) {
         [self.viewControllerStack addObject:viewController];
@@ -323,9 +319,6 @@ static const int navigationOffset = 48;
                 [obj didChangedController:newViewController];
         }];
         
-        if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
-            [oldViewController _didStackRemoved];
-        
     } else {
         // Animate
         
@@ -409,10 +402,6 @@ static const int navigationOffset = 48;
                 if([obj respondsToSelector:@selector(didChangedController:)])
                     [obj didChangedController:newViewController];
             }];
-            
-            
-            if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
-                [oldViewController _didStackRemoved];
         };
         
         

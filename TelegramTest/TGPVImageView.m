@@ -47,7 +47,7 @@
     if(self.image == nil) {
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8);
         [self.loader setCenterByView:self];
-        [self.loader setCurrentProgress:self.object.downloadItem.progress];
+        [self.loader setCurrentProgress:self.object.downloadItem.progress == 0 ? 3 : self.object.downloadItem.progress];
         [self addSubview:self.loader];
     } else {
         [self.loader removeFromSuperview];

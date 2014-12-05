@@ -55,6 +55,7 @@ static NSImage *playImage() {
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
         [self.imageView setIsAlwaysBlur:YES];
+        [self.imageView setCornerRadius:4];
         
         [self.imageView setTapBlock:^{
            

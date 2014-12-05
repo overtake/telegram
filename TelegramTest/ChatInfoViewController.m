@@ -251,6 +251,8 @@
 - (void)setChat:(TLChat *)chat {
     self->_chat = chat;
     
+    [self view];
+    
     if(chat)
         _bottomView.conversation = chat.dialog;
     

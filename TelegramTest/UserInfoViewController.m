@@ -369,7 +369,7 @@
 
 -(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation  {
     
-    
+    [self view];
     
     self->_state = UserInfoViewControllerNormal;
     self->_user = user;

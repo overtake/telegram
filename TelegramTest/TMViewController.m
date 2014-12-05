@@ -178,6 +178,9 @@ static TMProgressModalView *progressView;
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.view becomeFirstResponder];
+}
 
 - (void)loadView {
     self.view = [[TMView alloc] initWithFrame: self.frameInit];
@@ -185,7 +188,9 @@ static TMProgressModalView *progressView;
 }
 
 - (TMView *)view {
-    return (TMView *)[super view];
+    if(!_view)
+        [self loadView];
+    return _view;
 }
 
 @end

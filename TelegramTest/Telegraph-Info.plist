@@ -31,7 +31,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>10221</string>
+	<string>10328</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>
@@ -42,6 +42,11 @@
 	<string>NewMainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.razeware.shopsnap.view</string>
+		<string>com.razeware.shopsnap.edit</string>
+	</array>
 	<key>SUFeedURL</key>
 	<string>https://rink.hockeyapp.net/api/2/apps/c55f5e74ae5d0ad254df29f71a1b5f0e</string>
 	<key>SUPublicDSAKeyFile</key>

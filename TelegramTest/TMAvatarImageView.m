@@ -363,7 +363,7 @@ static CAAnimation *ani2() {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font];
+            __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font offsetY:self.offsetTextY];
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                     
@@ -444,7 +444,7 @@ static CAAnimation *ani2() {
 
 }
 
-+ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font {
++ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font offsetY:(int)offset {
     
     NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
@@ -504,7 +504,7 @@ static CAAnimation *ani2() {
         
         NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
         NSSize textSize = [text sizeWithAttributes:attributes];
-        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 ) )withAttributes: attributes];
+        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) )withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;

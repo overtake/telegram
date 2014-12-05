@@ -43,6 +43,7 @@
 -(void)setBroadcast:(TL_broadcast *)broadcast
 {
     self->_broadcast = broadcast;
+    [self view];
     
     self.bottomView.conversation = broadcast.conversation;
     

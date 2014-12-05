@@ -269,6 +269,8 @@ static const int maxWidth = 120;
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
+    [self view];
+    
     [self.items removeAllObjects];
     
     [self.waitItems removeAllObjects];

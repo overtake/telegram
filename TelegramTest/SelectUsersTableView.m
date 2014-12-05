@@ -87,10 +87,12 @@ static NSCache *cacheItems;
     contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN %@)",self.exceptions]];
     
     
+    
+    
     [contacts enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-        
+        item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
         [items addObject:item];
         
         if(items.count == 30)
@@ -148,6 +150,7 @@ static NSCache *cacheItems;
         [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
             
              SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+             item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
              [items addObject:item];
             
         }];
@@ -264,6 +267,8 @@ static NSCache *cacheItems;
     
     return selected;
 }
+
+
 
 - (CGFloat) rowHeight:(NSUInteger)row item:(TMRowItem *)item {
     return row == 0 ? 50 : 50;

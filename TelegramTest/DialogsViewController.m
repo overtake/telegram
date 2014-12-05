@@ -338,12 +338,13 @@
 }
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
+    
     DialogTableItem *dialog = (DialogTableItem *) item;
     if([[Telegram rightViewController] isModalViewActive]) {
         [[Telegram rightViewController] modalViewSendAction:dialog.dialog];
         return NO;
     }
-    return YES;
+    return ![Telegram rightViewController].navigationViewController.isLocked;
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TMRowItem *) item {

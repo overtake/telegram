@@ -52,4 +52,9 @@
     
 }
 
+-(void)setAction:(ComposeAction *)action {
+    _action = action;
+    [self view];
+}
+
 @end

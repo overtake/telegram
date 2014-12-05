@@ -86,15 +86,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        // Initialization code here.
-       
-    }
-    return self;
-}
+
 
 -(BOOL)becomeFirstResponder {
     [self.messagesViewController becomeFirstResponder];
@@ -441,6 +433,7 @@
         [self.navigationViewController goBackWithAnimation:YES];
     } else {
         
+        
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         
         [self.navigationViewController.viewControllerStack removeAllObjects];
@@ -458,9 +451,11 @@
     
     
     [self hideModalView:YES animation:NO];
-
-    [self.navigationViewController pushViewController:self.userInfoViewController animated:YES];
+    
     [self.userInfoViewController setUser:user conversation:conversation];
+    
+    [self.navigationViewController pushViewController:self.userInfoViewController animated:YES];
+    
 }
 
 
@@ -475,8 +470,10 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.collectionViewController animated:YES];
     [self.collectionViewController setConversation:conversation];
+    
+    [self.navigationViewController pushViewController:self.collectionViewController animated:YES];
+    
     
 }
 
@@ -486,8 +483,10 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:YES];
+    
     [self.broadcastInfoViewController setBroadcast:broadcast];
+    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:YES];
+    
 }
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction {
@@ -511,9 +510,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:YES];
     [self.composeChatCreateViewController setAction:composeAction];
-
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:YES];
 }
 
 
@@ -524,8 +522,8 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];
     [self.composeBroadcastListViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];
 
 }
 
@@ -539,9 +537,9 @@
     
     [self hideModalView:YES animation:NO];
     
-    
-    [self.navigationViewController pushViewController:self.chatInfoViewController animated:YES];
     [self.chatInfoViewController setChat:chat];
+    [self.navigationViewController pushViewController:self.chatInfoViewController animated:YES];
+    
 }
 
 - (void)showEncryptedKeyWindow:(TL_encryptedChat *)chat {
@@ -549,8 +547,10 @@
         return;
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:YES];
     [self.encryptedKeyViewController showForChat:chat];
+    
+    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:YES];
+    
     
 }
 
@@ -637,9 +637,11 @@
     
     [self hideModalView:YES animation:NO];
     
+     [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusTimestamp]];
+    
     [self.navigationViewController pushViewController:self.lastSeenViewController animated:YES];
     
-    [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusTimestamp]];
+   
     
 }
 

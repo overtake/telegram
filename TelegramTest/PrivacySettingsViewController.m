@@ -209,6 +209,8 @@
 -(void)setPrivacy:(PrivacyArchiver *)privacy {
     _privacy = privacy;
     
+    [self view];
+    
     self.changedPrivacy = [_privacy copy];
 }
 

@@ -132,6 +132,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__48-[TGModernTypingManager userTypingNotification:]_block_invoke:TGModernTypingManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -212,6 +215,9 @@
             </PersistentString>
             <PersistentString
                value = "self.connectionView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "self.centerViewBlock.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -328,6 +334,9 @@
          contextName = "-[TGImageObject initDownloadItem]:TGImageObject.m">
       </ContextState>
       <ContextState
+         contextName = "__23-[TMTypingObject check]_block_invoke:TMTypingObject.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellAudioView setStateTextFieldString:]:MessageTableCellAudioView.m">
          <PersistentStrings>
             <PersistentString
@@ -382,6 +391,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ImageSenderItem initWithImage:forConversation:]:ImageSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "__43-[SearchViewController remoteGlobalSearch:]_block_invoke:SearchViewController.m">
@@ -706,6 +718,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTypingView redrawByArray:]:MessageTypingView.m">
+      </ContextState>
+      <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke116:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -1008,6 +1023,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGPVContainer contentFullSize:]:TGPVContainer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.imageObject.imageSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
@@ -1288,6 +1311,9 @@
          contextName = "-[PhotoCollectionImageView mouseDown:]:PhotoCollectionImageView.m">
       </ContextState>
       <ContextState
+         contextName = "-[DeleteRandomMessagesSenderItem performRequest]:DeleteRandomMessagesSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__32+[TGSecretAction _resendActions]_block_invoke_2:TGSecretAction.m">
       </ContextState>
       <ContextState
@@ -1374,6 +1400,9 @@
       <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.thumbObject.imageSize">
+            </PersistentString>
             <PersistentString
                value = "self.message.media.document.thumb">
             </PersistentString>

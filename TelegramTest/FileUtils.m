@@ -472,7 +472,7 @@ void open_user_by_name(NSString * userName) {
                     
                     [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:NO];
                     
-                    [[Telegram rightViewController] showUserInfoPage:response];
+                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:response.n_id]];
                 } else {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }

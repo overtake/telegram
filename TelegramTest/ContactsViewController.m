@@ -294,6 +294,8 @@
     
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
+    [self.tableView removeAllItems:NO];
+    
     
     if(all.count > 100) {
         [self insertAll:[all subarrayWithRange:NSMakeRange(0, 20)]];
@@ -385,7 +387,7 @@
         [[Telegram rightViewController] modalViewSendAction:item.contact.user.dialog];
         return NO;
     }
-    return YES;
+    return ![Telegram rightViewController].navigationViewController.isLocked;
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TMRowItem *) item {

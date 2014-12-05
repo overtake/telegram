@@ -35,16 +35,19 @@
         
         self.fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
         
+        NSSize size;
+        
         if([self isHasThumb]) {
             
-            self.thumbSize = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
+            size = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
             
            if(self.message.media.document.thumb.bytes) {
                 NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
-                thumb = renderedImage(thumb, thumb.size);
+                thumb = renderedImage(thumb, size);
                 [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
             }
             
+            self.thumbSize = NSMakeSize(70, 70);
             
         } else {
             self.thumbSize = NSMakeSize(48, 48);
@@ -52,7 +55,7 @@
         
         self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:self.cachedThumb];
         
-        self.thumbObject.imageSize = self.thumbSize;
+        self.thumbObject.imageSize = size;
         
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
         self.previewSize = self.thumbSize;

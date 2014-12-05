@@ -141,7 +141,6 @@ NSImage *fireImage() {
     
     BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60;
 
-    [self.imageView setIsAlwaysBlur:cellState == CellStateSending];
     
     
     [self deallocFireImage];

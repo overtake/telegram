@@ -317,7 +317,6 @@
             [self add:@[response]];
         }
         
-        
         [[Storage manager] insertUser:self.userSelf completeHandler:nil];
         
         completeHandler(self.userSelf);

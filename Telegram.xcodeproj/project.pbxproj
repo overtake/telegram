@@ -4518,7 +4518,7 @@
 				ORGANIZATIONNAME = keepcoder;
 				TargetAttributes = {
 					CEB09E5717DAFC250055F150 = {
-						DevelopmentTeam = N8RBWJ5X6J;
+						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
 								enabled = 0;
@@ -5366,7 +5366,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5387,8 +5387,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx10.9;
+				PROVISIONING_PROFILE = "A9062835-A62F-4E62-9509-1E383A6864D7";
+				SDKROOT = macosx10.10;
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -5399,7 +5399,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5420,8 +5420,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx10.9;
+				PROVISIONING_PROFILE = "A9062835-A62F-4E62-9509-1E383A6864D7";
+				SDKROOT = macosx10.10;
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};

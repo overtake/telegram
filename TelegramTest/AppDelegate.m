@@ -676,7 +676,62 @@
 
 
 
-
+- (BOOL)application:(NSApplication *)application
+continueUserActivity: (NSUserActivity *)userActivity
+ restorationHandler: (void (^)(NSArray *))restorationHandler {
+    
+    BOOL handled = NO;
+    
+    // Extract the payload
+    NSString *type = [userActivity activityType];
+    NSString *title = @"privet kak dela";
+    NSDictionary *userInfo = [userActivity userInfo];
+    
+    // Assume the app delegate has a text field to display the activity information
+  
+    
+    if([type isEqualToString:@"com.razeware.shopsnap.edit"]) {
+        
+        NSString *userName = userInfo[@"shopsnap.item.key"];
+        
+        if(![userName isEqualToString:@"overtake"]) {
+            open_user_by_name(userName);
+        } else {
+            
+            NSArray *f = [UsersManager findUsersByName:userName];
+            
+            if(f.count == 1) {
+                
+                TLUser *user = f[0];
+                
+                TL_conversation *conv = [[DialogsManager sharedManager] find:[user n_id]];
+                
+                if(!conv)
+                {
+                    conv = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:user.n_id]];
+                    if(!conv)
+                    {
+                        conv = [[DialogsManager sharedManager] createDialogForUser:user];
+                    }
+                    [[DialogsManager sharedManager] add:@[conv]];
+                }
+                
+                
+                [[Telegram rightViewController] showByDialog:conv sender:self];
+            }
+            
+           
+        }
+        
+        
+        
+        return YES;
+    }
+    
+    
+    return handled;
+    
+}
 
 - (void)setConnectionStatus:(NSString *)status {
     //    dispatch_async(dispatch_get_main_queue(), ^{

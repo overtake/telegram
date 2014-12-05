@@ -140,8 +140,6 @@ typedef enum {
     }];
     
     
-    
-    
     self.messagesLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.messagesLoadMoreItem setClickBlock:^{
         [strongSelf showMore:SearchSectionMessages animation:YES];
@@ -267,7 +265,7 @@ typedef enum {
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
     if(![[Telegram rightViewController] isModalViewActive]) {
-        return YES;
+        return ![Telegram rightViewController].navigationViewController.isLocked;
     }
     
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
