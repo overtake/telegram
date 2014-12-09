@@ -218,8 +218,8 @@ static int offsetEditable = 30;
 }
 
 -(void)checkSelected:(BOOL)isSelected {
-    [self.lastSeenTextField setSelected:isSelected];
-    [self.titleTextField setSelected:isSelected];
+ //   [self.lastSeenTextField setSelected:isSelected];
+  //  [self.titleTextField setSelected:isSelected];
 }
 
 NSImage *composeCheckImage() {
