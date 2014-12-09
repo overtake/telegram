@@ -42,6 +42,7 @@
 @property (nonatomic,strong) NSMutableDictionary *groups;
 @property (nonatomic,strong) NSMutableDictionary *groupMemoryTaken;
 @property (nonatomic,strong) NSMutableDictionary *groupMemoryLimit;
+@property (nonatomic,strong) NSMutableDictionary *groupCountLimit;
 
 
 
@@ -71,7 +72,7 @@ NSString *const AVACACHE = @"AVACACHE";
             _groups = [[NSMutableDictionary alloc] init];
             _groupMemoryTaken = [[NSMutableDictionary alloc] init];
             _groupMemoryLimit = [[NSMutableDictionary alloc] init];
-            
+            _groupCountLimit = [[NSMutableDictionary alloc] init];
             NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
             
             [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -79,6 +80,7 @@ NSString *const AVACACHE = @"AVACACHE";
                 _groupMemoryLimit[obj] = @(defaultMemoryLimit);
                 _groupMemoryTaken[obj] = @(0);
                 _groups[obj] = [[NSMutableDictionary alloc] init];
+                _groupCountLimit[obj] = @(0);
                 
             }];
         } synchronous:YES];
@@ -164,6 +166,14 @@ NSString *const AVACACHE = @"AVACACHE";
     [[self cache].queue dispatchOnQueue:^{
         
         [[self cache] setMemoryLimit:limit group:group];
+        
+    }];
+}
+
++(void)setCountLimit:(NSUInteger)limit group:(NSString *)group {
+    [[self cache].queue dispatchOnQueue:^{
+        
+        [[self cache] setCountLimit:limit group:group];
         
     }];
 }
@@ -277,9 +287,12 @@ NSString *const AVACACHE = @"AVACACHE";
         NSUInteger size = [obj integerValue];
         NSUInteger limit = [_groupMemoryLimit[key] integerValue];
         
-        if(size > limit) {
-            
-            NSMutableDictionary *group = _groups[key];
+        NSUInteger maxCount = [_groupCountLimit[key] integerValue];
+        
+         NSMutableDictionary *group = _groups[key];
+        
+        
+        if(size > limit && (maxCount == 0 || maxCount < [group count])) {
             
             __unused NSUInteger sizeAfter = size;
             
@@ -315,6 +328,10 @@ NSString *const AVACACHE = @"AVACACHE";
 
 -(void)setMemoryLimit:(NSUInteger)limit group:(NSString *)group {
     _groupMemoryLimit[group] = @(limit);
+}
+
+-(void)setCountLimit:(NSUInteger)limit group:(NSString *)group {
+     _groupCountLimit[group] = @(limit);
 }
 
 

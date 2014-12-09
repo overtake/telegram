@@ -32,6 +32,7 @@ extern NSString *const AVACACHE;
 
 
 +(void)setMemoryLimit:(NSUInteger)limit group:(NSString *)group;
++(void)setCountLimit:(NSUInteger)limit group:(NSString *)group;
 
 +(void)changeKey:(NSString *)key withKey:(NSString *)nkey;
 

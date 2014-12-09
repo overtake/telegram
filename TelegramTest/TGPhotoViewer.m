@@ -82,6 +82,7 @@ static const int controlsHeight = 75;
     
     
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
+    [TGCache setCountLimit:25 group:PVCACHE];
 
   //  [CATransaction begin];
     
