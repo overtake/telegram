@@ -45,10 +45,10 @@
     
     TMView *rightView = [[TMView alloc] init];
     
-    weak();
+    weakify();
     self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Done"];
     [self.doneButton setTapBlock:^{
-        [weakSelf actionAddContact];
+        [strongSelf actionAddContact];
     }];
     
     [rightView setFrameSize:self.doneButton.frame.size];
