@@ -124,6 +124,12 @@ static NSImage *playImage() {
     return menu;
 }
 
+-(void)setEditable:(BOOL)editable animation:(BOOL)animation
+{
+    [super setEditable:editable animation:animation];
+    self.imageView.isNotNeedHackMouseUp = editable;
+}
+
 
 - (void)playAnimation {
     

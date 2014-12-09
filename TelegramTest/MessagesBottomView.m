@@ -704,16 +704,6 @@
         
        
         
-        NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:@"com.razeware.shopsnap.view"];
-        
-        
-        activity.userInfo = @{ };
-        
-        [activity setNeedsSave:YES];
-        
-        [activity becomeCurrent];
-        
-        
         
         [self.sendButton setTextColor:LINK_COLOR forState:TMButtonNormalState];
         [self.sendButton setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];

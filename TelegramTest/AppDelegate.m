@@ -684,53 +684,120 @@ continueUserActivity: (NSUserActivity *)userActivity
     
     // Extract the payload
     NSString *type = [userActivity activityType];
-    NSString *title = @"privet kak dela";
+
+    
+    
     NSDictionary *userInfo = [userActivity userInfo];
     
-    // Assume the app delegate has a text field to display the activity information
-  
     
-    if([type isEqualToString:@"com.razeware.shopsnap.edit"]) {
+    
+    int user_id = [userInfo[@"user_id"] intValue];
+    
+    if([UsersManager currentUserId] != user_id)
+        return NO;
+    
+    
+    
+    
+    
+    if([type isEqualToString:USER_ACTIVITY_CONVERSATION]) {
         
-        NSString *userName = userInfo[@"shopsnap.item.key"];
         
-        if(![userName isEqualToString:@"overtake"]) {
-            open_user_by_name(userName);
+        NSString *peerType = userInfo[@"peer"][@"type"];
+        int peerId = [userInfo[@"peer"][@"id"] intValue];
+        
+        NSString *text = userInfo[@"text"];
+        
+        NSString *username = userInfo[@"peer"][@"username"];
+        
+        
+        TLPeer *peer;
+        if([peerType isEqualToString:@"group"]) {
+            peerId = -peerId;
+            peer = [TL_peerChat createWithChat_id:peerId];
+        } else {
+            peer = [TL_peerUser createWithUser_id:peerId];
+        }
+        
+        TL_conversation *conversation = [[DialogsManager sharedManager] find:peerId];
+        
+        if(!conversation)
+            conversation = [[Storage manager] selectConversation:peer];
+        
+        if(!conversation)
+        {
+            handled = NO;
+            
         } else {
             
-            NSArray *f = [UsersManager findUsersByName:userName];
+            [[DialogsManager sharedManager] add:@[conversation]];
             
-            if(f.count == 1) {
-                
-                TLUser *user = f[0];
-                
-                TL_conversation *conv = [[DialogsManager sharedManager] find:[user n_id]];
-                
-                if(!conv)
-                {
-                    conv = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:user.n_id]];
-                    if(!conv)
-                    {
-                        conv = [[DialogsManager sharedManager] createDialogForUser:user];
-                    }
-                    [[DialogsManager sharedManager] add:@[conv]];
-                }
-                
-                
-                [[Telegram rightViewController] showByDialog:conv sender:self];
+            [[Telegram rightViewController] showByDialog:conversation sender:self];
+            
+            [[Telegram rightViewController].messagesViewController setStringValueToTextField:text];
+            
+            BOOL didSetText = [[Telegram rightViewController].messagesViewController.inputText isEqualToString:text];
+            
+            
+            if (didSetText)
+            {
+                [userActivity getContinuationStreamsWithCompletionHandler:^(__unused NSInputStream *inputStream, NSOutputStream *outputStream, NSError *error)
+                 {
+                     
+                     if (error == nil)
+                     {
+                         @try {
+                             [outputStream open];
+                             [outputStream close];
+                         }
+                         @catch (NSException *exception) {
+                         }
+                         @finally {
+                         }
+                     }
+                 }];
             }
             
-           
+            handled = YES;
+            
+            
+            
         }
         
         
         
-        return YES;
+        [TMViewController hideModalProgress];
+       
     }
     
+    restorationHandler(@[]);
+    
+    [TMViewController hideModalProgress];
     
     return handled;
     
+}
+
+- (void)application:(NSApplication *)application didUpdateUserActivity:(NSUserActivity *)userActivity  {
+    
+}
+
+-(void)application:(NSApplication *)application
+                  :(NSString *)userActivityType error:(NSError *)error {
+    [TMViewController hideModalProgress];
+}
+
+- (BOOL)application:(NSApplication *)application willContinueUserActivityWithType:(NSString *)userActivityType {
+    [TMViewController showModalProgress];
+    
+    NSArray *types = @[USER_ACTIVITY_CONVERSATION];
+    
+    BOOL accept = [types indexOfObject:userActivityType] != NSNotFound;;
+    
+    if(accept)
+         [TMViewController showModalProgress];
+    
+    return accept;
 }
 
 - (void)setConnectionStatus:(NSString *)status {

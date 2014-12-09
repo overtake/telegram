@@ -28,6 +28,8 @@
 
 +(TGPhotoViewerItem *)currentItem;
 
++(void)deleteItem:(TGPhotoViewerItem *)item;
+
 +(void)nextItem;
 +(void)prevItem;
 

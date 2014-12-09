@@ -224,6 +224,13 @@
 
 
 -(void)checkOperation {
+    
+    if(self.isEditable)
+    {
+        [self mouseDown:[NSApp currentEvent]];
+        return;
+    }
+    
     if(self.item.messageSender) {
         [self deleteAndCancel];
         return;

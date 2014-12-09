@@ -144,6 +144,8 @@
 
 @property (nonatomic,strong) NSMutableArray *searchItems;
 
+@property (nonatomic,strong) id activity;
+
 @end
 
 @implementation MessagesViewController
@@ -304,36 +306,7 @@
     
     [self.normalNavigationRightView setTapBlock:^{
         
-        NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Settings",nil)];
-        if(strongSelf.dialog.type == DialogTypeChat) {
-            
-            if(strongSelf.dialog.chat.type == TLChatTypeNormal) {
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:strongSelf.dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) : NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) withBlock:^(id sender) {
-                    [strongSelf leaveOrReturn:strongSelf.dialog];
-                }]];
-            }
-            
-            
-            
-            
-            
-            
-        } else {
-            
-            if(strongSelf.dialog.type != DialogTypeSecretChat) {
-                [theMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Delete", nil) withBlock:^(id sender) {
-                    [strongSelf deleteDialog:strongSelf.dialog];
-                }]];
-                
-                
-                
-            } else {
-                
-                
-            }
-        }
-        
-        [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
+       [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
  
     }];
     
@@ -884,13 +857,28 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self becomeFirstResponder];
     [TMMediaController setCurrentController:[TMMediaController controller]];
-  //  [[TMMediaController controller] prepare:self.dialog completionHandler:nil];
-  //  [[TGPhotoViewer viewer] prepare:self.dialog];
+
+    
     [self tryRead];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if([NSUserActivity class] && (self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeUser)) {
+        NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
+        activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
+        activity.userInfo = @{@"peer":@{
+                                      @"id":@(abs(self.dialog.peer_id)),
+                                      @"type":self.dialog.type == DialogTypeChat ? @"group" : @"user"},
+                              @"user_id":@([UsersManager currentUserId])};
+        
+        activity.title = @"org.telegram.conversation";
+        
+        self.activity = activity;
+        
+        [self.activity becomeCurrent];
+    }
     
     if(self.dialog) {
         [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.dialog, @"sender":self}];
@@ -905,6 +893,11 @@ static NSTextAttachment *headerMediaIcon() {
    [self.table.scrollView setHasVerticalScroller:NO];
 }
 
+-(void)viewDidDisappear:(BOOL)animated {
+    if([NSUserActivity class]) {
+        [self.activity invalidate];
+    }
+}
 
 
 - (void)scrollDidStart {
@@ -925,10 +918,13 @@ static NSTextAttachment *headerMediaIcon() {
     }
 }
 
-
-
 - (void)setStringValueToTextField:(NSString *)stringValue {
-    [self.bottomView setInputMessageString:stringValue disableAnimations:NO];
+    if(stringValue && stringValue.length > 0)
+        [self.bottomView setInputMessageString:stringValue disableAnimations:NO];
+}
+
+- (NSString *)inputText {
+    return self.bottomView.inputMessageString;
 }
 
 - (void) addScrollEvent {
@@ -1602,7 +1598,7 @@ static NSTextAttachment *headerMediaIcon() {
 
     [self hideSearchBox:NO];
     
-    if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [self.dialog.peer peer_id] != [dialog.peer peer_id])) {
+    if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [self.dialog.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         
         self.jumpMessageId = messageId;
@@ -2373,14 +2369,18 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        NSData *imageData;
+        NSImage *originImage;
         
         if(data) {
-            imageData = jpegNormalizedData([[NSImage alloc] initWithData:data]);
+            originImage = [[NSImage alloc] initWithData:data];
+           
         } else {
-            NSImage *image = imageFromFile(file_path);
-            imageData = jpegNormalizedData(image);
+            originImage = imageFromFile(file_path);
         }
+        
+        originImage = strongResize(originImage, 1280);
+        
+        NSData *imageData = jpegNormalizedData(originImage);
         
         NSImage *image = [[NSImage alloc] initWithData:imageData];
         SenderItem *sender;
@@ -2637,6 +2637,12 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback startDeleting:(dispatch_block_t)startDeleting {
     weakify();
     
+    
+    if(!dialog)
+    {
+        if(callback) callback();
+        return;
+    }
     
     dispatch_block_t block = ^{
         [[DialogsManager sharedManager] deleteDialog:dialog completeHandler:^{

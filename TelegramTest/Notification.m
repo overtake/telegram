@@ -162,4 +162,7 @@ NSString *const PRIVACY_UPDATE = @"privacy_update";
 }
 
 
+NSString *const USER_ACTIVITY_CONVERSATION = @"org.telegram.conversation";
+
+
 @end

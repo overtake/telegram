@@ -21,7 +21,6 @@
 
 
 
-
 //
 //-(void)rebuildDate:(int)date {
 //    _date = [NSDate dateWithTimeIntervalSince1970:date];

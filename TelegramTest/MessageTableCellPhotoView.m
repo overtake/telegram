@@ -139,7 +139,7 @@ NSImage *fireImage() {
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60;
+    BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0;
 
     
     
@@ -176,6 +176,12 @@ NSImage *fireImage() {
     
 }
 
+
+-(void)setEditable:(BOOL)editable animation:(BOOL)animation
+{
+    [super setEditable:editable animation:animation];
+    self.imageView.isNotNeedHackMouseUp = editable;
+}
 
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];

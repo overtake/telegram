@@ -41,7 +41,7 @@
         self.statusTextField = [[TMStatusTextField alloc] init];
         [self.statusTextField setStatusDelegate:self];
         [self.statusTextField setSelector:@selector(statusForGroupInfo)];
-        [self.statusTextField setFrameOrigin:NSMakePoint(146, 10)];
+        [self.statusTextField setFrameOrigin:NSMakePoint(146, 8)];
         [self addSubview:self.statusTextField];
         
         self.kickButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Chat.Kick", nil)];

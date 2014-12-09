@@ -280,7 +280,7 @@
         } else {
             request = [TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]];
             userBlock();
-        }
+        } 
         
         return;
     }

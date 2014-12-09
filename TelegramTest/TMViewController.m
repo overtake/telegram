@@ -120,16 +120,18 @@ static TMProgressModalView *progressView;
 +(void)showModalProgress {
     
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[[NSApp mainWindow].contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[[[Telegram delegate] mainWindow].contentView bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:[NSApp mainWindow].contentView];
+        [progressView setCenterByView:[[Telegram delegate] mainWindow].contentView];
         
-        [[NSApp mainWindow].contentView addSubview:progressView];
+         [[[Telegram delegate] mainWindow].contentView addSubview:progressView];
     }
     
-    [(MainWindow *)[NSApp mainWindow] setAcceptEvents:NO];
+   
+    
+    [[[Telegram delegate] mainWindow] setAcceptEvents:NO];
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0.8];
     
@@ -153,7 +155,7 @@ static TMProgressModalView *progressView;
     
     progressView.layer.opacity = 0.8;
     
-    [(MainWindow *)[NSApp mainWindow] setAcceptEvents:YES];
+    [(MainWindow *)[[Telegram delegate] mainWindow] setAcceptEvents:YES];
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
     

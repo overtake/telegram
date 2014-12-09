@@ -49,6 +49,10 @@
     return converted;
 }
 
+-(void)removeItems:(NSArray *)items {
+    
+}
+
 
 -(int)totalCount {
     return 1;

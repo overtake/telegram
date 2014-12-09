@@ -12,6 +12,10 @@
 #import "PhotoCollectionTableView.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGPVMediaBehavior.h"
+#import "PhotoHistoryFilter.h"
+#import "VideoHistoryFilter.h"
+#import "DocumentHistoryFilter.h"
+#import "AudioHistoryFilter.h"
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -110,7 +114,18 @@
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
 
-
+    
+    
+    self.rightNavigationBarView = (TMView *)[TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
+    
+    weakify();
+    
+    
+    [(TMTextButton *) self.rightNavigationBarView setTapBlock:^{
+        
+        [[strongSelf filterMenu] popUpForView:strongSelf.rightNavigationBarView center:YES];
+        
+    }];
     
     
 }
@@ -543,6 +558,30 @@ static const int maxWidth = 120;
     
     
     return imageObject;
+}
+
+
+-(NSMenu *)filterMenu {
+    NSMenu *filterMenu = [[NSMenu alloc] init];
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
+        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+    }]];
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
+        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[VideoHistoryFilter class] sender:self];
+    }]];
+    
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
+       [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[DocumentHistoryFilter class] sender:self];
+    }]];
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
+        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[AudioHistoryFilter class] sender:self];
+    }]];
+    
+    return filterMenu;
 }
 
 

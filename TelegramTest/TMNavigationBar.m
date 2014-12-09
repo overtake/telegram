@@ -72,6 +72,13 @@ static const float duration = 0.2;
     [self.connectionView.layer removeAllAnimations];
     [self.centerViewBlock.layer removeAllAnimations];
     
+    
+    [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), !show ? 0 : NSHeight(self.connectionView.frame))];
+    [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+    
+    [self.connectionView.layer setFrameOrigin:self.connectionView.frame.origin];
+    [self.centerViewBlock.layer setFrameOrigin:self.centerViewBlock.frame.origin];
+    
     if(animated) {
         
         [self.connectionView setHidden:NO];
@@ -92,7 +99,8 @@ static const float duration = 0.2;
         
         
         [connectionDelegate setCompletion:^(BOOL isFinished) {
-            [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
+            if(isFinished)
+                [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
         }];
 
         [self.connectionView.layer pop_addAnimation:connectionAnimation forKey:@"position"];
@@ -113,7 +121,8 @@ static const float duration = 0.2;
       //  self.centerViewBlock.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [centerAnimation.toValue floatValue]);
         
         [centerDelegate setCompletion:^(BOOL isFinished) {
-            [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+            if(isFinished)
+                [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
         }];
         
         [self.centerViewBlock.layer pop_addAnimation:centerAnimation forKey:@"position"];

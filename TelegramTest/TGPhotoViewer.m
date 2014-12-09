@@ -133,8 +133,7 @@ static const int controlsHeight = 75;
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
-    
-    
+        
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
@@ -214,6 +213,10 @@ static const int controlsHeight = 75;
     return [[self viewer] behavior];
 }
 
++(void)deleteItem:(TGPhotoViewerItem *)item {
+    [[self viewer] deleteItem:item];
+}
+
 -(void)resort {
     [ASQueue dispatchOnStageQueue:^{
         
@@ -238,7 +241,6 @@ static const int controlsHeight = 75;
         NSInteger index = [self indexOfObject:item.previewObject];
         
         [_list removeObject:item];
-        
         
         if(_list.count == 0) {
             [ASQueue dispatchOnMainQueue:^{
@@ -268,6 +270,10 @@ static const int controlsHeight = 75;
                 
             }];
         }
+        
+        [self.behavior removeItems:@[item.previewObject]];
+        
+        self.totalCount = [self.behavior totalCount];
         
     }];
 }

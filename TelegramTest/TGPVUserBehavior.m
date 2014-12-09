@@ -55,6 +55,8 @@ static NSMutableDictionary *count;
                 
                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:[photo n_id] media:[photo.sizes lastObject] peer_id:_user.n_id];
                 
+                previewObject.access_hash = photo.access_hash;
+                
                 [converted addObject:previewObject];
             }
             
@@ -71,6 +73,13 @@ static NSMutableDictionary *count;
     
 }
 
+
+-(void)removeItems:(NSArray *)items {
+    NSMutableArray *converted = count[@(_user.n_id)];
+    
+    [converted removeObjectsInArray:items];
+    
+}
 
 -(int)totalCount {
     return (int)[count[@(_user.n_id)] count] + 1;

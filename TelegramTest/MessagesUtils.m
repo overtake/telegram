@@ -237,6 +237,8 @@
         [messageText appendString:@"" withColor:LIGHT_GRAY];
     }
     
+    [messageText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:messageText.range];
+    
     
     static NSMutableParagraphStyle *paragraph;
     
@@ -245,7 +247,7 @@
         paragraph = [[NSMutableParagraphStyle alloc] init];
         [paragraph setLineSpacing:0];
         [paragraph setMinimumLineHeight:5];
-        [paragraph setMaximumLineHeight:15];
+        [paragraph setMaximumLineHeight:16];
     });
     
     [messageText setAlignment:NSLeftTextAlignment range:NSMakeRange(0, messageText.length)];

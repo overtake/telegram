@@ -116,7 +116,6 @@
         } forControlEvents:BTRControlEventClick];
         
         [self.moreButton addBlock:^(BTRControlEvents events) {
-            if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class])
                 [weakSelf contextMenu];
             
         } forControlEvents:BTRControlEventClick];
@@ -190,10 +189,18 @@
 
 - (void) contextMenu {
     
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@Menu",NSStringFromClass([[TGPhotoViewer behavior] class])]);
+    
+    if(![self respondsToSelector:selector])
+        return;
+    
     [self.moreButton setSelected:YES];
     
     if(!self.menuPopover) {
-        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:self.menu];
+        
+       
+        
+        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:[self performSelector:selector]];
         [self.menuPopover setHoverView:self.moreButton];
     }
     
@@ -202,6 +209,7 @@
         weak();
         [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
             [weakSelf.moreButton setSelected:NO];
+            weakSelf.menuPopover = nil;
         }];
         [self.menuPopover showRelativeToRect:rect ofView:self.moreButton preferredEdge:CGRectMaxYEdge];
     }
@@ -209,7 +217,79 @@
     //    [self.attachMenu popUpForView:self.attachButton];
 }
 
--(NSMenu *)menu {
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+}
+
+
+-(NSMenu *)TGPVUserBehaviorMenu {
+    
+    NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    if([TGPhotoViewer behavior].user.n_id == [UsersManager currentUserId]) {
+        
+        NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
+            
+            [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:@[[TL_inputPhoto createWithN_id:[TGPhotoViewer currentItem].previewObject.msg_id access_hash:[TGPhotoViewer currentItem].previewObject.access_hash]]] successHandler:^(RPCRequest *request, id response) {
+                
+                
+                [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
+            
+            
+        }];
+        // [photoDelete setImage:image_AttachPhotoVideo()];
+        // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
+        [theMenu addItem:photoDelete];
+        
+    }
+    
+    NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
+        
+        
+        NSSavePanel *savePanel = [NSSavePanel savePanel];
+        
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"IMG_%@.jpg",[dateFormatter stringFromDate:[NSDate date]]]];
+        [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
+         {
+             if (result == NSFileHandlingPanelOKButton) {
+                 NSURL *file = [savePanel URL];
+                 
+                 NSString *itemUrl = locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff");
+                 
+                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
+                     [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
+                 }
+                 
+             } else if(result == NSFileHandlingPanelCancelButton) {
+                 
+             }
+             
+         }];
+        
+        
+    }];
+    //  [photoSave setImage:image_AttachFile()];
+    // [photoSave setHighlightedImage:image_AttachFileHighlighted()];
+    
+    [theMenu addItem:photoSave];
+    
+    
+    
+    
+    return theMenu;
+    
+}
+
+
+-(NSMenu *)TGPVMediaBehaviorMenu {
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     
@@ -257,7 +337,10 @@
         
         NSSavePanel *savePanel = [NSSavePanel savePanel];
         
-        [savePanel setNameFieldStringValue:@"image.jpg"];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"IMG_%@.jpg",[dateFormatter stringFromDate:[NSDate date]]]];
         [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
         {
             if (result == NSFileHandlingPanelOKButton) {

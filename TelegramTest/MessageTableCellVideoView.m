@@ -109,6 +109,11 @@ static NSImage *playImage() {
     NSRectFill(rect);
 }
 
+-(void)setEditable:(BOOL)editable animation:(BOOL)animation
+{
+    [super setEditable:editable animation:animation];
+    self.imageView.isNotNeedHackMouseUp = editable;
+}
 
 - (void)open {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];

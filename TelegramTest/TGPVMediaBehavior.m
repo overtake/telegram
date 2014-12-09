@@ -43,6 +43,10 @@
     
 }
 
+-(void)removeItems:(NSArray *)items {
+    
+}
+
 -(int)totalCount {
     return [[Storage manager] countOfMedia:_conversation.peer_id];
 }

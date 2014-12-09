@@ -50,6 +50,7 @@ typedef enum {
 - (void)unSelectAll:(BOOL)animated;
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
 - (void)setStringValueToTextField:(NSString *)stringValue;
+- (NSString *)inputText;
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;

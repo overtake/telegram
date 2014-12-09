@@ -265,6 +265,17 @@
          contextName = "-[PhotoTableItemView redrawRow]:PhotoTableItemView.m">
       </ContextState>
       <ContextState
+         contextName = "-[AppDelegate application:continueUserActivity:restorationHandler:]:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "text">
+            </PersistentString>
+            <PersistentString
+               value = "[Tele]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -402,7 +413,7 @@
          contextName = "-[RightViewController showByDialog:withJump:historyFilter:sender:]:RightViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.messagesViewController.dialog.peer.peer_id">
+               value = "self.messagesViewController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -636,6 +647,14 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadOperation load]:DownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[TMViewController showModalProgress]:TMViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSApp mainWindow]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">
@@ -1015,6 +1034,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[AppDelegate application:willContinueUserActivityWithType:]:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.mainWindow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
          <PersistentStrings>
             <PersistentString
@@ -1242,6 +1269,9 @@
       </ContextState>
       <ContextState
          contextName = "__open_user_by_name_block_invoke386:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[UserInfoContainerView setUser:]:UserInfoContainerView.m">
       </ContextState>
       <ContextState
          contextName = "__34-[LastSeenViewController loadView]_block_invoke:LastSeenViewController.m">
@@ -1539,6 +1569,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer indexOfObject:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "__29-[SelectUsersTableView ready]_block_invoke:SelectUsersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">

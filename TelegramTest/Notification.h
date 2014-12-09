@@ -115,4 +115,8 @@ extern NSString *const LOGOUT_EVENT;
 
 + (void)perform:(NSString *)name object:(id)object;
 + (void)perform:(NSString *)name data:(NSDictionary *)data;
+
+
+extern NSString *const USER_ACTIVITY_CONVERSATION;
+
 @end

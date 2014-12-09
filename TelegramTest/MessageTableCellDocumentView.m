@@ -193,6 +193,11 @@ static NSImage *attachBackgroundThumb() {
         self.attachButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         [self.attachButton addBlock:^(BTRControlEvents events) {
             
+            
+            if(weakSelf.isEditable) {
+                [weakSelf mouseDown:[NSApp currentEvent]];
+                return;
+            }
             if(weakSelf.item.state == DocumentStateDownloaded) {
                 if(weakSelf.item.isset) {
                     [weakSelf open];
@@ -252,6 +257,7 @@ static NSImage *attachBackgroundThumb() {
     }
     return self;
 }
+
 
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];
@@ -499,6 +505,12 @@ static NSImage *attachBackgroundThumb() {
 }
 
 - (void)textField:(id)textField handleURLClick:(NSString *)url {
+    
+    if(self.isEditable)
+    {
+        [self mouseDown:[NSApp currentEvent]];
+        return;
+    }
     
     if(self.cellState != CellStateNormal && self.cellState != CellStateNeedDownload) {
         
