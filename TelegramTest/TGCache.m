@@ -269,6 +269,8 @@ NSString *const AVACACHE = @"AVACACHE";
 
 -(void)checkMemory {
     
+    NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
+    
     [_groupMemoryTaken enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL *stop) {
         
         
@@ -300,10 +302,15 @@ NSString *const AVACACHE = @"AVACACHE";
                 currentCacheSize += record.size;
             }];
             
-            _groupMemoryTaken[key] = @(currentCacheSize);
+            
+            update[key] = @(currentCacheSize);
 
         }
         
+    }];
+    
+    [update enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        _groupMemoryTaken[key] = obj;
     }];
 
 }
