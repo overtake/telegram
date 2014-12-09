@@ -302,16 +302,14 @@ NSString *const AVACACHE = @"AVACACHE";
                 currentCacheSize += record.size;
             }];
             
-            
             update[key] = @(currentCacheSize);
 
         }
         
     }];
     
-    [update enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        _groupMemoryTaken[key] = obj;
-    }];
+    [_groupMemoryTaken addEntriesFromDictionary:update];
+    
 
 }
 
