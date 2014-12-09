@@ -30,8 +30,8 @@
     }
     
 //    DLog(@"redraw rows");
-    
-    [self.rowDelegate redrawRow];
+    if([self.rowDelegate respondsToSelector:@selector(redrawRow)])
+        [self.rowDelegate redrawRow];
 }
 
 -(id)initWithObject:(id)object {
