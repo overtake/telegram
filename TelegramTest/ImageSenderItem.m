@@ -33,10 +33,12 @@
         self.conversation = conversation;
        
         
+        
+        
         image = prettysize(image);
         
-        NSSize realSize = strongsizeWithSizes(image.size, MIN_IMG_SIZE, NSMakeSize(2000, 1000));
-        NSSize maxSize = strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width);
+        NSSize realSize = image.size;
+        NSSize maxSize = strongsize(realSize, 250);
         
         
         if(realSize.width < 50 || realSize.height < 50)
@@ -52,7 +54,9 @@
             
         }
         
-        NSData *preview = compressImage(jpegData, 0.1);
+        NSImage *rendered = renderedImage(image, maxSize);
+        
+        NSData *preview = compressImage(jpegNormalizedData(rendered), 0.1);
         
         
         TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:realSize.width h:realSize.height bytes:preview];
@@ -69,7 +73,7 @@
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:0 access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
         
-        [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:rendered forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
         
