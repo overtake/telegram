@@ -447,7 +447,7 @@ NSImage *decompressedImage(NSImage *image) {
 
 
 NSImage *prettysize(NSImage *img) {
-    if(img.representations.count > 0) {
+    if(img.representations.count > 0 && !NSSizeNotZero(img.size)) {
         
         NSSize size = img.size;
         for (NSImageRep * imageRep in img.representations) {

@@ -2387,6 +2387,8 @@ static NSTextAttachment *headerMediaIcon() {
             originImage = imageFromFile(file_path);
         }
         
+        originImage = prettysize(originImage);
+        
         originImage = strongResize(originImage, 1280);
         
         
