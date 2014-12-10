@@ -202,7 +202,7 @@
             }
             
             if(needUpdateUserInDB && isNeedUpdateDB) {
-                [usersToUpdate addObject:currentUser];
+                [usersToUpdate addObject:newUser];
             }
         }
         
