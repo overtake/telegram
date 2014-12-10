@@ -121,6 +121,9 @@
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[SenderItem notifyAllListeners:]:SenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
@@ -373,6 +376,9 @@
                value = "_currentRightController.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__48-[DeleteRandomMessagesSenderItem performRequest]_block_invoke79:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "-[PhotoCollectionTableView setItems:conversation:]:PhotoCollectionTableView.m">
@@ -697,6 +703,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.imageSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[LeftViewController updateSize]:LeftViewController.m">
@@ -1437,6 +1448,9 @@
                value = "self.message.media.document.thumb">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPhotoViewerItem isEqual:]:TGPhotoViewerItem.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">

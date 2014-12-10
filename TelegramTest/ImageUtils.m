@@ -464,7 +464,7 @@ NSImage *prettysize(NSImage *img) {
 
 NSImage* strongResize(NSImage *image, int maxSize) {
     float scale = 1.0;
-    NSImage *img = [image copy];
+    NSImage *img = prettysize([image copy]);
     
     if(img.size.width < maxSize && img.size.height < maxSize)
         return img;
@@ -480,7 +480,7 @@ NSImage* strongResize(NSImage *image, int maxSize) {
     }
     
     
-    return prettysize(img);
+    return img;
 }
 
 NSSize strongsize(NSSize from, float max)  {

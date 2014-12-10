@@ -2408,14 +2408,12 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
        
-        
-        NSImage *image = [[NSImage alloc] initWithData:imageData];
         SenderItem *sender;
         
         if(self.dialog.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithImage:image uploadType:UploadImageType forConversation:self.dialog];
+            sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:self.dialog];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:image jpegData:imageData forConversation:self.dialog];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:self.dialog];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
