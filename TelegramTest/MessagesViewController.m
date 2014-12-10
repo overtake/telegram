@@ -2070,7 +2070,16 @@ static NSTextAttachment *headerMediaIcon() {
         NSBeep();
         return;
     }
-    
+//    
+//    if([message isEqualToString:@"1"]) {
+//        [Telegram setConnectionState:ConnectingStatusTypeConnecting];
+//    }
+//    
+//    if([message isEqualToString:@"2"]) {
+//        [Telegram setConnectionState:ConnectingStatusTypeConnected];
+//        return;
+//    }
+//    
     
 //    if([message hasPrefix:@"/changePass"]) {
 //        
@@ -2380,7 +2389,25 @@ static NSTextAttachment *headerMediaIcon() {
         
         originImage = strongResize(originImage, 1280);
         
-        NSData *imageData = jpegNormalizedData(originImage);
+        
+         NSData *imageData = jpegNormalizedData(originImage);
+        
+        
+        if(originImage.size.width / 5 > originImage.size.height) {
+            
+            NSString *path = exportPath(rand_long(), @"tiff");
+            
+            [imageData writeToFile:path atomically:YES];
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self sendDocument:path addCompletionHandler:completeHandler];
+            }];
+            
+            
+            return;
+        }
+        
+       
         
         NSImage *image = [[NSImage alloc] initWithData:imageData];
         SenderItem *sender;

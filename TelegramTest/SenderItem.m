@@ -50,6 +50,7 @@
 -(id)init {
     if(self = [super init]) {
         self.state = MessageStateWaitSend;
+        self.listeners = [[NSMutableArray alloc] init];
     }
     
     return self;

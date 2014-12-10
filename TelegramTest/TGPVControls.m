@@ -281,7 +281,18 @@
     
     [theMenu addItem:photoSave];
     
+    NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+        
+        NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+        [pasteboard clearContents];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff")]]];
+        
+        
+    }];
     
+    
+    
+    [theMenu addItem:copy];
     
     
     return theMenu;
@@ -376,7 +387,7 @@
     
      [theMenu addItem:photoGoto];
     
-    NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.CopyToClipboard", nil) withBlock:^(id sender) {
+    NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
         
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];

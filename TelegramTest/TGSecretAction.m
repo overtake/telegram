@@ -20,11 +20,11 @@
 -(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData senderClass:(Class)senderClass {
     if(self = [self initWithActionId:actionId chat_id:chat_id decryptedData:decryptedData]) {
         _senderClass = senderClass;
-        [self save];
     }
     
     return self;
 }
+
 
 -(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData {
     if(self = [super init]) {

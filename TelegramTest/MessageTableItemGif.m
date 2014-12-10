@@ -32,8 +32,8 @@
             size.width = ceil(thumb.w * k);
         }
         
-        size.width = MAX(36, size.width);
-        size.height = MAX(36, size.height);
+        size.width = MAX(60, size.width);
+        size.height = MAX(60, size.height);
         
         
         self.blockSize = size;

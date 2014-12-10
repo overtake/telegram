@@ -131,7 +131,7 @@
    
     
     [self.sound_effects_checkbox setTitle:NSLocalizedString(@"Settings.SoundEffects", nil)];
-  //  [self.launch_on_startup setTitle:NSLocalizedString(@"Settings.LaunchOnStartup", nil)];
+    [self.launch_on_startup setTitle:NSLocalizedString(@"Settings.iCloudSynch", nil)];
     
     
     [self.online_when_desc setStringValue:NSLocalizedString(@"Settings.online_when_desc", nil)];

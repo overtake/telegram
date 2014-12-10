@@ -19,9 +19,6 @@
         
         self.params.ttl = ttl;
         
-      //  Destructor *destructor = [[Destructor alloc] initWithTLL:ttl max_id:self.message.n_id chat_id:conversation.peer.chat_id];
-      //  [SelfDestructionController addDestructor:destructor];
-        
     }
     
     return self;
@@ -32,7 +29,8 @@
     
     self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.chat_id decryptedData:[self decryptedMessageLayer] senderClass:[SetTTLSenderItem class]];
     
-    [self addEventListener:self.action];
+    [self.action save];
+    
 }
 
 
@@ -53,7 +51,7 @@
         self.state = MessageSendingStateSent;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
+        self.state = MessageSendingStateSent;
     }];
   
 }

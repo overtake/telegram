@@ -13,6 +13,8 @@
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super initWithConversation:conversation]) {
         self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:self.params.n_id decryptedData:[self decryptedMessageLayer] senderClass:[self class]];
+        
+        [self.action save];
     }
     
     return self;
@@ -40,7 +42,7 @@
         self.state = MessageSendingStateSent;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        self.state = MessageSendingStateSent;
     }];
     
 }

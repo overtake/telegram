@@ -243,6 +243,8 @@ static NSImage *playImage() {
     
     [self.imageView setFrameSize:item.blockSize];
     
+    [self.progressView setCenterByView:self.imageView];
+    
     if(item.cachedThumb) {
         [self.imageView setImage:item.cachedThumb];
     } else {

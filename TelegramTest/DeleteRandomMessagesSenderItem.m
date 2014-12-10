@@ -19,11 +19,14 @@
         _ids = ids;
         
         self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:self.params.n_id decryptedData:[self decryptedMessageLayer] senderClass:[self class]];
-    
+        
+        [self.action save];
+        
     }
     
     return self;
 }
+
 
 
 -(NSData *)decryptedMessageLayer1 {
@@ -41,11 +44,10 @@
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedMessage *response) {
         
-        
         self.state = MessageSendingStateSent;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        self.state = MessageSendingStateSent;
     }];
     
 }

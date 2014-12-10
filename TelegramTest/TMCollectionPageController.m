@@ -85,7 +85,7 @@
     
     [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -15)];
     
-    [nameTextField setStringValue:NSLocalizedString(@"Photos", nil)];
+    [nameTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
     
     
     self.centerNavigationBarView = (TMView *) nameTextField;

@@ -15,6 +15,8 @@
         
        self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:conversation.peer.chat_id decryptedData:[self decryptedMessageLayer]  senderClass:[UpgradeLayerSenderItem class]];
         
+        [self.action save];
+        
     }
     
     return self;
@@ -38,9 +40,9 @@
     TLAPI_messages_sendEncryptedService *request = [TLAPI_messages_sendEncryptedService createWithPeer:[TL_inputEncryptedChat createWithChat_id:self.action.chat_id access_hash:self.action.params.access_hash] random_id:self.random_id data:[MessageSender getEncrypted:self.action.params messageData:self.action.decryptedData]];
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-        
+        self.state = MessageSendingStateSent;
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
+        self.state = MessageSendingStateSent;
     }];
     
     

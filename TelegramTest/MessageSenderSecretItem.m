@@ -38,6 +38,8 @@
     [super setMessage:message];
     
      self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class]];
+    
+    [self.action save];
             
     [self addEventListener:self.action];
 }

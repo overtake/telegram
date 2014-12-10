@@ -40,6 +40,11 @@
     _params = [EncryptedParams findAndCreate:conversation.peer.peer_id];
 }
 
+-(void)setAction:(TGSecretAction *)action {
+    _action = action;
+    [self addEventListener:_action];
+}
+
 -(id)initWithSecretAction:(TGSecretAction *)action {
     if(self = [self init]) {
         self.action = action;

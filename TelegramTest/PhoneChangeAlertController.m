@@ -52,7 +52,7 @@
     
     NSString *textFormat = NSLocalizedString(@"PhoneChangeAlertController.Description", nil);
     
-    [attr appendString:[NSString stringWithFormat:textFormat,@"",@""] withColor:NSColorFromRGB(0x999999)];
+    [attr appendString:[NSString stringWithFormat:textFormat,@"",@"",@"",@""] withColor:NSColorFromRGB(0x999999)];
     
     [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
     
@@ -61,8 +61,17 @@
     
     NSUInteger length = endRange.location - startRange.location;
     
+    
+    
     [attr addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] range:NSMakeRange(startRange.location, length-4)];
     
+    
+    startRange = [textFormat rangeOfString:@"%3$@"];
+    endRange = [textFormat rangeOfString:@"%4$@"];
+    
+    length = endRange.location - startRange.location;
+    
+    [attr addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] range:NSMakeRange(startRange.location - 8, length-4)];
     
 //   
 //    

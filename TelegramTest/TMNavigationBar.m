@@ -58,7 +58,7 @@
     return self;
 }
 
-static const float duration = 0.2;
+static const float duration = 0.25;
 
 -(void)showConnectionController:(BOOL)animated {
     
