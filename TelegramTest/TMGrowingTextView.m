@@ -248,6 +248,36 @@
     
 }
 
+- (void)setContinuousSpellCheckingEnabled:(BOOL)flag
+{
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    if(userDefaults)
+    {
+        [userDefaults setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled_%@",NSStringFromClass([self class])]];
+    }
+    
+    [super setContinuousSpellCheckingEnabled: flag];
+}
+
+-(BOOL)isContinuousSpellCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled_%@",NSStringFromClass([self class])]];
+}
+
+-(BOOL)isGrammarCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"GrammarCheckingEnabled_%@",NSStringFromClass([self class])]];
+}
+
+-(void)setGrammarCheckingEnabled:(BOOL)flag {
+    
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    if(userDefaults)
+    {
+        [userDefaults setBool: flag forKey:[NSString stringWithFormat:@"GrammarCheckingEnabled_%@",NSStringFromClass([self class])]];
+    }
+    
+    [super setContinuousSpellCheckingEnabled: flag];
+}
+
 
 
 - (void)setFrameOrigin:(NSPoint)newOriginN {
