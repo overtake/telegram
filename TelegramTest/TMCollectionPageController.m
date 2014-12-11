@@ -83,7 +83,7 @@
     [[nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [nameTextField setDrawsBackground:NO];
     
-    [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -15)];
+    [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -13)];
     
     [nameTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
     
@@ -583,8 +583,8 @@ static const int maxWidth = 120;
 }
 
 
--(void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     [Notification removeObserver:self];
     
     
