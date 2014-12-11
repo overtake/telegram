@@ -90,8 +90,10 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    
-    
+  
+}
+
+-(void)dealloc {
     
 }
 

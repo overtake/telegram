@@ -23,6 +23,40 @@ static const int width = 180;
     return self;
 }
 
+-(void)initDownloadItem {
+    
+    
+    if(self.downloadItem )
+        return;//[_downloadItem cancel];
+    
+    
+    self.downloadItem = [[DownloadPhotoCollectionItem alloc] initWithObject:self.location size:self.size];
+    
+    self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    
+    [self.downloadItem addEvent:self.downloadListener];
+    
+    
+    weak();
+    
+    [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        [weakSelf _didDownloadImage:item];
+        weakSelf.downloadItem = nil;
+        weakSelf.downloadListener = nil;
+    }];
+    
+    
+    [self.downloadListener setProgressHandler:^(DownloadItem * item) {
+        if([weakSelf.delegate respondsToSelector:@selector(didUpdatedProgress:)]) {
+            [weakSelf.delegate didUpdatedProgress:item.progress];
+        }
+    }];
+    
+    
+    [self.downloadItem start];
+}
+
+
 
 -(void)_didDownloadImage:(DownloadItem *)item {
     const NSSize size = NSMakeSize(width, width);

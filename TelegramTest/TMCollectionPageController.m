@@ -261,10 +261,8 @@ static const int maxWidth = 120;
     
     static NSString* const kRowIdentifier = @"photoCollectionView";
     
-    PhotoTableItemView *photoTableItemView = (PhotoTableItemView *) [self.photoCollection cacheViewForClass:[PhotoTableItemView class] identifier:kRowIdentifier];
-    
+    id photoTableItemView = [self.photoCollection cacheViewForClass:[PhotoTableItemView class] identifier:kRowIdentifier];
     item.size = [self itemSize];
-    
     return photoTableItemView;
 }
 
@@ -585,10 +583,13 @@ static const int maxWidth = 120;
 }
 
 
--(void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [Notification removeObserver:self];
+    
+    
     [self.items removeAllObjects];
+    
     [self.photoCollection removeAllItems:NO];
     [self.photoCollection reloadData];
     [TGCache removeAllCachedImages:@[PCCACHE]];

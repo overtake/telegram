@@ -220,9 +220,9 @@ typedef enum {
 
 
 -(void)updateFont {
-   
+    self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
     [self textDidChange:nil];
-     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
+    [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
 }
 
 

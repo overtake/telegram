@@ -179,7 +179,7 @@ static const int bottomOffset = 58;
 
 
 -(BOOL)canMinimisize {
-    return self.tabController.selectedIndex == 1 && !self.dialogsViewController.isSearchActive;
+    return  !self.dialogsViewController.isSearchActive;
 }
 
 - (BOOL)isSearchActive {

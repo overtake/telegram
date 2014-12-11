@@ -528,8 +528,8 @@ static TMTableView *tableStatic;
                   row:(NSInteger)row {
     
     TMRowItem *item = [self.list objectAtIndex:row];
-    TMRowView *cell = [self.tm_delegate viewForRow:row item:item];
     
+    TMRowView *cell = [self.tm_delegate viewForRow:row item:item];
     [cell setRow:row];
     [cell setHover:row == self.mouseOverRow redraw:NO];
     [cell setItem:item selected:item.hash == self.listSelectedElementHash ? YES : NO];

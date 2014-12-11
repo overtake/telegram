@@ -343,7 +343,7 @@
     
     self.typingView = [[MessageTypingView alloc] initWithFrame:self.view.bounds];
     
-    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 60)];
+    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 58)];
     self.bottomView.messagesViewController = self;
     [self.bottomView setAutoresizesSubviews:YES];
     [self.bottomView setAutoresizingMask:NSViewWidthSizable];
@@ -873,7 +873,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if([NSUserActivity class] && (self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeUser)) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
-        activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
+     //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
         activity.userInfo = @{@"peer":@{
                                       @"id":@(abs(self.dialog.peer_id)),
                                       @"type":self.dialog.type == DialogTypeChat ? @"group" : @"user"},
@@ -2384,29 +2384,37 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
+        
+        
+        
+        
+        
+        
         NSImage *originImage;
         
         if(data) {
             originImage = [[NSImage alloc] initWithData:data];
-           
         } else {
             originImage = imageFromFile(file_path);
         }
         
+        
+        
         originImage = prettysize(originImage);
         
-        originImage = strongResize(originImage, 1280);
-        
-        
-         NSData *imageData = jpegNormalizedData(originImage);
         
         
         if(originImage.size.width / 5 > originImage.size.height) {
             
-            NSString *path = exportPath(rand_long(), @"tiff");
+            NSString *path = file_path;
             
-            [imageData writeToFile:path atomically:YES];
             
+            if(!file_path) {
+                path = exportPath(rand_long(), @"tiff");
+                [data writeToFile:path atomically:YES];
+            }
+            
+           
             [ASQueue dispatchOnMainQueue:^{
                 [self sendDocument:path addCompletionHandler:completeHandler];
             }];
@@ -2414,6 +2422,18 @@ static NSTextAttachment *headerMediaIcon() {
             
             return;
         }
+        
+        
+        originImage = strongResize(originImage, 1280);
+        
+        
+        NSData *imageData = jpegNormalizedData(originImage);
+        
+        
+
+        NSLog(@"imageSize: %ld kb",imageData.length / 1024);
+        
+        
        
         SenderItem *sender;
         

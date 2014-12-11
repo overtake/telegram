@@ -223,7 +223,7 @@
     if(self->_normalView)
         return self->_normalView;
     
-    self->_normalView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height - 3)];
+    self->_normalView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height - 1)];
     [self.normalView setWantsLayer:YES];
     
     

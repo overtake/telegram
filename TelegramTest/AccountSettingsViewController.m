@@ -571,6 +571,7 @@ typedef enum {
     
     self.userNameTextField = [TMNameTextField defaultTextField];
     
+     self.userNameTextField.autoresizingMask = NSViewMinXMargin;
     
     [self.userName addSubview:self.userNameTextField];
    
@@ -598,6 +599,8 @@ typedef enum {
     [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
     
     self.phoneNumberTextField = [TMNameTextField defaultTextField];
+    
+    self.phoneNumberTextField.autoresizingMask = NSViewMinXMargin;
     
     
     [self.phoneNumber addSubview:self.phoneNumberTextField];

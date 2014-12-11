@@ -69,4 +69,8 @@ static CAAnimation *photoAnimation() {
     return [TGCache cachedImage:key group:@[PCCACHE]];
 }
 
+-(void)dealloc {
+    
+}
+
 @end

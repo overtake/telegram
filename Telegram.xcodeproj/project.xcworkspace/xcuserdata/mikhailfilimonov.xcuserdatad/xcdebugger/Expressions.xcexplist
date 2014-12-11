@@ -795,6 +795,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesBottomView initWithFrame:]:MessagesBottomView.m">
+      </ContextState>
+      <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke:TMCircularProgress.m">
          <PersistentStrings>
             <PersistentString
@@ -916,6 +919,14 @@
          <PersistentStrings>
             <PersistentString
                value = "item.message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__47-[TMCollectionPageController viewDidDisappear:]_block_invoke:TMCollectionPageController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.photoCollection.list">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1365,6 +1376,17 @@
             </PersistentString>
             <PersistentString
                value = "self.type &amp; SearchTypeGlobalUsers">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "prettysize:ImageUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "img.representations">
+            </PersistentString>
+            <PersistentString
+               value = "[imageRep pixelsWide]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

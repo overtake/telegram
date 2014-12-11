@@ -101,8 +101,8 @@
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
     if(proposedPosition < 80)
         return 70;
-    if(proposedPosition < 250)
-        return 250;
+    if(proposedPosition < 270)
+        return 270;
     
     return roundf(proposedPosition);
 }

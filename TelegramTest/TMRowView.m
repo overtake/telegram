@@ -64,6 +64,7 @@
 }
 
 - (void) setItem:(id)item selected:(BOOL)isSelected {
+    
     [self.rowItem setRowDelegate:nil];
     self.rowItem = item;
     [self.rowItem setRowDelegate:self];
