@@ -68,6 +68,7 @@
         [self.removeButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
         [self.removeButton setTextColor:BLUE_UI_COLOR];
         
+        [self.removeButton sizeToFit];
         
         weak();
         

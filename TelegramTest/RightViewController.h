@@ -89,7 +89,7 @@
 - (void)showPrivacyController;
 - (void)showLastSeenController;
 
-- (void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback;
+-(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback title:(NSString *)title;
 - (void)showPhoneChangeAlerController;
 - (void)showPhoneChangeController;
 - (void)showPhoneChangeConfirmController:(id)params phone:(NSString *)phone;

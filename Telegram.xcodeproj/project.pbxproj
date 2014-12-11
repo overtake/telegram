@@ -1704,6 +1704,7 @@
 		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
 		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
 		C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSendTypingManager.m; sourceTree = "<group>"; };
+		C2D235C11A3A2D6000765BA1 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -5252,6 +5253,7 @@
 				CE46A25B1854C09A00D6EF14 /* en */,
 				C20D18B11945BE890095A906 /* es */,
 				C2002D14199E9ADA002A1915 /* de */,
+				C2D235C11A3A2D6000765BA1 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

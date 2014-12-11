@@ -18,5 +18,6 @@
 
 @property (nonatomic,strong) dispatch_block_t addCallback;
 
+@property (nonatomic,strong) NSString *title;
 -(void)_didRemoveItem:(PrivacyUserListItem *)item;
 @end

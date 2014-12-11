@@ -110,6 +110,9 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.centerTextField setStringValue:self.title];
+    
+    
     [self.tableView removeAllItems:NO];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];

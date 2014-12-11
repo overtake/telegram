@@ -645,7 +645,7 @@
     
 }
 
--(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback  {
+-(void)showPrivacyUserListController:(PrivacyArchiver *)privacy arrayKey:(NSString *)arrayKey addCallback:(dispatch_block_t)addCallback title:(NSString *)title  {
     if(self.navigationViewController.currentController == self.privacyUserListController)
         return;
     
@@ -655,6 +655,7 @@
     self.privacyUserListController.privacy = privacy;
     self.privacyUserListController.arrayKey = arrayKey;
     self.privacyUserListController.addCallback = addCallback;
+    self.privacyUserListController.title = title;
     
     
     [self.navigationViewController pushViewController:self.privacyUserListController animated:YES];

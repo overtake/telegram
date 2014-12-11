@@ -178,7 +178,7 @@
                 
                 [[Telegram rightViewController] showComposeWithAction:self.allowUsersAction];
                 
-            }];
+            } title:NSLocalizedString(@"PrivacySettingsController.AlwaysShare", nil)];
         }
         
     } description:NSLocalizedString(@"PrivacySettingsController.AlwaysShareWith", nil) subdesc:@"5 users" height:42 stateback:nil];
@@ -191,7 +191,7 @@
         } else {
             [[Telegram rightViewController] showPrivacyUserListController:self.changedPrivacy arrayKey:@"disallowUsers" addCallback:^{
                 [[Telegram rightViewController] showComposeWithAction:self.disallowUsersAction];
-            }];
+            } title:NSLocalizedString(@"PrivacySettingsController.NeverShare", nil)];
         }
         
        
