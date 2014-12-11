@@ -392,6 +392,9 @@
                 return incomingEvent;
             }
             
+            if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
+                return incomingEvent;
+            }
             
             
             [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
