@@ -78,6 +78,8 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
+    
 //    NSUInteger numberOfLines, index, numberOfGlyphs = [self.layoutManager numberOfGlyphs];
 //    NSRange lineRange;
 //    
@@ -206,7 +208,7 @@
     self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     self.autoresizesSubviews = YES;
     self.delegate = self;
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    self.font = [NSFont fontWithName:@"HelveticaNeue" size:15];
     self.insertionPointColor = NSColorFromRGB(0x0f92dd);
     
     
@@ -252,7 +254,7 @@
 }
 
 - (void)setPlaceholderString:(NSString *)placeHodlder {
-    self.placeholderTextAttributedString = [[NSAttributedString alloc] initWithString:placeHodlder attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13]}];
+    self.placeholderTextAttributedString = [[NSAttributedString alloc] initWithString:placeHodlder attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13]}];
 }
 
 -(NSPoint)textContainerOrigin {

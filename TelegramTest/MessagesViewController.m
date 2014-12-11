@@ -86,7 +86,7 @@
 
 @end
 
-@interface MessagesViewController () {
+@interface MessagesViewController () <SettingsListener> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
 }
 
@@ -207,6 +207,9 @@
     return [self.messages copy];
 }
 
+-(void)reloadData {
+    [self.table reloadData];
+}
 
 - (void)loadView {
     [super loadView];
@@ -385,7 +388,10 @@
     
     [self.searchMessagesView setHidden:YES];
     
+
 }
+
+
 
 
 -(void)showSearchBox {
@@ -2408,7 +2414,6 @@ static NSTextAttachment *headerMediaIcon() {
             
             return;
         }
-        
        
         SenderItem *sender;
         

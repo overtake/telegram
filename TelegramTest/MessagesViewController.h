@@ -115,4 +115,6 @@ typedef enum {
 
 -(NSArray *)messageList;
 
+
+-(void)reloadData;
 @end

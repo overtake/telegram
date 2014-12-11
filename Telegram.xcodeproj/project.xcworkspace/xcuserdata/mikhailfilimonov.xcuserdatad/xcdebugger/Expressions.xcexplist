@@ -1532,6 +1532,14 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke_2:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[MesssageInputGrowingTextView setFont:]:MesssageInputGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.font">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33-[DialogsManager updateReadList:]_block_invoke_2:DialogsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -1717,6 +1725,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.message.media.document.thumb">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMGrowingTextView textDidChange:]:TMGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.font">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

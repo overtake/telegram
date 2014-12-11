@@ -15,4 +15,6 @@
 
 @property (nonatomic,strong) SearchSelectItem *mark;
 
+-(void)updateMessageFont;
+
 @end

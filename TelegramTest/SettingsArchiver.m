@@ -164,12 +164,14 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 }
 
 + (void)didChangeMask {
-    NSArray *listeners = [[SettingsArchiver instance].listeners copy];
-    for (id<SettingsListener> listener in listeners) {
-        if([listener respondsToSelector:@selector(didChangeSettingsMask:)]) {
-            [listener didChangeSettingsMask:[SettingsArchiver instance].mask];
+
+    [ASQueue dispatchOnMainQueue:^{
+        for (id<SettingsListener> listener in [[self instance] listeners]) {
+            if([listener respondsToSelector:@selector(didChangeSettingsMask:)]) {
+                [listener didChangeSettingsMask:[SettingsArchiver instance].mask];
+            }
         }
-    }
+    }];
 }
 
 + (NSString *)documentsFolder {
@@ -205,11 +207,16 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 }
 
 + (void)addEventListener:(id<SettingsListener>)listener {
-    [[SettingsArchiver instance].listeners addObject:listener];
+    [ASQueue dispatchOnMainQueue:^{
+        [[SettingsArchiver instance].listeners addObject:listener];
+    }];
+    
 }
 
 + (void)removeEventListener:(id<SettingsListener>)listener {
-    [[SettingsArchiver instance].listeners removeObject:listener];
+   [ASQueue dispatchOnMainQueue:^{
+        [[SettingsArchiver instance].listeners removeObject:listener];
+   }];
 }
 
 +(void)notifyOfLaunch {

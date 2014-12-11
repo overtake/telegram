@@ -23,3 +23,8 @@
 +(TLAPI_photos_deletePhotos *)createWithN_id:(NSArray *)n_id;
 
 @end
+
+
+@interface TL_invokeAfter : TLMsgResendReq
++(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query;
+@end

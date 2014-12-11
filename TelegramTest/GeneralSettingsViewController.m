@@ -130,6 +130,17 @@
     
     
     
+    GeneralSettingsRowItem *bigFong = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        [SettingsArchiver addOrRemoveSetting:BigFontSetting];
+        [[Telegram rightViewController].messagesViewController reloadData];
+    } description:NSLocalizedString(@"Settings.BigFont", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:BigFontSetting]);
+    }];
+    
+    [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
         [SettingsArchiver addOrRemoveSetting:PushNotifications];

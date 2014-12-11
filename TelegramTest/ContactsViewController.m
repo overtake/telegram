@@ -138,6 +138,12 @@
     return YES;
 }
 
+-(void)checkSelected:(BOOL)isSelected
+{
+    [self.titleTextField setSelected:isSelected];
+    [self.lastSeenTextField setSelected:isSelected];
+}
+
 
 -(NSColor *)color
 {

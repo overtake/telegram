@@ -10,7 +10,8 @@
 
 @interface SelectUserRowView : TMRowView
 
-
+@property (nonatomic, strong,readonly) TMNameTextField *titleTextField;
+@property (nonatomic,strong,readonly) TMStatusTextField *lastSeenTextField;
 - (void)needUpdateSelectType;
 
 @end

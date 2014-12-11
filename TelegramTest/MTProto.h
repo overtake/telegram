@@ -2462,6 +2462,4 @@
 @interface TL_msg_resend_req : TLMsgResendReq
 +(TL_msg_resend_req*)createWithMsg_ids:(NSMutableArray*)msg_ids;
 @end
-@interface TL_invokeAfter : TLMsgResendReq
-+(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query;
-@end
+

@@ -8764,19 +8764,3 @@
 }
 @end
 
-@implementation TL_invokeAfter
-+(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query {
-	TL_invokeAfter* obj = [[TL_invokeAfter alloc] init];
-	obj.msg_id = msg_id;
-	obj.query = query;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.msg_id];
-	[stream writeByteArray:self.query];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.msg_id = [stream readLong];
-	self.query = [stream readByteArray];
-}
-@end

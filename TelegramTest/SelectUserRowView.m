@@ -15,8 +15,7 @@
 
 @interface SelectUserRowView ()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
-@property (nonatomic, strong) TMNameTextField *titleTextField;
-@property (nonatomic,strong) TMStatusTextField *lastSeenTextField;
+
 @property (nonatomic, strong) BTRButton *selectButton;
 
 -(SelectUserItem *)rowItem;
@@ -38,7 +37,7 @@ static int offsetEditable = 30;
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
-        self.titleTextField = [[TMNameTextField alloc] init];
+        _titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
@@ -51,7 +50,7 @@ static int offsetEditable = 30;
         
         
         
-        self.lastSeenTextField = [[TMStatusTextField alloc] init];
+        _lastSeenTextField = [[TMStatusTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
         [self.lastSeenTextField setBackgroundColor:[NSColor clearColor]];

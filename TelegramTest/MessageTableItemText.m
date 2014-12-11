@@ -15,7 +15,7 @@
 
 #define MAX_WIDTH 400
 
-@interface MessageTableItemText()
+@interface MessageTableItemText()<SettingsListener>
 @property (nonatomic, strong) NSMutableAttributedString *nameAttritutedString;
 @property (nonatomic, strong) NSMutableAttributedString *forwardAttributedString;
 @end
@@ -30,18 +30,22 @@
     NSString *message = [object.message trim];
     
     
-    NSFontManager *fontManager = [NSFontManager sharedFontManager];
-    NSFont *font = [fontManager fontWithFamily:@"Helvetica Neue"
-                                              traits:0
-                                              weight:4
-                                                size:13];
+  
     
     
  //   font = [NSFont fontWithName:@"HelveticaNeue" size:13];
     
-    NSRange range = [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
-    [self.textAttributed setFont:font forRange:range];
+    [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
+    
+    [self updateMessageFont];
+    
+    [SettingsArchiver addEventListener:self];
+    
+    
+    
     [self.textAttributed detectAndAddLinks];
+    
+    
 
  //   [self.textAttributed addAttribute:NSBackgroundColorAttributeName value:NSColorFromRGB(0xcfcfcf) range:self.textAttributed.range];
     
@@ -96,6 +100,16 @@
     return self;
 }
 
+
+-(void)updateMessageFont {
+    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
+    [self makeSizeByWidth:[Telegram rightViewController].messagesViewController.table.containerView.frame.size.width];
+}
+
+-(void)didChangeSettingsMask:(SettingsMask)mask {
+    [self updateMessageFont];
+}
+
 - (BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
@@ -105,9 +119,6 @@
         width -= 50;
     }
 
-    
-    
-    
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.textAttributed);
     
@@ -122,6 +133,10 @@
     
     self.blockSize = textSize;
     return YES;
+}
+
+-(void)dealloc {
+    [SettingsArchiver removeEventListener:self];
 }
 
 @end

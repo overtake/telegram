@@ -214,7 +214,22 @@ typedef enum {
     [alert show];
 }
 
+-(void)didChangeSettingsMask:(SettingsMask)mask {
+    [self updateFont];
+}
+
+
+-(void)updateFont {
+   
+    [self textDidChange:nil];
+     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
+}
+
+
+
 - (void)initialize {
+    
+    [SettingsArchiver addEventListener:self];
     
     self.frame = NSMakeRect(0, 0, self.frame.size.width - 90, 200);
     [self setAllowsUndo:YES];
@@ -222,7 +237,7 @@ typedef enum {
     self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     self.autoresizesSubviews = YES;
     self.delegate = self;
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    [self updateFont];
     self.insertionPointColor = NSColorFromRGB(0x0f92dd);
     
     
@@ -269,11 +284,13 @@ typedef enum {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         para = [[NSMutableParagraphStyle alloc] init];
-        [para setLineSpacing:0];
-        [para setMaximumLineHeight:16];
+        
+        
     });
     
-    //[para setMaximumLineHeight:spacing];
+    [para setLineSpacing:0];
+    [para setMaximumLineHeight:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 20 : 16];
+    
     
     return para;
 }
