@@ -13,7 +13,6 @@
 
 
 
-
 -(id)initWithObject:(TL_fileLocation *)object size:(int)size {
     if(self = [super initWithObject:object]) {
         

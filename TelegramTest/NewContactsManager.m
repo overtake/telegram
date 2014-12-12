@@ -57,16 +57,16 @@
             
             [self remoteCheckContacts:^{
                 
-                
                if( [SettingsArchiver checkMaskedSetting:iCloudSynch] ) {
-                    [[Storage manager] importedContacts:^(NSSet *imported) {
-                        
-                        [self.queue dispatchOnQueue:^{
-                            
-                            [self importCloudContacts:imported];
-                        }];
-                        
-                    }];
+                   dispatch_after_seconds(2, ^{
+                       [[Storage manager] importedContacts:^(NSSet *imported) {
+                           
+                           [self.queue dispatchOnQueue:^{
+                                [self importCloudContacts:imported];
+                           }];
+                           
+                       }];
+                    });
                 }
                 
                

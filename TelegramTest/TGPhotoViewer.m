@@ -292,8 +292,8 @@ static const int controlsHeight = 75;
                     
                     pos = MAX(index - 1, 0);
                     
-                    if(index != 0)
-                        pos--;
+//                    if(index != 0)
+//                        pos--;
                     
                     if(pos >= ([self listCount] - 1)) {
                         pos = [self listCount] - 1;
