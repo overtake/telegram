@@ -79,7 +79,7 @@
     
     NSMutableParagraphStyle *subParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     [subParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-    [subParagraphStyle setAlignment:NSLeftTextAlignment];
+    [subParagraphStyle setAlignment:NSCenterTextAlignment];
     [subParagraphStyle setParagraphSpacing:4];
     
     NSMutableParagraphStyle *subParagraphStyle2 = [[NSMutableParagraphStyle alloc] init];
@@ -151,9 +151,7 @@
         self.secret = [self buildSecretString];
         
         [self.field setAttributedStringValue:self.secret];
-        
-        
-        
+                
     } else {
         [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
     }

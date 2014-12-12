@@ -276,9 +276,9 @@
                     </textFieldCell>
                 </textField>
                 <button id="kUB-Am-aTf">
-                    <rect key="frame" x="253" y="352" width="67" height="18"/>
+                    <rect key="frame" x="253" y="352" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tij-ww-D1J">
+                    <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tij-ww-D1J">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -307,9 +307,9 @@
                     </textFieldCell>
                 </textField>
                 <button id="Qdv-uC-Qwc">
-                    <rect key="frame" x="253" y="302" width="67" height="18"/>
+                    <rect key="frame" x="253" y="302" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="AEz-IQ-WMb">
+                    <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="AEz-IQ-WMb">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -347,9 +347,9 @@
                     </textFieldCell>
                 </textField>
                 <button id="p93-k3-eDL">
-                    <rect key="frame" x="253" y="327" width="67" height="18"/>
+                    <rect key="frame" x="253" y="327" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Groups" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eiv-VL-cO1">
+                    <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eiv-VL-cO1">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

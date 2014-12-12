@@ -302,6 +302,8 @@
     
     [self.tableView removeAllItems:NO];
     
+    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
+    
     
     if(all.count > 100) {
         [self insertAll:[all subarrayWithRange:NSMakeRange(0, 20)]];

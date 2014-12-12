@@ -27,7 +27,7 @@
     return self;
 }
 
-static NSMutableDictionary *cache;
+static const NSMutableDictionary *cache;
 
 
 +(void)initialize {
@@ -35,6 +35,7 @@ static NSMutableDictionary *cache;
     dispatch_once(&onceToken, ^{
         cache = [[NSMutableDictionary alloc] init];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
+        [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didDeletedMessages:) name:MESSAGE_DELETE_EVENT];
     });
 }
 
@@ -56,6 +57,28 @@ static NSMutableDictionary *cache;
     return self;
 }
 
+-(void)didDeletedMessages:(NSNotification *)notification {
+    
+    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
+        
+        TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
+        
+        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+            
+            NSNumber *count = cache[@(msg.peer_id)];
+            
+            if(count != nil) {
+                cache[@(msg.peer_id)] = @([count intValue] - 1);
+            }
+        }
+        
+    }];
+    
+}
+
+
 
 -(void)dealloc {
     [Notification removeObserver:self];
@@ -74,7 +97,7 @@ static NSMutableDictionary *cache;
 
 - (void)didReceivedMedia:(NSNotification *)notify {
     PreviewObject *preview = notify.userInfo[KEY_PREVIEW_OBJECT];
-    if(cache[@(preview.peerId)] != nil && [preview.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+    if(cache[@(preview.peerId)] != nil && [[preview.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         int count = [cache[@(preview.peerId)] intValue];
         count++;
         cache[@(preview.peerId)] = @(count);
@@ -95,16 +118,10 @@ static NSMutableDictionary *cache;
     self->_conversation = conversation;
     
     if(cache[@(conversation.peer.peer_id)] == nil) {
+        
         [self setLocked:YES];
-        
-        if(conversation.type != DialogTypeSecretChat && conversation.type != DialogTypeBroadcast)
-            [self loadCount:[conversation inputPeer] peer_id:conversation.peer.peer_id];
-        else {
-            [self setLocked:NO];
+        [self loadCount:[conversation inputPeer] peer_id:conversation.peer.peer_id];
 
-            self.count = (int)[TMMediaController controller]->items.count;
-        }
-        
     } else {
         self.count = [cache[@(conversation.peer.peer_id)] intValue];
     }

@@ -390,6 +390,9 @@
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:params:conversation:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[TMTableView numberOfRowsInTableView:]:TMTableView.mm">
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
       </ContextState>
       <ContextState
@@ -1755,6 +1758,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.font">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMSharedMediaButton setCount:]:TMSharedMediaButton.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

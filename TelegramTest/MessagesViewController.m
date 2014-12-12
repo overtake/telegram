@@ -1430,10 +1430,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     dispatch_block_t completeBlock = ^ {
-        [[Storage manager] deleteMessages:array completeHandler:^(BOOL result) {
-            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:array}];
-        }];
-        
+        [[Storage manager] deleteMessages:array completeHandler:nil];
+        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:array}];
         [self unSelectAll];
     };
     
@@ -1452,15 +1450,17 @@ static NSTextAttachment *headerMediaIcon() {
         
         completeBlock();
         
+    } else {
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+            
+            completeBlock();
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            completeBlock();
+        }];
     }
     
-    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-        
-        completeBlock();
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        completeBlock();
-    }];
+    
     
 }
 
@@ -2404,7 +2404,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         
-        if(originImage.size.width / 5 > originImage.size.height) {
+        if(originImage.size.width / 10 > originImage.size.height) {
             
             NSString *path = file_path;
             
