@@ -289,7 +289,7 @@ typedef enum {
     });
     
     [para setLineSpacing:0];
-    [para setMaximumLineHeight:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 20 : 16];
+    [para setMaximumLineHeight:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 20 : 18];
     
     
     return para;
