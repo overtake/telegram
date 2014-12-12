@@ -113,6 +113,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     if(![oldName isEqualToString:dbName]) {
         [SettingsArchiver setSupportUserId:0];
+        [SettingsArchiver removeSetting:BlockedContactsSynchronized];
         
         [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
         [[NSUserDefaults standardUserDefaults] synchronize];

@@ -103,7 +103,7 @@
 
 -(void)updateMessageFont {
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
-    [self makeSizeByWidth:[Telegram rightViewController].messagesViewController.table.containerView.frame.size.width];
+    [self makeSizeByWidth:[Telegram rightViewController].messagesViewController.table.containerSize.width];
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
@@ -124,13 +124,11 @@
     
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.textAttributed.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
     
-    textSize.width= ceil(textSize.width) ;
+    textSize.width= ceil(textSize.width);
     textSize.height = ceil(textSize.height);
     
     CFRelease(framesetter);
-    
-    
-    
+        
     self.blockSize = textSize;
     return YES;
 }

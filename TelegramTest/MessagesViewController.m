@@ -208,7 +208,9 @@
 }
 
 -(void)reloadData {
-    [self.table reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.table reloadData];
+    });
 }
 
 - (void)loadView {
