@@ -21,8 +21,6 @@
 @property (nonatomic,strong) TLUser *user;
 
 
-@property (nonatomic,strong) TGPVContainer *photoContainer;
-@property (nonatomic,strong) TGPVControls *controls;
 
 @property (nonatomic,strong) TMView *background;
 
@@ -116,13 +114,13 @@ static const int controlsHeight = 75;
     [self.contentView addSubview:self.background];
     
     
-    self.photoContainer = [[TGPVContainer alloc] initWithFrame:NSMakeRect(0, 0, 300, 600)];
+    _photoContainer = [[TGPVContainer alloc] initWithFrame:NSMakeRect(0, 0, 300, 600)];
     
 
     [self.contentView addSubview:self.photoContainer];
     
     
-    self.controls = [[TGPVControls alloc] initWithFrame:NSMakeRect(0, 0, 400, controlsHeight)];
+    _controls = [[TGPVControls alloc] initWithFrame:NSMakeRect(0, 0, 400, controlsHeight)];
     
     
     [self.controls setCenterByView:self.contentView];

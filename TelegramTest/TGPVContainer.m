@@ -14,6 +14,7 @@
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
 @property (nonatomic,strong) TMTextField *dateTextField;
+@property (nonatomic, strong) TMMenuPopover *menuPopover;
 
 @end
 
@@ -201,7 +202,30 @@ static const int bottomHeight = 60;
     
 }
 
-
-
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@Menu",NSStringFromClass([[TGPhotoViewer behavior] class])]);
+    
+    if(![[[TGPhotoViewer viewer] controls] respondsToSelector:selector])
+        return;
+    
+    
+    if(!self.menuPopover) {
+        
+        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:[[[TGPhotoViewer viewer] controls] performSelector:selector]];
+    }
+    
+    if(!self.menuPopover.isShown) {
+        NSRect rect = NSZeroRect;
+        rect.origin = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        weak();
+        [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
+            weakSelf.menuPopover = nil;
+        }];
+        [self.menuPopover showRelativeToRect:rect ofView:self preferredEdge:CGRectMinYEdge];
+    }
+    
+    //    [self.attachMenu popUpForView:self.attachButton];
+}
 
 @end

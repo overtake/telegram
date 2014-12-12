@@ -10,8 +10,12 @@
 #import "TGPVContainer.h"
 #import "TGPhotoViewerItem.h"
 #import "TGPVBehavior.h"
+#import "TGPVControls.h"
 @interface TGPhotoViewer : NSPanel
 
+
+@property (nonatomic,strong,readonly) TGPVContainer *photoContainer;
+@property (nonatomic,strong,readonly) TGPVControls *controls;
 
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation;
 -(void)show:(PreviewObject *)item user:(TLUser *)user;
