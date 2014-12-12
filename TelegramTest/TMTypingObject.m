@@ -186,7 +186,6 @@
         
         allObjects = [allObjects sortedArrayUsingSelector:@selector(compare:)];
         
-        NSLog(@"%@",allObjects);
         
         [actions addObject:allObjects[0]];
         

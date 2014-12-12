@@ -276,9 +276,7 @@ Class convertClass(NSString *c, int layer) {
             
             
             [list enumerateObjectsUsingBlock:^(TGSecretInAction *action, NSUInteger idx, BOOL *stop) {
-                
-                NSLog(@"in:%d,  local:%d",action.in_seq_no, params.in_seq_no * 2 + [params in_x]);
-                
+                                
                 if(action.in_seq_no == params.in_seq_no * 2 + [params in_x]) {
                     
                     
