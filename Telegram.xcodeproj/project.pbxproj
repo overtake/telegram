@@ -494,10 +494,6 @@
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
-		C2D235C21A3B3A7000765BA1 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D235C31A3B3A7500765BA1 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D235C41A3B3A8200765BA1 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D235C51A3B3A8500765BA1 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
@@ -675,8 +671,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D235C31A3B3A7500765BA1 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D235C21A3B3A7000765BA1 /* HockeySDK.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
@@ -2023,8 +2017,6 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D235C51A3B3A8500765BA1 /* HockeySDK.framework in Frameworks */,
-				C2D235C41A3B3A8200765BA1 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

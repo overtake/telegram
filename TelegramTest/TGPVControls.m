@@ -230,16 +230,34 @@
         
         NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
             
-            [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:@[[TL_inputPhoto createWithN_id:[TGPhotoViewer currentItem].previewObject.msg_id access_hash:[TGPhotoViewer currentItem].previewObject.access_hash]]] successHandler:^(RPCRequest *request, id response) {
+            if([UsersManager currentUser].photo.photo_id != [TGPhotoViewer currentItem].previewObject.msg_id) {
+                [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:@[[TL_inputPhoto createWithN_id:[TGPhotoViewer currentItem].previewObject.msg_id access_hash:[TGPhotoViewer currentItem].previewObject.access_hash]]] successHandler:^(RPCRequest *request, id response) {
+                    
+                    [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                }];
+            } else {
                 
                 
-                [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
+                [RPCRequest sendRequest:[TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]] successHandler:^(RPCRequest *request, id response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                     [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                    
+                    
+                } timeout:10];
+
                 
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-            }];
-            
+            }
+             
             
         }];
         // [photoDelete setImage:image_AttachPhotoVideo()];

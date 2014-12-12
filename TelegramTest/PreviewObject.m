@@ -21,6 +21,17 @@
     return self;
 }
 
+-(BOOL)isEqual:(PreviewObject *)object {
+    return self.msg_id == object.msg_id;
+}
+
+-(BOOL)isEqualTo:(PreviewObject *)object {
+    return self.msg_id == object.msg_id;
+}
+
+-(NSUInteger)hash {
+    return self.msg_id;
+}
 
 
 @end

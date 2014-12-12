@@ -31,5 +31,6 @@ typedef enum {
 -(NSArray *)convertObjects:(NSArray *)list;
 
 -(void)removeItems:(NSArray *)items;
+-(void)addItems:(NSArray *)items;
 
 @end

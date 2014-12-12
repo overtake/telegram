@@ -132,8 +132,45 @@ static const int controlsHeight = 75;
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
+    [Notification addObserver:self selector:@selector(didAddedPhoto:) name:USER_UPDATE_PHOTO];
         
 }
+
+
+-(void)didAddedPhoto:(NSNotification *)notification {
+    
+    
+    BOOL todelete = [notification.userInfo[KEY_PREVIOUS] boolValue];
+    
+    PreviewObject *previewObject = notification.userInfo[KEY_PREVIEW_OBJECT];
+    
+    TLUser *user = notification.userInfo[KEY_USER];
+    
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        if(todelete) {
+           
+            
+        } else {
+            
+            if(self.isVisibility && self.user == user) {
+                
+                [self insertObjects:@[previewObject]];
+                
+            } else {
+                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] init];
+                behavior.user = user;
+                
+                [behavior addItems:@[previewObject]];
+            }
+            
+        }
+        
+    }];
+    
+}
+
 
 -(void)mouseMoved:(NSEvent *)theEvent {
     
@@ -533,7 +570,7 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         [self.list addObjectsFromArray:[self.behavior convertObjects:previewObjects]];
-        
+                
         [self resort];
     }];
 }

@@ -19,6 +19,9 @@
     return self;
 }
 
+-(BOOL)isEqualTo:(TGPhotoViewerItem *)object {
+    return self.previewObject.msg_id == object.previewObject.msg_id;
+}
 
 
 //

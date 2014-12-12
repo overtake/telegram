@@ -189,6 +189,11 @@
       </ContextState>
       <ContextState
          contextName = "__31-[TGPhotoViewer insertObjects:]_block_invoke:TGPhotoViewer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "previewObject.msg_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TelegramSerialization serializeMessage:]:TelegramSerialization.m">
@@ -707,6 +712,9 @@
       <ContextState
          contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
          <PersistentStrings>
+            <PersistentString
+               value = "item.isRemoteLoaded">
+            </PersistentString>
             <PersistentString
                value = "self.imageSize">
             </PersistentString>

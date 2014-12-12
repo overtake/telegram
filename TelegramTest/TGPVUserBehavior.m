@@ -39,13 +39,14 @@ static NSMutableDictionary *count;
         __block NSMutableArray *converted = count[@(_user.n_id)];
         
         if(converted.count > 0) {
-            if(callback) callback(converted);
+            
+            if(callback) callback(converted.count > 0 ? [converted subarrayWithRange:NSMakeRange(1, converted.count - 1)] : @[]);
               _state = TGPVMediaBehaviorLoadingStateFull;
             return;
         }
         
         
-        _request = [RPCRequest sendRequest:[TLAPI_photos_getUserPhotos createWithUser_id:_user.inputUser offset:1 max_id:0 limit:1000] successHandler:^(RPCRequest *request, TL_photos_photos *response) {
+        _request = [RPCRequest sendRequest:[TLAPI_photos_getUserPhotos createWithUser_id:_user.inputUser offset:0 max_id:0 limit:1000] successHandler:^(RPCRequest *request, TL_photos_photos *response) {
             
             converted = [[NSMutableArray alloc] init];
             
@@ -64,7 +65,8 @@ static NSMutableDictionary *count;
             
             count[@(_user.n_id)] = converted;
             
-            if(callback) callback(converted);
+           
+            if(callback) callback(converted.count > 0 ? [converted subarrayWithRange:NSMakeRange(1, converted.count - 1)] : @[]);
             
             
         } errorHandler:nil];
@@ -81,8 +83,15 @@ static NSMutableDictionary *count;
     
 }
 
+-(void)addItems:(NSArray *)items {
+    NSMutableArray *converted = count[@(_user.n_id)];
+    
+    [converted insertObjects:items atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
+    
+}
+
 -(int)totalCount {
-    return (int)[count[@(_user.n_id)] count] + 1;
+    return (int)[count[@(_user.n_id)] count] ;
 }
 
 -(NSArray *)convertObjects:(NSArray *)list {
@@ -100,7 +109,7 @@ static NSMutableDictionary *count;
             TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             
             [converted addObject:item];
-        }
+        } 
         
     }];
     
