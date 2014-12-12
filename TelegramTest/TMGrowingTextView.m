@@ -250,35 +250,76 @@
 
 - (void)setContinuousSpellCheckingEnabled:(BOOL)flag
 {
-    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-    if(userDefaults)
-    {
-        [userDefaults setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled_%@",NSStringFromClass([self class])]];
-    }
-    
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
     [super setContinuousSpellCheckingEnabled: flag];
 }
 
 -(BOOL)isContinuousSpellCheckingEnabled {
-    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled_%@",NSStringFromClass([self class])]];
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
 }
 
--(BOOL)isGrammarCheckingEnabled {
-    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"GrammarCheckingEnabled_%@",NSStringFromClass([self class])]];
-}
 
 -(void)setGrammarCheckingEnabled:(BOOL)flag {
     
-    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-    if(userDefaults)
-    {
-        [userDefaults setBool: flag forKey:[NSString stringWithFormat:@"GrammarCheckingEnabled_%@",NSStringFromClass([self class])]];
-    }
-    
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"GrammarCheckingEnabled%@",NSStringFromClass([self class])]];
     [super setContinuousSpellCheckingEnabled: flag];
 }
 
+-(BOOL)isGrammarCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"GrammarCheckingEnabled%@",NSStringFromClass([self class])]];
+}
 
+
+-(void)setAutomaticSpellingCorrectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticSpellingCorrectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticSpellingCorrectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticSpellingCorrectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+
+-(void)setAutomaticQuoteSubstitutionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticQuoteSubstitutionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticQuoteSubstitutionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticQuoteSubstitutionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+-(void)setAutomaticLinkDetectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticLinkDetectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticLinkDetectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticLinkDetectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+-(void)setAutomaticDataDetectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticDataDetectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticDataDetectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticDataDetectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+
+-(void)setAutomaticDashSubstitutionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticDashSubstitutionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticDashSubstitutionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticDashSubstitutionEnabled%@",NSStringFromClass([self class])]];
+}
 
 - (void)setFrameOrigin:(NSPoint)newOriginN {
 }
