@@ -32,6 +32,8 @@
 @property (nonatomic,assign) int partEnumerator;
 @property (nonatomic,assign) int currentPartId;
 @property (nonatomic,assign) int max_poll_size;
+
+@property (nonatomic,assign) int startOffset;
 @end
 
 
@@ -51,7 +53,14 @@
         
         self.max_poll_size = self.partSize == 0 ? 1 : 5;
         
-        self.stream = [[NSOutputStream alloc] initToFileAtPath:_item.path append:NO];
+        
+        
+        NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:_item.path error: NULL];
+       
+        
+        
+        BOOL append = YES;
+        
         self.item.isRemoteLoaded = YES;
         if([_item isEncrypted]) {
             __block NSDictionary *keyIv;
@@ -61,7 +70,12 @@
             }];
             self.key = [keyIv objectForKey:@"key"];
             self.iv = [[keyIv objectForKey:@"iv"] mutableCopy];
+        } else if(item.size != 0) {
+            self.downloaded = self.startOffset = (int)[attrs fileSize];
+            append = self.downloaded < item.size && self.downloaded > 0;
         }
+        
+        self.stream = [[NSOutputStream alloc] initToFileAtPath:_item.path append:append];
 
     }
     return self;
@@ -132,7 +146,10 @@
          _item.errorType = DownloadErrorCantLoad;
          if(self.item.isRemoteLoaded) {
              [self.stream close];
-             [[NSFileManager defaultManager] removeItemAtPath:_item.path error:nil];
+             
+             if(self.item.isEncrypted || self.item.size == 0)
+                 [[NSFileManager defaultManager] removeItemAtPath:_item.path error:nil];
+             
              [self.target performSelectorInBackground:self.selector withObject:self];
          }
      }];
@@ -257,8 +274,8 @@
 - (void)fill {
     while (_item.downloadState == DownloadStateDownloading && _poll.count < _max_poll_size) {
         
-        if(self.item.size == 0 || (self.partEnumerator*self.partSize <= self.item.size)) {
-            DownloadPart *newPart = [[DownloadPart alloc] initWithId:self.partEnumerator offset:self.partEnumerator*self.partSize dcId:_item.dc_id downloadItem:_item];
+        if(self.item.size == 0 || (self.startOffset + self.partEnumerator*self.partSize <= self.item.size)) {
+            DownloadPart *newPart = [[DownloadPart alloc] initWithId:self.partEnumerator offset:self.startOffset + self.partEnumerator*self.partSize dcId:_item.dc_id downloadItem:_item];
             
             self.partEnumerator++;
             
