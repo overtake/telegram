@@ -1215,6 +1215,7 @@ static NSTextAttachment *headerMediaIcon() {
     NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
     
     for (MessageTableItem *msg in filtred) {
+        msg.message.flags&= ~TGUNREADMESSAGE;
         MessageTableCellContainerView *view = (MessageTableCellContainerView *)[self cellForRow:[self.messages indexOfObject:msg]];
         if([view isKindOfClass:[MessageTableCellContainerView class]]) {
             [view checkActionState:YES];

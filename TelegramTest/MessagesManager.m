@@ -268,6 +268,7 @@
     [self.queue dispatchOnQueue:^{
         if(!message || message.n_id == 0) return;
         
+        
         [self.messages setObject:message forKey:@(message.n_id)];
         
         if([message isKindOfClass:[TL_destructMessage class]])
