@@ -337,12 +337,6 @@
                     }
                     
                     _selectRange.length +=  (endIndex - startIndex);
-                    
-                    if(self.class == [TGMultipleSelectTextView class]) {
-                         [SelectTextManager addRange:_selectRange forItem:self.owner];
-                    }
-                    
-                  
                 }
                 
                
@@ -394,6 +388,11 @@
         
         
     }];
+    
+    
+    if(self.class == [TGMultipleSelectTextView class] && (_selectRange.location != 0 && _selectRange.length != 0)) {
+        [SelectTextManager addRange:_selectRange forItem:self.owner];
+    }
     
     
     
@@ -645,7 +644,7 @@
         [self setSelectionRange:range];
         
         _selectRange = range;
-        
+                
     }
     
     return theEvent.clickCount == 2 || theEvent.clickCount == 3;
