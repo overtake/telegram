@@ -18,11 +18,7 @@
 @property (nonatomic, strong) id query;
 @end
 
-@interface TLAPI_photos_deletePhotos : TLApiObject
-@property (nonatomic,strong) NSArray *n_id;
-+(TLAPI_photos_deletePhotos *)createWithN_id:(NSArray *)n_id;
 
-@end
 
 
 @interface TL_invokeAfter : TLMsgResendReq

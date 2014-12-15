@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.12.14..
+//  Auto created by Mikhail Filimonov on 15.12.14..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -954,6 +954,28 @@
 	[stream writeString:self.caption];
 	[TLClassStore TLSerialize:self.geo_point stream:stream];
 	[TLClassStore TLSerialize:self.crop stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_photos_deletePhotos
++(TLAPI_photos_deletePhotos*)createWithN_id:(NSMutableArray*)n_id {
+    TLAPI_photos_deletePhotos* obj = [[TLAPI_photos_deletePhotos alloc] init];
+    obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-2016444625];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLInputPhoto* obj = [self.n_id objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
 	return [stream getOutput];
 }
 @end

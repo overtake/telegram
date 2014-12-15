@@ -54,7 +54,7 @@
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 user_id:UsersManager.currentUserId date:[[MTNetwork instance] getTime] file_name:[self.filePath lastPathComponent] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath]];
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]] mutableCopy]]];
         
         self.message = [MessageSender createOutMessage:@"" media:document dialog:conversation];
         
@@ -135,11 +135,16 @@
     
     __block BOOL isNewDocument = [self.inputFile isKindOfClass:[TLInputFile class]];
     
+    NSMutableArray *attrs = [[NSMutableArray alloc] init];
+    
+    [attrs addObject:[TL_documentAttributeFilename createWithFile_name:self.uploader.fileName]];
+    
+    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile file_name:self.uploader.fileName mime_type:self.mimeType];
+            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.mimeType attributes:[@[] mutableCopy]];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile file_name:self.uploader.fileName mime_type:self.mimeType];
+            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.mimeType attributes:attrs];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;

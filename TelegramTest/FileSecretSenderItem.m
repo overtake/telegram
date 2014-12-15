@@ -132,7 +132,9 @@
         
         self.mimeType = [FileUtils mimetypefromExtension:[self.filePath pathExtension]];
         
-        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 user_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime] file_name:[self.filePath lastPathComponent] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath]];
+        
+        
+        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]]];
     } else if(self.uploadType == UploadAudioType) {
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];

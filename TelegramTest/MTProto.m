@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.12.14.
+//  Auto created by Mikhail Filimonov on 15.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -442,45 +442,83 @@
 @end
 
 @implementation TL_inputMediaUploadedDocument
-+(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file file_name:(NSString*)file_name mime_type:(NSString*)mime_type {
++(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes {
 	TL_inputMediaUploadedDocument* obj = [[TL_inputMediaUploadedDocument alloc] init];
 	obj.file = file;
-	obj.file_name = file_name;
 	obj.mime_type = mime_type;
+	obj.attributes = attributes;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.file stream:stream];
-	[stream writeString:self.file_name];
 	[stream writeString:self.mime_type];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.attributes count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [TLClassStore TLDeserialize:stream];
-	self.file_name = [stream readString];
 	self.mime_type = [stream readString];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.attributes)
+			self.attributes = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			[self.attributes addObject:obj];
+		}
+	}
 }
 @end
 
 @implementation TL_inputMediaUploadedThumbDocument
-+(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb file_name:(NSString*)file_name mime_type:(NSString*)mime_type {
++(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes {
 	TL_inputMediaUploadedThumbDocument* obj = [[TL_inputMediaUploadedThumbDocument alloc] init];
 	obj.file = file;
 	obj.thumb = thumb;
-	obj.file_name = file_name;
 	obj.mime_type = mime_type;
+	obj.attributes = attributes;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.file stream:stream];
 	[TLClassStore TLSerialize:self.thumb stream:stream];
-	[stream writeString:self.file_name];
 	[stream writeString:self.mime_type];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.attributes count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [TLClassStore TLDeserialize:stream];
 	self.thumb = [TLClassStore TLDeserialize:stream];
-	self.file_name = [stream readString];
 	self.mime_type = [stream readString];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.attributes)
+			self.attributes = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			[self.attributes addObject:obj];
+		}
+	}
 }
 @end
 
@@ -2613,6 +2651,34 @@
 	self.sound = [stream readString];
 	self.show_previews = [stream readBool];
 	self.events_mask = [stream readInt];
+}
+@end
+
+
+
+@implementation TLGlobalPrivacySettings
+@end
+
+@implementation TL_globalPrivacySettings
++(TL_globalPrivacySettings*)createWithNo_suggestions:(Boolean)no_suggestions hide_contacts:(Boolean)hide_contacts hide_located:(Boolean)hide_located hide_last_visit:(Boolean)hide_last_visit {
+	TL_globalPrivacySettings* obj = [[TL_globalPrivacySettings alloc] init];
+	obj.no_suggestions = no_suggestions;
+	obj.hide_contacts = hide_contacts;
+	obj.hide_located = hide_located;
+	obj.hide_last_visit = hide_last_visit;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeBool:self.no_suggestions];
+	[stream writeBool:self.hide_contacts];
+	[stream writeBool:self.hide_located];
+	[stream writeBool:self.hide_last_visit];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.no_suggestions = [stream readBool];
+	self.hide_contacts = [stream readBool];
+	self.hide_located = [stream readBool];
+	self.hide_last_visit = [stream readBool];
 }
 @end
 
@@ -6948,40 +7014,56 @@
 @end
 
 @implementation TL_document
-+(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date file_name:(NSString*)file_name mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id {
++(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes {
 	TL_document* obj = [[TL_document alloc] init];
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
-	obj.user_id = user_id;
 	obj.date = date;
-	obj.file_name = file_name;
 	obj.mime_type = mime_type;
 	obj.size = size;
 	obj.thumb = thumb;
 	obj.dc_id = dc_id;
+	obj.attributes = attributes;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeLong:self.n_id];
 	[stream writeLong:self.access_hash];
-	[stream writeInt:self.user_id];
 	[stream writeInt:self.date];
-	[stream writeString:self.file_name];
 	[stream writeString:self.mime_type];
 	[stream writeInt:self.size];
 	[TLClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.dc_id];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.attributes count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
-	self.user_id = [stream readInt];
 	self.date = [stream readInt];
-	self.file_name = [stream readString];
 	self.mime_type = [stream readString];
 	self.size = [stream readInt];
 	self.thumb = [TLClassStore TLDeserialize:stream];
 	self.dc_id = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.attributes)
+			self.attributes = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			[self.attributes addObject:obj];
+		}
+	}
 }
 @end
 
@@ -7721,6 +7803,104 @@
 	self.current_salt = [stream readByteArray];
 	self.n_salt = [stream readByteArray];
 	self.hint = [stream readString];
+}
+@end
+
+
+
+@implementation TLDocumentAttribute
+@end
+
+@implementation TL_documentAttributeImageSize
++(TL_documentAttributeImageSize*)createWithW:(int)w h:(int)h {
+	TL_documentAttributeImageSize* obj = [[TL_documentAttributeImageSize alloc] init];
+	obj.w = w;
+	obj.h = h;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.w];
+	[stream writeInt:self.h];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.w = [stream readInt];
+	self.h = [stream readInt];
+}
+@end
+
+@implementation TL_documentAttributeAnimated
++(TL_documentAttributeAnimated*)create {
+	TL_documentAttributeAnimated* obj = [[TL_documentAttributeAnimated alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_documentAttributeSticker
++(TL_documentAttributeSticker*)create {
+	TL_documentAttributeSticker* obj = [[TL_documentAttributeSticker alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_documentAttributeVideo
++(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h {
+	TL_documentAttributeVideo* obj = [[TL_documentAttributeVideo alloc] init];
+	obj.duration = duration;
+	obj.w = w;
+	obj.h = h;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.duration];
+	[stream writeInt:self.w];
+	[stream writeInt:self.h];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.duration = [stream readInt];
+	self.w = [stream readInt];
+	self.h = [stream readInt];
+}
+@end
+
+@implementation TL_documentAttributeAudio
++(TL_documentAttributeAudio*)createWithDuration:(int)duration {
+	TL_documentAttributeAudio* obj = [[TL_documentAttributeAudio alloc] init];
+	obj.duration = duration;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.duration];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.duration = [stream readInt];
+}
+@end
+
+@implementation TL_documentAttributeFilename
++(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name {
+	TL_documentAttributeFilename* obj = [[TL_documentAttributeFilename alloc] init];
+	obj.file_name = file_name;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.file_name];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.file_name = [stream readString];
 }
 @end
 
@@ -8534,7 +8714,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 

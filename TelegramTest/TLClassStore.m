@@ -27,7 +27,6 @@
         
         [self.classes setObject:[TL_boolFalse class] forKey:[NSNumber numberWithInt:-1132882121]];
         [self.classes setObject:[TL_boolTrue class] forKey:[NSNumber numberWithInt:-1720552011]];
-        
         [self.classes setObject:[TL_inputPeerEmpty class] forKey:[NSNumber numberWithInt:2134579434]];
         [self.classes setObject:[TL_inputPeerSelf class] forKey:[NSNumber numberWithInt:2107670217]];
         [self.classes setObject:[TL_inputPeerContact class] forKey:[NSNumber numberWithInt:270785512]];
@@ -137,6 +136,7 @@
         [self.classes setObject:[TL_peerNotifyEventsAll class] forKey:[NSNumber numberWithInt:1830677896]];
         [self.classes setObject:[TL_peerNotifySettingsEmpty class] forKey:[NSNumber numberWithInt:1889961234]];
         [self.classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1923214866]];
+        [self.classes setObject:[TL_globalPrivacySettings class] forKey:[NSNumber numberWithInt:1089848634]];
         [self.classes setObject:[TL_wallPaper class] forKey:[NSNumber numberWithInt:-860866985]];
         [self.classes setObject:[TL_userFull class] forKey:[NSNumber numberWithInt:1997575642]];
         [self.classes setObject:[TL_contact class] forKey:[NSNumber numberWithInt:-116274796]];
@@ -258,8 +258,8 @@
         [self.classes setObject:[TL_updateDcOptions class] forKey:[NSNumber numberWithInt:-1906403213]];
         [self.classes setObject:[TL_inputMediaUploadedAudio class] forKey:[NSNumber numberWithInt:1313442987]];
         [self.classes setObject:[TL_inputMediaAudio class] forKey:[NSNumber numberWithInt:-1986820223]];
-        [self.classes setObject:[TL_inputMediaUploadedDocument class] forKey:[NSNumber numberWithInt:887592125]];
-        [self.classes setObject:[TL_inputMediaUploadedThumbDocument class] forKey:[NSNumber numberWithInt:1044831837]];
+        [self.classes setObject:[TL_inputMediaUploadedDocument class] forKey:[NSNumber numberWithInt:-1610888]];
+        [self.classes setObject:[TL_inputMediaUploadedThumbDocument class] forKey:[NSNumber numberWithInt:1095242886]];
         [self.classes setObject:[TL_inputMediaDocument class] forKey:[NSNumber numberWithInt:-779818943]];
         [self.classes setObject:[TL_messageMediaDocument class] forKey:[NSNumber numberWithInt:802824708]];
         [self.classes setObject:[TL_messageMediaAudio class] forKey:[NSNumber numberWithInt:-961117440]];
@@ -272,7 +272,7 @@
         [self.classes setObject:[TL_audioEmpty class] forKey:[NSNumber numberWithInt:1483311320]];
         [self.classes setObject:[TL_audio class] forKey:[NSNumber numberWithInt:-945003370]];
         [self.classes setObject:[TL_documentEmpty class] forKey:[NSNumber numberWithInt:922273905]];
-        [self.classes setObject:[TL_document class] forKey:[NSNumber numberWithInt:-1627626714]];
+        [self.classes setObject:[TL_document class] forKey:[NSNumber numberWithInt:-106717361]];
         [self.classes setObject:[TL_help_support class] forKey:[NSNumber numberWithInt:398898678]];
         [self.classes setObject:[TL_notifyPeer class] forKey:[NSNumber numberWithInt:-1613493288]];
         [self.classes setObject:[TL_notifyUsers class] forKey:[NSNumber numberWithInt:-1261946036]];
@@ -318,6 +318,12 @@
         [self.classes setObject:[TL_updateUserPhone class] forKey:[NSNumber numberWithInt:314130811]];
         [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
         [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:1939758962]];
+        [self.classes setObject:[TL_documentAttributeImageSize class] forKey:[NSNumber numberWithInt:1815593308]];
+        [self.classes setObject:[TL_documentAttributeAnimated class] forKey:[NSNumber numberWithInt:297109817]];
+        [self.classes setObject:[TL_documentAttributeSticker class] forKey:[NSNumber numberWithInt:-83208409]];
+        [self.classes setObject:[TL_documentAttributeVideo class] forKey:[NSNumber numberWithInt:1494273227]];
+        [self.classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:85215461]];
+        [self.classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -360,6 +366,9 @@
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
+        
+        
+        
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:-878758099]];
         
         
@@ -482,8 +491,8 @@
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
     [outputStream open];
     [stream setOuput:outputStream];
-    [stream writeInt:-627372787]; //invokeWithLayer
-    [stream writeInt:20];
+    [stream writeInt:0xda9b0d0d]; //invokeWithLayer
+    [stream writeInt:22];
 
     [stream writeInt:constructor];
     

@@ -28,6 +28,7 @@
 #import "ChatsManager.h"
 #import "FullChatManager.h"
 #import "TGDcAuth.h"
+#import "TLDocument+Extension.h"
 #import "TLEncryptedChat+Extensions.h"
 #import "LoopingUtils.h"
 #import "TL_secretServiceMessage.h"

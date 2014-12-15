@@ -27,34 +27,6 @@
 
 
 
-@implementation TLAPI_photos_deletePhotos
-
-
-+(TLAPI_photos_deletePhotos *)createWithN_id:(NSArray *)n_id {
-    TLAPI_photos_deletePhotos *obj = [[TLAPI_photos_deletePhotos alloc] init];
-    obj.n_id = n_id;
-    
-    return obj;
-}
-
-- (NSData*)getData {
-    SerializedData* stream = [TLClassStore streamWithConstuctor:0x87cf7f2f];
-    
-    [stream writeInt:0x1cb5c415];
-    {
-        NSInteger tl_count = [self.n_id count];
-        [stream writeInt:(int)tl_count];
-        for(int i = 0; i < (int)tl_count; i++) {
-            id obj = [self.n_id objectAtIndex:i];
-            [TLClassStore TLSerialize:obj stream:stream];
-        }
-    }
-
-    return [stream getOutput];
-}
-
-@end
-
 @implementation TL_invokeAfter
 +(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query {
     TL_invokeAfter* obj = [[TL_invokeAfter alloc] init];

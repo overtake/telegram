@@ -494,6 +494,10 @@
 		C2C8AAFA1A3B8AF300C857D6 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C8AAFB1A3B8B3500C857D6 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2C8AAFC1A3B8B3900C857D6 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
+		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
+		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
+		C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
@@ -1696,6 +1700,17 @@
 		C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVImageView.m; sourceTree = "<group>"; };
 		C2C725D81860E05200094EC7 /* EncryptedParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedParams.h; sourceTree = "<group>"; };
 		C2C725D91860E05200094EC7 /* EncryptedParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedParams.m; sourceTree = "<group>"; };
+		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
+		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
+		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
+		C2C8AB041A3F3BC900C857D6 /* mux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mux.h; sourceTree = "<group>"; };
+		C2C8AB051A3F3BC900C857D6 /* mux_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mux_types.h; sourceTree = "<group>"; };
+		C2C8AB061A3F3BC900C857D6 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		C2C8AB081A3F3BC900C857D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
+		C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebpdemux.a; sourceTree = "<group>"; };
+		C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebpmux.a; sourceTree = "<group>"; };
+		C2C8AB0E1A3F508300C857D6 /* TLDocument+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDocument+Extension.h"; sourceTree = "<group>"; };
+		C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLDocument+Extension.m"; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
@@ -2000,6 +2015,7 @@
 				C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */,
 				C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */,
 				C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */,
+				C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */,
 				C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */,
 				C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */,
 				C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */,
@@ -2012,12 +2028,14 @@
 				C23298D718CF5FC7000826E5 /* QuickLook.framework in Frameworks */,
 				0A073FCC18BF638400BAA928 /* MTProtoKit.framework in Frameworks */,
 				CEAE5D6A181ED1BF00C17645 /* libsqlite3.dylib in Frameworks */,
+				C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */,
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
 				0A13B82A18199C1A00E06702 /* AddressBook.framework in Frameworks */,
 				CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */,
 				CECBC1661800CA2400AD98E6 /* Foundation.framework in Frameworks */,
 				CE29CA7C1801355200803E22 /* libssl.a in Frameworks */,
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
+				C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
@@ -3607,6 +3625,7 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */,
 				C268C14F19F05139007F836A /* pop */,
 				C2753DDD19E5B24500752BAF /* TGModernAnimatedImagePlayer.h */,
 				C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */,
@@ -3748,6 +3767,46 @@
 			name = behavior;
 			sourceTree = "<group>";
 		};
+		C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AAFF1A3F3BC900C857D6 /* include */,
+				C2C8AB071A3F3BC900C857D6 /* lib */,
+			);
+			path = "libwebp-0.4.2-mac-10.8";
+			sourceTree = "<group>";
+		};
+		C2C8AAFF1A3F3BC900C857D6 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB001A3F3BC900C857D6 /* webp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		C2C8AB001A3F3BC900C857D6 /* webp */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB011A3F3BC900C857D6 /* decode.h */,
+				C2C8AB021A3F3BC900C857D6 /* demux.h */,
+				C2C8AB031A3F3BC900C857D6 /* encode.h */,
+				C2C8AB041A3F3BC900C857D6 /* mux.h */,
+				C2C8AB051A3F3BC900C857D6 /* mux_types.h */,
+				C2C8AB061A3F3BC900C857D6 /* types.h */,
+			);
+			path = webp;
+			sourceTree = "<group>";
+		};
+		C2C8AB071A3F3BC900C857D6 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB081A3F3BC900C857D6 /* libwebp.a */,
+				C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */,
+				C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		C2CD77C21A2C9D0C000B4BA9 /* password */ = {
 			isa = PBXGroup;
 			children = (
@@ -3843,6 +3902,8 @@
 				CEAE5D6C181EEFF000C17645 /* TLPeer+Extensions.m */,
 				C2AA5D30186B50520026EA1F /* TLEncryptedChat+Extensions.h */,
 				C2AA5D31186B50520026EA1F /* TLEncryptedChat+Extensions.m */,
+				C2C8AB0E1A3F508300C857D6 /* TLDocument+Extension.h */,
+				C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -5207,6 +5268,7 @@
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,
 				C2200B7618F43B3300F28803 /* EncryptedKeyWindow.m in Sources */,
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
+				C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */,
 				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
@@ -5387,6 +5449,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
@@ -5420,6 +5483,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
