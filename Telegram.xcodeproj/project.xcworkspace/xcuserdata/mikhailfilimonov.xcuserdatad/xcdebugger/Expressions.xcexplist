@@ -1523,6 +1523,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGCTextView calcSelectedRange]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.marks">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
       </ContextState>
       <ContextState

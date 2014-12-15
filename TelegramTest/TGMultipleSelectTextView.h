@@ -11,8 +11,6 @@
 @interface TGMultipleSelectTextView : TGCTextView
 
 
-@property (nonatomic,weak) id <SelectTextDelegate> item;
-
 -(void)_parentMouseDragged:(NSEvent *)theEvent;
 -(void)_parentMouseDown:(NSEvent *)theEvent;
 

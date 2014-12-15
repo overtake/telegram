@@ -8,7 +8,7 @@
 
 #import "TGCTextView.h"
 #import "NSString+Extended.h"
-
+#import "TGMultipleSelectTextView.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -338,6 +338,11 @@
                     
                     _selectRange.length +=  (endIndex - startIndex);
                     
+                    if(self.class == [TGMultipleSelectTextView class]) {
+                         [SelectTextManager addRange:_selectRange forItem:self.owner];
+                    }
+                    
+                  
                 }
                 
                

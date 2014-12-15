@@ -266,9 +266,7 @@
         if([view isKindOfClass:[MessageTableCellTextView class]]) {
             
             TGMultipleSelectTextView *textView = ((MessageTableCellTextView *)view).textView;
-            
-            MessageTableItem *item = self.viewController.messageList[i];
-            
+                        
             
             NSPoint startConverted = [textView convertPoint:_startSelectPosition fromView:self];
             NSPoint currentConverted = [textView convertPoint:point fromView:nil];
@@ -324,8 +322,6 @@
             
             
             [textView setNeedsDisplay:YES];
-            
-            [SelectTextManager addRange:textView.selectRange forItem:item];
             
         }
         

@@ -62,7 +62,7 @@
     [self.textView setFrameSize:NSMakeSize(item.blockSize.width , item.blockSize.height)];
     [self.textView setAttributedString:item.textAttributed];
     
-    [self.textView setItem:item];
+    [self.textView setOwner:item];
     
     [self.textView setSelectionRange:[SelectTextManager rangeForItem:item]];
     

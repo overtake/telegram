@@ -45,7 +45,7 @@
     
     
     if([super _checkClickCount:theEvent]) {
-         [SelectTextManager addRange:self.selectRange forItem:self.item];
+         [SelectTextManager addRange:self.selectRange forItem:self.owner];
         
         return YES;
     }
@@ -132,6 +132,8 @@
         
     }
 }
+
+
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {

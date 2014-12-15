@@ -14,5 +14,6 @@
 
 @property (nonatomic,assign,readonly) BOOL isReal;
 
+
 -(id)initWithRange:(NSRange)range color:(NSColor *)color isReal:(BOOL)isReal;
 @end

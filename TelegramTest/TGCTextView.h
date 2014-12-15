@@ -30,7 +30,7 @@
 @property (nonatomic,strong) NSColor *selectColor;
 @property (nonatomic,strong) NSColor *backgroundColor;
 
-
+@property (nonatomic,weak) id <SelectTextDelegate> owner;
 
 -(void)setSelectionRange:(NSRange)selectionRange;
 
