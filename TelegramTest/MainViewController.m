@@ -100,7 +100,7 @@
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
     if(proposedPosition < 80)
-        return 70;
+        return self.leftViewController.isChatOpened ? 70 : 270;
     if(proposedPosition < 270)
         return 270;
     

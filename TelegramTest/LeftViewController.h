@@ -27,6 +27,7 @@
 
 -(void)updateSize;
 -(BOOL)canMinimisize;
+-(BOOL)isChatOpened;
 
 -(void)setUnreadCount:(int)count;
 

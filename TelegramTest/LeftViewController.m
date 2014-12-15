@@ -182,6 +182,10 @@ static const int bottomOffset = 58;
     return  !self.dialogsViewController.isSearchActive;
 }
 
+-(BOOL)isChatOpened {
+    return self.tabController.selectedIndex == 1;
+}
+
 - (BOOL)isSearchActive {
     return self.tabViewController.currentController == self.searchViewController;
 }
