@@ -652,6 +652,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMLoaderView drawRect:]:TMLoaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString

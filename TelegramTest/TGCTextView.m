@@ -337,6 +337,7 @@
                     }
                     
                     _selectRange.length +=  (endIndex - startIndex);
+                    
                 }
                 
                

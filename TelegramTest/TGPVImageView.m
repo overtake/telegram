@@ -44,7 +44,7 @@
 -(void)setImage:(NSImage *)image {
     [super setImage:image];
 
-    if(self.image == nil) {
+    if(self.image == nil && self.object) {
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8);
         [self.loader setCenterByView:self];
         [self.loader setCurrentProgress:self.object.downloadItem.progress == 0 ? 3 : self.object.downloadItem.progress];
@@ -55,6 +55,8 @@
     }
 
 }
+
+
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];

@@ -21,7 +21,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-    if(self.isHidden)
+    if(!self.window || self.isHidden || self.state != TMLoaderViewStateDownloading)
         return;
     
     
