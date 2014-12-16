@@ -38,9 +38,11 @@
     [self.textField setStringValue:item.text];
     
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.messagesViewController deleteItem:self.item];
-    });
+    if(item.removeType == RemoveUnreadMarkAfterSecondsType) {
+        dispatch_after_seconds(5, ^{
+            [self.messagesViewController deleteItem:self.item];
+        });
+    }
 }
 
 -(void)setFrameSize:(NSSize)newSize {

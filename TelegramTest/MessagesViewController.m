@@ -146,6 +146,8 @@
 
 @property (nonatomic,strong) id activity;
 
+@property (nonatomic,strong) MessageTableItemUnreadMark *unreadMark;
+
 @end
 
 @implementation MessagesViewController
@@ -1839,7 +1841,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 [self updateScrollBtn];
                 
-                MessageTableItemUnreadMark *mark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count];
+                MessageTableItemUnreadMark *mark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
                 
                 
                 NSArray *completeResult = message_id == 0 && self.historyController.filter.class == HistoryFilter.class && prevResult.count > 0 ? [prevResult arrayByAddingObject:mark] : prevResult;
@@ -1944,6 +1946,17 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos  needCheckLastMessage:(BOOL)needCheckLastMessage{
     assert([NSThread isMainThread]);
+    
+    
+    if(![[[Telegram delegate] mainWindow] isKeyWindow]) {
+        
+        // вставляем rfrrrr
+        if(!self.unreadMark) {
+            _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
+            array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
+        }
+    }
+    
     
     if(pos > self.messages.count)
         pos = self.messages.count-1;

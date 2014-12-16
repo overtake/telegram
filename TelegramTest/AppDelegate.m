@@ -239,7 +239,7 @@
     
     NSImage *menuIcon = [NSImage imageNamed:@"StatusIconWhite"];
     NSImage *highlightIcon = [NSImage imageNamed:@"StatusIconWhite"];
-    [highlightIcon setTemplate:YES];    
+    [highlightIcon setTemplate:YES];
     NSMenu *statusMenu = [StandartViewController attachMenu];
     
     

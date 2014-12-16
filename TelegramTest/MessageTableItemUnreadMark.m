@@ -10,8 +10,6 @@
 
 @implementation MessageTableItemUnreadMark
 
-@synthesize unread_count = _unread_count;
-@synthesize text = _text;
 
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
@@ -20,8 +18,9 @@
     return self;
 }
 
--(id)initWithCount:(int)unread_count {
+-(id)initWithCount:(int)unread_count type:(RemoveUnreadMarkType)type {
     if(self = [super init]) {
+        _removeType = type;
         self.viewSize = NSMakeSize(0, 26);
         _unread_count = unread_count;
         _text = NSLocalizedString(@"Messages.UnreadMessages", nil);
