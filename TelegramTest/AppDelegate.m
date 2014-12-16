@@ -229,7 +229,6 @@
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
 
-
     [SharedManager sharedManager];
     
     [SecretChatAccepter instance];

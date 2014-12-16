@@ -390,7 +390,7 @@
     }];
     
     
-    if(self.class == [TGMultipleSelectTextView class] && (_selectRange.location != 0 && _selectRange.length != 0)) {
+    if(self.class == [TGMultipleSelectTextView class]) {
         [SelectTextManager addRange:_selectRange forItem:self.owner];
     }
     

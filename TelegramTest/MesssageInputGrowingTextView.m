@@ -204,7 +204,8 @@ typedef enum {
     }
     
     if(type == PasteBoardItemTypeImage) {
-            }
+        
+    }
     
     if(iconImage)
         [alert setIcon:iconImage];
@@ -299,7 +300,7 @@ typedef enum {
     BOOL superAnswer = [super validateMenuItem:menuItem];
     if(menuItem.action == @selector(paste:)) {
         
-        BOOL ok = [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
+        BOOL ok = [[NSPasteboard generalPasteboard] canReadObjectForClasses:[NSArray arrayWithObject:[NSImage class]] options:@{}];
         
         return ok || superAnswer;
     }
