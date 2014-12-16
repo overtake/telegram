@@ -68,12 +68,12 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
             _context = [[MTContext alloc] initWithSerialization:serialization apiEnvironment:apiEnvironment];
             
-            [_context setKeychain:[MTKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER]];
+            if(isTestServer())
+                 [_context setKeychain:[MTKeychain unencryptedKeychainWithName:@"org.telegram.test"]];
+             else
+                [_context setKeychain:[MTKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER]];
             
            
-            
-            
-            
             [_context addChangeListener:self];
             
             

@@ -34,6 +34,8 @@
 @property (nonatomic, strong) MainWindow *mainWindow;
 @property (nonatomic, strong) LoginWindow *loginWindow;
 
+@property (nonatomic, strong,readonly) NSStatusItem *statusItem;
+
 - (TelegramWindow *)window;
 - (void)logoutWithForce:(BOOL)force;
 
