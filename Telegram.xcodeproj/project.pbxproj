@@ -1696,6 +1696,7 @@
 		C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVImageView.m; sourceTree = "<group>"; };
 		C2C725D81860E05200094EC7 /* EncryptedParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedParams.h; sourceTree = "<group>"; };
 		C2C725D91860E05200094EC7 /* EncryptedParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedParams.m; sourceTree = "<group>"; };
+		C2C8AB121A41F9B100C857D6 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
@@ -5242,6 +5243,7 @@
 				C20D18F31948A3FB0095A906 /* en */,
 				C20D18F51948A4970095A906 /* es */,
 				C2002D13199E9ADA002A1915 /* de */,
+				C2C8AB121A41F9B100C857D6 /* it */,
 			);
 			name = NewMainMenu.xib;
 			sourceTree = "<group>";
