@@ -237,8 +237,8 @@
     [_statusItem setTarget:self];
     [_statusItem setAction:@selector(didStatusItemClicked)];
     
-    NSImage *menuIcon = [NSImage imageNamed:@"StatusIconWhite"];
-    NSImage *highlightIcon = [NSImage imageNamed:@"StatusIconWhite"];
+    NSImage *menuIcon = [NSImage imageNamed:@"StatusIcon"];
+    NSImage *highlightIcon = [NSImage imageNamed:@"StatusIcon"];
     [highlightIcon setTemplate:YES];
     NSMenu *statusMenu = [StandartViewController attachMenu];
     

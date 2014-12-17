@@ -437,7 +437,7 @@
             
             [self.table.scrollView scrollToPoint:rowRect.origin animation:NO];
             
-            [self scrollToRect:rowRect isCenter:YES];
+            [self scrollToRect:rowRect isCenter:YES animated:NO];
             
         }
     };
@@ -1206,6 +1206,19 @@ static NSTextAttachment *headerMediaIcon() {
     [self becomeFirstResponder];
     [self tryRead];
     [self.normalNavigationCenterView setDialog:self.dialog];
+    
+    
+    
+    if(self.unreadMark) {
+        self.unreadMark.removeType = RemoveUnreadMarkAfterSecondsType;
+        
+        dispatch_after_seconds(5, ^{
+            
+            [self deleteItem:self.unreadMark];
+            self.unreadMark = nil;
+            
+        });
+    }
 }
 
 - (void)messageReadNotification:(NSNotification *)notify {
@@ -1231,7 +1244,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force  {
-    NSRange range = [self insertMessageTableItemsToList:@[message] startPosition:position needCheckLastMessage:YES];
+    
+    NSArray *items;
+    
+    NSRange range = [self insertMessageTableItemsToList:@[message] startPosition:position needCheckLastMessage:YES backItems:&items];
     
     if(range.length) {
         if(message.message.from_id != [UsersManager currentUserId]) {
@@ -1243,7 +1259,7 @@ static NSTextAttachment *headerMediaIcon() {
             
         }
         
-        [self insertAndGoToEnd:range forceEnd:force items:@[message]];
+        [self insertAndGoToEnd:range forceEnd:force items:items];
         [self didUpdateTable];
     }
 }
@@ -1277,6 +1293,13 @@ static NSTextAttachment *headerMediaIcon() {
     
    // [CATransaction begin];
     
+    NSRect prevRect;
+    
+    if(self.unreadMark && self.unreadMark.removeType == RemoveUnreadMarkNoneType)
+    {
+        prevRect = [self.table rectOfRow:[self indexOfObject:self.unreadMark]];
+    }
+    
     
     BOOL isScrollToEnd = [self.table.scrollView isScrollEndOfDocument];
     
@@ -1304,13 +1327,10 @@ static NSTextAttachment *headerMediaIcon() {
             [self jumpToLastMessages];
             return;
         } else {
-            [self.table.scrollView scrollToEndWithAnimation:YES];
+             [self.table.scrollView scrollToEndWithAnimation:YES];
         }
     }
-    
-  //  if(forceEnd)
-    //    return;
-    
+
     
     
     MessageTypingView *typingCell = [self.table viewAtColumn:0 row:0 makeIfNecessary:NO];
@@ -1346,6 +1366,31 @@ static NSTextAttachment *headerMediaIcon() {
     }];
     
     
+    if(self.unreadMark && self.unreadMark.removeType == RemoveUnreadMarkNoneType)
+    {
+        NSUInteger idx = [self indexOfObject:self.unreadMark];
+        NSRect rect = [self.table rectOfRow:idx];
+        
+        
+        if(NSMinY(rect) + NSHeight(rect) > NSHeight(self.table.scrollView.frame)) {
+            addAnimation = (rect.origin.y - 1) != (self.table.scrollView.documentOffset.y + NSHeight(self.table.scrollView.frame));
+            
+            if(!addAnimation)
+                forceEnd = YES;
+            
+            [self scrollToUnreadItem:NO];
+            
+            if(rect.origin.y + height  > NSHeight(self.table.scrollView.frame) && addAnimation)
+            {
+                height= rect.origin.y - prevRect.origin.y;
+                
+                addAnimation = height > 0;
+            }
+        }
+        
+    }
+
+    
     if(!addAnimation) {
         if(!isScrollToEnd && !forceEnd) {
             [self.table.scrollView scrollToPoint:NSMakePoint(self.table.scrollView.documentOffset.x, self.table.scrollView.documentOffset.y + height) animation:NO];
@@ -1354,9 +1399,12 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-   
     
-    NSUInteger count = visibleRange.location+visibleRange.length + 1;
+
+    
+   
+
+    NSUInteger count = visibleRange.location+visibleRange.length + 10;
     
     for (NSUInteger i = range.location; i < count && i < self.messages.count; i++) {
         
@@ -1378,6 +1426,8 @@ static NSTextAttachment *headerMediaIcon() {
             
             cellY = presentY;
         }
+        
+
         
         NSPoint fromValue = NSMakePoint(0, cellY);
         
@@ -1408,10 +1458,12 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
     
-    NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES];
+    NSArray *items;
+    
+    NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES backItems:&items];
     
     if(r.length) {
-        [self insertAndGoToEnd:r forceEnd:force items:list];
+        [self insertAndGoToEnd:r forceEnd:force items:items];
         [self didUpdateTable];
     }
     
@@ -1754,7 +1806,10 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(self.messages.count > 1) {
         //    dispatch_async(dispatch_get_main_queue(), ^{
-                NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO];
+            
+            NSArray *backItems;
+            
+                NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil];
                 NSSize oldsize = self.table.scrollView.documentSize;
                 NSPoint offset = self.table.scrollView.documentOffset;
                 
@@ -1773,7 +1828,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
            // });
         } else {
-            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO];
+            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil];
             [self.table reloadData];
             [self didUpdateTable];
             self.locked = NO;
@@ -1841,10 +1896,10 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 [self updateScrollBtn];
                 
-                MessageTableItemUnreadMark *mark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
+                self.unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
                 
                 
-                NSArray *completeResult = message_id == 0 && self.historyController.filter.class == HistoryFilter.class && prevResult.count > 0 ? [prevResult arrayByAddingObject:mark] : prevResult;
+                NSArray *completeResult = message_id == 0 && self.historyController.filter.class == HistoryFilter.class && prevResult.count > 0 ? [prevResult arrayByAddingObject:self.unreadMark] : prevResult;
                 
                 NSArray *nextResult = [completeResult arrayByAddingObjectsFromArray:result];
                 
@@ -1852,12 +1907,12 @@ static NSTextAttachment *headerMediaIcon() {
                 [self messagesLoadedTryToInsert:nextResult pos:0 next:NO];
                 
                 
-                id item = message_id == 0 ? mark : [self findMessageItemById:message_id];
+                id item = message_id == 0 ? self.unreadMark : [self findMessageItemById:message_id];
                 
                 NSUInteger index = [self indexOfObject:item];
                 NSRect rect = [self.table rectOfRow:index];
                 
-                [self scrollToRect:rect isCenter:message_id != 0];
+                [self scrollToRect:rect isCenter:message_id != 0  animated:NO];
                 //bug fix
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1901,7 +1956,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
--(void)scrollToRect:(NSRect)rect isCenter:(BOOL)isCenter {
+-(void)scrollToRect:(NSRect)rect isCenter:(BOOL)isCenter animated:(BOOL)animated {
     
     if(isCenter) {
         rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
@@ -1913,20 +1968,20 @@ static NSTextAttachment *headerMediaIcon() {
     if(rect.origin.y < 0)
         rect.origin.y = 0;
     
-    [self.table.scrollView scrollToPoint:rect.origin animation:NO];
+    [self.table.scrollView scrollToPoint:rect.origin animation:animated];
     
 }
 
 
-- (void)scrollToUnreadItem {
-    NSArray *item = [self.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@",[MessageTableItemUnreadMark class]]];
+- (void)scrollToUnreadItem:(BOOL)animated {
     
-    if(item.count > 0) {
-        NSUInteger index = [self indexOfObject:item[0]];
+    if(self.unreadMark != nil) {
+        NSUInteger index = [self indexOfObject:self.unreadMark];
         
         NSRect rect = [self.table rectOfRow:index];
         
-        [self.table.scrollView scrollToPoint:rect.origin animation:NO];
+        
+        [self scrollToRect:rect isCenter:NO animated:animated];
     }
 }
 
@@ -1944,19 +1999,20 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos  needCheckLastMessage:(BOOL)needCheckLastMessage{
+- (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos needCheckLastMessage:(BOOL)needCheckLastMessage backItems:(NSArray **)back {
     assert([NSThread isMainThread]);
     
     
     if(![[[Telegram delegate] mainWindow] isKeyWindow]) {
         
-        // вставляем rfrrrr
         if(!self.unreadMark) {
             _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
             array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
         }
     }
     
+    if(back != NULL)
+        *back = array;
     
     if(pos > self.messages.count)
         pos = self.messages.count-1;
@@ -1964,6 +2020,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(pos == 0)
         pos++;
+    
     
     
     
