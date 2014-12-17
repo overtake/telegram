@@ -1059,6 +1059,14 @@
          contextName = "__39-[UserNameViewContainer initWithFrame:]_block_invoke_2:UserNameViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates proccessStatefulMessage:needSave:]:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "container">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DialogTableView initWithFrame:]:DialogTableView.m">
          <PersistentStrings>
             <PersistentString
