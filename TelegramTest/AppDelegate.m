@@ -238,8 +238,8 @@
     [_statusItem setAction:@selector(didStatusItemClicked)];
     
     NSImage *menuIcon = [NSImage imageNamed:@"StatusIcon"];
-    NSImage *highlightIcon = [NSImage imageNamed:@"StatusIcon"];
-    [highlightIcon setTemplate:YES];
+    [menuIcon setTemplate:YES];
+    
     NSMenu *statusMenu = [StandartViewController attachMenu];
     
     
@@ -254,7 +254,7 @@
     [_statusItem setMenu:statusMenu];
     
     [_statusItem setImage:menuIcon];
-    [_statusItem setAlternateImage:highlightIcon];
+   // [_statusItem setAlternateImage:highlightIcon];
     
     [SharedManager sharedManager];
     
