@@ -30,9 +30,13 @@
         
     [[[self instance] list] removeObject:item];
     
-    [[[self instance] list] addObject:item];
+    [[[self instance] keys] removeObjectForKey:[item identifier]];
     
-    [[self instance] keys][[item identifier]] = [NSValue valueWithRange:range];
+    if(range.location != NSNotFound) {
+        [[[self instance] list] addObject:item];
+        
+        [[self instance] keys][[item identifier]] = [NSValue valueWithRange:range];
+    }
     
     
 }

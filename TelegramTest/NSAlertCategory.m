@@ -23,7 +23,7 @@ static char * const qBlockActionKey = "BlockActionKey";
 
 - (void)show {
 
-    [self beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+    [self beginSheetModalForWindow:[[Telegram delegate] mainWindow]
                       modalDelegate:self
                      didEndSelector:@selector(testDatabaseConnectionDidEnd:returnCode:contextInfo:)
                         contextInfo:nil];

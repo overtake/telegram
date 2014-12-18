@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" promptedForUpgradeToXcode5="NO">
     <dependencies>
         <deployment identifier="macosx"/>
+        <development version="6000" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
     </dependencies>
     <objects>
@@ -18,7 +19,7 @@
                 <menuItem title="Telegram" id="4">
                     <menu key="submenu" title="Telegram" systemMenu="apple" id="5">
                         <items>
-                            <menuItem title="Über" id="6">
+                            <menuItem title="Info" id="6">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="aboutAction:" target="89" id="98"/>
@@ -27,13 +28,13 @@
                             <menuItem isSeparatorItem="YES" id="7">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Konto Einstellungen" id="8">
+                            <menuItem title="Impostazioni account..." id="8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="settings:" target="89" id="108"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Einstellungen..." keyEquivalent="," id="9">
+                            <menuItem title="Preferenze" keyEquivalent="," id="9">
                                 <connections>
                                     <action selector="openSettings:" target="89" id="114"/>
                                 </connections>
@@ -41,7 +42,7 @@
                             <menuItem isSeparatorItem="YES" id="10">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Eine Frage stellen..." id="11">
+                            <menuItem title="Fai una domanda" id="11">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="askQuestion:" target="89" id="111"/>
@@ -50,35 +51,35 @@
                             <menuItem isSeparatorItem="YES" id="12">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Auf Aktualisierungen prüfen..." tag="1000" id="13">
+                            <menuItem title="Controlla aggiornamenti" tag="1000" id="13">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="checkForUpdates:" target="88" id="112"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Dienste" id="14">
-                                <menu key="submenu" title="Dienste" systemMenu="services" id="15"/>
+                            <menuItem title="Servizi" id="14">
+                                <menu key="submenu" title="Servizi" systemMenu="services" id="15"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="16">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Ausblenden" keyEquivalent="h" id="17">
+                            <menuItem title="Nascondi" keyEquivalent="h" id="17">
                                 <connections>
                                     <action selector="hide:" target="-1" id="99"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Andere ausblenden" keyEquivalent="h" id="18">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Nascondi altre" keyEquivalent="N" id="18">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="hideOtherApplications:" target="-1" id="101"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Alle einblenden" id="19">
+                            <menuItem title="Mostra tutto" id="19">
                                 <connections>
                                     <action selector="unhideAllApplications:" target="-1" id="102"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Schließen" keyEquivalent="w" id="20">
+                            <menuItem title="Chiudi" keyEquivalent="w" id="20">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="119"/>
                                 </connections>
@@ -86,7 +87,7 @@
                             <menuItem isSeparatorItem="YES" id="21">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Telegram beenden" keyEquivalent="q" id="22">
+                            <menuItem title="Chiudi Telegram" keyEquivalent="q" id="22">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="100"/>
                                 </connections>
@@ -94,10 +95,10 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Ablage" id="23">
-                    <menu key="submenu" title="Ablage" id="24">
+                <menuItem title="File" id="23">
+                    <menu key="submenu" title="File" id="24">
                         <items>
-                            <menuItem title="Medien anzeigen" keyEquivalent="y" id="25">
+                            <menuItem title="Mostra media" keyEquivalent="y" id="25">
                                 <connections>
                                     <action selector="showMedia:" target="89" id="116"/>
                                 </connections>
@@ -105,7 +106,7 @@
                             <menuItem isSeparatorItem="YES" id="26">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Chat verlassen..." id="27">
+                            <menuItem title="Lascia chat..." id="27">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="clearChatHistory:" target="89" id="109"/>
@@ -114,7 +115,7 @@
                             <menuItem isSeparatorItem="YES" id="28">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Abmelden" id="29">
+                            <menuItem title="Disconnetti" id="29">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="logout:" target="89" id="105"/>
@@ -123,15 +124,16 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Bearbeiten" id="30">
-                    <menu key="submenu" title="Bearbeiten" id="31">
+                <menuItem title="Composizione" id="30">
+                    <menu key="submenu" title="Composizione" id="31">
                         <items>
-                            <menuItem title="Widerrufen" keyEquivalent="z" id="32">
+                            <menuItem title="Annulla" keyEquivalent="A" id="32">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="undo:" target="-1" id="115"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Wiederholen" keyEquivalent="Z" id="33">
+                            <menuItem title="Ripristina" keyEquivalent="Z" id="33">
                                 <connections>
                                     <action selector="redo:" target="-1" id="106"/>
                                 </connections>
@@ -139,128 +141,128 @@
                             <menuItem isSeparatorItem="YES" id="34">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Ausschneiden" keyEquivalent="x" id="35">
+                            <menuItem title="Taglia" keyEquivalent="x" id="35">
                                 <connections>
                                     <action selector="cut:" target="-1" id="117"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Kopieren" keyEquivalent="c" id="36">
+                            <menuItem title="Copia" keyEquivalent="c" id="36">
                                 <connections>
                                     <action selector="copy:" target="-1" id="104"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Einsetzen" keyEquivalent="v" id="37">
+                            <menuItem title="Incolla" keyEquivalent="v" id="37">
                                 <connections>
                                     <action selector="paste:" target="-1" id="110"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sichern" keyEquivalent="s" id="38">
+                            <menuItem title="Salva" keyEquivalent="s" id="38">
                                 <connections>
                                     <action selector="save:" target="-1" id="107"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Einsetzen und Stil anpassen" keyEquivalent="V" id="39">
+                            <menuItem title="Incolla e mantieni lo stile" keyEquivalent="V" id="39">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             </menuItem>
-                            <menuItem title="Löschen" id="40">
+                            <menuItem title="Elimina" id="40">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="113"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Alles auswählen" keyEquivalent="a" id="41">
+                            <menuItem title="Seleziona tutto" keyEquivalent="a" id="41">
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="118"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="42"/>
-                            <menuItem title="Suchen" id="43">
+                            <menuItem title="Cerca" id="43">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Suchen" id="44">
+                                <menu key="submenu" title="Cerca" id="44">
                                     <items>
-                                        <menuItem title="Suchen…" tag="1" keyEquivalent="f" id="45"/>
-                                        <menuItem title="Suchen und Ersetzen…" tag="12" keyEquivalent="f" id="46">
+                                        <menuItem title="Cerca..." tag="1" keyEquivalent="f" id="45"/>
+                                        <menuItem title="Trova e sostituisci" tag="12" keyEquivalent="f" id="46">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Weitersuchen (vorwärts)" tag="2" keyEquivalent="g" id="47"/>
-                                        <menuItem title="Weitersuchen (rückwärts)" tag="3" keyEquivalent="G" id="48"/>
-                                        <menuItem title="Auswahl suchen" tag="7" keyEquivalent="e" id="49"/>
-                                        <menuItem title="Auswahl anzeigen" keyEquivalent="j" id="50"/>
+                                        <menuItem title="Cerca successivo" tag="2" keyEquivalent="g" id="47"/>
+                                        <menuItem title="Cerca precedente" tag="3" keyEquivalent="G" id="48"/>
+                                        <menuItem title="Usa selezione per cercare" tag="7" keyEquivalent="e" id="49"/>
+                                        <menuItem title="Vai fino alla selezione" keyEquivalent="j" id="50"/>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Rechtschreibung und Grammatik" id="51">
+                            <menuItem title="Ortografia e grammatica" id="51">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Rechtschreibung und Grammatik" id="52">
+                                <menu key="submenu" title="Ortografia e grammatica" id="52">
                                     <items>
-                                        <menuItem title="Rechtschreibung und Grammatik einblenden" keyEquivalent=":" id="53"/>
-                                        <menuItem title="Dokument jetzt prüfen" keyEquivalent=";" id="54"/>
+                                        <menuItem title="Mostra ortografia e grammatica" keyEquivalent=":" id="53"/>
+                                        <menuItem title="Controlla il documento adesso" keyEquivalent=";" id="54"/>
                                         <menuItem isSeparatorItem="YES" id="55"/>
-                                        <menuItem title="Während der Texteingabe prüfen" id="56">
+                                        <menuItem title="Controlla ortografia mentre scrivo" id="56">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Rechtschreib- und Grammatikprüfung" id="57">
+                                        <menuItem title="Controlla grammatica insieme all'ortografia" id="57">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Rechtschreibung autom. korrigieren" id="58">
+                                        <menuItem title="Correggi automaticamente l'ortografia" id="58">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Ersetzungen" id="59">
+                            <menuItem title="Sostituzioni" id="59">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Ersetzungen" id="60">
+                                <menu key="submenu" title="Sostituzioni" id="60">
                                     <items>
-                                        <menuItem title="Ersetzungen einblenden" id="61">
+                                        <menuItem title="Mostra sostituzioni" id="61">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="62"/>
-                                        <menuItem title="Intelligentes Kopieren/Einsetzen" id="63">
+                                        <menuItem title="Copia/incolla smart" id="63">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Intelligente Anführungszeichen" id="64">
+                                        <menuItem title="Virgolette smart" keyEquivalent="Q" id="64">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Intelligente Bindestriche" id="65">
+                                        <menuItem title="Trattini smart" id="65">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Intelligente Links" id="66">
+                                        <menuItem title="Link smart" id="66">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Datenerkennung" id="67">
+                                        <menuItem title="Rilevatori di dati" id="67">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Text ersetzen" id="68">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Transformationen" id="69">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Transformationen" id="70">
-                                    <items>
-                                        <menuItem title="Großbuchstaben" id="71">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Kleinbuchstaben" id="72">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Großschreiben" id="73">
+                                        <menuItem title="Sostituzione testo" id="68">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Sprachausgabe" id="74">
+                            <menuItem title="Trasformazioni" id="69">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Sprachausgabe" id="75">
+                                <menu key="submenu" title="Trasformazioni" id="70">
                                     <items>
-                                        <menuItem title="Sprachausgabe starten" id="76">
+                                        <menuItem title="Scrivi in lettere maiuscole" id="71">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Sprachausgabe stoppen" id="77">
+                                        <menuItem title="Scrivi in lettere minuscole" id="72">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="Usa maiuscole" id="73">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Voce" id="74">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Voce" id="75">
+                                    <items>
+                                        <menuItem title="Inizia riproduzione" id="76">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="Interrompi riproduzione" id="77">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
@@ -269,15 +271,16 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Fenster" id="78">
-                    <menu key="submenu" title="Fenster" systemMenu="window" id="79">
+                <menuItem title="Finestra" id="78">
+                    <menu key="submenu" title="Finestra" systemMenu="window" id="79">
                         <items>
-                            <menuItem title="Im Dock ablegen" keyEquivalent="m" id="80">
+                            <menuItem title="Contrai" keyEquivalent="o" id="80">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="97"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zoomen" id="81">
+                            <menuItem title="Ridimensiona" id="81">
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="103"/>
                                 </connections>
@@ -285,7 +288,7 @@
                             <menuItem isSeparatorItem="YES" id="82">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Alle nach vorne bringen" id="83">
+                            <menuItem title="Porta tutto in primo piano" id="83">
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="96"/>
                                 </connections>

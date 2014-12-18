@@ -15,4 +15,5 @@
 @property (nonatomic,strong) NSView *mainView;
 
 -(BOOL)isSearchActive;
++(NSMenu *)attachMenu;
 @end

@@ -11,5 +11,14 @@
 @interface MessageTableItemUnreadMark : MessageTableItem
 @property (nonatomic,assign,readonly) int unread_count;
 @property (nonatomic,strong,readonly) NSString *text;
--(id)initWithCount:(int)unread_count;
+
+typedef enum {
+    RemoveUnreadMarkAfterSecondsType,
+    RemoveUnreadMarkNoneType
+} RemoveUnreadMarkType;
+
+
+@property (nonatomic,assign) RemoveUnreadMarkType removeType;
+
+-(id)initWithCount:(int)unread_count type:(RemoveUnreadMarkType)type;
 @end

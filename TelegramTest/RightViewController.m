@@ -490,9 +490,6 @@
 }
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction {
-    if(self.composePickerViewController.action == composeAction)
-        return;
-    
     
     [self hideModalView:YES animation:NO];
     

@@ -815,7 +815,7 @@ static int insertCount = 3;
             
             NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
-            [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:NO];
+            [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:YES];
             
             [filtred enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj searchString:params.searchString]];

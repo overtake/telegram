@@ -119,7 +119,8 @@
 
 
 -(void)splitViewWillResizeSubviews:(NSNotification *)notification {
-     [self updateWindowMinSize];
+    [self updateWindowMinSize];
+    
 }
 
 -(void)updateWindowMinSize {

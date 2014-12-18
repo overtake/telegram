@@ -470,7 +470,7 @@ void open_user_by_name(NSString * userName) {
                 
                 if(![response isKindOfClass:[TL_userEmpty class]]) {
                     
-                    [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:NO];
+                    [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:YES];
                     
                     [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:response.n_id]];
                 } else {

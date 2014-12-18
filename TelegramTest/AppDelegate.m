@@ -224,16 +224,41 @@
     
 }
 
-
+-(void)didStatusItemClicked {
+    [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+   [self.mainWindow deminiaturize:self];
+}
 
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
+    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 
-
+    
+    [_statusItem setTarget:self];
+    [_statusItem setAction:@selector(didStatusItemClicked)];
+    
+    NSImage *menuIcon = [NSImage imageNamed:@"StatusIcon"];
+    [menuIcon setTemplate:YES];
+    
+    NSMenu *statusMenu = [StandartViewController attachMenu];
+    
+    
+    [statusMenu addItem:[NSMenuItem separatorItem]];
+    
+    [statusMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Quit", nil) withBlock:^(id sender) {
+        
+        [[NSApplication sharedApplication] terminate:self];
+        
+    }]];
+    
+    [_statusItem setMenu:statusMenu];
+    
+    [_statusItem setImage:menuIcon];
+   // [_statusItem setAlternateImage:highlightIcon];
+    
     [SharedManager sharedManager];
     
     [SecretChatAccepter instance];
-    
     
     [self initializeUpdater];
     [self initializeKeyDownHandler];
@@ -245,9 +270,9 @@
     if([[MTNetwork instance] isAuth]) {
         [self initializeMainWindow];
     } else {
-        //[self initializeLoginWindow];
         
        [self logoutWithForce:NO];
+        
     }
 
 }

@@ -106,7 +106,7 @@
     
 
     if(!self.menuPopover) {
-        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:self.attachMenu];
+        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:[StandartViewController attachMenu]];
         [self.menuPopover setHoverView:self.topButton];
     }
     
@@ -134,7 +134,7 @@
 
 }
 
--(NSMenu *)attachMenu {
++(NSMenu *)attachMenu {
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
@@ -143,6 +143,8 @@
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionGroupBehavior class]];
         
         [[Telegram rightViewController] showComposeWithAction:action];
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
         
     }];
     
@@ -162,8 +164,10 @@
              [[Telegram rightViewController] showComposeBroadcastList:action];
         }
         
-       
+       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        
     }];
+
     [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
     [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
     [theMenu addItem:broadcast];
@@ -175,6 +179,8 @@
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionSecretChatBehavior class]];
         
         [[Telegram rightViewController] showComposeWithAction:action];
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
         
     }];
     [secretChat setImage:[NSImage imageNamed:@"ComposeMenuNewSecret"]];

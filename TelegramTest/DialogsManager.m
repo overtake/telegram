@@ -263,7 +263,8 @@
                 block();
         }
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
+        if(block)
+            block();
     }];
 }
 

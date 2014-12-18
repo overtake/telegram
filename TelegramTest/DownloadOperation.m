@@ -73,6 +73,7 @@
         } else if(item.size != 0) {
             self.downloaded = self.startOffset = (int)[attrs fileSize];
             append = self.downloaded < item.size && self.downloaded > 0;
+            [DownloadQueue setProgress:(float)self.downloaded/(float)_item.size * 100.0f toOperation:self];
         }
         
         self.stream = [[NSOutputStream alloc] initToFileAtPath:_item.path append:append];
