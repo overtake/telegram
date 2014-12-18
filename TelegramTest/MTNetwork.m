@@ -88,27 +88,28 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             NSString *address = isTestServer() ? @"173.240.5.253" : @"173.240.5.1";
             
-            
-            
-            
             [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
             
             
-            _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
-            
-            
-            void (^execute)() = ^{
-                [_datacenterWatchdog execute:nil];
-            };
-            
-            
-            execute();
-            
-            _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+            if(!isTestServer()) {
+                _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+                
+                
+                void (^execute)() = ^{
+                    [_datacenterWatchdog execute:nil];
+                };
+                
+                
                 execute();
-            } queue:[ASQueue globalQueue].nativeQueue];
+                
+                _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+                    execute();
+                } queue:[ASQueue globalQueue].nativeQueue];
+                
+                [_executeTimer start];
+            }
             
-            [_executeTimer start];
+           
             
 
         }];
