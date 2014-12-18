@@ -481,6 +481,10 @@
 		C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB460191BD90F00305CC8 /* MediaCollectionItemView.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
+		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
+		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
+		C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */; };
+		C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
 		C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */; };
 		C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88D1A2C7D57008C4C4A /* MTProto.m */; };
@@ -1681,6 +1685,14 @@
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
 		C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeAlertController.h; sourceTree = "<group>"; };
 		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
+		C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemSticker.h; sourceTree = "<group>"; };
+		C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemSticker.m; sourceTree = "<group>"; };
+		C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellStickerView.h; sourceTree = "<group>"; };
+		C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellStickerView.m; sourceTree = "<group>"; };
+		C2C1DC0D1A4336CE00BBCC63 /* TGStickerImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerImageObject.h; sourceTree = "<group>"; };
+		C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerImageObject.m; sourceTree = "<group>"; };
+		C2C1DC111A433C3900BBCC63 /* DownloadStickerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadStickerItem.h; sourceTree = "<group>"; };
+		C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadStickerItem.m; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
 		C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeConfirmController.h; sourceTree = "<group>"; };
@@ -2245,6 +2257,7 @@
 		0A6758E01895504600F4487D /* items */ = {
 			isa = PBXGroup;
 			children = (
+				C2C1DC101A433BF600BBCC63 /* sticker */,
 				C2233DA61A07EEF10056594F /* social */,
 				0A613C1E18AD9892004096DD /* MessageTableItemContact.h */,
 				0A613C1F18AD9892004096DD /* MessageTableItemContact.m */,
@@ -2272,6 +2285,8 @@
 				C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */,
 				C268C19A19F12EFA007F836A /* MessageTableItemAudioDocument.h */,
 				C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */,
+				C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */,
+				C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -2307,6 +2322,8 @@
 				C268C19E19F13721007F836A /* MessagetableCellAudioController.m */,
 				C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */,
 				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
+				C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */,
+				C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -3731,6 +3748,17 @@
 			name = phonechange;
 			sourceTree = "<group>";
 		};
+		C2C1DC101A433BF600BBCC63 /* sticker */ = {
+			isa = PBXGroup;
+			children = (
+				C2C1DC0D1A4336CE00BBCC63 /* TGStickerImageObject.h */,
+				C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */,
+				C2C1DC111A433C3900BBCC63 /* DownloadStickerItem.h */,
+				C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */,
+			);
+			name = sticker;
+			sourceTree = "<group>";
+		};
 		C2C2491819EBC680006BB1AB /* BlockedUsers */ = {
 			isa = PBXGroup;
 			children = (
@@ -4855,6 +4883,7 @@
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
+				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
 				C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */,
 				CEAE5D2E181E4C6F00C17645 /* TLFileLocation+Extensions.m in Sources */,
@@ -4895,6 +4924,7 @@
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
+				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
 				0A62CC9A181F24270098720C /* RightViewController.m in Sources */,
 				C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */,
 				CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */,
@@ -5096,6 +5126,7 @@
 				CEDAEB5A1881AF85006189A2 /* YapDatabaseSecondaryIndex.m in Sources */,
 				C21C7B3B18D769E400253A7A /* SenderItem.m in Sources */,
 				0AE2E3F41867263C004926A7 /* TMSearchTextField.m in Sources */,
+				C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */,
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,
 				C2201A03192CCB6C00C0E441 /* SelectUserRowView.m in Sources */,
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
@@ -5208,6 +5239,7 @@
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
+				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
 				CEDAEB601881AF85006189A2 /* YapDatabaseViewChange.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,

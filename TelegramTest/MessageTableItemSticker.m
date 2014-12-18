@@ -10,4 +10,20 @@
 
 @implementation MessageTableItemSticker
 
+-(id)initWithObject:(TL_localMessage *)object {
+    if(self = [super initWithObject:object]) {
+        
+        if(NSSizeNotZero(object.media.document.imageSize)) {
+            self.blockSize = object.media.document.imageSize;
+        } else {
+            self.blockSize = NSMakeSize(200, 200);
+        }
+        
+        self.imageObject = [[TGStickerImageObject alloc] initWithMessage:object];
+        
+    }
+    
+    return self;
+}
+
 @end

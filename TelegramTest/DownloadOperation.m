@@ -70,7 +70,7 @@
             }];
             self.key = [keyIv objectForKey:@"key"];
             self.iv = [[keyIv objectForKey:@"iv"] mutableCopy];
-        } else if(item.size != 0) {
+        } else if(item.size != 0  && self.item.fileType != DownloadFileImage) {
             self.downloaded = self.startOffset = (int)[attrs fileSize];
             append = self.downloaded < item.size && self.downloaded > 0;
             [DownloadQueue setProgress:(float)self.downloaded/(float)_item.size * 100.0f toOperation:self];
@@ -90,10 +90,15 @@
     self.selector = selector;
     self.target = target;
     
-    
-    
-    
     [DownloadQueue dispatchOnDownloadQueue:^{
+        
+        if(![self.item isEncrypted] && self.item.size != 0 && self.downloaded == self.item.size && self.item.fileType != DownloadFileImage) {
+            _item.downloadState = DownloadStateCompleted;
+            [self.target performSelectorInBackground:self.selector withObject:self];
+            return;
+        }
+        
+        
         if(_item.fileType == DownloadFileImage) {
             
             

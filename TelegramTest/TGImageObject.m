@@ -97,7 +97,7 @@
         
         image = renderedImage(image, self.imageSize);
         
-        [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }
     
     
@@ -109,6 +109,10 @@
 -(void)dealloc {
     [self.downloadItem removeEvent:self.downloadListener];
     _downloadItem = nil;
+}
+
+-(NSString *)cacheKey {
+    return self.location.cacheKey;
 }
 
 

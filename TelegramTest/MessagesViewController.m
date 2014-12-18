@@ -2660,7 +2660,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     } else if(item.class == [MessageTableItemUnreadMark class]) {
         static NSString *const kRowIdentifier = @"unread_mark_cell";
-        cell = (MessageTableCellUnreadMarkView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
         if(!cell) {
             cell = [[MessageTableCellUnreadMarkView alloc] initWithFrame:self.view.bounds];
@@ -2670,7 +2670,7 @@ static NSTextAttachment *headerMediaIcon() {
     } else if(item.class == [MessageTableItemSocial class]) {
       
         static NSString *const kRowIdentifier = @"social_cell";
-        cell = (MessageTableCellSocialView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
         if(!cell) {
             cell = [[MessageTableCellSocialView alloc] initWithFrame:self.view.bounds];
@@ -2678,6 +2678,18 @@ static NSTextAttachment *headerMediaIcon() {
             cell.messagesViewController = self;
         }
 
+        
+    } else if(item.class == [MessageTableItemSticker class]) {
+        
+        static NSString *const kRowIdentifier = @"sticker_cell";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellStickerView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+        
         
     } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         

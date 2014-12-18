@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableCellContainerView.h"
-
-@interface MessagetableCellStickerView : MessageTableCellContainerView
+#import "MessageTableItemSticker.h"
+@interface MessageTableCellStickerView : MessageTableCellContainerView
 
 @end

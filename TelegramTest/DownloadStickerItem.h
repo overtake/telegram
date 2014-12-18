@@ -8,6 +8,6 @@
 
 #import "DownloadDocumentItem.h"
 
-@interface DownloadStickerItem : DownloadDocumentItem
+@interface DownloadStickerItem : DownloadItem
 
 @end

@@ -11,5 +11,7 @@
 @interface TLDocument (Extension)
 
 -(NSString *)file_name;
+-(BOOL)isSticker;
+-(NSSize)imageSize;
 
 @end

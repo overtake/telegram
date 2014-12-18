@@ -10,4 +10,5 @@
 
 @interface TGStickerImageObject : TGImageObject
 
+-(id)initWithMessage:(TL_localMessage *)message;
 @end

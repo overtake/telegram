@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItem.h"
-
+#import "TGStickerImageObject.h"
 @interface MessageTableItemSticker : MessageTableItem
-
+@property (nonatomic,strong) TGStickerImageObject *imageObject;
 @end

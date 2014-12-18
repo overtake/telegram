@@ -12,7 +12,7 @@
 
 -(NSString *)file_name {
     
-    __block NSString *fileName;
+    __block NSString *fileName = @"";
     
     [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
         
@@ -24,6 +24,35 @@
     }];
     
     return fileName;
+}
+
+-(BOOL)isSticker {
+    __block BOOL isSticker;
+    
+    [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj isKindOfClass:[TL_documentAttributeSticker class]]) {
+            isSticker = YES;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return isSticker;
+}
+-(NSSize)imageSize {
+    __block NSSize size = NSZeroSize;
+    
+    [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj isKindOfClass:[TL_documentAttributeImageSize class]]) {
+            size = NSMakeSize(obj.w,obj.h);
+            *stop = YES;
+        }
+        
+    }];
+    
+    return size;
 }
 
 @end

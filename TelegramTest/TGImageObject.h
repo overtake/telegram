@@ -50,6 +50,6 @@
 
 -(void)initDownloadItem;
 
-
+-(NSString *)cacheKey;
 
 @end
