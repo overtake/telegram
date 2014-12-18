@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.12.14.
+//  Auto created by Mikhail Filimonov on 18.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3045,6 +3045,20 @@
 @implementation TLcontacts_Contacts
 @end
 
+@implementation TL_contacts_contactsNotModified
++(TL_contacts_contactsNotModified*)create {
+	TL_contacts_contactsNotModified* obj = [[TL_contacts_contactsNotModified alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
 @implementation TL_contacts_contacts
 +(TL_contacts_contacts*)createWithContacts:(NSMutableArray*)contacts users:(NSMutableArray*)users {
 	TL_contacts_contacts* obj = [[TL_contacts_contacts alloc] init];
@@ -3097,20 +3111,6 @@
 			[self.users addObject:obj];
 		}
 	}
-}
-@end
-
-@implementation TL_contacts_contactsNotModified
-+(TL_contacts_contactsNotModified*)create {
-	TL_contacts_contactsNotModified* obj = [[TL_contacts_contactsNotModified alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
 }
 @end
 
@@ -7906,6 +7906,61 @@
 
 
 
+@implementation TLmessages_Stickers
+@end
+
+@implementation TL_messages_stickersNotModified
++(TL_messages_stickersNotModified*)create {
+	TL_messages_stickersNotModified* obj = [[TL_messages_stickersNotModified alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_messages_stickers
++(TL_messages_stickers*)createWithN_hash:(NSString*)n_hash strickers:(NSMutableArray*)strickers {
+	TL_messages_stickers* obj = [[TL_messages_stickers alloc] init];
+	obj.n_hash = n_hash;
+	obj.strickers = strickers;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.n_hash];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.strickers count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDocument* obj = [self.strickers objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_hash = [stream readString];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.strickers)
+			self.strickers = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocument* obj = [TLClassStore TLDeserialize:stream];
+			[self.strickers addObject:obj];
+		}
+	}
+}
+@end
+
+
+
 @implementation TLProtoMessage
 @end
 
@@ -8942,4 +8997,3 @@
 	}
 }
 @end
-

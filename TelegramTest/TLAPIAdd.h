@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TLApiObject.h"
 
+
 @interface TL_initConnection : TLObject
 @property int api_id;
 @property (nonatomic, strong) NSString *device_model;
@@ -21,6 +22,8 @@
 
 
 
-@interface TL_invokeAfter : TLMsgResendReq
+@interface TL_invokeAfter : TLObject
+@property (nonatomic,assign) long msg_id;
+@property (nonatomic,strong) NSData *query;
 +(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query;
 @end

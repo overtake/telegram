@@ -152,8 +152,8 @@
         [self.classes setObject:[TL_contacts_myLinkRequested class] forKey:[NSNumber numberWithInt:1818882030]];
         [self.classes setObject:[TL_contacts_myLinkContact class] forKey:[NSNumber numberWithInt:-1035932711]];
         [self.classes setObject:[TL_contacts_link class] forKey:[NSNumber numberWithInt:-322001931]];
-        [self.classes setObject:[TL_contacts_contacts class] forKey:[NSNumber numberWithInt:1871416498]];
         [self.classes setObject:[TL_contacts_contactsNotModified class] forKey:[NSNumber numberWithInt:-1219778094]];
+        [self.classes setObject:[TL_contacts_contacts class] forKey:[NSNumber numberWithInt:1871416498]];
         [self.classes setObject:[TL_contacts_importedContacts class] forKey:[NSNumber numberWithInt:-1387117803]];
         [self.classes setObject:[TL_contacts_blocked class] forKey:[NSNumber numberWithInt:471043349]];
         [self.classes setObject:[TL_contacts_blockedSlice class] forKey:[NSNumber numberWithInt:-1878523231]];
@@ -324,6 +324,8 @@
         [self.classes setObject:[TL_documentAttributeVideo class] forKey:[NSNumber numberWithInt:1494273227]];
         [self.classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:85215461]];
         [self.classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
+        [self.classes setObject:[TL_messages_stickersNotModified class] forKey:[NSNumber numberWithInt:-244016606]];
+        [self.classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:1395965841]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -366,7 +368,6 @@
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
-        
         
         
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:-878758099]];

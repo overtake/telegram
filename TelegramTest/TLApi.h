@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.12.14.
+//  Auto created by Mikhail Filimonov on 18.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -774,5 +774,12 @@
 @property (nonatomic, strong) NSData* password_hash;
 
 +(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash;
+@end
+
+@interface TLAPI_messages_getStickers : TLApiObject
+@property (nonatomic, strong) NSString* emoticon;
+@property (nonatomic, strong) NSString* n_hash;
+
++(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash;
 @end
 

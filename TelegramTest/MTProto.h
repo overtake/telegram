@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 15.12.14.
+//  Auto created by Dmitry Kondratyev on 18.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -336,6 +336,9 @@
 @interface TLDocumentAttribute : TLObject
 @end
 	
+@interface TLmessages_Stickers : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -395,7 +398,6 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
-	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -1275,11 +1277,11 @@
 @property (nonatomic, strong) NSMutableArray* users;
 @end
 
-@interface TL_contacts_contacts : TLcontacts_Contacts
-+(TL_contacts_contacts*)createWithContacts:(NSMutableArray*)contacts users:(NSMutableArray*)users;
-@end
 @interface TL_contacts_contactsNotModified : TLcontacts_Contacts
 +(TL_contacts_contactsNotModified*)create;
+@end
+@interface TL_contacts_contacts : TLcontacts_Contacts
++(TL_contacts_contacts*)createWithContacts:(NSMutableArray*)contacts users:(NSMutableArray*)users;
 @end
 	
 @interface TLcontacts_ImportedContacts()
@@ -2187,6 +2189,18 @@
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
 @end
 	
+@interface TLmessages_Stickers()
+@property (nonatomic, strong) NSString* n_hash;
+@property (nonatomic, strong) NSMutableArray* strickers;
+@end
+
+@interface TL_messages_stickersNotModified : TLmessages_Stickers
++(TL_messages_stickersNotModified*)create;
+@end
+@interface TL_messages_stickers : TLmessages_Stickers
++(TL_messages_stickers*)createWithN_hash:(NSString*)n_hash strickers:(NSMutableArray*)strickers;
+@end
+	
 @interface TLProtoMessage()
 @property long msg_id;
 @property int seqno;
@@ -2497,11 +2511,8 @@
 	
 @interface TLMsgResendReq()
 @property (nonatomic, strong) NSMutableArray* msg_ids;
-@property long msg_id;
-@property (nonatomic, strong) NSData* query;
 @end
 
 @interface TL_msg_resend_req : TLMsgResendReq
 +(TL_msg_resend_req*)createWithMsg_ids:(NSMutableArray*)msg_ids;
 @end
-
