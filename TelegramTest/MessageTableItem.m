@@ -366,7 +366,7 @@
 
 
 -(NSString *)string {
-    return self.message.message;
+    return ((MessageTableItemText *)self).textAttributed.string;
 }
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
