@@ -2079,11 +2079,31 @@ static NSTextAttachment *headerMediaIcon() {
         NSBeep();
         return;
     }
-//    
-//    if([message isEqualToString:@"1"]) {
-//        [Telegram setConnectionState:ConnectingStatusTypeConnecting];
-//    }
-//    
+    
+    
+    
+    
+    
+    if([message isEqualToString:@"!!!test!!!"]) {
+        [RPCRequest sendRequest:[TLAPI_messages_getStickers createWithEmoticon:@"😎" n_hash:@""] successHandler:^(RPCRequest *request, TL_messages_stickers * response) {
+            
+            if(response.strickers.count > 0) {
+                TL_localMessage *msg = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:[response.strickers lastObject]] dialog:self.dialog];
+                msg.dstate = DeliveryStateNormal;
+                [MessagesManager addAndUpdateMessage:msg];
+            }
+            
+           
+            
+            
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
+        
+        return;
+    }
+//
 //    if([message isEqualToString:@"2"]) {
 //        [Telegram setConnectionState:ConnectingStatusTypeConnected];
 //        return;

@@ -325,7 +325,7 @@
         [self.classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:85215461]];
         [self.classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
         [self.classes setObject:[TL_messages_stickersNotModified class] forKey:[NSNumber numberWithInt:-244016606]];
-        [self.classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:1395965841]];
+        [self.classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:0x8a8ecd32]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -437,7 +437,7 @@
     Class class = [obj class];
     NSNumber *constructor = [[self instance].constuctors objectForKey:class];
     if(constructor == nil) {
-        ELog(@" Error. Not found constructor for class %@", class);
+        NSLog(@" Error. Not found constructor for class %@", class);
       //  [NSException raise:@"Error" format:@"Not implemented class %@", NSStringFromClass(class)];
     } else {
         int constructorInt = [constructor intValue];
@@ -458,7 +458,7 @@
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        DLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
+        NSLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);

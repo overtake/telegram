@@ -11,6 +11,7 @@
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGSendTypingManager.h"
+#import "webp/decode.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -36,6 +37,8 @@
         self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
         self.filePath = path;
         self.conversation = conversation;
+        
+        self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
         
         NSImage *thumbImage = previewImageForDocument(self.filePath);
         
@@ -139,6 +142,20 @@
     
     [attrs addObject:[TL_documentAttributeFilename createWithFile_name:self.uploader.fileName]];
     
+    if([self.message.media.document.mime_type isEqualToString:@"webp"]) {
+        NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
+        int width = 0;
+        int heigth = 0;
+        if (WebPGetInfo(data.bytes, data.length, &width, &heigth))
+        {
+            
+            [attrs addObject:[TL_documentAttributeSticker create]];
+            [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
+            //  self.mimeType = [[NSString alloc] initWithFormat:@"sticker/webp; width=%d; height=%d", width, heigth];
+        }
+    }
+    
+    
     
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
@@ -168,7 +185,6 @@
         [SharedManager proccessGlobalResponse:obj];
         
         TLMessage *msg;
-        
         
         if(strongSelf.conversation.type != DialogTypeBroadcast)  {
             msg = [obj message];
