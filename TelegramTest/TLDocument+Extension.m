@@ -27,7 +27,7 @@
 }
 
 -(BOOL)isSticker {
-    __block BOOL isSticker;
+    __block BOOL isSticker = NO;
     
     [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
         

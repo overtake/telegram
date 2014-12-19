@@ -19,6 +19,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[StickersPanelView rebuild]:StickersPanelView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellTextView pop_animationDidReachToValue:]:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
@@ -72,6 +75,9 @@
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke308:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[MessageTableItem messageItemFromObject:]:MessageTableItem.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:]:TGModernEncryptedUpdates.m">
@@ -147,6 +153,17 @@
       </ContextState>
       <ContextState
          contextName = "__48-[TGModernTypingManager userTypingNotification:]_block_invoke:TGModernTypingManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[DocumentSenderItem sendMessage]_block_invoke:DocumentSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.media.document.size">
+            </PersistentString>
+            <PersistentString
+               value = "[msg media].document.size">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
@@ -748,6 +765,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TLDocument(Extensions) imageSize]:TLDocument+Extension.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -1295,6 +1315,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__44-[StickersPanelView showAndSearch:animated:]_block_invoke:StickersPanelView.m">
+      </ContextState>
+      <ContextState
          contextName = "_POPAnimationState::handleDidStop(signed char):POPAnimationInternal.h">
          <PersistentStrings>
             <PersistentString
@@ -1433,6 +1456,14 @@
          <PersistentStrings>
             <PersistentString
                value = "mark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__28-[StickersPanelView rebuild]_block_invoke:StickersPanelView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -693,6 +693,27 @@ NSData *jpegNormalizedData(NSImage *image) {
     return[myBitmapImageRep representationUsingType:NSJPEGFileType properties:jpegOptions];
 }
 
+NSData *pngNormalizedData(NSImage *image) {
+    NSBitmapImageRep* myBitmapImageRep;
+    
+    //this will get a bitmap from the image at 1 point == 1 pixel, which is probably what you want
+    NSSize imageSize = [image size];
+    [image lockFocus];
+    myBitmapImageRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:NSMakeRect(0, 0, imageSize.width , imageSize.height)];
+    [image unlockFocus];
+    
+    
+    CGFloat imageCompression = 0.5; //between 0 and 1; 1 is maximum quality, 0 is maximum compression
+    
+    // set up the options for creating a JPEG
+    NSDictionary* jpegOptions = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithDouble:imageCompression], NSImageCompressionFactor,
+                                 [NSNumber numberWithBool:YES], NSImageProgressive,
+                                 nil];
+    
+    return[myBitmapImageRep representationUsingType:NSPNGFileType properties:jpegOptions];
+}
+
 
 NSImage *renderedImage(NSImage * oldImage, NSSize size) {
     

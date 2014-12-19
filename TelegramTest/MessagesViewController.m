@@ -59,6 +59,8 @@
 #import "SearchMessagesView.h"
 #import "TGPhotoViewer.h"
 #import <MtProtoKit/MTEncryption.h>
+#import "StickersPanelView.h"
+
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -147,6 +149,8 @@
 @property (nonatomic,strong) id activity;
 
 @property (nonatomic,strong) MessageTableItemUnreadMark *unreadMark;
+
+@property (nonatomic,strong) StickersPanelView *stickerPanel;
 
 @end
 
@@ -392,6 +396,12 @@
     
     [self.searchMessagesView setHidden:YES];
     
+    
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 60)];
+    
+    [self.view addSubview:self.stickerPanel];
+    
+    [self.stickerPanel hide:NO];
 
 }
 
@@ -1655,6 +1665,17 @@ static NSTextAttachment *headerMediaIcon() {
     [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:self.dialog.cacheKey];
     [[Storage manager] saveInputTextForPeers:self.cacheTextForPeer];
     
+    
+    NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
+    
+    if(emoji.count == 1) {
+        
+        [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
+        
+    } else {
+        [self.stickerPanel hide:YES];
+    }
+    
 }
 
 -(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
@@ -2151,28 +2172,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    
-    
-    
-    if([message isEqualToString:@"!!!test!!!"]) {
-        [RPCRequest sendRequest:[TLAPI_messages_getStickers createWithEmoticon:@"😎" n_hash:@""] successHandler:^(RPCRequest *request, TL_messages_stickers * response) {
-            
-            if(response.strickers.count > 0) {
-                TL_localMessage *msg = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:[response.strickers lastObject]] dialog:self.dialog];
-                msg.dstate = DeliveryStateNormal;
-                [MessagesManager addAndUpdateMessage:msg];
-            }
-            
-           
-            
-            
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-        
-        return;
-    }
+
 //
 //    if([message isEqualToString:@"2"]) {
 //        [Telegram setConnectionState:ConnectingStatusTypeConnected];

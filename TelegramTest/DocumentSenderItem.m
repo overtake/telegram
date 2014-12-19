@@ -12,6 +12,7 @@
 #import "TLFileLocation+Extensions.h"
 #import "TGSendTypingManager.h"
 #import "webp/decode.h"
+#import "FileUtils.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -40,24 +41,62 @@
         
         self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
         
-        NSImage *thumbImage = previewImageForDocument(self.filePath);
-        
         long randomId = rand_long();
         
-        TLPhotoSize *size;
+        
+        NSMutableArray *attrs = [[NSMutableArray alloc] init];
+        
+        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]];
+        
+        __block NSData *thumbData;
+        __block NSImage *thumbImage;
+        
+        dispatch_block_t thumbBlock = ^ {
+            thumbImage = previewImageForDocument(self.filePath);
+            thumbData = jpegNormalizedData(thumbImage);
+        };
+        
+        if([self.filePath hasSuffix:@"sticker.webp"]) {
+            NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
+            int width = 0;
+            int heigth = 0;
+            if (WebPGetInfo(data.bytes, data.length, &width, &heigth))
+            {
+                [attrs addObject:[TL_documentAttributeSticker create]];
+                [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
+                
+                NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],randomId];
+                
+                [[NSFileManager defaultManager] copyItemAtPath:self.filePath toPath:sp error:nil];
+                
+                NSImage *sticker = [NSImage imageWithWebP:sp error:nil];
+                
+                [TGCache cacheImage:sticker forKey:[NSString stringWithFormat:@"s:%ld",randomId] groups:@[IMGCACHE]];
+                
+                thumbImage = strongResize(sticker, 128);
+                
+                thumbData = pngNormalizedData(thumbImage);
+                
+            } else
+                thumbBlock();
+        } else
+            thumbBlock();
+        
+        
+       TLPhotoSize *size;
         if(thumbImage) {
-            NSData *thumbData = jpegNormalizedData(thumbImage);
-            
-            
+           
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:thumbImage.size.width h:thumbImage.size.height bytes:thumbData];
             
             [TGCache cacheImage:thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
-                        
+            
         } else {
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]] mutableCopy]]];
+        
+        
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:attrs]];
         
         self.message = [MessageSender createOutMessage:@"" media:document dialog:conversation];
         
@@ -138,30 +177,12 @@
     
     __block BOOL isNewDocument = [self.inputFile isKindOfClass:[TLInputFile class]];
     
-    NSMutableArray *attrs = [[NSMutableArray alloc] init];
-    
-    [attrs addObject:[TL_documentAttributeFilename createWithFile_name:self.uploader.fileName]];
-    
-    if([self.message.media.document.mime_type isEqualToString:@"webp"]) {
-        NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
-        int width = 0;
-        int heigth = 0;
-        if (WebPGetInfo(data.bytes, data.length, &width, &heigth))
-        {
-            
-            [attrs addObject:[TL_documentAttributeSticker create]];
-            [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
-            //  self.mimeType = [[NSString alloc] initWithFormat:@"sticker/webp; width=%d; height=%d", width, heigth];
-        }
-    }
-    
-    
-    
+   
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.mimeType attributes:[@[] mutableCopy]];
+            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.mimeType attributes:self.message.media.document.attributes];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.mimeType attributes:attrs];
+            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.mimeType attributes:self.message.media.document.attributes];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;
@@ -188,9 +209,6 @@
         
         if(strongSelf.conversation.type != DialogTypeBroadcast)  {
             msg = [obj message];
-            strongSelf.message.n_id = [obj message].n_id;
-            strongSelf.message.date = [obj message].date;
-            
         } else {
             TL_messages_statedMessages *stated = (TL_messages_statedMessages *) obj;
             [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
@@ -217,6 +235,14 @@
 
         [[NSFileManager defaultManager] removeItemAtPath:exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]) error:nil];
         
+        
+        NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],message.media.document.n_id];
+        
+        NSString *np = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],[msg media].document.n_id];
+        
+        [[NSFileManager defaultManager] moveItemAtPath:sp toPath:np error:nil];
+        
+        [TGCache changeKey:[NSString stringWithFormat:@"s:%ld",message.media.document.n_id] withKey:[NSString stringWithFormat:@"s:%ld",[msg media].document.n_id]];
        
         message.n_id = msg.n_id;
         message.date = msg.date;
@@ -226,6 +252,10 @@
         message.media.document.access_hash = [msg media].document.access_hash;
         message.media.document.n_id = [msg media].document.n_id;
     
+        
+      
+        
+        
         
         
         if(![message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {

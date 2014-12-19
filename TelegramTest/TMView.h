@@ -27,4 +27,6 @@ typedef NSUInteger TMViewBorder;
 @property (nonatomic,assign,getter=flipper) BOOL isFlipped;
 
 - (void)sizeToFit;
+
+-(void)removeAllSubviews;
 @end

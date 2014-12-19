@@ -34,7 +34,6 @@
 	[stream writeLong:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeInt:self.date];
-	[stream writeString:self.file_name];
 	[stream writeString:self.mime_type];
 	[stream writeInt:self.size];
 	[TLClassStore TLSerialize:self.thumb stream:stream];

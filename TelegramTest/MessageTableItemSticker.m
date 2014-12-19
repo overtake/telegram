@@ -19,6 +19,8 @@
             self.blockSize = NSMakeSize(200, 200);
         }
         
+        self.blockSize = strongsize(self.blockSize, 200);
+        
         self.imageObject = [[TGStickerImageObject alloc] initWithMessage:object];
         
     }
