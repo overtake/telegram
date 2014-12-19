@@ -126,7 +126,7 @@
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
     
-    [window setMinSize:NSMakeSize(435 + [Telegram leftViewController].view.frame.size.width, 600)];
+    [window setMinSize:NSMakeSize(460 + [Telegram leftViewController].view.frame.size.width, 600)];
     
     if(window.minSize.width > window.frame.size.width) {
         [window setFrame:NSMakeRect(NSMinX(self.view.window.frame), NSMinY(self.view.window.frame), window.minSize.width, NSHeight(window.frame)) display:YES];

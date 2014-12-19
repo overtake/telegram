@@ -105,6 +105,8 @@ static NSMutableDictionary * messageKeys;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
 
     [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type] completeHandler:^(NSArray *result) {
+        
+        
         if(callback && self != nil) {
             callback(result);
         }

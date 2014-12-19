@@ -503,10 +503,7 @@ static ASQueue *queue;
             memory = filtred;
             
 
-            if(memory.count >= _selectLimit) {
-                NSUInteger location = next ? 0 : (memory.count-_selectLimit);
-                memory = [memory subarrayWithRange:NSMakeRange(location, _selectLimit)];
-            } else {
+            if(memory.count < _selectLimit) {
                 
                 ChatHistoryState state;
                 

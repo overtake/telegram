@@ -433,7 +433,7 @@ static BOOL mouseIsDown = NO;
     
     if(self.messagesViewController.state != MessagesViewControllerStateEditable)
         return;
-    if(mouseIsDown)
+    if([NSEvent pressedMouseButtons] == 1)
         [self acceptEvent:theEvent];
 }
 
