@@ -13,11 +13,15 @@
 @property (nonatomic,strong) TL_localMessage *message;
 @end
 
+
 @implementation TGStickerImageObject
 
--(id)initWithMessage:(TL_localMessage *)message {
+@synthesize placeholder = _placeholder;
+
+-(id)initWithMessage:(TL_localMessage *)message placeholder:(NSImage *)placeholder {
     if(self = [super init]) {
         self.message = message;
+        _placeholder = placeholder;
     }
     
     return self;
