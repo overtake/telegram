@@ -33,16 +33,23 @@
         
         self.scrollView = [[NSScrollView alloc] initWithFrame:self.bounds];
        
+       
+        
+        self.containerView = [[TMView alloc] initWithFrame:self.scrollView.bounds];
+        
+        self.scrollView.documentView = self.containerView;
+        
         [self.scrollView setHasVerticalScroller:NO];
         self.scrollView.verticalScrollElasticity = NO;
         [self.scrollView setDrawsBackground:NO];
         
-        self.containerView = [[TMView alloc] initWithFrame:self.bounds];
-        
-        self.scrollView.documentView = self.containerView;
         
         [self addSubview:self.scrollView];
         
+        self.autoresizingMask = NSViewWidthSizable;
+        
+        self.scrollView.autoresizingMask = NSViewWidthSizable;
+        self.background.autoresizingMask = NSViewWidthSizable;
         
         
     }
@@ -124,9 +131,6 @@
         if(response.strickers.count > 0) {
             self.stickers = response.strickers;
             
-            for (int i = 0; i < 20; i++) {
-                self.stickers = [self.stickers arrayByAddingObjectsFromArray:response.strickers];
-            }
             
             [self show:animated];
         }

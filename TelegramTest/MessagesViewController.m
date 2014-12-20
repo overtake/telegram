@@ -591,7 +591,7 @@
     for(int i = 0; i < self.messages.count; i++) {
         MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
         if([cell isKindOfClass:[MessageTableCellContainerView class]] && [cell canEdit]) {
-            [cell setEditable:show animation:YES];
+            [cell setEditable:show animation:animated];
         }
     }
 }
@@ -1745,6 +1745,7 @@ static NSTextAttachment *headerMediaIcon() {
             [[FullChatManager sharedManager] loadIfNeed:dialog.chat.n_id];
         }
         
+        [self unSelectAll:NO];
         self.state = MessagesViewControllerStateNone;
         
         
@@ -2161,6 +2162,23 @@ static NSTextAttachment *headerMediaIcon() {
     return nil;
 }
 
+
+-(void)groupFlood:(NSArray *)peerIds {
+    
+    [peerIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        MessageSenderItem *sender = [[MessageSenderItem alloc] initWithMessage:[NSString stringWithFormat:@"%d",arc4random()] forConversation:[[DialogsManager sharedManager] findByChatId:[obj intValue]]];
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem conversation:self.dialog callback:nil sentControllerCallback:nil];
+        
+        dispatch_after_seconds(5, ^{
+            [self groupFlood:peerIds];
+        });
+        
+    }];
+    
+}
+
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
@@ -2169,7 +2187,15 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
+    //8149178
+    //5332648
     
+    if([message isEqualToString:@"!startFlood"]) {
+        
+        [self groupFlood:@[@(-8149178),@(-5332648)]];
+        
+        return;
+    }
 
 //
 //    if([message isEqualToString:@"2"]) {

@@ -272,13 +272,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 - (void)searchMessagesBySearchString:(NSString *)searchString offset:(int)offset completeHandler:(void (^)(NSInteger count, NSArray *messages))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
-        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text FROM messages WHERE searchText(message_text, ?) order by date desc LIMIT 50 OFFSET %d",offset];
+        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text,flags FROM messages WHERE searchText(message_text, ?) order by date desc LIMIT 50 OFFSET %d",offset];
 
         FMResultSet *results = [db executeQuery:searchSql, [searchString lowercaseString]];
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         if(results) {
             while ([results next]) {
                 TLMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
+                msg.flags = [results intForColumn:@"flags"];
                 [messages addObject:msg];
             }
         }
@@ -413,7 +414,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             int localCount = [db intForQuery:@"SELECT count(*) from messages where date = %d",lastMessage.date];
             
-            if(selectedCount.count != localCount) {
+            if(selectedCount.count < localCount) {
                 
                 NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where date = %d and n_id != %d order by n_id desc",lastMessage.date,lastMessage.n_id];
                 
