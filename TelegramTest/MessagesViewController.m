@@ -60,6 +60,7 @@
 #import "TGPhotoViewer.h"
 #import <MtProtoKit/MTEncryption.h>
 #import "StickersPanelView.h"
+#import "StickerSenderItem.h"
 
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -1668,7 +1669,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
     
-    if(emoji.count == 1) {
+    if(emoji.count == 1 && [self.bottomView.inputMessageString isEqualToString:[emoji lastObject]]) {
         
         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
         
@@ -2375,6 +2376,21 @@ static NSTextAttachment *headerMediaIcon() {
             sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:self.dialog];
         }
         
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+    }];
+}
+
+
+-(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!self.dialog.canSendMessage || self.dialog.type == DialogTypeSecretChat) return;
+    
+    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        SenderItem *sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:self.dialog];
+       
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
     }];

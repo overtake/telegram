@@ -488,6 +488,7 @@
 		C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC1C1A443CCB00BBCC63 /* StickersPanelView.m */; };
 		C2C1DC201A444CCE00BBCC63 /* TGStickerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC1F1A444CCE00BBCC63 /* TGStickerImageView.m */; };
 		C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */; };
+		C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
 		C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */; };
 		C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88D1A2C7D57008C4C4A /* MTProto.m */; };
@@ -1702,6 +1703,8 @@
 		C2C1DC1F1A444CCE00BBCC63 /* TGStickerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerImageView.m; sourceTree = "<group>"; };
 		C2C1DC211A444F2F00BBCC63 /* TGMessagesStickerImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesStickerImageObject.h; sourceTree = "<group>"; };
 		C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesStickerImageObject.m; sourceTree = "<group>"; };
+		C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerSenderItem.h; sourceTree = "<group>"; };
+		C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerSenderItem.m; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
 		C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeConfirmController.h; sourceTree = "<group>"; };
@@ -2893,6 +2896,8 @@
 				C20D188A193CBC230095A906 /* AudioSenderItem.m */,
 				C25F91C2197858BF006868F3 /* LocationSenderItem.h */,
 				C25F91C3197858BF006868F3 /* LocationSenderItem.m */,
+				C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */,
+				C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -5264,6 +5269,7 @@
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
+				C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
 				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,

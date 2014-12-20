@@ -92,6 +92,7 @@ typedef enum {
 - (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
 ;
 
+-(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler;
 
 - (void)sendAudio:(NSString *)file_path;
 - (void)sendMessage:(NSString *)message ;

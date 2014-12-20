@@ -10,6 +10,7 @@
 #import "TGImageObject.h"
 #import "TGStickerImageView.h"
 #import "TGMessagesStickerImageObject.h"
+#import "SenderHeader.h"
 @interface StickersPanelView ()
 @property (nonatomic,strong) NSArray *stickers;
 @property (nonatomic,strong) NSScrollView *scrollView;
@@ -59,16 +60,25 @@
     [self.stickers enumerateObjectsUsingBlock:^(TL_document  *obj, NSUInteger idx, BOOL *stop) {
         
         if(![obj.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-            NSImage *placeholder = [[NSImage alloc] initWithData:obj.thumb.bytes];
             
+            NSImage *placeholder = [[NSImage alloc] initWithData:obj.thumb.bytes];
             
             
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 54);
             
-            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset + 5, 3, imgObj.imageSize.width, imgObj.imageSize.height)];
+            int y = roundf((60 - imgObj.imageSize.height) / 2);
             
+            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset + 5, y, imgObj.imageSize.width, imgObj.imageSize.height)];
+            
+            
+            [imgView setTapBlock:^{
+                
+                [[Telegram rightViewController].messagesViewController sendSticker:obj addCompletionHandler:nil];
+                
+       
+            }];
             
             imgView.object = imgObj;
             
