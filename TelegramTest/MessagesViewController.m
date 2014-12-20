@@ -1669,13 +1669,28 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
     
-    if(emoji.count == 1 && [self.bottomView.inputMessageString isEqualToString:[emoji lastObject]]) {
+    
+    
+    __block NSString *sticker = nil;
+    if(emoji.count > 0) {
         
-        [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
-        
-    } else {
+        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if([self.bottomView.inputMessageString hasSuffix:obj]) {
+                
+                sticker = obj;
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if(sticker != nil && sticker.length == 2)
+    {
+         [self.stickerPanel showAndSearch:sticker animated:YES];
+    } else
+    {
         [self.stickerPanel hide:YES];
     }
+    
     
 }
 

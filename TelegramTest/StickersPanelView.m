@@ -167,8 +167,7 @@
                     [self show:animated stickers:response.strickers];
                 }
             } else {
-                if(stickers.count > 0)
-                    [self hide:YES];
+                [self hide:YES];
             }
            
              stickers = response.strickers;
