@@ -1258,7 +1258,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *items;
     
-    NSRange range = [self insertMessageTableItemsToList:@[message] startPosition:position needCheckLastMessage:YES backItems:&items];
+    NSRange range = [self insertMessageTableItemsToList:@[message] startPosition:position needCheckLastMessage:YES backItems:&items checkActive:!force];
     
     if(range.length) {
         if(message.message.from_id != [UsersManager currentUserId]) {
@@ -1471,7 +1471,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *items;
     
-    NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES backItems:&items];
+    NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES backItems:&items checkActive:!force];
     
     if(r.length) {
         [self insertAndGoToEnd:r forceEnd:force items:items];
@@ -1845,7 +1845,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             NSArray *backItems;
             
-                NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil];
+                NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
                 NSSize oldsize = self.table.scrollView.documentSize;
                 NSPoint offset = self.table.scrollView.documentOffset;
                 
@@ -1864,7 +1864,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
            // });
         } else {
-            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil];
+            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
             [self.table reloadData];
             [self didUpdateTable];
             self.locked = NO;
@@ -2035,11 +2035,11 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos needCheckLastMessage:(BOOL)needCheckLastMessage backItems:(NSArray **)back {
+- (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos needCheckLastMessage:(BOOL)needCheckLastMessage backItems:(NSArray **)back checkActive:(BOOL)checkActive {
     assert([NSThread isMainThread]);
     
     
-    if(![[NSApplication sharedApplication] isActive]) {
+    if(![[NSApplication sharedApplication] isActive] && checkActive) {
         
         if(!self.unreadMark) {
             _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
