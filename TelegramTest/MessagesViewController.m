@@ -2003,8 +2003,6 @@ static NSTextAttachment *headerMediaIcon() {
     assert([NSThread isMainThread]);
     
     
-    
-    
     if(![[NSApplication sharedApplication] isActive]) {
         
         if(!self.unreadMark) {
@@ -2022,8 +2020,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(pos == 0)
         pos++;
-    
-    
     
     
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
@@ -2077,6 +2073,7 @@ static NSTextAttachment *headerMediaIcon() {
             }
         }
     }
+    
 }
 
 - (void)deleteItem:(MessageTableItem *)item {
