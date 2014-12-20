@@ -2003,7 +2003,9 @@ static NSTextAttachment *headerMediaIcon() {
     assert([NSThread isMainThread]);
     
     
-    if(![[[Telegram delegate] mainWindow] isKeyWindow]) {
+    
+    
+    if(![[NSApplication sharedApplication] isActive]) {
         
         if(!self.unreadMark) {
             _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
