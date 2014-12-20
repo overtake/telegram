@@ -200,7 +200,7 @@
             
         } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
             
-            object.message = @"This message is not supported on your version of Telegram. Update the app to view: http://vk.com/telegram_osx";
+            object.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
             objectReturn = [[MessageTableItemText alloc] initWithObject:object ];
             
         } else if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {

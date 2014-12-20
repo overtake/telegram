@@ -469,19 +469,19 @@ static ASQueue *queue;
         BOOL notify = NO;
     
         
-        NSArray *memory;
+        NSArray *allItems;
         
         
         if( [self checkState:ChatHistoryStateCache next:next]) {
             
             
-            memory = [self selectAllItems];
+            allItems = [self selectAllItems];
             
             
             
-            NSMutableArray *filtred = [[NSMutableArray alloc] init];
+            NSMutableArray *memory = [[NSMutableArray alloc] init];
             
-            [memory enumerateObjectsUsingBlock:^(MessageTableItem * obj, NSUInteger idx, BOOL *stop) {
+            [allItems enumerateObjectsUsingBlock:^(MessageTableItem * obj, NSUInteger idx, BOOL *stop) {
                 
                 if((self.filter.type & obj.message.filterType) > 0) {
                     
@@ -490,20 +490,26 @@ static ASQueue *queue;
                     if(next) {
                         
                         if(obj.message.date <= source_date)
-                            [filtred addObject:obj];
+                            [memory addObject:obj];
                     } else {
                         if(obj.message.date >= source_date )
-                            [filtred addObject:obj];
+                            [memory addObject:obj];
                     }
                     
                     
                 }
             }];
             
-            memory = filtred;
             
-
-            if(memory.count < _selectLimit) {
+            if(memory.count >= _selectLimit) {
+                NSUInteger location = next ? 0 : (memory.count-_selectLimit);
+                memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];
+                
+                MessageTableItem *lastItem = [memory lastObject];
+            
+                [memory addObjectsFromArray:[[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]]];
+                
+            } else {
                 
                 ChatHistoryState state;
                 
