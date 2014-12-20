@@ -1693,8 +1693,6 @@ static NSTextAttachment *headerMediaIcon() {
             historyFilter = [HistoryFilter class];
         
         
-        [self.historyController drop:NO];
-        self.historyController = nil;
         self.historyController = [[ChatHistoryController alloc] initWithConversation:dialog controller:self historyFilter:historyFilter];
         
         
