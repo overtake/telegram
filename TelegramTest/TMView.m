@@ -110,6 +110,12 @@
     
 }
 
+-(void)removeAllSubviews {
+    while (self.subviews.count > 0) {
+        [self.subviews[0] removeFromSuperview];
+    }
+}
+
 - (void)sizeToFit {
     
 }

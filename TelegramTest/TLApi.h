@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.12.14.
+//  Auto created by Mikhail Filimonov on 18.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -407,6 +407,12 @@
 +(TLAPI_photos_uploadProfilePhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption geo_point:(TLInputGeoPoint*)geo_point crop:(TLInputPhotoCrop*)crop;
 @end
 
+@interface TLAPI_photos_deletePhotos : TLApiObject
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_photos_deletePhotos*)createWithN_id:(NSMutableArray*)n_id;
+@end
+
 @interface TLAPI_upload_saveFilePart : TLApiObject
 @property long file_id;
 @property int file_part;
@@ -768,5 +774,12 @@
 @property (nonatomic, strong) NSData* password_hash;
 
 +(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash;
+@end
+
+@interface TLAPI_messages_getStickers : TLApiObject
+@property (nonatomic, strong) NSString* emoticon;
+@property (nonatomic, strong) NSString* n_hash;
+
++(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash;
 @end
 

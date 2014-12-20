@@ -59,6 +59,9 @@
 #import "SearchMessagesView.h"
 #import "TGPhotoViewer.h"
 #import <MtProtoKit/MTEncryption.h>
+#import "StickersPanelView.h"
+#import "StickerSenderItem.h"
+
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -147,6 +150,8 @@
 @property (nonatomic,strong) id activity;
 
 @property (nonatomic,strong) MessageTableItemUnreadMark *unreadMark;
+
+@property (nonatomic,strong) StickersPanelView *stickerPanel;
 
 @end
 
@@ -392,6 +397,12 @@
     
     [self.searchMessagesView setHidden:YES];
     
+    
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 60)];
+    
+    [self.view addSubview:self.stickerPanel];
+    
+    [self.stickerPanel hide:NO];
 
 }
 
@@ -1655,6 +1666,17 @@ static NSTextAttachment *headerMediaIcon() {
     [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:self.dialog.cacheKey];
     [[Storage manager] saveInputTextForPeers:self.cacheTextForPeer];
     
+    
+    NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
+    
+    if(emoji.count == 1 && [self.bottomView.inputMessageString isEqualToString:[emoji lastObject]]) {
+        
+        [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
+        
+    } else {
+        [self.stickerPanel hide:YES];
+    }
+    
 }
 
 -(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
@@ -2146,11 +2168,10 @@ static NSTextAttachment *headerMediaIcon() {
         NSBeep();
         return;
     }
-//    
-//    if([message isEqualToString:@"1"]) {
-//        [Telegram setConnectionState:ConnectingStatusTypeConnecting];
-//    }
-//    
+    
+    
+
+//
 //    if([message isEqualToString:@"2"]) {
 //        [Telegram setConnectionState:ConnectingStatusTypeConnected];
 //        return;
@@ -2352,6 +2373,21 @@ static NSTextAttachment *headerMediaIcon() {
             sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:self.dialog];
         }
         
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+    }];
+}
+
+
+-(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!self.dialog.canSendMessage || self.dialog.type == DialogTypeSecretChat) return;
+    
+    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        SenderItem *sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:self.dialog];
+       
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
     }];
@@ -2637,7 +2673,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     } else if(item.class == [MessageTableItemUnreadMark class]) {
         static NSString *const kRowIdentifier = @"unread_mark_cell";
-        cell = (MessageTableCellUnreadMarkView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
         if(!cell) {
             cell = [[MessageTableCellUnreadMarkView alloc] initWithFrame:self.view.bounds];
@@ -2647,7 +2683,7 @@ static NSTextAttachment *headerMediaIcon() {
     } else if(item.class == [MessageTableItemSocial class]) {
       
         static NSString *const kRowIdentifier = @"social_cell";
-        cell = (MessageTableCellSocialView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         
         if(!cell) {
             cell = [[MessageTableCellSocialView alloc] initWithFrame:self.view.bounds];
@@ -2655,6 +2691,18 @@ static NSTextAttachment *headerMediaIcon() {
             cell.messagesViewController = self;
         }
 
+        
+    } else if(item.class == [MessageTableItemSticker class]) {
+        
+        static NSString *const kRowIdentifier = @"sticker_cell";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellStickerView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+        
         
     } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         

@@ -19,6 +19,7 @@
 #import "MessagetableitemUnreadMark.h"
 #import "MessageTableItemAudioDocument.h"
 #import "MessageTableItemServiceMessage.h"
+#import "MessageTableItemSticker.h"
 #import "TGDateUtils.h"
 #import "PreviewObject.h"
 #import "NSString+Extended.h"
@@ -219,8 +220,10 @@
                 objectReturn = [[MessageTableItemGif alloc] initWithObject:object];
             } else if([document.mime_type hasPrefix:@"audio/"]) {
                  objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:object];
+            } else if([document isSticker]) {
+                objectReturn = [[MessageTableItemSticker alloc] initWithObject:object];
             } else {
-                objectReturn = [[MessageTableItemDocument alloc] initWithObject:object];
+                 objectReturn = [[MessageTableItemDocument alloc] initWithObject:object];
             }
             
         } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {

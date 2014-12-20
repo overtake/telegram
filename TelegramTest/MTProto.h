@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 01.12.14.
+//  Auto created by Dmitry Kondratyev on 18.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -127,6 +127,9 @@
 @end
 	
 @interface TLPeerNotifySettings : TLObject
+@end
+	
+@interface TLGlobalPrivacySettings : TLObject
 @end
 	
 @interface TLWallPaper : TLObject
@@ -330,6 +333,12 @@
 @interface TLaccount_Password : TLObject
 @end
 	
+@interface TLDocumentAttribute : TLObject
+@end
+	
+@interface TLmessages_Stickers : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -389,7 +398,6 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
-	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -486,7 +494,7 @@
 	
 @interface TLInputMedia()
 @property (nonatomic, strong) TLInputFile* file;
-@property (nonatomic, strong) TLInputMedia* n_id;
+@property (nonatomic, strong) TLInputDocument* n_id;
 @property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* phone_number;
 @property (nonatomic, strong) NSString* first_name;
@@ -496,7 +504,7 @@
 @property int h;
 @property (nonatomic, strong) NSString* mime_type;
 @property (nonatomic, strong) TLInputFile* thumb;
-@property (nonatomic, strong) NSString* file_name;
+@property (nonatomic, strong) NSMutableArray* attributes;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia
@@ -530,10 +538,10 @@
 +(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id;
 @end
 @interface TL_inputMediaUploadedDocument : TLInputMedia
-+(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file file_name:(NSString*)file_name mime_type:(NSString*)mime_type;
++(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_inputMediaUploadedThumbDocument : TLInputMedia
-+(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb file_name:(NSString*)file_name mime_type:(NSString*)mime_type;
++(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_inputMediaDocument : TLInputMedia
 +(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id;
@@ -1132,6 +1140,17 @@
 +(TL_peerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask;
 @end
 	
+@interface TLGlobalPrivacySettings()
+@property Boolean no_suggestions;
+@property Boolean hide_contacts;
+@property Boolean hide_located;
+@property Boolean hide_last_visit;
+@end
+
+@interface TL_globalPrivacySettings : TLGlobalPrivacySettings
++(TL_globalPrivacySettings*)createWithNo_suggestions:(Boolean)no_suggestions hide_contacts:(Boolean)hide_contacts hide_located:(Boolean)hide_located hide_last_visit:(Boolean)hide_last_visit;
+@end
+	
 @interface TLWallPaper()
 @property int n_id;
 @property (nonatomic, strong) NSString* title;
@@ -1258,11 +1277,11 @@
 @property (nonatomic, strong) NSMutableArray* users;
 @end
 
-@interface TL_contacts_contacts : TLcontacts_Contacts
-+(TL_contacts_contacts*)createWithContacts:(NSMutableArray*)contacts users:(NSMutableArray*)users;
-@end
 @interface TL_contacts_contactsNotModified : TLcontacts_Contacts
 +(TL_contacts_contactsNotModified*)create;
+@end
+@interface TL_contacts_contacts : TLcontacts_Contacts
++(TL_contacts_contacts*)createWithContacts:(NSMutableArray*)contacts users:(NSMutableArray*)users;
 @end
 	
 @interface TLcontacts_ImportedContacts()
@@ -1950,20 +1969,19 @@
 @interface TLDocument()
 @property long n_id;
 @property long access_hash;
-@property int user_id;
 @property int date;
-@property (nonatomic, strong) NSString* file_name;
 @property (nonatomic, strong) NSString* mime_type;
 @property int size;
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
+@property (nonatomic, strong) NSMutableArray* attributes;
 @end
 
 @interface TL_documentEmpty : TLDocument
 +(TL_documentEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_document : TLDocument
-+(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date file_name:(NSString*)file_name mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id;
++(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
 @end
 	
 @interface TLhelp_Support()
@@ -2143,6 +2161,44 @@
 @end
 @interface TL_account_password : TLaccount_Password
 +(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint;
+@end
+	
+@interface TLDocumentAttribute()
+@property int w;
+@property int h;
+@property int duration;
+@property (nonatomic, strong) NSString* file_name;
+@end
+
+@interface TL_documentAttributeImageSize : TLDocumentAttribute
++(TL_documentAttributeImageSize*)createWithW:(int)w h:(int)h;
+@end
+@interface TL_documentAttributeAnimated : TLDocumentAttribute
++(TL_documentAttributeAnimated*)create;
+@end
+@interface TL_documentAttributeSticker : TLDocumentAttribute
++(TL_documentAttributeSticker*)create;
+@end
+@interface TL_documentAttributeVideo : TLDocumentAttribute
++(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h;
+@end
+@interface TL_documentAttributeAudio : TLDocumentAttribute
++(TL_documentAttributeAudio*)createWithDuration:(int)duration;
+@end
+@interface TL_documentAttributeFilename : TLDocumentAttribute
++(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
+@end
+	
+@interface TLmessages_Stickers()
+@property (nonatomic, strong) NSString* n_hash;
+@property (nonatomic, strong) NSMutableArray* strickers;
+@end
+
+@interface TL_messages_stickersNotModified : TLmessages_Stickers
++(TL_messages_stickersNotModified*)create;
+@end
+@interface TL_messages_stickers : TLmessages_Stickers
++(TL_messages_stickers*)createWithN_hash:(NSString*)n_hash strickers:(NSMutableArray*)strickers;
 @end
 	
 @interface TLProtoMessage()
@@ -2455,11 +2511,8 @@
 	
 @interface TLMsgResendReq()
 @property (nonatomic, strong) NSMutableArray* msg_ids;
-@property long msg_id;
-@property (nonatomic, strong) NSData* query;
 @end
 
 @interface TL_msg_resend_req : TLMsgResendReq
 +(TL_msg_resend_req*)createWithMsg_ids:(NSMutableArray*)msg_ids;
 @end
-

@@ -44,13 +44,13 @@
 
      self->_object = object;
     
-    NSImage *image = [self cachedImage:object.location.cacheKey];
+    NSImage *image = [self cachedImage:[object cacheKey]];
     if(image) {
         self.image = image;
         return;
     }
         
-    self.image = [self cachedThumb:object.location.cacheKey];
+    self.image = [self cachedThumb:[object cacheKey]];
   
     object.delegate = self;
     
@@ -60,20 +60,10 @@
 
 
 -(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
-    if(object.location.hashCacheKey == self.object.location.hashCacheKey) {
+    if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
         [self setImage:newImage];
     }
 }
-
-
-
-
-
-- (NSUInteger) getKeyFromFileLocation:(TLFileLocation *)fileLocation {
-    NSString *string = [NSString stringWithFormat:@"%d_%f_%lu", self.roundSize, [self.borderColor redComponent], fileLocation.hashCacheKey];
-    return [string hash];
-}
-
 
 
 

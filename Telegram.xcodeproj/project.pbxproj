@@ -481,6 +481,14 @@
 		C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB460191BD90F00305CC8 /* MediaCollectionItemView.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
+		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
+		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
+		C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */; };
+		C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */; };
+		C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC1C1A443CCB00BBCC63 /* StickersPanelView.m */; };
+		C2C1DC201A444CCE00BBCC63 /* TGStickerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC1F1A444CCE00BBCC63 /* TGStickerImageView.m */; };
+		C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */; };
+		C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */; };
 		C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */; };
 		C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88A1A29F972008C4C4A /* PhoneChangeConfirmController.m */; };
 		C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88D1A2C7D57008C4C4A /* MTProto.m */; };
@@ -494,6 +502,10 @@
 		C2C8AAFA1A3B8AF300C857D6 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C8AAFB1A3B8B3500C857D6 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2C8AAFC1A3B8B3900C857D6 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
+		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
+		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
+		C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
@@ -1677,6 +1689,22 @@
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
 		C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeAlertController.h; sourceTree = "<group>"; };
 		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
+		C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemSticker.h; sourceTree = "<group>"; };
+		C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemSticker.m; sourceTree = "<group>"; };
+		C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellStickerView.h; sourceTree = "<group>"; };
+		C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellStickerView.m; sourceTree = "<group>"; };
+		C2C1DC0D1A4336CE00BBCC63 /* TGStickerImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerImageObject.h; sourceTree = "<group>"; };
+		C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerImageObject.m; sourceTree = "<group>"; };
+		C2C1DC111A433C3900BBCC63 /* DownloadStickerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadStickerItem.h; sourceTree = "<group>"; };
+		C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadStickerItem.m; sourceTree = "<group>"; };
+		C2C1DC1B1A443CCB00BBCC63 /* StickersPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickersPanelView.h; sourceTree = "<group>"; };
+		C2C1DC1C1A443CCB00BBCC63 /* StickersPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickersPanelView.m; sourceTree = "<group>"; };
+		C2C1DC1E1A444CCE00BBCC63 /* TGStickerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerImageView.h; sourceTree = "<group>"; };
+		C2C1DC1F1A444CCE00BBCC63 /* TGStickerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerImageView.m; sourceTree = "<group>"; };
+		C2C1DC211A444F2F00BBCC63 /* TGMessagesStickerImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesStickerImageObject.h; sourceTree = "<group>"; };
+		C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesStickerImageObject.m; sourceTree = "<group>"; };
+		C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerSenderItem.h; sourceTree = "<group>"; };
+		C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerSenderItem.m; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
 		C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeConfirmController.h; sourceTree = "<group>"; };
@@ -1696,7 +1724,17 @@
 		C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVImageView.m; sourceTree = "<group>"; };
 		C2C725D81860E05200094EC7 /* EncryptedParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedParams.h; sourceTree = "<group>"; };
 		C2C725D91860E05200094EC7 /* EncryptedParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedParams.m; sourceTree = "<group>"; };
-		C2C8AB121A41F9B100C857D6 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
+		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
+		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
+		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
+		C2C8AB041A3F3BC900C857D6 /* mux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mux.h; sourceTree = "<group>"; };
+		C2C8AB051A3F3BC900C857D6 /* mux_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mux_types.h; sourceTree = "<group>"; };
+		C2C8AB061A3F3BC900C857D6 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		C2C8AB081A3F3BC900C857D6 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
+		C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebpdemux.a; sourceTree = "<group>"; };
+		C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebpmux.a; sourceTree = "<group>"; };
+		C2C8AB0E1A3F508300C857D6 /* TLDocument+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDocument+Extension.h"; sourceTree = "<group>"; };
+		C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLDocument+Extension.m"; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
@@ -2001,6 +2039,7 @@
 				C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */,
 				C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */,
 				C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */,
+				C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */,
 				C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */,
 				C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */,
 				C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */,
@@ -2013,12 +2052,14 @@
 				C23298D718CF5FC7000826E5 /* QuickLook.framework in Frameworks */,
 				0A073FCC18BF638400BAA928 /* MTProtoKit.framework in Frameworks */,
 				CEAE5D6A181ED1BF00C17645 /* libsqlite3.dylib in Frameworks */,
+				C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */,
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
 				0A13B82A18199C1A00E06702 /* AddressBook.framework in Frameworks */,
 				CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */,
 				CECBC1661800CA2400AD98E6 /* Foundation.framework in Frameworks */,
 				CE29CA7C1801355200803E22 /* libssl.a in Frameworks */,
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
+				C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
@@ -2228,6 +2269,7 @@
 		0A6758E01895504600F4487D /* items */ = {
 			isa = PBXGroup;
 			children = (
+				C2C1DC101A433BF600BBCC63 /* sticker */,
 				C2233DA61A07EEF10056594F /* social */,
 				0A613C1E18AD9892004096DD /* MessageTableItemContact.h */,
 				0A613C1F18AD9892004096DD /* MessageTableItemContact.m */,
@@ -2255,6 +2297,8 @@
 				C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */,
 				C268C19A19F12EFA007F836A /* MessageTableItemAudioDocument.h */,
 				C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */,
+				C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */,
+				C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -2290,6 +2334,8 @@
 				C268C19E19F13721007F836A /* MessagetableCellAudioController.m */,
 				C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */,
 				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
+				C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */,
+				C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -2728,6 +2774,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C2C1DC161A443C9900BBCC63 /* stickers */,
 				C281C1711917D953007B160F /* dragging */,
 				0A6758DC18954EF400F4487D /* new */,
 				0AA01457183113FC00901B7A /* links */,
@@ -2849,6 +2896,8 @@
 				C20D188A193CBC230095A906 /* AudioSenderItem.m */,
 				C25F91C2197858BF006868F3 /* LocationSenderItem.h */,
 				C25F91C3197858BF006868F3 /* LocationSenderItem.m */,
+				C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */,
+				C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -3608,6 +3657,7 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */,
 				C268C14F19F05139007F836A /* pop */,
 				C2753DDD19E5B24500752BAF /* TGModernAnimatedImagePlayer.h */,
 				C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */,
@@ -3713,6 +3763,30 @@
 			name = phonechange;
 			sourceTree = "<group>";
 		};
+		C2C1DC101A433BF600BBCC63 /* sticker */ = {
+			isa = PBXGroup;
+			children = (
+				C2C1DC0D1A4336CE00BBCC63 /* TGStickerImageObject.h */,
+				C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */,
+				C2C1DC111A433C3900BBCC63 /* DownloadStickerItem.h */,
+				C2C1DC121A433C3900BBCC63 /* DownloadStickerItem.m */,
+			);
+			name = sticker;
+			sourceTree = "<group>";
+		};
+		C2C1DC161A443C9900BBCC63 /* stickers */ = {
+			isa = PBXGroup;
+			children = (
+				C2C1DC1B1A443CCB00BBCC63 /* StickersPanelView.h */,
+				C2C1DC1C1A443CCB00BBCC63 /* StickersPanelView.m */,
+				C2C1DC1E1A444CCE00BBCC63 /* TGStickerImageView.h */,
+				C2C1DC1F1A444CCE00BBCC63 /* TGStickerImageView.m */,
+				C2C1DC211A444F2F00BBCC63 /* TGMessagesStickerImageObject.h */,
+				C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */,
+			);
+			name = stickers;
+			sourceTree = "<group>";
+		};
 		C2C2491819EBC680006BB1AB /* BlockedUsers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3747,6 +3821,46 @@
 				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
 			);
 			name = behavior;
+			sourceTree = "<group>";
+		};
+		C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AAFF1A3F3BC900C857D6 /* include */,
+				C2C8AB071A3F3BC900C857D6 /* lib */,
+			);
+			path = "libwebp-0.4.2-mac-10.8";
+			sourceTree = "<group>";
+		};
+		C2C8AAFF1A3F3BC900C857D6 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB001A3F3BC900C857D6 /* webp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		C2C8AB001A3F3BC900C857D6 /* webp */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB011A3F3BC900C857D6 /* decode.h */,
+				C2C8AB021A3F3BC900C857D6 /* demux.h */,
+				C2C8AB031A3F3BC900C857D6 /* encode.h */,
+				C2C8AB041A3F3BC900C857D6 /* mux.h */,
+				C2C8AB051A3F3BC900C857D6 /* mux_types.h */,
+				C2C8AB061A3F3BC900C857D6 /* types.h */,
+			);
+			path = webp;
+			sourceTree = "<group>";
+		};
+		C2C8AB071A3F3BC900C857D6 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				C2C8AB081A3F3BC900C857D6 /* libwebp.a */,
+				C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */,
+				C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 		C2CD77C21A2C9D0C000B4BA9 /* password */ = {
@@ -3844,6 +3958,8 @@
 				CEAE5D6C181EEFF000C17645 /* TLPeer+Extensions.m */,
 				C2AA5D30186B50520026EA1F /* TLEncryptedChat+Extensions.h */,
 				C2AA5D31186B50520026EA1F /* TLEncryptedChat+Extensions.m */,
+				C2C8AB0E1A3F508300C857D6 /* TLDocument+Extension.h */,
+				C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -4673,6 +4789,7 @@
 				C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */,
 				0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */,
+				C2C1DC201A444CCE00BBCC63 /* TGStickerImageView.m in Sources */,
 				C20B228918E971D0007BCCD6 /* framing.c in Sources */,
 				0AA7E1DC18CD44130064EFC7 /* TMSimpleTabViewController.m in Sources */,
 				C22520E518B2801D00049558 /* MTConnection.m in Sources */,
@@ -4723,6 +4840,7 @@
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
+				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
 				CEDAEB8F1881AFA6006189A2 /* ContextFilterLogFormatter.m in Sources */,
@@ -4795,6 +4913,7 @@
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
+				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
 				C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */,
 				CEAE5D2E181E4C6F00C17645 /* TLFileLocation+Extensions.m in Sources */,
@@ -4835,10 +4954,12 @@
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
+				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
 				0A62CC9A181F24270098720C /* RightViewController.m in Sources */,
 				C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */,
 				CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */,
 				0AB43BAB18D4F1FF00FB805A /* TMImagePicker.m in Sources */,
+				C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */,
 				CEDAEB541881AF85006189A2 /* YapDatabaseFullTextSearchConnection.m in Sources */,
 				C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */,
 				C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */,
@@ -5036,6 +5157,7 @@
 				CEDAEB5A1881AF85006189A2 /* YapDatabaseSecondaryIndex.m in Sources */,
 				C21C7B3B18D769E400253A7A /* SenderItem.m in Sources */,
 				0AE2E3F41867263C004926A7 /* TMSearchTextField.m in Sources */,
+				C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */,
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,
 				C2201A03192CCB6C00C0E441 /* SelectUserRowView.m in Sources */,
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
@@ -5147,7 +5269,9 @@
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
+				C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
+				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
 				CEDAEB601881AF85006189A2 /* YapDatabaseViewChange.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,
@@ -5208,6 +5332,7 @@
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,
 				C2200B7618F43B3300F28803 /* EncryptedKeyWindow.m in Sources */,
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
+				C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */,
 				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
@@ -5243,7 +5368,6 @@
 				C20D18F31948A3FB0095A906 /* en */,
 				C20D18F51948A4970095A906 /* es */,
 				C2002D13199E9ADA002A1915 /* de */,
-				C2C8AB121A41F9B100C857D6 /* it */,
 			);
 			name = NewMainMenu.xib;
 			sourceTree = "<group>";
@@ -5389,12 +5513,14 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx10.10;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -5422,12 +5548,14 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx10.10;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};

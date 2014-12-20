@@ -336,7 +336,7 @@
                         _selectRange.location = startIndex;
                     }
                     
-                    _selectRange.length +=  (endIndex - startIndex);
+                    _selectRange.length += (endIndex - startIndex);
                 }
                 
                
@@ -399,6 +399,9 @@
     CGContextRestoreGState(context);
     
 }
+
+
+
 
 -(BOOL)becomeFirstResponder {
 

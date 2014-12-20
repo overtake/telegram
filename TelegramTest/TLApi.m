@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.12.14..
+//  Auto created by Mikhail Filimonov on 18.12.14..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -958,6 +958,28 @@
 }
 @end
 
+@implementation TLAPI_photos_deletePhotos
++(TLAPI_photos_deletePhotos*)createWithN_id:(NSMutableArray*)n_id {
+    TLAPI_photos_deletePhotos* obj = [[TLAPI_photos_deletePhotos alloc] init];
+    obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-2016444625];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLInputPhoto* obj = [self.n_id objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
 @implementation TLAPI_upload_saveFilePart
 +(TLAPI_upload_saveFilePart*)createWithFile_id:(long)file_id file_part:(int)file_part bytes:(NSData*)bytes {
     TLAPI_upload_saveFilePart* obj = [[TLAPI_upload_saveFilePart alloc] init];
@@ -1766,6 +1788,21 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
 	[stream writeByteArray:self.password_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getStickers
++(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash {
+    TLAPI_messages_getStickers* obj = [[TLAPI_messages_getStickers alloc] init];
+    obj.emoticon = emoticon;
+	obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1373446075];
+	[stream writeString:self.emoticon];
+	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
 @end

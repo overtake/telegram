@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TLApiObject.h"
 
+
 @interface TL_initConnection : TLObject
 @property int api_id;
 @property (nonatomic, strong) NSString *device_model;
@@ -18,13 +19,11 @@
 @property (nonatomic, strong) id query;
 @end
 
-@interface TLAPI_photos_deletePhotos : TLApiObject
-@property (nonatomic,strong) NSArray *n_id;
-+(TLAPI_photos_deletePhotos *)createWithN_id:(NSArray *)n_id;
-
-@end
 
 
-@interface TL_invokeAfter : TLMsgResendReq
+
+@interface TL_invokeAfter : TLObject
+@property (nonatomic,assign) long msg_id;
+@property (nonatomic,strong) NSData *query;
 +(TL_invokeAfter*)createWithMsg_id:(long)msg_id query:(NSData*)query;
 @end
