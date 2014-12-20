@@ -15,6 +15,8 @@
     if(self = [super initWithConversation:conversation]) {
         
         self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document] dialog:conversation];
+        
+        [self.message save:YES];
     }
     
     return self;

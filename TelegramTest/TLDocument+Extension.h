@@ -13,5 +13,6 @@
 -(NSString *)file_name;
 -(BOOL)isSticker;
 -(NSSize)imageSize;
+-(BOOL)isExist;
 
 @end

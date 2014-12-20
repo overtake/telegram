@@ -12,7 +12,6 @@
 #import "TGMessagesStickerImageObject.h"
 #import "SenderHeader.h"
 @interface StickersPanelView ()
-@property (nonatomic,strong) NSArray *stickers;
 @property (nonatomic,strong) NSScrollView *scrollView;
 
 @property (nonatomic,strong) TMView *containerView;
@@ -31,7 +30,13 @@
         self.background.layer.opacity = 0.7;
         [self addSubview:self.background];
         
-        self.scrollView = [[NSScrollView alloc] initWithFrame:self.bounds];
+        TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - 1, NSWidth(frameRect), 1)];
+        
+        separator.backgroundColor = GRAY_BORDER_COLOR;
+        
+        [self addSubview:separator];
+        
+        self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), NSHeight(self.bounds) - 1)];
        
        
         
@@ -58,18 +63,20 @@
 }
 
 
--(void)rebuild {
+-(void)rebuild:(NSArray *)stickers {
     [self.containerView removeAllSubviews];
     
     
     __block NSUInteger xOffset = 0;
     
-    [self.stickers enumerateObjectsUsingBlock:^(TL_document  *obj, NSUInteger idx, BOOL *stop) {
+    [stickers enumerateObjectsUsingBlock:^(TL_document  *obj, NSUInteger idx, BOOL *stop) {
         
         if(![obj.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
             
             NSImage *placeholder = [[NSImage alloc] initWithData:obj.thumb.bytes];
             
+            if(!placeholder)
+                placeholder = [NSImage imageWithWebpData:obj.thumb.bytes error:nil];
             
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
@@ -99,9 +106,9 @@
     [self.containerView setFrameSize:NSMakeSize(xOffset, NSHeight(self.containerView.frame))];
 }
 
--(void)show:(BOOL)animated {
+-(void)show:(BOOL)animated stickers:(NSArray *)stickers {
     
-    [self rebuild];
+    [self rebuild:stickers];
     
     if(self.alphaValue == 1.0f && !self.isHidden)
         return;
@@ -126,13 +133,59 @@
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
     
-    [RPCRequest sendRequest:[TLAPI_messages_getStickers createWithEmoticon:emotion n_hash:@""] successHandler:^(RPCRequest *request, TL_messages_stickers * response) {
+    ACCEPT_FEATURE
+    
+    __block NSString *hash = @"";
+    
+    __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSDictionary *dictionary = [transaction objectForKey:emotion inCollection:STICKERS_COLLECTION];
         
-        if(response.strickers.count > 0) {
-            self.stickers = response.strickers;
+        NSArray *serialized = dictionary[@"serialized"];
+        hash = dictionary[@"hash"];
+        
+        [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [stickers addObject:[TLClassStore deserialize:obj]];
+        }];
+        
+    }];
+    
+    if(stickers.count > 0) {
+        [self show:YES stickers:stickers];
+    }
+    
+    [RPCRequest sendRequest:[TLAPI_messages_getStickers createWithEmoticon:emotion n_hash:hash] successHandler:^(RPCRequest *request, TL_messages_stickers * response) {
+        
+        if(![response isKindOfClass:[TL_messages_stickersNotModified class]]) {
             
             
-            [self show:animated];
+            if(response.strickers.count > 0) {
+                if(stickers.count > 0) {
+                    [self rebuild:response.strickers];
+                } else {
+                    [self show:animated stickers:response.strickers];
+                }
+            } else {
+                if(stickers.count > 0)
+                    [self hide:YES];
+            }
+           
+             stickers = response.strickers;
+            
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                
+                NSMutableArray *serialized = [[NSMutableArray alloc] init];
+                
+                [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    [serialized addObject:[TLClassStore serialize:obj]];
+                    
+                }];
+                
+                [transaction setObject:@{@"serialized":serialized,@"hash":response.n_hash} forKey:emotion inCollection:STICKERS_COLLECTION];
+            }];
+            
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

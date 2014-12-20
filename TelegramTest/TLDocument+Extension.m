@@ -55,4 +55,8 @@
     return size;
 }
 
+-(BOOL)isExist {
+    return self.n_id != 0 && self.access_hash != 0;
+}
+
 @end

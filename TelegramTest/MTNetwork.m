@@ -360,14 +360,9 @@ static int MAX_WORKER_POLL = 5;
     {
         bool passwordRequired = [context isPasswordInputRequiredForDatacenterWithId:datacenterId];
         
-        
-        
         if(passwordRequired) {
-            [[Telegram delegate] logoutWithForce:YES];
-          //  [Telegram showEnterPasswordPanel];
+             [Telegram showEnterPasswordPanel];
         }
-        
-
       
     }
 }

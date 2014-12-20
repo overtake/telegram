@@ -2410,6 +2410,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
+    [self.bottomView setInputMessageString:@"" disableAnimations:NO];
+    
     [ASQueue dispatchOnStageQueue:^{
         
         SenderItem *sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:self.dialog];

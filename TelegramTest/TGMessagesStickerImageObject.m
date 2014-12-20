@@ -45,7 +45,10 @@
 }
 
 -(void)_didDownloadImage:(DownloadItem *)item {
-    NSImage *image = [NSImage imageWithWebP:item.path error:nil];
+    NSImage *image = [[NSImage alloc] initWithData:item.result];
+    
+    if(!image)
+        image = [NSImage imageWithWebpData:item.result error:nil];
     
     if(image != nil) {
         

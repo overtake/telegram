@@ -9,7 +9,7 @@
 
 #import "SenderItem.h"
 #import "MessageTableItem.h"
-
+#import "StickerSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -68,7 +68,15 @@
         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
             item = [[VideoSenderItem alloc] init];
         } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            
             item = [[DocumentSenderItem alloc] init];
+            
+            if([msg.media.document isSticker] && [msg.media.document isExist]) {
+                item = [[StickerSenderItem alloc] init];
+            }
+            
+            
+            
         } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
             item = [[AudioSenderItem alloc] init];
         } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {

@@ -29,16 +29,7 @@
 }
 
 
-+ (NSImage *)imageWithWebP:(NSString *)filePath error:(NSError **)error
-{
-    // If passed `filepath` is invalid, return nil to caller and log error in console
-    NSError *dataError = nil;;
-    NSData *imgData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:&dataError];
-    if(dataError != nil) {
-        NSLog(@"imageFromWebP: error: %@", dataError.localizedDescription);
-        return nil;
-    }
-    
++ (NSImage *)imageWithWebpData:(NSData *)imgData error:(NSError **)error {
     // `WebPGetInfo` weill return image width and height
     int width = 0, height = 0;
     if(!WebPGetInfo([imgData bytes], [imgData length], &width, &height)) {
@@ -60,7 +51,7 @@
     
     CGContextRef targetContext = CGBitmapContextCreate(targetMemory, (int)targetContextSize.width, (int)targetContextSize.height, 8, targetBytesPerRow, colorSpace, bitmapInfo);
     
-   
+    
     
     CGColorSpaceRelease(colorSpace);
     
@@ -101,6 +92,21 @@
     free(targetMemory);
     
     return image;
+}
+
++ (NSImage *)imageWithWebP:(NSString *)filePath error:(NSError **)error
+{
+    // If passed `filepath` is invalid, return nil to caller and log error in console
+    NSError *dataError = nil;;
+    NSData *imgData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:&dataError];
+    if(dataError != nil) {
+        NSLog(@"imageFromWebP: error: %@", dataError.localizedDescription);
+        return nil;
+    }
+    
+    
+    return [self imageWithWebpData:imgData error:&error];
+   
 }
 
 

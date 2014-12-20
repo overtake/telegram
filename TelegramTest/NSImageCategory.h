@@ -16,7 +16,7 @@
 -(CGImageRef)CGImage;
 
 
-+(NSImage *)imageWithWebpData:(NSData *)data;
++ (NSImage *)imageWithWebpData:(NSData *)data error:(NSError **)error;
 + (NSImage *)imageWithWebP:(NSString *)filePath error:(NSError **)error;
 
 @end

@@ -69,6 +69,8 @@
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
+    [self.progressView setHidden:[self.item.message.media.document isExist]];
+    
     [self.progressView setState:cellState];
     
     [self.progressView setCenterByView:self.imageView];

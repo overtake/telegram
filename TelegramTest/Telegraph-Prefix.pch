@@ -86,6 +86,11 @@
 #define DYNAMIC_PROPERTY(Name) static char k##Name; - (id) get##Name { return objc_getAssociatedObject(self, &k##Name);}; - (void) set##Name:(id)object { objc_setAssociatedObject(self, &k##Name, object, OBJC_ASSOCIATION_RETAIN); }
 
 
+#ifdef TGDEBUG
+#define ACCEPT_FEATURE if([@[@"vihor",@"marvin",@"ricdallaglio",@"victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter"] indexOfObject:[UsersManager currentUser].username] == NSNotFound) return;
+#else 
+#define ACCEPT_FEATURE
+#endif
 
 
 #define ICON_SIZE 48.0f
