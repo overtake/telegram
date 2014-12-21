@@ -398,7 +398,7 @@
     [self.searchMessagesView setHidden:YES];
     
     
-    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 90)];
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 80)];
     
     [self.view addSubview:self.stickerPanel];
     
