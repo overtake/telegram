@@ -34,6 +34,8 @@
         
         self.imageObject = [[TGStickerImageObject alloc] initWithMessage:object placeholder:placeholder];
         
+        self.imageObject.imageSize = self.blockSize;
+        
     }
     
     return self;

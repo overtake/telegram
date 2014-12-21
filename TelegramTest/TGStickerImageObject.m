@@ -65,7 +65,13 @@
     
     NSError *error = nil;
     
-    NSImage *image = [NSImage imageWithWebP:item.path error:&error];
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:item.path];
+    
+    if(!image)
+        image = [NSImage imageWithWebP:item.path error:&error];
+    
+    
+    image = renderedImage(image, self.imageSize);
     
     if(error == nil) {
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
