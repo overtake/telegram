@@ -104,9 +104,8 @@ NSString *const AVACACHE = @"AVACACHE";
 
 +(void)cacheImage:(NSImage *)image forKey:(NSString *)key groups:(NSArray *)groups {
     
-#ifdef TGDEBUG
-    assert(image != nil);
-#endif
+    if(!image)
+        return;
     
     [[self cache].queue dispatchOnQueue:^{
         [[self cache] cacheImage:image forKey:key groups:groups];

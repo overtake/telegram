@@ -966,7 +966,9 @@ static ASQueue *queue;
 }
 
 -(void)dealloc {
-    [self drop:NO];
+    [queue dispatchOnQueue:^{
+        [self drop:NO];
+    } synchronous:YES];
 }
 
 +(void)drop {

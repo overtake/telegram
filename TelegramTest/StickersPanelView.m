@@ -27,7 +27,7 @@
         self.background = [[TMView alloc] initWithFrame:self.bounds];
         self.background.wantsLayer = YES;
         self.background.layer.backgroundColor = NSColorFromRGB(0xffffff).CGColor;
-        self.background.layer.opacity = 0.7;
+        self.background.layer.opacity = 0.8;
         [self addSubview:self.background];
         
         TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - 1, NSWidth(frameRect), 1)];
@@ -80,9 +80,9 @@
             
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
-            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 54);
+            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 6);
             
-            int y = roundf((60 - imgObj.imageSize.height) / 2);
+            int y = roundf((NSHeight(self.frame)-1 - imgObj.imageSize.height) / 2);
             
             TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset + 5, y, imgObj.imageSize.width, imgObj.imageSize.height)];
             
