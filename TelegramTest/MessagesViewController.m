@@ -1667,6 +1667,9 @@ static NSTextAttachment *headerMediaIcon() {
     [[Storage manager] saveInputTextForPeers:self.cacheTextForPeer];
     
     
+    if(self.dialog.type == DialogTypeSecretChat)
+        return;
+    
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
     
     
