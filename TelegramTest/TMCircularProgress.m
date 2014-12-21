@@ -148,7 +148,8 @@ float ease(float t, float b, float c, float d) {
     float endAngel = (_currentAcceptProgress/(max-min))*360;
     endAngel = reversed ? endAngel : -endAngel;
     
-    
+    if(isnan(_currentAcceptProgress) || isnan(endAngel))
+        return;
     
     float startAngel = 90;
     

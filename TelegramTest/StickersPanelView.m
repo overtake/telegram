@@ -27,7 +27,7 @@
         self.background = [[TMView alloc] initWithFrame:self.bounds];
         self.background.wantsLayer = YES;
         self.background.layer.backgroundColor = NSColorFromRGB(0xffffff).CGColor;
-        self.background.layer.opacity = 0.8;
+        self.background.layer.opacity = 0.9;
         [self addSubview:self.background];
         
         TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - 1, NSWidth(frameRect), 1)];

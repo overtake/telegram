@@ -34,7 +34,8 @@ typedef enum {
     PushNotifications = 1 << 17,
     EmojiReplaces = 1 << 18,
     iCloudSynch = 1 << 19,
-    BigFontSetting = 1 << 20
+    BigFontSetting = 1 << 20,
+    StatusBarIcon = 1 << 21
     
 } SettingsMask;
 

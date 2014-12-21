@@ -52,7 +52,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 
 - (void)initialize {
     self.auto_download_limit_size = DownloadLimitSize10;
-    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications | EmojiReplaces | iCloudSynch;
+    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications | EmojiReplaces | iCloudSynch | StatusBarIcon;
     self.documents_folder = dp();
     self.defaultSoundNotification = @"DefaultSoundName";
 
@@ -328,6 +328,13 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                 
                 [SettingsArchiver addSetting:iCloudSynch];
 
+            }
+            
+            if(![defaults objectForKey:@"status_bar_sync_once"]) {
+                [defaults setObject:@"once" forKey:@"status_bar_sync_once"];
+                
+                [SettingsArchiver addSetting:StatusBarIcon];
+                
             }
             
             

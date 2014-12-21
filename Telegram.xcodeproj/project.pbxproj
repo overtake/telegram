@@ -1705,6 +1705,7 @@
 		C2C1DC221A444F2F00BBCC63 /* TGMessagesStickerImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesStickerImageObject.m; sourceTree = "<group>"; };
 		C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerSenderItem.h; sourceTree = "<group>"; };
 		C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerSenderItem.m; sourceTree = "<group>"; };
+		C2C1DC331A47656C00BBCC63 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C2C2491D19EBC699006BB1AB /* BlockedUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockedUsersViewController.h; sourceTree = "<group>"; };
 		C2C2491E19EBC699006BB1AB /* BlockedUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUsersViewController.m; sourceTree = "<group>"; };
 		C2C3A8891A29F972008C4C4A /* PhoneChangeConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeConfirmController.h; sourceTree = "<group>"; };
@@ -5368,6 +5369,7 @@
 				C20D18F31948A3FB0095A906 /* en */,
 				C20D18F51948A4970095A906 /* es */,
 				C2002D13199E9ADA002A1915 /* de */,
+				C2C1DC331A47656C00BBCC63 /* it */,
 			);
 			name = NewMainMenu.xib;
 			sourceTree = "<group>";

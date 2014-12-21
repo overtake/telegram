@@ -47,6 +47,7 @@
 
 @property (nonatomic,strong) ABPeoplePickerView *peoplePickerView;
 
+@property (weak) IBOutlet NSButton *statusBarIcon;
 
 @property (weak) IBOutlet NSTabView *tabView;
 
@@ -132,7 +133,7 @@
     
     [self.sound_effects_checkbox setTitle:NSLocalizedString(@"Settings.SoundEffects", nil)];
     [self.launch_on_startup setTitle:NSLocalizedString(@"Settings.iCloudSynch", nil)];
-    
+    [self.statusBarIcon setTitle:NSLocalizedString(@"Settings.StatusBarIcon", nil)];
     
     [self.online_when_desc setStringValue:NSLocalizedString(@"Settings.online_when_desc", nil)];
     [self.auto_download_desc setStringValue:NSLocalizedString(@"Settings.auto_download_desc", nil)];
@@ -175,7 +176,7 @@
     
     self.blocked_table_view.removeButton = self.remove_from_block_button;
     
-    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 30)];
+    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 15)];
     
     [self.security_settings_view setFrameOrigin:NSMakePoint(-5, self.security_settings_view.frame.size.height-70)];
     
@@ -245,6 +246,8 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     [self.online_settings selectCellWithTag:[SettingsArchiver contain:OnlineForever | OnlineFocused]];
     
     [self.launch_on_startup setState:[SettingsArchiver checkMaskedSetting:iCloudSynch]];
+    
+    [self.statusBarIcon setState:[SettingsArchiver checkMaskedSetting:StatusBarIcon]];
     
     [self.auto_download_limit selectItemAtIndex:[self indexForAutoDowloadSize]];
     
@@ -349,6 +352,13 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     
     [self updateUI];
 }
+
+- (IBAction)changeStatusBarIcon:(id)sender {
+    [SettingsArchiver addOrRemoveSetting:StatusBarIcon];
+    
+    [self updateUI];
+}
+
 
 - (IBAction)autoDownloadGroupVideo:(id)sender {
     [SettingsArchiver addOrRemoveSetting:AutoGroupVideo];
@@ -475,7 +485,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 - (IBAction)chatSettingAction:(id)sender {
    
     
-    float height = self.chat_settings_view.frame.size.height+80;
+    float height = self.chat_settings_view.frame.size.height+40;
     
     [self.security_settings_view setHidden:YES];
     

@@ -49,7 +49,7 @@
 
 @end
 
-@interface AppDelegate ()
+@interface AppDelegate ()<SettingsListener>
 
 
 #ifdef TGDEBUG
@@ -229,32 +229,51 @@
    [self.mainWindow deminiaturize:self];
 }
 
+-(void)didChangeSettingsMask:(SettingsMask)mask {
+    
+    if([SettingsArchiver checkMaskedSetting:StatusBarIcon]) {
+        
+        if(!_statusItem) {
+            _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+            
+            
+            [_statusItem setTarget:self];
+            [_statusItem setAction:@selector(didStatusItemClicked)];
+            
+            NSImage *menuIcon = [NSImage imageNamed:@"StatusIcon"];
+            [menuIcon setTemplate:YES];
+            
+            NSMenu *statusMenu = [StandartViewController attachMenu];
+            
+            
+            [statusMenu addItem:[NSMenuItem separatorItem]];
+            
+            [statusMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Quit", nil) withBlock:^(id sender) {
+                
+                [[NSApplication sharedApplication] terminate:self];
+                
+            }]];
+            
+            [_statusItem setMenu:statusMenu];
+            
+            [_statusItem setImage:menuIcon];
+        }
+        
+    } else {
+        [[NSStatusBar systemStatusBar] removeStatusItem:_statusItem];
+        _statusItem = nil;
+    }
+    
+}
+
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
-    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
-
     
-    [_statusItem setTarget:self];
-    [_statusItem setAction:@selector(didStatusItemClicked)];
+    [SettingsArchiver addEventListener:self];
     
-    NSImage *menuIcon = [NSImage imageNamed:@"StatusIcon"];
-    [menuIcon setTemplate:YES];
+    [self didChangeSettingsMask:0];
     
-    NSMenu *statusMenu = [StandartViewController attachMenu];
-    
-    
-    [statusMenu addItem:[NSMenuItem separatorItem]];
-    
-    [statusMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Quit", nil) withBlock:^(id sender) {
-        
-        [[NSApplication sharedApplication] terminate:self];
-        
-    }]];
-    
-    [_statusItem setMenu:statusMenu];
-    
-    [_statusItem setImage:menuIcon];
-   // [_statusItem setAlternateImage:highlightIcon];
+          // [_statusItem setAlternateImage:highlightIcon];
     
     [SharedManager sharedManager];
     
