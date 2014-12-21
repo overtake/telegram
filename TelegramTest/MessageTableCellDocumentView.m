@@ -246,6 +246,8 @@ static NSImage *attachBackgroundThumb() {
        // [self.thumbView setCornerRadius:4];
         
         [self.thumbView setCornerRadius:4];
+        
+        
 
         [self.thumbView setContentMode:BTRViewContentModeCenter];
         

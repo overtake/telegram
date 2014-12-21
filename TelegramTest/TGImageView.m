@@ -110,7 +110,7 @@
 - (void)mouseUp:(NSEvent *)theEvent  {
     
     if(self.isNotNeedHackMouseUp) {
-        [super mouseDown:theEvent];
+        [super mouseUp:theEvent];
         return;
     }
     

@@ -50,10 +50,12 @@
         
         __block NSData *thumbData;
         __block NSImage *thumbImage;
+        __block NSString *thumbName;
         
         dispatch_block_t thumbBlock = ^ {
             thumbImage = previewImageForDocument(self.filePath);
             thumbData = jpegNormalizedData(thumbImage);
+            thumbName = @"thumb.jpg";
         };
         
         if([self.filePath hasSuffix:@"sticker.webp"]) {
@@ -73,9 +75,13 @@
                 
                 [TGCache cacheImage:sticker forKey:[NSString stringWithFormat:@"s:%ld",randomId] groups:@[IMGCACHE]];
                 
-                thumbImage = strongResize(sticker, 128);
+                thumbImage = strongResize(sticker, 90);
                 
-                thumbData = pngNormalizedData(thumbImage);
+                thumbData = [NSImage convertToWebP:thumbImage quality:0.8 preset:WEBP_PRESET_ICON configBlock:^(WebPConfig *config) {
+                    
+                } error:nil];
+                
+                thumbName = @"thumb.webp";
                 
             } else
                 thumbBlock();
@@ -86,12 +92,12 @@
        TLPhotoSize *size;
         if(thumbImage) {
            
-            size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:thumbImage.size.width h:thumbImage.size.height bytes:thumbData];
+            size = [TL_photoCachedSize createWithType:thumbName location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:thumbImage.size.width h:thumbImage.size.height bytes:thumbData];
             
             [TGCache cacheImage:thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
             
         } else {
-            size = [TL_photoSizeEmpty createWithType:@"x"];
+            size = [TL_photoSizeEmpty createWithType:thumbName];
         }
         
         
@@ -151,10 +157,8 @@
     if([size isKindOfClass:[TL_photoCachedSize class]]) {
         self.uploaderThumb = [[UploadOperation alloc] init];
         
-        NSData *data = [strongResize([[NSImage alloc] initWithData:size.bytes], IS_RETINA ? 45 : 90) TIFFRepresentation];
-    
-        [self.uploaderThumb setFileData:compressImage(data, 0.4)];
-        [self.uploaderThumb setFileName:@"thumb.jpg"];
+        [self.uploaderThumb setFileData:size.bytes];
+        [self.uploaderThumb setFileName:size.type];
         [self.uploaderThumb setUploadComplete:^(UploadOperation *tu, id inputThumb) {
             strongSelf.thumbFile = inputThumb;
             strongSelf.isThumbUploaded = YES;

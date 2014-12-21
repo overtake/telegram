@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "webp/encode.h"
 
 @interface NSImage (Category)
 
@@ -18,5 +19,10 @@
 
 + (NSImage *)imageWithWebpData:(NSData *)data error:(NSError **)error;
 + (NSImage *)imageWithWebP:(NSString *)filePath error:(NSError **)error;
++ (NSData *)convertToWebP:(NSImage *)image
+                  quality:(CGFloat)quality
+                   preset:(WebPPreset)preset
+              configBlock:(void (^)(WebPConfig *))configBlock
+                    error:(NSError **)error;
 
 @end
