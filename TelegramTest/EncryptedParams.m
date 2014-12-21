@@ -33,6 +33,7 @@ static NSMutableDictionary *cached;
         _layer = layer;
         _isAdmin = isAdmin;
         _prev_layer = 1;
+        _layer = 1;
         //_out_seq_no = 1;
         //_in_seq_no = 1;
     }
@@ -41,7 +42,7 @@ static NSMutableDictionary *cached;
 
 -(void)setLayer:(int)layer {
     _prev_layer = _layer;
-    _layer = layer;
+    _layer = MAX(1,layer);
 }
 
 -(NSDictionary *)yapObject {
@@ -144,6 +145,7 @@ static NSMutableDictionary *cached;
             self.stateHandler(state);
     }];
 }
+
 
 
 +(EncryptedParams *)findAndCreate:(int)chat_id {
