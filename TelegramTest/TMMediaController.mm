@@ -266,7 +266,7 @@ static NSMutableDictionary *twoFingersTouches;
                 [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
                 
                 
-                [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.dialog messagesCount:1];
+                [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
                 
                 [[TMMediaController controller] close];
                 

@@ -265,8 +265,8 @@
             
             if([obj isKindOfClass:[MessagesViewController class]]) {
                 MessagesViewController *messagesController = (MessagesViewController *)obj;
-                if(messagesController.dialog.type == DialogTypeUser) {
-                    [self.tableView setSelectedByHash:messagesController.dialog.peer.peer_id];
+                if(messagesController.conversation.type == DialogTypeUser) {
+                    [self.tableView setSelectedByHash:messagesController.conversation.peer.peer_id];
                     
                     *stop = YES;
                     ret = YES;

@@ -183,7 +183,7 @@
         
         self.deleteSecretChatButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) tapBlock:^{
             [weakSelf.deleteSecretChatButton setLocked:YES];
-            [[Telegram rightViewController].messagesViewController deleteDialog:[Telegram rightViewController].messagesViewController.dialog callback:^{
+            [[Telegram rightViewController].messagesViewController deleteDialog:[Telegram rightViewController].messagesViewController.conversation callback:^{
                 [weakSelf.deleteSecretChatButton setLocked:NO];
             }];
         }];

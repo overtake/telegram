@@ -424,7 +424,7 @@
             
         } else if(incomingEvent.keyCode == 53) {
             
-            if([Telegram rightViewController].messagesViewController.dialog == nil && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
+            if([Telegram rightViewController].messagesViewController.conversation == nil && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
                 
                 if(![responder isKindOfClass:[NSTextView class]] || ![((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                     [[Telegram leftViewController] becomeFirstResponder];

@@ -34,8 +34,8 @@ typedef enum {
 } MessagesViewControllerState;
 
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
-@property (nonatomic, strong) MessagesTableView *table;
-@property (nonatomic, strong) TL_conversation *dialog;
+@property (nonatomic, strong,readonly) MessagesTableView *table;
+@property (nonatomic, strong) TL_conversation *conversation;
 
 @property (nonatomic) MessagesViewControllerState state;
 

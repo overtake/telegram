@@ -166,7 +166,7 @@
 
     [self.forwardButton setTapBlock:^{
 //        strongify();
-        [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.messagesViewController.dialog messagesCount:strongSelf.messagesViewController.selectedMessages.count];
+        [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.messagesViewController.conversation messagesCount:strongSelf.messagesViewController.selectedMessages.count];
     }];
     
     [self.actionsView addSubview:self.forwardButton];
@@ -391,7 +391,7 @@
         //
         //            DLog(@"result %@", result);
         //
-        //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.dialog];
+        //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.conversation];
         //        }];
     }];
     
@@ -401,7 +401,7 @@
     [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     
-  //  if(self.messagesViewController.dialog.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
+  //  if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
      //   [theMenu addItem:attachLocationItem];
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {

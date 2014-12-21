@@ -50,7 +50,7 @@ typedef enum {
         
     } else {
         
-        return [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.dialog asDocument:NO];
+        return [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
     
     }
     
@@ -84,7 +84,7 @@ typedef enum {
     if(files.count > 1) {
         NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:NSLocalizedString(@"Conversation.Confirm.SendFromClipboard", nil), (int)files.count] informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPicturesDescription", nil) block:^(id result) {
             if([result intValue] == 1000) {
-                [MessageSender sendFilesByPath:files dialog:[Telegram rightViewController].messagesViewController.dialog asDocument:NO];
+                [MessageSender sendFilesByPath:files dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
             }
         }];
         [alert addButtonWithTitle:NSLocalizedString(@"Message.Send", nil)];

@@ -21,7 +21,6 @@
 #import "TGTimer.h"
 @interface ChatHistoryController ()
 
-@property (nonatomic,strong) MessagesViewController *controller;
 
 @property (nonatomic,strong) NSMutableArray * messageItems;
 @property (nonatomic,strong) NSMutableDictionary * messageKeys;
@@ -71,7 +70,7 @@ static ASQueue *queue;
         });
 
         
-        _conversation = conversation;
+       // self.controller.conversation = conversation;
         _controller = controller;
         
         
@@ -111,7 +110,7 @@ static ASQueue *queue;
         list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
         
         [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            if(_conversation.peer.peer_id == obj.message.peer_id) {
+            if(self.controller.conversation.peer.peer_id == obj.message.peer_id) {
                 [accepted addObject:obj];
             } else {
                 [ignored addObject:obj];
@@ -206,14 +205,14 @@ static ASQueue *queue;
     
     [queue dispatchOnQueue:^{
        
-        TL_conversation *dialog = [notification.userInfo objectForKey:KEY_DIALOG];
+        TL_conversation *conversation = [notification.userInfo objectForKey:KEY_DIALOG];
         
         for (Class filterClass in filters) {
-            [filterClass removeAllItems:dialog.peer.peer_id];
+            [filterClass removeAllItems:conversation.peer.peer_id];
         }
 
         
-        if(_conversation == dialog) {
+        if(self.controller.conversation == conversation) {
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 [self.delegate flushMessages];
             }];
@@ -257,7 +256,7 @@ static ASQueue *queue;
         
        
         
-        if(message.peer_id == _conversation.peer.peer_id) {
+        if(message.peer_id == self.controller.conversation.peer.peer_id) {
             
             NSArray *items = [self selectAllItems];
             
@@ -428,11 +427,11 @@ static ASQueue *queue;
     messageItems = [filter messageItems];
     self.requestCounter = 0;
     
-    _start_min = _min_id = _conversation.last_marked_message == 0 ? _conversation.top_message : _conversation.last_marked_message;
+    _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
     _max_id =  0;
     
     _maxDate = [[MTNetwork instance] getTime];
-    _minDate = _conversation.last_marked_date;
+    _minDate = self.controller.conversation.last_marked_date;
     
     [queue dispatchOnQueue:^{
         NSArray *items = [self selectAllItems];
@@ -440,8 +439,8 @@ static ASQueue *queue;
         if(items.count > 0) {
             MessageTableItem *item = items[0];
             
-            if(self.filter.class == HistoryFilter.class && item.message.n_id != _conversation.top_message) {
-                [[self.filter class] removeAllItems:_conversation.peer.peer_id];
+            if(self.filter.class == HistoryFilter.class && item.message.n_id != self.controller.conversation.top_message) {
+                [[self.filter class] removeAllItems:self.controller.conversation.peer.peer_id];
             }
         }
         
@@ -514,9 +513,9 @@ static ASQueue *queue;
                 ChatHistoryState state;
                 
                 if(!next) {
-                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= _conversation.sync_message_id && _conversation.sync_message_id != 0) || _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                 } else {
-                    state = self.filter.class == HistoryFilter.class || _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = self.filter.class == HistoryFilter.class || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                 }
                 
                 [self setState:state next:next];
@@ -528,7 +527,7 @@ static ASQueue *queue;
             
             [self saveId:memory next:next];
             
-            if((!next && _min_id == _conversation.top_message)) {
+            if((!next && _min_id == self.controller.conversation.top_message)) {
                 [self setState:ChatHistoryStateFull next:next];
                 
                 notify = YES;
@@ -559,9 +558,9 @@ static ASQueue *queue;
                     
                     
                     if(result.count < _selectLimit) {
-                        [self setState: _conversation.type != DialogTypeSecretChat && _conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
+                        [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                         
-                        if(!next && (_min_id) == _conversation.top_message) {
+                        if(!next && (_min_id) == self.controller.conversation.top_message) {
                             [self setState:ChatHistoryStateFull next:NO];
                         }
                     }
@@ -582,7 +581,7 @@ static ASQueue *queue;
                     
                     [queue dispatchOnQueue:^{
                         
-                        if(!_conversation)
+                        if(!self.controller.conversation)
                             return;
                         
                          [TL_localMessage convertReceivedMessages:[response messages]];
@@ -597,8 +596,8 @@ static ASQueue *queue;
                         TL_localMessage *sync_message = [[response messages] lastObject];
                         
                         if(sync_message) {
-                            _conversation.sync_message_id = sync_message.n_id;
-                            [_conversation save];
+                            self.controller.conversation.sync_message_id = sync_message.n_id;
+                            [self.controller.conversation save];
                         }
                         
                         
@@ -609,14 +608,14 @@ static ASQueue *queue;
                                 last = messages[0];
                             
                             ChatHistoryState old_state = _prevState;
-                            ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= _conversation.sync_message_id && _conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                            ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                             [self setState:new_state next:next];
                             
                             if(old_state != new_state && new_state == ChatHistoryStateLocal) {
                                 NSMutableArray *copy = [messages mutableCopy];
                                 
                                 [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
-                                    if(obj.n_id <= _conversation.sync_message_id)
+                                    if(obj.n_id <= self.controller.conversation.sync_message_id)
                                         [copy removeObject:obj];
                                 }];
                                 
@@ -650,7 +649,7 @@ static ASQueue *queue;
                             [self setState:ChatHistoryStateFull next:next];
                         }
                         
-                        if(!next && (_min_id) == _conversation.top_message) {
+                        if(!next && (_min_id) == self.controller.conversation.top_message) {
                             [self setState:ChatHistoryStateFull next:next];
                         }
                         
@@ -739,7 +738,7 @@ static ASQueue *queue;
 -(NSArray *)selectAllItems {
 
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.message.peer_id == %d",_conversation.peer.peer_id]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.message.peer_id == %d",self.controller.conversation.peer.peer_id]];
     
     NSArray *memory = [messageItems
                        filteredArrayUsingPredicate:predicate];
@@ -761,7 +760,7 @@ static ASQueue *queue;
 
 -(void)removeAllItems {
     for (Class filterClass in filters) {
-        [filterClass removeAllItems:_conversation.peer.peer_id];
+        [filterClass removeAllItems:self.controller.conversation.peer.peer_id];
     }
 }
 
@@ -783,7 +782,7 @@ static ASQueue *queue;
 
 -(void)addItem:(MessageTableItem *)item {
     
-    [self addItem:item conversation:_conversation callback:nil sentControllerCallback:nil];
+    [self addItem:item conversation:self.controller.conversation callback:nil sentControllerCallback:nil];
 }
 
 
@@ -796,7 +795,7 @@ static ASQueue *queue;
 }
 
 -(void)addItem:(MessageTableItem *)item sentControllerCallback:(dispatch_block_t)sentControllerCallback {
-     [self addItem:item conversation:_conversation callback:nil sentControllerCallback:sentControllerCallback];
+     [self addItem:item conversation:self.controller.conversation callback:nil sentControllerCallback:sentControllerCallback];
 }
 
 
@@ -809,7 +808,7 @@ static ASQueue *queue;
             [item.messageSender addEventListener:self];
             
             NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
-            if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == _conversation.peer.peer_id) {
+            if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     [self.delegate receivedMessage:item position:0 itsSelf:YES];
                     
@@ -849,7 +848,7 @@ static ASQueue *queue;
             MessageTableItem *item = [items lastObject];
             
             NSRange range = NSMakeRange(0, filtred.count);
-            if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == _conversation.peer.peer_id) {
+            if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     [self.delegate receivedMessageList:filtred inRange:range itsSelf:YES];
                     
@@ -895,12 +894,12 @@ static ASQueue *queue;
             
             [queue dispatchOnQueue:^{
                 
-                if(_conversation.last_marked_message > TGMINFAKEID || _conversation.last_marked_message < checkItem.message.n_id) {
+                if(self.controller.conversation.last_marked_message > TGMINFAKEID || self.controller.conversation.last_marked_message < checkItem.message.n_id) {
                     
                     checkItem.messageSender.conversation.last_marked_message = checkItem.message.n_id;
                     checkItem.messageSender.conversation.last_marked_date = checkItem.message.date;
                     
-                    [_conversation save];
+                    [self.controller.conversation save];
                     
                     [messageItems removeObject:checkItem];
                     [messageKeys removeObjectForKey:@(checkItem.message.n_id)];
@@ -962,7 +961,10 @@ static ASQueue *queue;
     [Notification removeObserver:self];
     
     self.delegate = nil;
-    _conversation = nil;
+}
+
+-(TL_conversation *)conversation {
+    return _controller.conversation;
 }
 
 -(void)dealloc {

@@ -360,7 +360,7 @@ typedef enum {
     }
     
     if([controller isKindOfClass:[MessagesViewController class]]) {
-        if(((MessagesViewController *)controller).dialog.peer.peer_id == [SettingsArchiver supportUserId]) {
+        if(((MessagesViewController *)controller).conversation.peer.peer_id == [SettingsArchiver supportUserId]) {
             [self selectController:self.askQuestion];
             
             return;

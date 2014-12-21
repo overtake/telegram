@@ -565,7 +565,7 @@ static BOOL dragAction = NO;
         [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
         
         
-        [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.dialog messagesCount:1];
+        [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
         
         
         

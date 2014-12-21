@@ -308,7 +308,7 @@
     } else {
         object = [[DialogTableItem alloc] initWithDialogItem:dialog];
         [self.tableView insert:object atIndex:position tableRedraw:YES];
-        if(dialog == [Telegram rightViewController].messagesViewController.dialog)
+        if(dialog == [Telegram rightViewController].messagesViewController.conversation)
             [self.tableView setSelectedByHash:object.hash];
     }
     
@@ -361,7 +361,7 @@
     NSMenuItem *openConversationMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.OpenConversation", nil) withBlock:^(id sender) {
         [[Telegram rightViewController] showByDialog:dialog sender:self];
     }];
-    if([Telegram rightViewController].messagesViewController.dialog == dialog)
+    if([Telegram rightViewController].messagesViewController.conversation == dialog)
         openConversationMenuItem.target = nil;
     
     [menu addItem:openConversationMenuItem];

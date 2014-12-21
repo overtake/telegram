@@ -28,7 +28,7 @@
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
 
-    if([Telegram rightViewController].messagesViewController.dialog && [Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].messagesViewController) {
+    if([Telegram rightViewController].messagesViewController.conversation && [Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].messagesViewController) {
         NSPasteboard *pst = [sender draggingPasteboard];
         
         if(![pst.name isEqualToString:TGImagePType] && ( [[pst types] containsObject:NSFilenamesPboardType] || [[pst types] containsObject:NSTIFFPboardType])) {
@@ -59,7 +59,7 @@
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
     
-    [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.dialog asDocument:NO];
+    [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
     
     return YES;
 }
@@ -309,7 +309,7 @@
                 }];
             };
             
-            if(self.messagesViewController.dialog == dialog) {
+            if(self.messagesViewController.conversation == dialog) {
                 self.messagesViewController.didUpdatedTable();
             }
             [self hideModalView:YES animation:YES];
@@ -422,7 +422,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    if(self.messagesViewController.dialog == dialog && self.navigationViewController.currentController != self.messagesViewController) {
+    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController) {
       
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         

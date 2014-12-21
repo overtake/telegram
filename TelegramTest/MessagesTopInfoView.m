@@ -253,7 +253,7 @@ static NSMutableDictionary *cache;
     
     if(self.action == MessagesTopInfoActionUnblockUser) {
         self.locked = YES;
-        [[BlockedUsersManager sharedManager] unblock:self.controller.dialog.user.n_id completeHandler:^(BOOL response) {
+        [[BlockedUsersManager sharedManager] unblock:self.controller.conversation.user.n_id completeHandler:^(BOOL response) {
             [self hide:YES];
             self.locked = NO;
         }];
@@ -261,7 +261,7 @@ static NSMutableDictionary *cache;
     
     if(self.action == MessagesTopInfoActionAddContact) {
         self.locked = YES;
-        [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:self.controller.dialog.user.phone first_name:self.controller.dialog.user.first_name last_name:self.controller.dialog.user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
+        [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:0 phone:self.controller.conversation.user.phone first_name:self.controller.conversation.user.first_name last_name:self.controller.conversation.user.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
             cache[@(self.action)][@(self.conversation.peer.peer_id)] = @(self.conversation.peer.peer_id);
             [self hide:YES];
             self.locked = NO;
