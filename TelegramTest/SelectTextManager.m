@@ -27,7 +27,7 @@
 }
 
 +(void)addRange:(NSRange)range forItem:(id<SelectTextDelegate>)item {
-        
+            
     [[[self instance] list] removeObject:item];
     
     [[[self instance] keys] removeObjectForKey:[item identifier]];

@@ -332,7 +332,8 @@
                 }
                 
                 if(mark.isReal) {
-                    if(_selectRange.location == NSNotFound || _selectRange.location > startIndex) {
+                    if( abs((int)startIndex - (int)endIndex) > 0 && ( _selectRange.location == NSNotFound || _selectRange.location > startIndex)) {
+                        
                         _selectRange.location = startIndex;
                     }
                     
