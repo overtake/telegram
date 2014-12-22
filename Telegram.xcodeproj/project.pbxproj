@@ -340,7 +340,7 @@
 		C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */; };
 		C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87931A0015BD00EC962E /* TGSecretAction.m */; };
 		C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */; };
-		C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; };
+		C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
 		C2531F5A1964548100F7D7A2 /* MessagesTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */; };
@@ -406,6 +406,12 @@
 		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */; };
 		C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976B31A10E2110047E2C3 /* TGPVContainer.m */; };
+		C26F7E8A1A482C94001D1AE2 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26F7E8B1A482C96001D1AE2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26F7E8C1A482C9B001D1AE2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C26F7E8D1A482C9D001D1AE2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C26F7E911A483CF6001D1AE2 /* TGModernConversationList.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7E901A483CF6001D1AE2 /* TGModernConversationList.m */; };
+		C26F7E941A483DA8001D1AE2 /* TGModernConversationHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7E931A483DA8001D1AE2 /* TGModernConversationHistoryController.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -498,10 +504,6 @@
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
 		C2C6D9711A12952D001EF8A2 /* TGPVImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */; };
 		C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C725D91860E05200094EC7 /* EncryptedParams.m */; };
-		C2C8AAF91A3B8AEA00C857D6 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2C8AAFA1A3B8AF300C857D6 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2C8AAFB1A3B8B3500C857D6 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2C8AAFC1A3B8B3900C857D6 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -687,9 +689,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2C8AAFA1A3B8AF300C857D6 /* HockeySDK.framework in Copy Files (6 items) */,
-				C2C8AAF91A3B8AEA00C857D6 /* Sparkle.framework in Copy Files (6 items) */,
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
+				C26F7E8A1A482C94001D1AE2 /* Sparkle.framework in Copy Files (6 items) */,
+				C26F7E8B1A482C96001D1AE2 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1540,6 +1542,10 @@
 		C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewer.m; sourceTree = "<group>"; };
 		C26976B21A10E2110047E2C3 /* TGPVContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVContainer.h; sourceTree = "<group>"; };
 		C26976B31A10E2110047E2C3 /* TGPVContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVContainer.m; sourceTree = "<group>"; };
+		C26F7E8F1A483CF6001D1AE2 /* TGModernConversationList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationList.h; sourceTree = "<group>"; };
+		C26F7E901A483CF6001D1AE2 /* TGModernConversationList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationList.m; sourceTree = "<group>"; };
+		C26F7E921A483DA8001D1AE2 /* TGModernConversationHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationHistoryController.h; sourceTree = "<group>"; };
+		C26F7E931A483DA8001D1AE2 /* TGModernConversationHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationHistoryController.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2066,8 +2072,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2C8AAFB1A3B8B3500C857D6 /* Sparkle.framework in Frameworks */,
-				C2C8AAFC1A3B8B3900C857D6 /* HockeySDK.framework in Frameworks */,
+				C26F7E8C1A482C9B001D1AE2 /* HockeySDK.framework in Frameworks */,
+				C26F7E8D1A482C9D001D1AE2 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3406,6 +3412,17 @@
 			name = elements;
 			sourceTree = "<group>";
 		};
+		C26F7E8E1A483CDC001D1AE2 /* modernconversations */ = {
+			isa = PBXGroup;
+			children = (
+				C26F7E8F1A483CF6001D1AE2 /* TGModernConversationList.h */,
+				C26F7E901A483CF6001D1AE2 /* TGModernConversationList.m */,
+				C26F7E921A483DA8001D1AE2 /* TGModernConversationHistoryController.h */,
+				C26F7E931A483DA8001D1AE2 /* TGModernConversationHistoryController.m */,
+			);
+			name = modernconversations;
+			sourceTree = "<group>";
+		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
 			isa = PBXGroup;
 			children = (
@@ -4162,6 +4179,7 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C26F7E8E1A483CDC001D1AE2 /* modernconversations */,
 				C2CD77C21A2C9D0C000B4BA9 /* password */,
 				C26976AD1A10CBDE0047E2C3 /* photoviewer */,
 				C21D484619AF3C0E000F06E1 /* compose */,
@@ -4872,6 +4890,7 @@
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
+				C26F7E911A483CF6001D1AE2 /* TGModernConversationList.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
@@ -5335,6 +5354,7 @@
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
 				C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */,
 				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
+				C26F7E941A483DA8001D1AE2 /* TGModernConversationHistoryController.m in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
 				0AA7E1CD18CD28570064EFC7 /* TelegramFirstController.m in Sources */,
@@ -5498,7 +5518,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5533,7 +5553,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

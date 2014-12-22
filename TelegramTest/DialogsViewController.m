@@ -367,12 +367,6 @@
     [menu addItem:openConversationMenuItem];
     
     
-    
-    
-    
-    
-    
-    
     [menu addItem:[NSMenuItem separatorItem]];
     
     if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast) {
