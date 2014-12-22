@@ -212,15 +212,15 @@
 
 -(void)checkAndScroll:(NSPoint)point {
     
-    
-    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 2)); // 2 третьих.
-    
-    
-    NSPoint botCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 1)); // 1 третьяю
-    
-    NSLog(@"top:%@,bot:%@",NSStringFromPoint(topCorner),NSStringFromPoint(botCorner));
-    
-    int counter = 0;
+//    
+//    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 2)); // 2 третьих.
+//    
+//    
+//    NSPoint botCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 1)); // 1 третьяю
+//    
+//    NSLog(@"top:%@,bot:%@",NSStringFromPoint(topCorner),NSStringFromPoint(botCorner));
+//    
+//    int counter = 0;
     
 //    if(point.y > topCorner.y) {
 //        
@@ -264,9 +264,7 @@
         tablePoint.y = NSHeight(self.frame) - 1;
     }
     
-    
-    NSLog(@"tablePoint:%@",NSStringFromPoint(tablePoint));
-    
+        
     [self checkAndScroll:tablePoint];
 
     
