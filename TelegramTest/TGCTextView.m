@@ -654,6 +654,7 @@
     return theEvent.clickCount == 2 || theEvent.clickCount == 3;
 }
 
+
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
     

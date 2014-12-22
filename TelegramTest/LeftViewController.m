@@ -66,7 +66,7 @@
 
 @interface LeftViewController ()<TMTabViewDelegate>
 
-@property (nonatomic, strong) DialogsViewController *dialogsViewController;
+@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
 @property (nonatomic, strong) SearchViewController *searchViewController;
 @property (nonatomic, strong) AccountSettingsViewController *settingsViewController;
 @property (nonatomic, strong) BTRButton *topButton;
@@ -132,7 +132,7 @@ static const int bottomOffset = 58;
     self.contactsViewController = [[ContactsViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.contactsViewController];
     
-    self.dialogsViewController = [[DialogsViewController alloc] initWithFrame:controllerRect];
+    self.dialogsViewController = [[TGConversationListViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.dialogsViewController];
     
     

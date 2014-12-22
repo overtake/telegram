@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 
-@interface SearchMessageCellView : DialogTableItemView
+@interface SearchMessageCellView : ConversationTableItemView
 
 @end

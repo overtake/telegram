@@ -11,7 +11,7 @@
 
 #import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 #import "DownloadPhotoItem.h"
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.currentHash;
 #define HASH_CHECK() if(self.currentHash != hash) return;

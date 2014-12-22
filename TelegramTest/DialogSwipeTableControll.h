@@ -7,21 +7,21 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 #import "DialogTableView.h"
 #import "DialogRedButtonView.h"
 
-@class DialogTableItemView;
+@class ConversationTableItemView;
 
 @interface DialogSwipeTableControll : NSControl
-- (id)initWithFrame:(NSRect)frameRect itemView:(DialogTableItemView *)itemView;
+- (id)initWithFrame:(NSRect)frameRect itemView:(ConversationTableItemView *)itemView;
 - (void)showButton;
 - (void)hideButton;
 
 @property (nonatomic, copy) dispatch_block_t drawBlock;
 @property (nonatomic, strong) NSColor *backgroundColor;
 @property (nonatomic, strong) TMView *containerView;
-@property (nonatomic, strong) DialogTableItemView *itemView;
+@property (nonatomic, strong) ConversationTableItemView *itemView;
 @property (nonatomic, strong) DialogTableView *tableView;
 
 

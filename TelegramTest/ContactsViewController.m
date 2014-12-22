@@ -10,7 +10,7 @@
 #import "SearchTableCell.h"
 #import "SearchItem.h"
 #import "SearchSeparatorItem.h"
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 
 #import "SelectUserItem.h"
 #import "SelectUserRowView.h"

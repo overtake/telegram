@@ -15,7 +15,7 @@
 #import "DialogTableView.h"
 #import "TLEncryptedChatCategory.h"
 #import "TLEncryptedChat+Extensions.h"
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 #import "SearchLoadMoreCell.h"
 #import "HackUtils.h"
 #import "TLPeer+Extensions.h"
@@ -226,8 +226,8 @@ typedef enum {
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     if([item isKindOfClass:[SearchSeparatorItem class]]) {
         return [self.tableView cacheViewForClass:[SearchSeparatorTableCell class] identifier:@"SearchSeparatorTableCell" withSize:NSMakeSize(self.view.bounds.size.width, 27)];
-    } else if ([item isKindOfClass:[DialogTableItem class]]) {
-        DialogTableItemView *view = (DialogTableItemView *)[self.tableView cacheViewForClass:[DialogTableItemView class] identifier:@"SearchTableItem"];
+    } else if ([item isKindOfClass:[ConversationTableItem class]]) {
+        ConversationTableItemView *view = (ConversationTableItemView *)[self.tableView cacheViewForClass:[ConversationTableItemView class] identifier:@"SearchTableItem"];
         [view setSwipePanelActive:NO];
         return view;
         
@@ -269,10 +269,10 @@ typedef enum {
     }
     
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
-        DialogTableItem *searchItem = (DialogTableItem *)item;
+        ConversationTableItem *searchItem = (ConversationTableItem *)item;
         
-        if(searchItem.dialog) {
-            [[Telegram rightViewController] modalViewSendAction:searchItem.dialog];
+        if(searchItem.conversation) {
+            [[Telegram rightViewController] modalViewSendAction:searchItem.conversation];
         } else if(searchItem.user) {
             [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
         }
@@ -286,10 +286,10 @@ typedef enum {
 
 - (void)selectionDidChange:(NSInteger)row item:(TMRowItem *)item {
     
-    if(item && ([item isKindOfClass:[DialogTableItem class]] || [item isKindOfClass:[SearchItem class]])) {
+    if(item && ([item isKindOfClass:[ConversationTableItem class]] || [item isKindOfClass:[SearchItem class]])) {
         SearchItem *searchItem = (SearchItem *) item;
         
-        TL_conversation *dialog = searchItem.dialog;
+        TL_conversation *dialog = searchItem.conversation;
         
         if(!dialog)
             dialog = searchItem.user.dialog;
@@ -708,11 +708,11 @@ static int insertCount = 3;
                         NSMutableArray *cachePeers = [NSMutableArray array];
                         
                         searchParams.dialogs = [NSMutableArray array];
-                        for(TL_conversation *dialog in insertedDialogs) {
+                        for(TL_conversation *conversation in insertedDialogs) {
                             
-                            [cachePeers addObject:@(dialog.peer.peer_id)];
+                            [cachePeers addObject:@(conversation.peer.peer_id)];
                             
-                            [searchParams.dialogs addObject:[[DialogTableItem alloc] initWithDialogItem:dialog selectString:searchParams.searchString]];
+                            [searchParams.dialogs addObject:[[ConversationTableItem alloc] initWithConversationItem:conversation selectString:searchParams.searchString]];
                         }
                     
                 }];
@@ -888,6 +888,11 @@ static int insertCount = 3;
   
     
   
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.tableView cancelSelection];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

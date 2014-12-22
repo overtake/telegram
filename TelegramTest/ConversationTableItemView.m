@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 #import "NS(Attributed)String+Geometrics.h"
 #import "TMElements.h"
 #import "TMAttributedString.h"
@@ -81,10 +81,8 @@ static NSDictionary *attributes() {
 @end
 
 
-@interface DialogTableItemView()
+@interface ConversationTableItemView()
 
-
-@property (nonatomic, strong) TGImageView *photoImageView;
 @property (nonatomic, strong) TMNameTextField *titleTextField;
 @property (nonatomic, strong) TMTextField *messageTextField;
 @property (nonatomic, strong) TMTextField *dateTextField;
@@ -92,15 +90,14 @@ static NSDictionary *attributes() {
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) DialogShortUnreadCount *shortUnreadCount;
 @property (nonatomic, strong) TGTimer *timer;
-//@property (atomic) int width;
 
 @property (nonatomic, strong) DialogSwipeTableControll *controll;
 
-- (DialogTableItem *)rowItem;
+- (ConversationTableItem *)rowItem;
 
 @end
 
-@implementation DialogTableItemView
+@implementation ConversationTableItemView
 
 - (BOOL)isSwipePanelActive {
     return self.swipePanelActive;
@@ -130,11 +127,7 @@ static NSDictionary *attributes() {
         [self.messageTextField setHidden:NO];
         [self.dateTextField setHidden:NO];
         [self.shortUnreadCount setHidden:YES];
-        
-        
-     //   int mutedWith = [self rowItem].isMuted ? image_muted().size.width + 6 : 0;
-      //  [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - [self rowItem].dateSize.width - 80 - mutedWith, self.titleTextField.bounds.size.height)];
-
+    
         
         tableView.scrollView.isHideVerticalScroller = NO;
     }
@@ -287,8 +280,8 @@ static NSDictionary *attributes() {
         [self redrawRow];
 }
 
-- (DialogTableItem *)rowItem {
-    return (DialogTableItem *)[super rowItem];
+- (ConversationTableItem *)rowItem {
+    return (ConversationTableItem *)[super rowItem];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -362,7 +355,7 @@ static int unreadOffsetRight = 13;
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
-    [DialogsViewController showPopupMenuForDialog:[self rowItem].dialog withEvent:theEvent forView:self];
+    [TGConversationListViewController showPopupMenuForDialog:[self rowItem].conversation withEvent:theEvent forView:self];
 }
 
 - (void)setItem:(id)item selected:(BOOL)isSelected {
@@ -373,7 +366,7 @@ static int unreadOffsetRight = 13;
 - (void)redrawRow {
     [super redrawRow];
     
-    DialogTableItem *item = [self rowItem];
+    ConversationTableItem *item = [self rowItem];
     
     self.dateTextField.attributedStringValue = item.date;
     if(item.dateSize.width == 0) {
@@ -395,11 +388,10 @@ static int unreadOffsetRight = 13;
     [self.dateTextField setFrameOrigin:NSMakePoint(self.bounds.size.width - item.dateSize.width - 10, self.dateTextField.frame.origin.y)];
     
     if(item.isTyping) {
-        [self startTyping];
-        [self.messageTextField setAttributedStringValue:item.writeAttributedString];
+        [self startTimer:item];
+       
     } else {
-        [self stopTyping];
-        [self.messageTextField setAttributedStringValue:item.messageText];
+        [self stopTimer];
     }
     
     
@@ -419,38 +411,45 @@ static int unreadOffsetRight = 13;
 }
 
 - (void)setNeedsDisplay:(BOOL)flag {
-//    [super setNeedsDisplay:flag];
-    
     [self.controll setNeedsDisplay:YES];
     [self.controll.containerView setNeedsDisplay:YES];
 }
 
-- (void)startTyping {
+- (void)startTimer:(ConversationTableItem *)item {
     if(self.timer)
         return;
     
-    DialogTableItem *item = [self rowItem];
+    [self.messageTextField setAttributedStringValue:item.writeAttributedString];
     
     self.timer = [[TGTimer alloc] initWithTimeout:0.35 repeat:YES completion:^{
-        NSString *string = [NSString stringWithFormat:@"%@", item.writeAttributedString.string];
-        if([[string substringFromIndex:string.length - 3] isEqualToString:@"..."]) {
-            [[item.writeAttributedString mutableString] setString:[string substringToIndex:string.length - 3]];
+        
+        if(item == [self rowItem]) {
+            
+            NSString *string = [NSString stringWithFormat:@"%@", item.writeAttributedString.string];
+            if([[string substringFromIndex:string.length - 3] isEqualToString:@"..."]) {
+                [[item.writeAttributedString mutableString] setString:[string substringToIndex:string.length - 3]];
+            }
+            
+            [item.writeAttributedString appendString:@"." withColor:self.isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x808080)];
+            [item.writeAttributedString setSelected:self.isSelected];
+            [self.messageTextField setAttributedStringValue:item.writeAttributedString];
+            [self.messageTextField sizeToFit];
+            [self setFrameSize:self.frame.size];
+        } else {
+            [self stopTimer];
         }
         
-        [item.writeAttributedString appendString:@"." withColor:self.isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x808080)];
-        [item.writeAttributedString setSelected:self.isSelected];
-        [self.messageTextField setAttributedStringValue:item.writeAttributedString];
-        [self.messageTextField sizeToFit];
-        [self setFrameSize:self.frame.size];
-        
-        
-    } queue:dispatch_get_main_queue()];
+     } queue:dispatch_get_main_queue()];
+    
     [self.timer start];
 }
 
-- (void)stopTyping {
+
+
+- (void)stopTimer {
     [self.timer invalidate];
     self.timer = nil;
+    [self.messageTextField setAttributedStringValue:[self rowItem].messageText];
 }
 
 

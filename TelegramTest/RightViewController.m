@@ -439,7 +439,7 @@
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[DialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[TGConversationListViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]]];
     }
 
     return YES;

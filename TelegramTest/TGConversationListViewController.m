@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "DialogsViewController.h"
+#import "TGConversationListViewController.h"
 #import "Telegram.h"
 #import "DialogsManager.h"
 #import "TLPeer+Extensions.h"
@@ -14,8 +14,8 @@
 #import "DialogTableObject.h"
 #import "ImageUtils.h"
 #import "TMElements.h"
-#import "DialogTableItem.h"
-#import "DialogTableItemView.h"
+#import "ConversationTableItem.h"
+#import "ConversationTableItemView.h"
 #import "TGSecretAction.h"
 #import "SearchSeparatorItem.h"
 #import "SearchSeparatorTableCell.h"
@@ -30,13 +30,13 @@
 #import "TMTaskRequest.h"
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
-@interface DialogsViewController ()<TMSearchTextFieldDelegate>
+@interface TGConversationListViewController ()
 @property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
 @property (nonatomic, strong) TL_conversation *selectedConversation;
 @end
 
-@implementation DialogsViewController
+@implementation TGConversationListViewController
 
 - (void)loadView {
     [super loadView];
@@ -102,11 +102,9 @@
         
         [[MTNetwork instance] startNetwork];
         
-       
+       [[BlockedUsersManager sharedManager] remoteLoad];
         
-        [[BlockedUsersManager sharedManager] remoteLoad];
-        
-        if(result.count != 0 || [DialogsHistoryController sharedController].state == DialogsHistoryStateEnd) {
+        if(result.count != 0 || self.historyController.state == DialogsHistoryStateEnd) {
             
             [TMTaskRequest executeAll];
             
@@ -124,7 +122,7 @@
             [TGSecretAction dequeAllStorageActions];
             
             
-        } else if([DialogsHistoryController sharedController].state != DialogsHistoryStateEnd) {
+        } else if(self.historyController.state != DialogsHistoryStateEnd) {
             [self initConversations];
         }
         
@@ -166,7 +164,7 @@
     int offset = (int) self.tableView.count;
     
     if(self.historyController.state == DialogsHistoryStateNeedRemote) {
-         NSArray *filtred = [self.tableView.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.dialog.peer.class != %@ AND self.dialog.peer.class != %@",[TL_peerSecret class], [TL_peerBroadcast class]]];
+         NSArray *filtred = [self.tableView.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.conversation.peer.class != %@ AND self.conversation.peer.class != %@",[TL_peerSecret class], [TL_peerBroadcast class]]];
         
         offset = (int) filtred.count;
     }
@@ -190,7 +188,7 @@
         if(!dialog.isAddToList)
             continue;
         
-        DialogTableItem *item = [[DialogTableItem alloc] initWithDialogItem:dialog];
+        ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
         [dialogs addObject:item];
     }
     
@@ -203,8 +201,8 @@
     self.tableView.defaultAnimation = animation;
     
     
-    if([(DialogTableItem *)self.tableView.selectedItem dialog] != self.selectedConversation) {
-        NSUInteger hash = [DialogTableItem hash:self.selectedConversation];
+    if([(ConversationTableItem *)self.tableView.selectedItem conversation] != self.selectedConversation) {
+        NSUInteger hash = [ConversationTableItem hash:self.selectedConversation];
         if([self.tableView itemByHash:hash]) {
             [self.tableView cancelSelection];
             [self.tableView setSelectedByHash:hash];
@@ -236,27 +234,20 @@
 
         if(![conversation isKindOfClass:NSNull.class]) {
             self.selectedConversation = conversation;
-            NSUInteger hash = [DialogTableItem hash:self.selectedConversation];
+            NSUInteger hash = [ConversationTableItem hash:self.selectedConversation];
             [self.tableView setSelectedByHash:hash];
         }
     }
 }
 
-- (void)notificationContactsReload:(NSNotification *)notify {
-    
-    DLog(@"notification reload");
-}
-
 - (void) notificationDialogRemove:(NSNotification *)notify {
     TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
   //  DialogTableItem *dialogItem = [[DialogTableItem alloc] initWithDialogItem:dialog];
-     id object = [self.tableView itemByHash:[DialogTableItem hash:dialog]];
+     id object = [self.tableView itemByHash:[ConversationTableItem hash:dialog]];
     [self.tableView removeItem:object];
 }
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
-    
-    DLog(@"reload dialogs");
     
     [self.tableView removeAllItems:NO];
     NSArray *current = [[DialogsManager sharedManager] all];
@@ -269,7 +260,7 @@
             if(!dialog.isAddToList)
                 continue;
             
-            DialogTableItem *item = [[DialogTableItem alloc] initWithDialogItem:dialog];
+            ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
             
             [dialogs addObject:item];
         }
@@ -282,33 +273,31 @@
 
 - (void)notificationDialogToTop:(NSNotification *)notify {
     TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
-    [self move:0 dialog:dialog];
+    [self move:0 conversation:dialog];
 }
 
 - (void)notificationDialogChangePosition:(NSNotification *)notify {
     TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
     int position = [[notify.userInfo objectForKey:KEY_POSITION] intValue];
-    [self move:position dialog:dialog];
+    [self move:position conversation:dialog];
 }
 
--(void)move:(int)position dialog:(TL_conversation *)dialog {
+-(void)move:(int)position conversation:(TL_conversation *)conversation {
     
-    
-    if(position == 0 && dialog.top_message > TGMINFAKEID) {
+    if(position == 0 && conversation.top_message > TGMINFAKEID) {
         [self.tableView scrollToBeginningOfDocument:self];
     } 
     
     if(position != 0 && position >= self.tableView.count)
         position = (int) self.tableView.count-1;
     
-    
-    DialogTableItem *object = (DialogTableItem *) [self.tableView itemByHash:[DialogTableItem hash:dialog]];
+    ConversationTableItem *object = (ConversationTableItem *) [self.tableView itemByHash:[ConversationTableItem hash:conversation]];
     if(object) {
         [self.tableView moveItemFrom:[self.tableView positionOfItem:object] to:position tableRedraw:YES];
     } else {
-        object = [[DialogTableItem alloc] initWithDialogItem:dialog];
+        object = [[ConversationTableItem alloc] initWithConversationItem:conversation];
         [self.tableView insert:object atIndex:position tableRedraw:YES];
-        if(dialog == [Telegram rightViewController].messagesViewController.conversation)
+        if(conversation == [Telegram rightViewController].messagesViewController.conversation)
             [self.tableView setSelectedByHash:object.hash];
     }
     
@@ -317,7 +306,7 @@
 - (CGFloat) rowHeight:(NSUInteger)row item:(TMRowItem *)item {
     if([item isKindOfClass:[SearchSeparatorItem class]]) {
         return 25.0f;
-    } else if([item isKindOfClass:[DialogTableItem class]]) {
+    } else if([item isKindOfClass:[ConversationTableItem class]]) {
         return DIALOG_CELL_HEIGHT;
     }
     return DIALOG_CELL_HEIGHT;
@@ -329,7 +318,7 @@
 
 - (NSView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     
-    DialogTableItemView *view = (DialogTableItemView *)[self.tableView cacheViewForClass:[DialogTableItemView class] identifier:@"dialogItem" withSize:NSMakeSize(200, DIALOG_CELL_HEIGHT)];
+    ConversationTableItemView *view = (ConversationTableItemView *)[self.tableView cacheViewForClass:[ConversationTableItemView class] identifier:@"dialogItem" withSize:NSMakeSize(200, DIALOG_CELL_HEIGHT)];
     
     view.tableView = self.tableView;
     return view;
@@ -337,19 +326,17 @@
 
 }
 
-- (BOOL) selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
+- (BOOL) selectionWillChange:(NSInteger)row item:(ConversationTableItem *) item {
     
-    DialogTableItem *dialog = (DialogTableItem *) item;
     if([[Telegram rightViewController] isModalViewActive]) {
-        [[Telegram rightViewController] modalViewSendAction:dialog.dialog];
+        [[Telegram rightViewController] modalViewSendAction:item.conversation];
         return NO;
     }
     return ![Telegram rightViewController].navigationViewController.isLocked;
 }
 
-- (void) selectionDidChange:(NSInteger)row item:(TMRowItem *) item {
-    DialogTableItem *dialog = (DialogTableItem *) item;
-    [[Telegram sharedInstance] showMessagesFromDialog:dialog.dialog sender:self];
+- (void) selectionDidChange:(NSInteger)row item:(ConversationTableItem *) item {
+    [[Telegram sharedInstance] showMessagesFromDialog:item.conversation sender:self];
 }
 
 + (void)showPopupMenuForDialog:(TL_conversation *)dialog withEvent:(NSEvent *)theEvent forView:(NSView *)view {

@@ -7,7 +7,7 @@
 //
 
 #import "DialogTableView.h"
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 
 @interface HiddenScroller : NSScroller
 

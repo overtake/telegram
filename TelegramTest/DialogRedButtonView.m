@@ -41,8 +41,8 @@
         [super mouseUp:theEvent];
     } else {
         if(!self.disable) {
-            DialogTableItem *item = (DialogTableItem *)[self.itemView rowItem];
-            [[[Telegram rightViewController] messagesViewController] deleteDialog:item.dialog];
+            ConversationTableItem *item = (ConversationTableItem *)[self.itemView rowItem];
+            [[[Telegram rightViewController] messagesViewController] deleteDialog:item.conversation];
         } else {
             [super mouseUp:theEvent];
         }

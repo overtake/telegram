@@ -16,41 +16,41 @@
     if(self = [super init]) {
         
         self.lastMessage = message;
-        self.dialog = message.conversation;
+        self.conversation = message.conversation;
         self.selectString = selectedText;
         
         [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
         [Notification addObserver:self selector:@selector(notificationChangedDeliveryState:) name:MESSAGE_CHANGED_DSTATE];
         
-        self.type = self.dialog.type;
+        self.type = self.conversation.type;
         
         switch (self.type) {
                 
             case DialogTypeUser: {
-                self.user = self.dialog.user;
+                self.user = self.conversation.user;
                 break;
             }
                 
             case DialogTypeChat: {
-                self.chat = self.dialog.chat;
+                self.chat = self.conversation.chat;
                 break;
             }
                 
             case DialogTypeSecretChat: {
-                TLEncryptedChat *chat = self.dialog.encryptedChat;
+                TLEncryptedChat *chat = self.conversation.encryptedChat;
                 self.user = [chat peerUser];
                 break;
             }
                 
             case DialogTypeBroadcast: {
-                self.broadcast = self.dialog.broadcast;
+                self.broadcast = self.conversation.broadcast;
                 break;
             }
             default:
                 break;
         }
         
-        self.isMuted = self.dialog.isMute;
+        self.isMuted = self.conversation.isMute;
         
         NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
         [messageText beginEditing];
@@ -59,7 +59,7 @@
         self.isRead = !message.unread;
         
         
-        self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.dialog];
+        self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.conversation];
         
         int time = self.lastMessage.date;
         time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];

@@ -18,7 +18,7 @@
 
 @implementation DialogSwipeTableControll
 
-- (id)initWithFrame:(NSRect)frameRect itemView:(DialogTableItemView *)itemView {
+- (id)initWithFrame:(NSRect)frameRect itemView:(ConversationTableItemView *)itemView {
     self = [super initWithFrame:frameRect];
     if(self) {
         self.wantsLayer = YES;

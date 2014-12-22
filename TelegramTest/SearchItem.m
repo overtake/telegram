@@ -38,9 +38,9 @@
         self.user = user;
         
         self.type = SearchItemUser;
-        self.dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];
-        if(!self.dialog) {
-            self.dialog = [[DialogsManager sharedManager] createDialogForUser:user];
+        self.conversation = [[DialogsManager sharedManager] findByUserId:user.n_id];
+        if(!self.conversation) {
+            self.conversation = [[DialogsManager sharedManager] createDialogForUser:user];
         }
         
         [self.title appendString:user.fullName withColor:DARK_BLACK];
@@ -57,9 +57,9 @@
         [self initialize];
         
         self.type = SearchItemGlobalUser;
-        self.dialog = [[DialogsManager sharedManager] findByUserId:user.n_id];
-        if(!self.dialog) {
-            self.dialog = [[DialogsManager sharedManager] createDialogForUser:user];
+        self.conversation = [[DialogsManager sharedManager] findByUserId:user.n_id];
+        if(!self.conversation) {
+            self.conversation = [[DialogsManager sharedManager] createDialogForUser:user];
         }
         
         self.user = user;
@@ -85,10 +85,10 @@
 
         self.type = SearchItemChat;
         self.chat = [[ChatsManager sharedManager] find:chat.n_id];
-        self.dialog = [[DialogsManager sharedManager] findByChatId:chat.n_id];
+        self.conversation = [[DialogsManager sharedManager] findByChatId:chat.n_id];
    
-        if(!self.dialog) {
-            self.dialog = [[DialogsManager sharedManager] createDialogForChat:chat];
+        if(!self.conversation) {
+            self.conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
         }
         
         [self.title appendString:chat.title withColor:DARK_BLACK];
@@ -105,11 +105,11 @@
         
         self.type = SearchItemConversation;
         
-        self.dialog = dialog;
+        self.conversation = dialog;
         
         
         
-        self.user = self.dialog.user;
+        self.user = self.conversation.user;
         
         [self.title appendString:dialog.user.fullName withColor:DARK_BLACK];
         
@@ -127,19 +127,19 @@
         self.type = SearchItemMessage;
         self.message = message;
         
-        self.dialog = message.conversation;
+        self.conversation = message.conversation;
         
         
         
         
         self.user = [[UsersManager sharedManager] find:self.message.from_id == [UsersManager currentUserId] ? self.message.to_id.user_id : self.message.from_id];
         
-        if(self.dialog.type == DialogTypeSecretChat) {
-            self.user =  self.dialog.encryptedChat.peerUser;
+        if(self.conversation.type == DialogTypeSecretChat) {
+            self.user =  self.conversation.encryptedChat.peerUser;
         }
 
-        if(self.dialog.type == DialogTypeChat) {
-            self.chat = self.dialog.chat;
+        if(self.conversation.type == DialogTypeChat) {
+            self.chat = self.conversation.chat;
             [self.title appendString:self.chat.title withColor:DARK_BLACK];
         } else {
             [self.title appendString:self.user.fullName withColor:DARK_BLACK];
@@ -163,7 +163,7 @@
             [[self.status mutableString] replaceCharactersInRange:NSMakeRange(0, range.location - 8 + offset) withString:@"..."];
         }
         
-        if(self.dialog.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
+        if(self.conversation.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
             
             TLUser *user = [[UsersManager sharedManager] find:self.message.from_id];
             
@@ -204,7 +204,7 @@
         hashStr = [NSString stringWithFormat:@"global_user_%d", item.user.n_id];
     } else {
         if(item.type == SearchItemConversation ) {
-            hashStr = [Notification notificationNameByDialog:item.dialog action:@"hash"];
+            hashStr = [Notification notificationNameByDialog:item.conversation action:@"hash"];
         } else if(item.type == SearchItemUser) {
             hashStr = [NSString stringWithFormat:@"user_%d", item.user.n_id];
         } else if(item.type == SearchItemChat) {

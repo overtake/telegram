@@ -76,7 +76,6 @@
 }
 
 - (void)notificationFullScreen {
-    DLog(@"log");
     [self reloadData];
 }
 
@@ -210,6 +209,35 @@
     return [[self.viewController messageList] indexOfObject:item];
 }
 
+
+-(void)checkAndScroll:(NSPoint)point {
+    
+    
+    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 2)); // 2 третьих.
+    
+    
+    NSPoint botCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 1)); // 1 третьяю
+    
+    NSLog(@"top:%@,bot:%@",NSStringFromPoint(topCorner),NSStringFromPoint(botCorner));
+    
+    int counter = 0;
+    
+//    if(point.y > topCorner.y) {
+//        
+//        counter = point.y - topCorner.y;
+//        
+//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+//        
+//    } else if(point.y < botCorner.y) {
+//        
+//        counter = point.y - botCorner.y;
+//        
+//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+//    }
+    
+}
+
+
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
     
@@ -235,6 +263,12 @@
     if(tablePoint.y > NSHeight(self.frame)) {
         tablePoint.y = NSHeight(self.frame) - 1;
     }
+    
+    
+    NSLog(@"tablePoint:%@",NSStringFromPoint(tablePoint));
+    
+    [self checkAndScroll:tablePoint];
+
     
     NSUInteger row = [self rowAtPoint:tablePoint];
     
