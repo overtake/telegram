@@ -83,9 +83,6 @@
         }
         
         
-       
-        
-        
         BOOL result = dialog.isMute;
         if(result)
             return;
