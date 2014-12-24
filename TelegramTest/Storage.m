@@ -105,7 +105,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t114"; // 61
+    NSString *dbName = @"t115"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
