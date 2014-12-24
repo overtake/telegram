@@ -19,5 +19,6 @@
 @property (nonatomic,assign) float fakeHeight;
 
 - (void)clearSelection;
+-(void)checkAndScroll:(NSPoint)point;
 
 @end

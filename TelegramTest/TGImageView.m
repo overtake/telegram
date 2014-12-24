@@ -106,6 +106,11 @@
     [self.window invalidateCursorRectsForView:self];
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    if(!self.tapBlock)
+        [super mouseDown:theEvent];
+}
+
 
 - (void)mouseUp:(NSEvent *)theEvent  {
     

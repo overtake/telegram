@@ -16,7 +16,7 @@
 #import "FileUtils.h"
 #import "MessageTableCellContainerView.h"
 #import "MessageTableHeaderItem.h"
-
+#import "TGTimer.h"
 
 
 
@@ -33,7 +33,10 @@
 @property (nonatomic,strong) MessageTableItemText *firstSelectItem;
 @property (nonatomic,strong) MessageTableItemText *currentSelectItem;
 
+@property (nonatomic,strong) NSTrackingArea *trackingArea;
 @property (nonatomic,assign) NSPoint startSelectPosition; // not converted
+
+@property (nonatomic,strong) TGTimer *timer;
 
 @end
 
@@ -213,33 +216,36 @@
 -(void)checkAndScroll:(NSPoint)point {
     
 //    
-//    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 2)); // 2 третьих.
-//    
-//    
-//    NSPoint botCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) / 3 * 1)); // 1 третьяю
-//    
-//    NSLog(@"top:%@,bot:%@",NSStringFromPoint(topCorner),NSStringFromPoint(botCorner));
-//    
-//    int counter = 0;
+    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
     
-//    if(point.y > topCorner.y) {
-//        
-//        counter = point.y - topCorner.y;
-//        
-//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
-//        
-//    } else if(point.y < botCorner.y) {
-//        
-//        counter = point.y - botCorner.y;
-//        
-//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
-//    }
+    
+    NSPoint botCorner = NSMakePoint(0, 70);
+    
+    int counter = 0;
+    
+    BOOL next = YES;
+    
+    if(point.y > topCorner.y) {
+        
+        counter = abs(point.y - topCorner.y - 20);
+        
+        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+        
+    } else if(point.y < botCorner.y) {
+        
+        counter = abs(point.y - botCorner.y - 20);
+        
+       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+    } else
+        next = NO;
     
 }
 
 
+
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
+    
     
     if(_startSelectPosition.x == INT32_MIN && _startSelectPosition.y == INT32_MIN)
         return;
@@ -249,28 +255,28 @@
     
     NSPoint point = [theEvent locationInWindow]; // not converted
     
-    NSPoint tablePoint = [self convertPoint:point fromView:nil];
+    NSPoint startTablePoint = [self convertPoint:point fromView:nil];
     
-    if(tablePoint.x < 0) {
-        tablePoint.x = 0;
+    if(startTablePoint.x < 0) {
+        startTablePoint.x = 0;
     }
-    if(tablePoint.x > NSWidth(self.frame)) {
-        tablePoint.x = NSWidth(self.frame) - 1;
+    if(startTablePoint.x > NSWidth(self.frame)) {
+        startTablePoint.x = NSWidth(self.frame) - 1;
     }
-    if(tablePoint.y < 0) {
-        tablePoint.y = 0;
+    if(startTablePoint.y < 0) {
+        startTablePoint.y = 0;
     }
-    if(tablePoint.y > NSHeight(self.frame)) {
-        tablePoint.y = NSHeight(self.frame) - 1;
+    if(startTablePoint.y > NSHeight(self.frame)) {
+        startTablePoint.y = NSHeight(self.frame) - 1;
     }
     
-        
-    [self checkAndScroll:tablePoint];
+    
+    [self checkAndScroll:[self.scrollView convertPoint:point fromView:nil]];
 
     
-    NSUInteger row = [self rowAtPoint:tablePoint];
+    NSUInteger row = [self rowAtPoint:startTablePoint];
     
-    if(row == NSUIntegerMax && tablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
+    if(row == NSUIntegerMax && startTablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
         row = [self.viewController messagesCount] - 1;
     }
     
@@ -288,74 +294,89 @@
         endRow = startRow - endRow;
         startRow = startRow - endRow;
     }
-    
+        
     BOOL isMultiple = abs((int)endRow - (int)startRow) > 0;
     
     for (NSUInteger i = startRow; i <= endRow; i++) {
         
-         id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
         
-        if([view isKindOfClass:[MessageTableCellTextView class]]) {
+        MessageTableItem *item = self.viewController.messageList[i];
+        
+        if([item isKindOfClass:[MessageTableItemText class]]) {
             
-            TGMultipleSelectTextView *textView = ((MessageTableCellTextView *)view).textView;
-                        
+            MessageTableItemText *textItem = (MessageTableItemText *)item;
             
-            NSPoint startConverted = [textView convertPoint:_startSelectPosition fromView:self];
-            NSPoint currentConverted = [textView convertPoint:point fromView:nil];
+            NSPoint startPoint;
+            NSPoint endPoint;
+            
+            NSRect rect = [self rectOfRow:i];
+            
+            id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
+            
+            TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
+            
+            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - 79, _startSelectPosition.y - rect.origin.y - 10);
+            
+            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - 79, startTablePoint.y - rect.origin.y - 10);
             
             
             if(i > startRow && i < endRow) {
                 
-                textView->startSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
-                textView->currentSelectPosition = NSMakePoint(1, INT32_MAX); //location.y < 3 ? (count-1) : 0 ;
+                startPoint = NSMakePoint(textItem.blockSize.width, 0);
+                endPoint = NSMakePoint(1, INT32_MAX);
                 
             } else if(i == startRow) {
                 
                 if(!isMultiple) {
                     
-                    textView->startSelectPosition = startConverted;
-                    textView->currentSelectPosition = [textView convertPoint:point fromView:nil];
+                    startPoint = startConverted;
+                    endPoint = currentConverted;
                     
                     
                 } else {
                     
                     if(!reversed) {
                         
-                        textView->startSelectPosition = NSMakePoint(startConverted.x, startConverted.y);
-                        textView->currentSelectPosition = NSMakePoint(1, INT32_MAX);
+                        startPoint = NSMakePoint(startConverted.x, startConverted.y);
+                        endPoint = NSMakePoint(1, INT32_MAX);
                         
                     } else {
                         
                         // its end :D
                         
-                        textView->startSelectPosition = NSMakePoint(0, INT32_MAX);
-                        textView->currentSelectPosition = currentConverted;
+                        startPoint = NSMakePoint(0, INT32_MAX);
+                        endPoint = currentConverted;
                         
                         
                     }
                     
                 }
                 
-             } else if(i == endRow) {
+            } else if(i == endRow) {
                 
                 if(!reversed) {
-                    textView->startSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
-                    textView->currentSelectPosition = [textView convertPoint:point fromView:nil];
+                    startPoint = NSMakePoint(textItem.blockSize.width, 0);
+                    endPoint = currentConverted;
                     
                     
                 } else {
                     
-                    // its start lol, because reversed ;)
-                    
-                    textView->startSelectPosition = startConverted;
-                    textView->currentSelectPosition = NSMakePoint(NSWidth(textView.frame), 0); 
+                    startPoint = startConverted;
+                    endPoint = NSMakePoint(textItem.blockSize.width, 0);
                 }
             }
             
+            NSRange selectRange = [textItem.textAttributed selectRange:textItem.blockSize startPoint:startPoint currentPoint:endPoint];
             
-            [textView setNeedsDisplay:YES];
+            
+            [SelectTextManager addRange:selectRange forItem:item];
+            
+            
+            [textView setSelectionRange:selectRange];
+            
             
         }
+        
         
     }
     
@@ -376,6 +397,74 @@
     [self reloadData];
 }
 
+
+/*
+ 
+ 
+ id view = [self viewAtColumn:0 row:i makeIfNecessary:YES];
+ 
+ if([view isKindOfClass:[MessageTableCellTextView class]]) {
+ 
+ TGMultipleSelectTextView *textView = ((MessageTableCellTextView *)view).textView;
+ 
+ NSPoint startConverted = [textView convertPoint:_startSelectPosition fromView:self];
+ NSPoint currentConverted = [textView convertPoint:point fromView:nil];
+ 
+ 
+ if(i > startRow && i < endRow) {
+ 
+ textView->startSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
+ textView->currentSelectPosition = NSMakePoint(1, INT32_MAX); //location.y < 3 ? (count-1) : 0 ;
+ 
+ } else if(i == startRow) {
+ 
+ if(!isMultiple) {
+ 
+ textView->startSelectPosition = startConverted;
+ textView->currentSelectPosition = [textView convertPoint:point fromView:nil];
+ 
+ 
+ } else {
+ 
+ if(!reversed) {
+ 
+ textView->startSelectPosition = NSMakePoint(startConverted.x, startConverted.y);
+ textView->currentSelectPosition = NSMakePoint(1, INT32_MAX);
+ 
+ } else {
+ 
+ // its end :D
+ 
+ textView->startSelectPosition = NSMakePoint(0, INT32_MAX);
+ textView->currentSelectPosition = currentConverted;
+ 
+ 
+ }
+ 
+ }
+ 
+ } else if(i == endRow) {
+ 
+ if(!reversed) {
+ textView->startSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
+ textView->currentSelectPosition = [textView convertPoint:point fromView:nil];
+ 
+ 
+ } else {
+ 
+ // its start lol, because reversed ;)
+ 
+ textView->startSelectPosition = startConverted;
+ textView->currentSelectPosition = NSMakePoint(NSWidth(textView.frame), 0);
+ }
+ }
+ 
+ 
+ [textView setNeedsDisplay:YES];
+ 
+ }
+
+ */
 
 
 @end

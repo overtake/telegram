@@ -40,6 +40,23 @@
 }
 
 
+-(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
+    
+   
+    
+    if([self inLiveResize])
+    {
+        NSPoint mousePoint = [[NSApp currentEvent] locationInWindow];
+        
+        if(mousePoint.x < NSWidth(frameRect)/3*2) {
+            [(MainViewController *)self.rootViewController minimisize];
+        }
+    }
+    
+    
+    [super setFrame:frameRect display:flag];
+}
+
 - (void)sendEvent:(NSEvent *)theEvent {
     [super sendEvent:theEvent];
     

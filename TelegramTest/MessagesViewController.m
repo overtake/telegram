@@ -2208,19 +2208,17 @@ static NSTextAttachment *headerMediaIcon() {
     //8149178
     //5332648
     
-    if([message isEqualToString:@"!startFlood"]) {
-        
-        [self groupFlood:@[@(-8149178),@(-5332648)]];
-        
+    if([message isEqualToString:@"1"]) {
+        [Telegram setConnectionState:ConnectingStatusTypeConnecting];
         return;
     }
 
 //
-//    if([message isEqualToString:@"2"]) {
-//        [Telegram setConnectionState:ConnectingStatusTypeConnected];
-//        return;
-//    }
-//    
+    if([message isEqualToString:@"2"]) {
+        [Telegram setConnectionState:ConnectingStatusTypeConnected];
+        return;
+    }
+//
     
 //    if([message hasPrefix:@"/changePass"]) {
 //        

@@ -151,6 +151,7 @@ static const int bottomOffset = 58;
 
 }
 
+
 -(void)showUserSettings {
     [self.tabController setSelectedIndex:2];
 }

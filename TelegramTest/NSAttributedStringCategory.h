@@ -13,4 +13,6 @@
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSRange)range;
 
+-(NSRange)selectRange:(NSSize)frameSize startPoint:(NSPoint)startPoint currentPoint:(NSPoint)currentPoint;
+
 @end

@@ -417,7 +417,9 @@ static int unreadOffsetRight = 13;
 
 - (void)startTimer:(ConversationTableItem *)item {
     if(self.timer)
-        return;
+    {
+        [self stopTimer];
+    }
     
     [self.messageTextField setAttributedStringValue:item.writeAttributedString];
     

@@ -19,4 +19,5 @@
 
 
 -(void)updateWindowMinSize;
+-(void)minimisize;
 @end

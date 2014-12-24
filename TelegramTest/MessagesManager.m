@@ -185,7 +185,12 @@
             
             [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+            
+            [NSApp requestUserAttention:NSInformationalRequest];
         }
+        
+        
+        
     }];
 }
 

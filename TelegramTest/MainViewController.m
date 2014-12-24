@@ -27,19 +27,22 @@
 
 @end
 
+
+@interface MainViewController ()
+@property (nonatomic,strong) MainSplitView *splitView;
+@end
+
 @implementation MainViewController
 
 - (void)loadView {
-    [super loadView];
     
     
     
-    MainSplitView *splitView = [[MainSplitView alloc] initWithFrame:self.view.frame];
-    [splitView setVertical:YES];
-    [splitView setDividerStyle:NSSplitViewDividerStyleThin];
-//    [splitView set]
-    [splitView setDelegate:self];
-    self.view = splitView;
+    self.splitView = [[MainSplitView alloc] initWithFrame:self.frameInit];
+    [self.splitView setVertical:YES];
+    [self.splitView setDividerStyle:NSSplitViewDividerStyleThin];
+    [self.splitView setDelegate:self];
+    self.view = self.splitView;
     
     
     
@@ -72,6 +75,11 @@
     [((NSSplitView *)self.view) adjustSubviews];
     
    // [self updateWindowMinSize];
+}
+
+
+-(void)minimisize {
+    [self.splitView setPosition:70 ofDividerAtIndex:0];
 }
 
 
@@ -125,7 +133,7 @@
 
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
-    
+        
     [window setMinSize:NSMakeSize(460 + [Telegram leftViewController].view.frame.size.width, 600)];
     
     if(window.minSize.width > window.frame.size.width) {

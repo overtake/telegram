@@ -32,5 +32,4 @@
 -(void)setUnreadCount:(int)count;
 
 -(void)showUserSettings;
-
 @end
