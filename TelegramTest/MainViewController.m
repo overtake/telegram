@@ -82,6 +82,13 @@
     [self.splitView setPosition:70 ofDividerAtIndex:0];
 }
 
+-(BOOL)isMinimisze {
+    return self.leftViewController.view.frame.size.width == 70;
+}
+
+-(void)unminimisize {
+    [self.splitView setPosition:300 ofDividerAtIndex:0];
+}
 
 -(void)setConnectionState:(ConnectingStatusType)state {
    

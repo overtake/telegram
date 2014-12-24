@@ -154,6 +154,11 @@ static const int bottomOffset = 58;
 
 -(void)showUserSettings {
     [self.tabController setSelectedIndex:2];
+    
+    if([[Telegram mainViewController] isMinimisze]) {
+        
+        [[Telegram mainViewController] unminimisize];
+    }
 }
 
 

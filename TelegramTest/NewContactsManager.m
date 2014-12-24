@@ -53,6 +53,8 @@
             
             [self add:contacts withCustomKey:@"user_id"];
             
+           
+            
             [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
             
             [self remoteCheckContacts:^{
@@ -82,6 +84,16 @@
     }];
 }
 
+
+-(void)add:(NSArray *)all withCustomKey:(NSString*)key {
+    [self.queue dispatchOnQueue:^{
+        [super add:all withCustomKey:key];
+        
+        NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.fullName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+        
+        [self->list sortUsingDescriptors:@[descriptor]];
+    }];
+}
 
 
 -(void)drop
@@ -403,5 +415,7 @@
         
     } timeout:0 queue:self.queue.nativeQueue];
 }
+
+
 
 @end
