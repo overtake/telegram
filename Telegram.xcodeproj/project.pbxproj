@@ -1540,6 +1540,9 @@
 		C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewer.m; sourceTree = "<group>"; };
 		C26976B21A10E2110047E2C3 /* TGPVContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVContainer.h; sourceTree = "<group>"; };
 		C26976B31A10E2110047E2C3 /* TGPVContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVContainer.m; sourceTree = "<group>"; };
+		C26F7E9C1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C26F7E9D1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
+		C26F7E9E1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -4674,6 +4677,7 @@
 				ja,
 				nb,
 				sv,
+				nl,
 			);
 			mainGroup = CEB09E4F17DAFC240055F150;
 			productRefGroup = CEB09E5917DAFC250055F150 /* Products */;
@@ -5358,6 +5362,7 @@
 			children = (
 				0A9EDC1A1897BA0E0037E1BC /* en */,
 				C2002D12199E9ADA002A1915 /* de */,
+				C26F7E9C1A4B1EEB001D1AE2 /* nl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -5370,6 +5375,7 @@
 				C20D18F51948A4970095A906 /* es */,
 				C2002D13199E9ADA002A1915 /* de */,
 				C2C1DC331A47656C00BBCC63 /* it */,
+				C26F7E9D1A4B1EEB001D1AE2 /* nl */,
 			);
 			name = NewMainMenu.xib;
 			sourceTree = "<group>";
@@ -5382,6 +5388,7 @@
 				C20D18B11945BE890095A906 /* es */,
 				C2002D14199E9ADA002A1915 /* de */,
 				C2D235C11A3A2D6000765BA1 /* it */,
+				C26F7E9E1A4B1EEB001D1AE2 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

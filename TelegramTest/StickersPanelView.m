@@ -55,7 +55,7 @@
         
         self.scrollView.autoresizingMask = NSViewWidthSizable;
         self.background.autoresizingMask = NSViewWidthSizable;
-        
+        separator.autoresizingMask = NSViewWidthSizable;
         
     }
     
