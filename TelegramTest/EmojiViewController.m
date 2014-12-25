@@ -331,9 +331,15 @@ static NSImage *higlightedImage() {
     [self.tableView reloadData];
     [self.tableView scrollToBeginningOfDocument:nil];
     
+    if(self.currentButton.index == 7) {
+        [self.stickersTableView load];
+    }
+    
     
     [self.tableView.containerView setHidden:self.currentButton.index == 7];
     [self.stickersTableView.containerView setHidden:self.currentButton.index != 7];
+    
+    
 }
 
 - (void)insertEmoji:(NSString *)emoji {

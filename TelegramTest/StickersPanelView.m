@@ -106,6 +106,8 @@
     [self.containerView setFrameSize:NSMakeSize(xOffset, NSHeight(self.containerView.frame))];
 }
 
+
+
 -(void)show:(BOOL)animated stickers:(NSArray *)stickers {
     
     [self rebuild:stickers];
@@ -130,6 +132,16 @@
     }
 }
 
+static BOOL isRemoteLoaded = NO;
+
+void setRemoteStickersLoaded(BOOL loaded) {
+    isRemoteLoaded = loaded;
+}
+
+
+bool isRemoteStickersLoaded() {
+    return isRemoteLoaded;
+}
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
     
@@ -149,15 +161,31 @@
             [stickers addObject:[TLClassStore deserialize:obj]];
         }];
         
+        
+        NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+       [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+            
+            NSNumber *c1 = sort[@(obj1.n_id)];
+            NSNumber *c2 = sort[@(obj2.n_id)];
+            
+            if ([c1 longValue] > [c2 longValue])
+                return NSOrderedAscending;
+            else if ([c1 longValue] < [c2 longValue])
+                return NSOrderedDescending;
+            
+            return NSOrderedSame;
+        }];
+        
     }];
+    
+    
     
     if(stickers.count > 0) {
         [self show:YES stickers:stickers];
     }
     
-    static BOOL isNeedRemote = YES;
-    
-    if(isNeedRemote) {
+    if(!isRemoteStickersLoaded()) {
         [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_messages_allStickers * response) {
             
             if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
@@ -183,11 +211,13 @@
                 
             }
             
+            setRemoteStickersLoaded(YES);
+            
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
         }];
         
-        isNeedRemote = NO;
+        
     }
     
     
@@ -216,7 +246,6 @@
 }
 
 +(void)saveResponse:(TL_messages_allStickers *)response {
-    
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         

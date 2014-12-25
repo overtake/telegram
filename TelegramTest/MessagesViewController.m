@@ -2414,9 +2414,26 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat) return;
     
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        NSMutableDictionary *sc = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+        if(!sc)
+        {
+            sc = [[NSMutableDictionary alloc] init];
+        }
+        
+        sc[@(sticker.n_id)] = @([sc[@(sticker.n_id)] intValue]+1);
+        
+        [transaction setObject:sc forKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+    }];
+    
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     [self.bottomView closeEmoji];
+    
+    
     
     [self.bottomView setInputMessageString:@"" disableAnimations:NO];
     
