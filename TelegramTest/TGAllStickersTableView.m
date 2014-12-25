@@ -71,7 +71,7 @@
                 
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
                 
-            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 80);
+            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 70);
                 
             [_objects addObject:imgObj];
             
@@ -211,6 +211,9 @@ static NSImage *higlightedImage() {
     __block NSString *hash = @"";
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSDictionary *sort = [transaction objectForKey:@"sort" inCollection:STICKERS_COLLECTION];
+        
         NSDictionary *info  = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
         
         hash = info[@"hash"];
@@ -252,6 +255,7 @@ static NSImage *higlightedImage() {
             NSMutableArray *row = [[NSMutableArray alloc] init];
             
             [response.documents enumerateObjectsUsingBlock:^(TL_document *document, NSUInteger idx, BOOL *stop) {
+                
                 
                 if(![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     

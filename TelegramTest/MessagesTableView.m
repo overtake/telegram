@@ -315,9 +315,9 @@
             
             TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
             
-            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - 79, _startSelectPosition.y - rect.origin.y - 10);
+            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - item.containerOffset, _startSelectPosition.y - rect.origin.y - 10);
             
-            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - 79, startTablePoint.y - rect.origin.y - 10);
+            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - item.containerOffset, startTablePoint.y - rect.origin.y - 10);
             
             
             if(i > startRow && i < endRow) {
