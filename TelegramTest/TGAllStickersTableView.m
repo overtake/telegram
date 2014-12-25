@@ -312,6 +312,8 @@ static NSImage *higlightedImage() {
         
     }];
     
+    [self removeAllItems:NO];
+    
     [self insert:items startIndex:0 tableRedraw:NO];
     
     [super reloadData];
