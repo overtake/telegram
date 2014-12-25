@@ -13,4 +13,5 @@
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated;
 -(void)hide:(BOOL)animated;
++(void)saveResponse:(TL_messages_allStickers *)response;
 @end

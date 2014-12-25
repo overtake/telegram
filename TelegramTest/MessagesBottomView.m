@@ -520,6 +520,10 @@
     [self.inputMessageTextField insertText:emoji];
 }
 
+-(void)closeEmoji {
+    [self.smilePopover close];
+}
+
 - (void)smileButtonClick:(BTRButton *)button {
     EmojiViewController *emojiViewController = [EmojiViewController instance];
     weak();

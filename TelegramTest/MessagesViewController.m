@@ -2207,17 +2207,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     //8149178
     //5332648
-    
-    if([message isEqualToString:@"1"]) {
-        [Telegram setConnectionState:ConnectingStatusTypeConnecting];
-        return;
-    }
 
-//
-    if([message isEqualToString:@"2"]) {
-        [Telegram setConnectionState:ConnectingStatusTypeConnected];
-        return;
-    }
 //
     
 //    if([message hasPrefix:@"/changePass"]) {
@@ -2425,6 +2415,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    
+    [self.bottomView closeEmoji];
     
     [self.bottomView setInputMessageString:@"" disableAnimations:NO];
     

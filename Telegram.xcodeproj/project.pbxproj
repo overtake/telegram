@@ -410,6 +410,7 @@
 		C26F7E961A489364001D1AE2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C26F7E971A489366001D1AE2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C26F7E981A489366001D1AE2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1543,6 +1544,8 @@
 		C26F7E9C1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C26F7E9D1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C26F7E9E1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C26F7EA01A4C32DB001D1AE2 /* TGAllStickersTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAllStickersTableView.h; sourceTree = "<group>"; };
+		C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAllStickersTableView.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -3409,6 +3412,17 @@
 			name = elements;
 			sourceTree = "<group>";
 		};
+		C26F7E9F1A4C32BA001D1AE2 /* emoji */ = {
+			isa = PBXGroup;
+			children = (
+				0ADA319A19469D16002BAEDB /* EmojiViewController.h */,
+				0ADA319B19469D16002BAEDB /* EmojiViewController.m */,
+				C26F7EA01A4C32DB001D1AE2 /* TGAllStickersTableView.h */,
+				C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */,
+			);
+			name = emoji;
+			sourceTree = "<group>";
+		};
 		C270C5A718941E6F005D80E0 /* constructors */ = {
 			isa = PBXGroup;
 			children = (
@@ -4165,6 +4179,7 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C26F7E9F1A4C32BA001D1AE2 /* emoji */,
 				C2CD77C21A2C9D0C000B4BA9 /* password */,
 				C26976AD1A10CBDE0047E2C3 /* photoviewer */,
 				C21D484619AF3C0E000F06E1 /* compose */,
@@ -4187,8 +4202,6 @@
 				0AA01439182CF2BE00901B7A /* user/сhats info */,
 				C291C7B71836C38D00ABBB50 /* utils */,
 				0A62CC8B181EFFEA0098720C /* windows */,
-				0ADA319A19469D16002BAEDB /* EmojiViewController.h */,
-				0ADA319B19469D16002BAEDB /* EmojiViewController.m */,
 				0AB8F2AD194866050074E4E7 /* MapPanel.h */,
 				0AB8F2AE194866050074E4E7 /* MapPanel.m */,
 			);
@@ -5070,6 +5083,7 @@
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
 				C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */,
 				CEDAEB5B1881AF85006189A2 /* YapDatabaseSecondaryIndexConnection.m in Sources */,
+				C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */,
 				CEB7ADF11812E31F005CB6A1 /* ImageCache.m in Sources */,
 				0A5F0FF818DC0F5C00CCFA60 /* ChatInfoNotificationView.m in Sources */,
 				0AC7F475185DA87A00F90558 /* TMTableView.mm in Sources */,

@@ -325,7 +325,10 @@
         [self.classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:85215461]];
         [self.classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
         [self.classes setObject:[TL_messages_stickersNotModified class] forKey:[NSNumber numberWithInt:-244016606]];
-        [self.classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:0x8a8ecd32]];
+        [self.classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:-1970352846]];
+        [self.classes setObject:[TL_stickerPack class] forKey:[NSNumber numberWithInt:313694676]];
+        [self.classes setObject:[TL_messages_allStickersNotModified class] forKey:[NSNumber numberWithInt:-395967805]];
+        [self.classes setObject:[TL_messages_allStickers class] forKey:[NSNumber numberWithInt:-588304126]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

@@ -557,21 +557,24 @@ static BOOL dragAction = NO;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
-
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-        
-        
-        
-        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
-        
-        
-        [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
-        
-        
-        
-    }]];
+    if(self.item.message.conversation.type != DialogTypeSecretChat) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
+            
+            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            
+            
+            
+            [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+            
+            
+            [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
+            
+            
+        }]];
+    }
+    
+    
     [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
 
         [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
