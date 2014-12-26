@@ -500,15 +500,15 @@ static ASQueue *queue;
             }];
             
             
-         //   if(memory.count >= _selectLimit) {
-              //  NSUInteger location = next ? 0 : (memory.count-_selectLimit);
-              //  memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];
+            if(memory.count >= _selectLimit) {
+                NSUInteger location = next ? 0 : (memory.count-_selectLimit);
+                memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];
                 
-              //  MessageTableItem *lastItem = [memory lastObject];
+                MessageTableItem *lastItem = [memory lastObject];
             
-               // [memory addObjectsFromArray:[[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]]];
+                [memory addObjectsFromArray:[[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]]];
                 
-          //  } else {
+            } else {
                 
                 ChatHistoryState state;
                 
@@ -519,7 +519,7 @@ static ASQueue *queue;
                 }
                 
                 [self setState:state next:next];
-          //  }
+            }
             
             if(memory.count > 0)
                 notify = YES;

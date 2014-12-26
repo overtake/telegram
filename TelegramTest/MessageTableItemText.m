@@ -95,7 +95,7 @@
     }
     
     
-    [self makeSizeByWidth:280];
+  //  [self makeSizeByWidth:280];
     
     return self;
 }

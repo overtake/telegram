@@ -48,7 +48,7 @@
     {
         NSPoint mousePoint = [[NSApp currentEvent] locationInWindow];
         
-        if(mousePoint.x < NSWidth(frameRect)/3*2) {
+        if(mousePoint.x < NSWidth(frameRect)/3*2 && NSWidth(frameRect) == self.minSize.width) {
             [(MainViewController *)self.rootViewController minimisize];
         }
     }

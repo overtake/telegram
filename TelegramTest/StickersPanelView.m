@@ -62,6 +62,34 @@
     return self;
 }
 
+static NSImage *hoverImage() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [[NSImage alloc] initWithSize:NSMakeSize(67, 67)];
+        [image lockFocus];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 67, 67) xRadius:3 yRadius:3];
+        [NSColorFromRGB(0xf4f4f4) set];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+
+static NSImage *higlightedImage() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [[NSImage alloc] initWithSize:NSMakeSize(67, 67)];
+        [image lockFocus];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 67, 67) xRadius:3 yRadius:3];
+        [NSColorFromRGB(0xdedede) set];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+
 
 -(void)rebuild:(NSArray *)stickers {
     [self.containerView removeAllSubviews];
@@ -84,7 +112,7 @@
             
             int y = roundf((NSHeight(self.frame)-1 - imgObj.imageSize.height) / 2);
             
-            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset + 5, y, imgObj.imageSize.width, imgObj.imageSize.height)];
+            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(0, 0, imgObj.imageSize.width, imgObj.imageSize.height)];
             
             
             [imgView setTapBlock:^{
@@ -96,9 +124,17 @@
             
             imgView.object = imgObj;
             
-            [self.containerView addSubview:imgView];
             
-            xOffset += imgObj.imageSize.width + 10;
+            BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset + 3, 2, hoverImage().size.width, NSHeight(self.bounds) - 6)];
+            [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
+            
+            [imgView setCenterByView:button];
+            [button addSubview:imgView];
+            
+            [self.containerView addSubview:button];
+            
+            xOffset += NSWidth(button.frame) + 3;
         }
         
     }];

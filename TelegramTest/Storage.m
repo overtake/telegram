@@ -398,10 +398,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         
+        
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
        
         while ([result next]) {
-            TL_localMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -410,11 +412,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         TL_localMessage *lastMessage = [messages lastObject];
         
         if(lastMessage) {
-            
             NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
-            
+           
             int localCount = [db intForQuery:@"SELECT count(*) from messages where date = %d",lastMessage.date];
-            
             if(selectedCount.count < localCount) {
                 
                 NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where date = %d and n_id != %d order by n_id desc",lastMessage.date,lastMessage.n_id];
@@ -422,7 +422,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
                  while ([result next]) {
-                    TL_localMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                    TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
                     msg.flags = [result intForColumn:@"flags"];
                     [messages addObject:msg];
                  }

@@ -398,7 +398,7 @@
     [self.searchMessagesView setHidden:YES];
     
     
-    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 80)];
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
     
     [self.view addSubview:self.stickerPanel];
     
@@ -2029,7 +2029,7 @@ static NSTextAttachment *headerMediaIcon() {
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
-            [item makeSizeByWidth:self.table.containerSize.width];
+            //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
             [array insertObject:item atIndex:0];
         }
