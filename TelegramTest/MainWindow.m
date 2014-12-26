@@ -9,7 +9,7 @@
 #import "MainWindow.h"
 
 @interface MainWindow()<NSWindowDelegate>
-
+@property (nonatomic,assign) NSPoint point;
 @end
 
 @implementation MainWindow
@@ -46,15 +46,23 @@
     
     if([self inLiveResize])
     {
-        NSPoint mousePoint = [[NSApp currentEvent] locationInWindow];
         
-        if(mousePoint.x < NSWidth(frameRect)/3*2 && NSWidth(frameRect) == self.minSize.width) {
+        NSPoint current = [self convertScreenToBase:[NSEvent mouseLocation]];
+        
+        if(current.x < (self.point.x - NSWidth(frameRect)/3)  && NSWidth(frameRect) == self.minSize.width) {
             [(MainViewController *)self.rootViewController minimisize];
         }
     }
     
     
     [super setFrame:frameRect display:flag];
+}
+
+-(void)windowWillStartLiveResize:(NSNotification *)notification {
+    
+    self.point = [self convertScreenToBase:[NSEvent mouseLocation]];
+    
+    
 }
 
 - (void)sendEvent:(NSEvent *)theEvent {

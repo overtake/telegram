@@ -527,8 +527,6 @@
         NSEvent *result = incomingEvent;
         
         
-
-        
         if(result.window != [TMMediaController controller].panel) {
             
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
@@ -558,8 +556,11 @@
         
         if([self.mainWindow.firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            NSPoint mouseLoc = [[Telegram rightViewController].messagesViewController.table convertPoint:[incomingEvent locationInWindow] fromView:nil];
-            BOOL isInside = [[Telegram rightViewController].messagesViewController.table mouse:mouseLoc inRect:[Telegram rightViewController].messagesViewController.table.bounds];
+            NSPoint mouseLoc = [[Telegram rightViewController].messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            
+            
+            BOOL isInside = [[Telegram rightViewController].messagesViewController.table.scrollView mouse:mouseLoc inRect:[Telegram rightViewController].messagesViewController.table.scrollView.bounds];
+            
             
             if(isInside) {
                 [[Telegram rightViewController].messagesViewController.table mouseDragged:incomingEvent];
@@ -574,6 +575,7 @@
     };
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDraggedMask) handler:block3];
+    
 }
 
 
