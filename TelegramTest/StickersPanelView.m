@@ -109,9 +109,7 @@ static NSImage *higlightedImage() {
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 6);
-            
-            int y = roundf((NSHeight(self.frame)-1 - imgObj.imageSize.height) / 2);
-            
+                        
             TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(0, 0, imgObj.imageSize.width, imgObj.imageSize.height)];
             
             
@@ -119,7 +117,7 @@ static NSImage *higlightedImage() {
                 
                 [[Telegram rightViewController].messagesViewController sendSticker:obj addCompletionHandler:nil];
                 
-       
+                [[Telegram rightViewController].messagesViewController setStringValueToTextField:@""];
             }];
             
             imgView.object = imgObj;
@@ -180,9 +178,7 @@ bool isRemoteStickersLoaded() {
 }
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
-    
-    ACCEPT_FEATURE
-    
+        
     __block NSString *hash = @"";
     
     __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
@@ -314,6 +310,12 @@ bool isRemoteStickersLoaded() {
         }];
         [transaction setObject:@{@"hash":response.n_hash,@"serialized":serialized} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
         
+    }];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dispatch_after_seconds(60*60, ^{
+            setRemoteStickersLoaded(NO);
+        });
     }];
     
     

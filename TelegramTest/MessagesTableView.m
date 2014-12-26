@@ -49,7 +49,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        NSLog(@"%@",NSStringFromRect(self.containerView.frame));
         
 //        self.wantsLayer = YES;
 //        self.layer = [[TMLayer alloc] initWithLayer:self.layer];

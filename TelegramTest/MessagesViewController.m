@@ -940,7 +940,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)setStringValueToTextField:(NSString *)stringValue {
-    if(stringValue && stringValue.length > 0)
+    if(stringValue)
         [self.bottomView setInputMessageString:stringValue disableAnimations:NO];
 }
 
@@ -1674,21 +1674,9 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    __block NSString *sticker = nil;
-    if(emoji.count > 0) {
-        
-        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if([self.bottomView.inputMessageString hasSuffix:obj]) {
-                
-                sticker = obj;
-                *stop = YES;
-            }
-        }];
-    }
-    
-    if(sticker != nil && sticker.length == 2)
+    if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
-         [self.stickerPanel showAndSearch:sticker animated:YES];
+         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
     {
         [self.stickerPanel hide:YES];
@@ -2435,7 +2423,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    [self.bottomView setInputMessageString:@"" disableAnimations:NO];
+    
     
     [ASQueue dispatchOnStageQueue:^{
         
