@@ -100,6 +100,12 @@
          {
              [progressTimer invalidate];
              progressTimer = nil;
+             
+             if(!success)
+             {
+                 [[NSFileManager defaultManager] copyItemAtPath:path toPath:compressedPath error:nil];
+             }
+             
              completeHandler(success,compressedPath);
          }
      }];

@@ -266,17 +266,6 @@ float ease(float t, float b, float c, float d) {
     
     
     if(![self pop_animationForKey:@"rotate"]) {
-//        self.layer.shouldRasterize = YES;
-//        self.layer.position = NSMakePoint(NSWidth(self.frame)/2, NSHeight(self.frame)/2);
-//        
-//        self.layer.anchorPoint = NSMakePoint(0.5, 0.5);
-//        
-//        CABasicAnimation *rotate  = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-//        rotate.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-//        rotate.duration = 2;
-//        rotate.repeatCount = HUGE_VAL;
-//        rotate.toValue = @(- (M_PI * 2));
-//        [self.layer addAnimation:rotate forKey:@"rotate"];
 
         
         

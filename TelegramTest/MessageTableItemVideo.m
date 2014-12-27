@@ -16,8 +16,9 @@
     if(self) {
         TLVideo *video = object.media.video;
         TLPhotoSize *photoSize = video.thumb;
+        NSImage *placeholder;
         if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-            self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
+            placeholder = [[NSImage alloc] initWithData:photoSize.bytes];
         }
         
        
@@ -30,7 +31,7 @@
         self.videoSize = photoSize.size;
         NSSize blockSize = resizeToMaxCorner(NSMakeSize(photoSize.w, photoSize.h), 250);
         
-        self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:self.cachePhoto];
+        self.imageObject = [[TGImageObject alloc] initWithLocation:[photoSize isKindOfClass:[TL_photoCachedSize class]] ? nil : photoSize.location placeHolder:placeholder];
         
         self.imageObject.imageSize = blockSize;
         
