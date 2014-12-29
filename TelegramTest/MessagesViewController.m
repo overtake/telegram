@@ -1287,9 +1287,9 @@ static NSTextAttachment *headerMediaIcon() {
     [CATransaction disableActions];
     
     self->_ignoredCount = ignoredCount;
-    if(ignoredCount > 0)
-        [self.filtredNavigationLeftView setStringValue:[NSString stringWithFormat:@"%@ (%@)",NSLocalizedString(@"Profile.Cancel", nil),[NSString stringWithFormat:NSLocalizedString(@"Messages.scrollToBottomNewMessages", nil), ignoredCount]]];
-    else
+    if(ignoredCount > 0) {
+        [self.filtredNavigationLeftView setStringValue:[NSString stringWithFormat:@"%@ (%@)",NSLocalizedString(@"Profile.Cancel", nil),[NSString stringWithFormat:NSLocalizedString(ignoredCount == 1 ? @"Messages.scrollToBottomNewMessage" : @"Messages.scrollToBottomNewMessages", nil), ignoredCount]]];
+    } else
         [self.filtredNavigationLeftView setStringValue:NSLocalizedString(@"Profile.Cancel", nil)];
     
     [self.filtredNavigationLeftView sizeToFit];

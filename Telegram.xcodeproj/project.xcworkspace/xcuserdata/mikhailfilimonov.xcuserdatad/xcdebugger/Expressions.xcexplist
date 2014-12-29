@@ -228,6 +228,11 @@
       </ContextState>
       <ContextState
          contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_3:TGModernEncryptedUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "list">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__48-[DeleteRandomMessagesSenderItem performRequest]_block_invoke:DeleteRandomMessagesSenderItem.m">
@@ -560,6 +565,9 @@
                value = "response.contacts">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGAllStickersTableView reloadData:]_block_invoke_2:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke_3:NewContactsManager.m">
@@ -1647,6 +1655,9 @@
          contextName = "__47-[MessagesViewController sendMessage:callback:]_block_invoke_2:MessagesViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_2:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke_2:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -1720,6 +1731,12 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer indexOfObject:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAllStickersTableView load]:TGAllStickersTableView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellVideoView setItem:]:MessageTableCellVideoView.m">
       </ContextState>
       <ContextState
          contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">

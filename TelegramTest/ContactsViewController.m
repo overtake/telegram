@@ -308,7 +308,7 @@
     if(all.count > 100) {
         [self insertAll:[all subarrayWithRange:NSMakeRange(0, 20)]];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after_seconds(0.2, ^{
             [self insertAll:[all subarrayWithRange:NSMakeRange(20, all.count-20)]];
         });
     } else {
@@ -317,6 +317,8 @@
 }
 
 -(void)insertAll:(NSArray *)all {
+    
+    
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
     for(TL_contact *contact in all) {
         
@@ -331,7 +333,9 @@
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
     
-    [self.tableView insert:contacts startIndex:self.tableView.list.count tableRedraw:YES];
+    [self.tableView insert:contacts startIndex:self.tableView.list.count tableRedraw:NO];
+    
+    [self.tableView reloadData];
     
     self.tableView.defaultAnimation = animation;
 }
