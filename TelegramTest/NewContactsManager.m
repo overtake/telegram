@@ -352,9 +352,13 @@
                 userContact = user;
         }
         
-        TGHashContact *contact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
+        TGHashContact *hashContact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
         
-        [[Storage manager] insertContact:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
+        [[Storage manager] insertImportedContacts:[NSSet setWithObject:hashContact]];
+        
+        TLContact *contact = [TL_contact createWithUser_id:importedContact.user_id mutual:YES];
+        
+        [[Storage manager] insertContact:contact];
         
         [self add:@[contact] withCustomKey:@"hash"];
         
