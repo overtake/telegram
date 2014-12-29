@@ -53,7 +53,7 @@
             cachePhoto = renderedImage(cachePhoto, cachePhoto.size);
             
             
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:object.peer.peer_id size:self.photoSize];
+            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:self.message.n_id size:self.photoSize];
             
             self.imageObject.imageSize = imageSize;
             

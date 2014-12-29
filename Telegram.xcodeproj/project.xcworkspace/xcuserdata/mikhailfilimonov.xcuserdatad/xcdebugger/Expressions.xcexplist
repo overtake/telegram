@@ -1748,6 +1748,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellVideoView setItem:]:MessageTableCellVideoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.imageObject">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">
