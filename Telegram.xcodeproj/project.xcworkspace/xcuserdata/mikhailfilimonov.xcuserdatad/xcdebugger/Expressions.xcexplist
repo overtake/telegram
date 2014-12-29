@@ -875,13 +875,16 @@
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
+               value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
+            </PersistentString>
+            <PersistentString
                value = "item.downloadItem.downloadState">
             </PersistentString>
             <PersistentString
                value = "item.downloadItem.downloadState != DownloadStateWaitingStart &amp;&amp; item.downloadItem.downloadState != DownloadStateCompleted">
-            </PersistentString>
-            <PersistentString
-               value = "item.downloadItem.downloadState != DownloadStateWaitingStart">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1338,6 +1341,14 @@
          <PersistentStrings>
             <PersistentString
                value = "delegate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView downloadProgressHandler:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.progress">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

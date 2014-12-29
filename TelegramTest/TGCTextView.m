@@ -765,6 +765,8 @@
         
         if(link) {
             open_link(link);
+        } else {
+            [super mouseUp:theEvent];
         }
     } else {
         [super mouseUp:theEvent];

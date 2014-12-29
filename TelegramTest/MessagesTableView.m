@@ -240,7 +240,10 @@
     
 }
 
-
+-(void)mouseUp:(NSEvent *)theEvent {
+    _startSelectPosition = NSMakePoint(INT32_MIN, INT32_MIN);
+    [super mouseUp:theEvent];
+}
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
@@ -310,7 +313,15 @@
             
             NSRect rect = [self rectOfRow:i];
             
-            id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
+            id view;
+            
+            @try {
+                
+                view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
+            }
+            @catch (NSException *exception) {
+                
+            }
             
             TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
             

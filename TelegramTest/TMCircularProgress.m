@@ -215,6 +215,8 @@ float ease(float t, float b, float c, float d) {
     }
     
     
+    
+    
     if(!animated) {
         self->_currentAcceptProgress = self->_currentProgress;
         self->rotateAngel = 0;
@@ -231,9 +233,12 @@ float ease(float t, float b, float c, float d) {
         return;
     }
     
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    POPBasicAnimation *animation = [self pop_animationForKey:@"progress"];
     
-   
+    if(!animation) {
+        animation = [POPBasicAnimation animation];
+    }
+    
     animation.property = [POPAnimatableProperty propertyWithName:@"progress" initializer:^(POPMutableAnimatableProperty *prop) {
         
         [prop setReadBlock:^(TMCircularProgress *layer, CGFloat values[]) {
