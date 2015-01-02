@@ -465,9 +465,9 @@
             }
         }
         
-        if(!checkSort) {
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
-        }
+       // if(!checkSort) {
+        [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
+       // }
         
         
     }];

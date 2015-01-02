@@ -184,9 +184,6 @@ static NSString *kUpdateState = @"kUpdateState";
     
     [_statefulUpdates addObject:statefulMessage];
     
-    
-    
-    
     [self cancelSequenceTimer];
     
     _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
