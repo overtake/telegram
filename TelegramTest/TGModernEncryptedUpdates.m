@@ -9,6 +9,7 @@
 #import "TGModernEncryptedUpdates.h"
 #import "SecretLayer1.h"
 #import "SecretLayer17.h"
+#import "SecretLayer20.h"
 #import "Crypto.h"
 #import "SenderHeader.h"
 #import "MessagesUtils.h"
@@ -97,7 +98,7 @@
             
             int layer = [[action valueForKey:@"layer"] intValue];
             
-            if(layer >= MAX_ENCRYPTED_LAYER && params.layer != MAX_ENCRYPTED_LAYER && params.layer != layer) {
+            if(params.layer != MAX_ENCRYPTED_LAYER && params.layer != layer) {
                 [self upgradeLayer:params conversation:conversation];
             }
             
@@ -186,6 +187,12 @@
             return YES;
         
         }
+        
+        if([action isKindOfClass:convertClass(@"Secret%d_DecryptedMessageAction_decryptedMessageActionRequestKey", layer)]) {
+            
+            
+            
+        }
 
         
     }
@@ -256,15 +263,42 @@ Class convertClass(NSString *c, int layer) {
          media = [self media:[layerMessage.message valueForKey:@"media"] layer:17 file:encryptedMessage.file];
      }
     
-    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret17__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue]];
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret17__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:17];
     
     
     [[Storage manager] insertSecretInAction:action];
     
     [self dequeueInActions:params conversation:conversation];
     
-    
+}
 
+
+-(void)proccess20Layer:(Secret20_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
+    
+    Secret20_DecryptedMessageLayer *layerMessage = (Secret20_DecryptedMessageLayer *)message;
+    
+    
+    NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
+    
+    if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
+        return;
+    
+    
+    id media = [TL_messageMediaEmpty create];
+    
+    
+    
+    if([layerMessage.message isKindOfClass:[Secret20_DecryptedMessage_decryptedMessage class]]) {
+        media = [self media:[layerMessage.message valueForKey:@"media"] layer:20 file:encryptedMessage.file];
+    }
+    
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret20__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:20];
+    
+    
+    [[Storage manager] insertSecretInAction:action];
+    
+    [self dequeueInActions:params conversation:conversation];
+    
 }
 
 
@@ -280,18 +314,17 @@ Class convertClass(NSString *c, int layer) {
                 if(action.in_seq_no == params.in_seq_no * 2 + [params in_x]) {
                     
                     
-                    id messageObject = [Secret17__Environment parseObject:action.messageData];
+                    id messageObject = [NSClassFromString([NSString stringWithFormat:@"Secret%d__Environment",action.layer]) parseObject:action.messageData];
                     
                     id media = [TLClassStore deserialize:action.fileData];
                     
-                    BOOL isProccessed = [self proccessServiceMessage:messageObject withLayer:17 params:params conversation:conversation];
+                    BOOL isProccessed = [self proccessServiceMessage:messageObject withLayer:action.layer params:params conversation:conversation];
                     
                     
-                    if(!isProccessed && [messageObject isKindOfClass:[Secret17_DecryptedMessage_decryptedMessage class]]) {
+                    if(!isProccessed && [messageObject isKindOfClass:NSClassFromString([NSString stringWithFormat:@"Secret%d_DecryptedMessage_decryptedMessage",action.layer])]) {
                         
-                        Secret17_DecryptedMessage_decryptedMessage *msg = (Secret17_DecryptedMessage_decryptedMessage *) messageObject;
                         
-                        TL_destructMessage *localMessage = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGUNREADMESSAGE from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:params.n_id] date:action.date message:msg.message media:media destruction_time:0 randomId:[msg.random_id longValue] fakeId:[MessageSender getFakeMessageId] ttl_seconds:[msg.ttl intValue] out_seq_no:-1 dstate:DeliveryStateNormal];
+                        TL_destructMessage *localMessage = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGUNREADMESSAGE from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:params.n_id] date:action.date message:[messageObject valueForKey:@"message"] media:media destruction_time:0 randomId:[[messageObject valueForKey:@"random_id"] longValue] fakeId:[MessageSender getFakeMessageId] ttl_seconds:[[messageObject valueForKey:@"ttl"] intValue] out_seq_no:-1 dstate:DeliveryStateNormal];
                         
                         [MessagesManager addAndUpdateMessage:localMessage];
                         

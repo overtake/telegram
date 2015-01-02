@@ -27,9 +27,9 @@
 
 
 
--(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData senderClass:(Class)senderClass;
+-(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData senderClass:(Class)senderClass layer:(int)layer;
 
--(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData;
+-(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData layer:(int)layer;
 
 +(id)requestActionWithMessageId:(int)messageId;
 

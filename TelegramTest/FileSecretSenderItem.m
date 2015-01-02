@@ -161,7 +161,7 @@
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
     
-    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class]];
+    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
     
     [self.action save];
 }
@@ -174,9 +174,11 @@
 
 -(NSData *)decryptedMessageLayer17 {
     return [Secret17__Environment serializeObject:[Secret17_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(17) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret17_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.media]]];
-
 }
 
+-(NSData *)decryptedMessageLayer20 {
+    return [Secret20__Environment serializeObject:[Secret20_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(20) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret20_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.media]]];
+}
 
 -(void)performRequest {
     
@@ -228,9 +230,9 @@
                 
             } else if(strongSelf.params.layer == 17) {
                  strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 20) {
+                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
-            
-            
         }
     
         
@@ -242,6 +244,8 @@
                 
             } else if(strongSelf.params.layer == 17) {
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 20) {
+                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         
@@ -251,6 +255,8 @@
                 
             } else if(strongSelf.params.layer == 17) {
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 20) {
+                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         
@@ -261,6 +267,8 @@
                 
             } else if(strongSelf.params.layer == 17) {
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 20) {
+                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         

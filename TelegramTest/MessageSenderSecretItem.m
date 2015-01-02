@@ -37,7 +37,7 @@
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
     
-     self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class]];
+     self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
     
     [self.action save];
             
@@ -51,6 +51,10 @@
 
 -(NSData *)decryptedMessageLayer17 {
     return [Secret17__Environment serializeObject:[Secret17_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(17) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret17_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:[Secret17_DecryptedMessageMedia decryptedMessageMediaEmpty]]]];
+}
+
+-(NSData *)decryptedMessageLayer20 {
+    return [Secret20__Environment serializeObject:[Secret20_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(20) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret20_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:[Secret20_DecryptedMessageMedia decryptedMessageMediaEmpty]]]];
 }
 
 

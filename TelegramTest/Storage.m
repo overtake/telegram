@@ -105,7 +105,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t115"; // 61
+    NSString *dbName = @"t116"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -187,9 +187,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"create table if not exists broadcasts (n_id integer PRIMARY KEY, serialized blob, title string, date integer)"];
         
         
-        [db executeUpdate:@"create table if not exists out_secret_actions (action_id integer primary key, message_data blob, chat_id integer, senderClass string, out_seq_no integer)"];
+        [db executeUpdate:@"create table if not exists out_secret_actions (action_id integer primary key, message_data blob, chat_id integer, senderClass string, out_seq_no integer, layer integer)"];
         
-        [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer)"];
+        [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)"];
         
         
         
@@ -1578,7 +1578,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertSecretAction:(TGSecretAction *)action {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into out_secret_actions (action_id, message_data, chat_id, senderClass) values (?,?,?,?)",@(action.actionId),action.decryptedData,@(action.chat_id),action.senderClass];
+        [db executeUpdate:@"insert or replace into out_secret_actions (action_id, message_data, chat_id, senderClass, layer) values (?,?,?,?,?)",@(action.actionId),action.decryptedData,@(action.chat_id),action.senderClass,@(action.layer)];
     }];
 }
 
@@ -1596,7 +1596,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *list = [[NSMutableArray alloc] init];
         FMResultSet *result = [db executeQuery:@"select * from out_secret_actions where 1=1 order by action_id"];
         while ([result next]) {
-            TGSecretAction *action = [[TGSecretAction alloc] initWithActionId:[result intForColumn:@"action_id"] chat_id:[result intForColumn:@"chat_id"] decryptedData:[result dataForColumn:@"message_data"] senderClass:NSClassFromString([result stringForColumn:@"senderClass"])];
+            TGSecretAction *action = [[TGSecretAction alloc] initWithActionId:[result intForColumn:@"action_id"] chat_id:[result intForColumn:@"chat_id"] decryptedData:[result dataForColumn:@"message_data"] senderClass:NSClassFromString([result stringForColumn:@"senderClass"]) layer:[result intForColumn:@"layer"]];
             
             [list addObject:action];
         }
@@ -1610,7 +1610,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertSecretInAction:(TGSecretInAction *)action {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into in_secret_actions (action_id, message_data, file_data, chat_id, date, in_seq_no) values (?,?,?,?,?,?)",@(action.actionId),action.messageData, action.fileData,@(action.chat_id),@(action.date),@(action.in_seq_no)];
+        [db executeUpdate:@"insert or replace into in_secret_actions (action_id, message_data, file_data, chat_id, date, in_seq_no, layer) values (?,?,?,?,?,?,?)",@(action.actionId),action.messageData, action.fileData,@(action.chat_id),@(action.date),@(action.in_seq_no),@(action.layer)];
     }];
 }
 -(void)removeSecretInAction:(TGSecretInAction *)action {
@@ -1626,7 +1626,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         FMResultSet *result = [db executeQuery:@"select * from in_secret_actions where chat_id=? order by in_seq_no",@(chat_id)];
         while ([result next]) {
-            TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:[result intForColumn:@"action_id"] chat_id:[result intForColumn:@"chat_id"] messageData:[result dataForColumn:@"message_data"] fileData:[result dataForColumn:@"file_data"] date:[result intForColumn:@"date"] in_seq_no:[result intForColumn:@"in_seq_no"]];
+            TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:[result intForColumn:@"action_id"] chat_id:[result intForColumn:@"chat_id"] messageData:[result dataForColumn:@"message_data"] fileData:[result dataForColumn:@"file_data"] date:[result intForColumn:@"date"] in_seq_no:[result intForColumn:@"in_seq_no"] layer:[result intForColumn:@"layer"]];
             
             [list addObject:action];
         }

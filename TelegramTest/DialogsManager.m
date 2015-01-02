@@ -365,6 +365,8 @@
 
     [dialog save];
     
+    [self add:@[dialog]];
+    
     
     if(needUpdate) {
         
@@ -453,6 +455,7 @@
         
         BOOL checkSort = [self resortAndCheck];
         
+        [self add:last.allValues];
         
         for (TL_conversation *dialog in last.allValues) {
             [dialog save];
@@ -499,7 +502,12 @@
                 current.top_message = dialog.top_message;
                 current.last_message_date = dialog.last_message_date;
                 current.notify_settings = dialog.notify_settings;
-                
+                current.fake = dialog.fake;
+                current.last_marked_message = dialog.last_marked_message;
+                current.top_message_fake = dialog.top_message_fake;
+                current.last_marked_date = dialog.last_marked_date;
+                current.last_real_message_date = dialog.last_real_message_date;
+                current.dstate = dialog.dstate;
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer.peer_id)];
