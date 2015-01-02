@@ -258,7 +258,7 @@
         NSData *g_a = [Crypto exp:[[NSData alloc] initWithBytes:&g length:1] b:a dhPrime:[response p]];
         if(!MTCheckIsSafeGAOrB(g_a, [response p])) return;
         
-        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:rand_limit(INT32_MAX-1) encrypt_key:nil key_fingerprings:0 a:a g_a:g_a dh_prime:[response p] state:EncryptedWaitOnline access_hash:0 layer:MIN_ENCRYPTED_LAYER isAdmin:YES];
+        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:rand_limit(INT32_MAX-1) encrypt_key:nil key_fingerprint:0 a:a g_a:g_a dh_prime:[response p] state:EncryptedWaitOnline access_hash:0 layer:MIN_ENCRYPTED_LAYER isAdmin:YES];
         
         
         

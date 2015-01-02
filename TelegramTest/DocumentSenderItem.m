@@ -58,7 +58,7 @@
             thumbName = @"thumb.jpg";
         };
         
-        if([self.filePath hasSuffix:@"sticker.webp"]) {
+        if([self.filePath hasSuffix:@"webp"]) {
             NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
             int width = 0;
             int heigth = 0;

@@ -166,8 +166,6 @@
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
             }
             
-        
-            
             [dialog save];
             
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
@@ -378,7 +376,6 @@
 }
 
 
-
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
      NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog];
     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
@@ -450,8 +447,6 @@
         
         
         manager.unread_count += totalUnread;
-        
-        
         
         BOOL checkSort = [self resortAndCheck];
         
@@ -578,7 +573,6 @@
     });
     return instance;
 }
-
 
 
 @end
