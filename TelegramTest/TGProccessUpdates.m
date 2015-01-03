@@ -459,9 +459,10 @@ static NSString *kUpdateState = @"kUpdateState";
                 long keyId;
                 [key_fingerprints getBytes:&keyId];
                 
+                 params.key_fingerprint = keyId;
                 
-                params.key_fingerprint = keyId;
-                params.encrypt_key = key_hash;
+                [params setKey:key_hash forFingerprint:keyId];
+                
                 params.access_hash = chat.access_hash;
                 [params setState:EncryptedAllowed];
                 [params save];

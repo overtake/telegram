@@ -23,7 +23,6 @@ typedef enum  {
 #define MAX_ENCRYPTED_LAYER 20
 
 @property (atomic,assign) long access_hash;
-@property (atomic,strong) NSData *encrypt_key;
 @property (atomic,strong) NSData *dh_prime;
 @property (atomic,strong) NSData *a;
 @property (atomic,strong) NSData *g_a;
@@ -55,6 +54,9 @@ typedef void (^stateHandler)(EncryptedState state);
 +(EncryptedParams *)findAndCreate:(int)chat_id;
 
 -(NSData *)encryptedKey:(int)fingerprint;
+-(NSData *)lastKey;
+-(void)setKey:(NSData *)key forFingerprint:(long)fingerprint;
+
 
 -(int)in_x;
 -(int)out_x;

@@ -58,11 +58,11 @@
             thumbName = @"thumb.jpg";
         };
         
-        if([self.filePath hasSuffix:@"webp"]) {
+        if([self.filePath hasSuffix:@"webp"] && fileSize(self.filePath) < 128000) {
             NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
             int width = 0;
             int heigth = 0;
-            if (WebPGetInfo(data.bytes, data.length, &width, &heigth))
+            if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 200 & heigth > 200)
             {
                 [attrs addObject:[TL_documentAttributeSticker create]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];

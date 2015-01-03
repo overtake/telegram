@@ -143,7 +143,6 @@
         
         NSData *key_hash = [Crypto exp:[request g_a] b:b dhPrime:dhPrime];
         
-        
         NSData *key_fingerprints = [[Crypto sha1:key_hash] subdataWithRange:NSMakeRange(12, 8)];
         long keyId;
         [key_fingerprints getBytes:&keyId];

@@ -23,7 +23,6 @@ static NSMutableDictionary *cached;
 -(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprint:(long)key_fingerprint a:(NSData *)a g_a:(NSData *)g_a dh_prime:(NSData *)dh_prime state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin {
     if(self = [super init]) {
         _n_id = chat_id;
-        _encrypt_key = encrypt_key;
         _key_fingerprint = key_fingerprint;
         _a = a;
         _g_a = g_a;
@@ -36,7 +35,7 @@ static NSMutableDictionary *cached;
         _layer = 1;
         _keys = [[NSMutableDictionary alloc] init];
         
-        [_keys setObject:encrypt_key forKey:@(key_fingerprint)];
+        [self setKey:encrypt_key forFingerprint:key_fingerprint];
         
     }
     return self;
@@ -61,8 +60,6 @@ static NSMutableDictionary *cached;
     [data setObject:@(self.ttl) forKey:@"ttl"];
     
     
-    if(self.encrypt_key)
-        [data setObject:self.encrypt_key forKey:@"encrypt_key"];
     if(self.a)
         [data setObject:self.a forKey:@"a"];
     if(self.dh_prime)
@@ -111,7 +108,6 @@ static NSMutableDictionary *cached;
     if(self = [super init]) {
         _n_id = [[object objectForKey:@"chat_id"] intValue];
         _state = [[object objectForKey:@"state"] intValue];
-        _encrypt_key = [object objectForKey:@"encrypt_key"];
         _key_fingerprint = [[object objectForKey:@"key_fingerprint"] longValue];
         _a = [object objectForKey:@"a"];
         _g_a = [object objectForKey:@"g_a"];
@@ -123,9 +119,6 @@ static NSMutableDictionary *cached;
         _isAdmin = [[object objectForKey:@"isAdmin"] intValue];
         _prev_layer = [[object objectForKey:@"prevLayer"] intValue];
         _ttl = [[object objectForKey:@"ttl"] intValue];
-        if(self.encrypt_key.length != 256) {
-            _encrypt_key = [Crypto exp:[self g_a] b:self.a dhPrime:self.dh_prime];
-        }
         _keys = [object objectForKey:@"keys"];
     }
     return self;
@@ -140,7 +133,14 @@ static NSMutableDictionary *cached;
 
 }
 
+-(NSData *)lastKey {
+    return _keys[@(_key_fingerprint)];
+}
 
+-(void)setKey:(NSData *)key forFingerprint:(long)fingerprint {
+    if(fingerprint != 0)
+        [_keys setObject:key forKey:@(fingerprint)];
+}
 
 +(NSMutableDictionary *)cache {
     if(cached == nil)

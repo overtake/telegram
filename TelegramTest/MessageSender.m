@@ -194,9 +194,9 @@
    
     fullData = [fullData addPadding:16];
     
-    NSData *encryptedData = [Crypto encrypt:0 data:fullData auth_key:params.encrypt_key msg_key:msgKey encrypt:YES];
+    NSData *encryptedData = [Crypto encrypt:0 data:fullData auth_key:params.lastKey msg_key:msgKey encrypt:YES];
     
-    NSData *key_fingerprints = [[Crypto sha1:params.encrypt_key] subdataWithRange:NSMakeRange(12, 8)];;
+    NSData *key_fingerprints = [[Crypto sha1:params.lastKey] subdataWithRange:NSMakeRange(12, 8)];;
     
     fullData = [NSMutableData dataWithData:key_fingerprints];
     [fullData appendData:msgKey];
