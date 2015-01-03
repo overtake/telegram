@@ -20,7 +20,7 @@ typedef enum  {
 
 
 #define MIN_ENCRYPTED_LAYER 1
-#define MAX_ENCRYPTED_LAYER 20
+#define MAX_ENCRYPTED_LAYER 17
 
 @property (atomic,assign) long access_hash;
 @property (atomic,strong) NSData *dh_prime;
