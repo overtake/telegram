@@ -27,12 +27,16 @@
     if(chat) {
         
         
-        int64_t keyId = 0;
-        [update.bytes getBytes:&keyId range:NSMakeRange(0, 8)];
+        long keyId = 0;
+        [update .bytes getBytes:&keyId range:NSMakeRange(0, 8)];
       
         
+        NSData *key = [params ekey:keyId];
+        
+        assert(key);
+        
         NSData *msg_key = [update.bytes subdataWithRange:NSMakeRange(8, 16)];
-        NSData *decrypted = [Crypto encrypt:0 data:[update.bytes subdataWithRange:NSMakeRange(24, update.bytes.length - 24)] auth_key:[params lastKey] msg_key:msg_key encrypt:NO];
+        NSData *decrypted = [Crypto encrypt:0 data:[update.bytes subdataWithRange:NSMakeRange(24, update.bytes.length - 24)] auth_key:key msg_key:msg_key encrypt:NO];
         
         int messageLength = 0;
         
@@ -70,10 +74,7 @@
         }
         
         
-        if(layer == 0)
-        {
-            layer = 1;
-        }
+        layer = MAX(1, layer);
         
         Class DeserializeClass = NSClassFromString([NSString stringWithFormat:@"Secret%d__Environment",layer]);
         

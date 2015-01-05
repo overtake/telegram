@@ -53,7 +53,7 @@ typedef void (^stateHandler)(EncryptedState state);
 -(void)save;
 +(EncryptedParams *)findAndCreate:(int)chat_id;
 
--(NSData *)encryptedKey:(int)fingerprint;
+-(NSData *)ekey:(long)fingerprint;
 -(NSData *)lastKey;
 -(void)setKey:(NSData *)key forFingerprint:(long)fingerprint;
 

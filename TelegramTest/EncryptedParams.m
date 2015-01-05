@@ -84,7 +84,7 @@ static NSMutableDictionary *cached;
     return self.isAdmin ? 0 : 1;
 }
 
--(NSData *)encryptedKey:(int)fingerprint {
+-(NSData *)ekey:(long)fingerprint {
     return _keys[@(fingerprint)];
 }
 
