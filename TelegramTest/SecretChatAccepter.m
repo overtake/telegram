@@ -56,7 +56,7 @@ static NSString *kChatIdsForAccept = @"kChatIdsForAccept";
             
             EncryptedParams *params = [EncryptedParams findAndCreate:chat_id];
             
-            [RPCRequest sendRequest:[TLAPI_messages_acceptEncryption createWithPeer:[TL_inputEncryptedChat createWithChat_id:chat_id access_hash:params.access_hash] g_b:params.g_a key_fingerprint:params.key_fingerprints] successHandler:^(RPCRequest *request3, TL_encryptedChat * acceptResponse) {
+            [RPCRequest sendRequest:[TLAPI_messages_acceptEncryption createWithPeer:[TL_inputEncryptedChat createWithChat_id:chat_id access_hash:params.access_hash] g_b:params.g_a key_fingerprint:params.key_fingerprint] successHandler:^(RPCRequest *request3, TL_encryptedChat * acceptResponse) {
                 
                 TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:acceptResponse.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime]];
                 

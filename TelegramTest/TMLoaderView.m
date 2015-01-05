@@ -85,11 +85,11 @@
 }
 
 
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
     if(self.target && self.selector) {
         [self.target performSelector:self.selector];
     } else {
-        [super mouseDown:theEvent];
+        [super mouseUp:theEvent];
     }
 }
 

@@ -55,11 +55,39 @@
         
         self.scrollView.autoresizingMask = NSViewWidthSizable;
         self.background.autoresizingMask = NSViewWidthSizable;
-        
+        separator.autoresizingMask = NSViewWidthSizable;
         
     }
     
     return self;
+}
+
+static NSImage *hoverImage() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [[NSImage alloc] initWithSize:NSMakeSize(67, 67)];
+        [image lockFocus];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 67, 67) xRadius:3 yRadius:3];
+        [NSColorFromRGB(0xf4f4f4) set];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+
+static NSImage *higlightedImage() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [[NSImage alloc] initWithSize:NSMakeSize(67, 67)];
+        [image lockFocus];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 67, 67) xRadius:3 yRadius:3];
+        [NSColorFromRGB(0xdedede) set];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
 }
 
 
@@ -81,30 +109,38 @@
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 6);
-            
-            int y = roundf((NSHeight(self.frame)-1 - imgObj.imageSize.height) / 2);
-            
-            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset + 5, y, imgObj.imageSize.width, imgObj.imageSize.height)];
+                        
+            TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(0, 0, imgObj.imageSize.width, imgObj.imageSize.height)];
             
             
             [imgView setTapBlock:^{
                 
                 [[Telegram rightViewController].messagesViewController sendSticker:obj addCompletionHandler:nil];
                 
-       
+                [[Telegram rightViewController].messagesViewController setStringValueToTextField:@""];
             }];
             
             imgView.object = imgObj;
             
-            [self.containerView addSubview:imgView];
             
-            xOffset += imgObj.imageSize.width + 10;
+            BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset + 3, 2, hoverImage().size.width, NSHeight(self.bounds) - 6)];
+            [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
+            
+            [imgView setCenterByView:button];
+            [button addSubview:imgView];
+            
+            [self.containerView addSubview:button];
+            
+            xOffset += NSWidth(button.frame) + 3;
         }
         
     }];
     
     [self.containerView setFrameSize:NSMakeSize(xOffset, NSHeight(self.containerView.frame))];
 }
+
+
 
 -(void)show:(BOOL)animated stickers:(NSArray *)stickers {
     
@@ -130,11 +166,19 @@
     }
 }
 
+static BOOL isRemoteLoaded = NO;
+
+void setRemoteStickersLoaded(BOOL loaded) {
+    isRemoteLoaded = loaded;
+}
+
+
+bool isRemoteStickersLoaded() {
+    return isRemoteLoaded;
+}
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
-    
-    ACCEPT_FEATURE
-    
+        
     __block NSString *hash = @"";
     
     __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
@@ -143,54 +187,70 @@
         NSDictionary *dictionary = [transaction objectForKey:emotion inCollection:STICKERS_COLLECTION];
         
         NSArray *serialized = dictionary[@"serialized"];
-        hash = dictionary[@"hash"];
+        hash = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"hash"];
         
         [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             [stickers addObject:[TLClassStore deserialize:obj]];
         }];
         
+        
+        NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+       [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+            
+            NSNumber *c1 = sort[@(obj1.n_id)];
+            NSNumber *c2 = sort[@(obj2.n_id)];
+            
+            if ([c1 longValue] > [c2 longValue])
+                return NSOrderedAscending;
+            else if ([c1 longValue] < [c2 longValue])
+                return NSOrderedDescending;
+            
+            return NSOrderedSame;
+        }];
+        
     }];
+    
+    
     
     if(stickers.count > 0) {
         [self show:YES stickers:stickers];
     }
     
-    [RPCRequest sendRequest:[TLAPI_messages_getStickers createWithEmoticon:emotion n_hash:hash] successHandler:^(RPCRequest *request, TL_messages_stickers * response) {
-        
-        if(![response isKindOfClass:[TL_messages_stickersNotModified class]]) {
+    if(!isRemoteStickersLoaded()) {
+        [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_messages_allStickers * response) {
             
-            
-            if(response.strickers.count > 0) {
-                if(stickers.count > 0) {
-                    [self rebuild:response.strickers];
+            if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
+                
+                TL_stickerPack *pack = [[response.packs filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.emoticon = %@",emotion]] lastObject];
+                
+                NSArray *documents = [response.documents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",pack.documents]];
+                
+                
+                if(documents.count > 0) {
+                    if(stickers.count > 0) {
+                        [self rebuild:documents];
+                    } else {
+                        [self show:animated stickers:documents];
+                    }
                 } else {
-                    [self show:animated stickers:response.strickers];
+                    [self hide:YES];
                 }
-            } else {
-                [self hide:YES];
+                
+                stickers = [documents mutableCopy];
+                
+                [StickersPanelView saveResponse:response];
+                
             }
-           
-             stickers = response.strickers;
             
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                
-                NSMutableArray *serialized = [[NSMutableArray alloc] init];
-                
-                [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    
-                    [serialized addObject:[TLClassStore serialize:obj]];
-                    
-                }];
-                
-                [transaction setObject:@{@"serialized":serialized,@"hash":response.n_hash} forKey:emotion inCollection:STICKERS_COLLECTION];
-            }];
+            setRemoteStickersLoaded(YES);
             
-        }
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
         
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-    }];
-    
+    }
     
     
 }
@@ -214,6 +274,50 @@
         self.alphaValue = 0;
         self.hidden = YES;
     }
+    
+}
+
++(void)saveResponse:(TL_messages_allStickers *)response {
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        [response.packs enumerateObjectsUsingBlock:^(TL_stickerPack *pack, NSUInteger idx, BOOL *stop) {
+            
+            NSMutableArray *docs = [[NSMutableArray alloc] init];
+            
+            [pack.documents enumerateObjectsUsingBlock:^(NSNumber *d_id, NSUInteger idx, BOOL *stop) {
+                
+                TL_document *document = [[response.documents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id = %ld",[d_id longValue]]] lastObject];
+                
+                if(document) {
+                    [docs addObject:[TLClassStore serialize:document]];
+                }
+                
+            }];
+            
+            
+            [transaction setObject:@{@"serialized":docs} forKey:pack.emoticon inCollection:STICKERS_COLLECTION];
+            
+        }];
+        
+         NSMutableArray *serialized = [[NSMutableArray alloc] init];
+        
+        [response.documents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [serialized addObject:[TLClassStore serialize:obj]];
+            
+        }];
+        [transaction setObject:@{@"hash":response.n_hash,@"serialized":serialized} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+        
+    }];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dispatch_after_seconds(60*60, ^{
+            setRemoteStickersLoaded(NO);
+        });
+    }];
+    
     
 }
 

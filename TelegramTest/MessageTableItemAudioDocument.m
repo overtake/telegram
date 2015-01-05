@@ -33,6 +33,9 @@
     return self;
 }
 
+-(void)checkStartDownload:(SettingsMask)setting size:(int)size {
+    [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
+}
 
 
 - (Class)downloadClass {

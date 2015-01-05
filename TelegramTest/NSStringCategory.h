@@ -20,4 +20,8 @@
 + (NSString *) sizeToTransformedValue:(int)value;
 + (NSString *) durationTransformedValue:(int) elapsedSeconds;
 + (NSString *) sizeToTransformedValuePretty:(int)value;
+
+
++(NSRange)selectRange:(NSPoint)point frameSize:(NSSize)size;
+
 @end

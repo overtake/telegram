@@ -17,8 +17,8 @@
 @implementation TGSecretAction
 
 
--(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData senderClass:(Class)senderClass {
-    if(self = [self initWithActionId:actionId chat_id:chat_id decryptedData:decryptedData]) {
+-(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData senderClass:(Class)senderClass layer:(int)layer{
+    if(self = [self initWithActionId:actionId chat_id:chat_id decryptedData:decryptedData layer:layer]) {
         _senderClass = senderClass;
     }
     
@@ -26,12 +26,13 @@
 }
 
 
--(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData {
+-(id)initWithActionId:(int)actionId chat_id:(int)chat_id decryptedData:(NSData *)decryptedData layer:(int)layer {
     if(self = [super init]) {
         _actionId = actionId;
         _chat_id = chat_id;
         _decryptedData = decryptedData;
         _params = [EncryptedParams findAndCreate:_chat_id];
+        _layer = layer;
         [actions addObject:self];
 
     }

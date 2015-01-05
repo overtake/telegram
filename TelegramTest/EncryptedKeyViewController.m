@@ -83,7 +83,7 @@
     
     EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
     
-    NSData *hashData = [Crypto sha1:params.encrypt_key];
+    NSData *hashData = [Crypto sha1:[params lastKey]];
     
     
     

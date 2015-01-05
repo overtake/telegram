@@ -129,8 +129,8 @@
     startSelectPosition = NSMakePoint(-1, -1);
     currentSelectPosition = NSMakePoint(-1, -1);
     
-    if(self.realMark && self.selectRange.location == selectionRange.location && self.selectRange.length == selectionRange.length)
-        return;
+  //  if(self.realMark && self.selectRange.location == selectionRange.location && self.selectRange.length == selectionRange.length)
+       // return;
     
     
     [self.marks removeObject:self.realMark];
@@ -479,10 +479,10 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
-    
     [self _mouseDown:theEvent];
-    
 }
+
+
 
 
 /*
@@ -654,6 +654,7 @@
     return theEvent.clickCount == 2 || theEvent.clickCount == 3;
 }
 
+
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
     
@@ -764,6 +765,8 @@
         
         if(link) {
             open_link(link);
+        } else {
+            [super mouseUp:theEvent];
         }
     } else {
         [super mouseUp:theEvent];

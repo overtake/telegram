@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "RightViewController.h"
-#import "DialogsViewController.h"
+#import "TGConversationListViewController.h"
 #import "TelegramPopover.h"
 #import "NewConversationViewController.h"
 #import "TGWindowArchiver.h"
@@ -32,5 +32,4 @@
 -(void)setUnreadCount:(int)count;
 
 -(void)showUserSettings;
-
 @end

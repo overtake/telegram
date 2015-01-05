@@ -322,10 +322,12 @@
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     
+    TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+    
     
     NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
         
-        TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+        
         
         [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:@[@(msg.n_id)]}];
         
@@ -336,30 +338,29 @@
     [theMenu addItem:photoDelete];
     
     
-    NSMenuItem *photoForward = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Forward", nil) withBlock:^(id sender) {
-        
-        TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
-        
-        [[Telegram rightViewController] showByDialog:msg.conversation sender:[TGPhotoViewer viewer]];
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-        
-        MessageTableItem *item  = [MessageTableItem messageItemFromObject:msg];
-        
-        [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
-        
-        
-        [[Telegram rightViewController] showForwardMessagesModalView:_convertsation messagesCount:1];
-        
-        [[TGPhotoViewer viewer] hide];
-        
-        
-    }];
-    //[photoForward setImage:image_AttachTakePhoto()];
-    //[photoForward setHighlightedImage:image_AttachTakePhotoHighlighted()];
-    [theMenu addItem:photoForward];
-
-    
+    if(msg.conversation.type != DialogTypeSecretChat) {
+        NSMenuItem *photoForward = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Forward", nil) withBlock:^(id sender) {
+            
+            
+            [[Telegram rightViewController] showByDialog:msg.conversation sender:[TGPhotoViewer viewer]];
+            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            
+            MessageTableItem *item  = [MessageTableItem messageItemFromObject:msg];
+            
+            [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+            
+            
+            [[Telegram rightViewController] showForwardMessagesModalView:_convertsation messagesCount:1];
+            
+            [[TGPhotoViewer viewer] hide];
+            
+            
+        }];
+        //[photoForward setImage:image_AttachTakePhoto()];
+        //[photoForward setHighlightedImage:image_AttachTakePhotoHighlighted()];
+        [theMenu addItem:photoForward];
+    }
     
     NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
         

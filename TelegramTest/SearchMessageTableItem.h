@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "DialogTableItem.h"
+#import "ConversationTableItem.h"
 
-@interface SearchMessageTableItem : DialogTableItem
+@interface SearchMessageTableItem : ConversationTableItem
 
 -(id)initWithMessage:(TL_localMessage *)message selectedText:(NSString *)selectedText;
 

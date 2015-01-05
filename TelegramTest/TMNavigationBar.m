@@ -76,58 +76,67 @@ static const float duration = 0.25;
     [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), !show ? 0 : NSHeight(self.connectionView.frame))];
     [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
     
-    [self.connectionView.layer setFrameOrigin:self.connectionView.frame.origin];
-    [self.centerViewBlock.layer setFrameOrigin:self.centerViewBlock.frame.origin];
     
     if(animated) {
         
         [self.connectionView setHidden:NO];
         
-        TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
         
-       // [CATransaction begin];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [[self.connectionView animator] setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];
+            
+            [[self.centerView animator] setFrameOrigin:NSMakePoint(NSMinX(self.centerView.frame), !show ? 0 : -NSHeight(self.centerViewBlock.frame))];
+            
+        } completionHandler:^{
         
-        POPBasicAnimation *connectionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-        
-        connectionAnimation.duration = duration;
-        connectionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        
-        connectionAnimation.toValue = @( show ? 0 : NSHeight(self.connectionView.frame)  );
-        connectionAnimation.fromValue = @( show ? NSHeight(self.connectionView.frame) : 0 );
-        connectionAnimation.delegate = connectionDelegate;
-        connectionAnimation.removedOnCompletion = YES;
-        
-        
-        [connectionDelegate setCompletion:^(BOOL isFinished) {
-            if(isFinished)
-                [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
-        }];
-
-        [self.connectionView.layer pop_addAnimation:connectionAnimation forKey:@"position"];
-        
-        
-        TGAnimationBlockDelegate *centerDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
-        
-        POPBasicAnimation *centerAnimation =[POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-        
-        centerAnimation.duration = duration;
-        centerAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        
-        centerAnimation.toValue = @( !show ? 0 : -NSHeight(self.centerViewBlock.frame) );
-        centerAnimation.fromValue = @( !show ? -NSHeight(self.centerViewBlock.frame) : 0 );
-        centerAnimation.delegate = centerDelegate;
-        centerAnimation.removedOnCompletion = YES;
-        
-      //  self.centerViewBlock.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [centerAnimation.toValue floatValue]);
-        
-        [centerDelegate setCompletion:^(BOOL isFinished) {
-            if(isFinished)
-                [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
         }];
         
-        [self.centerViewBlock.layer pop_addAnimation:centerAnimation forKey:@"position"];
-        
-     //   [CATransaction commit];
+//        TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
+//        
+//       // [CATransaction begin];
+//        
+//        POPBasicAnimation *connectionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
+//        
+//        connectionAnimation.duration = duration;
+//        connectionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        
+//        connectionAnimation.toValue = @( show ? 0 : NSHeight(self.connectionView.frame)  );
+//        connectionAnimation.fromValue = @( show ? NSHeight(self.connectionView.frame) : 0 );
+//        connectionAnimation.delegate = connectionDelegate;
+//        connectionAnimation.removedOnCompletion = YES;
+//        
+//        
+//        [connectionDelegate setCompletion:^(BOOL isFinished) {
+//            if(isFinished)
+//                [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
+//        }];
+//
+//        [self.connectionView.layer pop_addAnimation:connectionAnimation forKey:@"position"];
+//        
+//        
+//        TGAnimationBlockDelegate *centerDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
+//        
+//        POPBasicAnimation *centerAnimation =[POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
+//        
+//        centerAnimation.duration = duration;
+//        centerAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        
+//        centerAnimation.toValue = @( !show ? 0 : -NSHeight(self.centerViewBlock.frame) );
+//        centerAnimation.fromValue = @( !show ? -NSHeight(self.centerViewBlock.frame) : 0 );
+//        centerAnimation.delegate = centerDelegate;
+//        centerAnimation.removedOnCompletion = YES;
+//        
+//      //  self.centerViewBlock.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [centerAnimation.toValue floatValue]);
+//        
+//        [centerDelegate setCompletion:^(BOOL isFinished) {
+//            if(isFinished)
+//                [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
+//        }];
+//        
+//        [self.centerViewBlock.layer pop_addAnimation:centerAnimation forKey:@"position"];
+//        
+//     //   [CATransaction commit];
         
         
     } else {
@@ -137,8 +146,6 @@ static const float duration = 0.25;
         [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), show ? 0 : NSHeight(self.connectionView.frame))];
         [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
         
-        [self.connectionView.layer setFrameOrigin:self.connectionView.frame.origin];
-        [self.centerViewBlock.layer setFrameOrigin:self.centerViewBlock.frame.origin];
     }
     
 }

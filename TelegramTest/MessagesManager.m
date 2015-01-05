@@ -65,12 +65,12 @@
 
 -(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
     [self.queue dispatchOnQueue:^{
+      
         if(!message)
             return;
         
         
         [self addMessage:message];
-        
         
         TL_conversation *dialog = message.conversation;
         
@@ -81,9 +81,6 @@
         if(message.from_id == [UsersManager currentUserId]) {
             return;
         }
-        
-        
-       
         
         
         BOOL result = dialog.isMute;
@@ -185,7 +182,12 @@
             
             [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+            
+            //[NSApp requestUserAttention:NSInformationalRequest];
         }
+        
+        
+        
     }];
 }
 

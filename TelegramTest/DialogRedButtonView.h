@@ -7,15 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "DialogTableItemView.h"
+#import "ConversationTableItemView.h"
 
-@class DialogTableItemView;
+@class ConversationTableItemView;
 
 @interface DialogRedButtonView : NSView
 
 @property (nonatomic, strong) NSAttributedString *attributedString;
 @property (nonatomic) NSSize size;
 @property (nonatomic) BOOL disable;
-@property (nonatomic, strong) DialogTableItemView *itemView;
+@property (nonatomic, strong) ConversationTableItemView *itemView;
 
 @end

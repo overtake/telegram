@@ -18,7 +18,7 @@
     if(self = [super initWithConversation:conversation]) {
         _ids = ids;
         
-        self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:self.params.n_id decryptedData:[self decryptedMessageLayer] senderClass:[self class]];
+        self.action = [[TGSecretAction alloc] initWithActionId:[MessageSender getFutureMessageId] chat_id:self.params.n_id decryptedData:[self decryptedMessageLayer] senderClass:[self class] layer:self.params.layer];
         
         [self.action save];
         
@@ -35,6 +35,10 @@
 
 -(NSData *)decryptedMessageLayer17 {
     return [Secret17__Environment serializeObject:[Secret17_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(17) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret17_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) action:[Secret17_DecryptedMessageAction decryptedMessageActionDeleteMessagesWithRandom_ids:self.ids]]]];
+}
+
+-(NSData *)decryptedMessageLayer20 {
+    return [Secret20__Environment serializeObject:[Secret20_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(20) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret20_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) action:[Secret20_DecryptedMessageAction decryptedMessageActionDeleteMessagesWithRandom_ids:self.ids]]]];
 }
 
 

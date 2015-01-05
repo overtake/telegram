@@ -143,13 +143,12 @@
         
         NSData *key_hash = [Crypto exp:[request g_a] b:b dhPrime:dhPrime];
         
-        
         NSData *key_fingerprints = [[Crypto sha1:key_hash] subdataWithRange:NSMakeRange(12, 8)];
         long keyId;
         [key_fingerprints getBytes:&keyId];
         
         
-        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:request.n_id encrypt_key:key_hash key_fingerprings:keyId a:b g_a:g_b dh_prime:dhPrime state:EncryptedRequested access_hash:request.access_hash layer:MIN_ENCRYPTED_LAYER isAdmin:NO];
+        EncryptedParams *params = [[EncryptedParams alloc] initWithChatId:request.n_id encrypt_key:key_hash key_fingerprint:keyId a:b g_a:g_b dh_prime:dhPrime state:EncryptedRequested access_hash:request.access_hash layer:MIN_ENCRYPTED_LAYER isAdmin:NO];
         
         [params save];
         

@@ -443,6 +443,8 @@ static BOOL mouseIsDown = NO;
     if(!self.isEditable)
         return false;
     
+    [self.messagesViewController.table checkAndScroll:[self.messagesViewController.table.scrollView convertPoint:[theEvent locationInWindow] fromView:nil]];
+    
     NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
     
     
@@ -497,7 +499,7 @@ static BOOL dragAction = NO;
     [self checkDateEditItem];
     
     
-    
+    [self.window makeFirstResponder:self];
     
     
     mouseIsDown = YES;
@@ -555,21 +557,24 @@ static BOOL dragAction = NO;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
-
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-        
-        
-        
-        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
-        
-        
-        [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
-        
-        
-        
-    }]];
+    if(self.item.message.conversation.type != DialogTypeSecretChat) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
+            
+            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            
+            
+            
+            [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+            
+            
+            [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
+            
+            
+        }]];
+    }
+    
+    
     [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
 
         [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
@@ -640,8 +645,6 @@ static BOOL dragAction = NO;
         
     self.stateLayer.container = self;
     
-    float offsetContainerView;
-    
     if(item.isForwadedMessage) {
         
         [self initForwardContainer];
@@ -678,8 +681,6 @@ static BOOL dragAction = NO;
         
         
         [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
-        offsetContainerView = 129;
-        
         
     } else {
         [CATransaction begin];
@@ -687,7 +688,6 @@ static BOOL dragAction = NO;
         [self.forwardMessagesTextLayer setHidden:YES];
         [CATransaction commit];
         
-        offsetContainerView = 79;
         [self deallocForwardContainer];
         
     }
@@ -706,7 +706,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(offsetContainerView, 10, self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.containerOffset, 10, self.containerView.bounds.size.width, item.blockSize.height)];
     
     if(item.messageSender)  {
         

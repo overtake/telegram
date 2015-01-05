@@ -58,7 +58,7 @@ static CAAnimation *ani() {
     
     if(self.isAlwaysBlur) {
         
-        NSString *key = [NSString stringWithFormat:@"%@blured",self.object.location.cacheKey];
+        NSString *key = [NSString stringWithFormat:@"%d:blured",self.object.sourceId];
         
         __block NSImage *blured = [TGCache cachedImage:key];
         

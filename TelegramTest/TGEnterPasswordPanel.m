@@ -256,14 +256,7 @@
 
 
 /*
- "PHONE_CODE_INVALID" = "Phone code invalid. Please try again.";
- "Password.password" = "Password";
- "Password.EnterYourPassword" = "Enter Your Password";
- "Password.ResetPassword" = "Delete Account";
- "Password.logout" = "Log Out";
- "Password.resetAlert" = "Your are sure? This action cannot be undone";
- "Password.confirm" = "Confirm";
- "PASSWORD_HASH_INVALID" = "Password invalid. Please try again";
+
  */
 
 @end

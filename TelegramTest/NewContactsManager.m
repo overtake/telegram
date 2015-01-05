@@ -53,6 +53,8 @@
             
             [self add:contacts withCustomKey:@"user_id"];
             
+           
+            
             [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
             
             [self remoteCheckContacts:^{
@@ -82,6 +84,16 @@
     }];
 }
 
+
+-(void)add:(NSArray *)all withCustomKey:(NSString*)key {
+    [self.queue dispatchOnQueue:^{
+        [super add:all withCustomKey:key];
+        
+        NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.fullName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+        
+        [self->list sortUsingDescriptors:@[descriptor]];
+    }];
+}
 
 
 -(void)drop
@@ -340,9 +352,13 @@
                 userContact = user;
         }
         
-        TGHashContact *contact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
+        TGHashContact *hashContact = [[TGHashContact alloc] initWithHash:[NSString stringWithFormat:@"%@:tg-itemQ:%@:tg-itemQ:%@",userContact.first_name,userContact.last_name,userContact.phone] user_id:userContact.n_id];
         
-        [[Storage manager] insertContact:[TL_contact createWithUser_id:importedContact.user_id mutual:YES]];
+        [[Storage manager] insertImportedContacts:[NSSet setWithObject:hashContact]];
+        
+        TLContact *contact = [TL_contact createWithUser_id:importedContact.user_id mutual:YES];
+        
+        [[Storage manager] insertContact:contact];
         
         [self add:@[contact] withCustomKey:@"hash"];
         
@@ -403,5 +419,7 @@
         
     } timeout:0 queue:self.queue.nativeQueue];
 }
+
+
 
 @end

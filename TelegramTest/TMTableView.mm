@@ -520,7 +520,9 @@ static TMTableView *tableStatic;
 }
 
 - (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row {
-    return [self.tm_delegate respondsToSelector:@selector(isGroupRow:item:)] && [self.tm_delegate isGroupRow:row item:[self.list objectAtIndex:row]];
+    if(self.list.count > row)
+        return [self.tm_delegate respondsToSelector:@selector(isGroupRow:item:)] && [self.tm_delegate isGroupRow:row item:[self.list objectAtIndex:row]];
+    return NO;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView

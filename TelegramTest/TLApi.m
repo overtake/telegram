@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.12.14..
+//  Auto created by Mikhail Filimonov on 25.12.14..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1802,6 +1802,19 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:-1373446075];
 	[stream writeString:self.emoticon];
+	[stream writeString:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getAllStickers
++(TLAPI_messages_getAllStickers*)createWithN_hash:(NSString*)n_hash {
+    TLAPI_messages_getAllStickers* obj = [[TLAPI_messages_getAllStickers alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1438922648];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }

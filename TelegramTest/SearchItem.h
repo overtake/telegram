@@ -19,7 +19,7 @@ typedef enum {
 
 @interface SearchItem : TMRowItem
 
-@property (nonatomic, strong) TL_conversation *dialog;
+@property (nonatomic, strong) TL_conversation *conversation;
 
 @property (nonatomic) SearchItemType type;
 

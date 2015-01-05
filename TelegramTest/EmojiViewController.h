@@ -14,6 +14,7 @@
 - (void)saveEmoji:(NSArray *)array;
 
 - (void)showPopovers;
+- (void)close;
 
 @property (nonatomic, copy) void (^insertEmoji) (NSString *emoji);
 

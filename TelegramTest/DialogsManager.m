@@ -166,8 +166,6 @@
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
             }
             
-        
-            
             [dialog save];
             
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
@@ -328,54 +326,60 @@
 }
 
 - (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
-    MessagesManager *manager = [MessagesManager sharedManager];
-    TL_conversation *dialog = message.conversation;
-    if(dialog.top_message != 0 && dialog.top_message != -1 && ((dialog.top_message > message.n_id && dialog.top_message < TGMINFAKEID)))
-        return;
     
-
-    if(message.unread && !message.n_out) {
-        dialog.unread_count++;
-        manager.unread_count++;
-    }
-       
-    dialog.top_message = message.n_id;
-    if(message.n_out) {
-        dialog.last_marked_message = message.n_id;
-        dialog.last_marked_date = message.date;
-    }
-    if(dialog.last_marked_message == 0) {
-        dialog.last_marked_message = dialog.top_message;
-        dialog.last_marked_date = dialog.last_message_date;
-    }
-
-    
-    if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
-        dialog.last_marked_message = message.n_id;
-        dialog.last_marked_date = message.date;
-    }
-    
-    int last_real_date = dialog.last_real_message_date;
-    
-    dialog.last_message_date = message.date;
-    
-    if(update_real_date) {
-        dialog.last_real_message_date = last_real_date;
-    }
-
-    [dialog save];
-    
-    
-    if(needUpdate) {
+    [self.queue dispatchOnQueue:^{
+        MessagesManager *manager = [MessagesManager sharedManager];
+        TL_conversation *dialog = message.conversation;
+        if(dialog.top_message != 0 && dialog.top_message != -1 && ((dialog.top_message > message.n_id && dialog.top_message < TGMINFAKEID)))
+            return;
         
-         NSUInteger position = [self positionForConversation:dialog];
         
-        [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
-    }
+        if(message.unread && !message.n_out) {
+            dialog.unread_count++;
+            manager.unread_count++;
+        }
+        
+        dialog.top_message = message.n_id;
+        if(message.n_out) {
+            dialog.last_marked_message = message.n_id;
+            dialog.last_marked_date = message.date;
+        }
+        if(dialog.last_marked_message == 0) {
+            dialog.last_marked_message = dialog.top_message;
+            dialog.last_marked_date = dialog.last_message_date;
+        }
+        
+        
+        if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
+            dialog.last_marked_message = message.n_id;
+            dialog.last_marked_date = message.date;
+        }
+        
+        int last_real_date = dialog.last_real_message_date;
+        
+        dialog.last_message_date = message.date;
+        
+        if(update_real_date) {
+            dialog.last_real_message_date = last_real_date;
+        }
+        
+        [dialog save];
+        
+        [self add:@[dialog]];
+        
+        
+        if(needUpdate) {
+            
+            NSUInteger position = [self positionForConversation:dialog];
+            
+            [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+        }
+
+
+    }];
+    
 }
-
-
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
      NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog];
@@ -449,10 +453,9 @@
         
         manager.unread_count += totalUnread;
         
-        
-        
         BOOL checkSort = [self resortAndCheck];
         
+        [self add:last.allValues];
         
         for (TL_conversation *dialog in last.allValues) {
             [dialog save];
@@ -462,9 +465,9 @@
             }
         }
         
-        if(!checkSort) {
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
-        }
+       // if(!checkSort) {
+        [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
+       // }
         
         
     }];
@@ -499,7 +502,12 @@
                 current.top_message = dialog.top_message;
                 current.last_message_date = dialog.last_message_date;
                 current.notify_settings = dialog.notify_settings;
-                
+                current.fake = dialog.fake;
+                current.last_marked_message = dialog.last_marked_message;
+                current.top_message_fake = dialog.top_message_fake;
+                current.last_marked_date = dialog.last_marked_date;
+                current.last_real_message_date = dialog.last_real_message_date;
+                current.dstate = dialog.dstate;
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer.peer_id)];
@@ -570,7 +578,6 @@
     });
     return instance;
 }
-
 
 
 @end

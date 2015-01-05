@@ -31,4 +31,6 @@ typedef enum {
 - (NSString *)inputMessageString;
 - (void)setSectedMessagesCount:(NSUInteger)count;
 
+-(void)closeEmoji;
+
 @end

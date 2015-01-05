@@ -21,14 +21,18 @@
         
         NSImage *placeholder;
         
-        if([object.media.document.thumb isKindOfClass:[TL_photoCachedSize class]]) {
+        NSData *bytes = object.media.document.thumb.bytes;
             
-            placeholder = [[NSImage alloc] initWithData:object.media.document.thumb.bytes];
-            
-            if(!placeholder)
-                placeholder = [NSImage imageWithWebpData:object.media.document.thumb.bytes error:nil];
-            
+        if(bytes.length == 0) {
+            bytes = [NSData dataWithContentsOfFile:locationFilePath(object.media.document.thumb.location, @"tiff") options:NSDataReadingMappedIfSafe error:nil];
         }
+            
+        placeholder = [[NSImage alloc] initWithData:bytes];
+            
+        if(!placeholder)
+            placeholder = [NSImage imageWithWebpData:bytes error:nil];
+            
+
         
         self.blockSize = strongsize(self.blockSize, 200);
         

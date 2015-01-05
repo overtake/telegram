@@ -38,9 +38,9 @@
 //
     
     self.originPoint = self.scrollView.documentVisibleRect.origin;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+  //  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [super startAnimation];
-    });
+ //   });
 }
 
 - (void)setCurrentProgress:(NSAnimationProgress)progress {
@@ -53,7 +53,7 @@
         return end/2*(t * t * t + 2) + start - 1.f;
     };
     
-    dispatch_sync(dispatch_get_main_queue(), ^{
+ //   dispatch_sync(dispatch_get_main_queue(), ^{
         
         NSPoint progressPoint = self.originPoint;
         progressPoint.x += cubicEaseInOut(progress, 0, self.targetPoint.x - self.originPoint.x);
@@ -64,7 +64,7 @@
         self.progressPoint = progressPoint;
         [self.scrollView.contentView scrollPoint:progressPoint];
         [self.scrollView displayIfNeeded];
-    });
+   // });
 }
 
 //- (void)stopAnimation {

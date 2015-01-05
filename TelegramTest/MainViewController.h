@@ -19,4 +19,7 @@
 
 
 -(void)updateWindowMinSize;
+-(void)minimisize;
+-(BOOL)isMinimisze;
+-(void)unminimisize;
 @end

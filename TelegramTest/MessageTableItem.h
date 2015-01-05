@@ -30,6 +30,8 @@
 @property (nonatomic) BOOL isHeaderMessage;
 @property (nonatomic) BOOL isHeaderForwardedMessage;
 
+@property (nonatomic,assign,readonly) int containerOffset;
+
 
 @property (nonatomic) NSSize blockSize;
 @property (nonatomic) NSSize previewSize;

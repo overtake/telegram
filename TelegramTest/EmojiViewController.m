@@ -7,9 +7,9 @@
 //
 
 #import "EmojiViewController.h"
-
+#import "TGAllStickersTableView.h"
 #define EMOJI_IMAGE(img) image_test#img
-#define EMOJI_COUNT_PER_ROW 7
+#define EMOJI_COUNT_PER_ROW 8
 
 @interface EmojiButton : BTRButton
 @property (nonatomic, strong) NSString *smile;
@@ -136,6 +136,7 @@ static NSImage *higlightedImage() {
 @property (nonatomic, strong) TMView *bottomView;
 @property (nonatomic, strong) NSArray *segments;
 @property (nonatomic, strong) NSMutableArray *userEmoji;
+@property (nonatomic, strong) TGAllStickersTableView *stickersTableView;
 
 @end
 
@@ -159,7 +160,7 @@ static NSImage *higlightedImage() {
     static EmojiViewController *controller;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 250, 240)];
+        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 280, 240)];
     });
     return controller;
 }
@@ -167,6 +168,8 @@ static NSImage *higlightedImage() {
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if(self) {
+        
+        
         
         self.userEmoji = [[Storage manager] emoji];
         
@@ -198,9 +201,11 @@ static NSImage *higlightedImage() {
 - (void)loadView {
     [super loadView];
     
+   
+    
 
     self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
-    for(int i = 1; i <= 6; i++) {
+    for(int i = 1; i <= 7; i++) {
         BTRButton *button = [self createButtonForIndex:i];
         [button setFrameOrigin:NSMakePoint(i * 18 + 20 * (i - 1), 12)];
         [self.bottomView addSubview:button];
@@ -209,6 +214,15 @@ static NSImage *higlightedImage() {
     self.currentButton = [self.bottomView.subviews objectAtIndex:self.userEmoji.count ? 0 : 1];
     [self.currentButton setSelected:YES];
     [self.view addSubview:self.bottomView];
+    
+    
+    self.stickersTableView = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
+    
+    [self.stickersTableView load];
+    
+    [self.view addSubview:self.stickersTableView.containerView];
+    
+    [self.stickersTableView.containerView setHidden:YES];
 
     
     self.tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
@@ -316,6 +330,16 @@ static NSImage *higlightedImage() {
     
     [self.tableView reloadData];
     [self.tableView scrollToBeginningOfDocument:nil];
+    
+    if(self.currentButton.index == 7) {
+        [self.stickersTableView load];
+    }
+    
+    
+    [self.tableView.containerView setHidden:self.currentButton.index == 7];
+    [self.stickersTableView.containerView setHidden:self.currentButton.index != 7];
+    
+    
 }
 
 - (void)insertEmoji:(NSString *)emoji {

@@ -461,7 +461,7 @@
 - (NSImage *)createEncryptedImage  {
     EncryptedParams *params = [EncryptedParams findAndCreate:self.controller.conversation.encryptedChat.n_id];
     
-    NSData *hashData = [Crypto sha1:params.encrypt_key];
+    NSData *hashData = [Crypto sha1:[params lastKey]];
 
     
     return TGIdenticonImage(hashData,NSMakeSize(20, 20));

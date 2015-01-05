@@ -38,7 +38,7 @@
         TLPhotoSize *cachedSize;
         NSData *imageData = nil;
         if(thumbImage) {
-            imageData = [thumbImage TIFFRepresentation];
+            imageData = jpegNormalizedData(thumbImage);
             
             imageData = compressImage(imageData, 0.1);
             
@@ -201,8 +201,7 @@
         [self.uploader setFilePath:self.path_for_file];
         [self.uploader ready:UploadVideoType];
         
-        if(success)
-            [self.message save:YES];
+        [self.message save:YES];
             
         ((TL_localMessage *)self.message).media.video.size = self.uploader.total_size;
         self.state = self.state;

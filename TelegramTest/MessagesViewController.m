@@ -398,7 +398,7 @@
     [self.searchMessagesView setHidden:YES];
     
     
-    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 80)];
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
     
     [self.view addSubview:self.stickerPanel];
     
@@ -940,7 +940,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)setStringValueToTextField:(NSString *)stringValue {
-    if(stringValue && stringValue.length > 0)
+    if(stringValue)
         [self.bottomView setInputMessageString:stringValue disableAnimations:NO];
 }
 
@@ -1287,9 +1287,9 @@ static NSTextAttachment *headerMediaIcon() {
     [CATransaction disableActions];
     
     self->_ignoredCount = ignoredCount;
-    if(ignoredCount > 0)
-        [self.filtredNavigationLeftView setStringValue:[NSString stringWithFormat:@"%@ (%@)",NSLocalizedString(@"Profile.Cancel", nil),[NSString stringWithFormat:NSLocalizedString(@"Messages.scrollToBottomNewMessages", nil), ignoredCount]]];
-    else
+    if(ignoredCount > 0) {
+        [self.filtredNavigationLeftView setStringValue:[NSString stringWithFormat:@"%@ (%@)",NSLocalizedString(@"Profile.Cancel", nil),[NSString stringWithFormat:NSLocalizedString(ignoredCount == 1 ? @"Messages.scrollToBottomNewMessage" : @"Messages.scrollToBottomNewMessages", nil), ignoredCount]]];
+    } else
         [self.filtredNavigationLeftView setStringValue:NSLocalizedString(@"Profile.Cancel", nil)];
     
     [self.filtredNavigationLeftView sizeToFit];
@@ -1674,21 +1674,9 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    __block NSString *sticker = nil;
-    if(emoji.count > 0) {
-        
-        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if([self.bottomView.inputMessageString hasSuffix:obj]) {
-                
-                sticker = obj;
-                *stop = YES;
-            }
-        }];
-    }
-    
-    if(sticker != nil && sticker.length == 2)
+    if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
-         [self.stickerPanel showAndSearch:sticker animated:YES];
+         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
     {
         [self.stickerPanel hide:YES];
@@ -2029,7 +2017,7 @@ static NSTextAttachment *headerMediaIcon() {
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
-            [item makeSizeByWidth:self.table.containerSize.width];
+            //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
             [array insertObject:item atIndex:0];
         }
@@ -2207,20 +2195,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     //8149178
     //5332648
-    
-    if([message isEqualToString:@"!startFlood"]) {
-        
-        [self groupFlood:@[@(-8149178),@(-5332648)]];
-        
-        return;
-    }
 
 //
-//    if([message isEqualToString:@"2"]) {
-//        [Telegram setConnectionState:ConnectingStatusTypeConnected];
-//        return;
-//    }
-//    
     
 //    if([message hasPrefix:@"/changePass"]) {
 //        
@@ -2426,9 +2402,28 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat) return;
     
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        NSMutableDictionary *sc = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+        if(!sc)
+        {
+            sc = [[NSMutableDictionary alloc] init];
+        }
+        
+        sc[@(sticker.n_id)] = @([sc[@(sticker.n_id)] intValue]+1);
+        
+        [transaction setObject:sc forKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+    }];
+    
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [self.bottomView setInputMessageString:@"" disableAnimations:NO];
+    [self.bottomView closeEmoji];
+    
+    
+    
+    
     
     [ASQueue dispatchOnStageQueue:^{
         

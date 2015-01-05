@@ -16,6 +16,8 @@
 @property (nonatomic,assign,readonly) int in_seq_no;
 @property (nonatomic,assign,readonly) int date;
 
--(id)initWithActionId:(int)actionId chat_id:(int)chat_id messageData:(NSData *)messageData fileData:(NSData *)fileData date:(int)date in_seq_no:(int)in_seq_no;
+@property (nonatomic,assign,readonly) int layer;
+
+-(id)initWithActionId:(int)actionId chat_id:(int)chat_id messageData:(NSData *)messageData fileData:(NSData *)fileData date:(int)date in_seq_no:(int)in_seq_no layer:(int)layer;
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 
-#import "DialogTableItem.h"
+#import "ConversationTableItem.h"
 #import "NS(Attributed)String+Geometrics.h"
 #import "MessagesUtils.h"
 #import "TLPeer+Extensions.h"
@@ -18,53 +18,52 @@
 #import "NSString+Extended.h"
 #import "TGDateUtils.h"
 #import "TMTypingObject.h"
-@interface DialogTableItem()
+@interface ConversationTableItem()
 @property (nonatomic) BOOL isNotRead;
 @end
 
-@implementation DialogTableItem
+@implementation ConversationTableItem
 
-- (id)initWithDialogItem:(TL_conversation *)dialog {
+- (id)initWithConversationItem:(TL_conversation *)conversation {
     self = [super init];
     
-    self.dialog = [[DialogsManager sharedManager] find:dialog.peer.peer_id];
+    self.conversation = [[DialogsManager sharedManager] find:conversation.peer.peer_id];
     
-    
-    [Notification addObserver:self selector:@selector(notificationChangeMessage:) name:[Notification notificationNameByDialog:dialog action:@"message"]];
-    [Notification addObserver:self selector:@selector(notificationChangeUnreadCount:) name:[Notification notificationNameByDialog:dialog action:@"unread_count"]];
-    [Notification addObserver:self selector:@selector(notificationTyping:) name:[Notification notificationNameByDialog:self.dialog action:@"typing"]];
+    [Notification addObserver:self selector:@selector(notificationChangeMessage:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
+    [Notification addObserver:self selector:@selector(notificationChangeUnreadCount:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
+    [Notification addObserver:self selector:@selector(notificationTyping:) name:[Notification notificationNameByDialog:self.conversation action:@"typing"]];
     [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
     [Notification addObserver:self selector:@selector(notificationChangedDeliveryState:) name:MESSAGE_CHANGED_DSTATE];
     
-    self.type = dialog.type;
+    self.type = conversation.type;
     
     switch (self.type) {
             
         case DialogTypeUser: {
-            self.user = dialog.user;
+            self.user = conversation.user;
             break;
         }
             
         case DialogTypeChat: {
-            self.chat = dialog.chat;
+            self.chat = conversation.chat;
             break;
         }
         
         case DialogTypeSecretChat: {
-            TLEncryptedChat *chat = dialog.encryptedChat;
+            TLEncryptedChat *chat = conversation.encryptedChat;
             self.user = [chat peerUser];
             break;
         }
             
         case DialogTypeBroadcast: {
-            self.broadcast = dialog.broadcast;
+            self.broadcast = conversation.broadcast;
             break;
         }
         default:
             break;
     }
     
-    self.isMuted = self.dialog.isMute;
+    self.isMuted = self.conversation.isMute;
     
     self.writeAttributedString = [[NSMutableAttributedString alloc] init];
     [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
@@ -72,8 +71,8 @@
     return self;
 }
 
-- (id)initWithDialogItem:(TL_conversation *)dialog selectString:(NSString *)selectString {
-    if(self = [self initWithDialogItem:dialog]) {
+- (id)initWithConversationItem:(TL_conversation *)conversation selectString:(NSString *)selectString {
+    if(self = [self initWithConversationItem:conversation]) {
         self.selectString = selectString;
     }
     return self;
@@ -81,7 +80,7 @@
 
 - (void)notificationChangeMute:(NSNotification *)notify {
     int peer_id = [[notify.userInfo objectForKey:KEY_PEER_ID] intValue];
-    if(peer_id == self.dialog.peer.peer_id) {
+    if(peer_id == self.conversation.peer.peer_id) {
         BOOL isMuted = [[notify.userInfo objectForKey:KEY_IS_MUTE] boolValue];
         if(self.isMuted != isMuted) {
             self.isMuted = isMuted;
@@ -93,13 +92,12 @@
 - (void)notificationTyping:(NSNotification *)notify {
     NSArray *array = [[notify.userInfo objectForKey:@"users"] mutableCopy];
 
-    
     if(array.count) {
         [[self.writeAttributedString mutableString] setString:@""];
         [self.writeAttributedString setSelected:NO];
 
         NSString *string;
-        if(self.dialog.type == DialogTypeChat) {
+        if(self.conversation.type == DialogTypeChat) {
             int maxSize = 15;
             
             if(array.count == 1) {
@@ -113,8 +111,8 @@
                     string = [NSString stringWithFormat:@"%@...", [string substringToIndex:maxSize - 3]];
                 
                 string = [NSString stringWithFormat:NSLocalizedString(@"Typing.IsTyping", nil), string];
-            } else if(array.count == 2) {
                 
+            } else if(array.count == 2) {
                 
                 TGActionTyping *action1 = array[0];
                 TGActionTyping *action2 = array[1];
@@ -171,11 +169,8 @@
 
 - (void)notificationChangeMessage:(NSNotification *)notify {
     
-    self.lastMessage = [[MessagesManager sharedManager] find:self.dialog.top_message];
+    self.lastMessage = [[MessagesManager sharedManager] find:self.conversation.top_message];
     
-    if(!self.lastMessage && self.dialog.top_message != -1) {
-        DLog(@"no message %@", self.dialog);
-    }
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
     [messageText beginEditing];
@@ -184,8 +179,7 @@
     self.isRead = !self.lastMessage.unread;
     self.isNotRead = self.lastMessage.unread && !self.isOut;
     
-    
-    self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.dialog];
+    self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.conversation];
         
     
     
@@ -199,7 +193,7 @@
 
 - (void)generateDate {
     
-    int time = self.dialog.last_message_date;
+    int time = self.conversation.last_message_date;
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
     self.dateSize = NSZeroSize;
@@ -217,21 +211,19 @@
 }
 
 - (void)notificationChangeUnreadCount:(NSNotification *)notify {
-    if(notify && !self.dialog.unread_count) {
+    if(notify && !self.conversation.unread_count) {
         [self notificationChangeMessage:nil];
         [self redrawRow];
         return;
     }
     
-    if(self.dialog.unread_count) {
+    if(self.conversation.unread_count) {
         NSString *unreadTextCount;
         
-        if(self.dialog.unread_count < 1000)
-            unreadTextCount = [NSString stringWithFormat:@"%d", self.dialog.unread_count];
+        if(self.conversation.unread_count < 1000)
+            unreadTextCount = [NSString stringWithFormat:@"%d", self.conversation.unread_count];
         else
-            unreadTextCount = [[NSNumber numberWithInt:self.dialog.unread_count] prettyNumber];
-        
-//  unreadTextCount = 1000;
+            unreadTextCount = [[NSNumber numberWithInt:self.conversation.unread_count] prettyNumber];
         
     NSDictionary *attributes =@{
                                 NSForegroundColorAttributeName: [NSColor whiteColor],
@@ -252,7 +244,7 @@
 }
 
 - (NSObject *)itemForHash {
-    return self.dialog;
+    return self.conversation;
 }
 
 + (NSUInteger)hash:(TL_conversation *)object {

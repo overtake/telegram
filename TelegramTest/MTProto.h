@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 18.12.14.
+//  Auto created by Dmitry Kondratyev on 25.12.14.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -339,6 +339,12 @@
 @interface TLmessages_Stickers : TLObject
 @end
 	
+@interface TLStickerPack : TLObject
+@end
+	
+@interface TLmessages_AllStickers : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -398,6 +404,7 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
+	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -2191,14 +2198,36 @@
 	
 @interface TLmessages_Stickers()
 @property (nonatomic, strong) NSString* n_hash;
-@property (nonatomic, strong) NSMutableArray* strickers;
+@property (nonatomic, strong) NSMutableArray* stickers;
 @end
 
 @interface TL_messages_stickersNotModified : TLmessages_Stickers
 +(TL_messages_stickersNotModified*)create;
 @end
 @interface TL_messages_stickers : TLmessages_Stickers
-+(TL_messages_stickers*)createWithN_hash:(NSString*)n_hash strickers:(NSMutableArray*)strickers;
++(TL_messages_stickers*)createWithN_hash:(NSString*)n_hash stickers:(NSMutableArray*)stickers;
+@end
+	
+@interface TLStickerPack()
+@property (nonatomic, strong) NSString* emoticon;
+@property (nonatomic, strong) NSMutableArray* documents;
+@end
+
+@interface TL_stickerPack : TLStickerPack
++(TL_stickerPack*)createWithEmoticon:(NSString*)emoticon documents:(NSMutableArray*)documents;
+@end
+	
+@interface TLmessages_AllStickers()
+@property (nonatomic, strong) NSString* n_hash;
+@property (nonatomic, strong) NSMutableArray* packs;
+@property (nonatomic, strong) NSMutableArray* documents;
+@end
+
+@interface TL_messages_allStickersNotModified : TLmessages_AllStickers
++(TL_messages_allStickersNotModified*)create;
+@end
+@interface TL_messages_allStickers : TLmessages_AllStickers
++(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents;
 @end
 	
 @interface TLProtoMessage()

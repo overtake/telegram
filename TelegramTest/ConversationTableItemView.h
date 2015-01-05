@@ -7,7 +7,7 @@
 //
 
 #import "TMElements.h"
-#import "DialogTableItem.h"
+#import "ConversationTableItem.h"
 #import "DialogSwipeTableControll.h"
 
 
@@ -20,7 +20,7 @@ typedef enum {
 
 @class DialogTableView;
 
-@interface DialogTableItemView : TMRowView
+@interface ConversationTableItemView : TMRowView
 
 @property (nonatomic, strong) DialogTableView *tableView;
 @property (nonatomic) BOOL swipePanelActive;

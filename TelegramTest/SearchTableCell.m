@@ -77,7 +77,7 @@
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
-    [DialogsViewController showPopupMenuForDialog:[self rowItem].dialog withEvent:theEvent forView:self];
+    [TGConversationListViewController showPopupMenuForDialog:[self rowItem].conversation withEvent:theEvent forView:self];
 }
 
 - (void) checkSelected:(BOOL)isSelected {
@@ -96,20 +96,20 @@
     SearchItem *item = [self rowItem];
     
     
-    if(item.dialog.type == DialogTypeChat) {
+    if(item.conversation.type == DialogTypeChat) {
          [self.titleTextField setChat:item.chat];
     }
     
-    if(item.dialog.type == DialogTypeUser) {
+    if(item.conversation.type == DialogTypeUser) {
          [self.titleTextField setUser:item.user];
     }
     
-    if(item.dialog.type == DialogTypeSecretChat) {
+    if(item.conversation.type == DialogTypeSecretChat) {
         [self.titleTextField setUser:item.user isEncrypted:YES];
     }
     
-    if(item.dialog.type == DialogTypeBroadcast) {
-        [self.titleTextField setBroadcast:item.dialog.broadcast];
+    if(item.conversation.type == DialogTypeBroadcast) {
+        [self.titleTextField setBroadcast:item.conversation.broadcast];
     }
     
     
@@ -142,16 +142,16 @@
         [self.dateTextField setHidden:YES];
     } else {
         
-        if(item.dialog.type == DialogTypeChat) {
+        if(item.conversation.type == DialogTypeChat) {
             [self.avatarImageView setChat:item.chat];
         }
         
-        if(item.dialog.type == DialogTypeUser || item.dialog.type == DialogTypeSecretChat) {
+        if(item.conversation.type == DialogTypeUser || item.conversation.type == DialogTypeSecretChat) {
             [self.avatarImageView setUser:item.user];
         }
         
-        if(item.dialog.type == DialogTypeBroadcast) {
-            [self.avatarImageView setBroadcast:item.dialog.broadcast];
+        if(item.conversation.type == DialogTypeBroadcast) {
+            [self.avatarImageView setBroadcast:item.conversation.broadcast];
         }
         
 

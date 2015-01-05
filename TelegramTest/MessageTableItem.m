@@ -45,6 +45,8 @@
         self.isForwadedMessage = [self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]];
         self.isChat = self.message.conversation.type == DialogTypeChat;
         
+        _containerOffset = self.isForwadedMessage ? 129 : 79;
+        
         if(self.message) {
            
             self.user = [[UsersManager sharedManager] find:object.from_id];

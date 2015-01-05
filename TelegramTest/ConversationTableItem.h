@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "TMElements.h"
 
-@interface DialogTableItem : TMRowItem
-@property (nonatomic, strong) TL_conversation *dialog;
+@interface ConversationTableItem : TMRowItem
+@property (nonatomic, strong) TL_conversation *conversation;
 @property (nonatomic, strong) TL_localMessage *lastMessage;
 
 @property (nonatomic, strong) TLUser *user;
@@ -36,6 +36,6 @@
 
 @property (nonatomic,strong) NSString *selectString;
 
-- (id)initWithDialogItem:(TL_conversation *)dialog;
-- (id)initWithDialogItem:(TL_conversation *)dialog selectString:(NSString *)selectString;
+- (id)initWithConversationItem:(TL_conversation *)conversation;
+- (id)initWithConversationItem:(TL_conversation *)conversation selectString:(NSString *)selectString;
 @end
