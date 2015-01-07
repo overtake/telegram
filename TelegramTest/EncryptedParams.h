@@ -20,12 +20,14 @@ typedef enum  {
 
 
 #define MIN_ENCRYPTED_LAYER 1
-#define MAX_ENCRYPTED_LAYER 17
+#define MAX_ENCRYPTED_LAYER 20
 
 @property (atomic,assign) long access_hash;
-@property (atomic,strong) NSData *dh_prime;
+@property (atomic,strong) NSData *p;
 @property (atomic,strong) NSData *a;
-@property (atomic,strong) NSData *g_a;
+@property (atomic,strong) NSData *random;
+@property (atomic,assign) int g;
+@property (atomic,strong) NSData *g_a_or_b;
 @property (atomic,assign) long key_fingerprint;
 @property (atomic,assign) int n_id;
 @property (atomic,assign) BOOL isAdmin;
@@ -46,7 +48,7 @@ typedef void (^stateHandler)(EncryptedState state);
 
 @property (nonatomic,copy) stateHandler stateHandler;
 
--(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprint:(long)key_fingerprint a:(NSData *)a g_a:(NSData *)g_a dh_prime:(NSData *)dh_prime state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin;
+-(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprint:(long)key_fingerprint a:(NSData *)a p:(NSData *)p random:(NSData *)random g_a_or_b:(NSData *)g_a_or_b g:(int)g state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin;
 -(NSDictionary *)yapObject;
 -(id)initWithYap:(NSDictionary *)object;
 
@@ -60,5 +62,6 @@ typedef void (^stateHandler)(EncryptedState state);
 
 -(int)in_x;
 -(int)out_x;
+
 
 @end

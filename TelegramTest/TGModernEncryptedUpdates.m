@@ -10,10 +10,13 @@
 #import "SecretLayer1.h"
 #import "SecretLayer17.h"
 #import "SecretLayer20.h"
+#import <MtProtoKit/MTEncryption.h>
 #import "Crypto.h"
 #import "SenderHeader.h"
 #import "MessagesUtils.h"
 #import "SelfDestructionController.h"
+#import "AcceptKeySecretSenderItem.h"
+#import "CommitKeySecretSenderItem.h"
 @implementation TGModernEncryptedUpdates
 
 
@@ -196,10 +199,120 @@
         
         if([action isKindOfClass:convertClass(@"Secret%d_DecryptedMessageAction_decryptedMessageActionRequestKey", layer)]) {
             
+            long exchange_id = [[action valueForKey:@"exchange_id"] longValue];
+            
+            NSData *g_a = [action valueForKey:@"g_a"];
             
             
-        }
+            
+            uint8_t rawABytes[256];
+            SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
+            
+            for (int i = 0; i < 256 && i < (int)params.random.length; i++)
+            {
+                uint8_t currentByte = ((uint8_t *)params.random.bytes)[i];
+                rawABytes[i] ^= currentByte;
+            }
+            
+            NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
+            
+            int32_t tmpG = params.g;
+            tmpG = NSSwapInt(tmpG);
+            NSData *g = [[NSData alloc] initWithBytes:&tmpG length:4];
+            
+            NSData *g_b = MTExp(g, aBytes, params.p);
+            
+            NSData *key =  MTExp(g_a, aBytes, params.p);
+            
+            long keyId;
+            [[[Crypto sha1:key] subdataWithRange:NSMakeRange(12, 8)] getBytes:&keyId];
+            
+            
+            if (!MTCheckIsSafeGAOrB(g_b, params.p))
+            {
+                DLog(@"Surprisingly, we generated an unsafe g_a");
+                
+            } else {
+                
+                AcceptKeySecretSenderItem *acceptKey = [[AcceptKeySecretSenderItem alloc] initWithConversation:conversation exchange_id:exchange_id g_b:g_b key_fingerprint:keyId];
+                
+                [acceptKey send];
+                
+                [params setKey:key forFingerprint:keyId];
+                
+                [params setKey_fingerprint:keyId];
+                
+                [params save];
+                
+            }
 
+            
+            return YES;
+
+        }
+        
+        if([action isKindOfClass:convertClass(@"Secret%d_DecryptedMessageAction_decryptedMessageActionCommitKey", layer)]) {
+            
+            
+            return YES;
+        }
+        
+        if([action isKindOfClass:convertClass(@"Secret%d_DecryptedMessageAction_decryptedMessageActionAcceptKey", layer)]) {
+            
+            
+            long exchange_id = [[action valueForKey:@"exchange_id"] longValue];
+            
+            NSData *g_b = [action valueForKey:@"g_b"];
+            
+            long key_fingerprint = [[action valueForKey:@"key_fingerprint"] longValue];
+            
+            
+            uint8_t rawABytes[256];
+            SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
+            
+            for (int i = 0; i < 256 && i < (int)params.random.length; i++)
+            {
+                uint8_t currentByte = ((uint8_t *)params.random.bytes)[i];
+                rawABytes[i] ^= currentByte;
+            }
+            
+            NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
+            
+            NSData *key =  MTExp(g_b, params.a, params.p);
+            
+            long keyId;
+            [[MTSha1(key) subdataWithRange:NSMakeRange(12, 8)] getBytes:&keyId];
+            
+            
+            if (!MTCheckIsSafeGAOrB(g_b, params.p))
+            {
+                DLog(@"Surprisingly, we generated an unsafe g_a");
+                
+            } else {
+                
+                if(keyId == key_fingerprint) {
+                    
+                    CommitKeySecretSenderItem *commit = [[CommitKeySecretSenderItem alloc] initWithConversation:conversation exchange_id:exchange_id key_fingerprint:key_fingerprint];
+                    
+                    [commit send];
+                    
+                    [params setKey:key forFingerprint:keyId];
+                    
+                    [params setKey_fingerprint:keyId];
+                    
+                    [params save];
+                    
+                } else {
+                    // abort key
+                }
+                
+               
+                
+            }
+
+            
+            return YES;
+        }
         
     }
     
@@ -263,11 +376,9 @@ Class convertClass(NSString *c, int layer) {
     id media = [TL_messageMediaEmpty create];
     
     
-    
-    
-     if([layerMessage.message isKindOfClass:[Secret17_DecryptedMessage_decryptedMessage class]]) {
+    if([layerMessage.message isKindOfClass:[Secret17_DecryptedMessage_decryptedMessage class]]) {
          media = [self media:[layerMessage.message valueForKey:@"media"] layer:17 file:encryptedMessage.file];
-     }
+    }
     
     TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret17__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:17];
     
@@ -278,11 +389,9 @@ Class convertClass(NSString *c, int layer) {
     
 }
 
-
 -(void)proccess20Layer:(Secret20_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
     
     Secret20_DecryptedMessageLayer *layerMessage = (Secret20_DecryptedMessageLayer *)message;
-    
     
     NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     

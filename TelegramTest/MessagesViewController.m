@@ -61,6 +61,7 @@
 #import <MtProtoKit/MTEncryption.h>
 #import "StickersPanelView.h"
 #import "StickerSenderItem.h"
+#import "RequestKeySecretSenderItem.h"
 
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -2191,6 +2192,33 @@ static NSTextAttachment *headerMediaIcon() {
     if(!_conversation.canSendMessage)  {
         NSBeep();
         return;
+    }
+    
+    if([message isEqualToString:@"requestKey"]) {
+        
+        EncryptedParams *config = _conversation.encryptedChat.encryptedParams;
+        
+        uint8_t rawABytes[256];
+        SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
+        
+        for (int i = 0; i < 256 && i < (int)config.random.length; i++)
+        {
+            uint8_t currentByte = ((uint8_t *)config.random.bytes)[i];
+            rawABytes[i] ^= currentByte;
+        }
+        
+        NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
+        
+        int32_t tmpG = config.g;
+        tmpG = NSSwapInt(tmpG);
+        NSData *g = [[NSData alloc] initWithBytes:&tmpG length:4];
+        
+        NSData *g_a = MTExp(g, config.a, config.p);
+        
+        
+        RequestKeySecretSenderItem *sender = [[RequestKeySecretSenderItem alloc] initWithConversation:_conversation exchange_id:rand_long() g_a:g_a];
+        
+        [sender send];
     }
     
     //8149178

@@ -10,4 +10,6 @@
 
 @interface RequestKeySecretSenderItem : SecretSenderItem
 
+-(id)initWithConversation:(TL_conversation *)conversation exchange_id:(long)exchange_id g_a:(NSData *)g_a;
+
 @end

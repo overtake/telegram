@@ -454,7 +454,7 @@ static NSString *kUpdateState = @"kUpdateState";
                
                 EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
                 
-                NSData *key_hash = [Crypto exp:[chat g_a_or_b] b:[params a] dhPrime:params.dh_prime];
+                NSData *key_hash = [Crypto exp:[chat g_a_or_b] b:[params a] dhPrime:params.p];
                 NSData *key_fingerprints = [[Crypto sha1:key_hash] subdataWithRange:NSMakeRange(12, 8)];
                 long keyId;
                 [key_fingerprints getBytes:&keyId];

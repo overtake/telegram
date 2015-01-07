@@ -283,8 +283,8 @@ static const char *Secret20__Serializer_Key = "Secret20__Serializer";
             NSNumber * exchange_id = nil;
             if ((exchange_id = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSString * g_a = nil;
-            if ((g_a = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSData * g_a = nil;
+            if ((g_a = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret20__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
             return [Secret20_DecryptedMessageAction decryptedMessageActionRequestKeyWithExchange_id:exchange_id g_a:g_a];
         } copy];
@@ -293,20 +293,13 @@ static const char *Secret20__Serializer_Key = "Secret20__Serializer";
             NSNumber * exchange_id = nil;
             if ((exchange_id = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSString * g_b = nil;
-            if ((g_b = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSData * g_b = nil;
+            if ((g_b = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret20__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
             NSNumber * key_fingerprint = nil;
             if ((key_fingerprint = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
             return [Secret20_DecryptedMessageAction decryptedMessageActionAcceptKeyWithExchange_id:exchange_id g_b:g_b key_fingerprint:key_fingerprint];
-        } copy];
-        parsers[@((int32_t)0xdd05ec6b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
-        {
-            NSNumber * exchange_id = nil;
-            if ((exchange_id = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
-               return nil;
-            return [Secret20_DecryptedMessageAction decryptedMessageActionAbortKeyWithExchange_id:exchange_id];
         } copy];
         parsers[@((int32_t)0xec2e0b9b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
@@ -317,6 +310,13 @@ static const char *Secret20__Serializer_Key = "Secret20__Serializer";
             if ((key_fingerprint = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
             return [Secret20_DecryptedMessageAction decryptedMessageActionCommitKeyWithExchange_id:exchange_id key_fingerprint:key_fingerprint];
+        } copy];
+        parsers[@((int32_t)0xdd05ec6b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSNumber * exchange_id = nil;
+            if ((exchange_id = [Secret20__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+               return nil;
+            return [Secret20_DecryptedMessageAction decryptedMessageActionAbortKeyWithExchange_id:exchange_id];
         } copy];
         parsers[@((int32_t)0xa82fdd63)] = [^id (__unused NSData *data, __unused NSUInteger* _offset, __unused id metaInfo)
         {
@@ -811,21 +811,15 @@ static const char *Secret20__Serializer_Key = "Secret20__Serializer";
 @interface Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey ()
 
 @property (nonatomic, strong) NSNumber * exchange_id;
-@property (nonatomic, strong) NSString * g_a;
+@property (nonatomic, strong) NSData * g_a;
 
 @end
 
 @interface Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey ()
 
 @property (nonatomic, strong) NSNumber * exchange_id;
-@property (nonatomic, strong) NSString * g_b;
+@property (nonatomic, strong) NSData * g_b;
 @property (nonatomic, strong) NSNumber * key_fingerprint;
-
-@end
-
-@interface Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey ()
-
-@property (nonatomic, strong) NSNumber * exchange_id;
 
 @end
 
@@ -833,6 +827,12 @@ static const char *Secret20__Serializer_Key = "Secret20__Serializer";
 
 @property (nonatomic, strong) NSNumber * exchange_id;
 @property (nonatomic, strong) NSNumber * key_fingerprint;
+
+@end
+
+@interface Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey ()
+
+@property (nonatomic, strong) NSNumber * exchange_id;
 
 @end
 
@@ -949,27 +949,20 @@ id random_ids_result = [Secret20__Serializer addSerializerToObject:random_ids_co
     return _object;
 }
 
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSString *)g_a
++ (Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSData *)g_a
 {
     Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey *_object = [[Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey alloc] init];
     _object.exchange_id = [Secret20__Serializer addSerializerToObject:[exchange_id copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
-    _object.g_a = [Secret20__Serializer addSerializerToObject:[g_a copy] serializer:[[Secret20_BuiltinSerializer_String alloc] init]];
+    _object.g_a = [Secret20__Serializer addSerializerToObject:[g_a copy] serializer:[[Secret20_BuiltinSerializer_Bytes alloc] init]];
     return _object;
 }
 
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSString *)g_b key_fingerprint:(NSNumber *)key_fingerprint
++ (Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSData *)g_b key_fingerprint:(NSNumber *)key_fingerprint
 {
     Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey *_object = [[Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey alloc] init];
     _object.exchange_id = [Secret20__Serializer addSerializerToObject:[exchange_id copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
-    _object.g_b = [Secret20__Serializer addSerializerToObject:[g_b copy] serializer:[[Secret20_BuiltinSerializer_String alloc] init]];
+    _object.g_b = [Secret20__Serializer addSerializerToObject:[g_b copy] serializer:[[Secret20_BuiltinSerializer_Bytes alloc] init]];
     _object.key_fingerprint = [Secret20__Serializer addSerializerToObject:[key_fingerprint copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
-    return _object;
-}
-
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id
-{
-    Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *_object = [[Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey alloc] init];
-    _object.exchange_id = [Secret20__Serializer addSerializerToObject:[exchange_id copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
@@ -978,6 +971,13 @@ id random_ids_result = [Secret20__Serializer addSerializerToObject:random_ids_co
     Secret20_DecryptedMessageAction_decryptedMessageActionCommitKey *_object = [[Secret20_DecryptedMessageAction_decryptedMessageActionCommitKey alloc] init];
     _object.exchange_id = [Secret20__Serializer addSerializerToObject:[exchange_id copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
     _object.key_fingerprint = [Secret20__Serializer addSerializerToObject:[key_fingerprint copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
+    return _object;
+}
+
++ (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id
+{
+    Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *_object = [[Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey alloc] init];
+    _object.exchange_id = [Secret20__Serializer addSerializerToObject:[exchange_id copy] serializer:[[Secret20_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
@@ -1236,30 +1236,6 @@ id random_ids_result = [Secret20__Serializer addSerializerToObject:random_ids_co
 
 @end
 
-@implementation Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self != nil)
-    {
-        [Secret20__Serializer addSerializerToObject:self withConstructorSignature:0xdd05ec6b serializeBlock:^bool (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *object, NSMutableData *data)
-        {
-            if (![Secret20__Environment serializeObject:object.exchange_id data:data addSignature:false])
-                return false;
-            return true;
-        }];
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAbortKey exchange_id:%@)", self.exchange_id];
-}
-
-@end
-
 @implementation Secret20_DecryptedMessageAction_decryptedMessageActionCommitKey
 
 - (instancetype)init
@@ -1282,6 +1258,30 @@ id random_ids_result = [Secret20__Serializer addSerializerToObject:random_ids_co
 - (NSString *)description
 {
     return [[NSString alloc] initWithFormat:@"(decryptedMessageActionCommitKey exchange_id:%@ key_fingerprint:%@)", self.exchange_id, self.key_fingerprint];
+}
+
+@end
+
+@implementation Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil)
+    {
+        [Secret20__Serializer addSerializerToObject:self withConstructorSignature:0xdd05ec6b serializeBlock:^bool (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *object, NSMutableData *data)
+        {
+            if (![Secret20__Environment serializeObject:object.exchange_id data:data addSignature:false])
+                return false;
+            return true;
+        }];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAbortKey exchange_id:%@)", self.exchange_id];
 }
 
 @end

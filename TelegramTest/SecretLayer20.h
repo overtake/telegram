@@ -13,8 +13,8 @@
 @class Secret20_DecryptedMessageAction_decryptedMessageActionResend;
 @class Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey;
 @class Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey;
-@class Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey;
 @class Secret20_DecryptedMessageAction_decryptedMessageActionCommitKey;
+@class Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey;
 @class Secret20_DecryptedMessageAction_decryptedMessageActionNoop;
 
 @class Secret20_SendMessageAction;
@@ -67,10 +67,10 @@
 + (Secret20_DecryptedMessageAction_decryptedMessageActionNotifyLayer *)decryptedMessageActionNotifyLayerWithLayer:(NSNumber *)layer;
 + (Secret20_DecryptedMessageAction_decryptedMessageActionTyping *)decryptedMessageActionTypingWithAction:(Secret20_SendMessageAction *)action;
 + (Secret20_DecryptedMessageAction_decryptedMessageActionResend *)decryptedMessageActionResendWithStart_seq_no:(NSNumber *)start_seq_no end_seq_no:(NSNumber *)end_seq_no;
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSString *)g_a;
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSString *)g_b key_fingerprint:(NSNumber *)key_fingerprint;
-+ (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id;
++ (Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSData *)g_a;
++ (Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSData *)g_b key_fingerprint:(NSNumber *)key_fingerprint;
 + (Secret20_DecryptedMessageAction_decryptedMessageActionCommitKey *)decryptedMessageActionCommitKeyWithExchange_id:(NSNumber *)exchange_id key_fingerprint:(NSNumber *)key_fingerprint;
++ (Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id;
 + (Secret20_DecryptedMessageAction_decryptedMessageActionNoop *)decryptedMessageActionNoop;
 
 @end
@@ -125,21 +125,15 @@
 @interface Secret20_DecryptedMessageAction_decryptedMessageActionRequestKey : Secret20_DecryptedMessageAction
 
 @property (nonatomic, strong, readonly) NSNumber * exchange_id;
-@property (nonatomic, strong, readonly) NSString * g_a;
+@property (nonatomic, strong, readonly) NSData * g_a;
 
 @end
 
 @interface Secret20_DecryptedMessageAction_decryptedMessageActionAcceptKey : Secret20_DecryptedMessageAction
 
 @property (nonatomic, strong, readonly) NSNumber * exchange_id;
-@property (nonatomic, strong, readonly) NSString * g_b;
+@property (nonatomic, strong, readonly) NSData * g_b;
 @property (nonatomic, strong, readonly) NSNumber * key_fingerprint;
-
-@end
-
-@interface Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey : Secret20_DecryptedMessageAction
-
-@property (nonatomic, strong, readonly) NSNumber * exchange_id;
 
 @end
 
@@ -147,6 +141,12 @@
 
 @property (nonatomic, strong, readonly) NSNumber * exchange_id;
 @property (nonatomic, strong, readonly) NSNumber * key_fingerprint;
+
+@end
+
+@interface Secret20_DecryptedMessageAction_decryptedMessageActionAbortKey : Secret20_DecryptedMessageAction
+
+@property (nonatomic, strong, readonly) NSNumber * exchange_id;
 
 @end
 

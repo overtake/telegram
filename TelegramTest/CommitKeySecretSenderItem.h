@@ -9,5 +9,5 @@
 #import "SecretSenderItem.h"
 
 @interface CommitKeySecretSenderItem : SecretSenderItem
-
+-(id)initWithConversation:(TL_conversation *)conversation exchange_id:(long)exchange_id key_fingerprint:(long)key_fingerprint;
 @end

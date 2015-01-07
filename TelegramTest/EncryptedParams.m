@@ -20,13 +20,15 @@
 
 static NSMutableDictionary *cached;
 
--(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprint:(long)key_fingerprint a:(NSData *)a g_a:(NSData *)g_a dh_prime:(NSData *)dh_prime state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin {
+-(id)initWithChatId:(int)chat_id encrypt_key:(NSData *)encrypt_key key_fingerprint:(long)key_fingerprint a:(NSData *)a p:(NSData *)p random:(NSData *)random g_a_or_b:(NSData *)g_a_or_b g:(int)g state:(int)state access_hash:(long)access_hash layer:(int)layer isAdmin:(BOOL)isAdmin {
     if(self = [super init]) {
         _n_id = chat_id;
         _key_fingerprint = key_fingerprint;
         _a = a;
-        _g_a = g_a;
-        _dh_prime = dh_prime;
+        _g = g;
+        _g_a_or_b = g_a_or_b;
+        _random = random;
+        _p = p;
         _state = state;
         _access_hash = access_hash;
         _layer = layer;
@@ -58,14 +60,16 @@ static NSMutableDictionary *cached;
     [data setObject:@(self.isAdmin) forKey:@"isAdmin"];
     [data setObject:@(self.prev_layer) forKey:@"prevLayer"];
     [data setObject:@(self.ttl) forKey:@"ttl"];
-    
+    [data setObject:@(self.g) forKey:@"g"];
     
     if(self.a)
         [data setObject:self.a forKey:@"a"];
-    if(self.dh_prime)
-        [data setObject:self.dh_prime forKey:@"dh_prime"];
-    if(self.g_a)
-        [data setObject:self.g_a forKey:@"g_a"];
+    if(self.p)
+        [data setObject:self.p forKey:@"dh_prime"];
+    if(self.random)
+        [data setObject:self.random forKey:@"random"];
+    if(self.g_a_or_b)
+        [data setObject:self.g_a_or_b forKey:@"g_a_or_b"];
     
     [data setObject:self.keys forKey:@"keys"];
     
@@ -110,8 +114,9 @@ static NSMutableDictionary *cached;
         _state = [[object objectForKey:@"state"] intValue];
         _key_fingerprint = [[object objectForKey:@"key_fingerprint"] longValue];
         _a = [object objectForKey:@"a"];
-        _g_a = [object objectForKey:@"g_a"];
-        _dh_prime = [object objectForKey:@"dh_prime"];
+        _g = [[object objectForKey:@"g"] intValue];
+        _random = [object objectForKey:@"random"];
+        _p = [object objectForKey:@"dh_prime"];
         _access_hash = [[object objectForKey:@"access_hash"] longValue];
         _layer = [[object objectForKey:@"layer"] intValue];
         _in_seq_no = [[object objectForKey:@"in_seq_no"] intValue];
@@ -120,6 +125,7 @@ static NSMutableDictionary *cached;
         _prev_layer = [[object objectForKey:@"prevLayer"] intValue];
         _ttl = [[object objectForKey:@"ttl"] intValue];
         _keys = [object objectForKey:@"keys"];
+        _g_a_or_b = [object objectForKey:@"g_a_or_b"];
     }
     return self;
 }
