@@ -20,7 +20,7 @@ typedef enum  {
 
 
 #define MIN_ENCRYPTED_LAYER 1
-#define MAX_ENCRYPTED_LAYER 20
+#define MAX_ENCRYPTED_LAYER 23
 
 @property (atomic,assign) long access_hash;
 @property (atomic,strong) NSData *p;
@@ -38,7 +38,6 @@ typedef enum  {
 @property (nonatomic,assign) int out_seq_no;
 
 @property (nonatomic,assign) int ttl;
-
 
 
 @property (nonatomic,assign) EncryptedState state;

@@ -412,6 +412,33 @@ Class convertClass(NSString *c, int layer) {
     
 }
 
+-(void)proccess23Layer:(Secret23_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
+    
+    Secret23_DecryptedMessageLayer *layerMessage = (Secret23_DecryptedMessageLayer *)message;
+    
+    NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
+    
+    if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
+        return;
+    
+    
+    id media = [TL_messageMediaEmpty create];
+    
+    
+    
+    if([layerMessage.message isKindOfClass:[Secret20_DecryptedMessage_decryptedMessage class]]) {
+        media = [self media:[layerMessage.message valueForKey:@"media"] layer:23 file:encryptedMessage.file];
+    }
+    
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret23__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:23];
+    
+    
+    [[Storage manager] insertSecretInAction:action];
+    
+    [self dequeueInActions:params conversation:conversation];
+    
+}
+
 
 -(void)dequeueInActions:(EncryptedParams *)params conversation:(TL_conversation *)conversation {
     

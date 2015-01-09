@@ -10,6 +10,7 @@
 #import "SecretLayer1.h"
 #import "SecretLayer17.h"
 #import "SecretLayer20.h"
+#import "SecretLayer23.h"
 #import "TGSecretAction.h"
 #import "NSMutableData+Extension.h"
 @interface SecretSenderItem : SenderItem
