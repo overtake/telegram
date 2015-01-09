@@ -17,6 +17,7 @@
 #import "SelfDestructionController.h"
 #import "AcceptKeySecretSenderItem.h"
 #import "CommitKeySecretSenderItem.h"
+#import "AbortKeySecretSenderItem.h"
 @implementation TGModernEncryptedUpdates
 
 
@@ -267,17 +268,6 @@
             long key_fingerprint = [[action valueForKey:@"key_fingerprint"] longValue];
             
             
-            uint8_t rawABytes[256];
-            SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
-            
-            for (int i = 0; i < 256 && i < (int)params.random.length; i++)
-            {
-                uint8_t currentByte = ((uint8_t *)params.random.bytes)[i];
-                rawABytes[i] ^= currentByte;
-            }
-            
-            NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
-            
             NSData *key =  MTExp(g_b, params.a, params.p);
             
             long keyId;
@@ -286,7 +276,9 @@
             
             if (!MTCheckIsSafeGAOrB(g_b, params.p))
             {
-                DLog(@"Surprisingly, we generated an unsafe g_a");
+                AbortKeySecretSenderItem *abort = [[AbortKeySecretSenderItem alloc] initWithConversation:conversation exchange_id:exchange_id];
+                
+                [abort send];
                 
             } else {
                 
@@ -304,6 +296,9 @@
                     
                 } else {
                     // abort key
+                    AbortKeySecretSenderItem *abort = [[AbortKeySecretSenderItem alloc] initWithConversation:conversation exchange_id:exchange_id];
+                    
+                    [abort send];
                 }
                 
                

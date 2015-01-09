@@ -415,6 +415,8 @@
 		C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EAE1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m */; };
 		C26F7EB21A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EB11A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m */; };
 		C26F7EB51A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EB41A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m */; };
+		C26F7EBB1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EBA1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m */; };
+		C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EC11A5EFB54001D1AE2 /* SecretLayer23.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1558,6 +1560,10 @@
 		C26F7EB11A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestKeySecretSenderItem.m; sourceTree = "<group>"; };
 		C26F7EB31A56E5C4001D1AE2 /* CommitKeySecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommitKeySecretSenderItem.h; sourceTree = "<group>"; };
 		C26F7EB41A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommitKeySecretSenderItem.m; sourceTree = "<group>"; };
+		C26F7EB91A5ED66E001D1AE2 /* AbortKeySecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbortKeySecretSenderItem.h; sourceTree = "<group>"; };
+		C26F7EBA1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbortKeySecretSenderItem.m; sourceTree = "<group>"; };
+		C26F7EC01A5EFB54001D1AE2 /* SecretLayer23.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretLayer23.h; sourceTree = "<group>"; };
+		C26F7EC11A5EFB54001D1AE2 /* SecretLayer23.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretLayer23.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2640,6 +2646,8 @@
 		0ABACDA5181ADB0500EF43DB /* MTProto */ = {
 			isa = PBXGroup;
 			children = (
+				C26F7EC01A5EFB54001D1AE2 /* SecretLayer23.h */,
+				C26F7EC11A5EFB54001D1AE2 /* SecretLayer23.m */,
 				C26F7EA61A56BEFE001D1AE2 /* SecretLayer20.h */,
 				C26F7EA71A56BEFE001D1AE2 /* SecretLayer20.m */,
 				C2B325EB1A23741E0012DE34 /* serialization */,
@@ -2946,6 +2954,8 @@
 				C26F7EB11A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m */,
 				C26F7EB31A56E5C4001D1AE2 /* CommitKeySecretSenderItem.h */,
 				C26F7EB41A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m */,
+				C26F7EB91A5ED66E001D1AE2 /* AbortKeySecretSenderItem.h */,
+				C26F7EBA1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m */,
 			);
 			name = secret;
 			sourceTree = "<group>";
@@ -4864,6 +4874,7 @@
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
 				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
 				C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */,
+				C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */,
 				C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */,
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
@@ -5302,6 +5313,7 @@
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
 				CEDAEB621881AF85006189A2 /* YapDatabaseViewRangeOptions.m in Sources */,
 				CEDAEB611881AF85006189A2 /* YapDatabaseViewMappings.m in Sources */,
+				C26F7EBB1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m in Sources */,
 				C268C1B019F6B1F7007F836A /* SearchMessageTableItem.m in Sources */,
 				CEC22DF81827CC10008817D0 /* FullChatManager.m in Sources */,
 				0AA3F3AB18BE1F7600D383F1 /* TMNameTextField.m in Sources */,
