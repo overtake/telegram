@@ -486,9 +486,9 @@ Class convertClass(NSString *c, int layer) {
             }];
             
             if(startResendSeqNo != 0 && endResendSeqNo != 0) {
-                ResendSecretSenderItem *resend = [[ResendSecretSenderItem alloc] initWithConversation:conversation start_seq:startResendSeqNo end_seq:endResendSeqNo];
-                
-                [resend send];
+//                ResendSecretSenderItem *resend = [[ResendSecretSenderItem alloc] initWithConversation:conversation start_seq:startResendSeqNo end_seq:endResendSeqNo];
+//                
+//                [resend send];
             }
             
         }];

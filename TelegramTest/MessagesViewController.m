@@ -62,6 +62,7 @@
 #import "StickersPanelView.h"
 #import "StickerSenderItem.h"
 #import "RequestKeySecretSenderItem.h"
+#import "ExternalDocumentSecretSenderItem.h"
 
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -1668,7 +1669,7 @@ static NSTextAttachment *headerMediaIcon() {
     [[Storage manager] saveInputTextForPeers:self.cacheTextForPeer];
     
     
-    if(_conversation.type == DialogTypeSecretChat)
+    if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
@@ -2428,7 +2429,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat) return;
+    if(!_conversation.canSendMessage) return;
+    
+    if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)
+        return;
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
@@ -2455,11 +2459,21 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        SenderItem *sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:_conversation];
+        
+        SenderItem *sender;
+        
+        if(self.conversation.type != DialogTypeSecretChat) {
+            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:_conversation];
+        } else {
+            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:_conversation document:sticker];
+        }
+        
        
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+        
     }];
+    
 }
 
 

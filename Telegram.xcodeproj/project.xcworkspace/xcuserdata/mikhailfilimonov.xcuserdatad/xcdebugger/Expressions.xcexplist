@@ -748,6 +748,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
+      </ContextState>
+      <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
       </ContextState>
       <ContextState
@@ -1249,6 +1252,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController convertedRows:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -1462,9 +1468,6 @@
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
-         contextName = "-[PhotoCollectionImageView mouseDown:]:PhotoCollectionImageView.m">
-      </ContextState>
-      <ContextState
          contextName = "-[DeleteRandomMessagesSenderItem performRequest]:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
@@ -1583,6 +1586,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewerItem isEqual:]:TGPhotoViewerItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ExternalDocumentSecretSenderItem performRequest]:ExternalDocumentSecretSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
@@ -1752,6 +1763,9 @@
          contextName = "__37-[MessagesViewController sendMessage]_block_invoke_2:MessagesViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[ExternalDocumentSecretSenderItem initWithConversation:document:]:ExternalDocumentSecretSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__29-[SelectUsersTableView ready]_block_invoke:SelectUsersTableView.m">
       </ContextState>
       <ContextState
@@ -1834,6 +1848,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ConnectionStatusViewControllerView show:]:ConnectionStatusViewControllerView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPVImageView setObject:]:TGPVImageView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController tableView:viewForTableColumn:row:]:MessagesViewController.m">

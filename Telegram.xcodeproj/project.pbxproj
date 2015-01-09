@@ -418,6 +418,7 @@
 		C26F7EBB1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EBA1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m */; };
 		C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EC11A5EFB54001D1AE2 /* SecretLayer23.m */; };
 		C26F7EC61A602837001D1AE2 /* ResendSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EC51A602837001D1AE2 /* ResendSecretSenderItem.m */; };
+		C26F7EC91A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EC81A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m */; };
 		C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */; };
 		C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C270C5AF18A13F9F005D80E0 /* FileUtils.m */; };
 		C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */ = {isa = PBXBuildFile; fileRef = C270C5B118A13FB9005D80E0 /* mime-types.txt */; };
@@ -1567,6 +1568,8 @@
 		C26F7EC11A5EFB54001D1AE2 /* SecretLayer23.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretLayer23.m; sourceTree = "<group>"; };
 		C26F7EC41A602837001D1AE2 /* ResendSecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResendSecretSenderItem.h; sourceTree = "<group>"; };
 		C26F7EC51A602837001D1AE2 /* ResendSecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResendSecretSenderItem.m; sourceTree = "<group>"; };
+		C26F7EC71A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalDocumentSecretSenderItem.h; sourceTree = "<group>"; };
+		C26F7EC81A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalDocumentSecretSenderItem.m; sourceTree = "<group>"; };
 		C270C5A818941E99005D80E0 /* TL_messageActionEncryptedChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_messageActionEncryptedChat.h; sourceTree = "<group>"; };
 		C270C5A918941E99005D80E0 /* TL_messageActionEncryptedChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_messageActionEncryptedChat.m; sourceTree = "<group>"; };
 		C270C5AE18A13F9F005D80E0 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
@@ -2961,6 +2964,8 @@
 				C26F7EBA1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m */,
 				C26F7EC41A602837001D1AE2 /* ResendSecretSenderItem.h */,
 				C26F7EC51A602837001D1AE2 /* ResendSecretSenderItem.m */,
+				C26F7EC71A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.h */,
+				C26F7EC81A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m */,
 			);
 			name = secret;
 			sourceTree = "<group>";
@@ -5015,6 +5020,7 @@
 				0AB43BAB18D4F1FF00FB805A /* TMImagePicker.m in Sources */,
 				C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */,
 				CEDAEB541881AF85006189A2 /* YapDatabaseFullTextSearchConnection.m in Sources */,
+				C26F7EC91A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m in Sources */,
 				C2ADB461191BD90F00305CC8 /* MediaCollectionItemView.m in Sources */,
 				C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */,
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
