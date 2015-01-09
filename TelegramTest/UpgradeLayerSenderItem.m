@@ -39,9 +39,6 @@
 }
 
 
--(BOOL)increaseSeq {
-    return self.params.prev_layer >= 17;
-}
 
 - (void)performRequest {
     

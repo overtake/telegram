@@ -19,6 +19,7 @@
 #import "AcceptKeySecretSenderItem.h"
 #import "CommitKeySecretSenderItem.h"
 #import "AbortKeySecretSenderItem.h"
+#import "ResendSecretSenderItem.h"
 @implementation TGModernEncryptedUpdates
 
 
@@ -426,7 +427,7 @@ Class convertClass(NSString *c, int layer) {
     
     
     
-    if([layerMessage.message isKindOfClass:[Secret20_DecryptedMessage_decryptedMessage class]]) {
+    if([layerMessage.message isKindOfClass:[Secret23_DecryptedMessage_decryptedMessage class]]) {
         media = [self media:[layerMessage.message valueForKey:@"media"] layer:23 file:encryptedMessage.file];
     }
     
@@ -445,6 +446,9 @@ Class convertClass(NSString *c, int layer) {
     [[Storage manager] selectSecretInActions:params.n_id completeHandler:^(NSArray *list) {
         
         [ASQueue dispatchOnStageQueue:^{
+            
+            __block int startResendSeqNo = 0;
+            __block int endResendSeqNo = 0;
             
             
             [list enumerateObjectsUsingBlock:^(TGSecretInAction *action, NSUInteger idx, BOOL *stop) {
@@ -473,10 +477,19 @@ Class convertClass(NSString *c, int layer) {
                     [[Storage manager] removeSecretInAction:action];
                     
                     
+                } else {
+                    startResendSeqNo = params.in_seq_no;
+                    endResendSeqNo = action.in_seq_no;
                 }
                 
                 
             }];
+            
+            if(startResendSeqNo != 0 && endResendSeqNo != 0) {
+                ResendSecretSenderItem *resend = [[ResendSecretSenderItem alloc] initWithConversation:conversation start_seq:startResendSeqNo end_seq:endResendSeqNo];
+                
+                [resend send];
+            }
             
         }];
         
@@ -485,6 +498,40 @@ Class convertClass(NSString *c, int layer) {
     
 }
 
+
+-(NSMutableArray *)convertDocumentAttributes:(NSArray *)lAttrs layer:(int)layer {
+    NSMutableArray *attrs = [[NSMutableArray alloc] init];
+    
+    
+    [lAttrs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        Class imageSizeAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeImageSize", layer);
+        Class stickerAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeSticker", layer);
+        Class filenameAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeFilename", layer);
+        Class videoAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeVideo", layer);
+        Class audioAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeAudio", layer);
+        Class animatedAttr = convertClass(@"Secret%d_DocumentAttribute_documentAttributeAnimated", layer);
+        
+        
+        
+        if([obj isKindOfClass:imageSizeAttr]) {
+            [attrs addObject:[TL_documentAttributeImageSize createWithW:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
+        } else if([obj isKindOfClass:stickerAttr]) {
+            [attrs addObject:[TL_documentAttributeSticker create]];
+        } else if([obj isKindOfClass:filenameAttr]) {
+            [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[obj valueForKey:@"file_name"]]];
+        } else if([obj isKindOfClass:videoAttr]) {
+            [attrs addObject:[TL_documentAttributeVideo createWithDuration:[[obj valueForKey:@"duration"] intValue] w:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
+        } else if([obj isKindOfClass:audioAttr]) {
+            [attrs addObject:[TL_documentAttributeAudio createWithDuration:[[obj valueForKey:@"duration"] intValue]]];
+        } else if([obj isKindOfClass:animatedAttr]) {
+            [attrs addObject:[TL_documentAttributeAnimated create]];
+        }
+        
+    }];
+    
+    return attrs;
+}
 
 -(TLMessageMedia *)media:(id)media layer:(int)layer file:(TLEncryptedFile *)file {
     
@@ -503,13 +550,34 @@ Class convertClass(NSString *c, int layer) {
     }
     
     
+    if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaExternalDocument", layer)]) {
+        
+        
+        TLPhotoSize *pthumb = [TL_photoSizeEmpty createWithType:@"jpeg"];
+        
+        
+        if( [[media valueForKey:@"thumb"] isKindOfClass:convertClass(@"Secret%d_PhotoSize_photoCachedSize", layer)]) {
+            
+            id thumb = [media valueForKey:@"thumb"];
+            
+            id location = [thumb valueForKey:@"location"];
+            
+            pthumb = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:[[location valueForKey:@"dc_id"] intValue] volume_id:[[location valueForKey:@"volume_id"] longValue] local_id:[[location valueForKey:@"local_id"] intValue] secret:[[location valueForKey:@"secret"] longValue]] w:[[thumb valueForKey:@"w"] intValue] h:[[thumb valueForKey:@"h"] intValue] bytes:[thumb valueForKey:@"bytes"]];
+        }
+        
+        NSMutableArray *attrs = [self convertDocumentAttributes:[media valueForKey:@"attributes"] layer:layer];
+        
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue] attributes:attrs]];
+        
+    }
+    
     
     // ------------------ start save file key -----------------
     
     
     TL_fileLocation *location = [TL_fileLocation createWithDc_id:[file dc_id] volume_id:[file n_id] local_id:-1 secret:[file access_hash]];
     
-    if(![media valueForKey:@"key"] || ![media valueForKey:@"iv"]) {
+    if(![media respondsToSelector:@selector(key)] || ![media respondsToSelector:@selector(iv)]) {
         DLog(@"drop encrypted media class ====== %@ ======",NSStringFromClass([media class]));
         return [TL_messageMediaEmpty create];
     }
@@ -535,14 +603,13 @@ Class convertClass(NSString *c, int layer) {
         
         TLPhotoSize *size = [TL_photoSizeEmpty createWithType:@"jpeg"];
         
-        
-        if( ((NSData *)[media valueForKey:@"thumb"]).length > 0) {
+         if( ((NSData *)[media valueForKey:@"thumb"]).length > 0) {
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]];
         }
-        
+            
         return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:[@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy]]];
-        
-        
+       
+           
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVideo", layer)]) {
         
         NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"mp4";

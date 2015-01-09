@@ -12,7 +12,7 @@
 
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
-        self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
+        self.isEncrypted = NO;
         self.n_id = object.media.document.n_id;
         self.path = [NSString stringWithFormat:@"%@/%ld.webp",path(),object.media.document.n_id];
         self.fileType = DownloadFileDocument;
