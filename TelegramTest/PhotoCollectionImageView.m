@@ -55,6 +55,7 @@ static CAAnimation *photoAnimation() {
 
 -(void)mouseDown:(NSEvent *)theEvent {
     PhotoCollectionImageObject *obj = (PhotoCollectionImageObject *) self.object;
+    obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"tiff"));
     
     [[TGPhotoViewer viewer] show:obj.previewObject conversation:[Telegram rightViewController].collectionViewController.conversation];
     

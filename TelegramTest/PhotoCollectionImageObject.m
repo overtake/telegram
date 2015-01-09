@@ -65,6 +65,8 @@ static const int width = 180;
     
     if(item.isRemoteLoaded) {
         
+        [[NSFileManager defaultManager] moveItemAtPath:item.path toPath:locationFilePath(self.location, @"tiff") error:nil];
+        
         image = cropCenterWithSize(image, size);
         
         [jpegNormalizedData(image) writeToFile:item.path atomically:YES];

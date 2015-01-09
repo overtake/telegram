@@ -46,7 +46,7 @@ static const TGTwoColors colors[] = {
 @property (nonatomic) TMAvatarType type;
 @property (nonatomic) BOOL isNeedPlaceholder;
 @property (nonatomic,strong) NSImage *placeholder;
-@property (nonatomic,strong) TMAvaImageObject *imageObject;
+
 
 @end
 
@@ -165,7 +165,7 @@ static const TGTwoColors colors[] = {
 
 -(void)didDownloadImage:(NSImage *)image object:(TMAvaImageObject *)object {
     
-    if([self.imageObject.location isEqualTo:object.location]) {
+    if([_imageObject.location isEqualTo:object.location]) {
         self.image = image;
     }
     
@@ -239,9 +239,9 @@ static const TGTwoColors colors[] = {
     self->_broadcast = nil;
     self.type = TMAvatarTypeUser;
     self.fileLocation = user.photo.photo_small;
-    self.imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:user.n_id];
-    self.imageObject.delegate = self;
-    self.imageObject.imageSize = self.frame.size;
+    _imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:user.n_id];
+    _imageObject.delegate = self;
+    _imageObject.imageSize = self.frame.size;
     [self rebuild:animated];
 }
 
@@ -260,9 +260,9 @@ static const TGTwoColors colors[] = {
     self->_broadcast = nil;
     self.type = TMAvatarTypeChat;
     self.fileLocation = chat.photo.photo_small;
-    self.imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:chat.n_id];
-    self.imageObject.delegate = self;
-    self.imageObject.imageSize = self.frame.size;
+    _imageObject = [[TMAvaImageObject alloc] initWithLocation:self.fileLocation placeHolder:self.placeholder sourceId:chat.n_id];
+    _imageObject.delegate = self;
+    _imageObject.imageSize = self.frame.size;
     [self rebuild:animated];
 }
 
@@ -351,7 +351,7 @@ static CAAnimation *ani2() {
     
     if(self.fileLocation) {
         
-        [self.imageObject initDownloadItem];
+        [_imageObject initDownloadItem];
         
     } else {
         

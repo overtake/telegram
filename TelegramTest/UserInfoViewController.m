@@ -128,6 +128,8 @@
         
         if(![strongSelf.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
+                        
+            previewObject.reservedObject = [TGCache cachedImage:strongSelf.user.photo.photo_small.cacheKey];
             
             [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
         }

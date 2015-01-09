@@ -13,16 +13,22 @@
 
 -(void)_didDownloadImage:(DownloadItem *)item {
     __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
+
+    NSImage *image = renderedImage(imageOrigin, imageOrigin.size);
     
-    NSImage *image = [TMImageUtils roundedImageNew:imageOrigin size:self.imageSize];
+    [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[AVACACHE]];
     
-    image = renderedImage(image, image.size);
+    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
     
-    [TGCache cacheImage:image forKey:[NSString stringWithFormat:@"%lu:%@",self.location.hashCacheKey,NSStringFromSize(self.imageSize)] groups:@[AVACACHE]];
+    [TGCache cacheImage:image forKey:[self cacheKey] groups:@[AVACACHE]];
     
     [ASQueue dispatchOnMainQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
+}
+
+-(NSString *)cacheKey {
+    return [NSString stringWithFormat:@"%lu:%@",self.location.hashCacheKey,NSStringFromSize(self.imageSize)];
 }
 
 @end

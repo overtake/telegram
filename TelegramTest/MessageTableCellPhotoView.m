@@ -62,6 +62,8 @@ NSImage *fireImage() {
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
             
+            object.reservedObject = weakSelf.imageView.image;
+            
             [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation];
             
             if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {

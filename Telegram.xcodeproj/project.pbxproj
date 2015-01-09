@@ -4874,7 +4874,6 @@
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
 				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
 				C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */,
-				C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */,
 				C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */,
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
@@ -5401,6 +5400,7 @@
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,
+				C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

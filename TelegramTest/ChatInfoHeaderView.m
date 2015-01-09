@@ -64,7 +64,12 @@
             if(strongSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
                 
                 if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]]) {
-                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.fullChat.chat_photo.n_id media:[strongSelf.fullChat.chat_photo.sizes lastObject] peer_id:strongSelf.fullChat.n_id];
+                    
+                    TL_photoSize *size = [strongSelf.fullChat.chat_photo.sizes lastObject];
+                    
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.fullChat.chat_photo.n_id media:size peer_id:strongSelf.fullChat.n_id];
+                    
+                    previewObject.reservedObject = [TGCache cachedImage:strongSelf.controller.chat.photo.photo_small.cacheKey];
                     
                     [[TGPhotoViewer viewer] show:previewObject];
                 }

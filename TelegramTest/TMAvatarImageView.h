@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CAAvatarLayer.h"
-
+#import "TMAvaImageObject.h"
 @interface TMAvatarImageView : BTRImageView
 
 typedef enum {
@@ -24,6 +24,8 @@ typedef enum {
 @property (nonatomic, strong) TLChat *chat;
 @property (nonatomic, strong) TL_broadcast *broadcast;
 @property (nonatomic, strong) NSString *text;
+
+@property (nonatomic, strong, readonly) TMAvaImageObject *imageObject;
 
 @property (nonatomic, strong) NSFont *font;
 

@@ -15,7 +15,7 @@
 
 @property (nonatomic,assign) long access_hash;
 
-@property (nonatomic,weak) id reservedObject;
+@property (nonatomic,strong) id reservedObject;
 
 
 -(id)initWithMsdId:(long)msg_id media:(id)media peer_id:(int)peer_id;
