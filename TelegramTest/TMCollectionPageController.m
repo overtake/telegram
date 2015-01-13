@@ -70,7 +70,7 @@
 
 -(void)loadView {
     
-    [TGCache setMemoryLimit:50*1024*1024 group:PCCACHE];
+    [TGCache setMemoryLimit:100*1024*1024 group:PCCACHE];
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
     
@@ -282,7 +282,11 @@ static const int maxWidth = 120;
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
+   
+    
     [self view];
+    
+     [self.photoCollection.containerView setFrameSize:[Telegram rightViewController].view.frame.size];
     
     [self.items removeAllObjects];
     

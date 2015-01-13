@@ -42,7 +42,7 @@
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         
-        self.isForwadedMessage = [self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]];
+        self.isForwadedMessage = ([self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]] ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media.document isSticker]);
         self.isChat = self.message.conversation.type == DialogTypeChat;
         
         _containerOffset = self.isForwadedMessage ? 129 : 79;

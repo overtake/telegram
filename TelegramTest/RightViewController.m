@@ -470,9 +470,11 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.collectionViewController setConversation:conversation];
+    
     
     [self.navigationViewController pushViewController:self.collectionViewController animated:YES];
+    
+    [self.collectionViewController setConversation:conversation];
     
     
 }

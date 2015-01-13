@@ -66,6 +66,7 @@
         [self.unblockButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
         [self.unblockButton setTextColor:BLUE_UI_COLOR];
         
+        [self.unblockButton sizeToFit];
        
         weak();
         
