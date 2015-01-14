@@ -12,8 +12,9 @@
 @implementation SetTTLSenderItem
 
 -(id)initWithConversation:(TL_conversation *)conversation ttl:(int)ttl {
-    if(self = [super initWithConversation:conversation]) {        
-        self.message = [TL_secretServiceMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTMESSAGE from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionSetMessageTTL createWithTtl:ttl] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() out_seq_no:-1 dstate:DeliveryStateNormal];
+    if(self = [super initWithConversation:conversation]) {
+        
+        self.message = [TL_secretServiceMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTMESSAGE from_id:[UsersManager currentUserId] to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionSetMessageTTL createWithTtl:ttl] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() out_seq_no:-1 dstate:DeliveryStateNormal];
         
         [self.message save:YES];
         
