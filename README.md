@@ -16,8 +16,7 @@ Documentation for MTproto protocol is available here: http://core.telegram.org/m
 
 
 1. Checkout repository
-2. Switch MtProtoKit submodule to 'unstable' branch
-3. Create 'Application.h' file with this content:
+2. Create 'Application.h' file with this content:
 
 ```c
 #ifndef Telegram_Application_h
