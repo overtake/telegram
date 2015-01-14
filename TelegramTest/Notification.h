@@ -73,6 +73,8 @@ extern NSString *const CHAT_STATUS;
 extern NSString *const BROADCAST_STATUS;
 extern NSString *const PUSHNOTIFICATION_UPDATE;
 
+extern NSString *const UPDATE_MESSAGE_ITEM;
+
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 

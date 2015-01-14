@@ -231,6 +231,7 @@
     self.cacheTextForPeer = [[Storage manager] inputTextForPeers];
     
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
+    [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -409,6 +410,15 @@
 }
 
 
+
+-(void)messageTableItemUpdate:(NSNotification *)notification {
+    
+    MessageTableItem *item = notification.userInfo[@"item"];
+    
+    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self indexOfObject:item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    
+    
+}
 
 
 -(void)showSearchBox {

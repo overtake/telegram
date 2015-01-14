@@ -406,6 +406,12 @@ static int unreadOffsetRight = 13;
     
     [self.titleTextField setSelectText:item.selectString];
     
+    [self.messageTextField setFrameSize:NSMakeSize(self.frame.size.width - 110, 36)];
+    
+    [self.titleTextField sizeToFit];
+    
+    [self.titleTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.titleTextField.frame),NSWidth(self.frame) - [self rowItem].dateSize.width - 95 - ([self rowItem].isMuted ? image_muted().size.width + 6 : 0) ), NSHeight(self.titleTextField.frame))];
+    
     [self setNeedsDisplay:YES];
     
 }

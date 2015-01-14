@@ -14,11 +14,14 @@
 -(id)initWithObject:(TL_localMessage *)object socialClass:(Class)socialClass {
     if(self = [super initWithObject:object]) {
         
-        _social = [[socialClass alloc] initWithSocialURL:object.message];
+        _social = [[socialClass alloc] initWithSocialURL:object.message item:self];
         
         self.blockSize = NSMakeSize(250, 150);
         
         self.viewSize = self.blockSize;
+        
+        
+       
         
     }
     

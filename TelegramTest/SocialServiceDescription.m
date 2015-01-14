@@ -10,7 +10,7 @@
 
 @implementation SocialServiceDescription
 
-- (id)initWithSocialURL:(NSString *)url {
+- (id)initWithSocialURL:(NSString *)url item:(MessageTableItem *)tableItem {
     if(self = [super init]) {
         
     }

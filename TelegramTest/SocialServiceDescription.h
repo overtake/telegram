@@ -10,6 +10,7 @@
 
 @interface SocialServiceDescription : NSObject
 
+
 @property (nonatomic,strong,readonly) NSURL *imageURL;
 @property (nonatomic,strong,readonly) NSString *url;
 
@@ -18,10 +19,10 @@
 
 @property (nonatomic,assign,readonly) NSSize titleSize;
 @property (nonatomic,assign,readonly) NSSize serviceNameSize;
+@property (nonatomic,weak,readonly) MessageTableItem *tableItem;
 
 
-
-- (id)initWithSocialURL:(NSString *)url;
+- (id)initWithSocialURL:(NSString *)url item:(MessageTableItem *)tableItem;
 
 -(NSImage *)centerImage;
 
