@@ -47,7 +47,7 @@
            
              NSString *desc = description[@"title"];
             
-             [self setTitle:desc.length > 25 ? [[desc substringToIndex:25] stringByAppendingString:@"..."] : desc];
+             [self setTitle:desc];
         
         } else {
             [self loadInfo:yid];
@@ -95,7 +95,9 @@
 -(void)setTitle:(NSString *)title {
     NSMutableAttributedString *t = [[NSMutableAttributedString alloc] init];
     
-    [t appendString:title withColor:[NSColor whiteColor]];
+    
+    
+    [t appendString:title.length > 25 ? [[title substringToIndex:25] stringByAppendingString:@"..."] : title withColor:[NSColor whiteColor]];
     
     [t setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:t.range];
     
