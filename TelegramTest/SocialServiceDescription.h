@@ -19,7 +19,7 @@
 
 @property (nonatomic,assign,readonly) NSSize titleSize;
 @property (nonatomic,assign,readonly) NSSize serviceNameSize;
-@property (nonatomic,weak,readonly) MessageTableItem *tableItem;
+@property (nonatomic,strong,readonly) MessageTableItem *tableItem;
 
 
 - (id)initWithSocialURL:(NSString *)url item:(MessageTableItem *)tableItem;
