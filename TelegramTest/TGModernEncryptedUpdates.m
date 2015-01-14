@@ -39,7 +39,10 @@
         
         NSData *key = [params ekey:keyId];
         
-        assert(key);
+        if(!key) {
+            return;
+        }
+        
         
         NSData *msg_key = [update.bytes subdataWithRange:NSMakeRange(8, 16)];
         NSData *decrypted = [Crypto encrypt:0 data:[update.bytes subdataWithRange:NSMakeRange(24, update.bytes.length - 24)] auth_key:key msg_key:msg_key encrypt:NO];

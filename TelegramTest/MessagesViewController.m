@@ -415,7 +415,10 @@
     
     MessageTableItem *item = notification.userInfo[@"item"];
     
-    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self indexOfObject:item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    NSUInteger index = [self indexOfObject:item];
+    
+    if(index != NSNotFound)
+        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     
     
 }
