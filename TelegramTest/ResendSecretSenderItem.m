@@ -31,7 +31,6 @@
     return self;
 }
 
-
 -(NSData *)decryptedMessageLayer17 {
     return [Secret17__Environment serializeObject:[Secret17_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(17) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret17_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) action:[Secret17_DecryptedMessageAction decryptedMessageActionResendWithStart_seq_no:_start_seq end_seq_no:_end_seq]]]];
 }
