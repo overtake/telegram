@@ -17,10 +17,12 @@
 @synthesize titleSize = _titleSize;
 @synthesize serviceNameSize = _serviceNameSize;
 @synthesize imageURL = _imageURL;
+@synthesize tableItem = _tableItem;
 
--(id)initWithSocialURL:(NSString *)url {
+-(id)initWithSocialURL:(NSString *)url item:(MessageTableItem *)tableItem {
     if(self = [super init]) {
         _url = url;
+        _tableItem = tableItem;
         
         _imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://instagram.com/p/%@/media/?size=l",[InstagramServiceDescription idWithURL:url]]];
         

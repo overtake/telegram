@@ -167,6 +167,10 @@
     }
 }
 
+-(TL_conversation *)conversation {
+    return [[DialogsManager sharedManager] find:_conversation.peer_id];
+}
+
 - (void)notificationChangeMessage:(NSNotification *)notify {
     
     self.lastMessage = [[MessagesManager sharedManager] find:self.conversation.top_message];
