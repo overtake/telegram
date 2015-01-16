@@ -168,7 +168,7 @@
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
             
-            if([[UsersManager currentUser] isOnline] && ![[NSApplication sharedApplication] isActive])
+            if([[UsersManager currentUser] isOnline])
                 return;
             
             

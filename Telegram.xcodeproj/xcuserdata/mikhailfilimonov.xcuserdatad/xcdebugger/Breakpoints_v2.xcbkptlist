@@ -115,7 +115,7 @@
                   symbolName = "-[DialogsManager updateLastMessageForDialog:]"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/DialogsManager.m"
-                  timestampString = "443112841.653695"
+                  timestampString = "443121808.186231"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "150"
@@ -129,7 +129,7 @@
                   symbolName = "__45-[DialogsManager updateLastMessageForDialog:]_block_invoke"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/DialogsManager.m"
-                  timestampString = "443112841.654078"
+                  timestampString = "443121808.186419"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "150"
@@ -137,6 +137,22 @@
                   offsetFromSymbolStart = "43">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGCache.m"
+            timestampString = "443121761.435231"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "307"
+            endingLineNumber = "307"
+            landmarkName = "-checkMemory"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

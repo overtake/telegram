@@ -96,7 +96,7 @@
      NSRect rect = self.frame;
     
     int width = 805;
-    int height = 350;
+    int height = 400;
     
     
     [self setMinSize:NSMakeSize(width-70, height)];

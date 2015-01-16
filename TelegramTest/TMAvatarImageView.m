@@ -159,7 +159,7 @@ static const TGTwoColors colors[] = {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [TGCache setMemoryLimit:5*1024*1024 group:AVACACHE];
+        [TGCache setMemoryLimit:50*1024*1024 group:AVACACHE];
     });
 }
 
