@@ -168,8 +168,8 @@
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
             
-            if([[UsersManager currentUser] isOnline])
-                return;
+           // if([[UsersManager currentUser] isOnline])
+             //   return;
             
             
             NSUserNotification *notification = [[NSUserNotification alloc] init];
