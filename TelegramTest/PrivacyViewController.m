@@ -16,6 +16,11 @@
 
 @property (nonatomic,strong) GeneralSettingsRowItem *lastSeenRowItem;
 @property (nonatomic,strong) GeneralSettingsRowItem *blockedUsersRowIten;
+@property (nonatomic,strong) GeneralSettingsRowItem *accountDaysItem;
+
+@property (nonatomic,assign) int accountDaysTTL;
+
+
 @end
 
 @implementation PrivacyViewController
@@ -62,9 +67,6 @@
     [self.tableView insert:self.blockedUsersRowIten atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    
-    
-    
     self.lastSeenRowItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         if(!self.lastSeenRowItem.locked)
@@ -107,6 +109,56 @@
     }];
     
     [self.tableView insert:logout atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil)];
+    
+    deleteAccountHeader.height = 51;
+    
+    [self.tableView insert:deleteAccountHeader atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    self.accountDaysItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+       /// [self logOut];
+        
+        GeneralSettingsRowView *view = [self.tableView viewAtColumn:0 row:[self.tableView indexOfItem:self.accountDaysItem] makeIfNecessary:NO];
+        
+        if(view) {
+            NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+            
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL30",nil) withBlock:^(id sender) {
+                
+                [self sendAccountDaysTTL:30];
+                
+            }]];
+            
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL90",nil) withBlock:^(id sender) {
+                [self sendAccountDaysTTL:90];
+            }]];
+            
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL180",nil) withBlock:^(id sender) {
+                [self sendAccountDaysTTL:180];
+            }]];
+            
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL365",nil) withBlock:^(id sender) {
+                [self sendAccountDaysTTL:365];
+            }]];
+            
+            [menu popUpForView:view.subdescField];
+        }
+        
+    } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+    }];
+    
+    [self.tableView insert:self.accountDaysItem atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    self.accountDaysItem.locked = YES;
+    
+    [self.tableView reloadData];
+    
+    [self loadDeleteAccountTimer];
 //    
 //    
 //    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil)];
@@ -130,7 +182,54 @@
 }
 
 
+-(void)sendAccountDaysTTL:(int)days {
+    
+    if(!self.accountDaysItem.locked) {
+        self.accountDaysItem.locked = YES;
+        
+        [self.tableView reloadData];
+        
+        [RPCRequest sendRequest:[TLAPI_account_setAccountTTL createWithTtl:[TL_accountDaysTTL createWithDays:days]] successHandler:^(RPCRequest *request, id response) {
+            
+            
+            self.accountDaysItem.locked = NO;
+            
+            if([response isKindOfClass:[TL_boolTrue class]]) {
+                self.accountDaysTTL = days;
+                [self updateAccountDaysTTL];
+            } else {
+                [self updateAccountDaysTTL];
+            }
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            self.accountDaysItem.locked = NO;
+            [self updateAccountDaysTTL];
+        }];
+    }
+}
 
+-(void)loadDeleteAccountTimer {
+    [RPCRequest sendRequest:[TLAPI_account_getAccountTTL create] successHandler:^(RPCRequest *request, TL_accountDaysTTL *response) {
+        
+        self.accountDaysItem.locked = NO;
+        
+        self.accountDaysTTL = response.days;
+        
+         [self updateAccountDaysTTL];
+       
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+    }];
+}
+
+-(void)updateAccountDaysTTL {
+    
+    NSString *key = [NSString stringWithFormat:@"AccountDaysTTL%d",self.accountDaysTTL];
+    
+    self.accountDaysItem.subdesc = NSLocalizedString(key, nil);
+    
+    [self.tableView reloadData];
+}
 
 - (void)terminateSessions {
     
@@ -145,8 +244,6 @@
             [self hideModalProgress];
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-            alert(NSLocalizedString(@"Alert.Error", nil), NSLocalizedString(@"Auth.CheckConnection", nil));
             
              [self hideModalProgress];
             

@@ -9,5 +9,5 @@
 #import "TMRowView.h"
 
 @interface GeneralSettingsRowView : TMRowView
-
+@property (nonatomic,strong) BTRButton *subdescField;
 @end

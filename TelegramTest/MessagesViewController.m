@@ -2119,12 +2119,19 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)deleteItem:(MessageTableItem *)item {
+    
+    
+    
     NSUInteger row = [self.messages indexOfObject:item];
     if(row != NSNotFound) {
         [self.messages removeObjectAtIndex:row];
         [self.selectedMessages removeObject:item];
         
+        [self.table beginUpdates];
+        
         [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
+        
+        [self.table endUpdates];
         
         [item clean];
     }

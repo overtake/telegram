@@ -68,24 +68,26 @@
     
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        
-        if(json) {
+        if(data) {
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
             
-            NSString *title = json[@"data"][@"title"];
-            NSString *duration = [NSString durationTransformedValue:[json[@"data"][@"duration"] intValue]];
-            
-            if(title && duration && self.tableItem) {
-                [self setTitle:title];
+            if(json) {
                 
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    [transaction setObject:@{@"title":title, @"duration":duration} forKey:yid inCollection:SOCIAL_DESC_COLLECTION];
-                }];
+                NSString *title = json[@"data"][@"title"];
+                NSString *duration = [NSString durationTransformedValue:[json[@"data"][@"duration"] intValue]];
                 
-                [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":self.tableItem}];
+                if(title && duration && self.tableItem) {
+                    [self setTitle:title];
+                    
+                    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [transaction setObject:@{@"title":title, @"duration":duration} forKey:yid inCollection:SOCIAL_DESC_COLLECTION];
+                    }];
+                    
+                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":self.tableItem}];
+                }
+                
+                
             }
-            
-            
         }
         
     }];

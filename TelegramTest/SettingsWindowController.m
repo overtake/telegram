@@ -113,9 +113,7 @@
     [self.auto_downlod_audio_group setTitle:NSLocalizedString(@"Settings.Groups", nil)];
     
     
-    
-    
-    NSButtonCell *localizable = [self.send_message_as cellAtRow:0 column:0];
+     NSButtonCell *localizable = [self.send_message_as cellAtRow:0 column:0];
     [localizable setTitle:NSLocalizedString(@"Settings.SendAsEnter", nil)];
     
     localizable = [self.send_message_as cellAtRow:1 column:0];

@@ -12,7 +12,7 @@
 #import "NSMenuCategory.h"
 @interface GeneralSettingsRowView ()
 @property (nonatomic,strong) TMTextField *descriptionField;
-@property (nonatomic,strong) BTRButton *subdescField;
+
 @property (nonatomic,strong) TMTextField *nextDesc;
 @property (nonatomic,strong) ITSwitch *switchControl;
 @property (nonatomic,strong) NSImageView *nextImage;
