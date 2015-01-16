@@ -88,6 +88,8 @@
     [nameTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
     
     
+    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
+    
     self.centerNavigationBarView = (TMView *) nameTextField;
     
     

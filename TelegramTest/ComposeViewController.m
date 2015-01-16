@@ -30,7 +30,7 @@
     
     self.centerNavigationBarView = (TMView *) self.centerTextField;
     
-    
+   
     
     TMView *rightView = [[TMView alloc] init];
     

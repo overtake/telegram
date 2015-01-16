@@ -41,6 +41,9 @@
 - (void)loadView {
     [super loadView];
     
+    
+    
+    
     int topOffset = 48;
     
     self.view.wantsLayer = YES;
@@ -91,6 +94,8 @@
     [[Storage manager] unreadCount:^(int count) {
         [[MessagesManager sharedManager] setUnread_count:count];
     }];
+    
+    
     
 }
 

@@ -23,6 +23,9 @@
     
     [super initialize:self.autoSaver];
     
+    [self setStyleMask:NSBorderlessWindowMask];
+    
+    
     
     if(!self.autoSaver) {
         self.autoSaver = [[TGWindowArchiver alloc] initWithName:NSStringFromClass(self.class)];

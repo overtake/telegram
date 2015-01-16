@@ -159,39 +159,19 @@ static NSDictionary *attributes() {
 
 
 -(void)redraw {
+    
+    
+    
+    
     int width = NSWidth(self.bounds);
     
     int height = NSHeight(self.bounds);
     
     int defWidth = width/self.tabs.count;
     
-//    NSMutableArray *itemsWidth = [[NSMutableArray alloc] init];
-//    
-//    for (int i = 0; i < self.tabs.count; i++) {
-//        
-//        int w = defWidth;
-//        
-//        if(self.tabs.count >= 3) {
-//            
-//            if(i == 0 || i == self.tabs.count -1) {
-//                w = defWidth+defWidth/3;
-//            } else {
-//                w = defWidth/2;
-//            }
-//        }
-//        
-//        [itemsWidth addObject:@(w)];
-//    }
-
+    [self removeAllSubviews];
     
-    
-    NSArray *copyViews = [self.subviews copy];
-    
-    [copyViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [obj removeFromSuperview];
-    }];
-    
-    
+   
     
     
     __block int xOffset = 0;
@@ -288,6 +268,11 @@ static NSDictionary *attributes() {
         
     }];
     
+//    
+//    NSVisualEffectView *vibrant= [[NSVisualEffectView alloc] initWithFrame:self.bounds];
+//    [vibrant setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+//    [vibrant setBlendingMode:NSVisualEffectBlendingModew];
+//    [self addSubview:vibrant];
 }
 
 

@@ -12,7 +12,7 @@
 #import "TGEnterPasswordPanel.h"
 
 #define ONLINE_EXPIRE 55
-#define OFFLINE_AFTER 40
+#define OFFLINE_AFTER 5
 
 @interface Telegram()
 

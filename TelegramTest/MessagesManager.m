@@ -167,6 +167,11 @@
         
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
+            
+            if([[UsersManager currentUser] isOnline] && ![[NSApplication sharedApplication] isActive])
+                return;
+            
+            
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
             notification.informativeText = msg;

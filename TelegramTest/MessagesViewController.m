@@ -1855,9 +1855,9 @@ static NSTextAttachment *headerMediaIcon() {
                 NSSize oldsize = self.table.scrollView.documentSize;
                 NSPoint offset = self.table.scrollView.documentOffset;
                 
-              //  [self.table beginUpdates];
+                [self.table beginUpdates];
                 [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
-               // [self.table endUpdates];
+                [self.table endUpdates];
                 
                 if(!next) {
                     NSSize newsize = self.table.scrollView.documentSize;
@@ -2147,6 +2147,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [item rebuildDate];
         
+        [self.table beginUpdates];
+        
         NSUInteger nRow = 1;
         NSIndexSet *set = [NSIndexSet indexSetWithIndex:nRow];
         if(row != 0) {
@@ -2168,6 +2170,8 @@ static NSTextAttachment *headerMediaIcon() {
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         [item.messageSender addEventListener:self.historyController];
         [item.messageSender send];
+        
+        [self.table endUpdates];
     }
 }
 
