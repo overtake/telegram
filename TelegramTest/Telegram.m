@@ -113,7 +113,7 @@ int maxBroadcastUsers() {
 }
 
 - (BOOL)canBeOnline {
-    return self.isWindowActive || [SettingsArchiver checkMaskedSetting:OnlineForever];
+    return ([[NSApplication sharedApplication] isActive] && SystemIdleTime() < 60 )  || [SettingsArchiver checkMaskedSetting:OnlineForever];
 }
 
 - (void)setAccountOffline:(BOOL)force {

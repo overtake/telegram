@@ -58,5 +58,6 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
+int64_t SystemIdleTime(void);
 
 @end
