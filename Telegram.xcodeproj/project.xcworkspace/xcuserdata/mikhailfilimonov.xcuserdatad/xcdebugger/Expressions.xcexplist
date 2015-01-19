@@ -166,6 +166,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMTableView tableView:heightOfRow:]:TMTableView.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.list">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -527,6 +535,9 @@
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke_3:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__47-[PrivacyViewController loadDeleteAccountTimer]_block_invoke:PrivacyViewController.m">
       </ContextState>
       <ContextState
          contextName = "__33-[TGImageObject initDownloadItem]_block_invoke:TGImageObject.m">
@@ -1731,6 +1742,14 @@
             </PersistentString>
             <PersistentString
                value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMTableView insert:atIndex:tableRedraw:]:TMTableView.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.list">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

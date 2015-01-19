@@ -303,7 +303,9 @@
     [self.tableView removeAllItems:YES];
     
     
-    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:all.count > 100];
+    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
+    
+    [self.tableView reloadData];
     
     
     if(all.count > 100) {
