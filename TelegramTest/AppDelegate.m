@@ -266,6 +266,11 @@
     
 }
 
+void exceptionHandler(NSException * exception)
+{
+    // ...
+}
+
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
     
@@ -273,9 +278,13 @@
     
     [self didChangeSettingsMask:0];
     
+    NSSetUncaughtExceptionHandler(&exceptionHandler);
+    
           // [_statusItem setAlternateImage:highlightIcon];
     
     [SharedManager sharedManager];
+    
+    
     
     [SecretChatAccepter instance];
     
