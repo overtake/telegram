@@ -527,7 +527,7 @@ void open_link(NSString *link) {
     
     
     
-    if(![link hasPrefix:@"http"]) {
+    if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"]) {
         
         if(!NSStringIsValidEmail(link)) {
             link = [@"http://" stringByAppendingString:link];
