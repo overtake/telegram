@@ -10,6 +10,7 @@
 #import "TGPVImageView.h"
 #import "MessageTableElements.h"
 #import "TGPhotoViewer.h"
+#import "SelfDestructionController.h"
 @interface TGPVContainer ()
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
@@ -107,6 +108,17 @@ static const int bottomHeight = 60;
     _currentViewerItem = currentViewerItem;
     
     self.imageView.object = currentViewerItem.imageObject;
+    
+    
+    if([currentViewerItem.previewObject.media isKindOfClass:[TL_destructMessage class]]) {
+        
+        TL_destructMessage *msg = (TL_destructMessage *) currentViewerItem.previewObject.media;
+        
+        if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
+            [SelfDestructionController addMessage:msg force:YES];
+        }
+        
+    }
     
     
     NSSize size = [self contentFullSize:currentViewerItem];

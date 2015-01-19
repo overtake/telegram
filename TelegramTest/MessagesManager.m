@@ -100,7 +100,7 @@
             msg = [MessagesUtils mediaMessage:message];
         }
         
-        if([message.to_id isSecret] && !message.action)
+        if([message.to_id isSecret])
             msg = NSLocalizedString(@"Notification.SecretMessage", nil);
         
         NSString *subTitle;
@@ -167,9 +167,6 @@
         
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
-            
-           // if([[UsersManager currentUser] isOnline])
-             //   return;
             
             
             NSUserNotification *notification = [[NSUserNotification alloc] init];

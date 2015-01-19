@@ -1568,6 +1568,11 @@
       </ContextState>
       <ContextState
          contextName = "__50-[MessagesManager notifyMessage:update_real_date:]_block_invoke:MessagesManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "subTitle">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
