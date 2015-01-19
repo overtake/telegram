@@ -300,9 +300,10 @@
     
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
-    [self.tableView removeAllItems:NO];
+    [self.tableView removeAllItems:YES];
     
-    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
+    
+    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:all.count > 100];
     
     
     if(all.count > 100) {

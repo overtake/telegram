@@ -693,7 +693,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		0AB6A4FB1827DD4B0015920A /* Copy Files (6 items) */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -5592,6 +5592,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx10.10;
@@ -5627,6 +5628,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx10.10;

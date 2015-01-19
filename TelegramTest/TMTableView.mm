@@ -345,7 +345,7 @@ static TMTableView *tableStatic;
     
     if(tableRedraw) {
         [self beginUpdates];
-        [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withAnimation:self.defaultAnimation];
+        [self reloadData];
         [self endUpdates];
     }
     
