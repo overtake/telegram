@@ -421,6 +421,10 @@
 }
 
 
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    return [super validateMenuItem:menuItem];
+}
+
 
 
 - (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {

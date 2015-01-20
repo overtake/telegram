@@ -107,6 +107,9 @@ static ASQueue *queue;
         NSMutableArray *accepted = [[NSMutableArray alloc] init];
         NSMutableArray *ignored = [[NSMutableArray alloc] init];
         
+        if(self.prevState != ChatHistoryStateFull)
+            return;
+        
         list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
         
         [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
@@ -246,7 +249,7 @@ static ASQueue *queue;
         
        // [self markAsReceived:[message n_id]];
         
-        if(!message)
+        if(!message || self.prevState != ChatHistoryStateFull)
             return;
         
         MessageTableItem *tableItem = (MessageTableItem *) [[self.controller messageTableItemsFromMessages:@[message]] lastObject];
@@ -287,7 +290,6 @@ static ASQueue *queue;
     
     filtred = [[NSMutableArray alloc] init];
     
-    
     for (Class filterClass in filters) {
         
         NSMutableArray *filterItems = [filterClass messageItems];
@@ -302,6 +304,7 @@ static ASQueue *queue;
             if( ((filterClass == HistoryFilter.class && self.filter.class == HistoryFilter.class) ||
                  (filterClass == HistoryFilter.class && isLatest)) ||
                (filterClass != HistoryFilter.class && obj.message.filterType & [filterClass type]) > 0) {
+                
                 
                 if(obj.message.n_id != 0) {
                     id saved = filterKeys[@(obj.message.n_id)];

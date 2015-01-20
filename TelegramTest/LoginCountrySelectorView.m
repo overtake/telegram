@@ -348,8 +348,14 @@
         NSString *xFormat = formatItem != nil ? formatItem.format : @"";
         
         
+        NSString *country = self.countryCodeTextField.stringValue;
         
-        NSString *format = [RMPhoneFormat formatPhoneNumber:[NSString stringWithFormat:@"%@%@", self.countryCodeTextField.stringValue, str]];
+        if([country isEqualToString:@"+1876"]) {
+            country = @"";
+        }
+        
+        
+        NSString *format = [RMPhoneFormat formatPhoneNumber:[NSString stringWithFormat:@"%@%@", country, str]];
         
         
         
