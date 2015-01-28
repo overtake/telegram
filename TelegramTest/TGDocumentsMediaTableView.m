@@ -39,7 +39,7 @@
     
     [self.tableView reloadData];
     
-    _loader = nil;
+    [_loader drop:NO];
     
     _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
     

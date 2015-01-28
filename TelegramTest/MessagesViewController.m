@@ -198,7 +198,7 @@
         
         self.isMarkIsset = NO;
         
-        self.historyController = nil;
+        [self.historyController drop:NO];
         
         self.historyController = [[ChatHistoryController alloc] initWithController:self];
         animated = NO;
@@ -394,7 +394,7 @@
     self.searchItems = [[NSMutableArray alloc] init];
     
     
-    self.historyController = nil;
+   [self.historyController drop:NO];
     
     self.historyController = [[ChatHistoryController alloc] initWithController:self];
     
@@ -1738,7 +1738,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(!historyFilter)
             historyFilter = [HistoryFilter class];
         
-        self.historyController = nil;
+        [self.historyController drop:NO];
         
         self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:historyFilter];
         

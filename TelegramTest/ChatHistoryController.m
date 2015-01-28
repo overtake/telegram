@@ -74,7 +74,13 @@ static NSMutableArray *listeners;
         });
         
         
-        [listeners addObject:self];
+        [queue dispatchOnQueue:^{
+            
+            [listeners addObject:self];
+            
+        } synchronous:YES];
+        
+        
 
         
        // self.controller.conversation = conversation;
@@ -999,6 +1005,7 @@ static NSMutableArray *listeners;
     _controller = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [Notification removeObserver:self];
+    [listeners removeObject:self];
     
 }
 
@@ -1008,7 +1015,7 @@ static NSMutableArray *listeners;
 
 -(void)dealloc {
     
-    [listeners removeObject:self];
+   
     
     assert([NSThread isMainThread]);
     
