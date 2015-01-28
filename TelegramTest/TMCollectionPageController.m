@@ -31,7 +31,7 @@
 
 @property (nonatomic,strong) TGDocumentsMediaTableView *documentsTableView;
 
-
+@property (nonatomic,strong) TMTextField *centerTextField;
 
 -(void)reloadData;
 -(BOOL)updateSize:(NSSize)newSize;
@@ -73,30 +73,26 @@
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
     
-    TMTextField *centerTextField = [TMTextField defaultTextField];
-    [centerTextField setAlignment:NSCenterTextAlignment];
-    [centerTextField setAutoresizingMask:NSViewWidthSizable];
-    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [centerTextField setDrawsBackground:NO];
+    _centerTextField = [TMTextField defaultTextField];
+    [_centerTextField setAlignment:NSCenterTextAlignment];
+    [_centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [_centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [_centerTextField setTextColor:NSColorFromRGB(0x222222)];
+    [[_centerTextField cell] setTruncatesLastVisibleLine:YES];
+    [[_centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [_centerTextField setDrawsBackground:NO];
     
     
-    [centerTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
+   
     
     
     TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
     self.centerNavigationBarView = centerView;
     
-    [centerView addSubview:centerTextField];
+    [centerView addSubview:_centerTextField];
     
-    [centerTextField sizeToFit];
-    
-    [centerTextField setCenterByView:centerView];
-    
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 12)];
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
     
     self.items = [[NSMutableArray alloc] init];
     
@@ -145,7 +141,15 @@
     
 }
 
-
+-(void)setTitle:(NSString *)title {
+    [_centerTextField setStringValue:title];
+    
+    [_centerTextField sizeToFit];
+    
+    [_centerTextField setCenterByView:self.centerNavigationBarView];
+    
+    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 12)];
+}
 
 
 -(void)didDeleteMessages:(NSNotification *)notification {
@@ -301,6 +305,13 @@ static const int maxWidth = 120;
     
    
     [self view];
+    
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+    
+    [self.documentsTableView.containerView setHidden:YES];
+    [self.photoCollection.containerView setHidden:NO];
+    
+    [self.documentsTableView setConversation:conversation];
     
     [self.photoCollection.containerView setFrameSize:[Telegram rightViewController].view.frame.size];
     
@@ -537,23 +548,27 @@ static const int maxWidth = 120;
     NSMenu *filterMenu = [[NSMenu alloc] init];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showCollectionPage:self.conversation];
+        
+        [self.photoCollection.containerView setHidden:NO];
+        [self.documentsTableView.containerView setHidden:YES];
+        [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+        
     }]];
     
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[VideoHistoryFilter class] sender:self];
-    }]];
-    
+//    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
+//        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[VideoHistoryFilter class] sender:self];
+//    }]];
+//    
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
         [self.photoCollection.containerView setHidden:YES];
         [self.documentsTableView.containerView setHidden:NO];
-        [self.documentsTableView setConversation:self.conversation];
+        [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
     }]];
     
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[AudioHistoryFilter class] sender:self];
-    }]];
+//    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
+//        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[AudioHistoryFilter class] sender:self];
+//    }]];
     
     return filterMenu;
 }
