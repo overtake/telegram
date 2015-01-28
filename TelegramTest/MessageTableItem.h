@@ -14,6 +14,8 @@
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
+@property (nonatomic,strong) TMTableView *table;
+
 @property (nonatomic, strong) TL_localMessage *message;
 @property (nonatomic, strong) SenderItem *messageSender;
 @property (nonatomic, strong) NSDate *date;

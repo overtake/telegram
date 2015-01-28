@@ -156,6 +156,8 @@ CACHE_IMAGE(PhotoViewerClose)
 
 CACHE_IMAGE(ChangenumberAlertIcon);
 
+CACHE_IMAGE(SharedMediaDocumentStatusDownload);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

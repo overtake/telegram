@@ -31,9 +31,18 @@
     
     [self.centerTextField setStringValue:NSLocalizedString(@"PhoneChangeAlertController.Header", nil)];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
+    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
-    self.centerNavigationBarView = (TMView *) self.centerTextField;
+    
+    self.centerNavigationBarView = centerView;
+    
+    [centerView addSubview:self.centerTextField];
+    
+    [self.centerTextField sizeToFit];
+    
+    [self.centerTextField setCenterByView:centerView];
+    
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 12)];
     
     TMTextButton *doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"PhoneChangeAlertController.ChangePhone", nil)];
     

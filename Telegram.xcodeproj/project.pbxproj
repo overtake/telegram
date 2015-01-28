@@ -484,6 +484,11 @@
 		C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AA4F0D18A8EDCB00E20C68 /* NSObject+TGLock.m */; };
 		C2AA5D32186B50520026EA1F /* TLEncryptedChat+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AA5D31186B50520026EA1F /* TLEncryptedChat+Extensions.m */; };
 		C2AA5D35187597680026EA1F /* LoopingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AA5D34187597680026EA1F /* LoopingUtils.m */; };
+		C2AC8D971A76889100655B9D /* TGOpacityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8D961A76889100655B9D /* TGOpacityViewController.m */; };
+		C2AC8D9E1A7693F400655B9D /* TGUnreadMarkView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8D9D1A7693F400655B9D /* TGUnreadMarkView.m */; };
+		C2AC8DA51A77B98700655B9D /* TGDocumentsMediaTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DA41A77B98700655B9D /* TGDocumentsMediaTableView.m */; };
+		C2AC8DAB1A77BC6C00655B9D /* TGDocumentMediaRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DAA1A77BC6C00655B9D /* TGDocumentMediaRowView.m */; };
+		C2AC8DAE1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DAD1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m */; };
 		C2ADB451191BB93000305CC8 /* TMCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */; };
 		C2ADB452191BB93000305CC8 /* TMCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */; };
 		C2ADB45B191BBA2500305CC8 /* MediaCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB45A191BBA2500305CC8 /* MediaCollectionItem.m */; };
@@ -491,10 +496,10 @@
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BC529C1A695A270004A8FE /* IOKit.framework */; };
-		C2BC52A61A6E83FD0004A8FE /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2BC52A71A6E83FD0004A8FE /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2BC52A81A6E83FF0004A8FE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2BC52A91A6E83FF0004A8FE /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2BC52AA1A6FD0A30004A8FE /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2BC52AB1A6FD0A30004A8FE /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2BC52AC1A6FD0A50004A8FE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2BC52AD1A6FD0A50004A8FE /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
 		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
 		C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */; };
@@ -698,8 +703,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C2BC52A61A6E83FD0004A8FE /* Sparkle.framework in Copy Files (6 items) */,
-				C2BC52A71A6E83FD0004A8FE /* HockeySDK.framework in Copy Files (6 items) */,
+				C2BC52AA1A6FD0A30004A8FE /* Sparkle.framework in Copy Files (6 items) */,
+				C2BC52AB1A6FD0A30004A8FE /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1708,6 +1713,16 @@
 		C2AA5D31186B50520026EA1F /* TLEncryptedChat+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLEncryptedChat+Extensions.m"; sourceTree = "<group>"; };
 		C2AA5D33187597680026EA1F /* LoopingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoopingUtils.h; sourceTree = "<group>"; };
 		C2AA5D34187597680026EA1F /* LoopingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoopingUtils.m; sourceTree = "<group>"; };
+		C2AC8D951A76889100655B9D /* TGOpacityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGOpacityViewController.h; sourceTree = "<group>"; };
+		C2AC8D961A76889100655B9D /* TGOpacityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGOpacityViewController.m; sourceTree = "<group>"; };
+		C2AC8D9C1A7693F400655B9D /* TGUnreadMarkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUnreadMarkView.h; sourceTree = "<group>"; };
+		C2AC8D9D1A7693F400655B9D /* TGUnreadMarkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUnreadMarkView.m; sourceTree = "<group>"; };
+		C2AC8DA31A77B98700655B9D /* TGDocumentsMediaTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDocumentsMediaTableView.h; sourceTree = "<group>"; };
+		C2AC8DA41A77B98700655B9D /* TGDocumentsMediaTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDocumentsMediaTableView.m; sourceTree = "<group>"; };
+		C2AC8DA91A77BC6C00655B9D /* TGDocumentMediaRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDocumentMediaRowView.h; sourceTree = "<group>"; };
+		C2AC8DAA1A77BC6C00655B9D /* TGDocumentMediaRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDocumentMediaRowView.m; sourceTree = "<group>"; };
+		C2AC8DAC1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedMediaFileThumbnailView.h; sourceTree = "<group>"; };
+		C2AC8DAD1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedMediaFileThumbnailView.m; sourceTree = "<group>"; };
 		C2ADB44E191BB93000305CC8 /* TMCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCollectionViewController.h; sourceTree = "<group>"; };
 		C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCollectionViewController.m; sourceTree = "<group>"; };
 		C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TMCollectionViewController.xib; sourceTree = "<group>"; };
@@ -2099,8 +2114,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2BC52A81A6E83FF0004A8FE /* Sparkle.framework in Frameworks */,
-				C2BC52A91A6E83FF0004A8FE /* HockeySDK.framework in Frameworks */,
+				C2BC52AC1A6FD0A50004A8FE /* Sparkle.framework in Frameworks */,
+				C2BC52AD1A6FD0A50004A8FE /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3774,9 +3789,23 @@
 			name = utils;
 			sourceTree = "<group>";
 		};
+		C2AC8D9F1A76CE1000655B9D /* documents */ = {
+			isa = PBXGroup;
+			children = (
+				C2AC8DAC1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.h */,
+				C2AC8DAD1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m */,
+				C2AC8DA31A77B98700655B9D /* TGDocumentsMediaTableView.h */,
+				C2AC8DA41A77B98700655B9D /* TGDocumentsMediaTableView.m */,
+				C2AC8DA91A77BC6C00655B9D /* TGDocumentMediaRowView.h */,
+				C2AC8DAA1A77BC6C00655B9D /* TGDocumentMediaRowView.m */,
+			);
+			name = documents;
+			sourceTree = "<group>";
+		};
 		C2ADB457191BBA0200305CC8 /* collection */ = {
 			isa = PBXGroup;
 			children = (
+				C2AC8D9F1A76CE1000655B9D /* documents */,
 				C269769B1A0A77E40047E2C3 /* old */,
 				C222AB331A0901BE00BEF907 /* photocollection */,
 				C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */,
@@ -4150,6 +4179,8 @@
 				0A62CC89181EFC1C0098720C /* Telegram.m */,
 				0AA7E1CB18CD28570064EFC7 /* TelegramFirstController.h */,
 				0AA7E1CC18CD28570064EFC7 /* TelegramFirstController.m */,
+				C2AC8D9C1A7693F400655B9D /* TGUnreadMarkView.h */,
+				C2AC8D9D1A7693F400655B9D /* TGUnreadMarkView.m */,
 			);
 			name = Telegram;
 			path = TelegramTest;
@@ -4248,6 +4279,8 @@
 				0A62CC8B181EFFEA0098720C /* windows */,
 				0AB8F2AD194866050074E4E7 /* MapPanel.h */,
 				0AB8F2AE194866050074E4E7 /* MapPanel.m */,
+				C2AC8D951A76889100655B9D /* TGOpacityViewController.h */,
+				C2AC8D961A76889100655B9D /* TGOpacityViewController.m */,
 			);
 			name = ui;
 			sourceTree = "<group>";
@@ -4897,6 +4930,7 @@
 				CEAE5D68181ECDF100C17645 /* FMResultSet.m in Sources */,
 				C2FA78E61923CB6A001A9D1B /* VideoHistoryFilter.m in Sources */,
 				C268C18C19F0519C007F836A /* POPBasicAnimation.mm in Sources */,
+				C2AC8D971A76889100655B9D /* TGOpacityViewController.m in Sources */,
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
 				C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
@@ -5068,6 +5102,7 @@
 				0A5F0FFB18DC2FF900CCFA60 /* ChatParticipantItem.m in Sources */,
 				C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */,
 				CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */,
+				C2AC8D9E1A7693F400655B9D /* TGUnreadMarkView.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
 				C26F7EB51A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
@@ -5154,6 +5189,7 @@
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,
 				0AAAE57D18C8CBB600A2F9F1 /* TMAnimations.m in Sources */,
 				C2201A0D1934E6D600C0E441 /* DownloadPart.m in Sources */,
+				C2AC8DAE1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m in Sources */,
 				CECBC1691800D5E000AD98E6 /* NSMutableData+Extension.m in Sources */,
 				C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */,
 				C21D485019AF9FE8000F06E1 /* ComposeActionBehavior.m in Sources */,
@@ -5168,8 +5204,10 @@
 				C23298DB18CF61AE000826E5 /* TMPreviewPhotoItem.m in Sources */,
 				CEADBEC218A37DB700FDB258 /* TL_peerSecret.m in Sources */,
 				C2ADB45B191BBA2500305CC8 /* MediaCollectionItem.m in Sources */,
+				C2AC8DAB1A77BC6C00655B9D /* TGDocumentMediaRowView.m in Sources */,
 				0AB8F6511861BE38000E6FF3 /* ConversationTableItem.m in Sources */,
 				0A073FDA18C0D01100BAA928 /* NotSelectedDialogsViewController.m in Sources */,
+				C2AC8DA51A77B98700655B9D /* TGDocumentsMediaTableView.m in Sources */,
 				CEDAEB691881AF85006189A2 /* YapDatabaseDefaults.m in Sources */,
 				CEDAEB8C1881AFA6006189A2 /* DDFileLogger.m in Sources */,
 				C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */,

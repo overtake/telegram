@@ -30,6 +30,7 @@
 #import "PhoneChangeAlertController.h"
 #import "PhoneChangeController.h"
 #import "PhoneChangeConfirmController.h"
+#import "TGOpacityViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -53,6 +54,7 @@
 @property (nonatomic, strong) PhoneChangeAlertController *phoneChangeAlertController;
 @property (nonatomic, strong) PhoneChangeController *phoneChangeController;
 @property (nonatomic, strong) PhoneChangeConfirmController *phoneChangeConfirmController;
+@property (nonatomic, strong) TGOpacityViewController *opacityViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;

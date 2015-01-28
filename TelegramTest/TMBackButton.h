@@ -9,7 +9,7 @@
 #import "TMTextField.h"
 #import "TMTextButton.h"
 #import "TMViewController.h"
-@interface TMBackButton : TMTextButton
+@interface TMBackButton : TMView
 
 typedef enum {
     TMBackButtonClose,
@@ -19,11 +19,13 @@ typedef enum {
 -(void)setTarget:(id)target selector:(SEL)selector;
 
 @property (nonatomic,strong) TMViewController *controller;
-
+@property (nonatomic,strong) TMTextField *field;
 - (id)initWithFrame:(NSRect)frame string:(NSString *)string;
 
 @property (nonatomic, strong) NSImageView *imageView;
 
 -(void)updateBackButton;
+
+@property (nonatomic,assign,getter=isDrawUnreadView) BOOL drawUnreadView;
 
 @end

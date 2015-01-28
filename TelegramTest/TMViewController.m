@@ -62,30 +62,31 @@
         [self.navigationViewController.nagivationBarView setRightView:rightNavigationBarView animated:animation];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
+-(TMView *)standartLeftBarView {
     if(self.backButton)
     {
         [self.backButton updateBackButton];
         
-       // [TMTextButton standartMessageNavigationButtonWithTitle:@"Back"];
-        
-        self.leftNavigationBarView = self.backButton;
-        
     } else {
-        if(![self isKindOfClass:[MessagesViewController class]]) { // =)))
-            self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
-           // self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
-            
-            self.backButton.controller = self;
-            
-           [self.backButton updateBackButton];
-            
-            self.leftNavigationBarView = self.backButton;
-        }
+        self.backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:NSLocalizedString(@"Compose.Back", nil)];
+        // self.leftNavigationBarView = [[TMView alloc] initWithFrame:self.backButton.bounds];
+        
+        self.backButton.controller = self;
+        
+        [self.backButton updateBackButton];
     }
     
+    return (TMView *) self.backButton;
 }
+
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    self.leftNavigationBarView = [self standartLeftBarView];
+}
+
+
+
 - (void)viewDidAppear:(BOOL)animated {
     [[Telegram sharedInstance] makeFirstController:self];
 }

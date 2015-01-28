@@ -943,7 +943,7 @@ static int offsetEditable = 30;
         
         [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
             
-            [ASQueue dispatchOnStageQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(weakSelf.cellState != CellStateDownloading)
                     [weakSelf updateCellState];
                 [weakSelf downloadProgressHandler:item];

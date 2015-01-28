@@ -529,7 +529,7 @@
     weak();
     if(!self.smilePopover) {
        
-       self.smilePopover = [[RBLPopover alloc] initWithContentViewController:emojiViewController];
+       self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
         [self.smilePopover setHoverView:self.smileButton];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
@@ -759,6 +759,16 @@
         
         [self.layer setNeedsDisplay];
     }
+}
+
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    
+    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, 30);
+    [self.inputMessageTextField textDidChange:nil];
 }
 
 

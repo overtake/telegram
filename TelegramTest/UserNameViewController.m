@@ -297,10 +297,18 @@
     
     [centerTextField setStringValue:NSLocalizedString(@"Profile.ChangeUserName", nil)];
     
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, -12)];
+    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
     
-    self.centerNavigationBarView = (TMView *) centerTextField;
+    self.centerNavigationBarView = centerView;
+    
+    [centerView addSubview:centerTextField];
+    
+    [centerTextField sizeToFit];
+    
+    [centerTextField setCenterByView:centerView];
+    
+    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 12)];
     
     weakify();
     self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Username.setName", nil)];

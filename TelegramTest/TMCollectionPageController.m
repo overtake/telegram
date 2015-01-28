@@ -16,6 +16,8 @@
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "TGDocumentsMediaTableView.h"
+
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -26,6 +28,8 @@
 
 @property (nonatomic,strong) TGPVMediaBehavior *behavior;
 
+
+@property (nonatomic,strong) TGDocumentsMediaTableView *documentsTableView;
 
 
 
@@ -42,15 +46,10 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     
-   // BOOL isUpdated = [self.controller updateSize:newSize];
     
     [super setFrameSize:newSize];
-    
-  //  if(!isUpdated)
-        [_controller reloadData];
-   // else
-       // [_controller.photoCollection noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, _controller.photoCollection.list.count)]];
-   
+    [_controller reloadData];
+  
 }
 
 @end
@@ -74,24 +73,30 @@
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
     
-    TMTextField *nameTextField = [TMTextField defaultTextField];
-    [nameTextField setAlignment:NSCenterTextAlignment];
-    [nameTextField setAutoresizingMask:NSViewWidthSizable];
-    [nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [nameTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[nameTextField cell] setTruncatesLastVisibleLine:YES];
-    [[nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [nameTextField setDrawsBackground:NO];
+    TMTextField *centerTextField = [TMTextField defaultTextField];
+    [centerTextField setAlignment:NSCenterTextAlignment];
+    [centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [centerTextField setTextColor:NSColorFromRGB(0x222222)];
+    [[centerTextField cell] setTruncatesLastVisibleLine:YES];
+    [[centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [centerTextField setDrawsBackground:NO];
     
-    [nameTextField setFrameOrigin:NSMakePoint(nameTextField.frame.origin.x, -13)];
     
-    [nameTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
+    [centerTextField setStringValue:NSLocalizedString(@"Profile.Photos", nil)];
     
     
     TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
-    self.centerNavigationBarView = (TMView *) nameTextField;
+    self.centerNavigationBarView = centerView;
     
+    [centerView addSubview:centerTextField];
+    
+    [centerTextField sizeToFit];
+    
+    [centerTextField setCenterByView:centerView];
+    
+    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 12)];
     
     self.items = [[NSMutableArray alloc] init];
     
@@ -130,7 +135,17 @@
     }];
     
     
+    self.documentsTableView = [[TGDocumentsMediaTableView alloc] initWithFrame:self.frameInit];
+    
+    
+    [self.view addSubview:self.documentsTableView.containerView];
+    
+    [self.documentsTableView.containerView setHidden:YES];
+    
+    
 }
+
+
 
 
 -(void)didDeleteMessages:(NSNotification *)notification {
@@ -285,10 +300,9 @@ static const int maxWidth = 120;
     self->_conversation = conversation;
     
    
-    
     [self view];
     
-     [self.photoCollection.containerView setFrameSize:[Telegram rightViewController].view.frame.size];
+    [self.photoCollection.containerView setFrameSize:[Telegram rightViewController].view.frame.size];
     
     [self.items removeAllObjects];
     
@@ -509,52 +523,6 @@ static const int maxWidth = 120;
         TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
         
         
-//        NSString *path = [photoSize.location squarePath];
-        
-//        if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-//            
-//            for(TLPhotoSize *photoSize in photo.sizes) {
-//                if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-//                    cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
-//                    break;
-//                }
-//            }
-//            
-//        }
-        
-        
-        
-     //   if(cachePhoto) {
-          //  cachePhoto = decompressedImage(cachePhoto);
-            
-            
-          //  cachePhoto = cropCenterWithSize(cachePhoto, NSMakeSize(maxWidth, maxWidth));
-            
-          //  [[PhotoCollectionImageView cache] setObject:cachePhoto forKey:photoSize.location.cacheKey];
-   //     }
-    
-            
-//        
-//
-//        
-//        if(cachePhoto && cachePhoto.size.width < photoSize.w) {
-//            float scale =  photoSize.w/cachePhoto.size.width;
-//            
-//            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
-//            
-//        }
-//        
-//        
-//        if(cachePhoto && cachePhoto.size.height < photoSize.h) {
-//            float scale =  photoSize.h/cachePhoto.size.height;
-//            
-//            cachePhoto.size = NSMakeSize(scale*cachePhoto.size.width, scale*cachePhoto.size.height);
-//            
-//        }
-//        
-//        cachePhoto = cropCenterWithSize(cachePhoto, NSMakeSize(maxWidth, maxWidth));
-//        
-        
         imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random()];
         imageObject.previewObject = previewObject;
         
@@ -569,7 +537,7 @@ static const int maxWidth = 120;
     NSMenu *filterMenu = [[NSMenu alloc] init];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+        [[Telegram rightViewController] showCollectionPage:self.conversation];
     }]];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
@@ -578,7 +546,9 @@ static const int maxWidth = 120;
     
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
-       [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[DocumentHistoryFilter class] sender:self];
+        [self.photoCollection.containerView setHidden:YES];
+        [self.documentsTableView.containerView setHidden:NO];
+        [self.documentsTableView setConversation:self.conversation];
     }]];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {

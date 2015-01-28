@@ -127,17 +127,14 @@
 
 @property (nonatomic, strong) TMTextButton *normalNavigationLeftView;
 @property (nonatomic, strong) MessageTableNavigationTitleView *normalNavigationCenterView;
-
-
 @property (nonatomic, strong) TMTextButton *normalNavigationRightView;
+
 @property (nonatomic, strong) TMTextButton *editableNavigationRightView;
+@property (nonatomic, strong) TMTextButton *editableNavigationLeftView;
 
 @property (nonatomic, strong) TMTextButton *filtredNavigationLeftView;
 @property (nonatomic, strong) TMTextButton *filtredNavigationCenterView;
 
-
-@property (nonatomic, strong) TMTextButton *selectedNagivationLeftView;
-@property (nonatomic, strong) TMView *selectedNagivationRightView;
 
 
 @property (nonatomic,strong) MessagesTopInfoView *topInfoView;
@@ -201,8 +198,9 @@
         
         self.isMarkIsset = NO;
         
-        self.historyController = [[ChatHistoryController alloc] initWithConversation:_conversation controller:self];
-        self.historyController.delegate = self;
+        self.historyController = nil;
+        
+        self.historyController = [[ChatHistoryController alloc] initWithController:self];
         animated = NO;
         
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
@@ -249,11 +247,11 @@
     __block MessagesViewController *strongSelf = self;
     
     //Navigation
-    self.normalNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
-    [self.normalNavigationLeftView setTapBlock:^{
+    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
+    [self.normalNavigationRightView setTapBlock:^{
         [strongSelf setCellsEditButtonShow:YES animated:YES];
     }];
-    [self.normalNavigationLeftView setDisableColor:NSColorFromRGB(0xa0a0a0)];
+    [self.normalNavigationRightView setDisableColor:NSColorFromRGB(0xa0a0a0)];
     
     
     
@@ -315,26 +313,26 @@
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
     
-    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
+//    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
+//    
+//    
+//    
+//    [self.normalNavigationRightView setTapBlock:^{
+//        
+//       [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
+// 
+//    }];
     
     
+    self.editableNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
     
-    [self.normalNavigationRightView setTapBlock:^{
-        
-       [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
- 
-    }];
-    
-    
-    self.editableNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
-    
-    [self.editableNavigationRightView setTapBlock:^{
+    [self.editableNavigationLeftView setTapBlock:^{
           [strongSelf clearHistory:strongSelf.conversation];
     }];
     
     
-    self.selectedNagivationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Done", nil)];
-    [self.selectedNagivationLeftView setTapBlock:^{
+    self.editableNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Done", nil)];
+    [self.editableNavigationRightView setTapBlock:^{
         [strongSelf unSelectAll];
     }];
     
@@ -396,7 +394,9 @@
     self.searchItems = [[NSMutableArray alloc] init];
     
     
-    self.historyController = [[ChatHistoryController alloc] initWithConversation:nil controller:self];
+    self.historyController = nil;
+    
+    self.historyController = [[ChatHistoryController alloc] initWithController:self];
     
     [self.searchMessagesView setHidden:YES];
     
@@ -406,6 +406,7 @@
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
+
 
 }
 
@@ -687,7 +688,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(state == MessagesViewControllerStateNone) {
         rightView = self.normalNavigationRightView;
-        leftView = self.normalNavigationLeftView;
+        leftView = [self standartLeftBarView];
         
         [self.bottomView setState:MessagesBottomViewNormalState animated:animated];
         
@@ -701,7 +702,7 @@ static NSTextAttachment *headerMediaIcon() {
         
     } else {
         rightView = self.editableNavigationRightView;
-        leftView = self.selectedNagivationLeftView;
+        leftView = self.editableNavigationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
     }
     
@@ -740,24 +741,22 @@ static NSTextAttachment *headerMediaIcon() {
 -(NSMenu *)filterMenu {
     NSMenu *filterMenu = [[NSMenu alloc] init];
     
-    weakify();
-    
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
-        [strongSelf setHistoryFilter:[PhotoHistoryFilter class] force:NO];
+        [[Telegram rightViewController] showCollectionPage:self.conversation];
     }]];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
-        [strongSelf setHistoryFilter:[VideoHistoryFilter class] force:NO];
+        [self setHistoryFilter:[VideoHistoryFilter class] force:NO];
     }]];
     
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
-        [strongSelf setHistoryFilter:[DocumentHistoryFilter class] force:NO];
+        [self setHistoryFilter:[DocumentHistoryFilter class] force:NO];
     }]];
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
-        [strongSelf setHistoryFilter:[AudioHistoryFilter class] force:NO];
+        [self setHistoryFilter:[AudioHistoryFilter class] force:NO];
     }]];
     
     return filterMenu;
@@ -1739,8 +1738,9 @@ static NSTextAttachment *headerMediaIcon() {
         if(!historyFilter)
             historyFilter = [HistoryFilter class];
         
+        self.historyController = nil;
         
-        self.historyController = [[ChatHistoryController alloc] initWithConversation:dialog controller:self historyFilter:historyFilter];
+        self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:historyFilter];
         
         
         
@@ -1757,8 +1757,6 @@ static NSTextAttachment *headerMediaIcon() {
         if(dialog.top_message != dialog.last_marked_message) {
             [self.historyController removeAllItems];
         }
-        
-        self.historyController.delegate = self;
         
         
         [self.normalNavigationCenterView setDialog:dialog];

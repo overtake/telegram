@@ -51,4 +51,6 @@
 
 -(void)loadView;
 
+-(TMView *)standartLeftBarView;
+
 @end

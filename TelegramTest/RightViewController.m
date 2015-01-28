@@ -99,6 +99,7 @@
 - (void) loadView {
     [super loadView];
     
+    
     self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.navigationViewController.view];
     
@@ -146,20 +147,13 @@
     
     self.phoneChangeConfirmController = [[PhoneChangeConfirmController alloc] initWithFrame:self.view.bounds];
     
+    self.opacityViewController = [[TGOpacityViewController alloc] initWithFrame:self.view.bounds];
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.userInfoViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.chatInfoViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.collectionViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.composePickerViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:NO];
-//    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:NO];
-//    [self.navigationViewController clear];
 
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
     [self.navigationViewController.view.window makeFirstResponder:nil];
+    [[Telegram mainViewController] layout];
 }
 
 - (void)navigationGoBack {

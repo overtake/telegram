@@ -17,6 +17,8 @@ extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
 
 +(NSString*)mimetypefromExtension:(NSString *)extension;
++(NSString*)extensionForMimetype:(NSString *)mimetype;
+
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler;
 

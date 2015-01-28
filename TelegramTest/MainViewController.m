@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "TGWindowArchiver.h"
+#import "NotSelectedDialogsViewController.h"
 @interface MainSplitView : NSSplitView
 @end
 
@@ -28,23 +29,32 @@
 @end
 
 
-@interface MainViewController ()
+#define MIN_SINGLE_LAYOUT_WIDTH 460
+#define MAX_SINGLE_LAYOUT_WIDTH 650
+
+#define MAX_LEFT_WIDTH 350
+
+@interface MainViewController () {
+    NSSize oldLeftSize,oldRightSize,newLeftSize,newRightSize;
+}
 @property (nonatomic,strong) MainSplitView *splitView;
+
 @end
 
 @implementation MainViewController
 
 - (void)loadView {
     
-    
+    [super loadView];
     
     self.splitView = [[MainSplitView alloc] initWithFrame:self.frameInit];
     [self.splitView setVertical:YES];
     [self.splitView setDividerStyle:NSSplitViewDividerStyleThin];
     [self.splitView setDelegate:self];
-    self.view = self.splitView;
     
+    [self.splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
+    [self.view addSubview:self.splitView];
     
     TGWindowArchiver *archiver = [TGWindowArchiver find:@"conversation"];
     
@@ -54,32 +64,61 @@
         archiver.origin = NSMakePoint(0, 0);
     }
     
-    
-    
     //LeftController
-    self.leftViewController = [[LeftViewController alloc] initWithFrame:NSMakeRect(archiver.origin.x, archiver.origin.y, archiver.size.width, archiver.size.height)];
+    self.leftViewController = [[LeftViewController alloc] initWithFrame:NSMakeRect(archiver.origin.x, archiver.origin.y,archiver.size.width, archiver.size.height)];
     
     self.leftViewController.archiver = archiver;
     
     [self.leftViewController viewWillAppear:NO];
-    [self.view addSubview:self.leftViewController.view];
+    [self.splitView addSubview:self.leftViewController.view];
     [self.leftViewController viewDidAppear:NO];
     
     self.settingsWindowController = [[SettingsWindowController alloc] initWithWindowNibName:@"SettingsWindowController"];
     
-    self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(archiver.size.width, 0, self.view.bounds.size.width - archiver.size.width, self.view.bounds.size.height)];
+    self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.frame.size.width, self.view.bounds.size.height)];
     [self.rightViewController viewWillAppear:NO];
-    [self.view addSubview:self.rightViewController.view];
+    [self.splitView addSubview:self.rightViewController.view];
     [self.rightViewController viewDidAppear:NO];
     
-    [((NSSplitView *)self.view) adjustSubviews];
+
+    [self layout];
     
-   // [self updateWindowMinSize];
+    
+    
 }
 
 
+-(void)layout {
+    
+
+    if([self isSingleLayout]) {
+        [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
+        [self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+    } else {
+        
+        int w = 460;
+        
+        [self.splitView setPosition:NSWidth(self.splitView.frame) - w  ofDividerAtIndex:0];
+        
+        [self.splitView setPosition:w ofDividerAtIndex:1];
+    }
+}
+
+-(void)checkLayout {
+    if([self isSingleLayout]) {
+        [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
+        [self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+    }
+}
+
+-(BOOL)isConversationListShown {
+    return [self.rightViewController.navigationViewController.currentController isKindOfClass:[NotSelectedDialogsViewController class]];
+}
+
+
+
 -(void)minimisize {
-    [self.splitView setPosition:70 ofDividerAtIndex:0];
+    [self.splitView setPosition:0 ofDividerAtIndex:0];
 }
 
 -(BOOL)isMinimisze {
@@ -90,34 +129,52 @@
     [self.splitView setPosition:300 ofDividerAtIndex:0];
 }
 
+
+-(BOOL)isSingleLayout {
+    return ![self isMinimisze] && (self.view.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+}
+
+
 -(void)setConnectionState:(ConnectingStatusType)state {
    
 }
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
+    
     if(subview == self.leftViewController.view)
-        return NO;
+        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && (NSWidth(self.rightViewController.view.frame) < MAX_LEFT_WIDTH )) );
     else
-        return YES;
+        return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
 }
+
+
+
+-(BOOL)isResizeToBig {
+    return oldLeftSize.width < newLeftSize.width;
+}
+
+-(BOOL)isResizeToLittle {
+    return oldLeftSize.width > newLeftSize.width;
+}
+
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldHideDividerAtIndex:(NSInteger)dividerIndex {
     return YES;
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return 300;
+    return self.splitView.frame.size.width;
 }
 
-- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return  ![self.leftViewController canMinimisize] ? 300 : 70;
-}
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
     if(proposedPosition < 80)
-        return self.leftViewController.isChatOpened ? 70 : 270;
+        return  [self isSingleLayout] ? 0 : (self.leftViewController.canMinimisize ? 70 : 270);
     if(proposedPosition < 270)
         return 270;
+    
+    if(proposedPosition > MAX_LEFT_WIDTH && ![self isSingleLayout])
+        return MAX_LEFT_WIDTH;
     
     return roundf(proposedPosition);
 }
@@ -129,49 +186,30 @@
     
     [self updateWindowMinSize];
     
+    newLeftSize = self.leftViewController.view.frame.size;
+    newRightSize = self.rightViewController.view.frame.size;
+        
 }
-
-
 
 -(void)splitViewWillResizeSubviews:(NSNotification *)notification {
+    
     [self updateWindowMinSize];
     
+    oldLeftSize = self.leftViewController.view.frame.size;
+    oldRightSize = self.rightViewController.view.frame.size;
+    
 }
+
 
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
         
-    [window setMinSize:NSMakeSize(460 + [Telegram leftViewController].view.frame.size.width, 400)];
+    [window setMinSize:NSMakeSize( MIN_SINGLE_LAYOUT_WIDTH, 400)];
     
     if(window.minSize.width > window.frame.size.width) {
-        [window setFrame:NSMakeRect(NSMinX(self.view.window.frame), NSMinY(self.view.window.frame), window.minSize.width, NSHeight(window.frame)) display:YES];
+        [window setFrame:NSMakeRect(NSMinX(self.splitView.window.frame), NSMinY(self.splitView.window.frame), window.minSize.width, NSHeight(window.frame)) display:YES];
     }
+    
 }
-
-//- (void)showLoginViewController:(BOOL)isShow {
-//
-//    if(!self.loginViewController) {
-//        self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:[NSBundle bundleForClass:[self class]]];
-//        [self.loginViewController.view setFrame:self.view.bounds];
-//        [self.view addSubview:self.loginViewController.view];
-//    } else {
-//        [self.loginViewController.view removeFromSuperview];
-//        self.loginViewController = nil;
-//        [self showLoginViewController:isShow];
-//        return;
-//    }
-//    
-//    if(isShow) {
-//        [self.leftViewController.view setHidden:YES];
-////        [self.rightView setHidden:YES];
-//        [self.loginViewController.view setHidden:NO];
-//        [self.loginViewController initialize];
-//    } else {
-//        [self.leftViewController.view setHidden:NO];
-////        [self.rightView setHidden:NO];
-//        [self.loginViewController.view setHidden:YES];
-//    }
-//}
-
 
 @end

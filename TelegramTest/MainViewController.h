@@ -22,4 +22,14 @@
 -(void)minimisize;
 -(BOOL)isMinimisze;
 -(void)unminimisize;
+
+
+// layout methods
+
+-(BOOL)isSingleLayout;
+
+-(void)singleLayout;
+-(void)multiLayout;
+-(void)layout;
+-(void)checkLayout;
 @end

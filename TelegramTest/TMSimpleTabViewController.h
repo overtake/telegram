@@ -18,5 +18,6 @@
 - (void)showController:(TMViewController *)viewController;
 - (void)removeController:(TMViewController *)viewController;
 - (void)addController:(TMViewController *)viewController;
+- (TMViewController *)contollerAtIndex:(int)index;
 
 @end

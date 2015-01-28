@@ -297,7 +297,8 @@ static NSDictionary *attributes() {
     
     [self.titleTextField sizeToFit];
     
-    [self.titleTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.titleTextField.frame),NSWidth(self.frame) - [self rowItem].dateSize.width - 95 - ([self rowItem].isMuted ? image_muted().size.width + 6 : 0) ), NSHeight(self.titleTextField.frame))];
+    [self.titleTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.titleTextField.frame),MAX(NSWidth(self.frame), 110) - [self rowItem].dateSize.width - 95 - ([self rowItem].isMuted ? image_muted().size.width + 6 : 0) ), NSHeight(self.titleTextField.frame))];
+    
     
 }
 

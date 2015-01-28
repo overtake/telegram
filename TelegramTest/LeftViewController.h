@@ -29,6 +29,8 @@
 -(BOOL)canMinimisize;
 -(BOOL)isChatOpened;
 
+-(TMViewController *)viewControllerAtTabIndex:(int)index;
+
 -(void)setUnreadCount:(int)count;
 
 -(void)showUserSettings;

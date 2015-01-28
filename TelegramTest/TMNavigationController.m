@@ -24,6 +24,7 @@
 #import "ConnectionStatusViewControllerView.h"
 #import "HackUtils.h"
 #import "TGAnimationBlockDelegate.h"
+#import "NotSelectedDialogsViewController.h"
 #define kDefaultAnimationDuration 0.1
 #define kSlowAnimationMultiplier 4
 #define kDefaultTimingFunction [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]
@@ -218,6 +219,8 @@ static const int navigationOffset = 48;
 }
 
 - (void)setCurrentViewController:(TMViewController *)newViewController withAnimation:(BOOL)animationFlag {
+    
+   
     if (_isLocked) {
         ELog(@"Navigtion Controller is locked");
         return;
@@ -266,6 +269,9 @@ static const int navigationOffset = 48;
     
     
     self.currentController = newViewController;
+    
+    
+    [[Telegram mainViewController] checkLayout];
     
     // Make view resize properly
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;

@@ -17,8 +17,6 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setAcceptsTouchEvents:YES];
-        
         [self setWantsLayer:YES];
         [self setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [self setBackgroundColor:[NSColor whiteColor]];
@@ -32,8 +30,6 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    
-    
     
     [image_ClosePopupDialog() drawAtPoint:NSMakePoint(self.bounds.size.width - image_ClosePopupDialog().size.width - 30, self.bounds.size.height - image_ClosePopupDialog().size.height - 30) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     

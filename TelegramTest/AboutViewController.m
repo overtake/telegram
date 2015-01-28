@@ -28,10 +28,18 @@
     
     [centerTextField setStringValue:NSLocalizedString(@"Account.About", nil)];
     
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, -12)];
+    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
     
-    self.centerNavigationBarView = (TMView *) centerTextField;
+    self.centerNavigationBarView = centerView;
+    
+    [centerView addSubview:centerTextField];
+    
+    [centerTextField sizeToFit];
+    
+    [centerTextField setCenterByView:centerView];
+    
+    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 12)];
     
     
     

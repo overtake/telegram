@@ -338,6 +338,10 @@ void alert(NSString *text, NSString *info) {
     return mimeType;
 }
 
++(NSString*)extensionForMimetype:(NSString *)mimetype {
+    return [[self sharedManager] extensions][mimetype];
+}
+
 /*
  ~/Library/Sounds
  /Library/Sounds

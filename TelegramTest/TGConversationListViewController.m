@@ -337,6 +337,8 @@
         [[Telegram rightViewController] modalViewSendAction:item.conversation];
         return NO;
     }
+    
+    
     return ![Telegram rightViewController].navigationViewController.isLocked;
 }
 

@@ -242,6 +242,8 @@ const static int textFieldXOffset = 30;
         } else {
             [self leftPosition:NO];
         }
+    } else {
+        [self.containerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - [self containerWidth]) / 2), 0)];
     }
 }
 

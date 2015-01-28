@@ -42,6 +42,9 @@
 -(void)drawRect:(NSRect)dirtyRect {
     [NSColorFromRGB(0xffffff) set];
     
+    if(self.drawBlock)
+        self.drawBlock();
+    
    // NSRectFill(NSMakeRect(0, 0, NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, NSHeight(self.bounds)));
 }
 
@@ -149,6 +152,10 @@ typedef enum {
     
     weakify();
     
+    [self.view setDrawBlock:^{
+        [header setCenterByView:topContainer];
+    }];
+    
     
     self.editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
     
@@ -201,12 +208,7 @@ typedef enum {
     [self.scrollView setDrawsBackground:YES];
     
   
-    
-    
-    
-    
     self.userCardViewController = [[UserCardViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 150)];
-    
     
     FlippedView *container = [[FlippedView alloc] initWithFrame:self.scrollView.bounds];
     

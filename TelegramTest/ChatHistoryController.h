@@ -26,7 +26,7 @@ typedef enum {
 @property (atomic,assign) ChatHistoryState prevState;
 
 //@property (nonatomic,strong,readonly) TL_conversation *conversation;
-@property (nonatomic,readonly) MessagesViewController *controller;
+@property (nonatomic,readonly) id<MessagesDelegate> controller;
 @property (atomic,assign,readonly) BOOL isProccessing;
 @property (nonatomic,assign) BOOL need_save_to_db;
 
@@ -45,13 +45,12 @@ typedef enum {
 @property (nonatomic,assign) int maxDate;
 
 @property (nonatomic,assign) NSUInteger selectLimit; // default = 70;
-@property (nonatomic,strong) id <MessagesDelegate> delegate;
 
 
 @property (nonatomic,strong) HistoryFilter *filter;
 
--(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller;
--(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller historyFilter:(Class)historyFilter;
+-(id)initWithController:(id<MessagesDelegate>)controller;
+-(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;
 typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler;

@@ -39,10 +39,10 @@
 
 static NSMutableArray *filters;
 static ASQueue *queue;
+static NSMutableArray *listeners;
 
-
--(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller {
-    if(self = [self initWithConversation:conversation controller:controller historyFilter:[HistoryFilter class]]) {
+-(id)initWithController:(id<MessagesDelegate>)controller {
+    if(self = [self initWithController:controller historyFilter:[HistoryFilter class]]) {
         
     }
     
@@ -51,9 +51,11 @@ static ASQueue *queue;
 
 
 
--(id)initWithConversation:(TL_conversation *)conversation controller:(MessagesViewController *)controller historyFilter:(Class)historyFilter {
+-(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
         
+        
+        assert([NSThread isMainThread]);
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -67,7 +69,12 @@ static ASQueue *queue;
             [filters addObject:[DocumentHistoryFilter class]];
             [filters addObject:[VideoHistoryFilter class]];
             [filters addObject:[AudioHistoryFilter class]];
+            
+            listeners = [[NSMutableArray alloc] init];
         });
+        
+        
+        [listeners addObject:self];
 
         
        // self.controller.conversation = conversation;
@@ -102,50 +109,55 @@ static ASQueue *queue;
 -(void)notificationReceiveMessages:(NSNotification *)notify {
     
     [queue dispatchOnQueue:^{
-        NSArray *list = notify.object;
-        
-        NSMutableArray *accepted = [[NSMutableArray alloc] init];
-        NSMutableArray *ignored = [[NSMutableArray alloc] init];
-        
-        if(self.prevState != ChatHistoryStateFull)
-            return;
-        
-        list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
-        
-        [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            if(self.controller.conversation.peer.peer_id == obj.message.peer_id) {
-                [accepted addObject:obj];
-            } else {
-                [ignored addObject:obj];
-            }
-        }];
-        
-        
-        if(accepted.count == 0) {
-            [self.delegate didAddIgnoredMessages:ignored];
-            return;
-        }
-        
-        
-        
-        NSArray *items = [self selectAllItems];
-        
-        int pos = (int) [items indexOfObject:accepted[0]];
-        
-        
-        NSRange range = NSMakeRange(pos, accepted.count);
-        
-        
-        accepted = [accepted mutableCopy];
-        [SelfDestructionController addMessages:accepted];
         
        
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            [self.delegate receivedMessageList:accepted inRange:range itsSelf:NO];
-        }];
+            
+            NSArray *list = notify.object;
+            
+        
+            
+            list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
         
         
-        
+            [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *controller, NSUInteger idx, BOOL *stop) {
+                
+                NSMutableArray *accepted = [[NSMutableArray alloc] init];
+                NSMutableArray *ignored = [[NSMutableArray alloc] init];
+            
+                [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                    if(controller.controller.conversation.peer.peer_id == obj.message.peer_id) {
+                        [accepted addObject:obj];
+                    } else {
+                        [ignored addObject:obj];
+                    }
+                }];
+                
+                
+                if(accepted.count == 0) {
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                        [controller.controller didAddIgnoredMessages:ignored];
+                    }];
+                    return;
+                }
+                
+                NSArray *items = [controller selectAllItems];
+                
+                int pos = (int) [items indexOfObject:accepted[0]];
+                
+                
+                NSRange range = NSMakeRange(pos, accepted.count);
+                
+                
+                accepted = [accepted mutableCopy];
+                [SelfDestructionController addMessages:accepted];
+                
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [controller.controller receivedMessageList:accepted inRange:range itsSelf:NO];
+                }];
+                
+                
+            }];
     }];
     
 }
@@ -186,10 +198,16 @@ static ASQueue *queue;
             [filterClass removeItems:msgs];
         }
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            [self.delegate deleteMessages:msgs];
+        [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {
+            
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                [obj.controller deleteMessages:msgs];
+                
+            }];
+
         }];
-    
+        
+        
         
         self.isProccessing = NO;
     }];
@@ -207,19 +225,26 @@ static ASQueue *queue;
     self.isProccessing = YES;
     
     [queue dispatchOnQueue:^{
-       
+        
+        
         TL_conversation *conversation = [notification.userInfo objectForKey:KEY_DIALOG];
         
         for (Class filterClass in filters) {
             [filterClass removeAllItems:conversation.peer.peer_id];
         }
-
         
-        if(self.controller.conversation == conversation) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [self.delegate flushMessages];
-            }];
-        }
+        
+        [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *controller, NSUInteger idx, BOOL *stop) {
+       
+            if(controller.controller.conversation == conversation) {
+                
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [controller.controller flushMessages];
+                }];
+                
+            }
+            
+        }];
         
         self.isProccessing = NO;
     }];
@@ -245,39 +270,46 @@ static ASQueue *queue;
 -(void)notificationReceiveMessage:(NSNotification *)notification {
     
     [queue dispatchOnQueue:^{
+        
+        
         TL_localMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
         
-       // [self markAsReceived:[message n_id]];
+        // [self markAsReceived:[message n_id]];
         
         if(!message || self.prevState != ChatHistoryStateFull)
             return;
         
         MessageTableItem *tableItem = (MessageTableItem *) [[self.controller messageTableItemsFromMessages:@[message]] lastObject];
         
-        
         NSArray *res = [self filterAndAdd:@[tableItem] isLates:YES];
         
-       
-        
-        if(message.peer_id == self.controller.conversation.peer.peer_id) {
+        [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {
             
-            NSArray *items = [self selectAllItems];
-            
-            int position = (int) [items indexOfObject:tableItem];
-            
-            if(res.count == 1) {
+             if(message.peer_id == obj.controller.conversation.peer.peer_id) {
                 
-                [SelfDestructionController addMessages:@[message]];
+                NSArray *items = [obj selectAllItems];
                 
-                if([self isFiltredAccepted:message.filterType]) {
+                int position = (int) [items indexOfObject:tableItem];
+                
+                if(res.count == 1) {
+                    
+                    [SelfDestructionController addMessages:@[message]];
+                    
                     [[ASQueue mainQueue] dispatchOnQueue:^{
-                        [self.delegate receivedMessage:tableItem position:position itsSelf:NO];
+                        
+                        if([obj isFiltredAccepted:message.filterType]) {
+                            [obj.controller receivedMessage:tableItem position:position itsSelf:NO];
+                        }
+                    
                     }];
                 }
             } else {
-                 [self.delegate didAddIgnoredMessages:@[tableItem]];
+                [ASQueue dispatchOnMainQueue:^{
+                    [obj.controller didAddIgnoredMessages:@[tableItem]];
+                }];
             }
-        }
+            
+        }];
         
     }];
     
@@ -509,7 +541,9 @@ static ASQueue *queue;
                 
                 MessageTableItem *lastItem = [memory lastObject];
             
-                [memory addObjectsFromArray:[[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]]];
+                NSArray *merge = [[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]];
+                
+                [memory addObjectsFromArray:merge];
                 
             } else {
                 
@@ -810,16 +844,17 @@ static ASQueue *queue;
             
             [item.messageSender addEventListener:self];
             
-            NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
-            if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
+             NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
+             if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [self.delegate receivedMessage:item position:0 itsSelf:YES];
-                    
-                    if(sentControllerCallback)
-                        sentControllerCallback();
-                    
+                    [self.controller receivedMessage:item position:0 itsSelf:YES];
                 }];
-            }
+                
+                if(sentControllerCallback)
+                    sentControllerCallback();
+             }
+            
+           
             
             item.messageSender.conversation.last_marked_message = item.message.n_id;
             item.messageSender.conversation.last_marked_date = item.message.date+1;
@@ -853,7 +888,8 @@ static ASQueue *queue;
             NSRange range = NSMakeRange(0, filtred.count);
             if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [self.delegate receivedMessageList:filtred inRange:range itsSelf:YES];
+                    
+                    [self.controller receivedMessageList:filtred inRange:range itsSelf:YES];
                     
                     if(sentControllerCallback)
                         sentControllerCallback();
@@ -960,10 +996,10 @@ static ASQueue *queue;
     
     self.filter.controller = nil;
     _filter = nil;
+    _controller = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [Notification removeObserver:self];
     
-    self.delegate = nil;
 }
 
 -(TL_conversation *)conversation {
@@ -971,6 +1007,11 @@ static ASQueue *queue;
 }
 
 -(void)dealloc {
+    
+    [listeners removeObject:self];
+    
+    assert([NSThread isMainThread]);
+    
     [queue dispatchOnQueue:^{
         [self drop:NO];
     } synchronous:YES];

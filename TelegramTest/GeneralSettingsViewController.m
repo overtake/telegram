@@ -31,9 +31,21 @@
     
     [self.centerTextField setStringValue:NSLocalizedString(@"GeneralSettings.General", nil)];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, -12)];
     
-    self.centerNavigationBarView = (TMView *) self.centerTextField;
+    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
+    
+    
+    self.centerNavigationBarView = centerView;
+    
+    [centerView addSubview:self.centerTextField];
+    
+    [self.centerTextField sizeToFit];
+    
+     [self.centerTextField setCenterByView:centerView];
+    
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 12)];
+    
+   
     
     self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     

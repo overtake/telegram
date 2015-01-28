@@ -8,71 +8,14 @@
 
 #import "TMTabViewController.h"
 #import "NSNumber+NumberFormatter.h"
-@interface ChatTabView : TMView
-
-@property (nonatomic, strong) NSString *unreadCount;
-@property (nonatomic) NSSize undreadSize;
-@end
-
-
-@implementation ChatTabView
-
-
-static NSDictionary *attributes() {
-    static NSDictionary *dictionary;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11], NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
-    });
-    return dictionary;
-}
-
-- (void)setUnreadCount:(NSString *)unreadCount {
-    self->_unreadCount = unreadCount;
-    NSSize size = [unreadCount sizeWithAttributes:attributes()];
-    size.width = ceilf(size.width);
-    size.height = ceilf(size.height);
-    self.undreadSize = size;
-    [self draw];
-}
-
-- (void)draw {
-    NSSize size = self.undreadSize;
-    
-    float width = MAX(22, size.width + 14);
-    [self setFrameSize:NSMakeSize(width, 22)];
-    [self setNeedsDisplay:YES];
-}
-
--(void)drawRect:(NSRect)dirtyRect {
-    
-    
-    float center = roundf(self.bounds.size.width / 2.0);
-    
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    [path moveToPoint:NSMakePoint(1, 11)];
-    [path appendBezierPathWithArcFromPoint:NSMakePoint(1, 21) toPoint:NSMakePoint(center, 21) radius:10];
-    [path appendBezierPathWithArcFromPoint:NSMakePoint(self.bounds.size.width - 1, 21) toPoint:NSMakePoint(self.bounds.size.width - 1, 11) radius:10];
-    [path appendBezierPathWithArcFromPoint:NSMakePoint(self.bounds.size.width - 1, 1) toPoint:NSMakePoint(center, 1) radius:10];
-    [path appendBezierPathWithArcFromPoint:NSMakePoint(1, 1) toPoint:NSMakePoint(1, 11) radius:10];
-    [path setLineWidth:2];
-    
-    
-    [NSColorFromRGB(0xDC3E34) setFill];
-    [path fill];
-    
-    [[NSColor whiteColor] set];
-    [self.unreadCount drawAtPoint:NSMakePoint( roundf(center - self.undreadSize.width/2) , 4) withAttributes:attributes()];
-}
-
-@end
+#import "TGUnreadMarkView.h"
 
 
 @interface TMTabViewController ()
 @property (nonatomic,assign) NSSize tabViewSize;
 @property (nonatomic,strong) NSMutableArray *tabs;
 @property (nonatomic,assign) NSSize lastAcceptedSize;
-@property (nonatomic,strong) ChatTabView *chatTabView;
+@property (nonatomic,strong) TGUnreadMarkView *chatTabView;
 
 @end
 
@@ -160,9 +103,6 @@ static NSDictionary *attributes() {
 
 -(void)redraw {
     
-    
-    
-    
     int width = NSWidth(self.bounds);
     
     int height = NSHeight(self.bounds);
@@ -221,9 +161,7 @@ static NSDictionary *attributes() {
         
         [container addSubview:imageView];
         
-      //  if(idx == 0)
-        //    container.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
-        
+
         [container setFrameSize:NSMakeSize(MAX(NSWidth(imageView.frame),NSWidth(field.frame)), NSHeight(container.frame))];
         
         [imageView setCenterByView:container];
@@ -238,9 +176,6 @@ static NSDictionary *attributes() {
         [container setCenterByView:view];
         
         
-       
-        
-        
         [view addSubview:container];
         
         
@@ -248,7 +183,7 @@ static NSDictionary *attributes() {
             
             
             if(!self.chatTabView) {
-                 self.chatTabView = [[ChatTabView alloc] init];
+                 self.chatTabView = [[TGUnreadMarkView alloc] init];
             }
             
             [self.chatTabView setUnreadCount:@"100"];
@@ -267,12 +202,7 @@ static NSDictionary *attributes() {
         xOffset+=itemWidth;
         
     }];
-    
-//    
-//    NSVisualEffectView *vibrant= [[NSVisualEffectView alloc] initWithFrame:self.bounds];
-//    [vibrant setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-//    [vibrant setBlendingMode:NSVisualEffectBlendingModew];
-//    [self addSubview:vibrant];
+
 }
 
 
@@ -288,7 +218,13 @@ static NSDictionary *attributes() {
 }
 
 -(void)setFrameSize:(NSSize)newSize {
+    
+    BOOL redraw = self.frame.size.width == 0;
+    
     [super setFrameSize:newSize];
+    
+    
+    [self redraw];
     
     [self.subviews enumerateObjectsUsingBlock:^(NSView *obj, NSUInteger idx, BOOL *stop) {
         

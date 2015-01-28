@@ -415,7 +415,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(lastMessage) {
             NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
            
-            int localCount = [db intForQuery:@"SELECT count(*) from messages where date = %d",lastMessage.date];
+            int localCount = [db intForQuery:@"SELECT count(*) from messages where date = ?",@(lastMessage.date)];
             if(selectedCount.count < localCount) {
                 
                 NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where date = %d and n_id != %d order by n_id desc",lastMessage.date,lastMessage.n_id];

@@ -256,6 +256,7 @@ typedef enum {
         [circlePath stroke];
         [[NSColor whiteColor] setFill];
         [circlePath fill];
+        [strongSelf.scrollView setFrameSize:NSMakeSize(NSWidth(rect) - 40, NSHeight(strongSelf.scrollView.frame))];
     }];
     
     // [self.containerView setBackgroundColor:NSColorFromRGB(0x000000)];

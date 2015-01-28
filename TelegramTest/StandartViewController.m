@@ -24,9 +24,23 @@
 @implementation ExtendView
 
 -(void)setFrameSize:(NSSize)newSize {
+    
+    
+    BOOL redraw = self.frame.size.width == 0;
+    
+    
     [super setFrameSize:newSize];
     
-    if(newSize.width == 70)
+    [self.controller.searchTextField setFrameSize:NSMakeSize(self.frame.size.width-70, 31)];
+        
+    [self.controller.topButton setFrameOrigin:NSMakePoint(self.frame.size.width == 70 ? 15 : (self.controller.searchTextField.frame.origin.y + self.controller.searchTextField.frame.size.width+11), 9)];
+    
+    NSView *topView = self.subviews[0];
+    
+    [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width - DIALOG_BORDER_WIDTH, 48)];
+  
+    
+     if(newSize.width == 70)
     {
         [self.controller.topButton setFrameOrigin:NSMakePoint(15, NSMinY(self.controller.topButton.frame))];
     } else if(NSWidth(self.controller.view.frame) == 200) {
@@ -36,8 +50,6 @@
 }
 
 @end
-
-
 
 
 
@@ -66,7 +78,7 @@
     
     self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , 205, 29)];
     
-    [self.searchTextField setFrameSize:NSMakeSize(self.view.bounds.size.width-70, 31)];
+    
     
     
      self.searchTextField.delegate = self;
@@ -74,7 +86,6 @@
     [topView addSubview:self.searchTextField];
     
     int buttonX = self.view.frame.size.width == 70 ? 15 : (self.searchTextField.frame.origin.y + self.searchTextField.frame.size.width+11);
-    
     
     
     NSImage *compose = [NSImage imageNamed:@"ComposeNewMsg"];

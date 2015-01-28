@@ -46,19 +46,32 @@
 -(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
     
    
+//    
+//    if([self inLiveResize])
+//    {
+//        MainViewController *mainViewController = (MainViewController *)self.rootViewController;
+//        
+//        NSPoint current = [self convertScreenToBase:[NSEvent mouseLocation]];
+//        
+//         if(current.x < (self.point.x - NSWidth(frameRect)/4)  && NSWidth(frameRect) == self.minSize.width) {
+//            [mainViewController minimisize];
+//            
+//         }
+////         else if(current.x > (self.point.x - NSWidth(frameRect)/4) && NSWidth(mainViewController.rightViewController.view.frame) > 600) {
+////            [mainViewController unminimisize];
+////          
+////         }
+//    }
     
-    if([self inLiveResize])
-    {
-        
-        NSPoint current = [self convertScreenToBase:[NSEvent mouseLocation]];
-        
-        if(current.x < (self.point.x - NSWidth(frameRect)/3)  && NSWidth(frameRect) == self.minSize.width) {
-            [(MainViewController *)self.rootViewController minimisize];
-        }
+    BOOL isSingleLayout = [[Telegram mainViewController] isSingleLayout];
+    
+    [super setFrame:frameRect display:flag];
+    
+    if(isSingleLayout != [[Telegram mainViewController] isSingleLayout]) {
+        [[Telegram mainViewController] layout];
     }
     
     
-    [super setFrame:frameRect display:flag];
 }
 
 -(void)windowWillStartLiveResize:(NSNotification *)notification {

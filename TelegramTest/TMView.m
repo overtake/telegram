@@ -58,6 +58,20 @@
 
 }
 
+-(void)setFrame:(NSRect)frame {
+    
+    frame = NSMakeRect(frame.origin.x, frame.origin.y, _minSize.width != 0 ? MIN(_minSize.width,frame.size.width) : frame.size.width, _minSize.height != 0 ? MIN(_minSize.height,frame.size.height) : frame.size.height);
+    
+    [super setFrame:frame];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    
+    newSize = NSMakeSize(_minSize.width != 0 ? MIN(_minSize.width,newSize.width) : newSize.width, _minSize.height != 0 ? MIN(_minSize.height,newSize.height) : newSize.height);
+    
+    [super setFrameSize:newSize];
+}
+
 - (void) drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 

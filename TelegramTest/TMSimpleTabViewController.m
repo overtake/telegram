@@ -49,6 +49,10 @@
     [self.controllers addObject:viewController];
 }
 
+- (TMViewController *)contollerAtIndex:(int)index {
+    return self.controllers[index];
+}
+
 - (void)removeController:(TMViewController *)viewController {
     [self.controllers removeObject:viewController];
 }
