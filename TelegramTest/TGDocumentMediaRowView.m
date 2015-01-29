@@ -76,13 +76,13 @@ static NSDictionary *colors;
         [_descriptionField setEditable:NO];
         [_descriptionField setBordered:NO];
         [_descriptionField setBackgroundColor:[NSColor clearColor]];
-        [_descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [_descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [[_descriptionField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_descriptionField cell] setTruncatesLastVisibleLine:YES];
         
         [_descriptionField setTextColor:NSColorFromRGB(0x999999)];
         
-        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 12, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
+        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 13, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
         
         [_descriptionField setUrl_delegate:self];
                 
@@ -93,9 +93,6 @@ static NSDictionary *colors;
         _downloadImageView.image = image_SharedMediaDocumentStatusDownload();
         
         [self addSubview:_downloadImageView];
-        
-        
-        
         
         _thumbView = [[TGSharedMediaFileThumbnailView alloc] initWithFrame:NSMakeRect(s_dox, 10, 40, 40)];
         
@@ -124,7 +121,7 @@ static NSDictionary *colors;
         dispatch_once(&onceToken, ^{
             NSArray *redColors = @[NSColorFromRGB(0xf0625d), NSColorFromRGB(0xde524e)];
             NSArray *greenColors = @[NSColorFromRGB(0x72ce76), NSColorFromRGB(0x54b658)];
-            NSArray *blueColors = @[NSColorFromRGB(0x60b0e8), NSColorFromRGB(0x60b0e8)];
+            NSArray *blueColors = @[NSColorFromRGB(0x60b0e8), NSColorFromRGB(0x4597d1)];
             NSArray *yellowColors = @[NSColorFromRGB(0xf5c565), NSColorFromRGB(0xe5a64e)];
             colors = @{
                        @"ppt": redColors,
@@ -445,7 +442,7 @@ static NSAttributedString *docLoadedAttributedString() {
         NSRange range = [mutableAttributedString appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:BLUE_UI_COLOR];
         [mutableAttributedString setLink:@"finder" forRange:range];
         
-        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:mutableAttributedString.range];
+        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:mutableAttributedString.range];
         
         instance = mutableAttributedString;
     });

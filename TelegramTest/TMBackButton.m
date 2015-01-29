@@ -62,8 +62,14 @@
         
         
         [self setTarget:self selector:@selector(click)];
+        
+        [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
     }
     return self;
+}
+
+-(void)didChangedLayout:(NSNotification *)notification {
+    [self updateBackButton];
 }
 
 -(void)setTarget:(id)target selector:(SEL)selector {

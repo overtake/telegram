@@ -160,6 +160,14 @@
     }
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    if(self.clickBlock) {
+        self.clickBlock();
+    } else {
+        [super mouseDown:theEvent];
+    }
+}
+
 -(void)insertEmoji:(NSString *)emoji {
     [self setStringValue:emoji];
 }

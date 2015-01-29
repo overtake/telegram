@@ -69,22 +69,24 @@
 
 -(void)loadView {
     
+     weakify();
+    
     [TGCache setMemoryLimit:100*1024*1024 group:PCCACHE];
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
     
     _centerTextField = [TMTextField defaultTextField];
     [_centerTextField setAlignment:NSCenterTextAlignment];
-    [_centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [_centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [_centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
     [_centerTextField setTextColor:NSColorFromRGB(0x222222)];
     [[_centerTextField cell] setTruncatesLastVisibleLine:YES];
     [[_centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [_centerTextField setDrawsBackground:NO];
     
-    
-   
-    
+    [_centerTextField setClickBlock:^{
+       [[strongSelf filterMenu] popUpForView:strongSelf.centerNavigationBarView center:YES];
+    }];
     
     TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
     
@@ -99,12 +101,12 @@
     self.behavior = [[TGPVMediaBehavior alloc] init];
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
-    
+        
      [_photoCollection setFrame:self.view.bounds];
     
     _photoCollection.tm_delegate = self;
     
-    [_photoCollection setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+    
     
     [(TMCollectionPageView *)self.view setController:self];
     
@@ -118,19 +120,6 @@
                                                object:clipView];
 
     
-    
-    self.rightNavigationBarView = (TMView *)[TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
-    
-    weakify();
-    
-    
-    [(TMTextButton *) self.rightNavigationBarView setTapBlock:^{
-        
-        [[strongSelf filterMenu] popUpForView:strongSelf.rightNavigationBarView center:YES];
-        
-    }];
-    
-    
     self.documentsTableView = [[TGDocumentsMediaTableView alloc] initWithFrame:self.frameInit];
     
     
@@ -141,8 +130,12 @@
     
 }
 
+-(void)showContextPopup {
+    [[self filterMenu] popUpForView:self.centerNavigationBarView center:YES];
+}
+
 -(void)setTitle:(NSString *)title {
-    [_centerTextField setStringValue:title];
+    [_centerTextField setAttributedStringValue:[self stringForSharedMedia:title]];
     
     [_centerTextField sizeToFit];
     
@@ -313,7 +306,7 @@ static const int maxWidth = 120;
     
     [self.documentsTableView setConversation:conversation];
     
-    [self.photoCollection.containerView setFrameSize:[Telegram rightViewController].view.frame.size];
+    [self.photoCollection.containerView setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 60)];
     
     [self.items removeAllObjects];
     
@@ -354,6 +347,20 @@ static const int maxWidth = 120;
     
 }
 
+
+-(NSAttributedString *)stringForSharedMedia:(NSString *)mediaString {
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+    
+    [string appendString:mediaString withColor:BLUE_UI_COLOR];
+    
+    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, string.length)];
+    
+    [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[image_HeaderDropdownArrow() imageWithInsets:NSEdgeInsetsMake(0, 5, 1, 4)]]]];
+    
+    [string setAlignment:NSCenterTextAlignment range:NSMakeRange(0, string.length)];
+    
+    return string;
+}
 
 -(void)loadRemote {
     

@@ -108,6 +108,8 @@ NSString *const LOGOUT_EVENT = @"logout";
 NSString *const KEY_PRIVACY = @"key_privacy";
 NSString *const PRIVACY_UPDATE = @"privacy_update";
 
+NSString *const LAYOUT_CHANGED = @"TGAPPLICATIONLAYOUTCHANGED";
+NSString *const UNREAD_COUNT_CHANGED = @"TGUNREADCOUNTCHANGED";
 
 +(NSNotificationCenter *)center {
     static NSNotificationCenter *center;

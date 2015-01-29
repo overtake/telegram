@@ -321,7 +321,7 @@
     [LoopingUtils runOnMainQueueAsync:^{
         NSString *str = unread_count > 0 ? [NSString stringWithFormat:@"%d",unread_count] : nil;
         [[[NSApplication sharedApplication] dockTile] setBadgeLabel:str];
-        [[Telegram leftViewController] setUnreadCount:unread_count];
+        [Notification perform:UNREAD_COUNT_CHANGED data:@{@"count":@(unread_count)}];
 
     }];
    

@@ -104,6 +104,10 @@ extern NSString *const KEY_PRIVACY;
 extern NSString *const PRIVACY_UPDATE;
 extern NSString *const LOGOUT_EVENT;
 
+
+extern NSString *const LAYOUT_CHANGED;
+extern NSString *const UNREAD_COUNT_CHANGED;
+
 + (void)addObserver:(id)target selector:(SEL)selector name:(NSString *)name;
 
 + (void)removeObserver:(id)target;

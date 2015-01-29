@@ -7,7 +7,7 @@
 //
 
 #import "TGUnreadMarkView.h"
-
+#import "NSNumber+NumberFormatter.h"
 @implementation TGUnreadMarkView
 
 static NSDictionary *attributes() {
@@ -17,6 +17,38 @@ static NSDictionary *attributes() {
         dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11], NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
     });
     return dictionary;
+}
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        [Notification addObserver:self selector:@selector(didChangedUnreadCount:) name:UNREAD_COUNT_CHANGED];
+        [self updateUnreadCount];
+    }
+    
+    return self;
+}
+
+-(void)didChangedUnreadCount:(NSNotification *)notification {
+    [self updateUnreadCount];
+}
+
+
+-(void)updateUnreadCount {
+    
+    int count = [[MessagesManager sharedManager] unread_count];
+    
+    NSString *text;
+    if(count < 1000)
+        text = [NSString stringWithFormat:@"%d", count];
+    else
+        text = [[NSNumber numberWithInt:count] prettyNumber];
+    
+    [self setUnreadCount:text];
+}
+
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 - (void)setUnreadCount:(NSString *)unreadCount {
@@ -37,6 +69,9 @@ static NSDictionary *attributes() {
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
+    
+    if([[MessagesManager sharedManager] unread_count] == 0)
+        return;
     
     
     float center = roundf(self.bounds.size.width / 2.0);

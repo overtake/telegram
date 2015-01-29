@@ -57,15 +57,11 @@
         
          [self.items addObjectsFromArray:filtred];
         
-        //dispatch_async(dispatch_get_main_queue(), ^{
+         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
             
-            [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
-            
-            if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
-                [self loadNext:NO];
-            }
-            
-      //  });
+        if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
+            [self loadNext:NO];
+        }
         
     }];
     

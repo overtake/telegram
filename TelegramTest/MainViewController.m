@@ -186,17 +186,11 @@
     
     [self updateWindowMinSize];
     
-    newLeftSize = self.leftViewController.view.frame.size;
-    newRightSize = self.rightViewController.view.frame.size;
-        
 }
 
 -(void)splitViewWillResizeSubviews:(NSNotification *)notification {
     
     [self updateWindowMinSize];
-    
-    oldLeftSize = self.leftViewController.view.frame.size;
-    oldRightSize = self.rightViewController.view.frame.size;
     
 }
 

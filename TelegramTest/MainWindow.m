@@ -69,6 +69,7 @@
     
     if(isSingleLayout != [[Telegram mainViewController] isSingleLayout]) {
         [[Telegram mainViewController] layout];
+        [Notification perform:LAYOUT_CHANGED data:nil];
     }
     
     

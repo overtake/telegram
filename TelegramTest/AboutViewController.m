@@ -19,7 +19,7 @@
     
      TMTextField* centerTextField = [TMTextField defaultTextField];
     [centerTextField setAlignment:NSCenterTextAlignment];
-    [centerTextField setAutoresizingMask:NSViewWidthSizable];
+    [centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
     [centerTextField setTextColor:NSColorFromRGB(0x222222)];
     [[centerTextField cell] setTruncatesLastVisibleLine:YES];

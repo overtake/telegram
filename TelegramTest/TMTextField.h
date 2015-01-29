@@ -36,6 +36,9 @@
 
 @property (nonatomic,strong) id <TMTextFieldDelegate> fieldDelegate;
 
+
+@property (nonatomic,strong) dispatch_block_t clickBlock;
+
 + (id)defaultTextField;
 + (id)loginPlaceholderTextField;
 - (PlaceholderTextView *)placeholderView;

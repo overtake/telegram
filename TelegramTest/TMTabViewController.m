@@ -185,9 +185,7 @@
             if(!self.chatTabView) {
                  self.chatTabView = [[TGUnreadMarkView alloc] init];
             }
-            
-            [self.chatTabView setUnreadCount:@"100"];
-            
+                        
             [self.chatTabView setCenterByView:view];
             
             [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX([view.subviews[0] frame])+15, NSHeight(view.bounds) - NSHeight(self.chatTabView.frame) - 3)];
@@ -206,16 +204,7 @@
 }
 
 
-- (void)setUnreadCount:(int)count {
-    [self.chatTabView setHidden:count == 0];
-    NSString *text;
-    if(count < 1000)
-        text = [NSString stringWithFormat:@"%d", count];
-    else
-        text = [[NSNumber numberWithInt:count] prettyNumber];
-    
-    [self.chatTabView setUnreadCount:text];
-}
+
 
 -(void)setFrameSize:(NSSize)newSize {
     
@@ -241,7 +230,7 @@
 
 -(void)setSelectedIndex:(NSUInteger)selectedIndex {
     
-    if(selectedIndex >= self.tabs.count)
+    if(selectedIndex > self.tabs.count || self.tabs.count == 0)
         return;
     
     
