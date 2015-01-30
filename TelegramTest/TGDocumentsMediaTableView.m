@@ -70,10 +70,11 @@
 
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {
     
-    [self.items insertObject:message atIndex:0];
-    
-    [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationEffectFade];
-    
+    if([message isKindOfClass:[MessageTableItemDocument class]]) {
+        [self.items insertObject:message atIndex:0];
+        
+        [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationEffectFade];
+    }
 }
 
 -(void)deleteMessages:(NSArray *)ids {
@@ -99,6 +100,8 @@
 }
 
 -(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
+    
+    list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@", [MessageTableItemDocument class]]];
     
     [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, list.count)]];
     
@@ -154,7 +157,7 @@
     
     self.controller.conversation = conversation;
     
-    // update;
+    [self addScrollEvent];
 }
 
 

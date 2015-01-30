@@ -45,6 +45,9 @@
 
 
 -(void)orderOut:(id)sender {
+    
+     [self runAnimation:NO];
+    
     [super orderOut:sender];
    
     [_photoContainer setCurrentViewerItem:nil animated:NO];
@@ -368,8 +371,32 @@ static const int controlsHeight = 75;
 }
 
 
+-(void)runAnimation:(BOOL)show {
+    
+    
+    float prevAlpha = show ? 0.0f : 1.0f;
+    float nextAlpha = show ? 1.0f : 0.0f;
+    
+    [self.background setAlphaValue:prevAlpha];
+    [self.controls setAlphaValue:prevAlpha];
+    [self.photoContainer setAlphaValue:prevAlpha];
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        
+        [context setDuration:0.2];
+        
+        [[self.background animator] setAlphaValue:nextAlpha];
+        [[self.controls animator] setAlphaValue:nextAlpha];
+        [[self.photoContainer animator] setAlphaValue:nextAlpha];
+        
+    } completionHandler:^{
+        
+    }];
+}
+
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
     _conversation = conversation;
+    
     
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
@@ -440,6 +467,8 @@ static const int controlsHeight = 75;
 }
 
 -(void)makeKeyAndOrderFront:(id)sender {
+    
+     [self runAnimation:YES];
     
     [self setFrame:[NSScreen mainScreen].frame display:NO];
     

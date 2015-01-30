@@ -12,7 +12,7 @@
 #import "TGImageView.h"
 #import "TMPreviewDocumentItem.h"
 #import "TMMediaController.h"
-#define s_dox 100
+#define s_dox 30
 
 @interface TGDocumentMediaRowView () <TMHyperlinkTextFieldDelegate,NSMenuDelegate>
 @property (nonatomic,strong) TMTextField *nameField;
@@ -223,7 +223,7 @@ static NSDictionary *colors;
         if(self.item.downloadItem.downloadState == DownloadStateDownloading) {
             NSString *downloadString = [NSString stringWithFormat:NSLocalizedString(@"Document.Downloading", nil), self.item.downloadItem.progress];
             
-            [self.descriptionField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
+            [self.descriptionField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
          } else {
             [self.descriptionField setStringValue:[NSString stringWithFormat:@"%@ • %@",item.fileSize,item.fullDate]];
         }

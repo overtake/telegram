@@ -11,7 +11,7 @@
 #import "TGTimer.h"
 #import "TGEnterPasswordPanel.h"
 
-#define ONLINE_EXPIRE 55
+#define ONLINE_EXPIRE 120
 #define OFFLINE_AFTER 5
 
 @interface Telegram()
@@ -113,7 +113,7 @@ int maxBroadcastUsers() {
 }
 
 - (BOOL)canBeOnline {
-    return ([[NSApplication sharedApplication] isActive] && SystemIdleTime() < 60 )  || [SettingsArchiver checkMaskedSetting:OnlineForever];
+    return ([[NSApplication sharedApplication] isActive] && SystemIdleTime() < 30 )  || [SettingsArchiver checkMaskedSetting:OnlineForever];
 }
 
 - (void)setAccountOffline:(BOOL)force {
@@ -127,7 +127,9 @@ int maxBroadcastUsers() {
         [self.onlineRequest cancelRequest];
         self.onlineRequest = [RPCRequest sendRequest:[TLAPI_account_updateStatus createWithOffline:YES] successHandler:^(RPCRequest *request, id response) {
             _isOnline = NO;
-            DLog(@"account is offline success");
+            
+            [[UsersManager sharedManager] setUserStatus:[TL_userStatusOffline createWithWas_online:[[MTNetwork instance] getTime]] forUid:[UsersManager currentUserId]];
+            
         } errorHandler:nil];
     } else {
         if(!self.accountOfflineStatusTimer) {
@@ -147,7 +149,7 @@ int maxBroadcastUsers() {
 - (void)setAccountOnline {
     
     if(![self canBeOnline]) {
-        self.isOnline = NO;
+        [self setAccountOffline:YES];
         return;
     }
     
@@ -164,6 +166,8 @@ int maxBroadcastUsers() {
         [self.onlineRequest cancelRequest];
         self.onlineRequest = [RPCRequest sendRequest:[TLAPI_account_updateStatus createWithOffline:NO] successHandler:^(RPCRequest *request, id response) {
             self.isOnline = YES;
+            
+            [[UsersManager sharedManager] setUserStatus:[TL_userStatusOnline createWithExpires:[[MTNetwork instance] getTime] + ONLINE_EXPIRE] forUid:[UsersManager currentUserId]];
             
             DLog(@"account is online");
         } errorHandler:nil];
@@ -201,13 +205,7 @@ int maxBroadcastUsers() {
 }
 
 - (void)showNotSelectedDialog {
-    
-//    [self.mainViewController.leftViewController.dialogsViewController.table selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-//    [self.mainViewController.leftViewController.contactsViewController.table selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-    
-//    [self.mainViewController.leftViewController.dialogsViewController tableViewSetSelectionDialog:nil];
-//    [self.mainViewController.leftViewController.contactsViewController setSelelected:-1];
-    
+
     [[Telegram rightViewController] showNotSelectedDialog];
 }
 

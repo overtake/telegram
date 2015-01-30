@@ -313,16 +313,6 @@
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
     
-//    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Media", nil)];
-//    
-//    
-//    
-//    [self.normalNavigationRightView setTapBlock:^{
-//        
-//       [strongSelf.filterMenu popUpForView:strongSelf.normalNavigationRightView center:YES];
-// 
-//    }];
-    
     
     self.editableNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
     

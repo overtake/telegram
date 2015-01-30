@@ -300,7 +300,9 @@
     
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
-    [self.tableView removeAllItems:YES];
+    [self.tableView removeAllItems:NO];
+    
+    [self.tableView reloadData];
     
     
     [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];

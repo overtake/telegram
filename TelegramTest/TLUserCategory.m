@@ -56,9 +56,6 @@ DYNAMIC_PROPERTY(DType);
 Online
 */
 - (BOOL)isOnline {
-    if(self.n_id == UsersManager.currentUserId)
-        return YES;
-    
     return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
 }
 

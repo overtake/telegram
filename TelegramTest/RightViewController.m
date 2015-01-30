@@ -448,7 +448,7 @@
     
     [self.userInfoViewController setUser:user conversation:conversation];
     
-    [self.navigationViewController pushViewController:self.userInfoViewController animated:YES];
+    [self.navigationViewController pushViewController:self.userInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -466,7 +466,7 @@
     
     
     
-    [self.navigationViewController pushViewController:self.collectionViewController animated:YES];
+    [self.navigationViewController pushViewController:self.collectionViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
     [self.collectionViewController setConversation:conversation];
     
@@ -481,7 +481,7 @@
     
     
     [self.broadcastInfoViewController setBroadcast:broadcast];
-    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:YES];
+    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -492,7 +492,7 @@
     
     [self.composePickerViewController setAction:composeAction];
     
-    [self.navigationViewController pushViewController:self.composePickerViewController animated:YES];
+    [self.navigationViewController pushViewController:self.composePickerViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -504,7 +504,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.composeChatCreateViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:YES];
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 
@@ -516,7 +516,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.composeBroadcastListViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:YES];
+    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 
 }
 
@@ -531,7 +531,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.chatInfoViewController setChat:chat];
-    [self.navigationViewController pushViewController:self.chatInfoViewController animated:YES];
+    [self.navigationViewController pushViewController:self.chatInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -542,7 +542,7 @@
     
     [self.encryptedKeyViewController showForChat:chat];
     
-    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:YES];
+    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
     
 }
@@ -561,7 +561,7 @@
     
     [self hideModalView:YES animation:NO];
 
-    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:YES];
+    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showGeneralSettings {
@@ -571,7 +571,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:YES];
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showSecuritySettings {
@@ -581,7 +581,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:YES];
+    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showAbout {
@@ -591,7 +591,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.aboutViewController animated:YES];
+    [self.navigationViewController pushViewController:self.aboutViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showUserNameController {
@@ -601,7 +601,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.userNameViewController animated:YES];
+    [self.navigationViewController pushViewController:self.userNameViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 -(void)showAddContactController {
@@ -611,7 +611,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.addContactViewController animated:YES];
+    [self.navigationViewController pushViewController:self.addContactViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showPrivacyController {
@@ -620,7 +620,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.privacyViewController animated:YES];
+    [self.navigationViewController pushViewController:self.privacyViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 
 }
 
@@ -632,7 +632,7 @@
     
      [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusTimestamp]];
     
-    [self.navigationViewController pushViewController:self.lastSeenViewController animated:YES];
+    [self.navigationViewController pushViewController:self.lastSeenViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
    
     
@@ -651,7 +651,7 @@
     self.privacyUserListController.title = title;
     
     
-    [self.navigationViewController pushViewController:self.privacyUserListController animated:YES];
+    [self.navigationViewController pushViewController:self.privacyUserListController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -662,7 +662,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeAlertController animated:YES];
+    [self.navigationViewController pushViewController:self.phoneChangeAlertController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     
 }
 
@@ -673,7 +673,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeController animated:YES];
+    [self.navigationViewController pushViewController:self.phoneChangeController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showPhoneChangeConfirmController:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone {
@@ -685,7 +685,7 @@
     [self.phoneChangeConfirmController setChangeParams:params phone:phone];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeConfirmController animated:YES];
+    [self.navigationViewController pushViewController:self.phoneChangeConfirmController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 - (void)showAboveController:(TMViewController *)lastController {
@@ -703,7 +703,7 @@
         
     } else {
         [self.navigationViewController.viewControllerStack removeAllObjects];
-        [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:YES];
+        [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     }
 }
 
