@@ -100,7 +100,7 @@ static NSImage *playImage() {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
     if([self.item isset]) {
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInFinder", nil) withBlock:^(id sender) {
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
         }]];
         

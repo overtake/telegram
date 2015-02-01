@@ -587,6 +587,10 @@ void exceptionHandler(NSException * exception)
     
 }
 
+- (void)windowDidChangeBackingProperties:(NSNotification *)notification {
+    
+}
+
 
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
     

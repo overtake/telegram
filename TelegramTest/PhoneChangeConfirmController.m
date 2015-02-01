@@ -49,7 +49,7 @@
     
     [self.centerTextField setCenterByView:centerView];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 12)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
     
 
     self.smsCodeView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 30, self.view.frame.size.width-200, 35)];

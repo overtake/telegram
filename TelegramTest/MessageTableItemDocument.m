@@ -72,6 +72,10 @@
     return self;
 }
 
+-(NSString *)fileName {
+    return _fileName.length > 0 ? _fileName : @"File";
+}
+
 - (int)size {
     return self.message.media.document.size;
 }

@@ -39,7 +39,7 @@
     
     [centerTextField setCenterByView:centerView];
     
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 12)];
+    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 13)];
     
     
     

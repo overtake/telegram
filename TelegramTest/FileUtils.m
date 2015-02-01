@@ -530,6 +530,19 @@ void open_link(NSString *link) {
     }
     
     
+    NSRange checkRange = [link rangeOfString:@"telegram.me/"];
+    
+    if(checkRange.location != NSNotFound) {
+        
+        NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
+        
+        if(name.length > 0) {
+            open_user_by_name(name);
+            
+            return;
+        } 
+    }
+    
     
     if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"]) {
         

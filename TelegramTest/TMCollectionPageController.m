@@ -141,7 +141,7 @@
     
     [_centerTextField setCenterByView:self.centerNavigationBarView];
     
-    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 12)];
+    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
 }
 
 

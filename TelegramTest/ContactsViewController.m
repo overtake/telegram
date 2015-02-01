@@ -297,18 +297,15 @@
 
 -(void)contactsLoaded:(NSNotification *)notify {
     
-    
     NSArray *all = [[[NewContactsManager sharedManager] all] copy];
     
     [self.tableView removeAllItems:NO];
     
     [self.tableView reloadData];
     
-    
     [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
     
     [self.tableView reloadData];
-    
     
     if(all.count > 100) {
         [self insertAll:[all subarrayWithRange:NSMakeRange(0, 20)]];

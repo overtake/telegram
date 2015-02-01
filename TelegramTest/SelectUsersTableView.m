@@ -9,52 +9,14 @@
 #import "SelectUsersTableView.h"
 #import "NSString+Extended.h"
 #import "TMSearchTextField.h"
+#import "TGSearchRowView.h"
 
 
-@interface SelectUsersSearchItem : TMRowItem
-
-@end
-
-@implementation SelectUsersSearchItem
-
--(NSUInteger)hash {
-    return -1;
-}
-
-@end
-
-@interface SelectUsersSearchView : TMRowView
-@property (nonatomic,strong) TMSearchTextField *searchField;
-@end
-
-@implementation SelectUsersSearchView
-
--(id)initWithFrame:(NSRect)frameRect {
-    if(self = [super initWithFrame:frameRect]) {
-        
-        self.searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 10, NSWidth(frameRect) - 20, 30)];
-        
-        self.searchField.autoresizingMask = NSViewWidthSizable ;
-        
-        [self addSubview:self.searchField];
-        
-    }
-    
-    return self;
-}
-
--(void)redrawRow {
-    self.searchField.delegate = self.rowItem.table;
-}
-
-
-
-@end
 
 @interface SelectUsersTableView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) NSMutableArray *items;
-@property (nonatomic,strong) SelectUsersSearchView *searchView;
-@property (nonatomic,strong) SelectUsersSearchItem *searchItem;
+@property (nonatomic,strong) TGSearchRowView *searchView;
+@property (nonatomic,strong) TGSearchRowItem *searchItem;
 @end
 
 @implementation SelectUsersTableView
@@ -124,9 +86,9 @@ static NSCache *cacheItems;
     
     self.items = items;
     
-    self.searchItem = [[SelectUsersSearchItem alloc] init];
+    self.searchItem = [[TGSearchRowItem alloc] init];
     
-    self.searchView = [[SelectUsersSearchView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
+    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
     
     [self insert:self.searchItem atIndex:0 tableRedraw:NO];
     
@@ -172,7 +134,7 @@ static NSCache *cacheItems;
     NSArray *copy;
     
     if(self.list.count > 0) {
-        if([self.list[0] isKindOfClass:[SelectUsersSearchItem class]]) {
+        if([self.list[0] isKindOfClass:[TGSearchRowItem class]]) {
             copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
         } else {
             copy = [self.list copy];
@@ -203,7 +165,7 @@ static NSCache *cacheItems;
             NSArray *copy;
             
             if(self.list.count > 0) {
-                if([self.list[0] isKindOfClass:[SelectUsersSearchItem class]]) {
+                if([self.list[0] isKindOfClass:[TGSearchRowItem class]]) {
                    copy = [self.list subarrayWithRange:NSMakeRange(1, self.list.count-1)];
                 } else {
                     copy = [self.list copy];

@@ -50,7 +50,7 @@
     
     [self.centerTextField setCenterByView:centerView];
     
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 12)];
+    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
     
     self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     

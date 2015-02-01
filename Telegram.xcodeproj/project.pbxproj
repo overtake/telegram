@@ -489,6 +489,8 @@
 		C2AC8DA51A77B98700655B9D /* TGDocumentsMediaTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DA41A77B98700655B9D /* TGDocumentsMediaTableView.m */; };
 		C2AC8DAB1A77BC6C00655B9D /* TGDocumentMediaRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DAA1A77BC6C00655B9D /* TGDocumentMediaRowView.m */; };
 		C2AC8DAE1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DAD1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m */; };
+		C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DB01A7BF0A500655B9D /* TGSearchRowView.m */; };
+		C2AC8DB41A7BF13000655B9D /* TGSearchRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AC8DB31A7BF13000655B9D /* TGSearchRowItem.m */; };
 		C2ADB451191BB93000305CC8 /* TMCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */; };
 		C2ADB452191BB93000305CC8 /* TMCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */; };
 		C2ADB45B191BBA2500305CC8 /* MediaCollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ADB45A191BBA2500305CC8 /* MediaCollectionItem.m */; };
@@ -1723,6 +1725,10 @@
 		C2AC8DAA1A77BC6C00655B9D /* TGDocumentMediaRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDocumentMediaRowView.m; sourceTree = "<group>"; };
 		C2AC8DAC1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedMediaFileThumbnailView.h; sourceTree = "<group>"; };
 		C2AC8DAD1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedMediaFileThumbnailView.m; sourceTree = "<group>"; };
+		C2AC8DAF1A7BF0A500655B9D /* TGSearchRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSearchRowView.h; sourceTree = "<group>"; };
+		C2AC8DB01A7BF0A500655B9D /* TGSearchRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSearchRowView.m; sourceTree = "<group>"; };
+		C2AC8DB21A7BF13000655B9D /* TGSearchRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSearchRowItem.h; sourceTree = "<group>"; };
+		C2AC8DB31A7BF13000655B9D /* TGSearchRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSearchRowItem.m; sourceTree = "<group>"; };
 		C2ADB44E191BB93000305CC8 /* TMCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCollectionViewController.h; sourceTree = "<group>"; };
 		C2ADB44F191BB93000305CC8 /* TMCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCollectionViewController.m; sourceTree = "<group>"; };
 		C2ADB450191BB93000305CC8 /* TMCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TMCollectionViewController.xib; sourceTree = "<group>"; };
@@ -2801,6 +2807,10 @@
 				C268C14219F01AE3007F836A /* TMLoaderView.m */,
 				C268C1A519F3F6C3007F836A /* TMClockProgressView.h */,
 				C268C1A619F3F6C3007F836A /* TMClockProgressView.m */,
+				C2AC8DAF1A7BF0A500655B9D /* TGSearchRowView.h */,
+				C2AC8DB01A7BF0A500655B9D /* TGSearchRowView.m */,
+				C2AC8DB21A7BF13000655B9D /* TGSearchRowItem.h */,
+				C2AC8DB31A7BF13000655B9D /* TGSearchRowItem.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -5006,6 +5016,7 @@
 				C2F3996F190FD1FC006B36F7 /* SGraphNode.m in Sources */,
 				0ABACDAE181AFE4B00EF43DB /* TLObject.m in Sources */,
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,
+				C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
@@ -5248,6 +5259,7 @@
 				0A59068518AA32C8002ED7BA /* NSImage+BTRImageAdditions.m in Sources */,
 				C268C19219F0519C007F836A /* POPMath.mm in Sources */,
 				CEDAEB6F1881AF85006189A2 /* YapTouch.m in Sources */,
+				C2AC8DB41A7BF13000655B9D /* TGSearchRowItem.m in Sources */,
 				C26752701A13D9F600152D9A /* TGPVUserBehavior.m in Sources */,
 				C2A5BFBF18DC80620021BE68 /* internal.c in Sources */,
 				C270C5AA18941E99005D80E0 /* TL_messageActionEncryptedChat.m in Sources */,

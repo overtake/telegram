@@ -82,7 +82,7 @@ static NSDictionary *colors;
         
         [_descriptionField setTextColor:NSColorFromRGB(0x999999)];
         
-        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 13, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
+        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 11, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
         
         [_descriptionField setUrl_delegate:self];
                 
@@ -320,7 +320,7 @@ static NSDictionary *colors;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
     if([self.item isset]) {
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInFinder", nil) withBlock:^(id sender) {
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
         }]];
         

@@ -10,12 +10,17 @@
 #import "DocumentHistoryFilter.h"
 #import "ChatHistoryController.h"
 #import "MessageTableItemDocument.h"
+#import "TGSearchRowView.h"
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
 @property (nonatomic,strong) ChatHistoryController *loader;
 @property (nonatomic,strong) NSMutableArray *items;
+@property (nonatomic,strong) NSMutableArray *searchItems;
 -(id)initWithTableView:(TGDocumentsMediaTableView *)tableView;
+
+@property (nonatomic,strong) TGSearchRowView *searchView;
+@property (nonatomic,strong) TGSearchRowItem *searchItem;
 
 @end
 
@@ -33,9 +38,19 @@
 -(void)setConversation:(TL_conversation *)conversation{
     _conversation = conversation;
     
+    self.searchItems = [[NSMutableArray alloc] init];
+    
     
     self.items = [[NSMutableArray alloc] init];
     
+    self.searchItem = [[TGSearchRowItem alloc] init];
+    self.searchItem.table = self.tableView;
+    
+    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.tableView.frame), 50)];
+    self.searchView.rowItem = self.searchItem;
+    
+    
+    [self.items addObject:self.searchItem];
     
     [self.tableView reloadData];
     
@@ -51,9 +66,15 @@
 
 -(void)loadNext:(BOOL)isFirst {
     
+    _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 500 : 50;
+    
     [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
         
-        NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@", [MessageTableItemDocument class]]];
+        NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            
+            return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]];
+            
+        }]];
         
          [self.items addObjectsFromArray:filtred];
         
@@ -71,9 +92,9 @@
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {
     
     if([message isKindOfClass:[MessageTableItemDocument class]]) {
-        [self.items insertObject:message atIndex:0];
+        [self.items insertObject:message atIndex:1];
         
-        [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationEffectFade];
+        [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
     }
 }
 
@@ -101,11 +122,15 @@
 
 -(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
     
-    list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@", [MessageTableItemDocument class]]];
+    list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]];
+        
+    }]];
     
-    [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, list.count)]];
+    [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)]];
     
-    [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, list.count)] withAnimation:NSTableViewAnimationEffectFade];
+    [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)] withAnimation:NSTableViewAnimationEffectFade];
 }
 
 - (void)didAddIgnoredMessages:(NSArray *)items {
@@ -153,6 +178,27 @@
     // Drawing code here.
 }
 
+- (void) searchFieldTextChange:(NSString*)searchString {
+    [self reloadWithString:searchString];
+}
+
+
+-(void)reloadWithString:(NSString *)string {
+    
+    NSArray *f = [[self.controller.items subarrayWithRange:NSMakeRange(1, self.controller.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
+    
+    
+    [self.controller.items removeAllObjects];
+    
+    [self.controller.items addObject:self.controller.searchItem];
+    
+    
+    [self.controller.items addObjectsFromArray:f];
+    
+    [self reloadData];
+    
+}
+
 -(void)setConversation:(TL_conversation *)conversation {
     
     self.controller.conversation = conversation;
@@ -170,13 +216,22 @@
 }
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
-    return 60;
+    return row == 0 ? NSHeight(self.controller.searchView.frame) : 60;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     
     MessageTableItem *item = [self.controller.items objectAtIndex:row];
     TGDocumentMediaRowView *cell = nil;
+    
+    
+    if(row == 0) {
+        
+        [self.controller.searchView redrawRow];
+        
+        return self.controller.searchView;
+        
+    }
     
     static NSString *const kRowIdentifier = @"documentMediaView";
     cell = [self makeViewWithIdentifier:kRowIdentifier owner:self];
