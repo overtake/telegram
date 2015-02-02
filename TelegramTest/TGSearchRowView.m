@@ -24,6 +24,10 @@
     return self;
 }
 
+-(BOOL)becomeFirstResponder {
+    return [_searchField becomeFirstResponder];
+}
+
 -(void)redrawRow {
     self.searchField.delegate = self.rowItem.table;
 }

@@ -313,7 +313,7 @@
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     
     [self.queue dispatchOnQueue:^{
-        if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
             [[Storage manager] insertMedia:message];
             
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];

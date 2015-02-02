@@ -34,4 +34,7 @@
 -(void)setUnreadCount:(int)count;
 
 -(void)showUserSettings;
+
+
+-(void)updateForwardActionView;
 @end

@@ -25,8 +25,6 @@
         
         [self rebuildTimeString];
         
-       
-        
         self.videoPhotoLocation = photoSize.location;
         self.videoSize = photoSize.size;
         NSSize blockSize = resizeToMaxCorner(NSMakeSize(photoSize.w, photoSize.h), 250);

@@ -7,7 +7,6 @@
 //
 
 #import "TMCollectionPageController.h"
-#import "TMCollectionViewController.h"
 #import "TMMediaController.h"
 #import "PhotoCollectionTableView.h"
 #import "TLFileLocation+Extensions.h"
@@ -17,7 +16,7 @@
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "TGDocumentsMediaTableView.h"
-
+#import "DownloadVideoItem.h"
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -293,16 +292,25 @@ static const int maxWidth = 120;
 }
 
 
+-(void)showFiles {
+    [self.documentsTableView.containerView setHidden:NO];
+    [self.photoCollection.containerView setHidden:YES];
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
+}
+
+-(void)showAllMedia {
+    [self.documentsTableView.containerView setHidden:YES];
+    [self.photoCollection.containerView setHidden:NO];
+    [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
+}
+
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
    
     [self view];
     
-    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
-    
-    [self.documentsTableView.containerView setHidden:YES];
-    [self.photoCollection.containerView setHidden:NO];
+    [self showAllMedia];
     
     [self.documentsTableView setConversation:conversation];
     
@@ -528,21 +536,36 @@ static const int maxWidth = 120;
 
 -(PhotoCollectionImageObject *)imageObjectWithPreview:(PreviewObject *)previewObject {
     
-    TLPhoto *photo = [(TL_localMessage *)previewObject.media media].photo;
+    TLMessageMedia *media = [(TL_localMessage *)previewObject.media media];
     
     PhotoCollectionImageObject *imageObject;
     
-    if(photo.sizes.count) {
+    
+    if([media isKindOfClass:[TL_messageMediaPhoto class]]) {
         
-//        NSImage *cachePhoto;
+        TLPhoto *photo = media.photo;
         
-        int idx = photo.sizes.count == 1 ? 0 : 1;
+        if(photo.sizes.count) {
+            
+            //        NSImage *cachePhoto;
+            
+            int idx = photo.sizes.count == 1 ? 0 : 1;
+            
+            TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
+            
+            
+            imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random()];
+            imageObject.previewObject = previewObject;
+            
+        }
+    } else if([media isKindOfClass:[TL_messageMediaVideo class]]) {
         
-        TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
+        TLVideo *video = media.video;
         
-        
-        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random()];
+        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:video.thumb.location placeHolder:nil sourceId:arc4random()];
         imageObject.previewObject = previewObject;
+        
+        previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:previewObject.media];
         
     }
     
@@ -554,11 +577,9 @@ static const int maxWidth = 120;
 -(NSMenu *)filterMenu {
     NSMenu *filterMenu = [[NSMenu alloc] init];
     
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.SharedMedia",nil) withBlock:^(id sender) {
         
-        [self.photoCollection.containerView setHidden:NO];
-        [self.documentsTableView.containerView setHidden:YES];
-        [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+        [self showAllMedia];
         
     }]];
     
@@ -568,9 +589,7 @@ static const int maxWidth = 120;
 //    
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
-        [self.photoCollection.containerView setHidden:YES];
-        [self.documentsTableView.containerView setHidden:NO];
-        [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
+        [self showFiles];
     }]];
     
 //    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {

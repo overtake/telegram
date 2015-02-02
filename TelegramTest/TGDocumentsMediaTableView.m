@@ -16,11 +16,12 @@
 @property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
 @property (nonatomic,strong) ChatHistoryController *loader;
 @property (nonatomic,strong) NSMutableArray *items;
-@property (nonatomic,strong) NSMutableArray *searchItems;
+@property (nonatomic,strong) NSMutableArray *defaultItems;
 -(id)initWithTableView:(TGDocumentsMediaTableView *)tableView;
 
 @property (nonatomic,strong) TGSearchRowView *searchView;
 @property (nonatomic,strong) TGSearchRowItem *searchItem;
+@property (nonatomic,assign) BOOL inSearch;
 
 @end
 
@@ -38,10 +39,12 @@
 -(void)setConversation:(TL_conversation *)conversation{
     _conversation = conversation;
     
-    self.searchItems = [[NSMutableArray alloc] init];
+    self.defaultItems = [[NSMutableArray alloc] init];
     
     
     self.items = [[NSMutableArray alloc] init];
+    
+    self.inSearch = NO;
     
     self.searchItem = [[TGSearchRowItem alloc] init];
     self.searchItem.table = self.tableView;
@@ -76,9 +79,11 @@
             
         }]];
         
-         [self.items addObjectsFromArray:filtred];
+        [self.items addObjectsFromArray:filtred];
         
-         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+        [self.defaultItems addObjectsFromArray:filtred];
+        
+        [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
             
         if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
             [self loadNext:NO];
@@ -185,7 +190,15 @@
 
 -(void)reloadWithString:(NSString *)string {
     
-    NSArray *f = [[self.controller.items subarrayWithRange:NSMakeRange(1, self.controller.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
+
+    
+    self.controller.inSearch = string.length != 0;
+    
+    NSArray *f = [self.controller.defaultItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
+    
+    if(string.length == 0) {
+        f = self.controller.defaultItems;
+    }
     
     
     [self.controller.items removeAllObjects];
@@ -197,13 +210,25 @@
     
     [self reloadData];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+         [self.controller.searchView.searchField becomeFirstResponder];
+    });
+    
 }
+
+
 
 -(void)setConversation:(TL_conversation *)conversation {
     
     self.controller.conversation = conversation;
     
+    [self.controller.searchView.searchField setStringValue:@""];
+    
     [self addScrollEvent];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.controller.searchView.searchField becomeFirstResponder];
+    });
 }
 
 
@@ -249,7 +274,7 @@
 
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     
-    if(self.controller.loader.nextState == ChatHistoryStateFull || ![self.scrollView isNeedUpdateBottom])
+    if(self.controller.loader.nextState == ChatHistoryStateFull || ![self.scrollView isNeedUpdateBottom] || [self.controller inSearch])
         return;
     
     [self.controller loadNext:NO];

@@ -14,4 +14,8 @@
 
 -(void)didAddMediaItem:(id<TMPreviewItem>)item;
 -(void)didDeleteMediaItem:(id<TMPreviewItem>)item;
+
+-(void)showAllMedia;
+-(void)showFiles;
+
 @end

@@ -58,7 +58,7 @@
     }
     
     
-    [item.previewObjects enumerateObjectsUsingBlock:^(TGImageObject *obj, NSUInteger idx, BOOL *stop) {
+    [item.previewObjects enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
         
         TGImageView *imageView;
         

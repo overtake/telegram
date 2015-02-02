@@ -154,6 +154,14 @@
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
     [self.navigationViewController.view.window makeFirstResponder:nil];
     [[Telegram mainViewController] layout];
+    
+    [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
+    
+}
+
+
+-(void)didChangedLayout:(NSNotification *)notification {
+    
 }
 
 - (void)navigationGoBack {
@@ -179,7 +187,7 @@
             self.modalView = nil;
             self.modalObject = nil;
             [Notification perform:@"MODALVIEW_VISIBLE_CHANGE" data:nil];
-
+            [[Telegram leftViewController] updateForwardActionView];
         };
         
         if(animated) {
@@ -212,6 +220,8 @@
 
         [self.view addSubview:self.modalView];
         
+        [[Telegram leftViewController] updateForwardActionView];
+        
         if(animated) {
             CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
             flash.fromValue = [NSNumber numberWithFloat:0.0];
@@ -227,6 +237,8 @@
             [[NSCursor arrowCursor] set];
         }
     }
+    
+   
 }
 
 - (void)modalViewSendAction:(id)object {
@@ -322,7 +334,10 @@
 - (void)showShareContactModalView:(TLUser *)user {
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController.view setAcceptsTouchEvents:NO];
+    if([[Telegram mainViewController] isSingleLayout]) {
+        [[Telegram rightViewController] showNotSelectedDialog];
+    }
+    
     
     TMModalView *view = [self shareContactModalView];
     
@@ -339,7 +354,9 @@
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController.view setAcceptsTouchEvents:NO];
+    if([[Telegram mainViewController] isSingleLayout]) {
+        [[Telegram rightViewController] showNotSelectedDialog];
+    }
     
     TMModalView *view = [self forwardModalView];
     
@@ -369,7 +386,11 @@
     
     [view setHeaderTitle:title text:[NSString stringWithFormat:NSLocalizedString(messagesCount == 1 ?  @"Conversation.SelectToForward" : @"Conversation.SelectToForwards", nil), name]];
     
+    
+    
     [self hideModalView:NO animation:YES];
+    
+    
 }
 
 - (TMModalView *)forwardModalView {
@@ -398,7 +419,7 @@
 }
 
 - (void)showNotSelectedDialog {
-    [self hideModalView:YES animation:NO];
+    [self.navigationViewController.viewControllerStack removeAllObjects];
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:YES];
 }
 
@@ -433,7 +454,7 @@
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[TGConversationListViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[TGConversationListViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]];
     }
 
     return YES;

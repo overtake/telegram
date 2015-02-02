@@ -8,10 +8,8 @@
 
 #import "ProfileSharedMediaView.h"
 #import "UserInfoContainerView.h"
-#import "TMCollectionViewController.h"
 #import "TMMediaController.h"
 @interface ProfileSharedMediaView ()
-@property (nonatomic,strong) TMCollectionViewController *mediaCollection;
 @end
 
 @implementation ProfileSharedMediaView

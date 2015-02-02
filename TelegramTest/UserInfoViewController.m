@@ -11,7 +11,6 @@
 #import "UserInfoContainerView.h"
 #import "UserInfoEditContainerView.h"
 #import "TMMediaUserPictureController.h"
-#import "TMCollectionViewController.h"
 #import "ChatAvatarImageView.h"
 #import "TGPhotoViewer.h"
 @interface UserInfoViewController ()

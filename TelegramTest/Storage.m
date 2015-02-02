@@ -136,10 +136,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists dialogs (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
         
-        
-        
-        
-        
         [db executeUpdate:@"create table if not exists chats (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
         
@@ -166,8 +162,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists encrypted_chats (chat_id integer primary key,serialized blob)"];
         
-        [db executeUpdate:@"create table if not exists media (message_id integer primary key, peer_id integer, serialized blob,date integer)"];
-        [db executeUpdate:@"CREATE INDEX if not exists mid_id_index ON media(message_id)"];
+        [db executeUpdate:@"create table if not exists sharedmedia (message_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer)"];
+        
+        
+        [db executeUpdate:@"CREATE INDEX if not exists mid_id_index ON sharedmedia(message_id)"];
         
         
         [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
@@ -615,7 +613,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE random_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from media WHERE message_id IN (%@)",mark];
+        sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE message_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -633,7 +631,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE n_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from media WHERE message_id IN (%@)",mark];
+        sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE message_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
         
@@ -650,7 +648,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE peer_id = %d",dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from media WHERE peer_id  =%d",dialog.peer.peer_id];
+        sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE peer_id  =%d",dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
         
         
@@ -909,7 +907,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db beginTransaction];
         [db executeUpdate:@"delete from dialogs where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
         [db executeUpdate:@"delete from messages where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
-        [db executeUpdate:@"delete from media where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
+        [db executeUpdate:@"delete from sharedmedia where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
         if([dialog.peer isChat]) {
             [db executeUpdate:@"delete from encrypted_chats where chat_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
             [db executeUpdate:@"delete from chats where n_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
@@ -1234,7 +1232,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertMedia:(TL_localMessage *)message {
     [queue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"insert or replace into media (message_id,peer_id,serialized,date) values (?,?,?,?)",@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime])];
+            [db executeUpdate:@"insert or replace into sharedmedia (message_id,peer_id,serialized,date,filter_mask) values (?,?,?,?,?)",@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType)];
     }];
 }
 
@@ -1265,7 +1263,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit {
      [queue inDatabase:^(FMDatabase *db) {
          
-         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from media where peer_id = %d and message_id %@ %ld order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
+         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from sharedmedia where peer_id = %d and message_id %@ %ld order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
 
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
@@ -1289,7 +1287,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-         count = [db intForQuery:@"select count(*) from media where peer_id= ?",@(peer_id)];
+         count = [db intForQuery:@"select count(*) from sharedmedia where (filter_mask & 8 = 8) and peer_id = ?",@(peer_id)];
         
     }];
     

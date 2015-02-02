@@ -21,6 +21,8 @@
 @property (nonatomic, strong) ChatInfoViewController *controller;
 @property (nonatomic) ChatInfoViewControllerType type;
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
+@property (nonatomic, strong) TMSharedMediaButton *filesMediaButton;
+
 @property (nonatomic,strong) ProfileSharedMediaView *mediaView;
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 

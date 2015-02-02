@@ -672,7 +672,7 @@ static NSMutableArray *listeners;
                         [SharedManager proccessGlobalResponse:response];
                         
                         for (TL_localMessage *message in messages) {
-                            if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                            if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
                                 [[Storage manager] insertMedia:message];
                                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
                                 [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];

@@ -308,6 +308,14 @@
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "-[PhotoCollectionImageView checkAction]:PhotoCollectionImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "object.previewObject">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke122:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -889,6 +897,9 @@
          contextName = "-[MessagesBottomView initWithFrame:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGDocumentsMediaTableView reloadWithString:]:TGDocumentsMediaTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke:TMCircularProgress.m">
          <PersistentStrings>
             <PersistentString
@@ -1013,9 +1024,6 @@
                value = "imageView.image">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
@@ -1612,6 +1620,9 @@
                value = "importedSet.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke289:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">

@@ -141,10 +141,7 @@
             
             [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
             
-            
-          //  [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
-            
-           // [[Telegram rightViewController] showByDialog:self.controller.chat.dialog withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+            [[Telegram rightViewController].collectionViewController showAllMedia];
         }];
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
@@ -152,6 +149,18 @@
         
         [self addSubview:self.sharedMediaButton];
         
+        self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            
+            [[Telegram rightViewController].collectionViewController showFiles];
+        }];
+        
+        [self.filesMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
+        
+        [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
+        
+        [self addSubview:self.filesMediaButton];
         
 
         
@@ -174,12 +183,12 @@
 
         }];
         
-        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.filesMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
 
         [self addSubview:self.notificationView];
         
-        self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
+        self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
         
         
 

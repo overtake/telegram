@@ -10,6 +10,8 @@
 #import "Telegram.h"
 
 @interface TMModalView()
+@property (nonatomic,strong) NSAttributedString *attributedString;
+@property (nonatomic,assign) NSSize size;
 @end
 
 @implementation TMModalView
@@ -33,6 +35,9 @@
     
     [image_ClosePopupDialog() drawAtPoint:NSMakePoint(self.bounds.size.width - image_ClosePopupDialog().size.width - 30, self.bounds.size.height - image_ClosePopupDialog().size.height - 30) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     
+    
+    [self.attributedString drawInRect:NSMakeRect(roundf((self.bounds.size.width - self.size.width ) / 2), roundf((self.bounds.size.height - self.size.height ) / 2), self.size.width, self.size.height)];
+    
 }
 
 - (void)setHeaderTitle:(NSString *)titleString text:(NSString *)text {
@@ -50,9 +55,12 @@
     
     NSSize size = [sharingContactAttributedString sizeForTextFieldForWidth:280];
     
-    [self.textField setFrameSize:size];
-    [self.textField setAttributedStringValue:sharingContactAttributedString];
-    [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - self.textField.bounds.size.width ) / 2), roundf((self.bounds.size.height - self.textField.bounds.size.height ) / 2))];
+    
+    self.size = size;
+    
+    self.attributedString = sharingContactAttributedString;
+    
+    [self setNeedsDisplay:YES];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {

@@ -112,7 +112,7 @@
 }
 
 -(BOOL)isConversationListShown {
-    return [self.rightViewController.navigationViewController.currentController isKindOfClass:[NotSelectedDialogsViewController class]];
+    return [self.rightViewController.navigationViewController.currentController isKindOfClass:[NotSelectedDialogsViewController class]] || [self.rightViewController isModalViewActive];
 }
 
 

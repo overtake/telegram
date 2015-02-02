@@ -33,6 +33,8 @@
 @property (nonatomic, strong) UserInfoShortButtonView *shareContactButton;
 @property (nonatomic, strong) UserInfoShortButtonView *blockContact;
 
+
+@property (nonatomic, strong) TMSharedMediaButton *filesMediaButton;
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
@@ -131,12 +133,16 @@
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation]; 
+            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
+            [[Telegram rightViewController].collectionViewController showAllMedia];
             
-            
-          //  [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
-          //  [[Telegram rightViewController] showByDialog:weakSelf.controller.conversation withJump:0 historyFilter:[PhotoHistoryFilter class] sender:self];
+        }];
         
+        
+        self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
+            [[Telegram rightViewController].collectionViewController showFiles];
         }];
         
 //        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
@@ -167,6 +173,11 @@
         [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sharedMediaButton];
         
+        [self.filesMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.filesMediaButton];
+        
+        
+        [self.blockContact.textButton setTextColor:[NSColor redColor]];
         [self.blockContact setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.blockContact];
         
@@ -222,8 +233,10 @@
         
         [self.deleteSecretChatButton.textButton setTextColor:[NSColor redColor]];
         [self.deleteSecretChatButton setFrameSize:NSMakeSize(offsetRight, 42)];
+     
+        
         [self.startSecretChatButton setFrameSize:NSMakeSize(offsetRight, 42)];
-        [self.startSecretChatButton.textButton setTextColor:NSColorFromRGB(0x61ad5e)];
+       // [self.startSecretChatButton.textButton setTextColor:NSColorFromRGB(0x61ad5e)];
         [self addSubview:self.startSecretChatButton];
         
         
@@ -276,7 +289,7 @@
         [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
         
         
-        self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
+        self.filesMediaButton.textButton.textColor = self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
         
         
         [Notification addObserver:self selector:@selector(didChangedBlockedUsers:) name:USER_BLOCK];
@@ -374,16 +387,6 @@
         } else {
             [self.shareContactButton setHidden:YES];
         }
-        
-        
-        if(self.user.type != TLUserTypeSelf) {
-            offset -= self.blockContact.bounds.size.height;
-            [self.blockContact setFrameOrigin:NSMakePoint(100, offset)];
-            [self.blockContact setHidden:NO];
-        } else {
-            [self.blockContact setHidden:YES];
-        }
-
     } else {
         [self.sendMessageButton setHidden:YES];
         [self.blockContact setHidden:YES];
@@ -394,7 +397,7 @@
 
     if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile) {
         
-         offset -= 62;
+         offset -= self.shareContactButton.bounds.size.height;
         
         [self.startSecretChatButton setHidden:self.controller.isSecretProfile];
         [self.startSecretChatButton setFrameOrigin:NSMakePoint(100, offset)];
@@ -410,9 +413,19 @@
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(100, offset)];
         
         [self.sharedMediaButton setHidden:NO];
+        
+        offset-=NSHeight(self.filesMediaButton.frame);
+        
+        [self.filesMediaButton setFrameOrigin:NSMakePoint(100, offset)];
+        
+        [self.filesMediaButton setHidden:NO];
+        
     } else {
         [self.sharedMediaButton setHidden:YES];
+        [self.filesMediaButton setHidden:YES];
     }
+    
+    
     
     
     [self.encryptedKeyButton setHidden:!self.controller.isSecretProfile];
@@ -421,7 +434,7 @@
     
     if(self.controller.isSecretProfile) {
         
-        offset-=self.sharedMediaButton.frame.size.height;
+        offset-=self.filesMediaButton.frame.size.height;
         [self.encryptedKeyButton setFrameOrigin:NSMakePoint(100, offset )];
         
         offset-=self.encryptedKeyButton.bounds.size.height;
@@ -448,6 +461,19 @@
     [self.notificationView setFrameOrigin:NSMakePoint(100, offset)];
     
     
+    
+    if(!self.controller.isSecretProfile) {
+        
+        offset-=62;
+        
+        if(self.user.type != TLUserTypeSelf) {
+            [self.blockContact setFrameOrigin:NSMakePoint(100, offset)];
+            [self.blockContact setHidden:NO];
+        } else {
+            [self.blockContact setHidden:YES];
+        }
+        
+    }
     
 //    offset-=self.notificationView.frame.size.height;
     

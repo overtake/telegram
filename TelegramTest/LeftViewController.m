@@ -13,6 +13,84 @@
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
 #import "ContactsViewController.h"
+
+
+@interface TMForwardView : TMView
+
+@property (nonatomic,strong) TMTextButton *cancelButton;
+@property (nonatomic,strong) TMTextField *descriptionField;
+
+@end
+
+
+@implementation TMForwardView
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        self.cancelButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+        
+        
+        [self addSubview:self.cancelButton];
+        
+        self.descriptionField = [TMTextField defaultTextField];
+        
+        [self.descriptionField setStringValue:NSLocalizedString(@"Messages.Selected.Forward", nil)];
+        
+        [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        
+        [self.descriptionField setTextColor:DARK_BLACK];
+        
+        
+        [self.descriptionField sizeToFit];
+        
+        self.descriptionField.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        
+        [self addSubview:self.descriptionField];
+        
+        self.backgroundColor = NSColorFromRGB(0xfafafa);
+        
+        
+        [self.cancelButton setCenterByView:self];
+        
+        
+        [self.cancelButton setFrameOrigin:NSMakePoint(20, NSMinY(self.cancelButton.frame))];
+        
+        [self.descriptionField setCenterByView:self];
+        
+        [self.cancelButton setTapBlock:^{
+            [[Telegram rightViewController] hideModalView:YES animation:YES];
+        }];
+
+    }
+    
+    return self;
+}
+
+-(void)setHidden:(BOOL)hidden {
+    [self.descriptionField setCenterByView:self];
+    
+    [super setHidden:hidden];
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+}
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    [GRAY_BORDER_COLOR setFill];
+    
+     NSRectFill(NSMakeRect(0, NSHeight(self.frame) - 1, NSWidth(self.frame), 1));
+}
+
+@end
+
+
 @interface LeftView : NSView
 @property (assign) NSPoint initialLocation;
 
@@ -74,6 +152,8 @@
 @property (nonatomic, strong) TMTabViewController *tabController;
 @property (nonatomic, strong) ContactsViewController *contactsViewController;
 
+@property (nonatomic, strong) TMForwardView *forwardView;
+
 @end
 
 @implementation LeftViewController
@@ -87,6 +167,8 @@ static const int bottomOffset = 58;
     LeftView *view = [[LeftView alloc] initWithFrame:self.view.bounds];
     
     self.view = view;
+    
+    
     
     self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
     
@@ -118,6 +200,10 @@ static const int bottomOffset = 58;
     [self.view addSubview:self.tabController];
     
     
+    
+    
+    
+    
     [self.view.window setMovableByWindowBackground:YES];
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable];
@@ -147,7 +233,23 @@ static const int bottomOffset = 58;
     [self updateSize];
     
     
+    self.forwardView = [[TMForwardView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
+    
+    [self.forwardView setAutoresizesSubviews:YES];
+    [self.forwardView setAutoresizingMask:NSViewWidthSizable];
+    
+    [self.view addSubview:self.forwardView];
+    
+    [self updateForwardActionView];
+    
+    [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
+    
 
+}
+
+
+-(void)didChangedLayout:(NSNotification *)notification {
+    [self updateForwardActionView];
 }
 
 -(TMViewController *)viewControllerAtTabIndex:(int)index {
@@ -163,6 +265,12 @@ static const int bottomOffset = 58;
         [[Telegram mainViewController] unminimisize];
     }
 }
+
+-(void)updateForwardActionView {
+    [self.forwardView setHidden:![[Telegram mainViewController] isSingleLayout] || ![[Telegram rightViewController] isModalViewActive]];
+}
+
+
 
 
 -(void)setUnreadCount:(int)count {

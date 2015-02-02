@@ -60,7 +60,7 @@
     
     [_request cancelRequest];
     
-   _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:_conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotos create] min_date:0 max_date:0 offset:0 max_id:(int)max_id limit:limit] successHandler:^(RPCRequest *request, id response) {
+   _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:_conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:(int)max_id limit:limit] successHandler:^(RPCRequest *request, id response) {
        
        if(self == nil)
            return;

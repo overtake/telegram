@@ -99,7 +99,7 @@
             fake.n_id = stated.n_id;
             fake.dstate = DeliveryStateNormal;
             
-            if([fake.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+            if([fake.media isKindOfClass:[TL_messageMediaPhoto class]]  || [fake.media isKindOfClass:[TL_messageMediaVideo class]]) {
                 [[Storage manager] insertMedia:fake];
             }
             
