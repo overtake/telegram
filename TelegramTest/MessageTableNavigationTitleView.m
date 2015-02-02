@@ -33,7 +33,6 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setAutoresizingMask:NSViewWidthSizable];
         
         self.container = [[TMView alloc] initWithFrame:self.bounds];
         self.container.wantsLayer = YES;
@@ -120,17 +119,14 @@
 
 - (void)buildForSize:(NSSize)size {
     
-    
-    [self.container setFrame:self.bounds];
-    
+    [self.container setFrameSize:size];
+        
 
     [self.nameTextField sizeToFit];
     [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 20, self.nameTextField.bounds.size.height)];
     
 
     [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
-    
-  
     
 
 }

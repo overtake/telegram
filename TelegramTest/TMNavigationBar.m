@@ -172,10 +172,16 @@ static const float duration = 0.25;
 - (void) setCenterView:(TMView *)view animated:(BOOL)animated {
     [self.centerView removeFromSuperview];
     self.centerView = view;
-    [self.centerView setAutoresizingMask:NSViewWidthSizable];
+  //  [self.centerView setAutoresizingMask:NSViewWidthSizable];
     [self.centerView setFrameSize:NSMakeSize(self.centerViewBlock.bounds.size.width, self.centerViewBlock.bounds.size.height)];
     [self.centerViewBlock addSubview:self.centerView];
     [self.centerViewBlock setFrameOrigin:NSMakePoint(0, 0)];
+    [self buildSizes];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
     [self buildSizes];
 }
 
@@ -184,7 +190,7 @@ static const float duration = 0.25;
     
     [self.centerViewBlock setFrameSize:NSMakeSize(self.bounds.size.width - 60 - maxSize * 2, self.bounds.size.height)];
     [self.centerViewBlock setFrameOrigin:NSMakePoint(32 + maxSize, 0)];
-    
+    [self.centerView setFrame:self.centerViewBlock.bounds];
     
     [self.connectionView setFrame:self.centerViewBlock.frame];
     

@@ -137,16 +137,13 @@
     [self.actionsView setAutoresizesSubviews:YES];
     [self.actionsView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
-    self.actionsView.backgroundColor = [NSColor whiteColor];
-//    [self.actionsView setBackgroundColor:NSColorFromRGB(0xfafafa)];
-//    [self.actionsView setBorder:TMViewBorderTop];
-//    [self.actionsView setBorderColor:GRAY_BORDER_COLOR];
+    
+        self.actionsView.backgroundColor = [NSColor whiteColor];
     
     self.deleteButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) standartImage:image_MessageActionDeleteActive() disabledImage:image_MessageActionDelete()];
-    [self.deleteButton setFrameOrigin:NSMakePoint(30, roundf((self.bounds.size.height - self.deleteButton.bounds.size.height) / 2) )];
-    [self.deleteButton setAutoresizingMask:NSViewMinYMargin | NSViewMaxYMargin];
+    
+    [self.deleteButton setAutoresizingMask:NSViewMaxXMargin ];
     [self.deleteButton setTapBlock:^{
-//        strongify();
         [strongSelf.messagesViewController deleteSelectedMessages];
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
@@ -160,14 +157,22 @@
     [self.actionsView addSubview:self.messagesSelectedCount];
     
     self.forwardButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Forward", nil) standartImage:image_MessageActionForwardActive() disabledImage:image_MessageActionForward()];
-    [self.forwardButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.forwardButton.bounds.size.width - 22, roundf((self.bounds.size.height - self.deleteButton.bounds.size.height) / 2))];
-    [self.forwardButton setAutoresizingMask:NSViewMinYMargin | NSViewMaxYMargin | NSViewMaxXMargin | NSViewMinXMargin];
+    
+    [self.forwardButton setAutoresizingMask:NSViewMinXMargin];
     self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);
 
     [self.forwardButton setTapBlock:^{
 //        strongify();
         [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.messagesViewController.conversation messagesCount:strongSelf.messagesViewController.selectedMessages.count];
     }];
+     
+     [self.actionsView setDrawBlock:^{
+        [strongSelf.forwardButton setFrameOrigin:NSMakePoint(strongSelf.bounds.size.width - strongSelf.forwardButton.bounds.size.width - 22, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2))];
+        [strongSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2) )];
+        [strongSelf.messagesSelectedCount setCenterByView:strongSelf.actionsView];
+    }];
+     
+
     
     [self.actionsView addSubview:self.forwardButton];
     

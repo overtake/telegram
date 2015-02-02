@@ -335,7 +335,7 @@
     [self hideModalView:YES animation:NO];
     
     if([[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram rightViewController] showNotSelectedDialog];
+        [[Telegram mainViewController] checkLayout];
     }
     
     
@@ -355,7 +355,7 @@
     [self hideModalView:YES animation:NO];
     
     if([[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram rightViewController] showNotSelectedDialog];
+        [[Telegram mainViewController] checkLayout];
     }
     
     TMModalView *view = [self forwardModalView];
