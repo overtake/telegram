@@ -236,6 +236,8 @@
                  strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 20) {
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 23) {
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
     
@@ -250,7 +252,10 @@
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 20) {
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 23) {
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
+            
         }
         
         if(strongSelf.uploadType == UploadDocumentType) {
@@ -261,6 +266,8 @@
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 20) {
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 23) {
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         
@@ -273,11 +280,13 @@
                 strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 20) {
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 23) {
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         
         
-        TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[TL_inputEncryptedChat createWithChat_id:strongSelf.action.chat_id access_hash:strongSelf.action.params.access_hash] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.action.params  messageData:strongSelf.action.decryptedData] file:inputFile];
+        TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[TL_inputEncryptedChat createWithChat_id:strongSelf.action.chat_id access_hash:strongSelf.action.params.access_hash] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.action.params  messageData:[strongSelf decryptedMessageLayer]] file:inputFile];
         
         
         
@@ -350,7 +359,7 @@
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
                 
-                [TGCache cacheImage:image forKey:newLocation.cacheKey groups:@[IMGCACHE]];
+                [TGCache cacheImage:renderedImage(image, strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width)) forKey:newLocation.cacheKey groups:@[IMGCACHE]];
                 
                 [[Storage manager] insertMedia:strongSelf.message];
                 

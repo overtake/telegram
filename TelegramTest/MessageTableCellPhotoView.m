@@ -88,6 +88,8 @@ NSImage *fireImage() {
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
         
+        [self.imageView setContentMode:BTRViewContentModeCenter];
+        
         
         [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
