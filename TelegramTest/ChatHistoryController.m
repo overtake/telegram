@@ -852,12 +852,15 @@ static NSMutableArray *listeners;
             
              NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
              if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+                
+                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     [self.controller receivedMessage:item position:0 itsSelf:YES];
-                }];
+               
                 
                 if(sentControllerCallback)
                     sentControllerCallback();
+                    
+                }];
              }
             
            
