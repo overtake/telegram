@@ -153,7 +153,8 @@
 
 -(void)notificationLogout:(NSNotification *)notification {
     [self.historyController drop];
-    [self.tableView removeAllItems:YES];
+    [self.tableView removeAllItems:NO];
+    [self.tableView reloadData];
 }
 
 - (void) scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {

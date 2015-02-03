@@ -539,12 +539,12 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updateUserStatus class]]) {
         
-        if(update.user_id == [UsersManager currentUserId]) {
-            [[Telegram sharedInstance] setIsOnline:NO];
-            [[Telegram sharedInstance] setAccountOnline];
-        
-            return;
-        }
+//        if(update.user_id == [UsersManager currentUserId]) {
+//            [[Telegram sharedInstance] setIsOnline:NO];
+//            [[Telegram sharedInstance] setAccountOnline];
+//        
+//            return;
+//        }
         [[UsersManager sharedManager] setUserStatus:[update status] forUid:update.user_id];
 
         return;

@@ -130,6 +130,8 @@ int maxBroadcastUsers() {
             
             [[UsersManager sharedManager] setUserStatus:[TL_userStatusOffline createWithWas_online:[[MTNetwork instance] getTime]] forUid:[UsersManager currentUserId]];
             
+            NSLog(@"account is offline");
+            
         } errorHandler:nil];
     } else {
         if(!self.accountOfflineStatusTimer) {
@@ -156,7 +158,7 @@ int maxBroadcastUsers() {
     [self.accountOfflineStatusTimer invalidate];
     self.accountOfflineStatusTimer = nil;
     
-    if(self.isOnline)
+    if([[UsersManager currentUser] isOnline])
         return;
     
     
@@ -169,7 +171,7 @@ int maxBroadcastUsers() {
             
             [[UsersManager sharedManager] setUserStatus:[TL_userStatusOnline createWithExpires:[[MTNetwork instance] getTime] + ONLINE_EXPIRE] forUid:[UsersManager currentUserId]];
             
-            DLog(@"account is online");
+            NSLog(@"account is online");
         } errorHandler:nil];
     }
 }

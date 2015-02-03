@@ -286,6 +286,9 @@
 
     [self.centerTextField setAttributedStringValue:self.action.behavior.centerTitle];
     
+    
+    
+    
     [self.doneButton setStringValue:self.action.behavior.doneTitle];
     
     [self.doneButton sizeToFit];

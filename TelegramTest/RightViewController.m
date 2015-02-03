@@ -188,6 +188,11 @@
             self.modalObject = nil;
             [Notification perform:@"MODALVIEW_VISIBLE_CHANGE" data:nil];
             [[Telegram leftViewController] updateForwardActionView];
+            
+            if([[Telegram mainViewController] isSingleLayout]) {
+                [[Telegram mainViewController] checkLayout];
+            }
+            
         };
         
         if(animated) {
@@ -221,6 +226,10 @@
         [self.view addSubview:self.modalView];
         
         [[Telegram leftViewController] updateForwardActionView];
+        
+        if([[Telegram mainViewController] isSingleLayout]) {
+            [[Telegram mainViewController] checkLayout];
+        }
         
         if(animated) {
             CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
@@ -334,9 +343,7 @@
 - (void)showShareContactModalView:(TLUser *)user {
     [self hideModalView:YES animation:NO];
     
-    if([[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram mainViewController] checkLayout];
-    }
+   
     
     
     TMModalView *view = [self shareContactModalView];
@@ -349,14 +356,14 @@
     [view setHeaderTitle:NSLocalizedString(@"Messages.SharingContact", nil) text:[NSString stringWithFormat:NSLocalizedString(@"Conversation.SelectToShareContact", nil), user.fullName]];
     
     [self hideModalView:NO animation:YES];
+    
+    
 }
 
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
     
-    if([[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram mainViewController] checkLayout];
-    }
+    
     
     TMModalView *view = [self forwardModalView];
     
@@ -389,7 +396,6 @@
     
     
     [self hideModalView:NO animation:YES];
-    
     
 }
 

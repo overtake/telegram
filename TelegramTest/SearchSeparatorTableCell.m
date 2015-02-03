@@ -53,6 +53,13 @@
     return self;
 }
 
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    [self.textField setCenterByView:self];
+}
+
+
 - (void)setHover:(BOOL)hover redraw:(BOOL)redraw {
     [super setHover:hover redraw:redraw];
 }
@@ -63,7 +70,7 @@
     self.textField.stringValue =  item.itemCount == -1 ? NSLocalizedString(@"Search.LoadingMessages", nil) : (item.itemCount == 0 ? item.oneName : [NSString stringWithFormat:@"%d %@", item.itemCount, item.itemCount == 1 ? item.oneName : item.pluralName]);
     [self.textField sizeToFit];
     [self.textField setCenterByView:self];
-    [self.textField setFrameOrigin:NSMakePoint(self.textField.frame.origin.x, self.textField.frame.origin.y + 2)];
+   
 }
 
 @end

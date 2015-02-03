@@ -195,7 +195,7 @@ static NSImage *playVideoImage() {
     
     [self.loaderView setState:state];
     
-    [self.loaderView setProgress:downloadItem.progress animated:NO];
+    [self.loaderView setProgress:state == TMLoaderViewStateNeedDownload ? 0 : downloadItem.progress animated:NO];
     
     [self.loaderView setHidden:[self isset:object]];
     

@@ -26,7 +26,7 @@
         self.field = [TMHyperlinkTextField defaultTextField];
         
         
-        
+        [self setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
        
         
         self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
@@ -80,7 +80,7 @@ static NSMutableDictionary *cache;
 }
 
 -(void)setFrame:(NSRect)frameRect {
-    [super setFrame:frameRect];
+    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth([Telegram rightViewController].view.frame), frameRect.size.height)];
     
     [self.progress setCenterByView:self];
     [self.field setCenterByView:self];

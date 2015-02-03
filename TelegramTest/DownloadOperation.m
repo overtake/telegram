@@ -90,6 +90,8 @@
     self.selector = selector;
     self.target = target;
     
+    _item.errorType = DownloadErrorNone;
+    
     [DownloadQueue dispatchOnDownloadQueue:^{
         
          [DownloadQueue setProgress:(float)self.downloaded/(float)_item.size * 100.0f toOperation:self];

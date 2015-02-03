@@ -222,7 +222,7 @@ float ease(float t, float b, float c, float d) {
         self->rotateAngel = 0;
         [self pop_removeAllAnimations];
         [self setNeedsDisplay:YES];
-       // return;
+        return;
     }
     
     if(self.isHidden || currentProgress == min)

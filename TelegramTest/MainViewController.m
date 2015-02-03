@@ -30,7 +30,7 @@
 
 
 #define MIN_SINGLE_LAYOUT_WIDTH 460
-#define MAX_SINGLE_LAYOUT_WIDTH 650
+#define MAX_SINGLE_LAYOUT_WIDTH 670
 
 #define MAX_LEFT_WIDTH 350
 
@@ -73,12 +73,16 @@
     [self.splitView addSubview:self.leftViewController.view];
     [self.leftViewController viewDidAppear:NO];
     
+   
+    
     self.settingsWindowController = [[SettingsWindowController alloc] initWithWindowNibName:@"SettingsWindowController"];
     
     self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.frame.size.width, self.view.bounds.size.height)];
     [self.rightViewController viewWillAppear:NO];
     [self.splitView addSubview:self.rightViewController.view];
     [self.rightViewController viewDidAppear:NO];
+    
+    
     
 
     [self layout];
@@ -92,22 +96,44 @@
     
 
     if([self isSingleLayout]) {
-        [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
-        [self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+      //  [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
+        //[self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+        
+        [self.leftViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? NSWidth(self.view.frame) : 0,NSHeight(self.leftViewController.view.frame))];
+        
+        
+         [self.rightViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? 0 : NSWidth(self.view.frame),NSHeight(self.rightViewController.view.frame))];
     } else {
         
         int w = 460;
         
-        [self.splitView setPosition:NSWidth(self.splitView.frame) - w  ofDividerAtIndex:0];
+      //  [self.splitView setPosition:NSWidth(self.splitView.frame) - w  ofDividerAtIndex:0];
         
-        [self.splitView setPosition:w ofDividerAtIndex:1];
+        NSLog(@"%@",NSStringFromRect(self.leftViewController.view.frame));
+        
+        [self.leftViewController.view setFrameSize:NSMakeSize(NSWidth(self.leftViewController.view.frame) == 0 ?  NSWidth(self.view.frame) - w : MIN(NSWidth(self.leftViewController.view.frame),NSWidth(self.view.frame) - w),NSHeight(self.leftViewController.view.frame))];
+        
+        [self.rightViewController.view setFrameSize:NSMakeSize(NSWidth(self.view.frame) - NSWidth(self.leftViewController.view.frame),NSHeight(self.rightViewController.view.frame))];
+        
+        
+        //
+        
+        // NSLog(@"%f:%f", [self.splitView minPossiblePositionOfDividerAtIndex:1],[self.splitView maxPossiblePositionOfDividerAtIndex:1]);
+        
+        // [self.splitView setPosition:[self.splitView minPossiblePositionOfDividerAtIndex:1] ofDividerAtIndex:1];
+        
     }
 }
 
 -(void)checkLayout {
     if([self isSingleLayout]) {
-        [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
-        [self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+       // [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
+      //  [self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+        
+        [self.leftViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? NSWidth(self.view.frame) : 0,NSHeight(self.leftViewController.view.frame))];
+        
+        [self.rightViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? 0 : NSWidth(self.view.frame),NSHeight(self.rightViewController.view.frame))];
+        
     }
 }
 
@@ -142,9 +168,11 @@
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
     
     if(subview == self.leftViewController.view)
-        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && (NSWidth(self.rightViewController.view.frame) < MAX_LEFT_WIDTH )) );
-    else
+        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && ((NSWidth(self.leftViewController.view.frame) <= MAX_LEFT_WIDTH ))) );
+    else {        
         return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+    }
+    
 }
 
 
@@ -175,6 +203,10 @@
     
     if(proposedPosition > MAX_LEFT_WIDTH && ![self isSingleLayout])
         return MAX_LEFT_WIDTH;
+    
+    
+    if(NSWidth(self.view.frame) - proposedPosition < MIN_SINGLE_LAYOUT_WIDTH )
+        return NSWidth(self.view.frame) - MIN_SINGLE_LAYOUT_WIDTH;
     
     return roundf(proposedPosition);
 }
