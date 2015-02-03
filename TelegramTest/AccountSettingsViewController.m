@@ -222,7 +222,7 @@ typedef enum {
     [container addSubview:separator];
     
     
-    [container setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable ];
+    [container setAutoresizingMask:NSViewWidthSizable ];
     
     [self.view addSubview:self.scrollView];
     
