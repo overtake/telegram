@@ -11,6 +11,9 @@
 #import "ChatHistoryController.h"
 #import "MessageTableItemDocument.h"
 #import "TGSearchRowView.h"
+#import "TGSharedMediaCap.h"
+
+
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
@@ -25,6 +28,12 @@
 
 @end
 
+
+@interface TGDocumentsMediaTableView ()
+@property (nonatomic,strong) TGDocumentsController *controller;
+@property (nonatomic,strong) TGSharedMediaCap *cap;
+-(void)checkCap;
+@end
 
 @implementation TGDocumentsController
 
@@ -84,7 +93,9 @@
         [self.defaultItems addObjectsFromArray:filtred];
         
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
-            
+        
+        [self.tableView checkCap];
+        
         if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
             [self loadNext:NO];
         }
@@ -100,6 +111,8 @@
         [self.items insertObject:message atIndex:1];
         
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
+        
+        [self.tableView checkCap];
     }
 }
 
@@ -114,7 +127,7 @@
     }];
     
     [self.items removeObjectsInArray:items];
-    
+    [self.tableView checkCap];
     
     
 }
@@ -123,6 +136,7 @@
     [self.items removeAllObjects];
     
     [self.tableView reloadData];
+    [self.tableView checkCap];
 }
 
 -(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
@@ -136,6 +150,8 @@
     [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)]];
     
     [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)] withAnimation:NSTableViewAnimationEffectFade];
+    
+    [self.tableView checkCap];
 }
 
 - (void)didAddIgnoredMessages:(NSArray *)items {
@@ -154,10 +170,7 @@
 @end
 
 
-@interface TGDocumentsMediaTableView ()
-@property (nonatomic,strong) TGDocumentsController *controller;
 
-@end
 
 @implementation TGDocumentsMediaTableView
 
@@ -166,10 +179,21 @@
         self.dataSource = self;
         self.delegate = self;
         self.controller = [[TGDocumentsController alloc] initWithTableView:self];
+        
+        [self.containerView setHidden:YES];
+        
+        
         [self addScrollEvent];
     }
     
     return self;
+}
+
+-(void)checkCap {
+    
+    [[Telegram rightViewController].collectionViewController checkCap];
+    
+    [self.cap setHidden:self.controller.defaultItems.count != 1];
 }
 
 -(BOOL)isFlipped {
@@ -209,6 +233,8 @@
     [self.controller.items addObjectsFromArray:f];
     
     [self reloadData];
+    
+    [self checkCap];
     
     dispatch_async(dispatch_get_main_queue(), ^{
          [self.controller.searchView.searchField becomeFirstResponder];

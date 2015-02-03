@@ -153,6 +153,9 @@ CACHE_IMAGE(ChangenumberAlertIcon);
 
 CACHE_IMAGE(SharedMediaDocumentStatusDownload);
 
+CACHE_IMAGE(NoFiles);
+CACHE_IMAGE(SadAttach);
+
 @interface ImageUtils : NSObject
 
 

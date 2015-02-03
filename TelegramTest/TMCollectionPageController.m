@@ -17,6 +17,9 @@
 #import "AudioHistoryFilter.h"
 #import "TGDocumentsMediaTableView.h"
 #import "DownloadVideoItem.h"
+#import "TGSharedMediaCap.h"
+
+
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -31,6 +34,7 @@
 @property (nonatomic,strong) TGDocumentsMediaTableView *documentsTableView;
 
 @property (nonatomic,strong) TMTextField *centerTextField;
+@property (nonatomic,strong) TGSharedMediaCap *mediaCap;
 
 -(void)reloadData;
 -(BOOL)updateSize:(NSSize)newSize;
@@ -126,6 +130,12 @@
     
     [self.documentsTableView.containerView setHidden:YES];
     
+    self.mediaCap = [[TGSharedMediaCap alloc] initWithFrame:self.view.bounds cap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];
+    
+    
+    [self.view addSubview:self.mediaCap];
+    
+   // [self.mediaCap setHidden:YES];
     
 }
 
@@ -296,12 +306,14 @@ static const int maxWidth = 120;
     [self.documentsTableView.containerView setHidden:NO];
     [self.photoCollection.containerView setHidden:YES];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
+    [self checkCap];
 }
 
 -(void)showAllMedia {
     [self.documentsTableView.containerView setHidden:YES];
     [self.photoCollection.containerView setHidden:NO];
     [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
+    [self checkCap];
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
@@ -487,7 +499,7 @@ static const int maxWidth = 120;
 
     [self.photoCollection reloadData];
     
-   
+    [self checkCap];
 }
 
 
@@ -531,7 +543,22 @@ static const int maxWidth = 120;
         if(lastItem)
             [self.photoCollection reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:startIndex-1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
          [self.photoCollection insert:insert startIndex:startIndex tableRedraw:YES];
+        
+        [self checkCap];
+        
     });
+}
+
+-(void)checkCap {
+    if([self.photoCollection.containerView isHidden]) {
+         [self.mediaCap setHidden:[self.documentsTableView numberOfRows] != 1];
+        [self.mediaCap updateCap:image_NoFiles() text:NSLocalizedString(@"SharedMedia.NoFiles", nil)];
+    } else {
+        [self.mediaCap setHidden:self.photoCollection.count != 0];
+        [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];
+    }
+    
+    
 }
 
 -(PhotoCollectionImageObject *)imageObjectWithPreview:(PreviewObject *)previewObject {

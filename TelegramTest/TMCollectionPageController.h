@@ -17,5 +17,5 @@
 
 -(void)showAllMedia;
 -(void)showFiles;
-
+-(void)checkCap;
 @end
