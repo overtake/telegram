@@ -10,6 +10,11 @@
 
 @interface TGSharedMediaCap : TMView
 
+@property (nonatomic,assign, getter=isProgress) BOOL progress;
+
+
 -(instancetype)initWithFrame:(NSRect)frameRect cap:(NSImage *)cap text:(NSString *)text;
 -(void)updateCap:(NSImage *)cap text:(NSString *)text;
+
+
 @end

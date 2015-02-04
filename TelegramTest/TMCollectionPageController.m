@@ -35,6 +35,7 @@
 
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TGSharedMediaCap *mediaCap;
+@property (nonatomic,assign) BOOL isProgress;
 
 -(void)reloadData;
 -(BOOL)updateSize:(NSSize)newSize;
@@ -305,6 +306,7 @@ static const int maxWidth = 120;
 -(void)showFiles {
     [self.documentsTableView.containerView setHidden:NO];
     [self.photoCollection.containerView setHidden:YES];
+    [self.documentsTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
     [self checkCap];
 }
@@ -318,6 +320,8 @@ static const int maxWidth = 120;
 
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
+    
+    self.isProgress = YES;
     
    
     [self view];
@@ -342,6 +346,9 @@ static const int maxWidth = 120;
     [self.behavior load:INT32_MAX next:YES limit:100 callback:^(NSArray *previewObjects) {
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
+            
+            self.isProgress = NO;
+            
             int limit = [self visibilityCount];
             
             self.waitItems = [[self convertItems:previewObjects] mutableCopy];
@@ -551,11 +558,13 @@ static const int maxWidth = 120;
 
 -(void)checkCap {
     if([self.photoCollection.containerView isHidden]) {
-         [self.mediaCap setHidden:[self.documentsTableView numberOfRows] != 1];
+        [self.mediaCap setHidden:![self.documentsTableView isNeedCap]];
         [self.mediaCap updateCap:image_NoFiles() text:NSLocalizedString(@"SharedMedia.NoFiles", nil)];
+        [self.mediaCap setProgress:self.documentsTableView.isProgress];
     } else {
         [self.mediaCap setHidden:self.photoCollection.count != 0];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];
+        [self.mediaCap setProgress:self.isProgress];
     }
     
     

@@ -84,6 +84,8 @@
     
     [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
         
+        self.tableView.isProgress = NO;
+        
         NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             
             return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]];
@@ -194,8 +196,6 @@
 -(void)checkCap {
     
     [[Telegram rightViewController].collectionViewController checkCap];
-    
-    [self.cap setHidden:self.controller.defaultItems.count != 1];
 }
 
 -(BOOL)isFlipped {
@@ -216,8 +216,6 @@
 
 -(void)reloadWithString:(NSString *)string {
     
-
-    
     self.controller.inSearch = string.length != 0;
     
     NSArray *f = [self.controller.defaultItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
@@ -227,26 +225,31 @@
     }
     
     
-    [self.controller.items removeAllObjects];
+    NSRange removeRange = NSMakeRange(1, self.controller.items.count - 1);
     
-    [self.controller.items addObject:self.controller.searchItem];
+    [self.controller.items removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:removeRange]];
     
+    [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:removeRange] withAnimation:NSTableViewAnimationEffectNone];
     
     [self.controller.items addObjectsFromArray:f];
     
-    [self reloadData];
+    [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,f.count)] withAnimation:NSTableViewAnimationEffectNone];
+    
+
     
     [self checkCap];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-         [self.controller.searchView.searchField becomeFirstResponder];
-    });
+    [self.controller.searchView.searchField becomeFirstResponder];
     
 }
 
-
+-(BOOL)isNeedCap {
+    return self.controller.defaultItems.count == 0;
+}
 
 -(void)setConversation:(TL_conversation *)conversation {
+    
+    self.isProgress = YES;
     
     self.controller.conversation = conversation;
     

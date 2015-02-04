@@ -346,7 +346,8 @@ static NSDictionary *colors;
 
 - (void)copy:(id)sender {
     
-    if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+    if(![self
+         .item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
         [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];

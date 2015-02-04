@@ -11,6 +11,7 @@
 @interface TGSharedMediaCap ()
 @property (nonatomic,strong) NSImageView *capImageView;
 @property (nonatomic,strong) TMTextField *capTextField;
+@property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 @end
 
 @implementation TGSharedMediaCap
@@ -31,6 +32,12 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect cap:(NSImage *)cap text:(NSString *)text {
     if(self = [super initWithFrame:frameRect]) {
+        
+        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
+        
+        [self addSubview:self.progressIndicator];
+        
+        
         
         self.backgroundColor = NSColorFromRGB(0xffffff);
         
@@ -55,9 +62,18 @@
         [self addSubview:self.capImageView];
         
         
+        [self setProgress:NO];
+        
     }
     
     return self;
+}
+
+-(void)setProgress:(BOOL)progress {
+    _progress = progress;
+    [_progressIndicator setHidden:!progress];
+    [_capImageView setHidden:progress];
+    [_capTextField setHidden:progress];
 }
 
 -(void)updateCap:(NSImage *)cap text:(NSString *)text {
@@ -79,6 +95,8 @@
     [self.capImageView setCenterByView:self];
     
     [self.capImageView setFrameOrigin:NSMakePoint(NSMinX(self.capImageView.frame), NSMinY(self.capTextField.frame) + NSHeight(self.capTextField.frame) + 50)];
+    
+    [self.progressIndicator setCenterByView:self];
 }
 
 

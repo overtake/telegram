@@ -58,12 +58,16 @@
 }
 
 
-+(void)addAndUpdateMessage:(TLMessage *)message {
-    [self notifyMessage:message update_real_date:NO];
++(void)addAndUpdateMessage:(TL_localMessage *)message {
+    [self addAndUpdateMessage:message notify:YES];
+}
+
++(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify {
+    [self notifyMessage:message update_real_date:NO notify:notify];
 }
 
 
--(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
+-(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     [self.queue dispatchOnQueue:^{
       
         if(!message)
@@ -193,9 +197,14 @@
     }];
 }
 
+
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
+     [self notifyMessage:message update_real_date:update_real_date notify:YES];
+}
+
++(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     
-    [[MessagesManager sharedManager] notifyMessage:message update_real_date:update_real_date];
+    [[MessagesManager sharedManager] notifyMessage:message update_real_date:update_real_date notify:notify];
 }
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text {

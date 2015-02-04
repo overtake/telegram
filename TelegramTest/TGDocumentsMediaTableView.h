@@ -9,7 +9,9 @@
 #import "TMTableView.h"
 #import "TGDocumentMediaRowView.h"
 @interface TGDocumentsMediaTableView : MessagesTableView
+@property (nonatomic,assign) BOOL isProgress;
 
 -(void)setConversation:(TL_conversation *)conversation;
 
+-(BOOL)isNeedCap;
 @end

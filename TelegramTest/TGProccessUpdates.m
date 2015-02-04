@@ -326,7 +326,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         
-        TL_localMessage *message = [TL_localMessage convertReceivedMessage:[update message]];
+        TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
         
         return [MessagesManager addAndUpdateMessage:message];
     }

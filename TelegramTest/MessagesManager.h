@@ -20,6 +20,7 @@
 -(NSArray *)markAllInDialog:(TLDialog*)dialog;
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
 +(void)statedMessage:(TL_messages_statedMessage*)response;
-+(void)addAndUpdateMessage:(TLMessage *)message;
-+(void)notifyMessage:(TLMessage *)message update_real_date:(BOOL)update_real_date;
++(void)addAndUpdateMessage:(TL_localMessage *)message;
++(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;
++(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date;
 @end
