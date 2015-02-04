@@ -144,15 +144,18 @@
 
 @interface LeftViewController ()<TMTabViewDelegate>
 
-@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
 @property (nonatomic, strong) SearchViewController *searchViewController;
 @property (nonatomic, strong) AccountSettingsViewController *settingsViewController;
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSimpleTabViewController *tabViewController;
 @property (nonatomic, strong) TMTabViewController *tabController;
-@property (nonatomic, strong) ContactsViewController *contactsViewController;
 
 @property (nonatomic, strong) TMForwardView *forwardView;
+
+
+
+@property (nonatomic, strong) ContactsViewController *contactsViewController;
+@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
 
 @end
 
@@ -256,6 +259,9 @@ static const int bottomOffset = 58;
     return [self.tabViewController contollerAtIndex:index];
 }
 
+-(TMViewController *)currentTabController {
+    return [self.tabViewController currentController];
+}
 
 -(void)showUserSettings {
     [self.tabController setSelectedIndex:2];

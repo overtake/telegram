@@ -15,7 +15,6 @@
 @interface LeftViewController : TMViewController<TMSearchTextFieldDelegate>
 
 
-
 @property (nonatomic,strong) TGWindowArchiver *archiver;
 @property (nonatomic,strong) NSView *buttonContainer;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -30,6 +29,8 @@
 -(BOOL)isChatOpened;
 
 -(TMViewController *)viewControllerAtTabIndex:(int)index;
+
+-(TMViewController *)currentTabController;
 
 -(void)setUnreadCount:(int)count;
 

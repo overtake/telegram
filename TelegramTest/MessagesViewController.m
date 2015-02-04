@@ -200,6 +200,8 @@
         
         [self.historyController drop:NO];
         
+        self.historyController = nil;
+        
         self.historyController = [[ChatHistoryController alloc] initWithController:self];
         animated = NO;
         
@@ -385,6 +387,8 @@
     
     
    [self.historyController drop:NO];
+    
+    self.historyController = nil;
     
     self.historyController = [[ChatHistoryController alloc] initWithController:self];
     

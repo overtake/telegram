@@ -219,6 +219,12 @@
     [self hideSearch:!hidden];
     
     [self.searchViewController searchByString:searchString ? searchString : @""];
+    
+    
+}
+
+-(void)searchByString:(NSString *)searchString {
+    [self.searchTextField setStringValue:searchString];
 }
 
 

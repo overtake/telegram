@@ -16,4 +16,5 @@
 
 -(BOOL)isSearchActive;
 +(NSMenu *)attachMenu;
+-(void)searchByString:(NSString *)searchString;
 @end

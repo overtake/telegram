@@ -68,6 +68,8 @@
     
     [_loader drop:NO];
     
+    _loader = nil;
+    
     _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
     
     [_loader setPrevState:ChatHistoryStateFull];

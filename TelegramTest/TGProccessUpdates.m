@@ -400,6 +400,11 @@ static NSString *kUpdateState = @"kUpdateState";
         TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
         
         TL_conversation *dialog = [[DialogsManager sharedManager] find:notifyUpdate.peer.peer.peer_id];
+        
+        if(!dialog) {
+            dialog = [[Storage manager] selectConversation:notifyUpdate.peer.peer];
+        }
+        
         if(dialog) {
             [dialog updateNotifySettings:notifyUpdate.notify_settings];
         }

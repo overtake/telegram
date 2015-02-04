@@ -298,6 +298,13 @@ typedef enum {
         
         if([item isKindOfClass:[SearchMessageTableItem class]]) {
             msg_id = [[(SearchMessageTableItem *)searchItem lastMessage] n_id];
+        } else {
+            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            
+            if([controller isKindOfClass:[StandartViewController class]]) {
+                [(StandartViewController *)controller searchByString:@""];
+            }
+            
         }
         
         if(dialog){

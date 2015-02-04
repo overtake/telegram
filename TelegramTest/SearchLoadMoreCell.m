@@ -50,4 +50,11 @@
     [self.loadMore setFrameOrigin:NSMakePoint(self.loadMore.frame.origin.x, self.loadMore.frame.origin.y + 2)];
 }
 
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    [self.loadMore setCenterByView:self];
+    [self.loadMore setFrameOrigin:NSMakePoint(self.loadMore.frame.origin.x, self.loadMore.frame.origin.y + 2)];
+}
+
+
 @end

@@ -1018,10 +1018,6 @@ static NSMutableArray *listeners;
 
 -(void)dealloc {
     
-   
-    
-    assert([NSThread isMainThread]);
-    
     [queue dispatchOnQueue:^{
         [self drop:NO];
     } synchronous:YES];

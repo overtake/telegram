@@ -103,7 +103,7 @@
         
         if(dialogs.dialogs.count < limit) {
             self.state = DialogsHistoryStateEnd;
-        }
+        } 
         
          self.isLoading = NO;
         

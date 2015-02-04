@@ -191,6 +191,8 @@
 
 - (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings {
     self.notify_settings = notify_settings;
+    
+    [[Storage manager] updateDialog:self];
     [Notification perform:PUSHNOTIFICATION_UPDATE data:@{KEY_PEER_ID: @(self.peer.peer_id), KEY_IS_MUTE: @(self.isMute)}];
 }
 

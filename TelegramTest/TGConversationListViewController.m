@@ -126,6 +126,8 @@
             
             [TGSecretAction dequeAllStorageActions];
             
+            [self loadhistory:100];
+            
             
         } else if(self.historyController.state != DialogsHistoryStateEnd) {
             [self initConversations];
@@ -179,8 +181,10 @@
         
         [self insertAll:result];
         
-        if(result.count < limit/3 && self.historyController.state != DialogsHistoryStateEnd) {
-            [self loadhistory:limit];
+        if(self.historyController.state != DialogsHistoryStateEnd) {
+            dispatch_after_seconds(0.8, ^{
+                [self loadhistory:limit];
+            });
         }
         
     } usersCallback:^(NSArray *users) {
