@@ -276,7 +276,9 @@ typedef enum {
         } else if(searchItem.user) {
             [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
         }
-                
+        
+        
+        
     }
 
     return NO;

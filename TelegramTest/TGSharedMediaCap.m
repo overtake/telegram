@@ -72,6 +72,12 @@
 -(void)setProgress:(BOOL)progress {
     _progress = progress;
     [_progressIndicator setHidden:!progress];
+    
+    if(progress)
+        [_progressIndicator startAnimation:self];
+    else
+        [_progressIndicator stopAnimation:self];
+    
     [_capImageView setHidden:progress];
     [_capTextField setHidden:progress];
 }
@@ -79,6 +85,8 @@
 -(void)updateCap:(NSImage *)cap text:(NSString *)text {
     
     [self.capImageView setImage:cap];
+    
+    [self.capImageView setFrameSize:cap.size];
     
     [self.capTextField setStringValue:text];
     

@@ -332,6 +332,13 @@
             [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
             
             
+            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            
+            if([controller isKindOfClass:[StandartViewController class]]) {
+                [(StandartViewController *)controller searchByString:@""];
+            }
+            
+            
         },nil);
         
     }
