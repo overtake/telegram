@@ -341,9 +341,10 @@ static TMTableView *tableStatic;
     NSUInteger count = self.list.count;
     self.listCacheHash->clear();
     [self.list removeAllObjects];
-    [self cancelSelection];
     
     if(tableRedraw) {
+        [self cancelSelection];
+        
         [self beginUpdates];
         [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withAnimation:self.defaultAnimation];
         [self endUpdates];
