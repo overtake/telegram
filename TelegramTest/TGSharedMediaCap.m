@@ -35,6 +35,8 @@
         
         self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
+        [self.progressIndicator setStyle:NSProgressIndicatorBarStyle];
+        
         [self addSubview:self.progressIndicator];
         
         
