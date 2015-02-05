@@ -109,9 +109,11 @@
         
       //  [self.splitView setPosition:NSWidth(self.splitView.frame) - w  ofDividerAtIndex:0];
         
-        NSLog(@"%@",NSStringFromRect(self.leftViewController.view.frame));
         
-        [self.leftViewController.view setFrameSize:NSMakeSize(NSWidth(self.leftViewController.view.frame) == 0 ?  NSWidth(self.view.frame) - w : MIN(NSWidth(self.leftViewController.view.frame),NSWidth(self.view.frame) - w),NSHeight(self.leftViewController.view.frame))];
+        if(NSWidth(self.leftViewController.view.frame) != 70) {
+            [self.leftViewController.view setFrameSize:NSMakeSize( NSWidth(self.leftViewController.view.frame) == 0 ?  NSWidth(self.view.frame) - w : MIN(MIN(NSWidth(self.leftViewController.view.frame),MAX_LEFT_WIDTH),NSWidth(self.view.frame) - w),NSHeight(self.leftViewController.view.frame))];
+        }
+        
         
         [self.rightViewController.view setFrameSize:NSMakeSize(NSWidth(self.view.frame) - NSWidth(self.leftViewController.view.frame),NSHeight(self.rightViewController.view.frame))];
         
@@ -230,7 +232,12 @@
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
         
-    [window setMinSize:NSMakeSize( MIN_SINGLE_LAYOUT_WIDTH, 400)];
+    [window setMinSize:NSMakeSize( [self isMinimisze] ? MIN_SINGLE_LAYOUT_WIDTH + 70 : MIN_SINGLE_LAYOUT_WIDTH, 400)];
+    
+    [self layout];
+    
+//    [self.rightViewController.view setFrameSize:NSMakeSize(NSWidth(self.view.frame) - NSWidth(self.leftViewController.view.frame), NSHeight(self.rightViewController.view.frame))];
+    
     
     if(window.minSize.width > window.frame.size.width) {
         [window setFrame:NSMakeRect(NSMinX(self.splitView.window.frame), NSMinY(self.splitView.window.frame), window.minSize.width, NSHeight(window.frame)) display:YES];

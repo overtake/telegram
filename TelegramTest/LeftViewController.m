@@ -108,6 +108,8 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     
+    
+    
     if(self.willResize)
         self.willResize(newSize);
     

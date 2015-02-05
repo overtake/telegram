@@ -31,7 +31,7 @@
 
 @interface TGDocumentsMediaTableView ()
 @property (nonatomic,strong) TGDocumentsController *controller;
-@property (nonatomic,strong) TGSharedMediaCap *cap;
+@property (nonatomic,assign,getter=isEditable) BOOL editable;
 -(void)checkCap;
 @end
 
@@ -243,6 +243,27 @@
     
 }
 
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    _editable = editable;
+    
+    
+    [self.controller.items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(idx > 0) {
+            TGDocumentMediaRowView *row = [self viewAtColumn:0 row:idx makeIfNecessary:NO];
+            
+            [row setEditable:editable animated:animated];
+        }
+        
+        
+    }];
+    
+}
+
+-(BOOL)isEditable {
+    return _editable;
+}
+
 -(BOOL)isNeedCap {
     return self.controller.defaultItems.count == 0;
 }
@@ -295,6 +316,8 @@
         cell = [[TGDocumentMediaRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 60)];
         cell.identifier = kRowIdentifier;
     }
+    
+    item.table = self;
     
     [cell setItem:item];
     

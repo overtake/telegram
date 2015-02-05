@@ -112,6 +112,17 @@
     
     
     
+    TMTextButton *selectRightButton =  [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"SharedMedia.Select", nil)];;
+    
+    [selectRightButton setTapBlock:^ {
+        
+        [self.documentsTableView setEditable:!self.documentsTableView.isEditable animated:YES];
+        
+    }];
+    
+  //  self.rightNavigationBarView = (TMView *)selectRightButton;
+    
+    
     [(TMCollectionPageView *)self.view setController:self];
     
     [self.view addSubview:_photoCollection.containerView];

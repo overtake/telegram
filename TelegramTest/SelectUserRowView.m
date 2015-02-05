@@ -63,15 +63,15 @@ static int offsetEditable = 30;
         
         
         
-        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - composeCheckActiveImage().size.height )/ 2), composeCheckActiveImage().size.width, composeCheckActiveImage().size.height)];
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
        // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
 
         weakify();
         
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHighlighted];
-        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateSelected];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
         [self.selectButton addBlock:^(BTRControlEvents events) {
             [strongSelf mouseDown:[NSApp currentEvent]];
         } forControlEvents:BTRControlEventLeftClick];
@@ -221,13 +221,6 @@ static int offsetEditable = 30;
   //  [self.titleTextField setSelected:isSelected];
 }
 
-NSImage *composeCheckImage() {
-    return [NSImage imageNamed:@"ComposeCheck"];
-}
-
-NSImage *composeCheckActiveImage() {
-    return [NSImage imageNamed:@"ComposeCheckActive"];
-}
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
     
@@ -237,21 +230,21 @@ NSImage *composeCheckActiveImage() {
     if(self.selectButton.layer.anchorPoint.x != 0.5) {
         CGPoint point = self.selectButton.layer.position;
         
-        point.x += roundf(composeCheckActiveImage().size.width / 2);
-        point.y += roundf(composeCheckActiveImage().size.height / 2);
+        point.x += roundf(image_ComposeCheckActive().size.width / 2);
+        point.y += roundf(image_ComposeCheckActive().size.height / 2);
         
         self.selectButton.layer.position = point;
         self.selectButton.layer.anchorPoint = CGPointMake(0.5, 0.5);
     }
     
     if(self.selectButton.isSelected) {
-        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:composeCheckActiveImage() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateHighlighted];
     } else {
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:composeCheckImage() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
     }
     
     if(animation) {

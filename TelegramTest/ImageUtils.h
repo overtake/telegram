@@ -156,6 +156,8 @@ CACHE_IMAGE(SharedMediaDocumentStatusDownload);
 CACHE_IMAGE(NoFiles);
 CACHE_IMAGE(SadAttach);
 
+CACHE_IMAGE(ComposeCheck);
+CACHE_IMAGE(ComposeCheckActive);
 @interface ImageUtils : NSObject
 
 

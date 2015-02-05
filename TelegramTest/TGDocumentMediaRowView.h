@@ -11,5 +11,8 @@
 @interface TGDocumentMediaRowView : MessageTableCell
 
 
+@property (nonatomic,assign,getter=isSelected) BOOL selected;
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated;
 
 @end

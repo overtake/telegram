@@ -12,6 +12,7 @@
 #import "TGImageView.h"
 #import "TMPreviewDocumentItem.h"
 #import "TMMediaController.h"
+#import "TGDocumentsMediaTableView.h"
 #define s_dox 30
 
 @interface TGDocumentMediaRowView () <TMHyperlinkTextFieldDelegate,NSMenuDelegate>
@@ -21,6 +22,11 @@
 @property (nonatomic,strong) TGSharedMediaFileThumbnailView *thumbView;
 @property (nonatomic,strong) TMTextField *extField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
+
+@property (nonatomic,assign,getter=isEditable,readonly) BOOL editable;
+
+@property (nonatomic,strong) BTRButton *selectButton;
+
 @end
 
 @implementation TGDocumentMediaRowView
@@ -99,7 +105,7 @@ static NSDictionary *colors;
         [self addSubview:_thumbView];
         
         
-        
+        [self setEditable:YES animated:YES];
         
         _extField = [TMTextField defaultTextField];
         
@@ -113,9 +119,9 @@ static NSDictionary *colors;
         
         
         
-        _thumbImageView = [[TGImageView alloc] initWithFrame:_thumbView.frame];
+        _thumbImageView = [[TGImageView alloc] initWithFrame:_thumbView.bounds];
         
-        [self addSubview:_thumbImageView];
+        [_thumbView addSubview:_thumbImageView];
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -148,11 +154,26 @@ static NSDictionary *colors;
         });
 
         
+         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((60 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        
+        weakify();
+        
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
+        
+        [self.selectButton setUserInteractionEnabled:NO];
+        
+        [self addSubview:self.selectButton];
+
+        
         
     }
     
     return self;
 }
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     
@@ -198,16 +219,20 @@ static NSDictionary *colors;
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    
-    if(![self.item isset]) {
-        [self startDownload];
-    } else {
-        NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    if(!self.isEditable) {
+        [super mouseDown:theEvent];
         
-        if(NSPointInRect(point, self.thumbImageView.frame)) {
-            [self open];
+        if(![self.item isset]) {
+            [self startDownload];
+        } else {
+            NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+            
+            if(NSPointInRect(point, self.thumbImageView.frame)) {
+                [self open];
+            }
         }
+    } else {
+        [self setSelected:!self.selectButton.isSelected];
     }
 }
 
@@ -233,8 +258,23 @@ static NSDictionary *colors;
     
     self.downloadImageView.image = item.downloadItem.downloadState == DownloadStateDownloading ? pauseImage() : image_SharedMediaDocumentStatusDownload();
     
-    [self.descriptionField setFrameOrigin:NSMakePoint(s_dox + 50 + (self.downloadImageView.isHidden ? 0 : NSWidth(self.downloadImageView.frame)), NSMinY(self.descriptionField.frame))];
     
+    
+    
+    
+    int editableOffset = (self.isEditable ? 30 : 0);
+    
+   // [self.thumbImageView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbImageView.frame))];
+    [self.thumbView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbView.frame))];
+    [self.nameField setFrameOrigin:NSMakePoint(s_dox + 50 + editableOffset, NSMinY(self.nameField.frame))];
+    [self.downloadImageView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.downloadImageView.frame))];
+    [self.descriptionField setFrameOrigin:NSMakePoint(s_dox + 50 + (self.item.isset ? 0 : NSWidth(self.downloadImageView.frame)) + editableOffset, NSMinY(self.descriptionField.frame))];
+    [self.selectButton setFrameOrigin:NSMakePoint(!self.isEditable ? 0 : 20, NSMinY(self.selectButton.frame))];
+    
+    
+    
+    
+    [self.selectButton setHidden:!self.isEditable];
 }
 
 
@@ -293,7 +333,7 @@ static NSDictionary *colors;
 }
 
 - (void) textField:(id)textField handleURLClick:(NSString *)url {
-    if([url isEqualToString:@"finder"]) {
+    if([url isEqualToString:@"finder"] && !self.isEditable) {
         if(self.item.isset)
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
         else
@@ -302,6 +342,9 @@ static NSDictionary *colors;
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    if(self.isEditable)
+        return;
     
     NSMenu *contextMenu = [self contextMenu];
     
@@ -346,12 +389,101 @@ static NSDictionary *colors;
 
 - (void)copy:(id)sender {
     
-    if(![self
-         .item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+    if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
         [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];
     }
+}
+
+-(void)setSelected:(BOOL)selected {
+    [self.selectButton setSelected:selected];
+}
+
+-(BOOL)isSelected {
+    return self.selectButton.isSelected;
+}
+
+-(BOOL)isEditable {
+    return [(TGDocumentsMediaTableView *)self.item.table isEditable];
+}
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    
+    [self.selectButton setSelected:self.isSelected];
+    
+    
+    if(animated) {
+        
+        [self.selectButton setHidden:NO];
+        
+        [self.selectButton setAlphaValue:1];
+        
+        if(editable){
+            [self.selectButton setAlphaValue:0];
+        }
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            
+            int editableOffset = (self.isEditable ? 30 : 0);
+            
+           // [[self.thumbImageView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbImageView.frame))];
+            [[self.thumbView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbView.frame))];
+            [[self.nameField animator] setFrameOrigin:NSMakePoint(s_dox + 50 + editableOffset, NSMinY(self.nameField.frame))];
+            [[self.downloadImageView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.downloadImageView.frame))];
+            [[self.descriptionField animator] setFrameOrigin:NSMakePoint(s_dox + 50 + (self.item.isset ? 0 : NSWidth(self.downloadImageView.frame)) + editableOffset, NSMinY(self.descriptionField.frame))];
+            [[self.selectButton animator] setFrameOrigin:NSMakePoint(!self.isEditable ? 0 : 20, NSMinY(self.selectButton.frame))];
+            
+            [[self.selectButton animator] setAlphaValue:editable ? 1 : 0];
+            
+        } completionHandler:^{
+            [self setItem:self.item];
+        }];
+
+        
+//        if(self.selectButton.layer.anchorPoint.x != 0.5) {
+//            CGPoint point = self.selectButton.layer.position;
+//            
+//            point.x += roundf(image_ComposeCheckActive().size.width / 2);
+//            point.y += roundf(image_ComposeCheckActive().size.height / 2);
+//            
+//            self.selectButton.layer.position = point;
+//            self.selectButton.layer.anchorPoint = CGPointMake(0.5, 0.5);
+//        }
+//        
+//        if(animated) {
+//            
+//            float duration = 1 / 18.f;
+//            float to = 0.9;
+//            
+//            POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+//            scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+//            scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
+//            scaleAnimation.duration = duration / 2;
+//            [scaleAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
+//                if(result) {
+//                    POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+//                    scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
+//                    scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
+//                    scaleAnimation.duration = duration / 2;
+//                    [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+//                }
+//            }];
+//            
+//            [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+//            
+//            
+//        }
+        
+        
+        
+        
+    } else {
+        [self setItem:self.item];
+    }
+    
 }
 
 
