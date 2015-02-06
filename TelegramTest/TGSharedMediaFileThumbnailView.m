@@ -38,6 +38,12 @@
 {
     [super drawRect:rect];
     
+    if(self.subviews.count > 0) {
+        if(![self.subviews[0] isHidden]) {
+            return;
+        }
+    }
+    
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     
     CGSize size = self.frame.size;

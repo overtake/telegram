@@ -162,7 +162,7 @@
     
     [self.view addSubview:self.actionsView];
     
-    [self.actionsView setHidden:YES];
+  //  [self.actionsView setHidden:YES];
     
 }
 
@@ -197,10 +197,22 @@
     [self.documentsTableView setEditable:isEditable animated:YES];
     [self reloadData];
     
-    [self.actionsView setHidden:!_isEditable];
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        
+        [[self.actionsView animator] setFrameOrigin:NSMakePoint(0, isEditable ? 0 : - NSHeight(self.actionsView.frame))];
+        [[self.photoCollection.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+        [[self.documentsTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+        
+        
+    } completionHandler:^{
+        
+    }];
     
-    [self.photoCollection.containerView setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
-    [self.documentsTableView.containerView setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+    
+    
+   // [self.actionsView setHidden:!_isEditable];
+    
+    
 
     
 }
