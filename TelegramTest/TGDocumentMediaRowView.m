@@ -18,7 +18,7 @@
 @interface TGDocumentMediaRowView () <TMHyperlinkTextFieldDelegate,NSMenuDelegate>
 @property (nonatomic,strong) TMTextField *nameField;
 @property (nonatomic,strong) TMHyperlinkTextField *descriptionField;
-@property (nonatomic,strong) NSImageView *downloadImageView;
+@property (nonatomic,strong) TMView *downloadImageView;
 @property (nonatomic,strong) TGSharedMediaFileThumbnailView *thumbView;
 @property (nonatomic,strong) TMTextField *extField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
@@ -94,9 +94,12 @@ static NSDictionary *colors;
                 
         [self addSubview:_descriptionField];
         
-        _downloadImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(s_dox + 50, 15, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
+    
         
-        _downloadImageView.image = image_SharedMediaDocumentStatusDownload();
+        _downloadImageView = [[TMView alloc] initWithFrame:NSMakeRect(s_dox + 50, 15, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
+        
+        
+        [_downloadImageView addSubview:imageViewWithImage(image_SharedMediaDocumentStatusDownload())];
         
         [self addSubview:_downloadImageView];
         
@@ -155,8 +158,6 @@ static NSDictionary *colors;
 
         
          self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((60 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
-        
-        weakify();
         
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
@@ -232,7 +233,12 @@ static NSDictionary *colors;
             }
         }
     } else {
-        [self setSelected:!self.selectButton.isSelected];
+        
+        TGDocumentsMediaTableView *table = (TGDocumentsMediaTableView *) self.item.table;
+        
+        [table setSelected:![table isSelectedItem:self.item] forItem:self.item];
+        
+        [self setSelected:[table isSelectedItem:self.item]];
     }
 }
 
@@ -256,10 +262,9 @@ static NSDictionary *colors;
     
     [self.downloadImageView setHidden:item.isset];
     
-    self.downloadImageView.image = item.downloadItem.downloadState == DownloadStateDownloading ? pauseImage() : image_SharedMediaDocumentStatusDownload();
+    NSImageView *imageView = [self.downloadImageView subviews][0];
     
-    
-    
+    imageView.image = item.downloadItem.downloadState == DownloadStateDownloading ? pauseImage() : image_SharedMediaDocumentStatusDownload();
     
     
     int editableOffset = (self.isEditable ? 30 : 0);
@@ -267,7 +272,7 @@ static NSDictionary *colors;
    // [self.thumbImageView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbImageView.frame))];
     [self.thumbView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbView.frame))];
     [self.nameField setFrameOrigin:NSMakePoint(s_dox + 50 + editableOffset, NSMinY(self.nameField.frame))];
-    [self.downloadImageView setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.downloadImageView.frame))];
+    [self.downloadImageView setFrameOrigin:NSMakePoint(s_dox + 50 + editableOffset, NSMinY(self.downloadImageView.frame))];
     [self.descriptionField setFrameOrigin:NSMakePoint(s_dox + 50 + (self.item.isset ? 0 : NSWidth(self.downloadImageView.frame)) + editableOffset, NSMinY(self.descriptionField.frame))];
     [self.selectButton setFrameOrigin:NSMakePoint(!self.isEditable ? 0 : 20, NSMinY(self.selectButton.frame))];
     
@@ -275,6 +280,8 @@ static NSDictionary *colors;
     
     
     [self.selectButton setHidden:!self.isEditable];
+    
+    [self.selectButton setSelected:self.isSelected];
 }
 
 
@@ -333,7 +340,13 @@ static NSDictionary *colors;
 }
 
 - (void) textField:(id)textField handleURLClick:(NSString *)url {
-    if([url isEqualToString:@"finder"] && !self.isEditable) {
+    
+    if(self.isEditable) {
+        [self mouseDown:[NSApp currentEvent]];
+        return;
+    }
+    
+    if([url isEqualToString:@"finder"]) {
         if(self.item.isset)
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
         else
@@ -401,7 +414,7 @@ static NSDictionary *colors;
 }
 
 -(BOOL)isSelected {
-    return self.selectButton.isSelected;
+    return [(TGDocumentsMediaTableView *)self.item.table isSelectedItem:self.item];
 }
 
 -(BOOL)isEditable {
@@ -432,7 +445,7 @@ static NSDictionary *colors;
            // [[self.thumbImageView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbImageView.frame))];
             [[self.thumbView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.thumbView.frame))];
             [[self.nameField animator] setFrameOrigin:NSMakePoint(s_dox + 50 + editableOffset, NSMinY(self.nameField.frame))];
-            [[self.downloadImageView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset, NSMinY(self.downloadImageView.frame))];
+            [[self.downloadImageView animator] setFrameOrigin:NSMakePoint(s_dox + editableOffset + 50, NSMinY(self.downloadImageView.frame))];
             [[self.descriptionField animator] setFrameOrigin:NSMakePoint(s_dox + 50 + (self.item.isset ? 0 : NSWidth(self.downloadImageView.frame)) + editableOffset, NSMinY(self.descriptionField.frame))];
             [[self.selectButton animator] setFrameOrigin:NSMakePoint(!self.isEditable ? 0 : 20, NSMinY(self.selectButton.frame))];
             

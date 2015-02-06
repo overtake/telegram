@@ -8,6 +8,9 @@
 
 #import "TMViewController.h"
 #import "TMPreviewItem.h"
+
+@class PhotoCollectionImageObject;
+
 @interface TMCollectionPageController : TMViewController
 @property (nonatomic,strong) TL_conversation *conversation;
 
@@ -18,4 +21,14 @@
 -(void)showAllMedia;
 -(void)showFiles;
 -(void)checkCap;
+
+@property (nonatomic,assign) BOOL isEditable;
+
+- (void)setSectedMessagesCount:(NSUInteger)count;
+
+-(BOOL)isSelectedItem:(PhotoCollectionImageObject *)item;
+-(void)setSelected:(BOOL)selected forItem:(PhotoCollectionImageObject *)item;
+
+-(NSArray *)selectedItems;
+
 @end

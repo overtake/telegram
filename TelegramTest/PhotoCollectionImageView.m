@@ -17,6 +17,8 @@
 @property (nonatomic,strong) TMLoaderView *loaderView;
 @property (nonatomic,strong) DownloadEventListener *listener;
 @property (nonatomic, strong) NSImageView *playImage;
+@property (nonatomic, strong) BTRButton *selectButton;
+
 @end
 
 @implementation PhotoCollectionImageView
@@ -63,7 +65,20 @@ static CAAnimation *photoAnimation() {
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
+    
+   
+    
     PhotoCollectionImageObject *obj = (PhotoCollectionImageObject *) self.object;
+    
+    
+    if([[Telegram rightViewController].collectionViewController isEditable]) {
+        
+        [[Telegram rightViewController].collectionViewController setSelected:![[Telegram rightViewController].collectionViewController isSelectedItem:obj] forItem:obj];
+        
+        [self setObject:obj];
+        
+        return;
+    }
     
     if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"tiff"));
@@ -72,6 +87,8 @@ static CAAnimation *photoAnimation() {
     } else if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
         [self checkAction];
     }
+    
+    
 }
 
 static NSImage *playVideoImage() {
@@ -120,6 +137,20 @@ static NSImage *playVideoImage() {
         
         [self.playImage setCenterByView:self];
         [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+        
+        
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
+        
+        [self.selectButton setUserInteractionEnabled:NO];
+        
+        [self.selectButton setSelected:YES];
+        
+        [self addSubview:self.selectButton];
     }
     
     return self;
@@ -130,6 +161,10 @@ static NSImage *playVideoImage() {
     
     TL_localMessage *msg = object.previewObject.media;
     
+    
+    [self.selectButton setHidden:![[Telegram rightViewController].collectionViewController isEditable]];
+    
+    [self.selectButton setSelected:[[Telegram rightViewController].collectionViewController isSelectedItem:object]];
     
     [self.loaderView setHidden:YES];
     [self.playImage setHidden:YES];
@@ -144,8 +179,6 @@ static NSImage *playVideoImage() {
 }
 
 -(void)checkState:(PhotoCollectionImageObject *)object {
-    
-   
     
     if(!object.previewObject.reservedObject || ![object.previewObject.reservedObject isKindOfClass:[DownloadVideoItem class]]) {
         object.previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:object.previewObject.media];
@@ -242,6 +275,12 @@ static NSImage *playVideoImage() {
 
 -(void)dealloc {
     
+}
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    [self.selectButton setFrameOrigin:NSMakePoint(NSWidth(frame) - 30, NSHeight(frame) - 30)];
 }
 
 @end

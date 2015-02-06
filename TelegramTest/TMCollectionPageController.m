@@ -37,6 +37,16 @@
 @property (nonatomic,strong) TGSharedMediaCap *mediaCap;
 @property (nonatomic,assign) BOOL isProgress;
 
+
+
+@property (nonatomic, strong) TMTextButton *deleteButton;
+@property (nonatomic, strong) TMTextButton *messagesSelectedCount;
+@property (nonatomic, strong) TMTextButton *forwardButton;
+
+@property (nonatomic, strong) TMView *actionsView;
+
+@property (nonatomic,strong) NSMutableArray *selectedItems;
+
 -(void)reloadData;
 -(BOOL)updateSize:(NSSize)newSize;
 @end
@@ -112,15 +122,15 @@
     
     
     
-    TMTextButton *selectRightButton =  [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"SharedMedia.Select", nil)];;
+    TMTextButton *selectRightButton =  [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];;
     
     [selectRightButton setTapBlock:^ {
         
-        [self.documentsTableView setEditable:!self.documentsTableView.isEditable animated:YES];
+        strongSelf.isEditable = !strongSelf.isEditable;
         
     }];
     
-  //  self.rightNavigationBarView = (TMView *)selectRightButton;
+    self.rightNavigationBarView = (TMView *)selectRightButton;
     
     
     [(TMCollectionPageView *)self.view setController:self];
@@ -149,6 +159,11 @@
     
    // [self.mediaCap setHidden:YES];
     
+    
+    [self.view addSubview:self.actionsView];
+    
+    [self.actionsView setHidden:YES];
+    
 }
 
 -(void)showContextPopup {
@@ -163,6 +178,31 @@
     [_centerTextField setCenterByView:self.centerNavigationBarView];
     
     [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
+}
+
+
+-(void)setIsEditable:(BOOL)isEditable {
+    _isEditable = isEditable;
+    
+     TMTextButton *btn = (TMTextButton *)self.rightNavigationBarView;
+    
+    [btn setStringValue:!isEditable ? NSLocalizedString(@"Profile.Edit", nil) : NSLocalizedString(@"Profile.Cancel", nil)];
+    
+    [btn sizeToFit];
+    
+    self.rightNavigationBarView = (TMView *) btn;
+    
+    self.selectedItems = [[NSMutableArray alloc] init];
+    
+    [self.documentsTableView setEditable:isEditable animated:YES];
+    [self reloadData];
+    
+    [self.actionsView setHidden:!_isEditable];
+    
+    [self.photoCollection.containerView setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+    [self.documentsTableView.containerView setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+
+    
 }
 
 
@@ -320,6 +360,7 @@ static const int maxWidth = 120;
     [self.documentsTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
     [self checkCap];
+    [self setIsEditable:NO];
 }
 
 -(void)showAllMedia {
@@ -327,6 +368,7 @@ static const int maxWidth = 120;
     [self.photoCollection.containerView setHidden:NO];
     [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
     [self checkCap];
+    [self setIsEditable:NO];
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
@@ -334,6 +376,12 @@ static const int maxWidth = 120;
     
     self.isProgress = YES;
     
+    self.selectedItems = [[NSMutableArray alloc] init];
+   
+    
+    self.isEditable = NO;
+    
+    [self setSectedMessagesCount:0];
    
     [self view];
     
@@ -341,7 +389,6 @@ static const int maxWidth = 120;
     
     [self.documentsTableView setConversation:conversation];
     
-    [self.photoCollection.containerView setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 60)];
     
     [self.items removeAllObjects];
     
@@ -384,6 +431,28 @@ static const int maxWidth = 120;
     }];
     
 }
+
+
+-(void)setSelected:(BOOL)selected forItem:(MessageTableItem *)item {
+    
+    
+    if(selected) {
+        [_selectedItems addObject:item];
+    } else {
+        [_selectedItems removeObject:item];
+    }
+    
+    [self setSectedMessagesCount:self.selectedItems.count];
+}
+
+-(BOOL)isSelectedItem:(PhotoCollectionImageObject *)item {
+    return [self.selectedItems indexOfObject:item] != NSNotFound;
+}
+
+-(NSArray *)selectedItems {
+    return _selectedItems;
+}
+
 
 
 -(NSAttributedString *)stringForSharedMedia:(NSString *)mediaString {
@@ -664,5 +733,149 @@ static const int maxWidth = 120;
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
 }
+
+
+
+- (TMView *)actionsView {
+    if(self->_actionsView)
+        return self->_actionsView;
+    
+    weakify();
+    
+    self->_actionsView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, strongSelf.view.bounds.size.width, 58)];
+    [self.actionsView setWantsLayer:YES];
+    [self.actionsView setAutoresizesSubviews:YES];
+    [self.actionsView setAutoresizingMask:NSViewWidthSizable];
+    
+    
+    
+    self.actionsView.backgroundColor = [NSColor whiteColor];
+    
+    self.deleteButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) standartImage:image_MessageActionDeleteActive() disabledImage:image_MessageActionDelete()];
+    
+    [self.deleteButton setAutoresizingMask:NSViewMaxXMargin ];
+    [self.deleteButton setTapBlock:^{
+       
+        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        
+        
+        if(![strongSelf.documentsTableView.containerView isHidden]) {
+            
+            
+            [strongSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+            }];
+            
+            
+        } else {
+            
+            [strongSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+                
+                MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+            }];
+            
+        }
+        
+       [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+        
+        strongSelf.isEditable = NO;
+        
+    }];
+    self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
+    [self.actionsView addSubview:self.deleteButton];
+    
+    
+    self.messagesSelectedCount = [TMTextButton standartUserProfileNavigationButtonWithTitle:@""];
+    self.messagesSelectedCount.textColor = DARK_BLACK;
+    self.messagesSelectedCount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+    [self.actionsView addSubview:self.messagesSelectedCount];
+    
+    self.forwardButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Forward", nil) standartImage:image_MessageActionForwardActive() disabledImage:image_MessageActionForward()];
+    
+    [self.forwardButton setAutoresizingMask:NSViewMinXMargin];
+    self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);
+    
+    [self.forwardButton setTapBlock:^{
+        
+        
+        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        
+        
+        NSUInteger count = 0;
+        
+        if(![strongSelf.documentsTableView.containerView isHidden]) {
+            
+            count = strongSelf.documentsTableView.selectedItems.count;
+            
+            [strongSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+            }];
+            
+            
+        } else {
+            
+            count = strongSelf.selectedItems.count;
+            
+            [strongSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+                
+                MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+            }];
+            
+        }
+        
+        [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.conversation messagesCount:count];
+        
+        strongSelf.isEditable = NO;
+        
+    }];
+    
+    [self.actionsView setDrawBlock:^{
+        
+        [GRAY_BORDER_COLOR set];
+        
+        NSRectFill(NSMakeRect(0, NSHeight(strongSelf.actionsView.frame) - 1, NSWidth(strongSelf.actionsView.frame), 1));
+        
+        [strongSelf.forwardButton setFrameOrigin:NSMakePoint(strongSelf.actionsView.bounds.size.width - strongSelf.forwardButton.bounds.size.width - 22, roundf((strongSelf.actionsView.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2))];
+        [strongSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((strongSelf.actionsView.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2) )];
+        [strongSelf.messagesSelectedCount setCenterByView:strongSelf.actionsView];
+        
+    }];
+    
+    
+    
+    [self.actionsView addSubview:self.forwardButton];
+    
+    return self.actionsView;
+}
+
+- (void)setSectedMessagesCount:(NSUInteger)count {
+    
+    if(count == 0) {
+        [self.messagesSelectedCount setHidden:YES];
+        [self.forwardButton setDisable:YES];
+        [self.deleteButton setDisable:YES];
+        return;
+    } else {
+        [self.deleteButton setDisable:NO];
+        [self.forwardButton setDisable:NO];
+    }
+    
+    [self.messagesSelectedCount setHidden:NO];
+    
+    [self.messagesSelectedCount setStringValue:[NSString stringWithFormat:NSLocalizedString(count == 1 ? @"Edit.selectMessage" : @"Edit.selectMessages", nil), count]];
+    [self.messagesSelectedCount sizeToFit];
+    [self.messagesSelectedCount setFrameOrigin:NSMakePoint(roundf((self.actionsView.bounds.size.width - self.messagesSelectedCount.bounds.size.width) /2), roundf((self.actionsView.bounds.size.height - self.messagesSelectedCount.bounds.size.height)/2))];
+    
+}
+
 
 @end
