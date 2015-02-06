@@ -19,7 +19,7 @@
 +(NSString *)shortTTL:(int)ttl;
 +(NSMutableAttributedString *)conversationLastText:(TLMessage *)message conversation:(TL_conversation *)conversation;
 
-
++(NSString *)muteUntil:(int)mute_until;
 
 
 @end

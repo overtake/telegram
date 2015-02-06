@@ -412,7 +412,38 @@
 }
 
 
-
++(NSString *)muteUntil:(int)mute_until {
+    
+    int until = mute_until - [[MTNetwork instance] getTime];
+    
+    
+    
+    int days = until / (60 * 60 * 24);
+    int hours = until / (60 * 60);
+    int minutes = until / 60;
+    int seconds = until;
+    
+    if(until < 0) {
+        return NSLocalizedString(@"Notification.Enabled", nil);
+    }
+    
+    if(days > 100) {
+        return NSLocalizedString(@"Notification.Disabled", nil);
+    }
+    
+    if(days > 0) {
+        return [NSString stringWithFormat:NSLocalizedString(days > 1 ? @"Notification.EnableInDays" : @"Notification.EnableInDay", nil),days];
+    } else if(hours > 0) {
+        return [NSString stringWithFormat:NSLocalizedString(hours > 1 ? @"Notification.EnableInHours" : @"Notification.EnableInHour", nil),hours];
+    } else if(minutes > 0) {
+        return [NSString stringWithFormat:NSLocalizedString(minutes > 1 ? @"Notification.EnableInMinutes" : @"Notification.EnableInMinute", nil),minutes];
+    } else if(seconds > 0) {
+        return [NSString stringWithFormat:NSLocalizedString(seconds > 1 ? @"Notification.EnableInSeconds" : @"Notification.EnableInSecond", nil),minutes];
+    }
+    
+    
+    return @"";
+}
 
 
 

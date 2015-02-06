@@ -145,16 +145,16 @@
     return self.last_message_date > 0  && !self.fake;
 }
 
-- (void)mute:(dispatch_block_t)completeHandler {
-    [self _changeMute:YES completeHandler:completeHandler];
+- (void)mute:(dispatch_block_t)completeHandler until:(int)until {
+    [self _changeMute:until completeHandler:completeHandler];
 }
 
 - (void)unmute:(dispatch_block_t)completeHandler {
-    [self _changeMute:NO completeHandler:completeHandler];
+    [self _changeMute:0 completeHandler:completeHandler];
 }
 
-- (void)_changeMute:(BOOL)isMute completeHandler:(dispatch_block_t)completeHandler {
-    __block int mute_until = !isMute ? 0 : [[MTNetwork instance] getTime] + 365 * 24 * 60 * 60;
+- (void)_changeMute:(int)until completeHandler:(dispatch_block_t)completeHandler {
+    __block int mute_until = until == 0 ? 0 : [[MTNetwork instance] getTime] + until;
     
     id request = [TLAPI_account_updateNotifySettings createWithPeer:[TL_inputNotifyPeer createWithPeer:[self inputPeer]] settings:[TL_inputPeerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound ? self.notify_settings.sound : @"" show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask]];
     
@@ -162,8 +162,6 @@
         if([response isKindOfClass:[TL_boolTrue class]]) {
             
             self.notify_settings = [TL_peerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask];
-
-            [self save];
             [self updateNotifySettings:self.notify_settings];
 
         }
@@ -177,12 +175,8 @@
     }];
 }
 
-- (void)muteOrUnmute:(dispatch_block_t)completeHandler {
-    if(self.notify_settings.mute_until) {
-        [self unmute:completeHandler];
-    } else {
-        [self mute:completeHandler];
-    }
+- (void)muteOrUnmute:(dispatch_block_t)completeHandler until:(int)until {
+    [self mute:completeHandler until:until];
 }
 
 -(int)peer_id {
@@ -192,7 +186,7 @@
 - (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings {
     self.notify_settings = notify_settings;
     
-    [[Storage manager] updateDialog:self];
+    [self save];
     [Notification perform:PUSHNOTIFICATION_UPDATE data:@{KEY_PEER_ID: @(self.peer.peer_id), KEY_IS_MUTE: @(self.isMute)}];
 }
 

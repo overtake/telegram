@@ -19,6 +19,7 @@
 #import "TMSharedMediaButton.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
 #import "TGPhotoViewer.h"
+#import "MessagesUtils.h"
 @implementation LineView
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -32,7 +33,7 @@
 
 @interface ChatInfoHeaderView()
 @property (nonatomic, strong) TLChatFull *fullChat;
-
+@property (nonatomic,strong) TMTextField *muteUntilTitle;
 
 
 
@@ -81,6 +82,8 @@
             }
             
         }];
+        
+        self.muteUntilTitle = [TMTextField defaultTextField];
         
         self.nameTextField = [[TMNameTextField alloc] init];
         [self.nameTextField setNameDelegate:self];
@@ -161,27 +164,40 @@
         [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
         
         [self addSubview:self.filesMediaButton];
-        
-
-        
+                
         _notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
-           
-        }];
-        
-        _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
-        
-        _notificationView.rightContainer = self.notificationSwitcher;
-        
-        [self.notificationSwitcher setDidChangeHandler:^(BOOL isOn) {
             
-            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
             
-            BOOL isMute =  dialog.isMute;
-            if(isMute == isOn) {
-                [dialog muteOrUnmute:nil];
-            }
-
+            NSMenu *menu = [MessagesViewController notifications:^{
+                
+                [self buildNotificationsTitle];
+                
+            } conversation:self.controller.chat.dialog click:^{
+                
+                
+            }];;
+            
+            
+            [menu popUpForView:strongSelf.muteUntilTitle withType:PopUpAlignTypeRight];
+            
+            
+            
         }];
+//        
+//        _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
+//        
+//        _notificationView.rightContainer = self.notificationSwitcher;
+//        
+//        [self.notificationSwitcher setDidChangeHandler:^(BOOL isOn) {
+//            
+//            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
+//            
+//            BOOL isMute =  dialog.isMute;
+//            if(isMute == isOn) {
+//             //   [dialog muteOrUnmute:nil];
+//            }
+//
+//        }];
         
         [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.filesMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
@@ -297,8 +313,34 @@
     
     BOOL isMute = chat.dialog.isMute;
     
-    [self.notificationSwitcher setOn:!isMute animated:NO];
+    [self buildNotificationsTitle];
+    
     [self TMNameTextFieldDidChanged:self.nameTextField];
+}
+
+-(void)buildNotificationsTitle  {
+    
+    static NSTextAttachment *attach;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 10, 0, 0)]];
+    });
+    
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+    NSString *str = [MessagesUtils muteUntil:self.controller.chat.dialog.notify_settings.mute_until];
+    
+    [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
+    
+    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    
+    [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
+    [self.muteUntilTitle setAttributedStringValue:string];
+    
+    [self.muteUntilTitle sizeToFit];
+    
+    self.notificationView.rightContainer = self.muteUntilTitle;
+    
 }
 
 

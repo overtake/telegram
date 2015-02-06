@@ -378,7 +378,7 @@
         BOOL isMuted = dialog.isMute;
         
         NSMenuItem *muteMenuItem = [NSMenuItem menuItemWithTitle:isMuted ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil) withBlock:^(id sender) {
-            [dialog muteOrUnmute:nil];
+            [dialog muteOrUnmute:nil until:isMuted ? 0 : 365*24*60*60];
         }];
         if(dialog.type == DialogTypeSecretChat)
             muteMenuItem.target = nil;
@@ -447,7 +447,7 @@
         BOOL isMuted = dialog.isMute;
         
         NSMenuItem *muteMenuItem = [NSMenuItem menuItemWithTitle:isMuted ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil) withBlock:^(id sender) {
-            [dialog muteOrUnmute:nil];
+            [dialog muteOrUnmute:nil until:isMuted ? 0 : 365*24*60*60];
         }];
         if(dialog.type == DialogTypeSecretChat)
             muteMenuItem.target = nil;

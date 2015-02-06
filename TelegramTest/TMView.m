@@ -72,6 +72,14 @@
     [super setFrameSize:newSize];
 }
 
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    if(theEvent.clickCount == 2)
+        return;
+    
+    [super mouseUp:theEvent];
+}
+
 - (void) drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 
@@ -137,8 +145,12 @@
 -(void)mouseDown:(NSEvent*)theEvent {
     if(self.callback)
         self.callback();
-    else
+    else {
+        if(theEvent.clickCount == 2)
+            return;
         [super mouseDown:theEvent];
+    }
+    
 }
 
 - (void)discardCursorRects {

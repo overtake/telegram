@@ -868,6 +868,40 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
++(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click {
+    
+    
+    NSMenu *submenu = [[NSMenu alloc] init];
+    
+    [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notifications.Menu.Enable",nil) withBlock:^(id sender) {
+        if(click) click();
+        [conversation muteOrUnmute:callback until:0];
+    }]];
+    
+    [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notifications.Menu.Mute1Hour",nil) withBlock:^(id sender) {
+        if(click) click();
+        [conversation muteOrUnmute:callback until:60*60 + 60];
+    }]];
+    
+    [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notifications.Menu.Mute8Hours",nil) withBlock:^(id sender) {
+        if(click) click();
+        [conversation muteOrUnmute:callback until:8*60*60 + 60];
+    }]];
+    [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notifications.Menu.Mute2Days",nil) withBlock:^(id sender) {
+        if(click) click();
+        [conversation muteOrUnmute:callback until:2*24*60*60 + 60];
+    }]];
+    [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Notifications.Menu.Disable",nil) withBlock:^(id sender) {
+        if(click) click();
+        [conversation muteOrUnmute:callback until:365*24*60*60];
+    }]];
+
+    
+    return submenu;
+}
+
+
+
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force {
     
     assert([NSThread isMainThread]);
