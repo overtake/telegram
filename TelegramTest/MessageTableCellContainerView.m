@@ -572,7 +572,7 @@ static BOOL dragAction = NO;
             [shareMenu addItem:item];
         }
         
-        NSMenuItem *shareSubItem = [NSMenuItem menuItemWithTitle:@"Context.Share" withBlock:nil];
+        NSMenuItem *shareSubItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Share",nil) withBlock:nil];
         
         [shareSubItem setSubmenu:shareMenu];
         
