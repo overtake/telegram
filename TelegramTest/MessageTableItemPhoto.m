@@ -73,6 +73,11 @@
     [super setMessageSender:messageSender];
 }
 
+-(BOOL)canShare {
+    return [TGCache cachedImage:self.imageObject.cacheKey] != nil;
+}
+
+
 
 -(void)doAfterDownload {
     

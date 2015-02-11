@@ -63,4 +63,9 @@
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
 + (NSDateFormatter *)dateFormatter;
+
+-(BOOL)canShare;
+
+-(NSURL *)shareObject;
+
 @end

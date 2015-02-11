@@ -35,6 +35,12 @@
     return self;
 }
 
+-(BOOL)canShare {
+    return [self isset];
+}
+
+
+
 - (Class)downloadClass {
     return [DownloadAudioItem class];
 }

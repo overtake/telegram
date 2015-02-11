@@ -338,6 +338,14 @@
     return YES;
 }
 
+-(BOOL)canShare {
+    return NO;
+}
+
+-(NSURL *)shareObject {
+    return [NSURL fileURLWithPath:mediaFilePath(self.message.media)];;
+}
+
 - (BOOL)needUploader {
     return NO;
 }

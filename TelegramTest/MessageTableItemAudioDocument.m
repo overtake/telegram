@@ -37,6 +37,11 @@
     [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
 }
 
+-(BOOL)canShare {
+    return [self isset];
+}
+
+
 
 - (Class)downloadClass {
     return [DownloadDocumentItem class];

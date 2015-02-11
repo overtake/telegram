@@ -457,8 +457,8 @@ static NSImage *attachBackgroundThumb() {
         
         [menu addItem:openWithItem];
         
-        [menu addItem:[NSMenuItem separatorItem]];
         
+        [menu addItem:[NSMenuItem separatorItem]];
         
     }
     
@@ -468,7 +468,6 @@ static NSImage *attachBackgroundThumb() {
 
     return menu;
 }
-
 
 
 

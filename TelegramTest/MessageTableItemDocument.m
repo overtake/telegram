@@ -76,6 +76,12 @@
     return _fileName.length > 0 ? _fileName : @"File";
 }
 
+-(BOOL)canShare {
+    return [self isset];
+}
+
+
+
 - (int)size {
     return self.message.media.document.size;
 }

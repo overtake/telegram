@@ -595,6 +595,31 @@ static NSDictionary *colors;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
+    if([self.item canShare]) {
+        
+        
+        NSArray *shareServiceItems = [NSSharingService sharingServicesForItems:@[self.item.shareObject]];
+        
+        NSMenu *shareMenu = [[NSMenu alloc] initWithTitle:@"Share"];
+        
+        
+        for (NSSharingService *currentService in shareServiceItems) {
+            NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:currentService.title action:@selector(selectedSharingServiceFromMenuItem:) keyEquivalent:@""];
+            item.image = currentService.image;
+            item.representedObject = currentService;
+            [shareMenu addItem:item];
+        }
+        
+        NSMenuItem *shareSubItem = [NSMenuItem menuItemWithTitle:@"Context.Share" withBlock:nil];
+        
+        [shareSubItem setSubmenu:shareMenu];
+        
+        [items addObject:shareSubItem];
+        
+        [items addObject:[NSMenuItem separatorItem]];
+        
+    }
+    
     if(self.item.message.conversation.type != DialogTypeSecretChat) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
             
@@ -628,6 +653,18 @@ static NSDictionary *colors;
     return items;
     
 }
+
+- (void)selectedSharingServiceFromMenuItem:(NSMenuItem *)menuItem
+{
+    NSURL *fileURL = self.item.shareObject;
+    if (!fileURL) return;
+    
+    NSSharingService *service = menuItem.representedObject;
+    if (![service isKindOfClass:[NSSharingService class]]) return; // just to make sure…
+    
+    [service performWithItems:@[fileURL]];
+}
+
 
 
 - (void)menuWillOpen:(NSMenu *)menu {
