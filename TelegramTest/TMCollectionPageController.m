@@ -99,7 +99,11 @@
     [_centerTextField setDrawsBackground:NO];
     
     [_centerTextField setClickBlock:^{
-       [[strongSelf filterMenu] popUpForView:strongSelf.centerNavigationBarView center:YES];
+        
+        TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:[strongSelf filterMenu]];
+        
+        [menuPopover showRelativeToRect:strongSelf.centerNavigationBarView.bounds ofView:strongSelf.centerNavigationBarView preferredEdge:CGRectMinYEdge];
+        
     }];
     
     TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];

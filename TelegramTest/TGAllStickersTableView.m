@@ -206,9 +206,9 @@ static NSImage *higlightedImage() {
     return self;
 }
 
--(void)load {
+-(void)load:(BOOL)force {
     
-    if(_stickers.count == 0) {
+    if(_stickers.count == 0 || force) {
         __block NSString *hash = @"";
         
         __block NSArray *stickers;
@@ -227,6 +227,14 @@ static NSImage *higlightedImage() {
             [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 [row addObject:[TLClassStore deserialize:obj]];
             }];
+            
+            
+            NSArray *localStickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+            
+            [localStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [row addObject:[TLClassStore deserialize:obj]];
+            }];
+            
             
             stickers = [row mutableCopy];
             

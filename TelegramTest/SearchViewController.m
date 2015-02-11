@@ -692,13 +692,16 @@ static int insertCount = 3;
             }
             
             
-            
+            NSMutableArray *cachePeers = [NSMutableArray array];
             
             
             if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
                 
                 
+                
+                
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
+                    
                     
                     [[DialogsManager sharedManager] add:dialogsDB];
                     [[MessagesManager sharedManager] add:messagesDB];
@@ -714,15 +717,14 @@ static int insertCount = 3;
                     }];
                         
                         
-                        NSMutableArray *cachePeers = [NSMutableArray array];
-                        
-                        searchParams.dialogs = [NSMutableArray array];
-                        for(TL_conversation *conversation in insertedDialogs) {
+                    searchParams.dialogs = [NSMutableArray array];
+                    for(TL_conversation *conversation in insertedDialogs) {
                             
-                            [cachePeers addObject:@(conversation.peer.peer_id)];
+                        [cachePeers addObject:@(conversation.peer.peer_id)];
                             
-                            [searchParams.dialogs addObject:[[ConversationTableItem alloc] initWithConversationItem:conversation selectString:searchParams.searchString]];
-                        }
+                        [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
+                    }
+                    
                     
                 }];
                 
@@ -736,9 +738,18 @@ static int insertCount = 3;
                 searchParams.contacts = [NSMutableArray array];
                 
                 for(TLUser *user in searchUsers) {
-                    id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                     
-                    [(user.type == TLUserTypeContact ? searchParams.contacts : searchParams.users) addObject:item];
+                    if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
+                        id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
+                        
+                        if(user.type == TLUserTypeContact) {
+                            [searchParams.dialogs addObject:item];
+                        }
+                        
+                        [cachePeers addObject:@(user.n_id)];
+                        
+                    }
+                    
                 }
                 
             }

@@ -18,6 +18,8 @@
 #import "TGOpusAudioPlayerAU.h"
 
 #import "NSMenuItemCategory.h"
+
+
 @interface DocumentThumbImageView()
 @property (nonatomic, strong) NSImage *originImage;
 @property (nonatomic) BOOL isAlwaysBlur;
@@ -394,16 +396,80 @@ static NSImage *attachBackgroundThumb() {
         }]];
         
         
+        NSArray *apps = [FileUtils appsForFileUrl:((MessageTableItemDocument *)self.item).path];
+        
+        NSMenuItem *openWithItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenWith", nil) withBlock:nil];
+        
+        NSMenu *openWithMenu = [[NSMenu alloc] initWithTitle:@"Open"];
+        
+        [openWithItem setSubmenu:openWithMenu];
+        
+        if(apps.count > 0) {
+            
+            
+            
+            for (OpenWithObject *a in apps) {
+                NSMenuItem *item = [NSMenuItem menuItemWithTitle:[a fullname] withBlock:^(id sender) {
+                    
+                    [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:[a.app path]];
+                    
+                    
+                }];
+                
+                [item setImage:[a icon]];
+                
+                [openWithMenu addItem:item];
+                
+            }
+            
+            [openWithMenu addItem:[NSMenuItem separatorItem]];
+            
+            
+        }
+        
+        [openWithMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Other", nil) withBlock:^(id sender) {
+            
+            NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+            
+            
+            NSArray *appsPaths = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSLocalDomainMask];
+            if ([appsPaths count]) [openPanel setDirectoryURL:[appsPaths firstObject]];
+            
+            [openPanel setCanChooseDirectories:NO];
+            [openPanel setCanChooseFiles:YES];
+            [openPanel setAllowsMultipleSelection:NO];
+            [openPanel setResolvesAliases:YES];
+            
+            [openPanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+                if (result == NSFileHandlingPanelOKButton) {
+                    if ([[openPanel URLs] count] > 0) {
+                        NSURL *app = [[openPanel URLs] objectAtIndex:0];
+                        NSString *path = [app path];
+                        
+                        [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:path];
+                    }
+                }
+            }];
+            
+            
+        }]];
+        
+        
+        [menu addItem:openWithItem];
+        
         [menu addItem:[NSMenuItem separatorItem]];
+        
+        
     }
     
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];
     }];
-    
-    
+
     return menu;
 }
+
+
 
 
 

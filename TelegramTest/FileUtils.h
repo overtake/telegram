@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+
+@interface OpenWithObject : NSObject
+@property (nonatomic, strong,readonly) NSString *fullname;
+@property (nonatomic, strong,readonly) NSURL *app;
+@property (nonatomic, strong,readonly) NSImage *icon;
+
+
+-(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon;
+
+@end
+
 @interface FileUtils : NSObject
 
 #define MIN_IMG_SIZE NSMakeSize(250,40)
@@ -62,4 +73,8 @@ NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
 int64_t SystemIdleTime(void);
 
+
++ (void) fillAppByUrl:(NSURL*)url bundle:(NSString**)bundle name:(NSString**)name version:(NSString**)version icon:(NSImage**)icon;
+
++(NSArray *)appsForFileUrl:(NSString *)file;
 @end

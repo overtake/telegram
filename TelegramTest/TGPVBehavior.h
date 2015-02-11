@@ -33,4 +33,6 @@ typedef enum {
 -(void)removeItems:(NSArray *)items;
 -(void)addItems:(NSArray *)items;
 
+-(BOOL)isReversedContentView;
+
 @end

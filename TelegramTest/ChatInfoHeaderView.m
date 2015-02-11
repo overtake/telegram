@@ -177,10 +177,9 @@
                 
             }];;
             
+            TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
             
-            [menu popUpForView:strongSelf.muteUntilTitle withType:PopUpAlignTypeRight];
-            
-            
+            [menuPopover showRelativeToRect:strongSelf.muteUntilTitle.bounds ofView:strongSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
             
         }];
 //        

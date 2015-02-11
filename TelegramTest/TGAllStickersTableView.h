@@ -10,6 +10,6 @@
 
 @interface TGAllStickersTableView : TMTableView
 
--(void)load;
+-(void)load:(BOOL)force;
 
 @end

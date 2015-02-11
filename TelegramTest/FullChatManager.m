@@ -179,7 +179,7 @@
             }
         }
         
-        DLog(@"need to load full chats%@", needToLoad);
+        NSLog(@"need to load full chats%@", needToLoad);
         [self loadFullChats:needToLoad];
     }];
 }
@@ -205,6 +205,8 @@
 }
 
 - (void)loadFullChatByChatId:(int)chat_id callback:(dispatch_block_t)callback {
+    
+        
     [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, id result) {
         
         [SharedManager proccessGlobalResponse:result];
@@ -227,7 +229,7 @@
        
        
         
-        DLog(@"fullchat loaded");
+        NSLog(@"fullchat loaded");
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);

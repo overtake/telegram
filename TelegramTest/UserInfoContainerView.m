@@ -23,6 +23,7 @@
 #import "MessagesUtils.h"
 #import "TMMediaController.h"
 #import "TMSharedMediaButton.h"
+#import "TMMenuPopover.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -225,7 +226,10 @@
               //  [self.setTTLButton setLocked:YES];
             }];
             
-            [menu popUpForView:weakSelf.muteUntilTitle withType:PopUpAlignTypeRight];
+            TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
+            
+            [menuPopover showRelativeToRect:weakSelf.setTTLButton.bounds ofView:weakSelf.setTTLButton preferredEdge:CGRectMinYEdge];
+            
         }];
         
         [self.setTTLButton setFrameSize:NSMakeSize(offsetRight, 42)];
@@ -271,9 +275,10 @@
             }];;
             
             
-            [menu popUpForView:weakSelf.setTTLButton withType:PopUpAlignTypeRight];
-            
+            TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
 
+            [menuPopover showRelativeToRect:weakSelf.muteUntilTitle.bounds ofView:weakSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
+            
 
         }];
         

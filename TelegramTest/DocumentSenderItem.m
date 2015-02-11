@@ -13,6 +13,7 @@
 #import "TGSendTypingManager.h"
 #import "webp/decode.h"
 #import "FileUtils.h"
+#import "EmojiViewController.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -75,7 +76,7 @@
                 
                 [TGCache cacheImage:sticker forKey:[NSString stringWithFormat:@"s:%ld",randomId] groups:@[IMGCACHE]];
                 
-                thumbImage = strongResize(sticker, 90);
+                thumbImage = strongResize(sticker, 128);
                 
                 thumbData = [NSImage convertToWebP:thumbImage quality:0.8 preset:WEBP_PRESET_ICON configBlock:^(WebPConfig *config) {
                     
@@ -266,6 +267,46 @@
            
             [message.media.document.thumb.bytes writeToFile:locationFilePath(message.media.document.thumb.location, @"tiff") atomically:NO];
         }
+        
+        
+        if(message.media.document.isSticker) {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                
+                NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+                
+                
+                NSMutableArray *deserialized = [[NSMutableArray alloc] init];
+                
+                BOOL needSave = YES;
+                
+                for (int i = 0; i < stickers.count; i++) {
+                    [deserialized addObject:[TLClassStore deserialize:stickers[i]]];
+                    
+                    TLDocument *doc = deserialized[i];
+                    
+                    if(doc.n_id == message.media.document.n_id)
+                        needSave = NO;
+                }
+                
+                
+                if(needSave) {
+                    
+                    stickers = [stickers arrayByAddingObject:[TLClassStore serialize:self.message.media.document]];
+                    
+                    [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+                    
+                }
+                
+                
+                
+            }];
+            
+            [EmojiViewController reloadStickers];
+            
+        }
+        
+        
+        
         
         self.uploader = nil;
         self.uploaderThumb = nil;

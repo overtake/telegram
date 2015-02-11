@@ -20,5 +20,7 @@
 
 + (EmojiViewController *)instance;
 
++(void)reloadStickers;
+
 
 @end

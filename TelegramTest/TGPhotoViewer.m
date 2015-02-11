@@ -500,42 +500,52 @@ static const int controlsHeight = 75;
 
 -(void)nextItem {
     
-    
-    NSUInteger count = [self listCount];
-    
-//    if(count == 1)
-//    {
-//        [self hide];
-//        return;
-//    }
-    
-    if(count > 0) {
-        if(self.currentItemId < (count - 1)) {
-             [self setCurrentItemId:[self currentItemId]+1];
-        }
+    if([self.behavior isReversedContentView]) {
+        
+        [self performPrevItem];
+        
+        return;
+        
     }
+    
+    [self performNextItem];
+    
 
 }
 
 -(void)prevItem {
     
     
+    if([self.behavior isReversedContentView]) {
+        
+        [self performNextItem];
+        
+        return;
+        
+    }
+    
+    [self performPrevItem];
+
+}
+
+-(void)performNextItem {
     NSUInteger count = [self listCount];
     
-//    if(count == 1)
-//    {
-//        [self hide];
-//        return;
-//    }
+    if(count > 0) {
+        if(self.currentItemId < (count - 1)) {
+            [self setCurrentItemId:[self currentItemId]+1];
+        }
+    }
+}
+
+-(void)performPrevItem {
+    NSUInteger count = [self listCount];
     
     if(count > 0 && self.currentItemId != 0) {
         [self setCurrentItemId:[self currentItemId]-1];
     }
-    
-    
+
 }
-
-
 
 +(void)prevItem {
     [[self viewer] prevItem];

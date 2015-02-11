@@ -1792,10 +1792,6 @@ static NSTextAttachment *headerMediaIcon() {
         [self.bottomView setDialog:dialog];
         
         
-        if(dialog.type == DialogTypeChat) {
-            [[FullChatManager sharedManager] loadIfNeed:dialog.chat.n_id];
-        }
-        
         [self unSelectAll:NO];
         self.state = MessagesViewControllerStateNone;
         

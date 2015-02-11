@@ -138,7 +138,6 @@ static NSMutableDictionary *cached;
     }];
 
 }
-
 -(NSData *)lastKey {
     return _keys[@(_key_fingerprint)];
 }

@@ -47,11 +47,13 @@
 
 @property (nonatomic, strong) NSAttributedString *response;
 
+
+
 @end
 
 @interface AppDelegate ()<SettingsListener>
 
-
+@property (nonatomic,strong) NSSharingService *sharing;
 #ifdef TGDEBUG
 @property (weak) IBOutlet SUUpdater *updater;
 #endif
@@ -271,7 +273,10 @@ void exceptionHandler(NSException * exception)
     // ...
 }
 
+
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
+    
+    
     
     
     [SettingsArchiver addEventListener:self];
