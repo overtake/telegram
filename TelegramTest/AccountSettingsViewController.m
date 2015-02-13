@@ -457,7 +457,7 @@ typedef enum {
     [self.statusTextField.layer pop_addAnimation:nameFade forKey:@"opacity"];
     
     
-    [self.editButton setStringValue:state == AccountSettingsStateNormal ? NSLocalizedString(@"Edit",nil) : NSLocalizedString(@"Profile.Done",nil)];
+    [self.editButton setStringValue:state == AccountSettingsStateNormal ? NSLocalizedString(@"Profile.Edit",nil) : NSLocalizedString(@"Profile.Done",nil)];
     
     [self.editButton sizeToFit];
     

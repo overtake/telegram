@@ -116,7 +116,17 @@
             
             TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);
             
-            TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:photoSize.location placeHolder:obj.reservedObject sourceId:_conversation.peer_id size:photoSize.size];
+            
+            
+            NSImage *thumb;
+            
+            if(photo.sizes.count > 0) {
+                TL_photoCachedSize *cached = photo.sizes[0];
+                thumb = [[NSImage alloc] initWithData:cached.bytes];
+            }
+           
+            
+            TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:photoSize.location placeHolder:obj.reservedObject ? obj.reservedObject : thumb sourceId:_conversation.peer_id size:photoSize.size];
             
             imgObj.imageSize = NSMakeSize([photoSize w], [photoSize h]);
             

@@ -183,7 +183,7 @@ NSString* mediaFilePath(TLMessageMedia *media) {
     }
     
     if([media isKindOfClass:[TL_messageMediaDocument class]]) {
-        return [FileUtils documentName:media.document];
+        return [media.document isSticker] ? [NSString stringWithFormat:@"%@/%ld.webp",path(),media.document.n_id] : [FileUtils documentName:media.document];
     }
     
     if([media isKindOfClass:[TL_messageMediaPhoto class]]) {

@@ -66,6 +66,8 @@
     weak();
 
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        weakSelf.isLoaded = YES;
+        
         [weakSelf _didDownloadImage:item];
         weakSelf.downloadItem = nil;
         weakSelf.downloadListener = nil;
@@ -99,8 +101,7 @@
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }
-    
-    
+        
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];

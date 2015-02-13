@@ -16,6 +16,7 @@
 
 static const int width = 180;
 
+
 -(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
     if(self = [super initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:size]) {
     }
@@ -40,6 +41,9 @@ static const int width = 180;
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        
+        weakSelf.isLoaded = YES;
+        
         [weakSelf _didDownloadImage:item];
         weakSelf.downloadItem = nil;
         weakSelf.downloadListener = nil;
@@ -76,6 +80,8 @@ static const int width = 180;
     image = decompressedImage(image);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[PCCACHE]];
+    
+    
     
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];

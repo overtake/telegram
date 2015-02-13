@@ -55,7 +55,7 @@
     [super drawRect:dirtyRect];
     
     [NSColorFromRGB(0xf4f4f4) set];
-    NSRectFill(self.bounds);    
+    NSRectFill(NSMakeRect(0, 1, NSWidth(self.bounds), NSHeight(self.bounds) - 2));
 }
 
 @end

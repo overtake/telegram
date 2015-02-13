@@ -108,10 +108,17 @@
         self.conversation = dialog;
         
         
-        if(self.conversation.type == DialogTypeChat)
+        if(self.conversation.type == DialogTypeChat) {
             self.chat = self.conversation.chat;
-        else
+        } else if(self.conversation.type == DialogTypeSecretChat) {
+            self.user = self.conversation.encryptedChat.peerUser;
+        } else {
             self.user = self.conversation.user;
+        }
+        
+        
+        
+        
         
         [self.title appendString:self.conversation.type == DialogTypeChat ? dialog.chat.title : dialog.user.fullName withColor:DARK_BLACK];
         

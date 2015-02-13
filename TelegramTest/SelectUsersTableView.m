@@ -259,12 +259,37 @@ static NSCache *cacheItems;
     CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
     
     
-    NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
+    __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
     
     
     if(searchString.length > 0) {
         sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@)",searchString,transformed,reversed]];
     }
+    
+    
+    if(searchString.length >= 5) {
+        NSArray *usernames = [UsersManager findUsersByName:searchString];
+        
+        
+        NSMutableArray *ids = [[NSMutableArray alloc] init];
+        
+        [sorted enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+            [ids addObject:@(obj.contact.user_id)];
+        }];
+        
+        NSArray *usersByName = [usernames filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+        
+        [usersByName enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+            
+            if([obj isKindOfClass:[TL_userContact class]]) {
+                sorted = [sorted arrayByAddingObject:[[SelectUserItem alloc] initWithObject:obj.contact]];
+            }
+            
+        }];
+    }
+    
+    
+    
     
     
     NSRange range = NSMakeRange(1, self.list.count-1);
@@ -285,11 +310,7 @@ static NSCache *cacheItems;
 
 }
 
--(void)keyDown:(NSEvent *)theEvent {
-     [self.searchView.searchField becomeFirstResponder];
-    
-    [self.searchView.searchField keyDown:theEvent];
-}
+
 
 -(BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *)item {
     return NO;

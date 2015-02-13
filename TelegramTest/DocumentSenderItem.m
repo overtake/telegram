@@ -274,6 +274,8 @@
                 
                 NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
                 
+                if(!stickers)
+                    stickers = @[];
                 
                 NSMutableArray *deserialized = [[NSMutableArray alloc] init];
                 

@@ -94,6 +94,10 @@
 }
 
 +(NSArray *)findUsersByName:(NSString *)userName {
+    
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
     return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
 }
 
