@@ -39,7 +39,13 @@
     return string;
 }
 
-
+-(NSString *)fixEmoji {
+    NSString *selfString = self;
+    
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"✌" withString:@"✌️"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"☺" withString:@"☺️"];
+    return selfString;
+}
 
 -(NSString *)replaceSmilesToEmoji {
     

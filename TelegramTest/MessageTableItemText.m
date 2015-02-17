@@ -27,7 +27,7 @@
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
-    NSString *message = [object.message trim];
+    NSString *message = [[object.message trim] fixEmoji];
     
     
   

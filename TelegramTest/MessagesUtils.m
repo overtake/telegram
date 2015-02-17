@@ -215,7 +215,7 @@
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
                 msgText = [MessagesUtils mediaMessage:message];
             } else {
-                msgText = message.message ? message.message : @"";
+                msgText = message.message ? [message.message fixEmoji] : @"";
                 msgText = [msgText trim];
             }
             

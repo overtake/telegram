@@ -50,7 +50,7 @@
                 
             }
             
-            cachePhoto = renderedImage(cachePhoto, cachePhoto.size);
+            cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size] ;
             
             
             self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:self.message.n_id size:self.photoSize];

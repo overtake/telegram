@@ -62,6 +62,9 @@ NSImage *fireImage() {
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
             
+            if(!weakSelf.item.isset)
+                return;
+            
             object.reservedObject = weakSelf.imageView.image;
             
             [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation];
@@ -160,9 +163,7 @@ NSImage *fireImage() {
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
     }
-    
-    [self.imageView setIsAlwaysBlur:!self.item.isset];
-    
+        
     
     [self.progressView setHidden:self.item.isset];
     
