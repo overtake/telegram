@@ -52,7 +52,7 @@
             
             NSRange nameRange = [userObj range];
             
-            if(range.location >= nameRange.location && (range.location+range.length) > (nameRange.location + nameRange.length)) {
+            if(range.location <= nameRange.location && (range.location+range.length) > (nameRange.location + nameRange.length)) {
                 [toremove addObject:userObj];
             }
             

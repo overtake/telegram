@@ -10,4 +10,6 @@
 
 @interface TMSharedMediaButton : UserInfoShortButtonView
 @property (nonatomic,strong) TL_conversation *conversation;
+
+@property (nonatomic,assign) BOOL isFiles;
 @end

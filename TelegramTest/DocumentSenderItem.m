@@ -78,7 +78,7 @@
                 
                 thumbImage = strongResize(sticker, 128);
                 
-                thumbData = [NSImage convertToWebP:thumbImage quality:0.8 preset:WEBP_PRESET_ICON configBlock:^(WebPConfig *config) {
+                thumbData = [NSImage convertToWebP:thumbImage quality:1.0 preset:WEBP_PRESET_ICON configBlock:^(WebPConfig *config) {
                     
                 } error:nil];
                 

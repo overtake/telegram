@@ -149,6 +149,9 @@
             [[Telegram rightViewController].collectionViewController showFiles];
         }];
         
+        
+        self.filesMediaButton.isFiles = YES;
+        
 //        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
 //           
 //            [[NewContactsManager sharedManager] syncContacts:^{
@@ -573,6 +576,8 @@
     [self.userNameView setString:[NSString stringWithFormat:@"@%@",user.username]];
     
     [self.sharedMediaButton setConversation:self.controller.conversation];
+    
+    [self.filesMediaButton setConversation:self.controller.conversation];
     
     
     NSSize size;

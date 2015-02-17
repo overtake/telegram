@@ -45,7 +45,7 @@
     [super setImage:image];
     
 
-    if(!self.object.isLoaded) {
+    if(self.image == nil && !fileExists(self.object.location)) {
         
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8);
         [self.loader setCenterByView:self];

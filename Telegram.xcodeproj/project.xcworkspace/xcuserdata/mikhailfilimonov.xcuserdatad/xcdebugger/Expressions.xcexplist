@@ -1520,6 +1520,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__31-[TGAllStickersTableView load:]_block_invoke:TGAllStickersTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
@@ -1590,6 +1593,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.item.message">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.isset">
             </PersistentString>
             <PersistentString
                value = "((TL_destructMessage *)self.item.message).ttl_seconds">

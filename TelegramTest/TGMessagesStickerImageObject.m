@@ -10,6 +10,7 @@
 #import "DownloadPhotoItem.h"
 @implementation TGMessagesStickerImageObject
 
+@synthesize supportDownloadListener = _supportDownloadListener;
 
 -(void)initDownloadItem {
     
@@ -21,6 +22,10 @@
     self.downloadItem = [[DownloadPhotoItem alloc] initWithObject:self.location size:self.size];
     
     self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    
+    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    
+    [self.downloadItem addEvent:_supportDownloadListener];
     
     [self.downloadItem addEvent:self.downloadListener];
     

@@ -60,7 +60,7 @@
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
         }
-        
+                
        
         self.imageObject.imageSize = imageSize;
         self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
@@ -78,6 +78,9 @@
 }
 
 
+-(BOOL)isset {
+    return isPathExists(self.imageObject.location.path) && self.downloadItem == nil;
+}
 
 -(void)doAfterDownload {
     

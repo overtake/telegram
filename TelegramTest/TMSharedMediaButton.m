@@ -34,6 +34,8 @@ static const NSMutableDictionary *cache;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         cache = [[NSMutableDictionary alloc] init];
+        cache[@"files"] = [[NSMutableDictionary alloc] init];
+        cache[@"photo-video"] = [[NSMutableDictionary alloc] init];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didDeletedMessages:) name:MESSAGE_DELETE_EVENT];
     });
@@ -65,12 +67,12 @@ static const NSMutableDictionary *cache;
         
         TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
         
-        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
             
-            NSNumber *count = cache[@(msg.peer_id)];
+            NSNumber *count = cache[[self primaryKey]][@(msg.peer_id)];
             
             if(count != nil) {
-                cache[@(msg.peer_id)] = @([count intValue] - 1);
+                cache[[self primaryKey]][@(msg.peer_id)] = @([count intValue] - 1);
             }
         }
         
@@ -97,10 +99,10 @@ static const NSMutableDictionary *cache;
 
 - (void)didReceivedMedia:(NSNotification *)notify {
     PreviewObject *preview = notify.userInfo[KEY_PREVIEW_OBJECT];
-    if(cache[@(preview.peerId)] != nil && [[preview.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
-        int count = [cache[@(preview.peerId)] intValue];
+    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
+        int count = [cache[[self primaryKey]][@(preview.peerId)] intValue];
         count++;
-        cache[@(preview.peerId)] = @(count);
+        cache[[self primaryKey]][@(preview.peerId)] = @(count);
         
         if(preview.peerId == self.conversation.peer.peer_id) {
             self.count = count;
@@ -117,28 +119,44 @@ static const NSMutableDictionary *cache;
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
-    if(cache[@(conversation.peer.peer_id)] == nil) {
+    if(cache[[self primaryKey]][@(conversation.peer.peer_id)] == nil) {
         
         [self setLocked:YES];
         [self loadCount:[conversation inputPeer] peer_id:conversation.peer.peer_id];
 
     } else {
-        self.count = [cache[@(conversation.peer.peer_id)] intValue];
+        self.count = [cache[[self primaryKey]][@(conversation.peer.peer_id)] intValue];
     }
     
 }
 
 -(void)loadCount:(TLInputPeer *)input peer_id:(int)peer_id {
     
-    [self setLocked:NO];
+   
     
-    self.count = [[Storage manager] countOfMedia:peer_id];
+    //self.count = [[Storage manager] countOfMedia:peer_id];
+    
+    
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:self.isFiles ? [TL_inputMessagesFilterDocument create] : [TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+        
+        [self setLocked:NO];
+        
+        self.count = (int) MAX(response.n_count,response.messages.count);
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        
+    }];
 }
 
 -(void)setCount:(int)count {
     self->_count = count;
-    cache[@(self.conversation.peer.peer_id)] = @(self.count);
+    cache[[self primaryKey]][@(self.conversation.peer.peer_id)] = @(self.count);
     [self rebuild];
+}
+
+-(NSString *)primaryKey {
+    return self.isFiles ? @"files" : @"photo-video";
 }
 
 -(void)rebuild {

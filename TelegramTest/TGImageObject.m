@@ -60,6 +60,10 @@
     
     _downloadListener = [[DownloadEventListener alloc] initWithItem:_downloadItem];
 
+    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:_downloadItem];
+    
+    
+    [_downloadItem addEvent:_supportDownloadListener];
     [_downloadItem addEvent:_downloadListener];
     
     

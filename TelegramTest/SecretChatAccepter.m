@@ -47,7 +47,7 @@ static NSString *kChatIdsForAccept = @"kChatIdsForAccept";
 
 
 -(void)proccess:(NSNotification *)notify {
-    if([[Telegram sharedInstance] isOnline]) {
+    if([[UsersManager currentUser] isOnline]) {
         
         [_ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             int chat_id = [obj intValue];

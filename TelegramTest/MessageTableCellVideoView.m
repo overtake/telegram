@@ -54,7 +54,7 @@ static NSImage *playImage() {
         weak();
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
-        [self.imageView setIsAlwaysBlur:YES];
+       // [self.imageView setIsAlwaysBlur:YES];
         [self.imageView setCornerRadius:4];
         
         [self.imageView setTapBlock:^{
@@ -131,6 +131,9 @@ static NSImage *playImage() {
     
     [self.progressView setState:cellState];
     
+    self.imageView.object = ((MessageTableItemVideo *)self.item).imageObject;
+    
+    [self.imageView setIsAlwaysBlur:self.item.message.media.video.thumb.w != 250];
 }
 
 - (NSMenu *)contextMenu {

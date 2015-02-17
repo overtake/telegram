@@ -17,6 +17,7 @@
 @implementation TGStickerImageObject
 
 @synthesize placeholder = _placeholder;
+@synthesize supportDownloadListener = _supportDownloadListener;
 
 -(id)initWithMessage:(TL_localMessage *)message placeholder:(NSImage *)placeholder {
     if(self = [super init]) {
@@ -38,6 +39,10 @@
     self.downloadItem = [[DownloadStickerItem alloc] initWithObject:self.message];
     
     self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    
+    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    
+    [self.downloadItem addEvent:_supportDownloadListener];
     
     [self.downloadItem addEvent:self.downloadListener];
     

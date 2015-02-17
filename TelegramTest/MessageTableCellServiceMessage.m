@@ -42,6 +42,8 @@
         [self.photoImageView setTapBlock:^ {
             PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:[weakSelf.item.message.action.photo.sizes lastObject] peer_id:weakSelf.item.message.peer_id];
             
+            preview.reservedObject = weakSelf.photoImageView.image;
+            
             [[TGPhotoViewer viewer] show:preview];
         }];
         

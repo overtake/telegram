@@ -135,10 +135,10 @@ static int futureUniqueKey = 0;
                 default:
                     break;
                 }
-                
-            if(type == DownloadItemHandlerTypeCompletion)
-                [self clear];
         }];
+        
+        if(type == DownloadItemHandlerTypeCompletion)
+            [self clear];
         
     }];
 }

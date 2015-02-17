@@ -159,6 +159,8 @@
             [[Telegram rightViewController].collectionViewController showFiles];
         }];
         
+        self.filesMediaButton.isFiles = YES;
+        
         [self.filesMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
         
         [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
@@ -306,7 +308,7 @@
     
     [_mediaView setConversation:chat.dialog];
     [self.sharedMediaButton setConversation:chat.dialog];
-    
+    [self.filesMediaButton setConversation:chat.dialog];
     
     [self.nameTextField setChat:chat];
     

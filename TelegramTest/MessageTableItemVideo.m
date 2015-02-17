@@ -14,32 +14,39 @@
 - (id) initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        TLVideo *video = object.media.video;
-        TLPhotoSize *photoSize = video.thumb;
-        NSImage *placeholder;
-        if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-            placeholder = [[NSImage alloc] initWithData:photoSize.bytes];
-        }
-        
        
-        
         [self rebuildTimeString];
         
-        self.videoPhotoLocation = photoSize.location;
-        self.videoSize = photoSize.size;
-        NSSize blockSize = resizeToMaxCorner(NSMakeSize(photoSize.w, photoSize.h), 250);
         
-        self.imageObject = [[TGImageObject alloc] initWithLocation:[photoSize isKindOfClass:[TL_photoCachedSize class]] ? nil : photoSize.location placeHolder:placeholder sourceId:self.message.n_id];
+        [self rebuildImageObject];
         
-        self.imageObject.imageSize = blockSize;
-        
-        self.blockSize = blockSize;
-        
-        self.previewSize = blockSize;
         
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.video.size];
     }
     return self;
+}
+
+
+-(void)rebuildImageObject {
+    
+    TLVideo *video = self.message.media.video;
+    TLPhotoSize *photoSize = video.thumb;
+    NSImage *placeholder;
+    if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
+        placeholder = [[NSImage alloc] initWithData:photoSize.bytes];
+    }
+    
+    self.videoPhotoLocation = photoSize.location;
+    self.videoSize = photoSize.size;
+    NSSize blockSize = resizeToMaxCorner(NSMakeSize(photoSize.w, photoSize.h), 250);
+    
+    self.imageObject = [[TGImageObject alloc] initWithLocation:[photoSize isKindOfClass:[TL_photoCachedSize class]] ? nil : photoSize.location placeHolder:placeholder sourceId:self.message.n_id];
+    
+    self.imageObject.imageSize = blockSize;
+    
+    self.blockSize = blockSize;
+    
+    self.previewSize = blockSize;
 }
 
 
@@ -79,6 +86,10 @@
     return YES;
 }
 
+
+-(void)doAfterDownload {
+    [self rebuildImageObject];
+}
 
 -(BOOL)canDownload {
     return self.message.media.video.dc_id != 0;
