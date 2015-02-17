@@ -455,6 +455,7 @@
 		C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BB1836C39900ABBB50 /* LBProgressBar.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
 		C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */; };
+		C2967B081A93B131003759B2 /* TGPVDocumentBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B071A93B131003759B2 /* TGPVDocumentBehavior.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1645,6 +1646,8 @@
 		C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
 		C2936943197E6B5700DD9680 /* MessageTableHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableHeaderItem.h; sourceTree = "<group>"; };
 		C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableHeaderItem.m; sourceTree = "<group>"; };
+		C2967B061A93B131003759B2 /* TGPVDocumentBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentBehavior.h; sourceTree = "<group>"; };
+		C2967B071A93B131003759B2 /* TGPVDocumentBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentBehavior.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -3893,6 +3896,8 @@
 				C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */,
 				C26752751A15099A00152D9A /* TGPVEmptyBehavior.h */,
 				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
+				C2967B061A93B131003759B2 /* TGPVDocumentBehavior.h */,
+				C2967B071A93B131003759B2 /* TGPVDocumentBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -4955,6 +4960,7 @@
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
 				CEDAEB551881AF85006189A2 /* YapDatabaseFullTextSearchSnippetOptions.m in Sources */,
 				C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */,
+				C2967B081A93B131003759B2 /* TGPVDocumentBehavior.m in Sources */,
 				C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */,
 				C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */,
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,

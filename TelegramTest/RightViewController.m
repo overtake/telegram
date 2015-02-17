@@ -73,6 +73,8 @@
 @property (nonatomic, strong) TMViewController *noDialogsSelectedViewController;
 @property (nonatomic, strong) TMView *modalView;
 @property (nonatomic, strong) id modalObject;
+ 
+
 
 @end
 
@@ -117,6 +119,8 @@
     self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:self.view.bounds];
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
     self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.
     
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];

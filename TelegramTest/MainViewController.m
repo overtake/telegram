@@ -96,8 +96,8 @@
     
 
     if([self isSingleLayout]) {
-      //  [self.splitView setPosition:[self isConversationListShown] ? NSWidth(self.view.frame) : 0 ofDividerAtIndex:0];
-        //[self.splitView setPosition:[self isConversationListShown] ? 0 : NSWidth(self.view.frame) ofDividerAtIndex:1];
+
+
         
         [self.leftViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? NSWidth(self.view.frame) : 0,NSHeight(self.leftViewController.view.frame))];
         
