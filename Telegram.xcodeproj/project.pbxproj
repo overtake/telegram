@@ -219,6 +219,7 @@
 		0AF4F4AA189D5C72004BA4DF /* MessageTableItemServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */; };
 		0AF4F4AD189D5CD5004BA4DF /* MessageTableCellServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */; };
 		0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */; };
+		474EA9521A954D15007B1294 /* known-url-schemes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 474EA9511A954D15007B1294 /* known-url-schemes.txt */; };
 		C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */; };
 		C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0519994D7A002A1915 /* BroadcastInfoHeaderView.m */; };
 		C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C202D96618E9D67A0060238B /* TMClickTextFieldView.m */; };
@@ -1159,6 +1160,8 @@
 		0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellServiceMessage.m; sourceTree = "<group>"; };
 		0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemGif.h; sourceTree = "<group>"; };
 		0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemGif.m; sourceTree = "<group>"; };
+		474EA94C1A94D8FF007B1294 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
+		474EA9511A954D15007B1294 /* known-url-schemes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "known-url-schemes.txt"; sourceTree = "<group>"; };
 		C2002D0119990F10002A1915 /* BroadcastInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoViewController.h; sourceTree = "<group>"; };
 		C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastInfoViewController.m; sourceTree = "<group>"; };
 		C2002D0419994D7A002A1915 /* BroadcastInfoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoHeaderView.h; sourceTree = "<group>"; };
@@ -4059,6 +4062,7 @@
 		CEB09E4F17DAFC240055F150 = {
 			isa = PBXGroup;
 			children = (
+				474EA94C1A94D8FF007B1294 /* Application.h */,
 				CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
 				CEAE5D57181ECDE900C17645 /* sql */,
@@ -4185,6 +4189,7 @@
 				CEB09E6917DAFC250055F150 /* Telegraph-Prefix.pch */,
 				CE46A2571854B68F00D6EF14 /* Localizable.strings */,
 				C2B1730B19A3BF43003FBA23 /* Application.h */,
+				474EA9511A954D15007B1294 /* known-url-schemes.txt */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4816,6 +4821,7 @@
 				C2A5C00818E17C630021BE68 /* SettingsWindowController.xib in Resources */,
 				CE46A2551854B68F00D6EF14 /* Localizable.strings in Resources */,
 				0A9EDC621897BA0E0037E1BC /* Rebel-Info.plist in Resources */,
+				474EA9521A954D15007B1294 /* known-url-schemes.txt in Resources */,
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
 				0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */,

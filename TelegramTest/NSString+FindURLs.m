@@ -7,6 +7,7 @@
 //
 
 #import "NSString+FindURLs.h"
+#import "FileUtils.h"
 
 @implementation NSString (NSString_FindURLs)
 
@@ -68,13 +69,16 @@
         
     }];
     
+    
+    
     //Load the list on the regex
-    NSArray *schemesToFind = @[@"spotify:", @"x-apple.systempreferences://"]; //dumb version
+    NSArray *schemesToFind = urlSchemes();
     NSString *schemeRegexString = @"";
     for (NSString *scheme in schemesToFind) {
-        schemeRegexString = [schemeRegexString stringByAppendingString:[NSString stringWithFormat:@"(%@.+)|", scheme]];
+        //explaining the regex: for example, if "spotify:" (open spotify) and "x-apple.systempreferences:" (open system preference) is on the array, the final regex will be /(spotify:\S*)| (x-apple.systempreferences:\S*)" witch says: "find the letters 'spotify:', in this order, followed by or not by any charachter until any whitespace is found OR find the letters 'x-apple.systempreferences:', in this order, followed by or not by any charachter until any whitespace is found"
+        schemeRegexString = [schemeRegexString stringByAppendingString:[NSString stringWithFormat:@"(%@\\S*)|", scheme]];
     }
-    //remove last character of string |
+    //remove last character of string "|"
     schemeRegexString = [schemeRegexString substringToIndex:schemeRegexString.length-(schemeRegexString.length>0)];
 
     //detect occurence of array into string
@@ -92,7 +96,7 @@
 
 
 /*
- //the following code has been commented because there's no programatic way of determining all the URL shchemes presented on a system, thus forcing the creation of the .plist for handling known URL schemes
+ //the following code has been commented because there's no programatic way of determining all the URL schemes presented on a system, thus forcing the creation of the .txt for handling known URL schemes
 -(NSArray *) listOfURIsOnTheSystem {
     NSPipe *pipe = [NSPipe pipe];
     NSFileHandle *file = pipe.fileHandleForReading;
