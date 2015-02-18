@@ -11,7 +11,7 @@
 #import "NSString+Extended.h"
 #import "FileUtils.h"
 #import "Telegram.h"
-#import "MesssageInputGrowingTextView.h"
+#import "MessageInputGrowingTextView.h"
 #import <Quartz/Quartz.h>
 #import "Rebel/Rebel.h"
 #import "EmojiViewController.h"
@@ -23,6 +23,9 @@
 #import "TMAudioRecorder.h"
 #import "TGSendTypingManager.h"
 
+#import "NSString+FindURLs.h"
+#import "TGAttachImageElement.h"
+
 @interface MessagesBottomView()
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -30,7 +33,7 @@
 @property (nonatomic, strong) TMView *secretInfoView;
 
 
-@property (nonatomic, strong) MesssageInputGrowingTextView *inputMessageTextField;
+@property (nonatomic, strong) MessageInputGrowingTextView *inputMessageTextField;
 @property (nonatomic, strong) BTRButton *attachButton;
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) TMButton *sendButton;
@@ -52,6 +55,11 @@
 @property (nonatomic,strong) NSMenu *attachMenu;
 @property (nonatomic, strong) RBLPopover *smilePopover;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
+
+@property (nonatomic,strong) NSMutableArray *attachments;
+
+@property (nonatomic,strong) NSMutableArray *attachmentsIgnore;
+
 @end
 
 @implementation MessagesBottomView
@@ -63,6 +71,10 @@
         [self setWantsLayer:YES];
         
         self.layer.backgroundColor = NSColorFromRGB(0xfafafa).CGColor;
+        
+        self.attachments = [[NSMutableArray alloc] init];
+        
+        self.attachmentsIgnore = [[NSMutableArray alloc] init];
         
       //  self.layer = [[TMLayer alloc] initWithLayer:self.layer];
         
@@ -98,6 +110,15 @@
 
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
+    
+    [_attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj removeFromSuperview];
+        
+    }];
+    
+    [_attachments removeAllObjects];
+    [_attachmentsIgnore removeAllObjects];
 
     [self stopRecord:nil];
     
@@ -239,7 +260,7 @@
 //    [self.normalView setBorderColor:GRAY_BORDER_COLOR];
     
     
-    self.inputMessageTextField = [[MesssageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+    self.inputMessageTextField = [[MessageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
     [self.inputMessageTextField setEditable:YES];
     [self.inputMessageTextField setRichText:NO];
  //   [self.inputMessageTextField.scrollView setFrameSize:NSMakeSize(100-30,100-10)];
@@ -678,6 +699,19 @@
 }
 
 - (void)sendButtonAction {
+    
+    
+    
+    [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.image) {
+            [self.messagesViewController sendImage:nil file_data:[obj.image TIFFRepresentation]];
+        }
+        
+    }];
+    
+    [self.attachmentsIgnore removeAllObjects];
+    
     [self.messagesViewController sendMessage];
 }
 
@@ -730,6 +764,93 @@
         [self.sendButton setHidden:YES];
         [self.recordAudioButton setHidden:NO];
     }
+    
+    
+    
+    [self checkAttachImages];
+    
+    
+}
+
+-(void)checkAttachImages {
+    
+    //
+    
+    NSArray *links = [self.inputMessageTextField.stringValue locationsOfLinks];
+    
+    NSArray *acceptExtensions = @[@"jpg",@"png",@"tiff"];
+    
+    
+    [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj removeFromSuperview];
+        
+    }];
+    
+    [self.attachments removeAllObjects];
+    
+    
+    __block int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    
+    __block int k = 0;
+    
+    [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSRange range = [obj range];
+        
+        NSString *link = [self.inputMessageTextField.stringValue substringWithRange:range];
+        
+        __block BOOL checkIgnore = YES;
+        
+        
+        [self.attachmentsIgnore enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            NSString *l = obj[@"link"];
+            NSRange r = [obj[@"range"] rangeValue];
+            
+            if((range.location == r.location && range.length == r.length) && [link isEqualToString:l])
+            {
+                *stop = YES;
+                checkIgnore = NO;
+            }
+            
+        }];
+        
+        if([acceptExtensions indexOfObject:[link pathExtension]] != NSNotFound && checkIgnore) {
+            
+            
+            TGAttachImageElement *attach = [[TGAttachImageElement alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20, 70, 70)];
+            
+            startX +=80;
+            
+            [attach setDeleteCallback:^{
+                
+                [self.attachmentsIgnore addObject:@{@"link":link,@"range":[NSValue valueWithRange:range]}];
+                
+                [self checkAttachImages];
+                
+            }];
+            
+            [attach setLink:link range:range];
+            
+            
+            
+            [self.attachments addObject:attach];
+            
+            [self.normalView addSubview:attach];
+            
+            
+            k++;
+            
+        }
+        
+        if(k == 4)
+            *stop = YES;
+        
+    }];
+    
+    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+    
 }
 
 
@@ -740,6 +861,10 @@
 //    DLog(@"height %d", height);
     height = height % 2 == 1 ? height + 1 : height;
 //    DLog(@"height %d", height);
+    
+    if(self.attachments.count > 0) {
+        height += 75;
+    }
 
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
@@ -821,6 +946,7 @@
     [self.inputMessageTextField textDidChange:nil];
 
     self.inputMessageTextField.disableAnimation = YES;
+    
 }
 
 - (NSString *)inputMessageString {

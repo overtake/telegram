@@ -160,7 +160,7 @@
 		0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43B9118D304C400FB805A /* RegistrationAvatarView.m */; };
 		0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43B9D18D43DC000FB805A /* TMGifImageView.m */; };
 		0AB43BA518D44A1C00FB805A /* GifAnimationLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BA418D44A1C00FB805A /* GifAnimationLayer.m */; };
-		0AB43BA818D4D60B00FB805A /* MesssageInputGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BA718D4D60B00FB805A /* MesssageInputGrowingTextView.m */; };
+		0AB43BA818D4D60B00FB805A /* MessageInputGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BA718D4D60B00FB805A /* MessageInputGrowingTextView.m */; };
 		0AB43BAB18D4F1FF00FB805A /* TMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BAA18D4F1FF00FB805A /* TMImagePicker.m */; };
 		0AB43BB018D84FA200FB805A /* TMImagesSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BAF18D84FA200FB805A /* TMImagesSearchController.m */; };
 		0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB43BB418D89C5700FB805A /* TMSearchImage.m */; };
@@ -455,6 +455,7 @@
 		C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BB1836C39900ABBB50 /* LBProgressBar.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
 		C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */; };
+		C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1040,8 +1041,8 @@
 		0AB43B9D18D43DC000FB805A /* TMGifImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMGifImageView.m; sourceTree = "<group>"; };
 		0AB43BA318D44A1C00FB805A /* GifAnimationLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GifAnimationLayer.h; sourceTree = "<group>"; };
 		0AB43BA418D44A1C00FB805A /* GifAnimationLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GifAnimationLayer.m; sourceTree = "<group>"; };
-		0AB43BA618D4D60B00FB805A /* MesssageInputGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MesssageInputGrowingTextView.h; sourceTree = "<group>"; };
-		0AB43BA718D4D60B00FB805A /* MesssageInputGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MesssageInputGrowingTextView.m; sourceTree = "<group>"; };
+		0AB43BA618D4D60B00FB805A /* MessageInputGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageInputGrowingTextView.h; sourceTree = "<group>"; };
+		0AB43BA718D4D60B00FB805A /* MessageInputGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageInputGrowingTextView.m; sourceTree = "<group>"; };
 		0AB43BA918D4F1FF00FB805A /* TMImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMImagePicker.h; sourceTree = "<group>"; };
 		0AB43BAA18D4F1FF00FB805A /* TMImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMImagePicker.m; sourceTree = "<group>"; };
 		0AB43BAE18D84FA200FB805A /* TMImagesSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMImagesSearchController.h; sourceTree = "<group>"; };
@@ -1645,6 +1646,8 @@
 		C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
 		C2936943197E6B5700DD9680 /* MessageTableHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableHeaderItem.h; sourceTree = "<group>"; };
 		C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableHeaderItem.m; sourceTree = "<group>"; };
+		C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAttachImageElement.h; sourceTree = "<group>"; };
+		C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachImageElement.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -2834,8 +2837,8 @@
 				0A62CCAE182021D00098720C /* MessagesViewController.m */,
 				0AEE20831821352D00F348F2 /* MessagesTableView.h */,
 				0AEE20841821352D00F348F2 /* MessagesTableView.m */,
-				0AB43BA618D4D60B00FB805A /* MesssageInputGrowingTextView.h */,
-				0AB43BA718D4D60B00FB805A /* MesssageInputGrowingTextView.m */,
+				0AB43BA618D4D60B00FB805A /* MessageInputGrowingTextView.h */,
+				0AB43BA718D4D60B00FB805A /* MessageInputGrowingTextView.m */,
 				C222774C19093C8C002AA0F6 /* TMBottomScrollView.h */,
 				C222774D19093C8C002AA0F6 /* TMBottomScrollView.m */,
 				C2FA78ED1924D934001A9D1B /* NoMessagesView.h */,
@@ -2844,6 +2847,8 @@
 				C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */,
 				C2753DD019E4282000752BAF /* SearchMessagesView.h */,
 				C2753DD119E4282000752BAF /* SearchMessagesView.m */,
+				C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */,
+				C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */,
 			);
 			name = messages;
 			sourceTree = "<group>";
@@ -3572,6 +3577,13 @@
 			name = utils;
 			sourceTree = "<group>";
 		};
+		C2967B0D1A94B3FC003759B2 /* links-preview */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "links-preview";
+			sourceTree = "<group>";
+		};
 		C297955219EC29CA00BE893E /* general */ = {
 			isa = PBXGroup;
 			children = (
@@ -4238,6 +4250,7 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C2967B0D1A94B3FC003759B2 /* links-preview */,
 				C26F7E9F1A4C32BA001D1AE2 /* emoji */,
 				C2CD77C21A2C9D0C000B4BA9 /* password */,
 				C26976AD1A10CBDE0047E2C3 /* photoviewer */,
@@ -4979,7 +4992,7 @@
 				0AA0A98718B160CF00836E83 /* TMAvatarImageView.m in Sources */,
 				0A697E86191624AD003469CB /* TMCircleLayer.m in Sources */,
 				C297955819EC29EA00BE893E /* GeneralSettingsRowView.m in Sources */,
-				0AB43BA818D4D60B00FB805A /* MesssageInputGrowingTextView.m in Sources */,
+				0AB43BA818D4D60B00FB805A /* MessageInputGrowingTextView.m in Sources */,
 				CEDAEB681881AF85006189A2 /* YapDatabaseConnectionState.m in Sources */,
 				C248F3E419BE08A800BF658E /* lpc.c in Sources */,
 				C2A5BFF318E02BAB0021BE68 /* TGAudioPlayer.m in Sources */,
@@ -5144,6 +5157,7 @@
 				C26976A21A0AB3A20047E2C3 /* PhotoCollectionImageView.m in Sources */,
 				C23536AD19CC64330044978E /* LoginBottomView.m in Sources */,
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
+				C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */,
 				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
 				C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */,

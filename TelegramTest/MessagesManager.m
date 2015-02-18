@@ -317,10 +317,12 @@
                 [marked addObject:@([msg n_id])];
             msg.flags&=~TGUNREADMESSAGE;
         }
-        [[Storage manager] markAllInDialog:dialog];
+        
     } synchronous:YES];
     
    
+    [[Storage manager] markAllInDialog:dialog];
+    
     return marked;
 }
 

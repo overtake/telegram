@@ -1851,7 +1851,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     manager.unread_count-=_conversation.unread_count;
     
-    [[DialogsManager sharedManager] markAllMessagesAsRead:_conversation];
+    [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:_conversation];
     
     _conversation.unread_count = 0;
     

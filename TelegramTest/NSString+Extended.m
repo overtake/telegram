@@ -44,6 +44,19 @@
     
     selfString = [selfString stringByReplacingOccurrencesOfString:@"✌" withString:@"✌️"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"☺" withString:@"☺️"];
+    
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"1⃣" withString:@"1️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"2⃣" withString:@"2️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"3⃣" withString:@"3️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"4⃣" withString:@"4️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"5⃣" withString:@"5️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"6⃣" withString:@"6️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"7⃣" withString:@"7️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"8⃣" withString:@"8️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"9⃣" withString:@"9️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"0⃣" withString:@"0️⃣"];
+    
+    
     return selfString;
 }
 
@@ -61,7 +74,7 @@
                                           @":laughing:": @"😆",
                                           @":blush:": @"😊",
                                           @":smiley:": @"😃",
-                                          @":relaxed:": @"☺",
+                                          @":relaxed:": @"😊",
                                           @":smirk:": @"😏",
                                           @":heart_eyes:": @"😍",
                                           @":kissing_heart:": @"😘",

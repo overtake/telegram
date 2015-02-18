@@ -1081,6 +1081,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGAttachImageElement setLink:range:]:TGAttachImageElement.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">
          <PersistentStrings>
             <PersistentString

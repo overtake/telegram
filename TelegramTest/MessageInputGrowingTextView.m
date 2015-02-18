@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MesssageInputGrowingTextView.h"
+#import "MessageInputGrowingTextView.h"
 #import "TMImageUtils.h"
 #import "MessageSender.h"
 #import "ImageUtils.h"
@@ -17,7 +17,7 @@ typedef enum {
     PasteBoardItemTypeGif
 } PasteBoardItemType;
 
-@implementation MesssageInputGrowingTextView
+@implementation MessageInputGrowingTextView
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -214,6 +214,21 @@ typedef enum {
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
     [alert show];
 }
+
+
+-(void)setString:(NSString *)string {
+    [super setString:string];
+    
+}
+
+/*
+ NSImage * pic = image_AppIcon();
+ NSTextAttachmentCell *attachmentCell = [[NSTextAttachmentCell alloc] initImageCell:pic];
+ NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+ [attachment setAttachmentCell: attachmentCell ];
+ NSAttributedString *attributedString = [NSAttributedString  attributedStringWithAttachment: attachment];
+ [[self textStorage] appendAttributedString:attributedString];
+ */
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
     [self updateFont];

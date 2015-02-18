@@ -17,6 +17,7 @@
 - (void) TMGrowingTextViewTextDidChange:(id)textView;
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder;
 
+
 @end
 
 @interface TMGrowingTextView : NSTextView<NSTextViewDelegate>

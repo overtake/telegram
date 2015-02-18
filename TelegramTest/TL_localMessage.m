@@ -153,6 +153,7 @@
     
     if(o && o != n && _userNotification) {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:_userNotification];
+        _userNotification = nil;
     }
     
 }
