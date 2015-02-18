@@ -53,7 +53,15 @@
 
 
 -(void)setImage:(NSImage *)image forState:(TMLoaderViewState)state {
-    _stateImages[@(state)] = image;
+    
+    if(!image)
+    {
+        [_stateImages removeObjectForKey:@(state)];
+    } else
+    {
+        _stateImages[@(state)] = image;
+    }
+    
     
     self.state = state;
 }
@@ -74,11 +82,17 @@
     
     NSImage *image = _stateImages[@(state)];
     
-    [self.imageView setFrameSize:image.size];
+    if(image) {
+        [self.imageView setFrameSize:image.size];
+        
+        self.imageView.image = image;
+        
+        [self.imageView setCenterByView:self];
+    }
     
-    self.imageView.image = image;
+    [self.imageView setHidden:!image];
     
-    [self.imageView setCenterByView:self];
+    
     
     
     [self setNeedsDisplay:YES];

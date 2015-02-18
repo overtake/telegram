@@ -99,6 +99,7 @@
 
 
         
+        
         [self.leftViewController.view setFrameSize:NSMakeSize([self isConversationListShown] ? NSWidth(self.view.frame) : 0,NSHeight(self.leftViewController.view.frame))];
         
         

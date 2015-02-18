@@ -143,6 +143,20 @@
     return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
 }
 
+-(void)setFlags:(int)flags {
+    
+    BOOL o = [self unread];
+    
+    [super setFlags:flags];
+    
+    BOOL n = [self unread];
+    
+    if(o && o != n && _userNotification) {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:_userNotification];
+    }
+    
+}
+
 
 DYNAMIC_PROPERTY(DDialog);
 

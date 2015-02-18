@@ -22,6 +22,8 @@ typedef enum {
 @property (nonatomic,assign) DeliveryState dstate;
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 
+@property (nonatomic,strong) NSUserNotification *userNotification;
+
 -(void)save:(BOOL)updateConversation;
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;

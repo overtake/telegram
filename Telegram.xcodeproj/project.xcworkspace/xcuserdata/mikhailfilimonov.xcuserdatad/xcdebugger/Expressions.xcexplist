@@ -734,6 +734,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemPhoto isset]:MessageTableItemPhoto.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.downloadItem">
+            </PersistentString>
+            <PersistentString
+               value = "self.messageSender">
+            </PersistentString>
+            <PersistentString
+               value = "isPathExists(self.imageObject.location.path)">
+            </PersistentString>
+            <PersistentString
+               value = "self.imageObject.location">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString
@@ -1652,6 +1669,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_conversation updateNotifySettings:]:TL_conversation.m">
+      </ContextState>
+      <ContextState
+         contextName = "__41-[TMSharedMediaButton loadCount:peer_id:]_block_invoke:TMSharedMediaButton.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">

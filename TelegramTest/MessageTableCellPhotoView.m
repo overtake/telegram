@@ -93,10 +93,6 @@ NSImage *fireImage() {
         [self.imageView setContentMode:BTRViewContentModeCenter];
         
         
-       // [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
-       // [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
-       // [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
-        
         
     }
     return self;
@@ -145,11 +141,16 @@ NSImage *fireImage() {
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
+    [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
+    [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
+    [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateUploading];
+
     
-    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
     
     BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
+    
+    
     
     
     [self deallocFireImage];
