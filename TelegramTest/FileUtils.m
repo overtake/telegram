@@ -421,6 +421,11 @@ void playSentMessage(BOOL play) {
 
 }
 
+NSArray *urlSchemes() {
+    NSString *scheme = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"known-url-schemes.txt"]];
+    return [[[NSString alloc] initWithContentsOfFile:scheme encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
 NSArray *mediaTypes() {
     return @[@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi"];
 }
@@ -563,7 +568,15 @@ void open_link(NSString *link) {
     }
     
     
-    if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"]) {
+    NSArray *schemes = urlSchemes();
+    BOOL hasSchemeInLink = false;
+    for (NSString *uri in schemes) {
+        hasSchemeInLink = [link hasPrefix:uri];
+        if (hasSchemeInLink)
+            break;
+    }
+    
+    if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"] && !hasSchemeInLink) {
         
         if(!NSStringIsValidEmail(link)) {
             link = [@"http://" stringByAppendingString:link];
