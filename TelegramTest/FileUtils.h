@@ -54,6 +54,7 @@ void alert(NSString *text, NSString *info);
 void alert_bad_files(NSArray *bad_files);
 void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void));
 
+NSArray *urlSchemes();
 NSArray *mediaTypes();
 NSArray *videoTypes();
 NSArray *imageTypes();
