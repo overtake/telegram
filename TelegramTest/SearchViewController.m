@@ -114,7 +114,7 @@ typedef enum {
     
     self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contact", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
     self.usersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.User", nil) pluralName:NSLocalizedString(@"Search.Separator.Users", nil)];
-    self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Message", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
+    self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Messages", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
     
     self.globalUsersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.GlobalSearch", nil) pluralName:NSLocalizedString(@"Search.Separator.GlobalSearch", nil)];
     
@@ -513,7 +513,9 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
+    
     [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
+
         
         if(params != self.searchParams)
             return;
@@ -812,7 +814,9 @@ static int insertCount = 3;
 -(void)remoteGlobalSearch:(SearchParams *)params {
     params.isLoading = YES;
     
+    
     [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:params.searchString limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+        
         
         
         if(self.searchParams != params)
@@ -861,7 +865,14 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
+    
+    test_start_group(@"request");
+    
     [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
+        
+        
+        test_step_group(@"request");
+        test_release_group(@"request");
         
         [ASQueue dispatchOnStageQueue:^{
             if(self.searchParams != params)

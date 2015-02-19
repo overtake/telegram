@@ -272,7 +272,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 - (void)searchMessagesBySearchString:(NSString *)searchString offset:(int)offset completeHandler:(void (^)(NSInteger count, NSArray *messages))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
-        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text,flags FROM messages WHERE searchText(message_text, ?) order by date desc LIMIT 50 OFFSET %d",offset];
+        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text,flags FROM messages WHERE message_text LIKE ? order by date desc LIMIT 50 OFFSET %d",offset];
 
         FMResultSet *results = [db executeQuery:searchSql, [searchString lowercaseString]];
         NSMutableArray *messages = [[NSMutableArray alloc] init];
