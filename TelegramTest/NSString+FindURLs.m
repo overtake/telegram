@@ -29,7 +29,7 @@
 
 - (NSArray *)locationsOfLinks
 {
-   
+    //detect range of links
     NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
     
     
@@ -37,6 +37,7 @@
     
     NSError *error = nil;
     
+    //detect range of @ (usernames)
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w]{5,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
@@ -62,6 +63,19 @@
         
         
     }];
+    
+    //detect range of URL Schemes
+    
+    // Run the following command to have a list of schemes available
+    //System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -dump | egrep "(bindings.*\:$)"|sort
+    
+    
+    //Load the list on the first run to memory
+    
+    
+    //check the contents of messages against the schemes (Regex or other?)
+    
+    //return the range of URL scheme to program
     
    return [results arrayByAddingObjectsFromArray:userNames];
 }
