@@ -20,4 +20,7 @@
 +(NSData *)xorAB:(NSData *)a b:(NSData *)b;
 +(NSData *)encrypt:(int)x data:(NSData *)data auth_key:(NSData *)auth_key msg_key:(NSData *)msg_key encrypt:(BOOL)encrypt;
 +(NSData *)md5:(NSData *)data;
+
+NSData *computeSHA1ForSubdata(NSData *data, int offset, int length);
+
 @end

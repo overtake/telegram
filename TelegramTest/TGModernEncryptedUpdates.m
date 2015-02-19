@@ -20,6 +20,7 @@
 #import "CommitKeySecretSenderItem.h"
 #import "AbortKeySecretSenderItem.h"
 #import "ResendSecretSenderItem.h"
+#import "Crypto.h"
 @implementation TGModernEncryptedUpdates
 
 
@@ -50,6 +51,21 @@
         int messageLength = 0;
         
         [decrypted getBytes:&messageLength range:NSMakeRange(0, 4)];
+        
+        
+        
+        if (messageLength < 0 || messageLength > (int32_t)decrypted.length - 4)
+            return;
+        else {
+            NSData *localMessageKeyFull = computeSHA1ForSubdata(decrypted, 0, messageLength + 4);
+            
+            NSData *localMessageKey = [[NSData alloc] initWithBytes:(((int8_t *)localMessageKeyFull.bytes) + localMessageKeyFull.length - 16) length:16];
+            if (![localMessageKey isEqualToData:msg_key])
+                return;
+
+        }
+        
+        
         
         decrypted = [decrypted subdataWithRange:NSMakeRange(4, decrypted.length-4)];
         

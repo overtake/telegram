@@ -349,5 +349,14 @@
     return encrypted_data;
 }
 
+NSData *computeSHA1ForSubdata(NSData *data, int offset, int length)
+{
+    uint8_t digest[20];
+    SHA1(data.bytes + offset, length, digest);
+    
+    NSData *result = [[NSData alloc] initWithBytes:digest length:20];
+    return result;
+}
+
 
 @end
