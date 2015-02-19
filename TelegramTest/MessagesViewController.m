@@ -1744,7 +1744,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
         
-        [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
+        
         
         [self.noMessagesView setConversation:dialog];
         
@@ -1790,7 +1790,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.normalNavigationCenterView setDialog:dialog];
         
         [self.bottomView setDialog:dialog];
-        
+        [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
         
         [self unSelectAll:NO];
         self.state = MessagesViewControllerStateNone;

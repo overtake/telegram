@@ -81,8 +81,6 @@ NSImage *fireImage() {
             
         }];
         
-        [self.progressView setFrameSize:NSMakeSize(30, 30)];
-        
 
         
         [self setProgressToView:self.imageView];

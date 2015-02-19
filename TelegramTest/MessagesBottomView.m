@@ -355,7 +355,7 @@
     
     
     self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.origin.x + self.inputMessageTextField.containerView.frame.size.width - 30, 17, image_smile().size.width, image_smile().size.height)];
-    [self.smileButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.smileButton setAutoresizingMask:NSViewMinXMargin];
     [self.smileButton setBackgroundImage:image_smile() forControlState:BTRControlStateNormal];
     [self.smileButton setBackgroundImage:image_smileHover() forControlState:BTRControlStateHover];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
@@ -867,6 +867,8 @@
     }
 
     
+    
+    
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
         
@@ -874,17 +876,20 @@
         
         if(isCleared) {
             
+            
+            [[self.smileButton animator] setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame)- NSHeight(self.smileButton.frame) - 6)];
             [self.animator setFrameSize:layoutSize];
-                [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
+            [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             
         } else {
+            [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
         }
         
        
-
+        
         
         
         [self.layer setNeedsDisplay];
