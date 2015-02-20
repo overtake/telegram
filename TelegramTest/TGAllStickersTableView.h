@@ -10,6 +10,7 @@
 
 @interface TGAllStickersTableView : TMTableView
 
+-(void)removeSticker:(TL_outDocument *)document;
 -(void)load:(BOOL)force;
 
 @end

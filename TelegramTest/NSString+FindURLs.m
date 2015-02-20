@@ -1,9 +1,7 @@
 //
 //  NSString+FindURLs.m
-//  timezone
 //
-//  Created by Randall Brown on 7/31/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+
 //
 
 #import "NSString+FindURLs.h"
@@ -63,7 +61,28 @@
         
     }];
     
-   return [results arrayByAddingObjectsFromArray:userNames];
+    
+    //Load the list on the regex
+    NSArray *schemesToFind = @[@"spotify:", @"x-apple.systempreferences://"]; //dumb version
+    NSString *schemeRegexString = @"";
+    for (NSString *scheme in schemesToFind) {
+        schemeRegexString = [schemeRegexString stringByAppendingString:[NSString stringWithFormat:@"(%@.+)|", scheme]];
+    }
+    //remove last character of string |
+    schemeRegexString = [schemeRegexString substringToIndex:schemeRegexString.length-(schemeRegexString.length>0)];
+    
+    //detect occurence of array into string
+    NSRegularExpression *schemeRegex = [NSRegularExpression regularExpressionWithPattern:schemeRegexString options:0 error:&error];
+    
+    
+    //check the contents of messages against the schemes (Regex or other?)
+    NSArray* schemeResult = [schemeRegex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
+    //return the range of URL scheme to program
+    NSArray* newResult = [results arrayByAddingObjectsFromArray:schemeResult];
+    
+    return [newResult arrayByAddingObjectsFromArray:userNames];;
+    
+    //return [results arrayByAddingObjectsFromArray:userNames];
 }
 
 @end

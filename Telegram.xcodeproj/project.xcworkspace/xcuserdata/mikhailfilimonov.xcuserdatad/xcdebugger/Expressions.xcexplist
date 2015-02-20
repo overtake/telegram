@@ -655,6 +655,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__40-[TGAllStickersTableView removeSticker:]_block_invoke_2:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "localStickers">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DialogSwipeTableControll mouseDown:]:DialogSwipeTableControll.m">
          <PersistentStrings>
             <PersistentString

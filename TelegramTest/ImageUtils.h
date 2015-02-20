@@ -158,6 +158,10 @@ CACHE_IMAGE(SadAttach);
 
 CACHE_IMAGE(ComposeCheck);
 CACHE_IMAGE(ComposeCheckActive);
+
+CACHE_IMAGE(RemoveSticker);
+CACHE_IMAGE(RemoveStickerActive);
+
 @interface ImageUtils : NSObject
 
 

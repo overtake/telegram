@@ -456,6 +456,7 @@
 		C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
 		C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */; };
 		C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */; };
+		C2967B121A9656A4003759B2 /* url-schemes.txt in Resources */ = {isa = PBXBuildFile; fileRef = C2967B111A9656A4003759B2 /* url-schemes.txt */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1648,6 +1649,7 @@
 		C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableHeaderItem.m; sourceTree = "<group>"; };
 		C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAttachImageElement.h; sourceTree = "<group>"; };
 		C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachImageElement.m; sourceTree = "<group>"; };
+		C2967B111A9656A4003759B2 /* url-schemes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "url-schemes.txt"; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -4185,6 +4187,7 @@
 		CEB09E6217DAFC250055F150 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C2967B111A9656A4003759B2 /* url-schemes.txt */,
 				C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */,
 				C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */,
 				C2200B5518EC8A2700F28803 /* sent.caf */,
@@ -4819,6 +4822,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2967B121A9656A4003759B2 /* url-schemes.txt in Resources */,
 				CEC22DEF18273CB1008817D0 /* PhoneFormats.dat in Resources */,
 				C271524A19B0D8C700841C8A /* Images.xcassets in Resources */,
 				C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */,

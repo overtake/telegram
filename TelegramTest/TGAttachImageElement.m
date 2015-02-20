@@ -36,7 +36,7 @@
         
 
         
-        _deleteImageView = imageViewWithImage(image_clearActive());
+        _deleteImageView = imageViewWithImage(image_RemoveSticker());
         
         
         self.containerImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(5, 5, NSWidth(self.frame) - 10, NSHeight(self.frame) - 10)];

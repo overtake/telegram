@@ -98,6 +98,7 @@
 
 @interface TGAllStickerTableItemView : TMRowView
 @property (nonatomic,strong) TGStickerImageView *imageView;
+@property (nonatomic,strong) TGAllStickersTableView *tableView;
 
 @end
 
@@ -157,7 +158,11 @@ static NSImage *higlightedImage() {
         BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
         
         [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
-        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
+        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
+        
+        
+        
+        
        
         TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
         
@@ -175,6 +180,26 @@ static NSImage *higlightedImage() {
         [imageView setCenterByView:button];
         
         [button addSubview:imageView];
+        
+        if([obj isKindOfClass:[TL_outDocument class]]) {
+            BTRButton *removeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(width - image_RemoveSticker().size.width - 3, NSHeight(self.bounds) - image_RemoveSticker().size.height - 3, image_RemoveSticker().size.width, image_RemoveSticker().size.height)];
+            
+            [removeButton setBackgroundImage:image_RemoveSticker() forControlState:BTRControlStateNormal];
+            [removeButton setBackgroundImage:image_RemoveStickerActive() forControlState:BTRControlStateHighlighted];
+            
+            
+            [removeButton addBlock:^(BTRControlEvents events) {
+                
+                [self.tableView removeSticker:obj];
+                
+            } forControlEvents:BTRControlEventClick];
+            
+             [button addSubview:removeButton];
+
+        }
+        
+        
+       
         
         [self addSubview:button];
         
@@ -265,6 +290,8 @@ static NSImage *higlightedImage() {
             }];
             
             
+        } else {
+            [self reloadData];
         }
     } else {
         [self reloadData];
@@ -273,6 +300,37 @@ static NSImage *higlightedImage() {
     
     
     
+    
+}
+
+-(void)removeSticker:(TL_outDocument *)document {
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        NSMutableArray *localStickers = [[transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+        
+        __block id toDelete;
+        
+        [localStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_outDocument *d = [TLClassStore deserialize:obj];
+            
+            if(d.n_id == document.n_id) {
+                
+                toDelete = obj;
+                
+                *stop = YES;
+            }
+            
+        }];
+        
+        [localStickers removeObject:toDelete];
+        
+        [transaction setObject:localStickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+        
+    }];
+    
+    [self load:YES];
     
 }
 
@@ -338,7 +396,9 @@ static NSImage *higlightedImage() {
 }
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return [self cacheViewForClass:[TGAllStickerTableItemView class] identifier:@"stickerTableItemView" withSize:NSMakeSize(NSWidth(self.bounds), 80)];
+    TGAllStickerTableItemView *view = (TGAllStickerTableItemView *) [self cacheViewForClass:[TGAllStickerTableItemView class] identifier:@"stickerTableItemView" withSize:NSMakeSize(NSWidth(self.bounds), 80)];;
+    view.tableView = self;
+    return view;
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(TMRowItem *) item {

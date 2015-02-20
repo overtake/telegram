@@ -58,13 +58,13 @@ NSString *const TLUserNamePrefix = @"@";
         
         for (NSString *line in mimes) {
             NSArray* single = [line componentsSeparatedByCharactersInSet:
-                                   [NSCharacterSet characterSetWithCharactersInString:@":"]];
+                               [NSCharacterSet characterSetWithCharactersInString:@":"]];
             
             [types setObject:[single objectAtIndex:1] forKey:[single objectAtIndex:0]];
             [ex setObject:[single objectAtIndex:0] forKey:[single objectAtIndex:1]];
         }
         
-       
+        
         self.extensions = ex;
         
         self.mimeTypes = types;
@@ -216,20 +216,20 @@ NSString* documentPath(TLDocument *document) {
     
     return [NSString stringWithFormat:@"%@/%@.%@",[SettingsArchiver documentsFolder],item[0],extenstion];
     
-
+    
     
 }
 
 NSString* dp() {
-  //  NSFileManager *fm = [NSFileManager defaultManager];
+    //  NSFileManager *fm = [NSFileManager defaultManager];
     
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES)[0];
-   // NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-   // NSString *path = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"documents"];
+    // NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    // NSString *path = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"documents"];
     
-   // if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]) {
-        
-   // }
+    // if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]) {
+    
+    // }
     return applicationSupportPath;
 }
 
@@ -312,7 +312,7 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
     NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
         if([result intValue] == 1000)
             block();
-         else if(cancelBlock)
+        else if(cancelBlock)
             cancelBlock();
     }];
     [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
@@ -338,13 +338,13 @@ void alert(NSString *text, NSString *info) {
 }
 
 + (NSString *)fileMD5:(NSString *)path {
-	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-	if( handle == nil)
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
+    if( handle == nil)
         return [@"ERROR GETTING FILE MD5" md5]; // file didnt exist
-	
+    
     NSUInteger size = fileSize(path);
     
-	NSData *fileData = [[NSData alloc] initWithData:[handle readDataOfLength:MIN(size, 4096)]];
+    NSData *fileData = [[NSData alloc] initWithData:[handle readDataOfLength:MIN(size, 4096)]];
     NSString *md5 = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] md5];
     return [[NSString stringWithFormat:@"MD5_%@_%lu", md5, (unsigned long)size] md5];
 }
@@ -376,7 +376,7 @@ NSArray * soundsList() {
     [list addObject:@"DefaultSoundName"];
     
     [list addObject:@"None"];
-
+    
     NSArray *dirContents = [fm contentsOfDirectoryAtPath:@"~/Library/Sounds" error:nil];
     [list addObjectsFromArray:[dirContents filteredArrayUsingPredicate:fltr]];
     
@@ -403,7 +403,7 @@ NSArray * soundsList() {
         return NSOrderedSame;
         
     }];
-
+    
 }
 void playSentMessage(BOOL play) {
     [ASQueue dispatchOnStageQueue:^{
@@ -418,7 +418,12 @@ void playSentMessage(BOOL play) {
         if(play && [SettingsArchiver checkMaskedSetting:SoundEffects])
             [sound play];
     }];
+    
+}
 
+NSArray *urlSchemes() {
+    NSString *scheme = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"url-schemes.txt"]];
+    return [[[NSString alloc] initWithContentsOfFile:scheme encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
 NSArray *mediaTypes() {
@@ -459,10 +464,10 @@ void open_card(NSString *link) {
                 }
             });
             
-          
+            
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
-             [TMViewController hideModalProgress];
+            [TMViewController hideModalProgress];
             
             dispatch_after_seconds(0.2, ^{
                 if(error.error_code == 400) {
@@ -470,12 +475,12 @@ void open_card(NSString *link) {
                 }
             });
             
-          
+            
             
         } timeout:4];
     }
     
-
+    
 }
 
 void open_user_by_name(NSString * userName) {
@@ -514,7 +519,7 @@ void open_user_by_name(NSString * userName) {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }
             });
-           
+            
             
         } timeout:4];
     }
@@ -559,19 +564,25 @@ void open_link(NSString *link) {
             open_user_by_name(name);
             
             return;
-        } 
+        }
     }
     
+    NSArray *schemes = urlSchemes();
+    BOOL hasSchemeInLink = false;
+    for (NSString *uri in schemes) {
+        hasSchemeInLink = [link hasPrefix:uri];
+        if (hasSchemeInLink)
+            break;
+    }
     
-    if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"]) {
-        
+    if(![link hasPrefix:@"http"] && ![link hasPrefix:@"ftp"] && !hasSchemeInLink) {
         if(!NSStringIsValidEmail(link)) {
             link = [@"http://" stringByAppendingString:link];
         } else if(![link hasPrefix:@"mailto:"]) {
             link = [@"mailto:" stringByAppendingString:link];
         }
     }
-
+    
     
     
     
@@ -657,11 +668,11 @@ NSString *exportPath(long randomId, NSString *extension) {
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = appName();
     NSString *exportDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"exports"];
-   
+    
     [[NSFileManager defaultManager] createDirectoryAtPath:exportDirectory
-       withIntermediateDirectories:YES
-                        attributes:nil
-                             error:nil];
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:nil];
     
     
     return [NSString stringWithFormat:@"%@/%lu.%@",exportDirectory,randomId,extension];
@@ -694,7 +705,7 @@ NSArray *encodeCard(NSString *card) {
             NSScanner *scanner = [NSScanner scannerWithString:obj];
             
             int result = 0;
-
+            
             [scanner scanHexInt:&result];
             
             
