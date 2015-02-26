@@ -57,8 +57,10 @@
             
             if(item.type == SettingsRowItemTypeChoice) {
                 
-               [item.menu popUpForView:weakSelf.subdescField];
+                TMMenuPopover *popover = [[TMMenuPopover alloc] initWithMenu:item.menu];
                 
+                [popover showRelativeToRect:weakSelf.subdescField.bounds ofView:weakSelf.subdescField preferredEdge:CGRectMinYEdge];
+                                
             }
             
         } forControlEvents:BTRControlEventClick];

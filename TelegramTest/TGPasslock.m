@@ -81,7 +81,7 @@
     
     [self invalidateTimer];
     
-    if([self autoLockTime] == 0)
+    if([self autoLockTime] == 0 || ![TGPasslock isEnabled])
         return;
     
     _saveTime = [[MTNetwork instance] getTime];
@@ -100,13 +100,17 @@
 }
 
 -(void)checkLocker {
-    int differenceTime = [[MTNetwork instance] getTime] - _saveTime;
     
-    if(differenceTime > [self autoLockTime]) {
-        [ASQueue dispatchOnMainQueue:^{
-            [TMViewController showBlockPasslock:nil];
-        }];
+    if(_saveTime != 0  && [TGPasslock isEnabled]) {
+        int differenceTime = [[MTNetwork instance] getTime] - _saveTime;
+        
+        if(differenceTime > [self autoLockTime]) {
+            [ASQueue dispatchOnMainQueue:^{
+                [TMViewController showBlockPasslock:nil];
+            }];
+        }
     }
+    
 }
 
 -(void)invalidateTimer {
@@ -124,6 +128,13 @@
 }
 
 -(NSUInteger)autoLockTime {
+    
+    id time = [[NSUserDefaults standardUserDefaults] objectForKey:@"auto-passlock"];
+    
+    if(!time) {
+        [TGPasslock setAutoLockTime:3600];
+    }
+    
     return [[NSUserDefaults standardUserDefaults] integerForKey:@"auto-passlock"];
 }
 

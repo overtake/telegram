@@ -198,6 +198,27 @@
     [[self.secureField cell] setPlaceholderAttributedString:attrs];
 }
 
+
+- (void)performShake {
+    float a = 3;
+    float duration = 0.04;
+    
+    NSBeep();
+    
+    __block NSRange selectionRange = self.secureField.selectedRange;
+    [self.secureField prepareForAnimation];
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        [self.secureField setWantsLayer:NO];
+        [self.secureField.window makeFirstResponder:self.secureField];
+        [self.secureField setSelectionRange:selectionRange];
+    }];
+    
+    [self.secureField setAnimation:[TMAnimations shakeWithDuration:duration fromValue:CGPointMake(-a + self.secureField.layer.position.x, self.secureField.layer.position.y) toValue:CGPointMake(a + self.secureField.layer.position.x, self.secureField.layer.position.y)] forKey:@"position"];
+    [CATransaction commit];
+}
+
 -(void)checkPassword {
     
     NSString *hash = [self.secureField.stringValue md5];
@@ -207,7 +228,7 @@
         if([TGPasslock checkHash:hash]) {
             [self closeAndNotify:hash success:YES];
         } else {
-            NSBeep();
+            [self performShake];
         }
         
         return;
@@ -218,7 +239,7 @@
             if([_md5Hashs[_state - 1] isEqualToString:hash]) {
                  [self closeAndNotify:hash success:YES];
             } else {
-                NSBeep();
+               [self performShake];
             }
             
             return;
@@ -231,8 +252,7 @@
         if(_state == 0) {
             
             if(![TGPasslock checkHash:hash]) {
-                [self showError];
-                NSBeep();
+                [self performShake];
                 return;
             }
             
@@ -241,7 +261,7 @@
                 
                 [self closeAndNotify:hash success:YES];
             } else {
-                NSBeep();
+                [self performShake];
             }
             
             return;

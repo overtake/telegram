@@ -124,15 +124,12 @@
         }];
         
         
+        
+        
         NSMenu *menu = [[NSMenu alloc] initWithTitle:@"menu"];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Passcode.AutoLockTime0", nil) withBlock:^(id sender) {
             [TGPasslock setAutoLockTime:0];
-            [self.tableView reloadData];
-        }]];
-        
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Passcode.AutoLockTime5", nil) withBlock:^(id sender) {
-            [TGPasslock setAutoLockTime:5];
             [self.tableView reloadData];
         }]];
         
@@ -158,6 +155,7 @@
         }]];
         
         autoLockPasscode.menu = menu;
+    
         
         [self.tableView insert:autoLockPasscode atIndex:self.tableView.list.count tableRedraw:NO];
         
