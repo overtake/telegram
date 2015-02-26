@@ -228,9 +228,9 @@ static NSDictionary *colors;
         } else {
             NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
             
-            if(NSPointInRect(point, self.thumbImageView.frame)) {
+          //  if(NSPointInRect(point, self.thumbImageView.frame)) {
                 [self open];
-            }
+            //}
         }
     } else {
         

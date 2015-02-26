@@ -86,7 +86,13 @@
     
 }
 
+-(void)keyDown:(NSEvent *)theEvent {
+    
+}
 
+-(void)keyUp:(NSEvent *)theEvent {
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect
 {

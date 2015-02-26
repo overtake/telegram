@@ -36,6 +36,7 @@
     return _context;
 }
 
+
 + (MTNetwork *)instance
 {
     static MTNetwork *singleton = nil;
@@ -98,6 +99,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 void (^execute)() = ^{
                     [_datacenterWatchdog execute:nil];
+                    [self update];
                 };
                 
                 
@@ -128,6 +130,11 @@ static NSString *kDefaultDatacenter = @"default_dc";
     dispatch_once(&onceToken, ^{
          [self initConnectionWithId:_masterDatacenter];
     });
+}
+
+-(void)update {
+    [_mtProto pause];
+    [_mtProto resume];
 }
 
 static int MAX_WORKER_POLL = 5;

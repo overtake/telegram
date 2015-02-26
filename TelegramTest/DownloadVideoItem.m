@@ -60,7 +60,7 @@
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
         
-        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:250 h:250 bytes:jpegNormalizedData(thumbImg)];
+        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumbImg.size.width h:thumbImg.size.height bytes:jpegNormalizedData(thumbImg)];
         
         [[Storage manager] updateMessages:@[msg]];
         

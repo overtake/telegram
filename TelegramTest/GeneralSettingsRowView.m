@@ -57,32 +57,7 @@
             
             if(item.type == SettingsRowItemTypeChoice) {
                 
-                NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-                
-                NSArray *list = soundsList();
-                
-                for (int i = 0; i < list.count; i++) {
-                    
-                    NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
-                        
-                        if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
-                            [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-                        else
-                            [SettingsArchiver setSoundNotification:sender.title];
-                        
-                        [weakSelf redrawRow];
-                        
-                    }];
-                    
-                    
-                    
-                    [menu addItem:item];
-                    if(i == 0) {
-                        [menu addItem:[NSMenuItem separatorItem]];
-                    }
-                }
-                
-                [menu popUpForView:weakSelf.subdescField];
+               [item.menu popUpForView:weakSelf.subdescField];
                 
             }
             

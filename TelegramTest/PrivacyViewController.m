@@ -71,7 +71,7 @@
         
         [[Telegram rightViewController] showBlockedUsers];
         
-    } description:NSLocalizedString(@"PrivacyAndSecurity.BlockedUsers", nil) height:42 stateback:nil];
+    } description:NSLocalizedString(@"PrivacyAndSecurity.BlockedUsers", nil) subdesc:@"" height:42 stateback:nil];
     
     [self.tableView insert:self.blockedUsersRowIten atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -94,6 +94,16 @@
     [self.tableView insert:security atIndex:self.tableView.list.count tableRedraw:NO];
     
     
+    GeneralSettingsRowItem *passcode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [[Telegram rightViewController] showPasscodeController];
+        
+    } description:NSLocalizedString(@"PrivacyAndSecurity.PassCode", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @(YES);
+    }];
+    
+    [self.tableView insert:passcode atIndex:self.tableView.list.count tableRedraw:NO];
+    
     
     
     GeneralSettingsRowItem *terminateSessions = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
@@ -101,7 +111,7 @@
         [self terminateSessions];
         
     } description:NSLocalizedString(@"PrivacyAndSecurity.TerminateSessions", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+        return @(YES);
     }];
     
     [self.tableView insert:terminateSessions atIndex:self.tableView.list.count tableRedraw:NO];

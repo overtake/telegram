@@ -437,6 +437,7 @@ static const int controlsHeight = 75;
     _behavior = [[TGPVUserBehavior alloc] init];
     [_behavior setUser:user];
     
+    
     [ASQueue dispatchOnStageQueue:^{
         
         self.list = [[NSMutableArray alloc] init];

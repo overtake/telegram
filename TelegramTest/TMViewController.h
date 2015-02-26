@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TMView.h"
 
+
 @class TMPopover;
 @class TMNavigationController;
 @interface TMViewController : NSObject
@@ -44,6 +45,25 @@
 
 -(void)showModalProgress;
 -(void)hideModalProgress;
+
+
+
++(void)showPasslock:(passlockCallback)callback;
++(void)hidePasslock;
+
+-(void)showPasslock:(passlockCallback)callback;
+-(void)hidePasslock;
+
+
++(void)showCreatePasslock:(passlockCallback)callback;
+-(void)showCreatePasslock:(passlockCallback)callback;
+
++(void)showChangePasslock:(passlockCallback)callback;
+-(void)showChangePasslock:(passlockCallback)callback;
+
+
++(void)showBlockPasslock:(passlockCallback)callback;
+-(void)showBlockPasslock:(passlockCallback)callback;
 
 -(void)_didStackRemoved;
 

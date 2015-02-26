@@ -146,6 +146,9 @@
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemVideo rebuildImageObject]:MessageTableItemVideo.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SenderItem notifyAllListeners:]:SenderItem.m">
       </ContextState>
       <ContextState
@@ -202,6 +205,9 @@
                value = "self.superview">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPhotoViewer show:user:]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
@@ -476,6 +482,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TMHyperlinkTextField mouseUp:]:TMHyperlinkTextField.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[TMAvatarImageView text:]:TMAvatarImageView.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forConversation:]:ImageSenderItem.m">
@@ -759,6 +768,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[UsersManager currentUser].photo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString
@@ -782,6 +799,9 @@
       </ContextState>
       <ContextState
          contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__27-[TGPhotoViewer show:user:]_block_invoke:TGPhotoViewer.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
@@ -1065,6 +1085,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke_2211:ChatAvatarImageView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -1245,6 +1268,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TLAPI_messages_sendEncryptedService getData:]:TLRPCApi.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ConversationTableItem updateLastMessage]:ConversationTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.lastMessage.message">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">

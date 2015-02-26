@@ -457,6 +457,9 @@
 		C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2936944197E6B5700DD9680 /* MessageTableHeaderItem.m */; };
 		C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */; };
 		C2967B121A9656A4003759B2 /* url-schemes.txt in Resources */ = {isa = PBXBuildFile; fileRef = C2967B111A9656A4003759B2 /* url-schemes.txt */; };
+		C2967B161A9B59D2003759B2 /* TGPasslockModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B151A9B59D2003759B2 /* TGPasslockModalView.m */; };
+		C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B181A9B75B4003759B2 /* TGPasslock.m */; };
+		C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1650,6 +1653,12 @@
 		C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAttachImageElement.h; sourceTree = "<group>"; };
 		C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachImageElement.m; sourceTree = "<group>"; };
 		C2967B111A9656A4003759B2 /* url-schemes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "url-schemes.txt"; sourceTree = "<group>"; };
+		C2967B141A9B59D2003759B2 /* TGPasslockModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasslockModalView.h; sourceTree = "<group>"; };
+		C2967B151A9B59D2003759B2 /* TGPasslockModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasslockModalView.m; sourceTree = "<group>"; };
+		C2967B171A9B75B4003759B2 /* TGPasslock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasslock.h; sourceTree = "<group>"; };
+		C2967B181A9B75B4003759B2 /* TGPasslock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasslock.m; sourceTree = "<group>"; };
+		C2967B1A1A9B9710003759B2 /* TGPasscodeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasscodeSettingsViewController.h; sourceTree = "<group>"; };
+		C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasscodeSettingsViewController.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -3008,6 +3017,7 @@
 		C21D482B19ACB7A6000F06E1 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				C2967B131A9B59B0003759B2 /* passlock */,
 				C2B326051A24F7200012DE34 /* phonechange */,
 				C270D2EA1A1CD73500522FB0 /* pravicy */,
 				C268C13A19EEB56C007F836A /* username */,
@@ -3584,6 +3594,17 @@
 			children = (
 			);
 			name = "links-preview";
+			sourceTree = "<group>";
+		};
+		C2967B131A9B59B0003759B2 /* passlock */ = {
+			isa = PBXGroup;
+			children = (
+				C2967B141A9B59D2003759B2 /* TGPasslockModalView.h */,
+				C2967B151A9B59D2003759B2 /* TGPasslockModalView.m */,
+				C2967B1A1A9B9710003759B2 /* TGPasscodeSettingsViewController.h */,
+				C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */,
+			);
+			name = passlock;
 			sourceTree = "<group>";
 		};
 		C297955219EC29CA00BE893E /* general */ = {
@@ -4327,6 +4348,8 @@
 				C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */,
 				C26752781A1A7CEF00152D9A /* TGCache.h */,
 				C26752791A1A7CEF00152D9A /* TGCache.m */,
+				C2967B171A9B75B4003759B2 /* TGPasslock.h */,
+				C2967B181A9B75B4003759B2 /* TGPasslock.m */,
 			);
 			name = logic;
 			sourceTree = "<group>";
@@ -4924,6 +4947,7 @@
 				C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */,
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
+				C2967B161A9B59D2003759B2 /* TGPasslockModalView.m in Sources */,
 				CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */,
 				0A67588B18928F1A00F4487D /* TMGrowingTextView.m in Sources */,
 				0AF4F4AD189D5CD5004BA4DF /* MessageTableCellServiceMessage.m in Sources */,
@@ -5048,8 +5072,10 @@
 				C233FB2B18B6126C008C9A96 /* NewConversationTableView.m in Sources */,
 				C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */,
 				0AA0145E1831140D00901B7A /* NSAttributedString+Hyperlink.m in Sources */,
+				C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */,
 				CEB0A1E317DB03AA0055F150 /* AsyncSocket.m in Sources */,
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
+				C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
 				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,

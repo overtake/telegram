@@ -171,6 +171,34 @@
         return NSLocalizedString([SettingsArchiver soundNotification], nil);
     }];
     
+    
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+    
+    NSArray *list = soundsList();
+    
+    for (int i = 0; i < list.count; i++) {
+        
+        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
+            
+            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
+                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+            else
+                [SettingsArchiver setSoundNotification:sender.title];
+            
+            [self.tableView reloadData];
+            
+        }];
+        
+        
+        
+        [menu addItem:item];
+        if(i == 0) {
+            [menu addItem:[NSMenuItem separatorItem]];
+        }
+    }
+    
+    soundNotification.menu = menu;
+    
     [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
 

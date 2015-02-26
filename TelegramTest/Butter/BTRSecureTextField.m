@@ -28,14 +28,14 @@
 
 static const CGFloat BTRTextFieldCornerRadius = 3.f;
 static const CGFloat BTRTextFieldInnerRadius = 2.f;
-static CGFloat const BTRTextFieldXInset = 2.f;
-#define BTRTextFieldBorderColor [NSColor colorWithDeviceWhite:1.f alpha:0.6f]
-#define BTRTextFieldActiveGradientStartingColor [NSColor colorWithCalibratedRed:0.114 green:0.364 blue:0.689 alpha:1.000]
-#define BTRTextFieldActiveGradientEndingColor [NSColor colorWithCalibratedRed:0.176 green:0.490 blue:0.898 alpha:1]
-#define BTRTextFieldInactiveGradientStartingColor [NSColor colorWithDeviceWhite:0.6 alpha:1.0]
-#define BTRTextFieldInactiveGradientEndingColor [NSColor colorWithDeviceWhite:0.7 alpha:1.0]
-#define BTRTextFieldFillColor [NSColor whiteColor]
-#define BTRTextFieldShadowColor [NSColor colorWithDeviceRed:0.19 green:0.51 blue:0.81 alpha:1.0]
+static CGFloat const BTRTextFieldXInset = 5.f;
+#define BTRTextFieldBorderColor [NSColor clearColor]
+#define BTRTextFieldActiveGradientStartingColor [NSColor clearColor]
+#define BTRTextFieldActiveGradientEndingColor [NSColor clearColor]
+#define BTRTextFieldInactiveGradientStartingColor [NSColor clearColor]
+#define BTRTextFieldInactiveGradientEndingColor [NSColor clearColor]
+#define BTRTextFieldFillColor NSColorFromRGB(0xF1F1F1)
+#define BTRTextFieldShadowColor [NSColor clearColor]
 
 @implementation BTRSecureTextField {
 	BOOL _btrDrawsBackground;
@@ -185,6 +185,15 @@ static CGFloat const BTRTextFieldXInset = 2.f;
 	[[NSBezierPath bezierPathWithRoundedRect:innerRect xRadius:BTRTextFieldInnerRadius yRadius:BTRTextFieldInnerRadius] fill];
 	
 	[super drawRect:dirtyRect];
+}
+
+
+
+-(void)textDidChange:(NSNotification *)notification {
+    if(self.stringValue.length > 33) {
+        [self setStringValue:[self.stringValue substringWithRange:NSMakeRange(0, 33)]];
+        NSBeep();
+    }
 }
 
 - (CATransition *)shadowOpacityAnimation {
@@ -409,11 +418,11 @@ static CGFloat const BTRTextFieldXInset = 2.f;
 		CGFloat heightDelta = newRect.size.height - textSize.height;
 		if (heightDelta > 0)
 		{
-			newRect.size.height -= heightDelta;
+			//newRect.size.height -= heightDelta;
 			newRect.origin.y += ceil(heightDelta / 2);
 		}
 	}
-	return NSInsetRect(newRect, BTRTextFieldXInset, 0.f);
+	return NSInsetRect(newRect, BTRTextFieldXInset, -1.f);
 }
 
 - (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength {

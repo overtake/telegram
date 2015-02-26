@@ -20,7 +20,7 @@
 #import "ImageUtils.h"
 #import "TGCache.h"
 #import "TMAvaImageObject.h"
-
+#import "NSString+Extended.h"
 
 
 typedef struct
@@ -388,12 +388,39 @@ static CAAnimation *ani2() {
         if([[object valueForKey:@"first_name"] length] == 0 && [[object valueForKey:@"last_name"] length] == 0) {
             text = [NSString stringWithFormat:@"A"];
         } else {
-            text = [NSString stringWithFormat:@"%C%C", (unichar)([[object valueForKey:@"first_name"] length] ? [[object valueForKey:@"first_name"] characterAtIndex:0] : 0), (unichar)([[object valueForKey:@"last_name"] length] ? [[object valueForKey:@"last_name"] characterAtIndex:0] : 0)];
+            
+            
+            NSArray *emoji = [[object valueForKey:@"first_name"] getEmojiFromString];
+            
+            __block NSString *firstName = [object valueForKey:@"first_name"];
+            
+            [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                firstName = [firstName stringByReplacingOccurrencesOfString:obj withString:@""];
+            }];
+            
+            emoji = [[object valueForKey:@"last_name"] getEmojiFromString];
+            
+            __block NSString *lastName = [object valueForKey:@"last_name"];
+            
+            [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                lastName = [lastName stringByReplacingOccurrencesOfString:obj withString:@""];
+            }];
+            
+            text = [NSString stringWithFormat:@"%C%C", (unichar)([firstName length] ? [firstName characterAtIndex:0] : 0), (unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
         }
         
     } else if([object isKindOfClass:[TLChat class]]) {
-        text = [NSString stringWithFormat:@"%C", (unichar)([[object valueForKey:@"title"] length] > 0 ? [[object valueForKey:@"title"] characterAtIndex:0] : [[object valueForKey:@"n_id"] intValue])];
-                                                           
+        
+        NSArray *emoji = [[object valueForKey:@"title"] getEmojiFromString];
+        
+        __block NSString *textResult = [object valueForKey:@"title"];
+        
+        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            textResult = [textResult stringByReplacingOccurrencesOfString:obj withString:@""];
+        }];
+        
+        text = textResult.length > 0 ? [textResult substringWithRange:NSMakeRange(0, 1)] : @"A";
+        
     } else if([object isKindOfClass:[TL_broadcast class]]) {
         if([[object valueForKey:@"title"] length] > 0 ) {
             text = [NSString stringWithFormat:@"%C", (unichar)([[object valueForKey:@"title"] characterAtIndex:0])];
@@ -450,6 +477,12 @@ static CAAnimation *ani2() {
     [image lockFocus];
     
     
+   
+    
+    
+    
+    
+    
     TGTwoColors twoColors;
     
     
@@ -485,7 +518,14 @@ static CAAnimation *ani2() {
 
     if(type != TMAvatarTypeBroadcast) {
         NSColor *color = [NSColor whiteColor];
-        text = [text uppercaseString];
+        
+         __block NSString *textResult = [text uppercaseString];
+       
+         NSArray *emoji = [textResult getEmojiFromString];
+        
+        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            textResult = [textResult stringByReplacingOccurrencesOfString:obj withString:@""];
+        }];
         
         if(colorMask == -1) {
             NSBezierPath *path = [NSBezierPath bezierPath];
@@ -503,8 +543,8 @@ static CAAnimation *ani2() {
         }
         
         NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
-        NSSize textSize = [text sizeWithAttributes:attributes];
-        [text drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) )withAttributes: attributes];
+        NSSize textSize = [textResult sizeWithAttributes:attributes];
+        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) )withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;

@@ -865,14 +865,9 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    
-    test_start_group(@"request");
-    
+        
     [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
         
-        
-        test_step_group(@"request");
-        test_release_group(@"request");
         
         [ASQueue dispatchOnStageQueue:^{
             if(self.searchParams != params)

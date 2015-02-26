@@ -31,6 +31,7 @@
 #import "PhoneChangeController.h"
 #import "PhoneChangeConfirmController.h"
 #import "TGOpacityViewController.h"
+#import "TGPasscodeSettingsViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -55,6 +56,7 @@
 @property (nonatomic, strong) PhoneChangeController *phoneChangeController;
 @property (nonatomic, strong) PhoneChangeConfirmController *phoneChangeConfirmController;
 @property (nonatomic, strong) TGOpacityViewController *opacityViewController;
+@property (nonatomic, strong) TGPasscodeSettingsViewController *passcodeViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -97,5 +99,7 @@
 - (void)showPhoneChangeConfirmController:(id)params phone:(NSString *)phone;
 
 - (void)showAboveController:(TMViewController *)lastController;
+
+-(void)showPasscodeController;
 
 @end

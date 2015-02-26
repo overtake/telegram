@@ -42,7 +42,7 @@
 #import "RBLPopover.h"
 #import "NSTextView+EmojiExtension.h"
 #import "TGPhotoViewer.h"
-
+#import "TGPasslock.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -277,7 +277,7 @@ void exceptionHandler(NSException * exception)
 - (void)showMainApplicationWindowForCrashManager:(id)crashManager {
     
     
-    
+    [self registerSleepNotification];
     
     [SettingsArchiver addEventListener:self];
     
@@ -617,6 +617,30 @@ void exceptionHandler(NSException * exception)
         [[Telegram sharedInstance] setIsWindowActive:YES];
         [[Telegram sharedInstance] setAccountOnline];
     }
+    
+    
+    [TGPasslock appIncomeActive];
+}
+
+- (void) receiveSleepNote: (NSNotification*) note
+{
+    NSLog(@"receiveSleepNote: %@", [note name]);
+}
+
+- (void) receiveWakeNote: (NSNotification*) note
+{
+    [[MTNetwork instance] update];
+}
+
+- (void) registerSleepNotification
+{
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self
+                                                           selector: @selector(receiveSleepNote:)
+                                                               name: NSWorkspaceWillSleepNotification object: NULL];
+    
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self
+                                                           selector: @selector(receiveWakeNote:)
+                                                               name: NSWorkspaceDidWakeNotification object: NULL];
 }
 
 - (void)applicationDidResignActive:(NSNotification *)notification {
@@ -624,11 +648,13 @@ void exceptionHandler(NSException * exception)
         [[Telegram sharedInstance] setIsWindowActive:NO];
         [[Telegram sharedInstance] setAccountOffline:NO];
     }
-    
+    [TGPasslock appResignActive];
 }
 
 
 - (void)initializeMainWindow {
+    
+    
     
     MainWindow *mainWindow = [[MainWindow alloc] init];
     
@@ -644,6 +670,17 @@ void exceptionHandler(NSException * exception)
     
     
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
+    
+    if([TGPasslock isEnabled]) {
+        
+        [TMViewController showBlockPasslock:^(BOOL result, NSString *md5Hash) {
+            
+            
+            
+        }];
+        
+        return;
+    }
     
 }
 

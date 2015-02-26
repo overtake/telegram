@@ -10,6 +10,7 @@
 #import "TMView.h"
 #import "TMProgressModalView.h"
 #import "HackUtils.h"
+#import "TGPasslockModalView.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -117,6 +118,7 @@
 
 
 static TMProgressModalView *progressView;
+static TGPasslockModalView *passlockView;
 
 +(void)showModalProgress {
     
@@ -174,6 +176,91 @@ static TMProgressModalView *progressView;
 }
 -(void)hideModalProgress {
     [TMViewController hideModalProgress];
+}
+
++(void)showPasslock:(passlockCallback)callback animated:(BOOL)animated {
+    
+    
+    assert([NSThread isMainThread]);
+    
+    if(!passlockView) {
+        passlockView = [[TGPasslockModalView alloc] initWithFrame:[[[Telegram delegate] mainWindow].contentView bounds]];
+        
+        if(animated)
+            passlockView.layer.opacity = 0;
+        
+        [passlockView setCenterByView:[[Telegram delegate] mainWindow].contentView];
+        
+        [[[Telegram delegate] mainWindow].contentView addSubview:passlockView];
+    }
+    
+    passlockView.passlockResult = callback;
+    passlockView.type = TGPassLockViewConfirmType;
+    
+    if(animated) {
+        POPBasicAnimation *anim = [TMViewController popAnimationForProgress:passlockView.layer.opacity to:1];
+        
+        [passlockView.layer pop_addAnimation:anim forKey:@"fade"];
+    }
+    
+    
+    [passlockView becomeFirstResponder];
+}
+
+
++(void)showPasslock:(passlockCallback)callback {
+    [self showPasslock:callback animated:YES];
+}
+
++(void)showCreatePasslock:(passlockCallback)callback {
+    [self showPasslock:callback];
+    passlockView.type = TGPassLockViewCreateType;
+}
+
+-(void)showCreatePasslock:(passlockCallback)callback {
+    [TMViewController showCreatePasslock:callback];
+}
+
++(void)showChangePasslock:(passlockCallback)callback {
+    [self showPasslock:callback];
+    passlockView.type = TGPassLockViewChangeType;
+}
+-(void)showChangePasslock:(passlockCallback)callback {
+    [TMViewController showChangePasslock:callback];
+}
+
++(void)showBlockPasslock:(passlockCallback)callback {
+     [self showPasslock:callback animated:NO];
+     [passlockView setClosable:NO];
+}
+-(void)showBlockPasslock:(passlockCallback)callback {
+    [TMViewController showBlockPasslock:callback];
+}
+
+
++(void)hidePasslock {
+    
+    assert([NSThread isMainThread]);
+    
+    passlockView.layer.opacity = 0.8;
+    
+    
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:passlockView.layer.opacity to:0];
+    
+    [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
+        [passlockView removeFromSuperview];
+        passlockView = nil;
+    }];
+    
+    [passlockView.layer pop_addAnimation:anim forKey:@"fade"];
+}
+
+-(void)showPasslock:(passlockCallback)callback {
+    [TMViewController showPasslock:callback];
+}
+
+-(void)hidePasslock {
+    [TMViewController hidePasslock];
 }
 
 

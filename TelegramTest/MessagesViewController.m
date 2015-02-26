@@ -63,6 +63,7 @@
 #import "StickerSenderItem.h"
 #import "RequestKeySecretSenderItem.h"
 #import "ExternalDocumentSecretSenderItem.h"
+#import "TGPasslock.h"
 
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -1821,7 +1822,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)tryRead {
-    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == HistoryFilter.class) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == HistoryFilter.class && ![TGPasslock isVisibility]) {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
@@ -2250,32 +2251,48 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    if([message isEqualToString:@"requestKey"]) {
+    
+    if([message isEqualToString:@"passlock"] && [UsersManager currentUserId] == 438078) {
+        [self showPasslock:^(BOOL result, NSString *md5Hash) {
+            
+            
+        }];
         
-        EncryptedParams *config = _conversation.encryptedChat.encryptedParams;
-        
-        uint8_t rawABytes[256];
-        SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
-        
-        for (int i = 0; i < 256 && i < (int)config.random.length; i++)
-        {
-            uint8_t currentByte = ((uint8_t *)config.random.bytes)[i];
-            rawABytes[i] ^= currentByte;
-        }
-        
-        NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
-        
-        int32_t tmpG = config.g;
-        tmpG = NSSwapInt(tmpG);
-        NSData *g = [[NSData alloc] initWithBytes:&tmpG length:4];
-        
-        NSData *g_a = MTExp(g, config.a, config.p);
-        
-        
-        RequestKeySecretSenderItem *sender = [[RequestKeySecretSenderItem alloc] initWithConversation:_conversation exchange_id:rand_long() g_a:g_a];
-        
-        [sender send];
+        return;
     }
+    
+    if([message hasPrefix:@"setpasslock"] && [UsersManager currentUserId] == 438078) {
+        [TGPasslock enableWithHash:[[message substringFromIndex:12] md5]];
+        
+        return;
+    }
+    
+//    if([message isEqualToString:@"requestKey"]) {
+//        
+//        EncryptedParams *config = _conversation.encryptedChat.encryptedParams;
+//        
+//        uint8_t rawABytes[256];
+//        SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
+//        
+//        for (int i = 0; i < 256 && i < (int)config.random.length; i++)
+//        {
+//            uint8_t currentByte = ((uint8_t *)config.random.bytes)[i];
+//            rawABytes[i] ^= currentByte;
+//        }
+//        
+//        NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
+//        
+//        int32_t tmpG = config.g;
+//        tmpG = NSSwapInt(tmpG);
+//        NSData *g = [[NSData alloc] initWithBytes:&tmpG length:4];
+//        
+//        NSData *g_a = MTExp(g, config.a, config.p);
+//        
+//        
+//        RequestKeySecretSenderItem *sender = [[RequestKeySecretSenderItem alloc] initWithConversation:_conversation exchange_id:rand_long() g_a:g_a];
+//        
+//        [sender send];
+//    }
     
     //8149178
     //5332648

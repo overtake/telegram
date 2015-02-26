@@ -15,7 +15,7 @@
 @implementation TMRowItem
 
 - (void) redrawRow {
-    if(!self.rowDelegate) {
+   // if(!self.rowDelegate) {
         TMTableView *table = (TMTableView *)self.table;
         if(table) {
             NSUInteger pos = [table positionOfItem:self];
@@ -27,7 +27,7 @@
                 }
             }
         }
-    }
+   // }
     
 //    DLog(@"redraw rows");
     if([self.rowDelegate respondsToSelector:@selector(redrawRow)])

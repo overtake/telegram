@@ -30,4 +30,6 @@
 
 -(MTContext *)context;
 
+-(void)update;
+
 @end

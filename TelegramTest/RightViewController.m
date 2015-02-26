@@ -153,6 +153,8 @@
     
     self.opacityViewController = [[TGOpacityViewController alloc] initWithFrame:self.view.bounds];
     
+    self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:self.view.bounds];
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
 
     [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
@@ -743,6 +745,17 @@
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
     }
+}
+
+
+-(void)showPasscodeController {
+    if(self.navigationViewController.currentController == self.passcodeViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.passcodeViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 @end

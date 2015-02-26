@@ -16,6 +16,7 @@
 #import "MessagesUtils.h"
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
+#import "TGPasslock.h"
 @interface NSUserNotification(Extensions)
 
 @property (nonatomic)  BOOL hasReplyButton;
@@ -74,7 +75,7 @@
         
         
         [self addMessage:message];
-        
+         
         TL_conversation *dialog = message.conversation;
         
         [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
@@ -95,7 +96,7 @@
         TLChat *chat = [[ChatsManager sharedManager] find:message.to_id.chat_id];
         
         
-        NSString *title = [fromUser fullName];
+        NSString *title = [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName];
         NSString *msg = message.message;
         if(message.action) {
             msg = [MessagesUtils serviceMessage:message forAction:message.action];
@@ -103,58 +104,65 @@
             msg = [MessagesUtils mediaMessage:message];
         }
         
-        if([message.to_id isSecret])
+        if([message.to_id isSecret] || [TGPasslock isVisibility])
             msg = NSLocalizedString(@"Notification.SecretMessage", nil);
         
         NSString *subTitle;
         
         
-        NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
+        NSImage *image;
         
-        if(message.to_id.chat_id != 0) {
-            cacheKey = [chat.photo.photo_small cacheKey];
-        }
-        
-        NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
-        
-        
-        NSImage *image = [TGCache cachedImage:p group:@[AVACACHE]];
-        
-        
-        
-        if(!image) {
+        if(![message.to_id isSecret] && ![TGPasslock isVisibility]) {
+            NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
             
-            NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
-            
-            
-            if(data.length > 0) {
-                image = [[NSImage alloc] initWithData:data];
-                
-                image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
-                
-                [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+            if(message.to_id.chat_id != 0) {
+                cacheKey = [chat.photo.photo_small cacheKey];
             }
             
-        }
-        
-        
-        if(!image) {
+            NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
             
-            p = [NSString stringWithFormat:@"notification_%d",chat ? chat.n_id : fromUser.n_id];
             
-            image = [TGCache cachedImage:p];
+            image = [TGCache cachedImage:p group:@[AVACACHE]];
+            
+            
             
             if(!image) {
-                int colorMask = [TMAvatarImageView colorMask:chat ? chat : fromUser];
                 
-                NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
+                NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
                 
-                image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30] offsetY:0];
                 
-                [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                if(data.length > 0) {
+                    image = [[NSImage alloc] initWithData:data];
+                    
+                    image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
+                    
+                    [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                }
+                
+            }
+            
+            
+            if(!image) {
+                
+                p = [NSString stringWithFormat:@"notification_%d",chat ? chat.n_id : fromUser.n_id];
+                
+                image = [TGCache cachedImage:p];
+                
+                if(!image) {
+                    int colorMask = [TMAvatarImageView colorMask:chat ? chat : fromUser];
+                    
+                    NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
+                    
+                    image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30] offsetY:0];
+                    
+                    [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                }
+                
             }
             
         }
+        
+        
         
         
         if(message.to_id.chat_id != 0) {
@@ -209,7 +217,7 @@
 }
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text {
-    if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
+    if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications] && ![TGPasslock isVisibility]) {
         NSUserNotification *notification = [[NSUserNotification alloc] init];
         notification.title = title;
         notification.informativeText = text;

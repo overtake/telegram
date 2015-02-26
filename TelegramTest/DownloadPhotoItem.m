@@ -32,7 +32,7 @@
 
 
 -(int)partSize {
-    return self.size == 0 ? 0 : 1024*64;
+    return self.size == 0 ? 0 : 1024*32;
 }
 
 -(TLInputFileLocation *)input {
