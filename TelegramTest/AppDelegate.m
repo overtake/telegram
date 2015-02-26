@@ -620,6 +620,8 @@ void exceptionHandler(NSException * exception)
     
     
     [TGPasslock appIncomeActive];
+    
+    [[Telegram rightViewController] becomeFirstResponder];
 }
 
 - (void) receiveSleepNote: (NSNotification*) note

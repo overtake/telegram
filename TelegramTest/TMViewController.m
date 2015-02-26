@@ -11,6 +11,7 @@
 #import "TMProgressModalView.h"
 #import "HackUtils.h"
 #import "TGPasslockModalView.h"
+#import "TGPasslock.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -203,6 +204,8 @@ static TGPasslockModalView *passlockView;
         [passlockView.layer pop_addAnimation:anim forKey:@"fade"];
     }
     
+    [TGPasslock setVisibility:YES];
+    
     
     [passlockView becomeFirstResponder];
 }
@@ -240,6 +243,8 @@ static TGPasslockModalView *passlockView;
 
 +(void)hidePasslock {
     
+    
+    
     assert([NSThread isMainThread]);
     
     passlockView.layer.opacity = 0.8;
@@ -253,6 +258,8 @@ static TGPasslockModalView *passlockView;
     }];
     
     [passlockView.layer pop_addAnimation:anim forKey:@"fade"];
+    
+    [TGPasslock setVisibility:NO];
 }
 
 -(void)showPasslock:(passlockCallback)callback {
@@ -269,7 +276,7 @@ static TGPasslockModalView *passlockView;
 }
 
 -(BOOL)becomeFirstResponder {
-    return [self.view becomeFirstResponder];
+    return [TGPasslock isVisibility] ? [passlockView becomeFirstResponder] : [self.view becomeFirstResponder];
 }
 
 - (void)loadView {

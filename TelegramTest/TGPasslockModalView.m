@@ -19,6 +19,8 @@
 @property (nonatomic,assign) int state;
 
 @property (nonatomic,strong) NSMutableArray *md5Hashs;
+
+@property (nonatomic,strong) BTRButton *enterButton;
 @end
 
 @implementation TGPasslockModalView
@@ -39,18 +41,26 @@
         
         self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         
+        TMView *containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+        
+        [containerView setCenterByView:self];
+        
+        [containerView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMaxYMargin];
+        
+        [self addSubview:containerView];
+        
         
         self.avatar = [TMAvatarImageView standartUserInfoAvatar];
         [self.avatar setFrameSize:NSMakeSize(100, 100)];
         
-        [self.avatar setAutoresizesSubviews:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMinYMargin];
+       
         
         
-        [self.avatar setCenterByView:self];
+        [self.avatar setCenterByView:containerView];
         
         [self.avatar setFrameOrigin:NSMakePoint(NSMinX(self.avatar.frame), NSMinY(self.avatar.frame) + 50)];
         
-        [self addSubview:self.avatar];
+        [containerView addSubview:self.avatar];
         
         
         [self.avatar setUser:[UsersManager currentUser]];
@@ -73,7 +83,7 @@
         
         [self.secureField setAlignment:NSLeftTextAlignment];
         
-        [self.secureField setCenterByView:self];
+        [self.secureField setCenterByView:containerView];
         
         [self.secureField setBordered:NO];
         [self.secureField setDrawsBackground:YES];
@@ -100,7 +110,7 @@
         [self.secureField setFrameOrigin:NSMakePoint(NSMinX(self.secureField.frame), NSMinY(self.avatar.frame) - 100)];
         
         
-        [self addSubview:self.secureField];
+        [containerView addSubview:self.secureField];
         
         
         self.descriptionField = [[TMNameTextField alloc] initWithFrame:NSZeroRect];
@@ -118,11 +128,11 @@
         
         [self.descriptionField sizeToFit];
         
-        [self.descriptionField setCenterByView:self];
+        [self.descriptionField setCenterByView:containerView];
         
         [self.descriptionField setFrameOrigin:NSMakePoint(NSMinX(self.descriptionField.frame), NSMinY(self.avatar.frame) - 40)];
         
-        [self addSubview:self.descriptionField];
+        [containerView addSubview:self.descriptionField];
         
         self.closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ClosePopupDialog().size.width, image_ClosePopupDialog().size.height)];
         
@@ -143,6 +153,24 @@
         } forControlEvents:BTRControlEventClick];
         
         [self addSubview:self.closeButton];
+        
+        
+        
+        self.enterButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_PasslockEnter().size.width, image_PasslockEnter().size.height)];
+        
+        [self.enterButton setImage:image_PasslockEnter() forControlState:BTRControlStateNormal];
+        [self.enterButton setImage:image_PasslockEnterHighlighted() forControlState:BTRControlStateHover];
+        
+        [self.enterButton addBlock:^(BTRControlEvents events) {
+            
+            [weakSelf checkPassword];
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        
+        [self.enterButton setFrameOrigin:NSMakePoint(NSMaxX(self.secureField.frame) + 20, NSMinY(self.secureField.frame) + 3)];
+        
+        [containerView addSubview:self.enterButton];
         
       //  [self updateDescription];
         

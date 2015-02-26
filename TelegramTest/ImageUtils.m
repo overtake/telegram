@@ -168,6 +168,9 @@ CACHE_IMAGE(ComposeCheckActive);
 CACHE_IMAGE(RemoveSticker);
 CACHE_IMAGE(RemoveStickerActive);
 
+CACHE_IMAGE(PasslockEnter);
+CACHE_IMAGE(PasslockEnterHighlighted);
+
 
 @implementation ImageUtils
 

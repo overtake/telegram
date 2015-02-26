@@ -65,6 +65,7 @@
 +(void)showBlockPasslock:(passlockCallback)callback;
 -(void)showBlockPasslock:(passlockCallback)callback;
 
+
 -(void)_didStackRemoved;
 
 -(BOOL)becomeFirstResponder;

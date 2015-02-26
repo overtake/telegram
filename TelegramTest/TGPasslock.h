@@ -20,6 +20,7 @@
 +(BOOL)isLocked;
 
 +(BOOL)isVisibility;
++(void)setVisibility:(BOOL)visibility;
 
 +(NSString *)autoLockDescription;
 

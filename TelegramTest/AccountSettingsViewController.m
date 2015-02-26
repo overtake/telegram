@@ -25,7 +25,7 @@
     [super drawRect:dirtyRect];
     
     [DIALOG_BORDER_COLOR setFill];
-    NSRectFill(NSMakeRect(NSMaxX(dirtyRect), 0, DIALOG_BORDER_WIDTH, NSHeight(dirtyRect)));
+ //   NSRectFill(NSMakeRect(NSMaxX(dirtyRect), 0, DIALOG_BORDER_WIDTH, NSHeight(dirtyRect)));
 }
 
 
@@ -45,7 +45,7 @@
     if(self.drawBlock)
         self.drawBlock();
     
-   // NSRectFill(NSMakeRect(0, 0, NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, NSHeight(self.bounds)));
+    NSRectFill(NSMakeRect(0, 0, NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, NSHeight(self.bounds)));
 }
 
 @end
@@ -141,6 +141,15 @@ typedef enum {
     topContainer.autoresizingMask = NSViewWidthSizable;
     
     
+    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(topContainer.frame), 1)];
+    
+    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    
+    separator.autoresizingMask = NSViewHeightSizable | NSViewMinXMargin;
+    
+    [topContainer addSubview:separator];
+    
+    
     TMTextField *header = [TMTextField defaultTextField];
     
     [header setStringValue:NSLocalizedString(@"Settings", nil)];
@@ -201,7 +210,7 @@ typedef enum {
     [self.view addSubview:topContainer];
     
 
-    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 48, NSWidth(self.frameInit), NSHeight(self.frameInit) - 48)];
+    self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 48, NSWidth(self.frameInit)- DIALOG_BORDER_WIDTH, NSHeight(self.frameInit) - 48)];
     
     self.scrollView.autoresizesSubviews = YES;
     self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -212,14 +221,7 @@ typedef enum {
     
     FlippedView *container = [[FlippedView alloc] initWithFrame:self.scrollView.bounds];
     
-    
-    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(NSWidth(self.scrollView.frame) - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(self.scrollView.frame))];
-    
-    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
-    
-    separator.autoresizingMask = NSViewHeightSizable | NSViewMinXMargin;
-    
-    [container addSubview:separator];
+
     
     
     [container setAutoresizingMask:NSViewWidthSizable ];

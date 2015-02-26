@@ -12,6 +12,7 @@
 @interface TGPasslock ()
 @property (nonatomic,strong) TGTimer *lockTimer;
 @property (nonatomic,assign) int saveTime;
+@property (nonatomic,assign) BOOL visibility;
 @end
 
 @implementation TGPasslock
@@ -148,15 +149,12 @@
     return NSLocalizedString(key, nil);
 }
 
++(void)setVisibility:(BOOL)visibility {
+    [[self instance] setVisibility:visibility];
+}
+
 +(BOOL)isVisibility {
-    
-    __block BOOL result = NO;
-    
-//    [ASQueue dispatchOnMainQueue:^{
-//        result = [HackUtils findElementsByClass:@"TGPasslockModalView" inView:[[(AppDelegate *)[NSApp delegate] mainWindow] contentView]].count == 1;
-//    } synchronous:YES];
-    
-    return result;
+    return [[self instance] visibility];
 }
 
 +(BOOL)isLocked {
