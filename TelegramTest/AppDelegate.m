@@ -675,11 +675,12 @@ void exceptionHandler(NSException * exception)
     
     if([TGPasslock isEnabled]) {
         
-        [TMViewController showBlockPasslock:^(BOOL result, NSString *md5Hash) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
             
+            [TMViewController showBlockPasslock:nil];
             
-            
-        }];
+        });
         
         return;
     }

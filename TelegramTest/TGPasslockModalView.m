@@ -141,6 +141,7 @@
         
         [self.closeButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(self.closeButton.frame) - 20, NSHeight(self.frame) - NSHeight(self.closeButton.frame) - 20)];
         
+        [self.closeButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
         
         weak();
         

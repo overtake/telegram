@@ -133,7 +133,7 @@ typedef enum {
     
     self.view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
-    TMView *topContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, 47)];
+    TMView *topContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, 48)];
     
     topContainer.backgroundColor = [NSColor whiteColor];
     
