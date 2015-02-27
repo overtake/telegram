@@ -38,9 +38,11 @@
             return [@(obj1.n_id) compare:@(obj2.n_id)];
         }];
         
-        long random = rand_long();
+        
         
         for (int i = 0; i < copy.count; i++) {
+            
+            long random = rand_long();
             
             TLMessage *f = copy[i];
             
@@ -80,7 +82,13 @@
         return;
     }
     
-    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.conversation.inputPeer n_id:[self.msg_ids mutableCopy]];
+    NSMutableArray *random_ids = [[NSMutableArray alloc] init];
+    
+    [self.fakes enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessageForwarded  *obj, NSUInteger idx, BOOL *stop) {
+        [random_ids addObject:@(obj.randomId)];
+    }];
+    
+    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.conversation.inputPeer n_id:[self.msg_ids mutableCopy] random_id:random_ids];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessages *response) {
         

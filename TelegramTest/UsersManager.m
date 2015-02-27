@@ -156,7 +156,6 @@
                 }
                 
                 currentUser.access_hash = newUser.access_hash;
-                currentUser.inactive = newUser.inactive;
                 
                 if(!currentUser.phone || !currentUser.phone.length)
                     currentUser.phone = newUser.phone;

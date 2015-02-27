@@ -10,12 +10,13 @@
 
 @implementation TGUpdateContainer
 
--(id)initWithSequence:(int)seq pts:(int)pts date:(int)date qts:(int)qts update:(id)update {
+-(id)initWithSequence:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count update:(id)update {
     if(self = [super init]) {
         self.beginSeq = seq;
         self.pts = pts;
         self.date = date;
         self.qts = qts;
+        self.pts_count = pts_count;
         self.update = update;
     }
     return self;

@@ -106,7 +106,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t118"; // 61
+    NSString *dbName = @"t120"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -140,7 +140,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         
-        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer)"];
+        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer, pts_count integer)"];
         
         
         
@@ -248,7 +248,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select * from update_state limit 1"];
         
         if([result next]) {
-            state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"]];
+            state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"] pts_count:[result intForColumn:@"pts_count"]];
         }
         
         [db commit];
@@ -264,7 +264,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"delete from update_state where 1=1"];
         
-        [db executeUpdate:@"insert into update_state (pts, qts, date, seq) values (?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq)];
+        [db executeUpdate:@"insert into update_state (pts, qts, date, seq,pts_count) values (?,?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
     }];
 }
 

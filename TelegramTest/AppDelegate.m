@@ -672,19 +672,7 @@ void exceptionHandler(NSException * exception)
     
     
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
-    
-    if([TGPasslock isEnabled]) {
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [TMViewController showBlockPasslock:nil];
-            
-        });
-        
-        return;
-    }
-    
+
 }
 
 - (void)initializeLoginWindow {

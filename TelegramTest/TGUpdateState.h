@@ -13,8 +13,9 @@
 @property (nonatomic,assign) int qts;
 @property (nonatomic,assign) int date;
 @property (nonatomic,assign) int seq;
+@property (nonatomic,assign) int pts_count;
 
 @property (nonatomic,assign) BOOL checkMinimum;
 
--(id)initWithPts:(int)pts qts:(int)qts date:(int)date seq:(int)seq;
+-(id)initWithPts:(int)pts qts:(int)qts date:(int)date seq:(int)seq pts_count:(int)pts_count;
 @end

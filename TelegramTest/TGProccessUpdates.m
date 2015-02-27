@@ -51,7 +51,7 @@ static NSString *kUpdateState = @"kUpdateState";
 - (void)resetStateAndSync {
     
     [ASQueue dispatchOnStageQueue:^{
-        _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1];
+        _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         
         [self saveUpdateState];
         
@@ -74,7 +74,7 @@ static NSString *kUpdateState = @"kUpdateState";
     int statePts = 0;
     int stateDate = 0;
     int stateQts = 0;
-    
+    int statePts_count = 0;
     
     for(TLUpdate *update in updates) {
         if ([update date] > stateDate)
@@ -87,12 +87,15 @@ static NSString *kUpdateState = @"kUpdateState";
             int updatePts = [update pts];
             if (updatePts > statePts)
                 statePts = updatePts;
+            int updatePts_count = [update pts_count];
+            if (updatePts_count > statePts_count)
+                statePts_count = updatePts_count;
         }
         
     }
     
    
-    [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts];
+    [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts pts_count:statePts_count];
     
     
 }
@@ -107,7 +110,7 @@ static NSString *kUpdateState = @"kUpdateState";
        [update isKindOfClass:[TL_messages_sentMessage class]] ||
        [update isKindOfClass:[TL_messages_affectedHistory class]]) {
                 
-        [self addStatefullUpdate:update seq:[update seq] pts:[update pts] date:0 qts:0];
+        [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
         
         
     }
@@ -147,7 +150,7 @@ static NSString *kUpdateState = @"kUpdateState";
             [self failSequence];
             return;
         }
-        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
+        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
         
     }
     
@@ -157,7 +160,7 @@ static NSString *kUpdateState = @"kUpdateState";
             [self failSequence];
             return;
         }
-        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
+        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
         
     }
     
@@ -172,12 +175,12 @@ static NSString *kUpdateState = @"kUpdateState";
     
 }
 
--(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts {
+-(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count {
     
-    TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts update:update];
+    TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
-    if(_updateState.seq+1 == statefulMessage.beginSeq && !_holdUpdates) {
+    if(_updateState.pts + statefulMessage.pts_count == statefulMessage.pts && !_holdUpdates) {
         [self proccessStatefulMessage:statefulMessage needSave:YES];
         return;
     }
@@ -217,7 +220,7 @@ static NSString *kUpdateState = @"kUpdateState";
     NSMutableArray *successful = [[NSMutableArray alloc] init];
     
     
-    if(_updateState.seq+1 != [_statefulUpdates[0] beginSeq])
+    if(_updateState.pts + [_statefulUpdates[0] pts_count] != [_statefulUpdates[0] pts] )
         return;
     
     
@@ -315,6 +318,7 @@ static NSString *kUpdateState = @"kUpdateState";
 
 
 -(void)updateShort:(TL_updateShort *)shortUpdate {
+    
     _updateState.date = [shortUpdate date];
     [self saveUpdateState];
     
@@ -339,6 +343,16 @@ static NSString *kUpdateState = @"kUpdateState";
         }
         
         [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
+        [[DialogsManager sharedManager] markAllMessagesAsRead:[[DialogsManager sharedManager] find:update.peer.peer_id]];
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
+        [[DialogsManager sharedManager] markAllMessagesAsRead:[[DialogsManager sharedManager] find:update.peer.peer_id]];
         return;
     }
     
@@ -399,10 +413,10 @@ static NSString *kUpdateState = @"kUpdateState";
         
         TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
         
-        TL_conversation *dialog = [[DialogsManager sharedManager] find:notifyUpdate.peer.peer.peer_id];
+        TL_conversation *dialog = [[DialogsManager sharedManager] find:notifyUpdate.peer.peer_id];
         
         if(!dialog) {
-            dialog = [[Storage manager] selectConversation:notifyUpdate.peer.peer];
+            dialog = [[Storage manager] selectConversation:notifyUpdate.peer];
         }
         
         if(dialog) {
@@ -434,7 +448,7 @@ static NSString *kUpdateState = @"kUpdateState";
         if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]]) {
             isContact = YES;
         } else if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkRequested class]]) {
-            isContact = contactLink.my_link.contact;
+            isContact = [contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]];
         }
         
         DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
@@ -642,7 +656,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
-            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq];
+            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
 
             [self saveUpdateState];
             
@@ -681,9 +695,7 @@ static NSString *kUpdateState = @"kUpdateState";
         int stateQts = _updateState.qts;
         int statePts = _updateState.pts;
         int stateDate = _updateState.date;
-        int stateSeq = _updateState.seq;
-        
-        
+        int stateSeq = _updateState.seq;        
         
         if([response isKindOfClass:[TL_updates_difference class]]) {
             stateQts = [[updates state] qts];

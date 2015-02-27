@@ -510,7 +510,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         case TLUserTypeRequest:
             return [TL_userRequest createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username access_hash:self.access_hash phone:self.phone photo:self.photo status:self.status];
         case TLUserTypeSelf:
-            return [TL_userSelf createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username phone:self.phone photo:self.photo status:self.status inactive:self.inactive];
+            return [TL_userSelf createWithN_id:self.n_id first_name:self.first_name last_name:self.last_name username:self.username phone:self.phone photo:self.photo status:self.status];
         default:
             return [TL_userEmpty createWithN_id:self.n_id];
             break;

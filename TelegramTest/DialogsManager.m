@@ -387,6 +387,10 @@
     [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
 }
 
+- (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id {
+    
+}
+
 - (void)insertDialog:(TL_conversation *)dialog {
     [self add:[NSArray arrayWithObject:dialog]];
     [dialog save];
