@@ -66,7 +66,7 @@
         [self.avatar setUser:[UsersManager currentUser]];
         
         
-        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 150, 30)];
+        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 180, 30)];
         
         
         NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];

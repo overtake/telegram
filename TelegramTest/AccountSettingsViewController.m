@@ -409,54 +409,59 @@ typedef enum {
     
     int defaultY = state == AccountSettingsStateNormal ? 98 : 108;
     
-    POPBasicAnimation *move = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-    move.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    move.toValue = @(defaultY);
-    move.duration = duration;
-    
-    [move setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-        [self.defaultView setFrameOrigin:NSMakePoint(0, defaultY)];
-    }];
-    
-    
-    [self.defaultView.layer pop_addAnimation:move forKey:@"slide"];
-    
-    float opacity = state == AccountSettingsStateNormal ? 0 : 1;
-    
-    
-    if(state == AccountSettingsStateEditable) {
-          [self.editView setHidden:NO];
+    if(animated)
+    {POPBasicAnimation *move = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
+        move.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        move.toValue = @(defaultY);
+        move.duration = duration;
+        
+        [move setCompletionBlock:^(POPAnimation *anim, BOOL result) {
+            [self.defaultView setFrameOrigin:NSMakePoint(0, defaultY)];
+        }];
+        
+        
+        [self.defaultView.layer pop_addAnimation:move forKey:@"slide"];
+        
+        float opacity = state == AccountSettingsStateNormal ? 0 : 1;
+        
+        
+        if(state == AccountSettingsStateEditable) {
+            [self.editView setHidden:NO];
+        }
+        
+        POPBasicAnimation *fadeEdit = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        fadeEdit.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        fadeEdit.toValue = @(opacity);
+        fadeEdit.duration = duration;
+        
+        [fadeEdit setCompletionBlock:^(POPAnimation *anim, BOOL result) {
+            [self.editView setHidden:state == AccountSettingsStateNormal ? YES : NO];
+            [self.firstNameView.textView becomeFirstResponder];
+            [self.firstNameView.textView setSelectionRange:NSMakeRange(self.firstNameView.textView.stringValue.length, 0)];
+        }];
+        
+        
+        [self.editView.layer pop_addAnimation:fadeEdit forKey:@"opacity"];
+        
+        
+        
+        POPBasicAnimation *nameFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        nameFade.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        nameFade.toValue = @(state == AccountSettingsStateNormal ? 1 : 0);
+        nameFade.duration = duration;
+        
+        [nameFade setCompletionBlock:^(POPAnimation *anim, BOOL result) {
+            // [self.nameTextField setHidden:state == AccountSettingsStateNormal ? NO : YES];
+        }];
+        
+        
+        [self.nameTextField.layer pop_addAnimation:nameFade forKey:@"opacity"];
+        
+        [self.statusTextField.layer pop_addAnimation:nameFade forKey:@"opacity"];
+
+        
     }
     
-    POPBasicAnimation *fadeEdit = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    fadeEdit.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    fadeEdit.toValue = @(opacity);
-    fadeEdit.duration = duration;
-    
-    [fadeEdit setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-        [self.editView setHidden:state == AccountSettingsStateNormal ? YES : NO];
-        [self.firstNameView.textView becomeFirstResponder];
-        [self.firstNameView.textView setSelectionRange:NSMakeRange(self.firstNameView.textView.stringValue.length, 0)];
-    }];
-    
-    
-    [self.editView.layer pop_addAnimation:fadeEdit forKey:@"opacity"];
-    
-    
-    
-    POPBasicAnimation *nameFade = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    nameFade.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    nameFade.toValue = @(state == AccountSettingsStateNormal ? 1 : 0);
-    nameFade.duration = duration;
-    
-    [nameFade setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-       // [self.nameTextField setHidden:state == AccountSettingsStateNormal ? NO : YES];
-    }];
-    
-    
-    [self.nameTextField.layer pop_addAnimation:nameFade forKey:@"opacity"];
-    
-    [self.statusTextField.layer pop_addAnimation:nameFade forKey:@"opacity"];
     
     
     [self.editButton setStringValue:state == AccountSettingsStateNormal ? NSLocalizedString(@"Profile.Edit",nil) : NSLocalizedString(@"Profile.Done",nil)];
@@ -879,10 +884,14 @@ typedef enum {
     [super viewWillAppear:animated];
     [self updateUserName];
     
+   
+    
     [[TGPhotoViewer viewer] prepareUser:[UsersManager currentUser]];
    // [[TMMediaUserPictureController controller] prepare:[UsersManager currentUser] completionHandler:nil];
     
     [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
+    
+    [self setState:AccountSettingsStateNormal animated:NO];
 }
 
 @end

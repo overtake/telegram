@@ -348,10 +348,6 @@
 		C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F711965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m */; };
 		C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F741966C15800F7D7A2 /* ViewAcceptMoveWindow.m */; };
 		C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */ = {isa = PBXBuildFile; fileRef = C2544E891A8128A8006E44DF /* TGSharedMediaCap.m */; };
-		C2544E971A88D818006E44DF /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2544E981A88D818006E44DF /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2544E991A88D81D006E44DF /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2544E9A1A88D81D006E44DF /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E8F718D0A70B008FFA04 /* TMPreviewUserPicture.m */; };
 		C256E8FB18D0A742008FFA04 /* TMMediaUserPictureController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C256E8FA18D0A742008FFA04 /* TMMediaUserPictureController.mm */; };
 		C256E90218D1E185008FFA04 /* TMCircularProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E90118D1E185008FFA04 /* TMCircularProgress.m */; };
@@ -460,6 +456,12 @@
 		C2967B161A9B59D2003759B2 /* TGPasslockModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B151A9B59D2003759B2 /* TGPasslockModalView.m */; };
 		C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B181A9B75B4003759B2 /* TGPasslock.m */; };
 		C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */; };
+		C2967B1F1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B1E1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.m */; };
+		C2967B221AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B211AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.m */; };
+		C2967B231AA0E2AF003759B2 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2967B241AA0E2AF003759B2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2967B251AA0E2B1003759B2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2967B261AA0E2B1003759B2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -706,8 +708,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C2544E971A88D818006E44DF /* Sparkle.framework in Copy Files (6 items) */,
-				C2544E981A88D818006E44DF /* HockeySDK.framework in Copy Files (6 items) */,
+				C2967B231AA0E2AF003759B2 /* Sparkle.framework in Copy Files (6 items) */,
+				C2967B241AA0E2AF003759B2 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1659,6 +1661,10 @@
 		C2967B181A9B75B4003759B2 /* TGPasslock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasslock.m; sourceTree = "<group>"; };
 		C2967B1A1A9B9710003759B2 /* TGPasscodeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasscodeSettingsViewController.h; sourceTree = "<group>"; };
 		C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasscodeSettingsViewController.m; sourceTree = "<group>"; };
+		C2967B1D1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsDescriptionRowView.h; sourceTree = "<group>"; };
+		C2967B1E1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralSettingsDescriptionRowView.m; sourceTree = "<group>"; };
+		C2967B201AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsDescriptionRowItem.h; sourceTree = "<group>"; };
+		C2967B211AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralSettingsDescriptionRowItem.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -2123,8 +2129,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2544E991A88D81D006E44DF /* Sparkle.framework in Frameworks */,
-				C2544E9A1A88D81D006E44DF /* HockeySDK.framework in Frameworks */,
+				C2967B251AA0E2B1003759B2 /* Sparkle.framework in Frameworks */,
+				C2967B261AA0E2B1003759B2 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3619,6 +3625,10 @@
 				C297955719EC29EA00BE893E /* GeneralSettingsRowView.m */,
 				C297955919EC36F100BE893E /* GeneralSettingsBlockHeaderView.h */,
 				C297955A19EC36F100BE893E /* GeneralSettingsBlockHeaderView.m */,
+				C2967B1D1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.h */,
+				C2967B1E1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.m */,
+				C2967B201AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.h */,
+				C2967B211AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.m */,
 			);
 			name = general;
 			sourceTree = "<group>";
@@ -5086,6 +5096,7 @@
 				0AB43BAB18D4F1FF00FB805A /* TMImagePicker.m in Sources */,
 				C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */,
 				CEDAEB541881AF85006189A2 /* YapDatabaseFullTextSearchConnection.m in Sources */,
+				C2967B1F1AA0E088003759B2 /* GeneralSettingsDescriptionRowView.m in Sources */,
 				C26F7EC91A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m in Sources */,
 				C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */,
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
@@ -5449,6 +5460,7 @@
 				CEB7AE0818143E35005CB6A1 /* MessageSender.m in Sources */,
 				CE8454911822EE2000E73DF7 /* ChatsManager.m in Sources */,
 				C268C19519F0519C007F836A /* POPVector.mm in Sources */,
+				C2967B221AA0E09C003759B2 /* GeneralSettingsDescriptionRowItem.m in Sources */,
 				0A6758981894367E00F4487D /* TMStandartImages.m in Sources */,
 				C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */,
 				C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */,

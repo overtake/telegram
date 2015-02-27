@@ -11,6 +11,8 @@
 #import "GeneralSettingsBlockHeaderView.h"
 #import "GeneralSettingsRowItem.h"
 #import "TGPasslock.h"
+#import "GeneralSettingsDescriptionRowItem.h"
+#import "GeneralSettingsDescriptionRowView.h"
 @interface TGPasscodeSettingsViewController ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TMTableView *tableView;
@@ -92,7 +94,25 @@
         return @(NO);
     }];
     
+    
+    
+    
     [self.tableView insert:turnPasscode atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
+    
+    NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
+    
+    [attrs appendString:NSLocalizedString(@"Passcode.TurnDescription", nil) withColor:NSColorFromRGB(0x909090)];
+    
+    [attrs setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, attrs.string.length)];
+    
+    GeneralSettingsDescriptionRowItem *desc = [[GeneralSettingsDescriptionRowItem alloc] initWithObject:attrs];
+    
+    
+    [self.tableView insert:desc atIndex:self.tableView.list.count tableRedraw:NO];
+
     
     
     if([TGPasslock isEnabled]) {
@@ -186,6 +206,10 @@
     
     if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
         return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowViewClass"];
+    }
+    
+    if([item isKindOfClass:[GeneralSettingsDescriptionRowItem class]]) {
+        return [self.tableView cacheViewForClass:[GeneralSettingsDescriptionRowView class] identifier:@"GeneralSettingsDescriptionRowViewClass"];
     }
     
     return nil;
