@@ -15,7 +15,7 @@
     if(self = [super initWithObject:object]) {
         self.attributedString = object;
         
-        self.height = 60;
+        self.height = 80;
     }
     
     return self;

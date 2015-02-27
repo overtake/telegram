@@ -38,9 +38,8 @@
     GeneralSettingsDescriptionRowItem *item = (GeneralSettingsDescriptionRowItem *) [self rowItem];
     
     [self.descriptionField setAttributedStringValue:item.attributedString];
-
     
-    [self.descriptionField setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame) - 200, 60)];
+    [self.descriptionField setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame) - 200, item.height)];
     
     
     [self.descriptionField setFrameOrigin:NSMakePoint(100, 0)];
@@ -48,7 +47,8 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    [self.descriptionField setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame) - 200, 60)];
+    GeneralSettingsDescriptionRowItem *item = (GeneralSettingsDescriptionRowItem *) [self rowItem];
+    [self.descriptionField setFrameSize:NSMakeSize(NSWidth([Telegram rightViewController].view.frame) - 200, item.height)];
 }
 
 @end
