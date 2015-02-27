@@ -536,7 +536,8 @@ static TMTableView *tableStatic;
     [cell setRow:row];
     [cell setHover:row == self.mouseOverRow redraw:NO];
     [cell setItem:item selected:item.hash == self.listSelectedElementHash ? YES : NO];
-
+    [item setTable:self];
+    
     return cell;
 }
 

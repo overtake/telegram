@@ -66,7 +66,7 @@
         [self.avatar setUser:[UsersManager currentUser]];
         
         
-        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 30)];
+        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 150, 30)];
         
         
         NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
@@ -104,8 +104,8 @@
         [self.secureField setAction:@selector(checkPassword)];
         [self.secureField setTarget:self];
         
-        [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:16]];
-        [self.secureField setTextColor:NSColorFromRGB(0xc8c8c8)];
+        [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.secureField setTextColor:DARK_BLACK];
         
         [self.secureField setFrameOrigin:NSMakePoint(NSMinX(self.secureField.frame), NSMinY(self.avatar.frame) - 100)];
         
@@ -185,17 +185,10 @@
                         @(TGPassLockViewChangeType):@[NSLocalizedString(@"Passcode.EnterYourOldPasscode", nil),NSLocalizedString(@"Passcode.EnterYourNewPasscode", nil),NSLocalizedString(@"Passcode.ReEnterYourPasscode", nil)],
                         @(TGPassLockViewConfirmType):@[NSLocalizedString(@"Passcode.EnterYourPasscode", nil)]};
     
-   
     
-    NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
+    [self.secureField setPlaceholderString:d[@(_type)][_state]];
     
-    [attrs appendString:d[@(_type)][_state] withColor:NSColorFromRGB(0xc8c8c8)];
     
-    [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
-    
-    [attrs setAlignment:NSLeftTextAlignment range:attrs.range];
-    
-    [[self.secureField cell] setPlaceholderAttributedString:attrs];
 }
 
 
@@ -205,14 +198,13 @@
     
     NSBeep();
     
-    __block NSRange selectionRange = self.secureField.selectedRange;
     [self.secureField prepareForAnimation];
     
     [CATransaction begin];
     [CATransaction setCompletionBlock:^{
         [self.secureField setWantsLayer:NO];
         [self.secureField.window makeFirstResponder:self.secureField];
-        [self.secureField setSelectionRange:selectionRange];
+        [self.secureField setSelectionRange:NSMakeRange(0, self.secureField.stringValue.length)];
     }];
     
     [self.secureField setAnimation:[TMAnimations shakeWithDuration:duration fromValue:CGPointMake(-a + self.secureField.layer.position.x, self.secureField.layer.position.y) toValue:CGPointMake(a + self.secureField.layer.position.x, self.secureField.layer.position.y)] forKey:@"position"];

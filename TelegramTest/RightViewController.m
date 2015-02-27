@@ -284,17 +284,25 @@
     }
     
     if(self.modalView == [self shareContactModalView]) {
-        TLUser *modalObject = self.modalObject;
         
-        if(modalObject && modalObject.phone) {
+        
+        confirm(NSLocalizedString(@"Alert.Share", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ShareTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
             
-            [self.messagesViewController shareContact:modalObject conversation:dialog callback:^{
-                [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-            }];
+            TLUser *modalObject = self.modalObject;
             
-           
-            //[MessageSender shareContact:media dialog:dialog];
-        }
+            if(modalObject && modalObject.phone) {
+                
+                [self.messagesViewController shareContact:modalObject conversation:dialog callback:^{
+                    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                }];
+                
+            }
+            
+        }, ^{
+            
+        });
+        
+        
         
         
     } else {

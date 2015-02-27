@@ -8,7 +8,7 @@
 
 #import "NSString+Extended.h"
 
-
+#import "NSString+FindURLs.h"
 
 @implementation NSString (Extended)
 
@@ -947,8 +947,34 @@
     });
     
     __block NSString *text = self;
+    
+    NSArray *links = [self locationsOfLinks];
+    
+    
     [replaces enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        text = [text stringByReplacingOccurrencesOfString:key withString:obj];
+        
+        [links enumerateObjectsUsingBlock:^(id linkObj, NSUInteger linkIdx, BOOL *linkStop) {
+            
+            NSRange range = [linkObj range];
+            
+            NSRange emojiRange;
+            
+            NSRange nextRange = NSMakeRange(0, text.length);
+            
+            while ((emojiRange = [text rangeOfString:key options:0 range:nextRange]).location != NSNotFound) {
+                
+                if(!(range.location <= emojiRange.location && (range.location+range.length) > (emojiRange.location + emojiRange.length))) {
+                    text = [text stringByReplacingCharactersInRange:emojiRange withString:obj];
+                }
+                
+                nextRange = NSMakeRange(emojiRange.location + emojiRange.length, text.length - emojiRange.location - emojiRange.length);
+                
+            }
+            
+            
+        }];
+        
+       
     }];
     
     return text;

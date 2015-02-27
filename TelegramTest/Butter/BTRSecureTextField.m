@@ -190,8 +190,8 @@ static CGFloat const BTRTextFieldXInset = 5.f;
 
 
 -(void)textDidChange:(NSNotification *)notification {
-    if(self.stringValue.length > 33) {
-        [self setStringValue:[self.stringValue substringWithRange:NSMakeRange(0, 33)]];
+    if(self.stringValue.length > 31) {
+        [self setStringValue:[self.stringValue substringWithRange:NSMakeRange(0, 31)]];
         NSBeep();
     }
 }

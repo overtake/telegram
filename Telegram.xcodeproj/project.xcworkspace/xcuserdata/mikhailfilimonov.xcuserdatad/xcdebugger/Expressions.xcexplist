@@ -771,6 +771,9 @@
          contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "[UsersManager currentUser]">
+            </PersistentString>
+            <PersistentString
                value = "[UsersManager currentUser].photo">
             </PersistentString>
          </PersistentStrings>
@@ -1808,9 +1811,6 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__37-[TGAllStickersTableView reloadData:]_block_invoke:TGAllStickersTableView.m">

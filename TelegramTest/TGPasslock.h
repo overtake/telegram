@@ -27,4 +27,6 @@
 +(void)appIncomeActive;
 +(void)appResignActive;
 
++(void)forceDisable;
+
 @end

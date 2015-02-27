@@ -721,6 +721,9 @@ void exceptionHandler(NSException * exception)
     
     dispatch_block_t block = ^ {
         
+        [TGPasslock forceDisable];
+        
+        
         [TMViewController hideModalProgress];
         
         [[Storage manager] drop:^{

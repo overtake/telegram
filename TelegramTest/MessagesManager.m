@@ -167,7 +167,8 @@
         
         if(message.to_id.chat_id != 0) {
             if(![message.to_id isSecret]) {
-                subTitle = title;
+                if(![TGPasslock isVisibility])
+                    subTitle = title;
                 title = [chat title];
             } else {
                 title = message.conversation.encryptedChat.peerUser.fullName;

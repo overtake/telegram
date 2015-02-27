@@ -77,6 +77,10 @@
 }
 
 
++(void)forceDisable {
+    [[NSFileManager defaultManager] removeItemAtPath:[TGPasslock path] error:nil];
+}
+
 -(void)updateTimer {
     
     [self invalidateTimer];
