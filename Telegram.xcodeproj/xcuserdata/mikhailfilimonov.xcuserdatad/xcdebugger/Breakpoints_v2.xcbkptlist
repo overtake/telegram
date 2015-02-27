@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/UsersManager.m"
-            timestampString = "446487831.107982"
+            timestampString = "446740037.362918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "341"
-            endingLineNumber = "341"
+            startingLineNumber = "340"
+            endingLineNumber = "340"
             landmarkName = "-updateAccountPhoto:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/UsersManager.m"
-            timestampString = "446487855.192136"
+            timestampString = "446740037.362918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
             landmarkName = "-updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
          </BreakpointContent>

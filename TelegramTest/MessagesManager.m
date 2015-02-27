@@ -170,9 +170,7 @@
                 if(![TGPasslock isVisibility])
                     subTitle = title;
                 title = [chat title];
-            } else {
-                title = message.conversation.encryptedChat.peerUser.fullName;
-            }
+            } 
         }
         
         
