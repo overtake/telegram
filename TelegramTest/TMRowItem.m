@@ -22,8 +22,14 @@
             if(pos != NSNotFound && pos != -1) {
                 NSTableRowView *cellView = [table rowViewAtRow:pos makeIfNecessary:NO];
                 if(cellView && cellView.subviews.count) {
-                    DLog(@"find row");
-                    self.rowDelegate = [cellView.subviews objectAtIndex:0];
+                    [cellView.subviews enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
+                        
+                        if(obj.class != NSView.class) {
+                            self.rowDelegate = (id) obj;
+                            *stop = YES;
+                        }
+                        
+                    }];
                 }
             }
         }

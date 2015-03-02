@@ -35,6 +35,8 @@ DYNAMIC_PROPERTY(DType);
 
 - (TLUserType)rebuildType {
     int type;
+    
+    
     if([self isKindOfClass:[TL_userContact class]])
         type = TLUserTypeContact;
     else if([self isKindOfClass:[TL_userDeleted class]])

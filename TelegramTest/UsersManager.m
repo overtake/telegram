@@ -118,6 +118,8 @@
         for (TLUser *newUser in all) {
             TLUser *currentUser = [keys objectForKey:[newUser valueForKey:key]];
             
+            
+            
             BOOL needUpdateUserInDB = NO;
             if(currentUser) {
                 BOOL isNeedRebuildNames = NO;
@@ -209,6 +211,8 @@
                 [usersToUpdate addObject:newUser];
             }
         }
+        
+        
         
         if(usersToUpdate.count)
             [[Storage manager] insertUsers:usersToUpdate completeHandler:nil];
