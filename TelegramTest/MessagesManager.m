@@ -104,9 +104,7 @@
             msg = [MessagesUtils mediaMessage:message];
         }
         
-        if([message.to_id isSecret] || [TGPasslock isVisibility])
-            msg = NSLocalizedString(@"Notification.SecretMessage", nil);
-        
+
         NSString *subTitle;
         
         
@@ -167,8 +165,7 @@
         
         if(message.to_id.chat_id != 0) {
             if(![message.to_id isSecret]) {
-                if(![TGPasslock isVisibility])
-                    subTitle = title;
+                subTitle = title;
                 title = [chat title];
             } 
         }
@@ -177,6 +174,13 @@
         
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
+            
+            if([TGPasslock isVisibility] || [message.to_id isSecret])
+            {
+                title = nil;
+                subTitle = nil;
+                msg = NSLocalizedString(@"Notification.SecretMessage", nil);
+            }
             
             
             NSUserNotification *notification = [[NSUserNotification alloc] init];

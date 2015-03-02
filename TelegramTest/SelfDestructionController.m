@@ -114,7 +114,7 @@
             if(n_id > TGMINSECRETID) {
                 TL_destructMessage *message = [(MessagesManager *)[MessagesManager sharedManager] find:n_id];
                 
-                if(message.params.layer > 1 && [message.media isKindOfClass:[TL_messageMediaPhoto class]] && [message n_out] && message.ttl_seconds <  60*60)
+                if([message isKindOfClass:[TL_destructMessage class]] && message.params.layer > 1 && [message.media isKindOfClass:[TL_messageMediaPhoto class]] && [message n_out] && message.ttl_seconds <  60*60)
                     continue;
                 
                 if(message.ttl_seconds != 0) {

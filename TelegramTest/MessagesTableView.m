@@ -215,28 +215,28 @@
 -(void)checkAndScroll:(NSPoint)point {
     
 //    
-    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
-    
-    
-    NSPoint botCorner = NSMakePoint(0, 70);
-    
-    int counter = 0;
-    
-    BOOL next = YES;
-    
-    if(point.y > topCorner.y) {
-        
-        counter = abs(point.y - topCorner.y - 20);
-        
-        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
-        
-    } else if(point.y < botCorner.y) {
-        
-        counter = abs(point.y - botCorner.y - 20);
-        
-       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
-    } else
-        next = NO;
+//    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
+//    
+//    
+//    NSPoint botCorner = NSMakePoint(0, 70);
+//    
+//    int counter = 0;
+//    
+//    BOOL next = YES;
+//    
+//    if(point.y > topCorner.y) {
+//        
+//        counter = abs(point.y - topCorner.y - 20);
+//        
+//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+//        
+//    } else if(point.y < botCorner.y) {
+//        
+//        counter = abs(point.y - botCorner.y - 20);
+//        
+//       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+//    } else
+//        next = NO;
     
 }
 

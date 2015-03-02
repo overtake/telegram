@@ -90,7 +90,7 @@ NSImage *fireImage() {
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
         
-        [self.imageView setContentMode:BTRViewContentModeCenter];
+      //  [self.imageView setContentMode:BTRViewContentMode];
         
         
         
