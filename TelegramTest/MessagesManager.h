@@ -18,6 +18,8 @@
 -(void)TGsetMessage:(TLMessage *)message;
 
 -(NSArray *)markAllInDialog:(TLDialog*)dialog;
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
+
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
 +(void)statedMessage:(TL_messages_statedMessage*)response;
 +(void)addAndUpdateMessage:(TL_localMessage *)message;

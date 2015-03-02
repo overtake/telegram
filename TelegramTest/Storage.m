@@ -106,7 +106,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t120"; // 61
+    NSString *dbName = @"t121"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -602,6 +602,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
         //[db commit];
 
+    }];
+}
+
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+    [queue inDatabase:^(FMDatabase *db) {
+        //[db beginTransaction];
+        [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ? and n_id <= ?",@(conversation.peer.peer_id),@(max_id)];
+        //[db commit];
+        
     }];
 }
 

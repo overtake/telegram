@@ -336,6 +336,33 @@
 }
 
 
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+    
+    __block NSMutableArray *marked = [[NSMutableArray alloc] init];
+    
+    [self.queue dispatchOnQueue:^{
+        NSArray *copy = [[self.messages allValues] copy];
+        copy = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d",conversation.peer.peer_id]];
+        
+        
+        for (TL_localMessage *msg in copy) {
+            
+            if(msg.n_id <= max_id) {
+                if(msg.unread == YES)
+                    [marked addObject:@([msg n_id])];
+                msg.flags&=~TGUNREADMESSAGE;
+            }
+            
+        }
+        
+    } synchronous:YES];
+    
+    
+    [[Storage manager] markAllInConversation:conversation max_id:max_id];
+    
+    return marked;
+}
+
 
 -(void)setUnread_count:(int)unread_count {
      self->_unread_count = unread_count < 0 ? 0 : unread_count;

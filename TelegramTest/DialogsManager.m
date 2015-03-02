@@ -389,6 +389,11 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id {
     
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:peer.peer_id];
+    
+    NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id];
+    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
+    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation}];
 }
 
 - (void)insertDialog:(TL_conversation *)dialog {
