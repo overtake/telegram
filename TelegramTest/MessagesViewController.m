@@ -2252,21 +2252,6 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    if([message isEqualToString:@"passlock"] && [UsersManager currentUserId] == 438078) {
-        [self showPasslock:^(BOOL result, NSString *md5Hash) {
-            
-            
-        }];
-        
-        return;
-    }
-    
-    if([message hasPrefix:@"setpasslock"] && [UsersManager currentUserId] == 438078) {
-        [TGPasslock enableWithHash:[[message substringFromIndex:12] md5]];
-        
-        return;
-    }
-    
 //    if([message isEqualToString:@"requestKey"]) {
 //        
 //        EncryptedParams *config = _conversation.encryptedChat.encryptedParams;

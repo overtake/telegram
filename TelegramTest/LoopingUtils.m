@@ -30,7 +30,7 @@
 
 
 void dispatch_after_seconds(float seconds, dispatch_block_t block) {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_current_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         block();
     });
 }
