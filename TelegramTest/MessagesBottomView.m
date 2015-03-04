@@ -25,7 +25,7 @@
 
 #import "NSString+FindURLs.h"
 #import "TGAttachImageElement.h"
-
+#import "TGMentionPopup.h"
 @interface MessagesBottomView()
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -718,7 +718,7 @@
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
     BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
     
-    if(isNeedSend) {
+    if(isNeedSend && ![TGMentionPopup isVisibility]) {
          [self sendButtonAction];
     }
     return isNeedSend;
@@ -768,6 +768,69 @@
     
     
     [self checkAttachImages];
+    
+    
+    if(self.dialog.type == DialogTypeChat) {
+        
+        NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
+        
+        NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
+        textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
+        
+        rect.origin.x -= textViewBounds.origin.x;
+        rect.origin.y-= textViewBounds.origin.y;
+        
+        rect.origin.x += 100;
+        
+        
+        NSString *string = [self.inputMessageTextField string];
+        
+        NSRange range;
+        
+        NSString *username;
+        
+        NSRange selectedRange = self.inputMessageTextField.selectedRange;
+        
+        while ((range = [string rangeOfString:@"@"]).location != NSNotFound) {
+            username = [string substringFromIndex:range.location + 1];
+            
+            NSRange space = [username rangeOfString:@" "];
+            
+            if(space.location != NSNotFound)
+                username = [username substringToIndex:space.location];
+            
+            
+            
+            if(username.length > 0) {
+                
+                if(selectedRange.location == range.location + username.length + 1)
+                    break;
+                else
+                    username = nil;
+            }
+            
+            string = [string substringFromIndex:range.location +1];
+            
+        }
+        if(username.length > 0) {
+            [TGMentionPopup show:username chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:^(NSString *fullUserName) {
+                
+                NSMutableString *insert = [string mutableCopy];
+                
+                [insert insertString:[fullUserName substringFromIndex:username.length] atIndex:selectedRange.location];
+                
+                
+                
+                [self.inputMessageTextField insertText:fullUserName replacementRange:NSMakeRange(range.location + 1, username.length)];
+                
+            }];
+        } else {
+            [TGMentionPopup close];
+        }
+
+    }
+        
+    
     
     
 }

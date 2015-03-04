@@ -8,6 +8,9 @@
 
 #import "TMMenuController.h"
 
+
+
+
 @class TMMenuController;
 
 @interface TMMenuItemView : BTRControl
@@ -16,12 +19,14 @@
 
 @property (nonatomic, strong, readonly) BTRImageView *backgroundImageView;
 @property (nonatomic, strong) TMTextLayer *textLayer;
-@property (nonatomic, strong) CALayer *imageLayer;
+@property (nonatomic, strong) NSImageView *imageView;
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
 @property (nonatomic, unsafe_unretained) TMMenuController *controller;
 
 @end
+
+
 
 @implementation TMMenuItemView
 
@@ -38,6 +43,11 @@
 
         
         
+        [item addObserver:self
+                  forKeyPath:@"image"
+                     options:NSKeyValueObservingOptionNew
+                     context:NULL];
+        
         
         self.textLayer = [TMTextLayer layer];
         [self.textLayer disableActions];
@@ -49,17 +59,29 @@
         [self.textLayer setContentsScale:self.layer.contentsScale];
         [self.layer addSublayer:self.textLayer];
         
-        self.imageLayer = [CALayer layer];
-        [self.imageLayer disableActions];
-        [self.imageLayer setFrameSize:item.image.size];
-        [self.imageLayer setFrameOrigin:CGPointMake(roundf((46 - item.image.size.width) / 2.f), roundf((self.bounds.size.height - item.image.size.height) / 2.f))];
-        [self.layer addSublayer:self.imageLayer];
+        self.imageView = [[NSImageView alloc] init];
+        [self.imageView setFrameSize:item.image.size];
+        [self.imageView setFrameOrigin:CGPointMake(roundf((46 - item.image.size.width) / 2.f), roundf((self.bounds.size.height - item.image.size.height) / 2.f))];
+        [self addSubview:self.imageView];
         
         [self handleStateChange];
         
         [self addTarget:self action:@selector(click) forControlEvents:BTRControlEventLeftClick];
     }
     return self;
+}
+
+-(NSString *)title {
+    return self.item.title;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    
+    [self handleStateChange];
+
+    
+    
 }
 
 - (void)click {
@@ -81,19 +103,40 @@
     
     [[NSCursor arrowCursor] set];
     
-    if(self.isHover) {
+    if((self.isHover && self.controller.popover.isAutoHighlight ) || self.controller.selectedItem == self) {
+        
+        NSImage *img = self.item.highlightedImage;
+        
+        if(!img)
+            img = self.item.image;
+    
+        
         [self.gradientLayer setColors:@[(id)BLUE_COLOR_SELECT.CGColor, (id)BLUE_COLOR_SELECT.CGColor]];
         [self.textLayer setTextColor:[NSColor whiteColor]];
-        self.imageLayer.contents = self.item.highlightedImage;
+        
+        [self.imageView setFrameSize:img.size];
+        [self.imageView setFrameOrigin:CGPointMake(roundf((46 - img.size.width) / 2.f), roundf((self.bounds.size.height - img.size.height) / 2.f))];
+        
+        self.imageView.image = img;
         
     } else {
         [self.gradientLayer setColors:@[]];
-        [self.textLayer setTextColor:[NSColor blackColor]];
-        self.imageLayer.contents = self.item.image;
+        [self.textLayer setTextColor:NSColorFromRGB(0x000000)];
+        
+        
+        [self.imageView setFrameSize:self.item.image.size];
+        [self.imageView setFrameOrigin:CGPointMake(roundf((46 - self.item.image.size.width) / 2.f), roundf((self.bounds.size.height - self.item.image.size.height) / 2.f))];
+        
+        self.imageView.image = self.item.image;
+        
+        
+        
     }
     
-    if(self.imageLayer.contents == nil) {
+    if(self.imageView.image == nil) {
         [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2))];
+    } else {
+        [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0) - 1)];
     }
 }
 
@@ -101,7 +144,10 @@
 
 
 @interface TMMenuController ()
+@property (nonatomic,assign) int selectedIndex;
 @end
+
+
 
 @implementation TMMenuController
 
@@ -109,6 +155,7 @@
     self = [super initWithFrame:NSMakeRect(0, 0, 200, menu.itemArray.count * 36 + 12)];
     if(self) {
         self.menuController = menu;
+        _selectedIndex = -1;
     }
     return self;
 }
@@ -129,6 +176,48 @@
         [self.view addSubview:itemView];
         count--;
     }
+}
+
+-(void)selectNext {
+    
+    _selectedIndex++;
+    
+    if(_selectedIndex >= self.view.subviews.count) {
+        _selectedIndex = 0;
+    }
+    
+    TMMenuItemView *lastItem = _selectedItem;
+    
+     _selectedItem = self.view.subviews[_selectedIndex];
+    
+    [lastItem handleStateChange];
+    
+    [(TMMenuItemView *)_selectedItem handleStateChange];
+    
+}
+
+-(void)selectPrev {
+    _selectedIndex--;
+    
+    if(_selectedIndex < 0) {
+        _selectedIndex = (int)self.view.subviews.count - 1;
+    }
+    
+    TMMenuItemView *lastItem = _selectedItem;
+    
+    [(TMMenuItemView *)_selectedItem handleStateChange];
+    
+    _selectedItem = self.view.subviews[_selectedIndex];
+    
+     [lastItem handleStateChange];
+    
+    [(TMMenuItemView *)_selectedItem handleStateChange];
+}
+
+-(void)performSelected {
+    TMMenuItemView *item = (TMMenuItemView *)_selectedItem;
+    
+    item.item.blockAction(item.item);
 }
 
 @end

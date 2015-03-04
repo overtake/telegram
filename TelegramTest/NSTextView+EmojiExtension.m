@@ -9,6 +9,7 @@
 #import "NSTextView+EmojiExtension.h"
 #import "EmojiViewController.h"
 #import "RBLPopover.h"
+#import "TGMentionPopup.h"
 @implementation NSTextView (EmojiExtension)
 
 
@@ -50,11 +51,6 @@ DYNAMIC_PROPERTY(EmojiPopover)
 
 
 
-//-(void)didChangeText {
-//
-//    RBLPopover *popover = [self getEmojiPopover];
-//    [popover close];
-//}
 
 
 @end

@@ -517,6 +517,10 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     }
 }
 
+-(BOOL)isEqual:(id)object {
+    return [object isKindOfClass:[TLUser class]] ? [(TLUser *)object n_id] == self.n_id : object == self;
+}
+
 -(TLInputPeer *)inputPeer {
     if([self isKindOfClass:[TL_userContact class]]) {
         return [TL_inputPeerContact createWithUser_id:self.n_id];

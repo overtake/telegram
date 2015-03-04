@@ -134,7 +134,7 @@ extern NSString *const FILE_NAMES;
 
 -(void)markAllInDialog:(TL_conversation *)dialog;
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
 
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 

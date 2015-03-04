@@ -7,13 +7,10 @@
     
 	NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString: inString];
 	NSRange range = NSMakeRange(0, [attrString length]);
-	[attrString beginEditing];
+	
     
-    if([aURL absoluteString])
-        [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString] range:range];
- 	
-    [attrString addAttribute:NSFontAttributeName value:[NSFont fontWithName:FONT_NAME size:FONT_SIZE] range:range];
-    [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+    [attrString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+    
 	[attrString endEditing];
  	
 	return attrString;

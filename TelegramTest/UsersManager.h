@@ -16,7 +16,7 @@
 + (TLUser *)currentUser;
 
 +(NSArray *)findUsersByName:(NSString *)userName;
-
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids;
 
 - (void)addFromDB:(NSArray *)array;
 

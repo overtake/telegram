@@ -605,13 +605,28 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
-    [queue inDatabase:^(FMDatabase *db) {
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+    
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         //[db beginTransaction];
+        
+        FMResultSet *result = [db executeQuery:@"select n_id from messages where flags & 1 = 1 and peer_id = ? and n_id <= ?",@(conversation.peer.peer_id),@(max_id)];
+        
+        
+        
+        while ([result next]) {
+            
+            [ids addObject:@([result intForColumn:@"n_id"])];
+        }
+        
         [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ? and n_id <= ?",@(conversation.peer.peer_id),@(max_id)];
         //[db commit];
         
     }];
+    
+    return ids;
 }
 
 

@@ -10,6 +10,7 @@
 #import "TMNineImage.h"
 #import "NSString+Extended.h"
 #import "TGAnimationBlockDelegate.h"
+#import "NSTextView+AutomaticLinkDetection.h"
 @interface TMGrowingTextCell : NSTextFieldCell
 
 @end
@@ -78,7 +79,10 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    [self detectAndAddLinks];
+    
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
+    
     
 //    NSUInteger numberOfLines, index, numberOfGlyphs = [self.layoutManager numberOfGlyphs];
 //    NSRange lineRange;
@@ -191,11 +195,15 @@
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     [self.growingDelegate TMGrowingTextViewTextDidChange:self];
     
+    
+    
     [self setNeedsDisplay:YES];
     
     [self setSelectedRange:NSMakeRange(self.selectedRange.location, self.selectedRange.length)];
     
     [self setNeedsDisplay:YES];
+    
+   
 }
 
 - (void)initialize {

@@ -46,7 +46,7 @@
             NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
             int total = 0;
             for (TL_localMessage *message in messages) {
-                if(message.unread && message.conversation) {
+                if(message.conversation) {
                     if(!message.n_out) {
                         if(message.conversation.unread_count != 0)
                             ++total;
@@ -392,8 +392,11 @@
     TL_conversation *conversation = [[DialogsManager sharedManager] find:peer.peer_id];
     
     NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id];
-    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
-    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation}];
+    
+    if(marked.count > 0) {
+        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
+    }
+
 }
 
 - (void)insertDialog:(TL_conversation *)dialog {

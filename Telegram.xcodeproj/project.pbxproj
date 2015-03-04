@@ -460,6 +460,7 @@
 		C2967B161A9B59D2003759B2 /* TGPasslockModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B151A9B59D2003759B2 /* TGPasslockModalView.m */; };
 		C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B181A9B75B4003759B2 /* TGPasslock.m */; };
 		C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */; };
+		C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1659,6 +1660,8 @@
 		C2967B181A9B75B4003759B2 /* TGPasslock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasslock.m; sourceTree = "<group>"; };
 		C2967B1A1A9B9710003759B2 /* TGPasscodeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasscodeSettingsViewController.h; sourceTree = "<group>"; };
 		C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasscodeSettingsViewController.m; sourceTree = "<group>"; };
+		C2967B411AA4CFA9003759B2 /* TGMentionPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMentionPopup.h; sourceTree = "<group>"; };
+		C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMentionPopup.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -2840,6 +2843,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C2967B3C1AA4CF5C003759B2 /* mentions */,
 				C2C1DC161A443C9900BBCC63 /* stickers */,
 				C281C1711917D953007B160F /* dragging */,
 				0A6758DC18954EF400F4487D /* new */,
@@ -3605,6 +3609,15 @@
 				C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */,
 			);
 			name = passlock;
+			sourceTree = "<group>";
+		};
+		C2967B3C1AA4CF5C003759B2 /* mentions */ = {
+			isa = PBXGroup;
+			children = (
+				C2967B411AA4CFA9003759B2 /* TGMentionPopup.h */,
+				C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */,
+			);
+			name = mentions;
 			sourceTree = "<group>";
 		};
 		C297955219EC29CA00BE893E /* general */ = {
@@ -5054,6 +5067,7 @@
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
 				C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */,
 				0ADA319C19469D16002BAEDB /* EmojiViewController.m in Sources */,
+				C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */,
 				C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */,
 				C268C19419F0519C007F836A /* POPSpringAnimation.mm in Sources */,
 				C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */,

@@ -338,7 +338,6 @@
 
 -(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
     
-    __block NSMutableArray *marked = [[NSMutableArray alloc] init];
     
     [self.queue dispatchOnQueue:^{
         NSArray *copy = [[self.messages allValues] copy];
@@ -348,19 +347,14 @@
         for (TL_localMessage *msg in copy) {
             
             if(msg.n_id <= max_id) {
-                if(msg.unread == YES)
-                    [marked addObject:@([msg n_id])];
                 msg.flags&=~TGUNREADMESSAGE;
             }
-            
         }
         
     } synchronous:YES];
     
     
-    [[Storage manager] markAllInConversation:conversation max_id:max_id];
-    
-    return marked;
+    return [[Storage manager] markAllInConversation:conversation max_id:max_id];
 }
 
 

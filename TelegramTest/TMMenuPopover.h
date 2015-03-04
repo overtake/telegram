@@ -50,6 +50,8 @@ typedef void (^TMMenuPopoverDelegateBlock)(TMMenuPopover *popover);
 // you add to the popover or its subviews.
 
 @class TMMenuPopover;
+@class TMMenuController;
+
 @interface TMMenuPopoverWindow : NSWindow
 
 @property (nonatomic) BOOL canBeKey;
@@ -62,10 +64,12 @@ typedef void (^TMMenuPopoverDelegateBlock)(TMMenuPopover *popover);
 
 - (BOOL)isMouseInPopover;
 
+@property (nonatomic,assign, getter=isAutoHighlight) BOOL autoHighlight;
+
 @property (nonatomic, strong) BTRControl *hoverView;
 
 // The view controller providing the view displayed within the popover.
-@property (nonatomic, strong) NSViewController *contentViewController;
+@property (nonatomic, strong) TMMenuController *contentViewController;
 
 // The class of which an instance is created which sits behind the
 // `contentViewController`'s view. This is useful for customising the appearance
@@ -200,5 +204,6 @@ typedef void (^TMMenuPopoverDelegateBlock)(TMMenuPopover *popover);
 
 // The color used to fill the shape of the background view.
 @property (nonatomic, strong) NSColor *fillColor;
+
 
 @end

@@ -347,12 +347,12 @@ static NSString *kUpdateState = @"kUpdateState";
     }
     
     if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:[[DialogsManager sharedManager] find:update.peer.peer_id]];
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
         return;
     }
     
     if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:[[DialogsManager sharedManager] find:update.peer.peer_id]];
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
         return;
     }
     
