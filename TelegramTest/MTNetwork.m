@@ -12,6 +12,8 @@
 #import <MTProtoKit/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
+#import "TGKeychain.h"
+#import "NSData+Extensions.h"
 @interface MTNetwork ()
 {
     MTContext *_context;
@@ -25,6 +27,7 @@
     DatacenterArchiver *_datacenterArchived;
     TGDatacenterWatchdogActor *_datacenterWatchdog;
     TGTimer *_executeTimer;
+    ASQueue *_queue;
 }
 
 @end
@@ -57,7 +60,12 @@ static NSString *kDefaultDatacenter = @"default_dc";
     if (self != nil)
     {
         
-        [ASQueue dispatchOnStageQueue:^{
+        _queue = [[ASQueue alloc] initWithName:"mtnetwork"];
+        
+        [self moveAndEncryptKeychain];
+        
+        [_queue dispatchOnQueue:^{
+                        
             _objectiveDatacenter = [[NSMutableDictionary alloc] init];
             _pollConnections = [[NSMutableArray alloc] init];
             
@@ -70,49 +78,64 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
             _context = [[MTContext alloc] initWithSerialization:serialization apiEnvironment:apiEnvironment];
             
-            if(isTestServer())
-                 [_context setKeychain:[MTKeychain unencryptedKeychainWithName:@"org.telegram.test"]];
-             else
-                [_context setKeychain:[MTKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER]];
             
-           
-            [_context addChangeListener:self];
+            __block TGKeychain *keychain = [self nKeychain];
             
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
             
-            _masterDatacenter = (int)[defaults integerForKey:kDefaultDatacenter];
-            _masterDatacenter = _masterDatacenter == 0 ? 1 : _masterDatacenter;
+            [keychain loadIfNeeded];
             
-            
-            _datacenterCount = 5;
-            
-            
-            NSString *address = isTestServer() ? @"173.240.5.253" : @"149.154.175.50";
-            
-            [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
-            
-            
-            if(!isTestServer()) {
-                _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+            if(keychain.isNeedPasscode) {
                 
-                
-                void (^execute)() = ^{
-                    [_datacenterWatchdog execute:nil];
-                    [self update];
+                dispatch_block_t block = ^ {
+                    
+                    [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
+                        
+                        __block BOOL acceptHash;
+                        
+                        [_queue dispatchOnQueue:^{
+                            
+                            acceptHash = [keychain updatePasscodeHash:[md5Hash dataUsingEncoding:NSUTF8StringEncoding] save:NO];
+                            
+                        } synchronous:YES];
+                        
+                        if(acceptHash) {
+                            [_queue dispatchOnQueue:^{
+                                [self startWithKeychain:keychain];
+                                [self initConnectionWithId:_masterDatacenter];
+                                
+                            }];
+                            
+                            
+                            if(![self isAuth]) {
+                                [[Telegram delegate] logoutWithForce:YES];
+                            }
+                        } 
+                        
+                        
+                        return acceptHash;
+                        
+                        
+                    }];
+                    
                 };
                 
+                [ASQueue dispatchOnMainQueue:^{
+                    block();
+                }];
+              
                 
-                execute();
                 
-                _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
-                    execute();
-                } queue:[ASQueue globalQueue].nativeQueue];
+            } else {
+                [self startWithKeychain:keychain];
                 
-                [_executeTimer start];
+                if(![self isAuth]) {
+                    [[Telegram delegate] logoutWithForce:YES];
+                }
+                
             }
             
-           
             
 
         }];
@@ -121,11 +144,145 @@ static NSString *kDefaultDatacenter = @"default_dc";
     return self;
 }
 
+
+-(void)moveAndEncryptKeychain {
+    
+    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    
+    NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
+    
+    
+    
+    BOOL isset = NO;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:odirectory isDirectory:&isset]) {
+        
+        if(isset) {
+            
+            TGKeychain *keychain = [self nKeychain];
+            
+            [keychain setNotEncryptedKeychain:YES];
+            
+            [keychain loadIfNeeded];
+            
+            [keychain setNotEncryptedKeychain:NO];
+            
+            [keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
+            
+            [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
+            
+        }
+        
+    }
+
+}
+
+-(TGKeychain *)nKeychain {
+    if(isTestServer())
+        return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
+    else
+        return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+}
+
+
+-(void)updatePasscode:(NSData *)md5Hash {
+    
+    [_queue dispatchOnQueue:^{
+        
+        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        
+        [keychain updatePasscodeHash:md5Hash save:YES];
+        
+    }];
+
+}
+
+-(BOOL)checkPasscode:(NSData *)md5Hash {
+    
+    
+    __block BOOL result;
+    
+    [_queue dispatchOnQueue:^{
+        
+        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        
+        result = [md5Hash isEqualToData:[keychain md5PasscodeHash]];
+        
+    } synchronous:YES];
+    
+    return result;
+    
+}
+
+-(BOOL)passcodeIsEnabled {
+    
+    __block BOOL result;
+    
+    [_queue dispatchOnQueue:^{
+        
+        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        
+        result = [keychain passcodeIsEnabled];
+        
+        
+    } synchronous:YES];
+    
+    return result;
+   
+}
+
+-(void)startWithKeychain:(TGKeychain *)keychain {
+    
+    [_context setKeychain:keychain];
+    
+    
+    [_context addChangeListener:self];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    _masterDatacenter = (int)[defaults integerForKey:kDefaultDatacenter];
+    _masterDatacenter = _masterDatacenter == 0 ? 1 : _masterDatacenter;
+    
+    
+    _datacenterCount = 5;
+    
+    
+    NSString *address = isTestServer() ? @"173.240.5.253" : @"149.154.175.50";
+    
+    [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
+    
+    
+    if(!isTestServer()) {
+        _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+        
+        
+        void (^execute)() = ^{
+            [_datacenterWatchdog execute:nil];
+            [self update];
+        };
+        
+        
+        execute();
+        
+        _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+            execute();
+        } queue:_queue.nativeQueue];
+        
+        [_executeTimer start];
+    }
+    
+}
+
 - (TGUpdateMessageService *)updateService {
     return _updateService;
 }
 
 -(void)startNetwork {
+    
+    
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
          [self initConnectionWithId:_masterDatacenter];
@@ -164,18 +321,22 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         
-        [_mtProto stop];
-        _mtProto = [[MTConnection alloc] initWithContext:_context datacenterId:dc_id];
-        
-        _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
-        _updateService = [[TGUpdateMessageService alloc] init];
-        
-        [_mtProto addMessageService:_requestService];
-        [_mtProto addMessageService:_updateService];
-        
-        [self resetWorkers];
+        if(_context.keychain != nil) {
+            
+            [_mtProto stop];
+            
+            _mtProto = [[MTConnection alloc] initWithContext:_context datacenterId:dc_id];
+            
+            _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
+            _updateService = [[TGUpdateMessageService alloc] init];
+            
+            [_mtProto addMessageService:_requestService];
+            [_mtProto addMessageService:_updateService];
+            
+            [self resetWorkers];
+        }
 
     }];
     
@@ -188,6 +349,16 @@ static int MAX_WORKER_POLL = 5;
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDefaultDatacenter];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    
+    
+    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    
+    NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+    
+    [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
+    
+    
     [self.updateService drop];
     [self setDatacenter:1];
     
@@ -214,7 +385,7 @@ static int MAX_WORKER_POLL = 5;
 }
 
 -(void)cancelRequest:(RPCRequest *)request {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
          [_requestService removeRequestByInternalId:request.mtrequest.internalId];
     }];
     
@@ -222,7 +393,7 @@ static int MAX_WORKER_POLL = 5;
 }
 
 -(void)sendRequest:(RPCRequest *)request forDatacenter:(int)datacenterId {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         NSMutableArray *poll = [_objectiveDatacenter objectForKey:@(datacenterId)];
         
         TGNetworkWorker *worker = [poll objectAtIndex:rand_limit(MAX_WORKER_POLL-1)];
@@ -232,7 +403,7 @@ static int MAX_WORKER_POLL = 5;
 }
 
 -(void)sendRandomRequest:(RPCRequest *)request {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         TGNetworkWorker *worker = [_pollConnections objectAtIndex:rand_limit((int)_pollConnections.count-1)];
         [worker addRequest:[self constructRequest:request]];
     }];
@@ -302,7 +473,7 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)sendRequest:(RPCRequest *)request {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         static NSArray *noAuthClasses;
         
         static dispatch_once_t onceToken;
@@ -317,7 +488,7 @@ static int MAX_WORKER_POLL = 5;
 }
 
 -(void)successAuthForDatacenter:(int)dc_id {
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
         [_context updateAuthTokenForDatacenterWithId:dc_id authToken:@(dc_id)];
     }];
     
@@ -328,7 +499,7 @@ static int MAX_WORKER_POLL = 5;
     
     __block BOOL success;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
      
         success = [[_context authTokenForDatacenterWithId:_masterDatacenter] intValue] > 0;
     
@@ -341,7 +512,7 @@ static int MAX_WORKER_POLL = 5;
     
     __block MTDatacenterAuthInfo *info;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_queue dispatchOnQueue:^{
        
         info = [_context authInfoForDatacenterWithId:dc_id];
     

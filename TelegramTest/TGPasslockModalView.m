@@ -66,7 +66,7 @@
         [self.avatar setUser:[UsersManager currentUser]];
         
         
-        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 150, 30)];
+        self.secureField = [[BTRSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 30)];
         
         
         NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
@@ -148,7 +148,9 @@
         [self.closeButton addBlock:^(BTRControlEvents events) {
             
             
-            [weakSelf closeAndNotify:nil success:NO];
+             weakSelf.passlockResult(NO,nil);
+            
+            [TMViewController hidePasslock];
             
             
         } forControlEvents:BTRControlEventClick];
@@ -217,10 +219,12 @@
     
     if(_type == TGPassLockViewConfirmType) {
         
-        if([TGPasslock checkHash:hash]) {
-            [self closeAndNotify:hash success:YES];
-        } else {
+        BOOL result = _passlockResult(YES,hash);
+        
+        if(!result) {
             [self performShake];
+        } else {
+            [TMViewController hidePasslock];
         }
         
         return;
@@ -229,7 +233,11 @@
         
         if(_state == 1) {
             if([_md5Hashs[_state - 1] isEqualToString:hash]) {
-                 [self closeAndNotify:hash success:YES];
+                
+                _passlockResult(YES,hash);
+                
+                [TMViewController hidePasslock];
+                
             } else {
                [self performShake];
             }
@@ -243,7 +251,7 @@
         
         if(_state == 0) {
             
-            if(![TGPasslock checkHash:hash]) {
+            if(![[MTNetwork instance] checkPasscode:[hash dataUsingEncoding:NSUTF8StringEncoding]]) {
                 [self performShake];
                 return;
             }
@@ -251,7 +259,9 @@
         } else if(_state == 2) {
             if([_md5Hashs[_state - 1] isEqualToString:hash]) {
                 
-                [self closeAndNotify:hash success:YES];
+               _passlockResult(YES,hash);
+                
+                
             } else {
                 [self performShake];
             }
@@ -272,14 +282,6 @@
     
 }
 
--(void)closeAndNotify:(NSString *)hash success:(BOOL)success {
-    if(_passlockResult) {
-        _passlockResult(success, hash);
-    }
-
-    
-    [TMViewController hidePasslock];
-}
 
 -(void)showError {
     

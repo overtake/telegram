@@ -26,6 +26,8 @@
 #import "NSString+FindURLs.h"
 #import "TGAttachImageElement.h"
 #import "TGMentionPopup.h"
+#import "TGReplayMessage.h"
+
 @interface MessagesBottomView()
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -60,6 +62,8 @@
 
 @property (nonatomic,strong) NSMutableArray *attachmentsIgnore;
 
+@property (nonatomic,strong) TGReplayMessage *replayMessage;
+
 @end
 
 @implementation MessagesBottomView
@@ -75,13 +79,7 @@
         self.attachments = [[NSMutableArray alloc] init];
         
         self.attachmentsIgnore = [[NSMutableArray alloc] init];
-        
-      //  self.layer = [[TMLayer alloc] initWithLayer:self.layer];
-        
-        
-//        [self addSubview:self.normalView];
-//        [self addSubview:self.actionsView];
-//        [self addSubview:self.secretInfoView];
+
                 
         [self setState:MessagesBottomViewNormalState animated:NO];
         
@@ -144,6 +142,8 @@
     } else {
          [self setForwardEnabled:YES];
     }
+    
+    [self checkReplayMessage:YES];
 
 }
 
@@ -203,6 +203,10 @@
 - (void)setForwardEnabled:(BOOL)forwardEnabled {
     self->_forwardEnabled = forwardEnabled;
     [self.forwardButton setDisable:!forwardEnabled];
+}
+
+-(void)updateReplayMessage:(BOOL)updateHeight {
+    [self checkReplayMessage:updateHeight];
 }
 
 - (void)setSectedMessagesCount:(NSUInteger)count {
@@ -712,6 +716,7 @@
     
     [self.attachmentsIgnore removeAllObjects];
     
+    
     [self.messagesViewController sendMessage];
 }
 
@@ -745,9 +750,6 @@
        // [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
         
-       
-        
-        
         [self.sendButton setTextColor:LINK_COLOR forState:TMButtonNormalState];
         [self.sendButton setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];
         [self.sendButton setTextColor:NSColorFromRGB(0x2e618c) forState:TMButtonPressedState];
@@ -768,6 +770,9 @@
     
     
     [self checkAttachImages];
+    
+    
+    
     
     
     if(self.dialog.type == DialogTypeChat) {
@@ -833,6 +838,49 @@
     
     
     
+}
+
+-(void)checkReplayMessage:(BOOL)updateHeight {
+    
+    [self.replayMessage removeFromSuperview];
+    
+    
+    self.replayMessage = nil;
+    
+    
+    __block TL_localMessage *replayMessage;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSData *serialized = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.dialog.peer_id] inCollection:REPLAY_COLLECTION];
+        
+        if(serialized) {
+            replayMessage = [TLClassStore deserialize:serialized];
+        }
+        
+    }];
+    
+    if(replayMessage) {
+        int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+        
+        self.replayMessage = [[TGReplayMessage alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) message:[[MessagesManager sharedManager] find:self.dialog.top_message]];
+        
+        
+        [self.normalView addSubview:self.replayMessage];
+        
+        if(updateHeight) {
+            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+        }
+        
+        self.replayMessage.autoresizingMask = NSViewMinYMargin;
+    } else {
+        
+        if(updateHeight) {
+            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+        }
+        
+    }
+   
 }
 
 -(void)checkAttachImages {
@@ -912,7 +960,8 @@
         
     }];
     
-    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+    if(self.inputMessageString.length > 0)
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:YES];
     
 }
 
@@ -930,7 +979,9 @@
     }
 
     
-    
+    if(self.replayMessage != nil) {
+        height+= 35;
+    }
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];

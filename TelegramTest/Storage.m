@@ -24,6 +24,7 @@ NSString *const ENCRYPTED_IMAGE_COLLECTION = @"encrypted_image_collection";
 NSString *const ENCRYPTED_PARAMS_COLLECTION = @"encrypted_params_collection";
 NSString *const STICKERS_COLLECTION = @"stickers_collection";
 NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
+NSString *const REPLAY_COLLECTION = @"replay_collection";
 NSString *const FILE_NAMES = @"file_names";
 
 -(id)init {

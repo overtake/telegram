@@ -180,10 +180,21 @@ static NSString *kUpdateState = @"kUpdateState";
     TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
-    if(_updateState.pts + statefulMessage.pts_count == statefulMessage.pts && !_holdUpdates) {
+    if(statefulMessage.pts > 0 && _updateState.pts + statefulMessage.pts_count == statefulMessage.pts && !_holdUpdates) {
         [self proccessStatefulMessage:statefulMessage needSave:YES];
         return;
     }
+    
+    if(statefulMessage.qts > 0 && _updateState.qts + 1 == statefulMessage.qts && !_holdUpdates) {
+        [self proccessStatefulMessage:statefulMessage needSave:YES];
+        return;
+    }
+    
+    if(statefulMessage.beginSeq > 0 && _updateState.seq + 1 == statefulMessage.beginSeq && !_holdUpdates) {
+        [self proccessStatefulMessage:statefulMessage needSave:YES];
+        return;
+    }
+    
     
     [_statefulUpdates addObject:statefulMessage];
     
@@ -213,48 +224,104 @@ static NSString *kUpdateState = @"kUpdateState";
     
     
     [_statefulUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
-        return obj1.beginSeq < obj2.beginSeq ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    
-   
-    NSMutableArray *successful = [[NSMutableArray alloc] init];
-    
-    
-    if(_updateState.pts + [_statefulUpdates[0] pts_count] != [_statefulUpdates[0] pts] )
-        return;
-    
-    
-    
-    int lastSeq = _updateState.seq;
-    TGUpdateContainer *lastUpdate;
-    for (int i = 0; i < _statefulUpdates.count; i++) {
-       if(lastSeq+1 == [_statefulUpdates[i] beginSeq]) {
-            lastUpdate = _statefulUpdates[i];
-            [successful addObject:lastUpdate];
-            lastSeq = lastUpdate.beginSeq;
-       } else {
-           break;
-       }
-        
-    }
-    
-    if(!lastUpdate)
-        return;
-    
-    [successful sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
         return obj1.pts < obj2.pts ? NSOrderedAscending : NSOrderedDescending;
     }];
     
     
-    for (TGUpdateContainer *successUpdate in successful) {
-        BOOL success = [self proccessStatefulMessage:successUpdate needSave:YES];
-        [_statefulUpdates removeObject:successUpdate];
+    if([_statefulUpdates[0] pts] > 0 &&  _updateState.pts + [_statefulUpdates[0] pts_count] != [_statefulUpdates[0] pts] )
+        return;
+    
+    
+   __block BOOL fail = NO;
+    
+    
+    NSMutableArray *qtsUpdates = [[NSMutableArray alloc] init];
+    NSMutableArray *seqUpdates = [[NSMutableArray alloc] init];
+    
+    [_statefulUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer *obj, NSUInteger idx, BOOL *stop) {
         
-        if(!success)
-            return;
+        
+        if(obj.pts > 0) {
+            if(_updateState.pts + [obj pts_count] == [obj pts]) {
+                
+                BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                
+                if(!success)
+                {
+                    *stop = YES;
+                    fail = YES;
+                }
+            } else {
+                *stop = YES;
+                fail = YES;
+            }
+        } else {
+            
+            if(obj.qts > 0) {
+                [qtsUpdates addObject:obj];
+            } else if(obj.beginSeq > 0) {
+                [seqUpdates addObject:obj];
+            }
+            
+        }
+            
+    }];
+    
+    if(!fail) {
+        
+        
+        [qtsUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
+            return obj1.qts < obj2.qts ? NSOrderedAscending : NSOrderedDescending;
+        }];
+        
+        [qtsUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer  *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(_updateState.qts + 1 == [obj qts]) {
+                
+                BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                
+                if(!success)
+                {
+                    *stop = YES;
+                    fail = YES;
+                }
+            } else {
+                *stop = YES;
+                fail = YES;
+            }
+            
+        }];
+        
+        
+        if(!fail) {
+            
+            [seqUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
+                return obj1.beginSeq < obj2.beginSeq ? NSOrderedAscending : NSOrderedDescending;
+            }];
+            
+            [seqUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer  *obj, NSUInteger idx, BOOL *stop) {
+                
+                if(_updateState.seq + 1 == [obj beginSeq]) {
+                    
+                    BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                    
+                    if(!success)
+                    {
+                        *stop = YES;
+                        fail = YES;
+                    }
+                } else {
+                    *stop = YES;
+                    fail = YES;
+                }
+                
+            }];
+        }
+        
     }
     
-    if (_statefulUpdates.count == 0)
+    
+    if (!fail)
     {
         [self cancelSequenceTimer];
     }
@@ -413,10 +480,12 @@ static NSString *kUpdateState = @"kUpdateState";
         
         TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
         
-        TL_conversation *dialog = [[DialogsManager sharedManager] find:notifyUpdate.peer.peer_id];
+        TL_notifyPeer *peer = (TL_notifyPeer *) notifyUpdate.peer;
+        
+        TL_conversation *dialog = [[DialogsManager sharedManager] find:peer.peer.peer_id];
         
         if(!dialog) {
-            dialog = [[Storage manager] selectConversation:notifyUpdate.peer];
+            dialog = [[Storage manager] selectConversation:peer.peer];
         }
         
         if(dialog) {

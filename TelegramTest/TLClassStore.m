@@ -203,7 +203,7 @@
         [self.classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
         [self.classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
         [self.classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:784507964]];
-        [self.classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:1676683896]];
+        [self.classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:1047491370]];
         [self.classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
         [self.classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
         [self.classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];

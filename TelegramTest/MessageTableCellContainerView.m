@@ -557,6 +557,12 @@ static BOOL dragAction = NO;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
+    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Replay", nil) withBlock:^(id sender) {
+        
+        [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message];
+        
+    }]];
+    
     
     if([self.item canShare]) {
         
@@ -612,6 +618,10 @@ static BOOL dragAction = NO;
 
         
     }]];
+    
+    
+    
+   
     
     
     

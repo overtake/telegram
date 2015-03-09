@@ -30,6 +30,7 @@ extern NSString *const ENCRYPTED_IMAGE_COLLECTION;
 extern NSString *const ENCRYPTED_PARAMS_COLLECTION;
 extern NSString *const STICKERS_COLLECTION;
 extern NSString *const SOCIAL_DESC_COLLECTION;
+extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
 
 -(void)drop:(void (^)())completeHandler;

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 27.02.15.
+//  Auto created by Dmitry Kondratyev on 06.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -407,7 +407,6 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
-	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -1694,6 +1693,7 @@
 	
 @interface TLConfig()
 @property int date;
+@property int expires;
 @property Boolean test_mode;
 @property int this_dc;
 @property (nonatomic, strong) NSMutableArray* dc_options;
@@ -1705,10 +1705,12 @@
 @property int online_cloud_timeout_ms;
 @property int notify_cloud_delay_ms;
 @property int notify_default_delay_ms;
+@property int chat_big_size;
+@property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig
-+(TL_config*)createWithDate:(int)date test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()

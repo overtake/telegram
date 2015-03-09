@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.02.15.
+//  Auto created by Mikhail Filimonov on 06.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -5785,9 +5785,10 @@
 @end
 
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms {
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
 	obj.date = date;
+	obj.expires = expires;
 	obj.test_mode = test_mode;
 	obj.this_dc = this_dc;
 	obj.dc_options = dc_options;
@@ -5799,10 +5800,13 @@
 	obj.online_cloud_timeout_ms = online_cloud_timeout_ms;
 	obj.notify_cloud_delay_ms = notify_cloud_delay_ms;
 	obj.notify_default_delay_ms = notify_default_delay_ms;
+	obj.chat_big_size = chat_big_size;
+	obj.disabled_features = disabled_features;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.date];
+	[stream writeInt:self.expires];
 	[stream writeBool:self.test_mode];
 	[stream writeInt:self.this_dc];
 	//Serialize FullVector
@@ -5823,9 +5827,21 @@
 	[stream writeInt:self.online_cloud_timeout_ms];
 	[stream writeInt:self.notify_cloud_delay_ms];
 	[stream writeInt:self.notify_default_delay_ms];
+	[stream writeInt:self.chat_big_size];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.disabled_features count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDisabledFeature* obj = [self.disabled_features objectAtIndex:i];
+			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.date = [stream readInt];
+	self.expires = [stream readInt];
 	self.test_mode = [stream readBool];
 	self.this_dc = [stream readInt];
 	//UNS FullVector
@@ -5847,6 +5863,18 @@
 	self.online_cloud_timeout_ms = [stream readInt];
 	self.notify_cloud_delay_ms = [stream readInt];
 	self.notify_default_delay_ms = [stream readInt];
+	self.chat_big_size = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.disabled_features)
+			self.disabled_features = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDisabledFeature* obj = [TLClassStore TLDeserialize:stream];
+			[self.disabled_features addObject:obj];
+		}
+	}
 }
 @end
 
@@ -8889,6 +8917,8 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
+
+
 
 @implementation TL_gzip_packed
 +(TL_gzip_packed*)createWithPacked_data:(NSData*)packed_data {

@@ -461,6 +461,8 @@
 		C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B181A9B75B4003759B2 /* TGPasslock.m */; };
 		C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */; };
 		C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */; };
+		C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B451AA8684E003759B2 /* TGReplayMessage.m */; };
+		C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B481AA9BF90003759B2 /* TGKeychain.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1662,6 +1664,10 @@
 		C2967B1B1A9B9710003759B2 /* TGPasscodeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasscodeSettingsViewController.m; sourceTree = "<group>"; };
 		C2967B411AA4CFA9003759B2 /* TGMentionPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMentionPopup.h; sourceTree = "<group>"; };
 		C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMentionPopup.m; sourceTree = "<group>"; };
+		C2967B441AA8684E003759B2 /* TGReplayMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGReplayMessage.h; sourceTree = "<group>"; };
+		C2967B451AA8684E003759B2 /* TGReplayMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGReplayMessage.m; sourceTree = "<group>"; };
+		C2967B471AA9BF90003759B2 /* TGKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGKeychain.h; sourceTree = "<group>"; };
+		C2967B481AA9BF90003759B2 /* TGKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGKeychain.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -2864,6 +2870,8 @@
 				C2753DD119E4282000752BAF /* SearchMessagesView.m */,
 				C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */,
 				C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */,
+				C2967B441AA8684E003759B2 /* TGReplayMessage.h */,
+				C2967B451AA8684E003759B2 /* TGReplayMessage.m */,
 			);
 			name = messages;
 			sourceTree = "<group>";
@@ -4270,6 +4278,8 @@
 				C22520E418B2801D00049558 /* MTConnection.m */,
 				CEC6A8EE18C90A69002EC18F /* DatacenterArchiver.h */,
 				CEC6A8EF18C90A69002EC18F /* DatacenterArchiver.m */,
+				C2967B471AA9BF90003759B2 /* TGKeychain.h */,
+				C2967B481AA9BF90003759B2 /* TGKeychain.m */,
 			);
 			name = protocol;
 			sourceTree = "<group>";
@@ -5004,6 +5014,7 @@
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
+				C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
@@ -5094,6 +5105,7 @@
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
 				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
 				C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */,
+				C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */,
 				0A62CC9A181F24270098720C /* RightViewController.m in Sources */,
 				C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */,
 				CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */,

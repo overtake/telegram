@@ -59,17 +59,17 @@
             
             [self remoteCheckContacts:^{
                 
-               if( [SettingsArchiver checkMaskedSetting:iCloudSynch] ) {
-                   dispatch_after_seconds(2, ^{
-                       [[Storage manager] importedContacts:^(NSSet *imported) {
-                           
-                           [self.queue dispatchOnQueue:^{
-                                [self importCloudContacts:imported];
-                           }];
-                           
-                       }];
-                    });
-                }
+//               if( [SettingsArchiver checkMaskedSetting:iCloudSynch] ) {
+//                   dispatch_after_seconds(2, ^{
+//                       [[Storage manager] importedContacts:^(NSSet *imported) {
+//                           
+//                           [self.queue dispatchOnQueue:^{
+//                                [self importCloudContacts:imported];
+//                           }];
+//                           
+//                       }];
+//                    });
+//                }
                 
             }];
             

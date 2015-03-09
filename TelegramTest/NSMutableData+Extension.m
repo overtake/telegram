@@ -27,7 +27,7 @@
 
 -(NSMutableData *)addPadding:(int)bits {
 
-        [self addRandomBytes:(bits - self.length % bits) % bits];
+    [self addRandomBytes:(bits - self.length % bits) % bits];
     return self;
 }
 @end

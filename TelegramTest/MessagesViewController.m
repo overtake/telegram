@@ -2243,6 +2243,9 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+
+
+
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
@@ -2251,21 +2254,6 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    
-    if([message isEqualToString:@"passlock"] && [UsersManager currentUserId] == 438078) {
-        [self showPasslock:^(BOOL result, NSString *md5Hash) {
-            
-            
-        }];
-        
-        return;
-    }
-    
-    if([message hasPrefix:@"setpasslock"] && [UsersManager currentUserId] == 438078) {
-        [TGPasslock enableWithHash:[[message substringFromIndex:12] md5]];
-        
-        return;
-    }
     
 //    if([message isEqualToString:@"requestKey"]) {
 //        
@@ -2340,7 +2328,11 @@ static NSTextAttachment *headerMediaIcon() {
 //    }
     
     
+    
+    
     if(message.length > 0) {
+        
+        [self removeReplayMessage:NO];
         
         [self sendMessage:message callback:^{
             [self.bottomView setInputMessageString:@"" disableAnimations:NO];
@@ -2709,6 +2701,29 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
+
+- (void)addReplayMessage:(TL_localMessage *)message {
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction setObject:[TLClassStore serialize:message] forKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        
+    }];
+    
+     [self.bottomView updateReplayMessage:YES];
+    
+}
+
+-(void)removeReplayMessage:(BOOL)update {
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        
+    }];
+    
+    
+    [self.bottomView updateReplayMessage:NO];
+}
 
 //Table methods
 
