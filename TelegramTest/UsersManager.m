@@ -12,6 +12,7 @@
 #import "ImageUtils.h"
 #import "TGTimer.h"
 #import <AddressBook/AddressBook.h>
+#import "TLUserCategory.h"
 @interface UsersManager ()
 @property (nonatomic, strong) TGTimer *lastSeenUpdater;
 @property (nonatomic, strong) RPCRequest *lastSeenRequest;
@@ -101,6 +102,30 @@
     return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
 }
 
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    
+    NSArray *userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
+    
+    
+    NSArray *fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fullName CONTAINS[c] %@ AND self.n_id IN %@ AND self.username.length != 0",userName,uids]];
+    
+    NSMutableArray *result = [[NSMutableArray alloc] initWithArray:userNames];
+    
+    [fullName enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if([result indexOfObject:obj] == NSNotFound) {
+            [result addObject:obj];
+        }
+        
+    }];
+    
+    return result;
+
+}
+
 - (void)addFromDB:(NSArray *)array {
     [self add:array withCustomKey:@"n_id" update:NO];
 }
@@ -158,7 +183,6 @@
                 }
                 
                 currentUser.access_hash = newUser.access_hash;
-                currentUser.inactive = newUser.inactive;
                 
                 if(!currentUser.phone || !currentUser.phone.length)
                     currentUser.phone = newUser.phone;

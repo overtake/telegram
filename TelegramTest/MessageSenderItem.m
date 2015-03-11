@@ -17,13 +17,9 @@
 
 
 -(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation{
-    if(self = [super init]) {
+    if(self = [super initWithConversation:conversation]) {
         
-        
-        
-        self.conversation = conversation;
-        
-        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] dialog:conversation];
+        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
         [self.message save:YES];
         
@@ -41,7 +37,7 @@
     id request;
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMessage createWithPeer:[self.conversation inputPeer] message:[self.message message] random_id:[self.message randomId]];
+        request = [TLAPI_messages_sendMessage createWithPeer:[self.conversation inputPeer] reply_to_id:self.message.reply_to_id message:[self.message message] random_id:[self.message randomId]];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;

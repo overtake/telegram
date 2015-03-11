@@ -17,7 +17,6 @@
 
 -(void)resetStateAndSync;
 
-
-
-
++(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages asyncCompletionHandler:(dispatch_block_t)completionHandler;
++(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages;
 @end

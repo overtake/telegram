@@ -116,7 +116,7 @@
 
 @interface TMMenuPopover()
 @property (nonatomic, strong) NSWindow *shadowWindow;
-@property (nonatomic, weak) NSView *positioningView;
+@property (nonatomic, strong) NSView *positioningView;
 @end
 
 @implementation TMMenuPopover
@@ -129,7 +129,7 @@
     if (self == nil)
         return nil;
     
-    
+    _autoHighlight = YES;
     
     TMMenuController *controller = [[TMMenuController alloc] initWithMenu:menu];
     controller.popover = self;
@@ -649,6 +649,7 @@ static CGFloat const TMMenuPopoverBackgroundViewArrowWidth = 24.0;
     [self.fillColor set];
     NSRectFill(rect);
 }
+
 
 - (CGRectEdge)arrowEdgeForPopoverEdge:(CGRectEdge)popoverEdge {
     CGRectEdge arrowEdge = CGRectMinYEdge;

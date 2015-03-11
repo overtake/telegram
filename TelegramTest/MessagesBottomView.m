@@ -25,6 +25,8 @@
 
 #import "NSString+FindURLs.h"
 #import "TGAttachImageElement.h"
+#import "TGMentionPopup.h"
+#import "MessageReplyContainer.h"
 
 @interface MessagesBottomView()
 
@@ -60,6 +62,8 @@
 
 @property (nonatomic,strong) NSMutableArray *attachmentsIgnore;
 
+@property (nonatomic,strong) MessageReplyContainer *replyContainer;
+
 @end
 
 @implementation MessagesBottomView
@@ -75,13 +79,7 @@
         self.attachments = [[NSMutableArray alloc] init];
         
         self.attachmentsIgnore = [[NSMutableArray alloc] init];
-        
-      //  self.layer = [[TMLayer alloc] initWithLayer:self.layer];
-        
-        
-//        [self addSubview:self.normalView];
-//        [self addSubview:self.actionsView];
-//        [self addSubview:self.secretInfoView];
+
                 
         [self setState:MessagesBottomViewNormalState animated:NO];
         
@@ -144,6 +142,8 @@
     } else {
          [self setForwardEnabled:YES];
     }
+    
+    [self checkReplayMessage:YES];
 
 }
 
@@ -203,6 +203,10 @@
 - (void)setForwardEnabled:(BOOL)forwardEnabled {
     self->_forwardEnabled = forwardEnabled;
     [self.forwardButton setDisable:!forwardEnabled];
+}
+
+-(void)updateReplayMessage:(BOOL)updateHeight {
+    [self checkReplayMessage:updateHeight];
 }
 
 - (void)setSectedMessagesCount:(NSUInteger)count {
@@ -712,13 +716,14 @@
     
     [self.attachmentsIgnore removeAllObjects];
     
+    
     [self.messagesViewController sendMessage];
 }
 
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
     BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
     
-    if(isNeedSend) {
+    if(isNeedSend && ![TGMentionPopup isVisibility]) {
          [self sendButtonAction];
     }
     return isNeedSend;
@@ -745,9 +750,6 @@
        // [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
         
-       
-        
-        
         [self.sendButton setTextColor:LINK_COLOR forState:TMButtonNormalState];
         [self.sendButton setTextColor:NSColorFromRGB(0x467fb0) forState:TMButtonNormalHoverState];
         [self.sendButton setTextColor:NSColorFromRGB(0x2e618c) forState:TMButtonPressedState];
@@ -770,6 +772,128 @@
     [self checkAttachImages];
     
     
+    
+    
+    
+    if(self.dialog.type == DialogTypeChat) {
+        
+        NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
+        
+        NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
+        textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
+        
+        rect.origin.x -= textViewBounds.origin.x;
+        rect.origin.y-= textViewBounds.origin.y;
+        
+        rect.origin.x += 100;
+        
+        
+        NSString *string = [self.inputMessageTextField string];
+        
+        NSRange range;
+        
+        NSString *username;
+        
+        NSRange selectedRange = self.inputMessageTextField.selectedRange;
+        
+        while ((range = [string rangeOfString:@"@"]).location != NSNotFound) {
+            username = [string substringFromIndex:range.location + 1];
+            
+            NSRange space = [username rangeOfString:@" "];
+            
+            if(space.location != NSNotFound)
+                username = [username substringToIndex:space.location];
+            
+            
+            
+            if(username.length > 0) {
+                
+                if(selectedRange.location == range.location + username.length + 1)
+                    break;
+                else
+                    username = nil;
+            }
+            
+            string = [string substringFromIndex:range.location +1];
+            
+        }
+        if(username.length > 0) {
+            [TGMentionPopup show:username chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:^(NSString *fullUserName) {
+                
+                NSMutableString *insert = [string mutableCopy];
+                
+                [insert insertString:[fullUserName substringFromIndex:username.length] atIndex:selectedRange.location];
+                
+                
+                
+                [self.inputMessageTextField insertText:fullUserName replacementRange:NSMakeRange(range.location + 1, username.length)];
+                
+            }];
+        } else {
+            [TGMentionPopup close];
+        }
+
+    }
+        
+    
+    
+    
+}
+
+-(void)checkReplayMessage:(BOOL)updateHeight {
+    
+    [self.replyContainer removeFromSuperview];
+    
+    self.replyContainer = nil;
+    
+    
+    __block TL_localMessage *replyMessage;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSData *serialized = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.dialog.peer_id] inCollection:REPLAY_COLLECTION];
+        
+        if(serialized) {
+            replyMessage = [TLClassStore deserialize:serialized];
+        }
+        
+        
+    }];
+    
+    if(replyMessage) {
+        int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+        
+        _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        
+        
+        
+        weak();
+        
+        [_replyContainer setDeleteHandler:^{
+           
+            [weakSelf.messagesViewController removeReplayMessage:YES];
+            
+        }];
+        
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
+        
+        [_replyContainer setReplyObject:replyObject];
+        
+        [self.normalView addSubview:_replyContainer];
+        
+        if(updateHeight) {
+            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+        }
+        
+        _replyContainer.autoresizingMask = NSViewMinYMargin | NSViewWidthSizable;
+    } else {
+        
+        if(updateHeight) {
+            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+        }
+        
+    }
+   
 }
 
 -(void)checkAttachImages {
@@ -849,7 +973,8 @@
         
     }];
     
-    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+    if(self.inputMessageString.length > 0)
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:YES];
     
 }
 
@@ -867,7 +992,9 @@
     }
 
     
-    
+    if(self.replyContainer != nil) {
+        height+= 35;
+    }
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];

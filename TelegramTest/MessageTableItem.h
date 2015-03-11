@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SenderHeader.h"
 #import "DownloadItem.h"
-
+#import "TGReplyObject.h"
 #define FORWARMESSAGE_TITLE_HEIGHT 28
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
@@ -17,6 +17,7 @@
 @property (nonatomic,weak) TMTableView *table;
 
 @property (nonatomic, strong) TL_localMessage *message;
+
 @property (nonatomic, strong) SenderItem *messageSender;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
@@ -41,6 +42,8 @@
 @property (nonatomic, strong) DownloadItem *downloadItem;
 @property (nonatomic,strong) DownloadEventListener *downloadListener;
 
+
+@property (nonatomic,strong,readonly) TGReplyObject *replyObject;
 
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;
@@ -67,5 +70,9 @@
 -(BOOL)canShare;
 
 -(NSURL *)shareObject;
+
+-(BOOL)isReplyMessage;
+-(BOOL)isFwdMessage;
+
 
 @end

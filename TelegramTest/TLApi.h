@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.12.14.
+//  Auto created by Mikhail Filimonov on 09.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -269,9 +269,8 @@
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int max_id;
 @property int offset;
-@property Boolean read_contents;
 
-+(TLAPI_messages_readHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id offset:(int)offset read_contents:(Boolean)read_contents;
++(TLAPI_messages_readHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id offset:(int)offset;
 @end
 
 @interface TLAPI_messages_deleteHistory : TLApiObject
@@ -285,12 +284,6 @@
 @property (nonatomic, strong) NSMutableArray* n_id;
 
 +(TLAPI_messages_deleteMessages*)createWithN_id:(NSMutableArray*)n_id;
-@end
-
-@interface TLAPI_messages_restoreMessages : TLApiObject
-@property (nonatomic, strong) NSMutableArray* n_id;
-
-+(TLAPI_messages_restoreMessages*)createWithN_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_messages_receivedMessages : TLApiObject
@@ -308,25 +301,28 @@
 
 @interface TLAPI_messages_sendMessage : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_id;
 @property (nonatomic, strong) NSString* message;
 @property long random_id;
 
-+(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer message:(NSString*)message random_id:(long)random_id;
++(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id message:(NSString*)message random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 
-+(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer media:(TLInputMedia*)media random_id:(long)random_id;
++(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id media:(TLInputMedia*)media random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
+@property (nonatomic, strong) NSMutableArray* random_id;
 
-+(TLAPI_messages_forwardMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
++(TLAPI_messages_forwardMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id;
 @end
 
 @interface TLAPI_messages_getChats : TLApiObject
@@ -787,5 +783,11 @@
 @property (nonatomic, strong) NSString* n_hash;
 
 +(TLAPI_messages_getAllStickers*)createWithN_hash:(NSString*)n_hash;
+@end
+
+@interface TLAPI_account_updateDeviceLocked : TLApiObject
+@property int period;
+
++(TLAPI_account_updateDeviceLocked*)createWithPeriod:(int)period;
 @end
 

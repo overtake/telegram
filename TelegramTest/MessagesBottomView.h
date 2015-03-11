@@ -33,4 +33,6 @@ typedef enum {
 
 -(void)closeEmoji;
 
+-(void)updateReplayMessage:(BOOL)updateHeight;
+
 @end

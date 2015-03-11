@@ -28,10 +28,7 @@
 }
 
 - (id)initWithImage:(NSImage *)image jpegData:(NSData *)jpegData forConversation:(TL_conversation *)conversation {
-    if(self = [super init]) {
-        
-        self.conversation = conversation;
-       
+    if(self = [super initWithConversation:conversation]) {
         
         
         NSSize realSize = image.size;
@@ -71,7 +68,7 @@
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
-        self.message = [MessageSender createOutMessage:@"" media:photo dialog:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
         
         [jpegData writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
@@ -110,7 +107,7 @@
         if(strongSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer media:media random_id:rand_long()];
+            request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer reply_to_id:strongSelf.message.reply_to_id media:media random_id:rand_long()];
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {

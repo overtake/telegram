@@ -11,8 +11,7 @@
 #import "GeneralSettingsBlockHeaderView.h"
 #import "GeneralSettingsRowItem.h"
 #import "TGPasslock.h"
-#import "GeneralSettingsDescriptionRowItem.h"
-#import "GeneralSettingsDescriptionRowView.h"
+#import "NSData+Extensions.h"
 @interface TGPasscodeSettingsViewController ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TMTableView *tableView;
@@ -71,59 +70,64 @@
     
     GeneralSettingsRowItem *turnPasscode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
         
-        if([TGPasslock isEnabled]) {
-            [self showPasslock:^(BOOL result, NSString *md5Hash) {
+        
+        
+        if([[MTNetwork instance] passcodeIsEnabled]) {
+            
+            [self showPasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
-                [TGPasslock disableWithHash:md5Hash];
+                BOOL res = [[MTNetwork instance] checkPasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                 
-                [self rebuildController];
+                if(res) {
+                    [[MTNetwork instance] updatePasscode:[[NSData alloc] initWithEmptyBytes:32]];
+                    
+                    
+                    [self rebuildController];
+                    
+                    [TMViewController hidePasslock];
+                }
                 
+                
+                
+                return res;
             }];
+            
+            
         } else {
-            [self showCreatePasslock:^(BOOL result, NSString *md5Hash) {
+            [self showCreatePasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
-                [TGPasslock enableWithHash:md5Hash];
+                [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
+                
+                [TMViewController hidePasslock];
                 
                 [self rebuildController];
+                
+                return YES;
                 
             }];
         }
         
         
-    } description:[TGPasslock isEnabled] ? NSLocalizedString(@"PasscodeSettings.TurnOffPasscode", nil) : NSLocalizedString(@"PasscodeSettings.TurnOnPasscode", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+        
+        
+    } description:[[MTNetwork instance] passcodeIsEnabled] ? NSLocalizedString(@"PasscodeSettings.TurnOffPasscode", nil) : NSLocalizedString(@"PasscodeSettings.TurnOnPasscode", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
         return @(NO);
     }];
-    
-    
-    
     
     [self.tableView insert:turnPasscode atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    
-    
-    NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
-    
-    [attrs appendString:NSLocalizedString(@"Passcode.TurnDescription", nil) withColor:NSColorFromRGB(0x909090)];
-    
-    [attrs setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, attrs.string.length)];
-    
-    GeneralSettingsDescriptionRowItem *desc = [[GeneralSettingsDescriptionRowItem alloc] initWithObject:attrs];
-    
-    
-    [self.tableView insert:desc atIndex:self.tableView.list.count tableRedraw:NO];
-
-    
-    
-    if([TGPasslock isEnabled]) {
+    if([[MTNetwork instance] passcodeIsEnabled]) {
         
         GeneralSettingsRowItem *changePasscode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
             
-            [self showChangePasslock:^(BOOL result, NSString *md5Hash) {
+            [self showChangePasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
-                [TGPasslock changeWithHash:md5Hash];
+                [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                 
                 [self rebuildController];
+                
+                return YES;
                 
             }];
             
@@ -206,10 +210,6 @@
     
     if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
         return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowViewClass"];
-    }
-    
-    if([item isKindOfClass:[GeneralSettingsDescriptionRowItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsDescriptionRowView class] identifier:@"GeneralSettingsDescriptionRowViewClass"];
     }
     
     return nil;

@@ -178,9 +178,8 @@ bool isRemoteStickersLoaded() {
 }
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
-        
+
     __block NSString *hash = @"";
-    
     __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {

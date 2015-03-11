@@ -30,6 +30,7 @@
 #import "TMTaskRequest.h"
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
+#import "TGPasslock.h"
 @interface TGConversationListViewController ()
 @property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
@@ -85,6 +86,17 @@
                 
                 [ASQueue dispatchOnMainQueue:^{
                     [self initConversations];
+                    
+                    if([TGPasslock isEnabled]) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            [TMViewController showBlockPasslock:nil];
+                            
+                        });
+                        
+                    }
+                    
                 }];
             }];
         }];

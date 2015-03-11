@@ -24,6 +24,7 @@ NSString *const ENCRYPTED_IMAGE_COLLECTION = @"encrypted_image_collection";
 NSString *const ENCRYPTED_PARAMS_COLLECTION = @"encrypted_params_collection";
 NSString *const STICKERS_COLLECTION = @"stickers_collection";
 NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
+NSString *const REPLAY_COLLECTION = @"replay_collection";
 NSString *const FILE_NAMES = @"file_names";
 
 -(id)init {
@@ -106,7 +107,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t118"; // 61
+    NSString *dbName = @"t127"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -140,7 +141,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         
-        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer)"];
+        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer, pts_count integer)"];
         
         
         
@@ -190,6 +191,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)"];
         
+        
+        [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
         
         [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
@@ -248,7 +251,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select * from update_state limit 1"];
         
         if([result next]) {
-            state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"]];
+            state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"] pts_count:[result intForColumn:@"pts_count"]];
         }
         
         [db commit];
@@ -264,7 +267,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"delete from update_state where 1=1"];
         
-        [db executeUpdate:@"insert into update_state (pts, qts, date, seq) values (?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq)];
+        [db executeUpdate:@"insert into update_state (pts, qts, date, seq,pts_count) values (?,?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
     }];
 }
 
@@ -428,10 +431,26 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  [result close];
                 
             }
-            
         }
         
+        
+        
+        
     }];
+    
+    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_id != 0"]];
+    
+    NSMutableArray *supportIds = [[NSMutableArray alloc] init];
+    
+    [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        [supportIds addObject:@([obj reply_to_id])];
+        
+    }];
+    
+    NSArray *support = [self selectSupportMessages:supportIds];
+    
+    [[MessagesManager sharedManager] addSupportMessages:support];
     
     if(completeHandler)
         completeHandler(messages);
@@ -439,8 +458,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(TLMessage *)messageById:(int)msgId {
-    __block TLMessage *message;
+-(TL_localMessage *)messageById:(int)msgId {
+    __block TL_localMessage *message;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
@@ -603,6 +622,30 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         //[db commit];
 
     }];
+}
+
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+    
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        //[db beginTransaction];
+        
+        FMResultSet *result = [db executeQuery:@"select n_id from messages where flags & 1 = 1 and peer_id = ? and n_id <= ?",@(conversation.peer.peer_id),@(max_id)];
+        
+        
+        
+        while ([result next]) {
+            
+            [ids addObject:@([result intForColumn:@"n_id"])];
+        }
+        
+        [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ? and n_id <= ?",@(conversation.peer.peer_id),@(max_id)];
+        //[db commit];
+        
+    }];
+    
+    return ids;
 }
 
 
@@ -1570,6 +1613,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             [list addObject:broadcast];
         }
+        
+         [result close];
+        
     }];
     
     
@@ -1602,6 +1648,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [list addObject:action];
         }
         
+        [result close];
+        
         if(completeHandler) completeHandler(list);
         
     }];
@@ -1632,8 +1680,48 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [list addObject:action];
         }
         
+        [result close];
+        
         if(completeHandler) completeHandler(list);
         
+    }];
+}
+
+
+-(NSArray *)selectSupportMessages:(NSArray *)ids {
+    
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        NSString *join = [ids componentsJoinedByString:@","];
+        
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from support_messages where n_id IN (%@)",join];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        
+        while ([result next]) {
+            
+            [messages addObject:[TLClassStore deserialize:[result dataForColumn:@"serialized"]]];
+            
+        }
+        
+        [result close];
+        
+    }];
+    
+    return messages;
+    
+}
+
+
+-(void)addSupportMessages:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            [db executeUpdate:@"insert into support_messages (n_id,serialized) values (?,?)",@(obj.n_id),[TLClassStore serialize:obj]];
+        }];
     }];
 }
 

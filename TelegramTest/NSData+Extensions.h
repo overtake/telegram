@@ -13,4 +13,7 @@
 -(NSData *)gzipInflate;
 - (NSData *)gzipDeflate;
 -(NSData *)dataWithData:(NSData *)data;
+
+-(id)initWithEmptyBytes:(int)bytes;
+
 @end

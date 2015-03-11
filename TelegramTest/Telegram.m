@@ -74,8 +74,6 @@ Telegram *TelegramInstance() {
 
 - (void)initialize {
     [Notification addObserver:self selector:@selector(protocolUpdated:) name:PROTOCOL_UPDATED];
-    if([[MTNetwork instance] isAuth])
-        [self protocolUpdated:nil];
 }
 
 - (void)dealloc {

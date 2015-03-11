@@ -26,6 +26,19 @@
     return [NSString stringWithString:hexString];
 }
 
+-(id)initWithEmptyBytes:(int)bytes {
+    
+    NSMutableData *data = [[NSMutableData alloc] init];
+    
+    for (int i = 0; i < bytes; i++) {
+        int b = 0;
+        [data appendBytes:&b length:1];
+    }
+    
+    return data;
+    
+}
+
 
 -(NSData *)gzipInflate;
 {

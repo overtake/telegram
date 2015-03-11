@@ -43,6 +43,7 @@
 
 +(BOOL)enableWithHash:(NSString *)md5Hash {
     
+    
     if(![TGPasslock isEnabled]) {
         
         
@@ -110,7 +111,17 @@
         
         if(differenceTime > [self autoLockTime]) {
             [ASQueue dispatchOnMainQueue:^{
-                [TMViewController showBlockPasslock:nil];
+                [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
+                    
+                    BOOL res = [[MTNetwork instance] checkPasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
+                    
+                    if(res) {
+                        [TMViewController hidePasslock];
+                    }
+                    
+                    return res;
+                    
+                }];
             }];
         }
     }

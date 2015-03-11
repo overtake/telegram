@@ -155,6 +155,14 @@
          contextName = "__17-[MTNetwork init]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
+         contextName = "__53-[MessagesBottomView TMGrowingTextViewTextDidChange:]_block_invoke:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "range">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[SelectTextManager enumerateItemsWithOptions:usingBlock:]:SelectTextManager.m">
          <PersistentStrings>
             <PersistentString
@@ -413,9 +421,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TL_conversation inputPeer]:TL_conversation.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TGImageObject initDownloadItem]:TGImageObject.m">
       </ContextState>
       <ContextState
@@ -465,6 +470,12 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__34-[UserInfoViewController loadView]_block_invoke:UserInfoViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesTopInfoView setConversation:]:MessagesTopInfoView.m">
       </ContextState>
       <ContextState
          contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
@@ -840,6 +851,9 @@
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) rebuildType]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
       </ContextState>
       <ContextState
@@ -993,6 +1007,9 @@
                value = "strongSelf.user.photo">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[Storage insertUsers:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke_6:TMCircularProgress.m">
@@ -1300,6 +1317,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates updateShort:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -1312,6 +1332,9 @@
                value = "self.messages">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMentionPhoto generatePhoto]:TGMentionPopup.m">
       </ContextState>
       <ContextState
          contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
@@ -1724,6 +1747,9 @@
          contextName = "__41-[TMSharedMediaButton loadCount:peer_id:]_block_invoke:TMSharedMediaButton.m">
       </ContextState>
       <ContextState
+         contextName = "-[GeneralSettingsDescriptionRowView redrawRow]:GeneralSettingsDescriptionRowView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
          <PersistentStrings>
             <PersistentString
@@ -1811,6 +1837,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__37-[TGAllStickersTableView reloadData:]_block_invoke:TGAllStickersTableView.m">

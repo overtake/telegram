@@ -10,6 +10,8 @@
 #import "TMImageUtils.h"
 #import "MessageSender.h"
 #import "ImageUtils.h"
+#import "TGMentionPopup.h"
+
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -310,6 +312,50 @@ typedef enum {
     
     
     return para;
+}
+
+
+-(void)keyDown:(NSEvent *)theEvent {
+    
+    if([TGMentionPopup isVisibility]) {
+        
+        
+        if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
+            
+            if(theEvent.keyCode == 125) {
+                [TGMentionPopup selectNext];
+            } else {
+                [TGMentionPopup selectPrev];
+            }
+            
+            return;
+            
+        }
+        
+        if([self isEnterEvent:theEvent] || [self isCommandEnterEvent:theEvent]) {
+            
+            BOOL result = [self.growingDelegate TMGrowingTextViewCommandOrControlPressed:self isCommandPressed:[self isCommandEnterEvent:theEvent]];
+            
+            if(result) {
+                
+                [TGMentionPopup performSelected];
+                
+                
+                return;
+            }
+            
+        }
+        
+        
+        
+        
+        
+    }
+    
+    [super keyDown:theEvent];
+    
+
+    
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

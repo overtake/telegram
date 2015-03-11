@@ -38,11 +38,10 @@
     if(self) {
         self.message = object;
         
-        
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         
-        self.isForwadedMessage = ([self.message isKindOfClass:[TL_messageForwarded class]] || [self.message isKindOfClass:[TL_localMessageForwarded class]] ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media.document isSticker]);
+        self.isForwadedMessage = (self.message.fwd_from_id != 0 ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media.document isSticker]);
         self.isChat = self.message.conversation.type == DialogTypeChat;
         
         _containerOffset = self.isForwadedMessage ? 129 : 79;
@@ -107,6 +106,8 @@
         
     }
     
+    
+    
     NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
     
     [header appendString:name withColor:nameColor];
@@ -117,18 +118,20 @@
     
     self.headerName = header;
     
-  //  self.headerSize = [self.headerName sizeForTextFieldForWidth:<#(int)#>]
     
-//    NSRange range = [self.headerString appendString:name withColor:nameColor];
-//    [self.headerString addAttribute:NSParagraphStyleAttributeName value:style range:range];
-//    [self.headerString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12] forRange:range];
-//    [self.headerString setLink:[TMInAppLinks userProfile:self.user.n_id] forRange:range];
+    
+    if([self isReplyMessage])
+    {
+        _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage];
+            
+    }
+    
     
     if(self.isForwadedMessage) {
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
 //        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
-        TLUser *user = [[UsersManager sharedManager] find:self.message.fwd_from_id];
+        TLUser *user = self.fwd_user;
         
         NSRange rangeUser = NSMakeRange(0, 0);
         if(user) {
@@ -167,6 +170,10 @@
             
             if(self.isForwadedMessage)
                 viewSize.height += 24;
+        }
+        
+        if([self isReplyMessage]) {
+            viewSize.height +=40;
         }
         
         if(self.isForwadedMessage && self.isHeaderForwardedMessage)
@@ -391,13 +398,22 @@
     if((self.downloadItem.downloadState == DownloadStateCanceled || self.downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart))
         [self.downloadItem start];
     
-    
-    
+}
+
+
+-(BOOL)isReplyMessage {
+    return self.message.reply_to_id != 0;
+}
+
+-(BOOL)isFwdMessage {
+    return self.message.fwd_from_id != 0;
 }
 
 - (BOOL)makeSizeByWidth:(int)width {
     return NO;
 }
+
+
 
 + (NSDateFormatter *)dateFormatter {
     static NSDateFormatter *dateF = nil;

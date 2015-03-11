@@ -58,11 +58,14 @@
 #define TGOUTUNREADMESSAGE 0x3
 #define TGNOFLAGSMESSAGE 0x0
 
+#define TGFWDMESSAGE 0x4
+#define TGREPLYMESSAGE 0x8
+
 #define TGMINFAKEID 1500000000
 #define TGMINSECRETID 800000000
 //#define NSLocalizedString(key, comment) \
 //[[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:@"localizations"]
-#define FONT_NAME @"Helvetica Neue"
+#define FONT_NAME @"HelveticaNeue"
 #define FONT_NAME_LIGHT @"Helvetica-Light"
 #define FONT_SIZE 13
 

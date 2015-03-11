@@ -30,6 +30,7 @@ extern NSString *const ENCRYPTED_IMAGE_COLLECTION;
 extern NSString *const ENCRYPTED_PARAMS_COLLECTION;
 extern NSString *const STICKERS_COLLECTION;
 extern NSString *const SOCIAL_DESC_COLLECTION;
+extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
 
 -(void)drop:(void (^)())completeHandler;
@@ -134,13 +135,15 @@ extern NSString *const FILE_NAMES;
 
 -(void)markAllInDialog:(TL_conversation *)dialog;
 
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
+
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 
 
 -(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
--(TLMessage *)messageById:(int)msgId;
+-(TL_localMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
 
 
@@ -198,5 +201,8 @@ extern NSString *const FILE_NAMES;
 
 -(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
 
+
+-(NSArray *)selectSupportMessages:(NSArray *)ids;
+-(void)addSupportMessages:(NSArray *)messages;
 
 @end

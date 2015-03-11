@@ -2137,7 +2137,7 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderForwardedMessage = YES;
     
     if(prevItem.message && item.message) {
-        if(!prevItem.message.action && !item.message.action) {
+        if(!prevItem.message.action && !item.message.action && ![prevItem isReplyMessage]) {
             if(prevItem.message.from_id == item.message.from_id && ABS(prevItem.message.date - item.message.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderMessage = NO;
             }
@@ -2243,6 +2243,9 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+
+
+
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
@@ -2251,81 +2254,9 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    
-//    if([message isEqualToString:@"requestKey"]) {
-//        
-//        EncryptedParams *config = _conversation.encryptedChat.encryptedParams;
-//        
-//        uint8_t rawABytes[256];
-//        SecRandomCopyBytes(kSecRandomDefault, 256, rawABytes);
-//        
-//        for (int i = 0; i < 256 && i < (int)config.random.length; i++)
-//        {
-//            uint8_t currentByte = ((uint8_t *)config.random.bytes)[i];
-//            rawABytes[i] ^= currentByte;
-//        }
-//        
-//        NSData * aBytes = [[NSData alloc] initWithBytes:rawABytes length:256];
-//        
-//        int32_t tmpG = config.g;
-//        tmpG = NSSwapInt(tmpG);
-//        NSData *g = [[NSData alloc] initWithBytes:&tmpG length:4];
-//        
-//        NSData *g_a = MTExp(g, config.a, config.p);
-//        
-//        
-//        RequestKeySecretSenderItem *sender = [[RequestKeySecretSenderItem alloc] initWithConversation:_conversation exchange_id:rand_long() g_a:g_a];
-//        
-//        [sender send];
-//    }
-    
-    //8149178
-    //5332648
-
-//
-    
-//    if([message hasPrefix:@"/changePass"]) {
-//        
-//        NSString *pass = [message substringFromIndex:@"/changePass".length + 1];
-//        
-//        
-//        [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, TL_account_noPassword *response) {
-//            
-//            
-//            NSMutableData *newsalt = [response.n_salt mutableCopy];
-//            
-//            [newsalt addRandomBytes:16];
-//            
-//            
-//            NSMutableData *hashData = [NSMutableData dataWithData:newsalt];
-//            
-//            [hashData appendData:[pass dataUsingEncoding:NSUTF8StringEncoding]];
-//            
-//            [hashData appendData:newsalt];
-//            
-//            NSData *passhash =  MTSha256(hashData);
-//            
-//            
-//            [RPCRequest sendRequest:[TLAPI_account_setPassword createWithCurrent_password_hash:[[NSData alloc] init] n_salt:newsalt n_password_hash:passhash hint:@"12345"] successHandler:^(RPCRequest *request, id response) {
-//                
-//                
-//                
-//                
-//            } errorHandler:^(RPCRequest *request, RpcError *error) {
-//                
-//            }];
-//            
-//            
-//            
-//        } errorHandler:^(RPCRequest *request, RpcError *error) {
-//            
-//        }];
-//        
-//        return;
-//    }
-    
-    
     if(message.length > 0) {
+        
+        
         
         [self sendMessage:message callback:^{
             [self.bottomView setInputMessageString:@"" disableAnimations:NO];
@@ -2377,11 +2308,11 @@ static NSTextAttachment *headerMediaIcon() {
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
-        
         if (message.length <= messagePartLimit) {
             MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:_conversation];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:_conversation callback:callback sentControllerCallback:nil];
+            
         }
         
         else
@@ -2396,15 +2327,13 @@ static NSTextAttachment *headerMediaIcon() {
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
                     
+                    
                 }
                 
             }
             
             [self.historyController addItems:preparedItems conversation:_conversation callback:callback sentControllerCallback:nil];
         }
-        
-        
-        
         
         
     }];
@@ -2631,11 +2560,6 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnStageQueue:^{
         
         
-        
-        
-        
-        
-        
         NSImage *originImage;
         
         if(data) {
@@ -2694,6 +2618,46 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
+
+- (void)addReplayMessage:(TL_localMessage *)message {
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction setObject:[TLClassStore serialize:message] forKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        
+    }];
+    
+     [self.bottomView updateReplayMessage:YES];
+    
+}
+
+-(void)removeReplayMessage:(BOOL)update {
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        
+    }];
+    
+    
+    [self.bottomView updateReplayMessage:update];
+}
+
+
+-(TL_localMessage *)replyMessage {
+    
+    __block TL_localMessage *replyMessage;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        if(data)
+            replyMessage = [TLClassStore deserialize:data];
+        
+    }];
+    
+    return replyMessage;
+    
+}
 
 //Table methods
 

@@ -18,22 +18,19 @@
 @interface MessageTableItemText()<SettingsListener>
 @property (nonatomic, strong) NSMutableAttributedString *nameAttritutedString;
 @property (nonatomic, strong) NSMutableAttributedString *forwardAttributedString;
+
+
 @end
 
 @implementation MessageTableItemText
 
-- (id) initWithObject:(TLMessage *)object {
+- (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
     NSString *message = [[object.message trim] fixEmoji];
     
-    
-  
-    
-    
- //   font = [NSFont fontWithName:@"HelveticaNeue" size:13];
     
     [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
     
@@ -74,10 +71,11 @@
     [self.nameAttritutedString setLink:[TMInAppLinks userProfile:self.user.n_id] withColor:[MessagesUtils colorForUserId:self.message.from_id] forRange:rangeHeader];
     
     
-    if([object isKindOfClass:[TL_messageForwarded class]] || [object isKindOfClass:[TL_localMessageForwarded class]] ) {
+    if(self.isForwadedMessage) {
+        
         self.forwardAttributedString = [[NSMutableAttributedString alloc] init];
         NSRange range1 = [self.forwardAttributedString appendString:@"Message.ForwardedFrom" withColor:NSColorFromRGB(0x6da2cb)];
-        TLUser *user = [[UsersManager sharedManager] find:object.fwd_from_id];
+        TLUser *user = self.fwd_user;
         NSRange range2 = [self.forwardAttributedString appendString:user.fullName withColor:NSColorFromRGB(0x57a4e1)];
         
         [self.forwardAttributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:range2];

@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef void (^passlockCallback)(BOOL result, NSString * md5Hash);
+typedef BOOL (^passlockCallback)(BOOL result,NSString * md5Hash);
 
 enum {
     TMViewBorderTop = (1 << 0),

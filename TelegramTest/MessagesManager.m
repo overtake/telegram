@@ -26,6 +26,8 @@
 @interface MessagesManager ()
 @property (nonatomic,strong) NSMutableDictionary *messages;
 @property (nonatomic,strong) NSMutableDictionary *messages_with_random_ids;
+
+@property (nonatomic,strong) NSMutableDictionary *supportMessages;
 @end
 
 @implementation MessagesManager
@@ -34,8 +36,38 @@
     if(self = [super initWithQueue:queue]) {
         self.messages = [[NSMutableDictionary alloc] init];
         self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
+        self.supportMessages = [[NSMutableDictionary alloc] init];
     }
     return self;
+}
+
+
+-(void)addSupportMessages:(NSArray *)supportMessages {
+    
+    [self.queue dispatchOnQueue:^{
+        
+        [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            _supportMessages[@(obj.n_id)] = obj;
+            
+        }];
+        
+    }];
+    
+   
+}
+
+-(TL_localMessage *)supportMessage:(int)n_id {
+    
+    __block TL_localMessage *message;
+    
+    [self.queue dispatchOnQueue:^{
+        
+        message = _supportMessages[@(n_id)];
+        
+    } synchronous:YES];
+    
+    return message;
 }
 
 
@@ -337,6 +369,27 @@
     return marked;
 }
 
+
+-(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+    
+    
+    [self.queue dispatchOnQueue:^{
+        NSArray *copy = [[self.messages allValues] copy];
+        copy = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d",conversation.peer.peer_id]];
+        
+        
+        for (TL_localMessage *msg in copy) {
+            
+            if(msg.n_id <= max_id) {
+                msg.flags&=~TGUNREADMESSAGE;
+            }
+        }
+        
+    } synchronous:YES];
+    
+    
+    return [[Storage manager] markAllInConversation:conversation max_id:max_id];
+}
 
 
 -(void)setUnread_count:(int)unread_count {

@@ -75,7 +75,7 @@
         [self.classes setObject:[TL_fileLocationUnavailable class] forKey:[NSNumber numberWithInt:2086234950]];
         [self.classes setObject:[TL_fileLocation class] forKey:[NSNumber numberWithInt:1406570614]];
         [self.classes setObject:[TL_userEmpty class] forKey:[NSNumber numberWithInt:537022650]];
-        [self.classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:1879553105]];
+        [self.classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
         [self.classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
         [self.classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];
         [self.classes setObject:[TL_userForeign class] forKey:[NSNumber numberWithInt:123533224]];
@@ -95,7 +95,7 @@
         [self.classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:935395612]];
         [self.classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
         [self.classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
-        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:1450613171]];
+        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-302118921]];
         [self.classes setObject:[TL_messageForwarded class] forKey:[NSNumber numberWithInt:-1553471722]];
         [self.classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:495384334]];
         [self.classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
@@ -103,7 +103,7 @@
         [self.classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:-1563278704]];
         [self.classes setObject:[TL_messageMediaGeo class] forKey:[NSNumber numberWithInt:1457575028]];
         [self.classes setObject:[TL_messageMediaContact class] forKey:[NSNumber numberWithInt:1585262393]];
-        [self.classes setObject:[TL_messageMediaUnsupported class] forKey:[NSNumber numberWithInt:694364726]];
+        [self.classes setObject:[TL_messageMediaUnsupported class] forKey:[NSNumber numberWithInt:-1618676578]];
         [self.classes setObject:[TL_messageActionEmpty class] forKey:[NSNumber numberWithInt:-1230047312]];
         [self.classes setObject:[TL_messageActionChatCreate class] forKey:[NSNumber numberWithInt:-1503425638]];
         [self.classes setObject:[TL_messageActionChatEditTitle class] forKey:[NSNumber numberWithInt:-1247687078]];
@@ -111,7 +111,7 @@
         [self.classes setObject:[TL_messageActionChatDeletePhoto class] forKey:[NSNumber numberWithInt:-1780220945]];
         [self.classes setObject:[TL_messageActionChatAddUser class] forKey:[NSNumber numberWithInt:1581055051]];
         [self.classes setObject:[TL_messageActionChatDeleteUser class] forKey:[NSNumber numberWithInt:-1297179892]];
-        [self.classes setObject:[TL_dialog class] forKey:[NSNumber numberWithInt:-1422222932]];
+        [self.classes setObject:[TL_dialog class] forKey:[NSNumber numberWithInt:-1042448310]];
         [self.classes setObject:[TL_photoEmpty class] forKey:[NSNumber numberWithInt:590459437]];
         [self.classes setObject:[TL_photo class] forKey:[NSNumber numberWithInt:582313809]];
         [self.classes setObject:[TL_photoSizeEmpty class] forKey:[NSNumber numberWithInt:236446268]];
@@ -121,7 +121,7 @@
         [self.classes setObject:[TL_video class] forKey:[NSNumber numberWithInt:948937617]];
         [self.classes setObject:[TL_geoPointEmpty class] forKey:[NSNumber numberWithInt:286776671]];
         [self.classes setObject:[TL_geoPoint class] forKey:[NSNumber numberWithInt:541710092]];
-        [self.classes setObject:[TL_auth_checkedPhone class] forKey:[NSNumber numberWithInt:-486486981]];
+        [self.classes setObject:[TL_auth_checkedPhone class] forKey:[NSNumber numberWithInt:-2128698738]];
         [self.classes setObject:[TL_auth_sentCode class] forKey:[NSNumber numberWithInt:-269659687]];
         [self.classes setObject:[TL_auth_authorization class] forKey:[NSNumber numberWithInt:-155815004]];
         [self.classes setObject:[TL_auth_exportedAuthorization class] forKey:[NSNumber numberWithInt:-543777747]];
@@ -136,7 +136,6 @@
         [self.classes setObject:[TL_peerNotifyEventsAll class] forKey:[NSNumber numberWithInt:1830677896]];
         [self.classes setObject:[TL_peerNotifySettingsEmpty class] forKey:[NSNumber numberWithInt:1889961234]];
         [self.classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1923214866]];
-        [self.classes setObject:[TL_globalPrivacySettings class] forKey:[NSNumber numberWithInt:1089848634]];
         [self.classes setObject:[TL_wallPaper class] forKey:[NSNumber numberWithInt:-860866985]];
         [self.classes setObject:[TL_userFull class] forKey:[NSNumber numberWithInt:1997575642]];
         [self.classes setObject:[TL_contact class] forKey:[NSNumber numberWithInt:-116274796]];
@@ -151,7 +150,7 @@
         [self.classes setObject:[TL_contacts_myLinkEmpty class] forKey:[NSNumber numberWithInt:-768992160]];
         [self.classes setObject:[TL_contacts_myLinkRequested class] forKey:[NSNumber numberWithInt:1818882030]];
         [self.classes setObject:[TL_contacts_myLinkContact class] forKey:[NSNumber numberWithInt:-1035932711]];
-        [self.classes setObject:[TL_contacts_link class] forKey:[NSNumber numberWithInt:-322001931]];
+        [self.classes setObject:[TL_contacts_link class] forKey:[NSNumber numberWithInt:986597452]];
         [self.classes setObject:[TL_contacts_contactsNotModified class] forKey:[NSNumber numberWithInt:-1219778094]];
         [self.classes setObject:[TL_contacts_contacts class] forKey:[NSNumber numberWithInt:1871416498]];
         [self.classes setObject:[TL_contacts_importedContacts class] forKey:[NSNumber numberWithInt:-1387117803]];
@@ -163,25 +162,23 @@
         [self.classes setObject:[TL_messages_messages class] forKey:[NSNumber numberWithInt:-1938715001]];
         [self.classes setObject:[TL_messages_messagesSlice class] forKey:[NSNumber numberWithInt:189033187]];
         [self.classes setObject:[TL_messages_messageEmpty class] forKey:[NSNumber numberWithInt:1062078024]];
-        [self.classes setObject:[TL_messages_message class] forKey:[NSNumber numberWithInt:-7289833]];
-        [self.classes setObject:[TL_messages_statedMessages class] forKey:[NSNumber numberWithInt:-1768654661]];
-        [self.classes setObject:[TL_messages_statedMessage class] forKey:[NSNumber numberWithInt:-797251802]];
-        [self.classes setObject:[TL_messages_sentMessage class] forKey:[NSNumber numberWithInt:-772484260]];
-        [self.classes setObject:[TL_messages_chat class] forKey:[NSNumber numberWithInt:1089011754]];
-        [self.classes setObject:[TL_messages_chats class] forKey:[NSNumber numberWithInt:-2125411368]];
+        [self.classes setObject:[TL_messages_statedMessages class] forKey:[NSNumber numberWithInt:131615560]];
+        [self.classes setObject:[TL_messages_statedMessage class] forKey:[NSNumber numberWithInt:-1776022422]];
+        [self.classes setObject:[TL_messages_sentMessage class] forKey:[NSNumber numberWithInt:-1878086592]];
+        [self.classes setObject:[TL_messages_chats class] forKey:[NSNumber numberWithInt:1694474197]];
         [self.classes setObject:[TL_messages_chatFull class] forKey:[NSNumber numberWithInt:-438840932]];
-        [self.classes setObject:[TL_messages_affectedHistory class] forKey:[NSNumber numberWithInt:-1210173710]];
+        [self.classes setObject:[TL_messages_affectedHistory class] forKey:[NSNumber numberWithInt:-1269012015]];
         [self.classes setObject:[TL_inputMessagesFilterEmpty class] forKey:[NSNumber numberWithInt:1474492012]];
         [self.classes setObject:[TL_inputMessagesFilterPhotos class] forKey:[NSNumber numberWithInt:-1777752804]];
         [self.classes setObject:[TL_inputMessagesFilterVideo class] forKey:[NSNumber numberWithInt:-1614803355]];
         [self.classes setObject:[TL_inputMessagesFilterPhotoVideo class] forKey:[NSNumber numberWithInt:1458172132]];
+        [self.classes setObject:[TL_inputMessagesFilterPhotoVideoDocuments class] forKey:[NSNumber numberWithInt:-648121413]];
         [self.classes setObject:[TL_inputMessagesFilterDocument class] forKey:[NSNumber numberWithInt:-1629621880]];
         [self.classes setObject:[TL_inputMessagesFilterAudio class] forKey:[NSNumber numberWithInt:-808946398]];
-        [self.classes setObject:[TL_updateNewMessage class] forKey:[NSNumber numberWithInt:20626867]];
+        [self.classes setObject:[TL_updateNewMessage class] forKey:[NSNumber numberWithInt:522914557]];
         [self.classes setObject:[TL_updateMessageID class] forKey:[NSNumber numberWithInt:1318109142]];
-        [self.classes setObject:[TL_updateReadMessages class] forKey:[NSNumber numberWithInt:-966484431]];
-        [self.classes setObject:[TL_updateDeleteMessages class] forKey:[NSNumber numberWithInt:-1456734682]];
-        [self.classes setObject:[TL_updateRestoreMessages class] forKey:[NSNumber numberWithInt:-782376883]];
+        [self.classes setObject:[TL_updateReadMessages class] forKey:[NSNumber numberWithInt:777696872]];
+        [self.classes setObject:[TL_updateDeleteMessages class] forKey:[NSNumber numberWithInt:846964760]];
         [self.classes setObject:[TL_updateUserTyping class] forKey:[NSNumber numberWithInt:1548249383]];
         [self.classes setObject:[TL_updateChatUserTyping class] forKey:[NSNumber numberWithInt:-1704596961]];
         [self.classes setObject:[TL_updateChatParticipants class] forKey:[NSNumber numberWithInt:125178264]];
@@ -189,16 +186,15 @@
         [self.classes setObject:[TL_updateUserName class] forKey:[NSNumber numberWithInt:-1489818765]];
         [self.classes setObject:[TL_updateUserPhoto class] forKey:[NSNumber numberWithInt:-1791935732]];
         [self.classes setObject:[TL_updateContactRegistered class] forKey:[NSNumber numberWithInt:628472761]];
-        [self.classes setObject:[TL_updateContactLink class] forKey:[NSNumber numberWithInt:1369737882]];
-        [self.classes setObject:[TL_updateActivation class] forKey:[NSNumber numberWithInt:1869154659]];
+        [self.classes setObject:[TL_updateContactLink class] forKey:[NSNumber numberWithInt:-1657903163]];
         [self.classes setObject:[TL_updateNewAuthorization class] forKey:[NSNumber numberWithInt:-1895411046]];
         [self.classes setObject:[TL_updates_state class] forKey:[NSNumber numberWithInt:-1519637954]];
         [self.classes setObject:[TL_updates_differenceEmpty class] forKey:[NSNumber numberWithInt:1567990072]];
         [self.classes setObject:[TL_updates_difference class] forKey:[NSNumber numberWithInt:16030880]];
         [self.classes setObject:[TL_updates_differenceSlice class] forKey:[NSNumber numberWithInt:-1459938943]];
         [self.classes setObject:[TL_updatesTooLong class] forKey:[NSNumber numberWithInt:-484987010]];
-        [self.classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:-738961532]];
-        [self.classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:724548942]];
+        [self.classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:-1199725647]];
+        [self.classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:552099309]];
         [self.classes setObject:[TL_updateShort class] forKey:[NSNumber numberWithInt:2027216577]];
         [self.classes setObject:[TL_updatesCombined class] forKey:[NSNumber numberWithInt:1918567619]];
         [self.classes setObject:[TL_updates class] forKey:[NSNumber numberWithInt:1957577280]];
@@ -207,14 +203,14 @@
         [self.classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
         [self.classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
         [self.classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:784507964]];
-        [self.classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:777313652]];
+        [self.classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:1047491370]];
         [self.classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
         [self.classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
         [self.classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];
         [self.classes setObject:[TL_help_inviteText class] forKey:[NSNumber numberWithInt:415997816]];
-        [self.classes setObject:[TL_messages_statedMessagesLinks class] forKey:[NSNumber numberWithInt:1047852486]];
-        [self.classes setObject:[TL_messages_statedMessageLink class] forKey:[NSNumber numberWithInt:-1448138623]];
-        [self.classes setObject:[TL_messages_sentMessageLink class] forKey:[NSNumber numberWithInt:-371504577]];
+        [self.classes setObject:[TL_messages_statedMessagesLinks class] forKey:[NSNumber numberWithInt:1371430169]];
+        [self.classes setObject:[TL_messages_statedMessageLink class] forKey:[NSNumber numberWithInt:155755144]];
+        [self.classes setObject:[TL_messages_sentMessageLink class] forKey:[NSNumber numberWithInt:-383565811]];
         [self.classes setObject:[TL_inputGeoChat class] forKey:[NSNumber numberWithInt:1960072954]];
         [self.classes setObject:[TL_inputNotifyGeoChatPeer class] forKey:[NSNumber numberWithInt:1301143240]];
         [self.classes setObject:[TL_geoChat class] forKey:[NSNumber numberWithInt:1978329690]];
@@ -329,6 +325,14 @@
         [self.classes setObject:[TL_stickerPack class] forKey:[NSNumber numberWithInt:313694676]];
         [self.classes setObject:[TL_messages_allStickersNotModified class] forKey:[NSNumber numberWithInt:-395967805]];
         [self.classes setObject:[TL_messages_allStickers class] forKey:[NSNumber numberWithInt:-588304126]];
+        [self.classes setObject:[TL_disabledFeature class] forKey:[NSNumber numberWithInt:-1369215196]];
+        [self.classes setObject:[TL_updateReadHistoryInbox class] forKey:[NSNumber numberWithInt:-1721631396]];
+        [self.classes setObject:[TL_updateReadHistoryOutbox class] forKey:[NSNumber numberWithInt:791617983]];
+        [self.classes setObject:[TL_messages_affectedMessages class] forKey:[NSNumber numberWithInt:-2066640507]];
+        [self.classes setObject:[TL_contactLinkUnknown class] forKey:[NSNumber numberWithInt:1599050311]];
+        [self.classes setObject:[TL_contactLinkNone class] forKey:[NSNumber numberWithInt:-17968211]];
+        [self.classes setObject:[TL_contactLinkHasPhone class] forKey:[NSNumber numberWithInt:646922073]];
+        [self.classes setObject:[TL_contactLinkContact class] forKey:[NSNumber numberWithInt:-721239344]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -371,7 +375,6 @@
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
-        
         
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:-878758099]];
         
@@ -461,7 +464,7 @@
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        NSLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
+        NSLog(@"Error, constructor %d not found, return nil", constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
@@ -496,7 +499,7 @@
     [outputStream open];
     [stream setOuput:outputStream];
     [stream writeInt:0xda9b0d0d]; //invokeWithLayer
-    [stream writeInt:22];
+    [stream writeInt:25];
 
     [stream writeInt:constructor];
     

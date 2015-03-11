@@ -30,7 +30,7 @@
         TL_messageMediaAudio *audio = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
         
         
-        self.message = [MessageSender createOutMessage:@"" media:audio dialog:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
     }
     return self;
 }
@@ -71,7 +71,7 @@
         if(weakSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithPeer:weakSelf.conversation.inputPeer media:media random_id:rand_long()];
+            request = [TLAPI_messages_sendMedia createWithPeer:weakSelf.conversation.inputPeer reply_to_id:weakSelf.message.reply_to_id media:media random_id:rand_long()];
         }
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage *response) {

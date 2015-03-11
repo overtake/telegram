@@ -13,7 +13,8 @@
 @property (nonatomic,assign) int pts;
 @property (nonatomic,assign) int qts;
 @property (nonatomic,assign) int date;
+@property (nonatomic,assign) int pts_count;
 @property (nonatomic,strong) id update;
 
--(id)initWithSequence:(int)seq pts:(int)pts date:(int)date qts:(int)qts update:(id)update;
+-(id)initWithSequence:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count update:(id)update;
 @end

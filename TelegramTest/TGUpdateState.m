@@ -16,6 +16,7 @@
         _qts = [aDecoder decodeIntForKey:@"qts"];
         _date = [aDecoder decodeIntForKey:@"date"];
         _seq = [aDecoder decodeIntForKey:@"seq"];
+        _pts_count = [aDecoder decodeIntForKey:@"pts_count"];
     }
     return self;
 }
@@ -41,7 +42,12 @@
         _date = date;
 }
 
--(id)initWithPts:(int)pts qts:(int)qts date:(int)date seq:(int)seq {
+-(void)setPts_count:(int)pts_count {
+    if(_pts_count < pts_count || !_checkMinimum)
+        _pts_count = pts_count;
+}
+
+-(id)initWithPts:(int)pts qts:(int)qts date:(int)date seq:(int)seq pts_count:(int)pts_count {
     
     if(self = [super init]) {
         _pts = pts;
@@ -65,6 +71,7 @@
     [aCoder encodeInt:self.qts forKey:@"qts"];
     [aCoder encodeInt:self.date forKey:@"date"];
     [aCoder encodeInt:self.seq forKey:@"seq"];
+    [aCoder encodeInt:self.pts_count forKey:@"pts_count"];
 }
 
 @end

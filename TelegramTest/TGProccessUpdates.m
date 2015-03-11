@@ -24,11 +24,16 @@
 @property (nonatomic,strong) TGTimer *sequenceTimer;
 @property (nonatomic,assign) BOOL holdUpdates;
 @property (nonatomic,strong) TGModernEncryptedUpdates *encryptedUpdates;
+
+
+
 @end
 
 @implementation TGProccessUpdates
 
 static NSString *kUpdateState = @"kUpdateState";
+
+static ASQueue *queue;
 
 @synthesize updateState = _updateState;
 @synthesize statefulUpdates = _statefulUpdates;
@@ -44,14 +49,19 @@ static NSString *kUpdateState = @"kUpdateState";
         _updateState = [[Storage manager] updateState];
         
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            queue = [[ASQueue alloc] initWithName:"UpdatesQueue"];
+        });
     }
     return self;
 }
 
 - (void)resetStateAndSync {
     
-    [ASQueue dispatchOnStageQueue:^{
-        _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1];
+    [queue dispatchOnQueue:^{
+        _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         
         [self saveUpdateState];
         
@@ -62,11 +72,15 @@ static NSString *kUpdateState = @"kUpdateState";
 
 -(void)drop {
     
-    _updateState = nil;
-    [[Storage manager] saveUpdateState:_updateState];
-
-    [self cancelSequenceTimer];
-    [self.statefulUpdates removeAllObjects];
+    [queue dispatchOnQueue:^{
+        _updateState = nil;
+        [[Storage manager] saveUpdateState:_updateState];
+        
+        [self cancelSequenceTimer];
+        [self.statefulUpdates removeAllObjects];
+    }];
+    
+    
 }
 
 -(void)processUpdates:(NSArray *)updates stateSeq:(int)stateSeq {
@@ -74,7 +88,7 @@ static NSString *kUpdateState = @"kUpdateState";
     int statePts = 0;
     int stateDate = 0;
     int stateQts = 0;
-    
+    int statePts_count = 0;
     
     for(TLUpdate *update in updates) {
         if ([update date] > stateDate)
@@ -87,100 +101,116 @@ static NSString *kUpdateState = @"kUpdateState";
             int updatePts = [update pts];
             if (updatePts > statePts)
                 statePts = updatePts;
+            int updatePts_count = [update pts_count];
+            if (updatePts_count > statePts_count)
+                statePts_count = updatePts_count;
         }
         
     }
     
    
-    [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts];
+    [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts pts_count:statePts_count];
     
     
 }
 
 -(void)addUpdate:(id)update {
     
-    
-    if([update isKindOfClass:[TL_messages_statedMessage class]] ||
-       [update isKindOfClass:[TL_messages_statedMessageLink class]] ||
-       [update isKindOfClass:[TL_messages_statedMessages class]] ||
-       [update isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
-       [update isKindOfClass:[TL_messages_sentMessage class]] ||
-       [update isKindOfClass:[TL_messages_affectedHistory class]]) {
+    [queue dispatchOnQueue:^{
+        if([update isKindOfClass:[TL_messages_statedMessage class]] ||
+           [update isKindOfClass:[TL_messages_statedMessageLink class]] ||
+           [update isKindOfClass:[TL_messages_statedMessages class]] ||
+           [update isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
+           [update isKindOfClass:[TL_messages_sentMessage class]] ||
+           [update isKindOfClass:[TL_messages_affectedHistory class]]) {
+            
+            [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
+            
+            
+        }
+        
+        if([update isKindOfClass:[TL_updateShort class]]) {
+            [self updateShort:update];
+        }
+        if([update isKindOfClass:[TL_updatesCombined class]]) {
+            TL_updatesCombined *combined = update;
+            
+            if(_updateState.seq+1 == combined.seq_start) {
                 
-        [self addStatefullUpdate:update seq:[update seq] pts:[update pts] date:0 qts:0];
+                [SharedManager proccessGlobalResponse:update];
+                
+                for (TLUpdate *one in combined.updates) {
+                    [self proccessUpdate:one];
+                }
+                
+                _updateState.seq = combined.seq;
+                [self saveUpdateState];
+                
+            } else {
+                [self failSequence];
+            }
+        }
         
-        
-    }
-    
-    if([update isKindOfClass:[TL_updateShort class]]) {
-        [self updateShort:update];
-    }
-    if([update isKindOfClass:[TL_updatesCombined class]]) {
-        TL_updatesCombined *combined = update;
-        
-        if(_updateState.seq+1 == combined.seq_start) {
+        if([update isKindOfClass:[TL_updates class]]) {
             
             [SharedManager proccessGlobalResponse:update];
-            
-            for (TLUpdate *one in combined.updates) {
-                [self proccessUpdate:one];
+            [self processUpdates:[update updates] stateSeq:[update seq]];
+        }
+        
+        
+        if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
+            TL_updateShortChatMessage *shortMessage = update;
+            if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+                [self failSequence];
+                return;
             }
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
             
-            _updateState.seq = combined.seq;
-            [self saveUpdateState];
-
-        } else {
-            [self failSequence];
         }
-    }
-    
-    if([update isKindOfClass:[TL_updates class]]) {
         
-        [SharedManager proccessGlobalResponse:update];
-        [self processUpdates:[update updates] stateSeq:[update seq]];
-    }
-    
-    
-    if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
-        TL_updateShortChatMessage *shortMessage = update;
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
-            [self failSequence];
-            return;
+        if([update isKindOfClass:[TL_updateShortMessage class]]) {
+            TL_updateShortMessage *shortMessage = update;
+            if(![[UsersManager sharedManager] find:shortMessage.from_id]) {
+                [self failSequence];
+                return;
+            }
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+            
         }
-        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
         
-    }
-    
-    if([update isKindOfClass:[TL_updateShortMessage class]]) {
-        TL_updateShortMessage *shortMessage = update;
-        if(![[UsersManager sharedManager] find:shortMessage.from_id]) {
-            [self failSequence];
-            return;
+        
+        if([update isKindOfClass:[TL_updatesTooLong class]]) {
+            [self updateDifference];
         }
-        [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0];
         
-    }
+        if([update isKindOfClass:[TL_updateServiceNotification class]]) { // for debug
+            [self proccessUpdate:update];
+        }
+    }];
     
-    
-    if([update isKindOfClass:[TL_updatesTooLong class]]) {
-        [self updateDifference];
-    }
-    
-    if([update isKindOfClass:[TL_updateServiceNotification class]]) { // for debug
-        [self proccessUpdate:update];
-    }
     
 }
 
--(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts {
+-(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count {
     
-    TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts update:update];
+    TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
-    if(_updateState.seq+1 == statefulMessage.beginSeq && !_holdUpdates) {
+    if(statefulMessage.pts > 0 && _updateState.pts + statefulMessage.pts_count == statefulMessage.pts && !_holdUpdates) {
         [self proccessStatefulMessage:statefulMessage needSave:YES];
         return;
     }
+    
+    if(statefulMessage.qts > 0 && _updateState.qts + 1 == statefulMessage.qts && !_holdUpdates) {
+        [self proccessStatefulMessage:statefulMessage needSave:YES];
+        return;
+    }
+    
+    if(statefulMessage.beginSeq > 0 && _updateState.seq + 1 == statefulMessage.beginSeq && !_holdUpdates) {
+        [self proccessStatefulMessage:statefulMessage needSave:YES];
+        return;
+    }
+    
     
     [_statefulUpdates addObject:statefulMessage];
     
@@ -188,7 +218,7 @@ static NSString *kUpdateState = @"kUpdateState";
     
     _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
         [self failSequence];
-    } queue:dispatch_get_current_queue()];
+    } queue:queue.nativeQueue];
     
     [_sequenceTimer start];
     
@@ -207,51 +237,106 @@ static NSString *kUpdateState = @"kUpdateState";
     if(!_statefulUpdates.count || _holdUpdates)
         return;
     
-    
-    
     [_statefulUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
-        return obj1.beginSeq < obj2.beginSeq ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    
-   
-    NSMutableArray *successful = [[NSMutableArray alloc] init];
-    
-    
-    if(_updateState.seq+1 != [_statefulUpdates[0] beginSeq])
-        return;
-    
-    
-    
-    int lastSeq = _updateState.seq;
-    TGUpdateContainer *lastUpdate;
-    for (int i = 0; i < _statefulUpdates.count; i++) {
-       if(lastSeq+1 == [_statefulUpdates[i] beginSeq]) {
-            lastUpdate = _statefulUpdates[i];
-            [successful addObject:lastUpdate];
-            lastSeq = lastUpdate.beginSeq;
-       } else {
-           break;
-       }
-        
-    }
-    
-    if(!lastUpdate)
-        return;
-    
-    [successful sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
         return obj1.pts < obj2.pts ? NSOrderedAscending : NSOrderedDescending;
     }];
     
     
-    for (TGUpdateContainer *successUpdate in successful) {
-        BOOL success = [self proccessStatefulMessage:successUpdate needSave:YES];
-        [_statefulUpdates removeObject:successUpdate];
+    if([_statefulUpdates[0] pts] > 0 &&  _updateState.pts + [_statefulUpdates[0] pts_count] != [_statefulUpdates[0] pts] )
+        return;
+    
+    
+   __block BOOL fail = NO;
+    
+    
+    NSMutableArray *qtsUpdates = [[NSMutableArray alloc] init];
+    NSMutableArray *seqUpdates = [[NSMutableArray alloc] init];
+    
+    [_statefulUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer *obj, NSUInteger idx, BOOL *stop) {
         
-        if(!success)
-            return;
+        
+        if(obj.pts > 0) {
+            if(_updateState.pts + [obj pts_count] == [obj pts]) {
+                
+                BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                
+                if(!success)
+                {
+                    *stop = YES;
+                    fail = YES;
+                }
+            } else {
+                *stop = YES;
+                fail = YES;
+            }
+        } else {
+            
+            if(obj.qts > 0) {
+                [qtsUpdates addObject:obj];
+            } else if(obj.beginSeq > 0) {
+                [seqUpdates addObject:obj];
+            }
+            
+        }
+            
+    }];
+    
+    [_statefulUpdates removeAllObjects];
+    
+    if(!fail) {
+        
+        [qtsUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
+            return obj1.qts < obj2.qts ? NSOrderedAscending : NSOrderedDescending;
+        }];
+        
+        [qtsUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer  *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(_updateState.qts + 1 == [obj qts]) {
+                
+                BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                
+                if(!success)
+                {
+                    *stop = YES;
+                    fail = YES;
+                }
+            } else {
+                *stop = YES;
+                fail = YES;
+            }
+            
+        }];
+        
+        
+        if(!fail) {
+            
+            [seqUpdates sortUsingComparator:^NSComparisonResult(TGUpdateContainer * obj1, TGUpdateContainer * obj2) {
+                return obj1.beginSeq < obj2.beginSeq ? NSOrderedAscending : NSOrderedDescending;
+            }];
+            
+            [seqUpdates enumerateObjectsUsingBlock:^(TGUpdateContainer  *obj, NSUInteger idx, BOOL *stop) {
+                
+                if(_updateState.seq + 1 == [obj beginSeq]) {
+                    
+                    BOOL success = [self proccessStatefulMessage:obj needSave:YES];
+                    
+                    if(!success)
+                    {
+                        *stop = YES;
+                        fail = YES;
+                    }
+                } else {
+                    *stop = YES;
+                    fail = YES;
+                }
+                
+            }];
+        }
+        
     }
     
-    if (_statefulUpdates.count == 0)
+    
+    if (!fail)
     {
         [self cancelSequenceTimer];
     }
@@ -282,7 +367,7 @@ static NSString *kUpdateState = @"kUpdateState";
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -295,13 +380,10 @@ static NSString *kUpdateState = @"kUpdateState";
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
-    
-    if(needSave)
-        [self applyUpdate:container];
     
     if([container.update isKindOfClass:[NSArray class]]) {
         for (TLUpdate *update in container.update) {
@@ -309,17 +391,89 @@ static NSString *kUpdateState = @"kUpdateState";
         }
     }
     
+    if(needSave)
+        [self applyUpdate:container];
+    
     return YES;
     
 }
 
 
 -(void)updateShort:(TL_updateShort *)shortUpdate {
+    
     _updateState.date = [shortUpdate date];
     [self saveUpdateState];
     
     [self proccessUpdate:shortUpdate.update];
 }
+
++(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages {
+    [self checkAndLoadIfNeededSupportMessages:messages asyncCompletionHandler:nil];
+}
+
++(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages asyncCompletionHandler:(dispatch_block_t)completionHandler {
+    
+   NSMutableArray *supportMessages = [[NSMutableArray alloc] init];
+        
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage * obj, NSUInteger idx, BOOL *stop) {
+            
+        if(obj.reply_to_id != 0 && obj.replyMessage == nil) {
+            [supportMessages addObject:@(obj.reply_to_id)];
+        } 
+            
+    }];
+        
+    if(supportMessages.count > 0)
+    {
+      
+        [self loadSupportSyncMessages:supportMessages syncCompletionHandler:completionHandler];
+    
+    } else if(completionHandler != nil) {
+        
+        completionHandler();
+       
+    }
+
+
+}
+
++(void)loadSupportSyncMessages:(NSArray *)ids syncCompletionHandler:(dispatch_block_t)completionHandler {
+    
+    
+    dispatch_semaphore_t semaphore = NULL;
+    
+    if(completionHandler == nil) {
+       semaphore = dispatch_semaphore_create(0);
+    }
+    
+    [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[ids mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+        
+        [TL_localMessage convertReceivedMessages:response.messages];
+        
+        [[Storage manager] addSupportMessages:response.messages];
+        [[MessagesManager sharedManager] addSupportMessages:response.messages];
+        
+        
+        if(completionHandler == nil) {
+            dispatch_semaphore_signal(semaphore);
+        } else {
+            completionHandler();
+        }
+        
+        
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+    }];
+    
+    if(completionHandler == nil) {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        dispatch_release(semaphore);
+    }
+    
+   
+}
+
 
 -(void)proccessUpdate:(TLUpdate *)update {
     
@@ -327,6 +481,8 @@ static NSString *kUpdateState = @"kUpdateState";
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
+       
+        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
         
         return [MessagesManager addAndUpdateMessage:message];
     }
@@ -339,6 +495,16 @@ static NSString *kUpdateState = @"kUpdateState";
         }
         
         [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
+        return;
+    }
+    
+    if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
         return;
     }
     
@@ -379,7 +545,7 @@ static NSString *kUpdateState = @"kUpdateState";
             [conversation save];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -399,10 +565,12 @@ static NSString *kUpdateState = @"kUpdateState";
         
         TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
         
-        TL_conversation *dialog = [[DialogsManager sharedManager] find:notifyUpdate.peer.peer.peer_id];
+        TL_notifyPeer *peer = (TL_notifyPeer *) notifyUpdate.peer;
+        
+        TL_conversation *dialog = [[DialogsManager sharedManager] find:peer.peer.peer_id];
         
         if(!dialog) {
-            dialog = [[Storage manager] selectConversation:notifyUpdate.peer.peer];
+            dialog = [[Storage manager] selectConversation:peer.peer];
         }
         
         if(dialog) {
@@ -434,7 +602,7 @@ static NSString *kUpdateState = @"kUpdateState";
         if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]]) {
             isContact = YES;
         } else if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkRequested class]]) {
-            isContact = contactLink.my_link.contact;
+            isContact = [contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]];
         }
         
         DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
@@ -582,7 +750,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -642,7 +810,7 @@ static NSString *kUpdateState = @"kUpdateState";
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
-            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq];
+            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
 
             [self saveUpdateState];
             
@@ -681,9 +849,7 @@ static NSString *kUpdateState = @"kUpdateState";
         int stateQts = _updateState.qts;
         int statePts = _updateState.pts;
         int stateDate = _updateState.date;
-        int stateSeq = _updateState.seq;
-        
-        
+        int stateSeq = _updateState.seq;        
         
         if([response isKindOfClass:[TL_updates_difference class]]) {
             stateQts = [[updates state] qts];
@@ -737,10 +903,13 @@ static NSString *kUpdateState = @"kUpdateState";
     
         
         
+        
         [response setN_messages:copy];
         
         [SharedManager proccessGlobalResponse:updates];
         
+        
+        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response n_messages]];
         
         for (TLUpdate *update in [updates other_updates]) {
             [self proccessUpdate:update];

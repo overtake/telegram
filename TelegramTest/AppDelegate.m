@@ -300,13 +300,13 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
-    if([[MTNetwork instance] isAuth]) {
+ //   if([[MTNetwork instance] isAuth]) {
         [self initializeMainWindow];
-    } else {
+   // } else {
         
-       [self logoutWithForce:NO];
+   //    [self logoutWithForce:NO];
         
-    }
+ //   }
 
 }
 
@@ -674,19 +674,7 @@ void exceptionHandler(NSException * exception)
     
     
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
-    
-    if([TGPasslock isEnabled]) {
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [TMViewController showBlockPasslock:nil];
-            
-        });
-        
-        return;
-    }
-    
+
 }
 
 - (void)initializeLoginWindow {
@@ -722,9 +710,7 @@ void exceptionHandler(NSException * exception)
 - (void)logoutWithForce:(BOOL)force {
     
     dispatch_block_t block = ^ {
-        
-        [TGPasslock forceDisable];
-        
+                
         
         [TMViewController hideModalProgress];
         

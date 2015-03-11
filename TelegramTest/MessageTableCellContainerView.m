@@ -13,6 +13,9 @@
 #import "TMClockProgressView.h"
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
+#import "MessageReplyContainer.h"
+
+
 @interface MessageTableCellContainerView() <NSMenuDelegate,TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -28,8 +31,9 @@
 @property (nonatomic, strong) TMTextLayer *dateLayer;
 @property (nonatomic, strong) BTRButton *selectButton;
 
-@property (nonatomic,strong) MessageStateLayer *stateLayer;
+@property (nonatomic, strong) MessageStateLayer *stateLayer;
 
+@property (nonatomic, strong) MessageReplyContainer *replyContainer;
 
 
 @end
@@ -113,7 +117,7 @@
             float offset = weakSelf.item.isHeaderMessage ? 26 : 0;
             
             if(weakSelf.item.isHeaderForwardedMessage) {
-                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset - 37));
+                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset - 32));
             } else {
                 NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset));
             }
@@ -157,6 +161,26 @@
 
 }
 
+
+-(void)initReplyContainer {
+    
+    if(!_replyContainer)
+    {
+        _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(80, 0, self.bounds.size.width - 170, 30)];
+    
+        
+        [self addSubview:_replyContainer];
+    }
+    
+}
+
+-(void)deallocReplyContainer {
+    
+    [_replyContainer removeFromSuperview];
+    
+    [_replyContainer setReplyObject:nil];
+    _replyContainer = nil;
+}
 
 -(void)initSelectButton {
     
@@ -550,12 +574,26 @@ static BOOL dragAction = NO;
 
 - (NSMenu *)contextMenu {
     
-    return nil;
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Context"];
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    return menu;
 }
 
 -(NSArray *)defaultMenuItems {
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    if(self.item.message.to_id.class == [TL_peerChat class]) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+            
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message];
+            
+        }]];
+    }
     
     
     if([self.item canShare]) {
@@ -682,6 +720,9 @@ static BOOL dragAction = NO;
     
     [super setItem:item];
     
+    
+   
+    
         
     self.stateLayer.container = self;
     
@@ -712,7 +753,7 @@ static BOOL dragAction = NO;
         [self.fwdAvatar setUser:item.fwd_user];
         
         if(self.item.isHeaderMessage) {
-            [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - 26 - minus))];
+            [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - 22 - minus))];
             [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 48 - minus)];
         } else {
             [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - minus))];
@@ -747,6 +788,21 @@ static BOOL dragAction = NO;
    
     
     [self.containerView setFrame:NSMakeRect(item.containerOffset, 10, self.containerView.bounds.size.width, item.blockSize.height)];
+    
+    
+    if([item isReplyMessage])
+    {
+        [self initReplyContainer];
+        
+        
+        [_replyContainer setReplyObject:item.replyObject];
+        
+        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 15, NSWidth(self.bounds) - 170, NSHeight(_replyContainer.frame))];
+        
+        
+    } else {
+        [self deallocReplyContainer];
+    }
     
     if(item.messageSender)  {
         

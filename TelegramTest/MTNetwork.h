@@ -32,4 +32,9 @@
 
 -(void)update;
 
+-(void)updatePasscode:(NSData *)md5Hash;
+-(BOOL)checkPasscode:(NSData *)md5Hash;
+-(BOOL)passcodeIsEnabled;
+
+
 @end

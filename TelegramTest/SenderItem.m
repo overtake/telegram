@@ -39,6 +39,8 @@
     return self;
 }
 
+
+
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         self.conversation = conversation;
