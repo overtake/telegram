@@ -143,7 +143,7 @@
          [self setForwardEnabled:YES];
     }
     
-    [self checkReplayMessage:YES];
+    [self checkReplayMessage:YES animated:NO];
 
 }
 
@@ -205,8 +205,8 @@
     [self.forwardButton setDisable:!forwardEnabled];
 }
 
--(void)updateReplayMessage:(BOOL)updateHeight {
-    [self checkReplayMessage:updateHeight];
+-(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated {
+    [self checkReplayMessage:updateHeight animated:animated];
 }
 
 - (void)setSectedMessagesCount:(NSUInteger)count {
@@ -840,7 +840,7 @@
     
 }
 
--(void)checkReplayMessage:(BOOL)updateHeight {
+-(void)checkReplayMessage:(BOOL)updateHeight animated:(BOOL)animated {
     
     [self.replyContainer removeFromSuperview];
     
@@ -860,18 +860,40 @@
         
     }];
     
+    
+    
+    dispatch_block_t block = ^ {
+        
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    };
+    
+    dispatch_block_t animationBlock = ^ {
+      
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            
+            block();
+            
+        } completionHandler:^{
+            
+        }];
+        
+    };
+    
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
         _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
-        
+        _replyContainer.autoresizingMask = NSViewWidthSizable;
         
         weak();
         
         [_replyContainer setDeleteHandler:^{
            
-            [weakSelf.messagesViewController removeReplayMessage:YES];
+            [weakSelf.messagesViewController removeReplayMessage:YES animated:YES];
             
         }];
         
@@ -882,24 +904,21 @@
         [self.normalView addSubview:_replyContainer];
         
         if(updateHeight) {
-            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+            if(animated)
+                animationBlock();
+            else
+                block();
         }
         
-        _replyContainer.autoresizingMask = NSViewMinYMargin | NSViewWidthSizable;
+        
     } else {
         
         if(updateHeight) {
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-                
-                [context setDuration:0.2];
-                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-                
-                [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:YES];
-                
-            } completionHandler:^{
-                
-            }];
             
+            if(animated)
+                animationBlock();
+             else
+                block();
         }
         
     }
@@ -1019,13 +1038,15 @@
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             
+            
         } else {
             [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
         }
         
-       
+        
+       [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
         
         
         

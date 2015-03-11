@@ -449,6 +449,15 @@ static BOOL mouseIsDown = NO;
 
 -(void)mouseUp:(NSEvent *)theEvent {
     [super mouseUp:theEvent];
+    
+    
+    if(theEvent.clickCount == 2 && !self.isEditable) {
+        if(self.item.message.to_id.class == [TL_peerChat class]) {
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+        }
+        
+    }
+    
     mouseIsDown = NO;
 }
 
@@ -517,6 +526,7 @@ static BOOL dragAction = NO;
     
     if(!self.isEditable) {
         [super mouseDown:theEvent];
+        
         return;
     }
     
@@ -590,7 +600,7 @@ static BOOL dragAction = NO;
     if(self.item.message.to_id.class == [TL_peerChat class]) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
             
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message];
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
             
         }]];
     }

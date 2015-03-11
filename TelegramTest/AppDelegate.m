@@ -531,6 +531,8 @@ void exceptionHandler(NSException * exception)
             
         }
         
+    [[Telegram rightViewController] becomeFirstResponder];
+        
         return result;
     };
     

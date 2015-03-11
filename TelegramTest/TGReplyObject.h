@@ -16,6 +16,8 @@
 
 @property (nonatomic,strong,readonly) NSURL *geoURL;
 
+@property (nonatomic,strong,readonly) TL_localMessage *replyMessage;
+
 -(id)initWithReplyMessage:(TL_localMessage *)message;
 
 @end

@@ -1732,11 +1732,66 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
--(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
 
+- (void)showMessage:(int)messageId {
+    
+    MessageTableItem *item = [self itemOfMsgId:messageId];
+    
+    if(item)
+    {
+        [self scrollToItem:item animated:YES centered:YES highlight:YES];
+    } else {
+        
+        [TMViewController showModalProgress];
+        
+        [ASQueue dispatchOnStageQueue:^{
+            
+            TL_localMessage *msg = [[Storage manager] messageById:messageId];
+            
+            if(!msg) {
+                
+                [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
+                    
+                    TLMessage *msg = response.messages[0];
+                    
+                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                        [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
+                    }
+                    
+                    [TMViewController hideModalProgress];
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                    [TMViewController hideModalProgress];
+                    
+                } timeout:10];
+
+                
+            } else {
+                
+                
+                dispatch_after_seconds(0.2, ^{
+                    
+                    [TMViewController hideModalProgress];
+                    
+                    [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
+                });
+                
+            }
+            
+        }];
+        
+        
+        
+        
+    }
+    
+}
+
+- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
     [self hideSearchBox:NO];
     
-    if(!self.locked &&  ((messageId != 0 && messageId != self.jumpMessageId) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
+    if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         
         self.jumpMessageId = messageId;
@@ -1805,6 +1860,11 @@ static NSTextAttachment *headerMediaIcon() {
         [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
         [self addScrollEvent];
     }
+}
+
+-(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
+
+    [self setCurrentConversation:dialog withJump:messageId historyFilter:historyFilter force:NO];
     
 }
 
@@ -2046,14 +2106,47 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)scrollToUnreadItem:(BOOL)animated {
     
     if(self.unreadMark != nil) {
-        NSUInteger index = [self indexOfObject:self.unreadMark];
+        [self scrollToItem:self.unreadMark animated:animated centered:NO highlight:NO];
+    }
+}
+
+- (void)scrollToItem:(MessageTableItem *)item animated:(BOOL)animated centered:(BOOL)centered highlight:(BOOL)highlight {
+    
+    if(item) {
+        NSUInteger index = [self indexOfObject:item];
         
         NSRect rect = [self.table rectOfRow:index];
         
         
-        [self scrollToRect:rect isCenter:NO animated:animated];
+        [self scrollToRect:rect isCenter:centered animated:animated];
+        
+        if(highlight) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if(index != NSNotFound) {
+                    MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+                    
+                    if(cell && [cell isKindOfClass:[MessageTableCellContainerView class]]) {
+                        
+                        for(int i = 0; i < self.messages.count; i++) {
+                            MessageTableCellContainerView *cell2 = (MessageTableCellContainerView *)[self cellForRow:i];
+                            if(cell2 && [cell2 isKindOfClass:[MessageTableCellContainerView class]]) {
+                                [cell2 stopSearchSelection];
+                            }
+                        }
+                        
+                        
+                        [cell searchSelection];
+                    }
+                }
+            });
+            
+        }
+        
     }
 }
+
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input{
     NSMutableArray *array = [NSMutableArray array];
@@ -2619,7 +2712,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)addReplayMessage:(TL_localMessage *)message {
+- (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
@@ -2627,11 +2720,11 @@ static NSTextAttachment *headerMediaIcon() {
         
     }];
     
-     [self.bottomView updateReplayMessage:YES];
+     [self.bottomView updateReplayMessage:YES animated:animated];
     
 }
 
--(void)removeReplayMessage:(BOOL)update {
+-(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated {
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
@@ -2639,7 +2732,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
     
     
-    [self.bottomView updateReplayMessage:update];
+    [self.bottomView updateReplayMessage:update animated:animated];
 }
 
 

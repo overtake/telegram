@@ -163,6 +163,17 @@
     
 }
 
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    if(!_deleteHandler) {
+        
+        // go to message
+        
+        [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id];
+        
+    }
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];

@@ -91,8 +91,7 @@
 
 
 -(BOOL)becomeFirstResponder {
-    [self.messagesViewController becomeFirstResponder];
-    return YES;
+    return [self.navigationViewController.currentController becomeFirstResponder];
 }
 -(BOOL)acceptsFirstResponder {
     return YES;

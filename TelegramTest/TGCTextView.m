@@ -765,14 +765,16 @@
         
         if(link) {
             open_link(link);
-        } else {
+        } else if(![self _checkClickCount:theEvent]) {
             [super mouseUp:theEvent];
         }
-    } else {
+    } else if(![self _checkClickCount:theEvent]) {
         [super mouseUp:theEvent];
     }
     
-    [self _checkClickCount:theEvent];
+    
+    
+    
     
     [[NSCursor arrowCursor] set];
 }

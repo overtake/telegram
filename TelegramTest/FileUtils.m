@@ -223,14 +223,16 @@ NSString* documentPath(TLDocument *document) {
 NSString* dp() {
     //  NSFileManager *fm = [NSFileManager defaultManager];
     
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES)[0];
+    NSString *downloadPath = [NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathExtension:@"telegram-documents"];
     // NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     // NSString *path = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"documents"];
     
-    // if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]) {
+    [[NSFileManager defaultManager] createDirectoryAtPath:downloadPath withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    // if (!) {
     
     // }
-    return applicationSupportPath;
+    return downloadPath;
 }
 
 NSString* path() {

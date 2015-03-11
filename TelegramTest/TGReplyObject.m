@@ -13,6 +13,8 @@
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage {
     if(self = [super init]) {
         
+        _replyMessage = replyMessage;
+        
         NSColor *nameColor = LINK_COLOR;
         
         static NSColor * colors[6];
@@ -103,6 +105,12 @@
             
         }
         
+        if([replyMessage.media isKindOfClass:[TL_messageMediaAudio class]]) {
+            
+            [replyText appendString:NSLocalizedString(@"ChatMedia.Audio", nil) withColor:NSColorFromRGB(0x808080)];
+            
+        }
+        
         if([replyMessage.media isKindOfClass:[TL_messageMediaVideo class]]) {
             
             TLPhotoSize *photoSize = replyMessage.media.video.thumb;
@@ -120,25 +128,29 @@
         
         if([replyMessage.media isKindOfClass:[TL_messageMediaDocument class]]) {
             
-            if(replyMessage.media.document.thumb && ![replyMessage.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            if([replyMessage.media.document isSticker]) {
+               
+                [replyText appendString:NSLocalizedString(@"ChatMedia.Sticker", nil) withColor:NSColorFromRGB(0x808080)];
                 
-                NSImage *thumb;
-                
-                if(replyMessage.media.document.thumb.bytes) {
-                    thumb = [[NSImage alloc] initWithData:replyMessage.media.document.thumb.bytes];
-                    thumb = renderedImage(thumb, NSMakeSize(30, 30));
+            } else {
+                if(replyMessage.media.document.thumb && ![replyMessage.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+                    
+                    NSImage *thumb;
+                    
+                    if(replyMessage.media.document.thumb.bytes) {
+                        thumb = [[NSImage alloc] initWithData:replyMessage.media.document.thumb.bytes];
+                        thumb = renderedImage(thumb, NSMakeSize(30, 30));
+                    }
+                    
+                    _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? replyMessage.media.document.thumb.location : nil placeHolder:thumb];
+                    
+                    self.replyThumb.imageSize = NSMakeSize(30, 30);
+                    
                 }
                 
-                _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? replyMessage.media.document.thumb.location : nil placeHolder:thumb];
                 
-                self.replyThumb.imageSize = NSMakeSize(30, 30);
-                
+                [replyText appendString:replyMessage.media.document.file_name withColor:NSColorFromRGB(0x808080)];
             }
-            
-            
-            [replyText appendString:NSLocalizedString(@"ChatMedia.File", nil) withColor:NSColorFromRGB(0x808080)];
-            
-            
         }
         
         

@@ -58,7 +58,11 @@ typedef enum {
 - (void)saveInputText;
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;
+- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force;
 - (void)setCurrentConversation:(TL_conversation *)dialog;
+
+- (void)showMessage:(int)messageId;
+
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;
@@ -86,8 +90,8 @@ typedef enum {
 - (void)sendVideo:(NSString *)file_path;
 - (void)sendDocument:(NSString *)file_path;
 
-- (void)addReplayMessage:(TL_localMessage *)message;
--(void)removeReplayMessage:(BOOL)update;
+-(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
+-(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
 
 
 - (void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;

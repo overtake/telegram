@@ -74,8 +74,8 @@
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
-    if(theEvent.clickCount == 2)
-        return;
+  //  if(theEvent.clickCount == 2)
+    //    return;
     
     [super mouseUp:theEvent];
 }

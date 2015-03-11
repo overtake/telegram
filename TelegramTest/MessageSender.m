@@ -198,7 +198,7 @@
         } else {
             [ASQueue dispatchOnMainQueue:^{
                 
-                [[Telegram rightViewController].messagesViewController removeReplayMessage:YES];
+                [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
                 
             }];
         }
