@@ -889,7 +889,17 @@
     } else {
         
         if(updateHeight) {
-            [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+                
+                [context setDuration:0.2];
+                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+                
+                [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:YES];
+                
+            } completionHandler:^{
+                
+            }];
+            
         }
         
     }
