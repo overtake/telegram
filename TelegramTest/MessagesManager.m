@@ -26,6 +26,8 @@
 @interface MessagesManager ()
 @property (nonatomic,strong) NSMutableDictionary *messages;
 @property (nonatomic,strong) NSMutableDictionary *messages_with_random_ids;
+
+@property (nonatomic,strong) NSMutableDictionary *supportMessages;
 @end
 
 @implementation MessagesManager
@@ -34,8 +36,38 @@
     if(self = [super initWithQueue:queue]) {
         self.messages = [[NSMutableDictionary alloc] init];
         self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
+        self.supportMessages = [[NSMutableDictionary alloc] init];
     }
     return self;
+}
+
+
+-(void)addSupportMessages:(NSArray *)supportMessages {
+    
+    [self.queue dispatchOnQueue:^{
+        
+        [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            _supportMessages[@(obj.n_id)] = obj;
+            
+        }];
+        
+    }];
+    
+   
+}
+
+-(TL_localMessage *)supportMessage:(int)n_id {
+    
+    __block TL_localMessage *message;
+    
+    [self.queue dispatchOnQueue:^{
+        
+        message = _supportMessages[@(n_id)];
+        
+    } synchronous:YES];
+    
+    return message;
 }
 
 

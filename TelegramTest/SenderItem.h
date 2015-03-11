@@ -44,6 +44,10 @@ typedef enum {
 @property (nonatomic, strong) NSString *filePath;
 
 - (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
+
+
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation;
+
 - (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation;
 
 -(id)initWithConversation:(TL_conversation *)conversation;

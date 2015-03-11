@@ -143,7 +143,7 @@ extern NSString *const FILE_NAMES;
 -(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
--(TLMessage *)messageById:(int)msgId;
+-(TL_localMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
 
 
@@ -201,5 +201,8 @@ extern NSString *const FILE_NAMES;
 
 -(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
 
+
+-(NSArray *)selectSupportMessages:(NSArray *)ids;
+-(void)addSupportMessages:(NSArray *)messages;
 
 @end

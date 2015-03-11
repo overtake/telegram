@@ -158,8 +158,55 @@
 
 
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media dialog:(TL_conversation *)dialog {
-    return  [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[dialog.peer peerOut] date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
++(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation {
+    
+    __block TL_localMessage *replyMessage;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        if(data)
+            replyMessage = [TLClassStore deserialize:data];
+        
+    }];
+    
+    int reply_to_id = replyMessage.n_id;
+    
+    int flags = TGOUTUNREADMESSAGE;
+    
+    if(reply_to_id > 0)
+        flags|=TGREPLYMESSAGE;
+    
+    
+    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_id:reply_to_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
+    
+    if(reply_to_id != 0)
+    {
+        [[Storage manager] addSupportMessages:@[replyMessage]];
+        [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];
+    }
+
+    if(replyMessage)
+    {
+        
+        if(conversation.peer_id != [Telegram rightViewController].messagesViewController.conversation.peer_id) {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                
+                [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
+                
+            }];
+        } else {
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [[Telegram rightViewController].messagesViewController removeReplayMessage:YES];
+                
+            }];
+        }
+        
+        
+    }
+    
+    return  outMessage;
 }
 
 

@@ -26,7 +26,7 @@
 #import "NSString+FindURLs.h"
 #import "TGAttachImageElement.h"
 #import "TGMentionPopup.h"
-#import "TGReplayMessage.h"
+#import "MessageReplyContainer.h"
 
 @interface MessagesBottomView()
 
@@ -62,7 +62,7 @@
 
 @property (nonatomic,strong) NSMutableArray *attachmentsIgnore;
 
-@property (nonatomic,strong) TGReplayMessage *replayMessage;
+@property (nonatomic,strong) MessageReplyContainer *replyContainer;
 
 @end
 
@@ -842,37 +842,50 @@
 
 -(void)checkReplayMessage:(BOOL)updateHeight {
     
-    [self.replayMessage removeFromSuperview];
+    [self.replyContainer removeFromSuperview];
+    
+    self.replyContainer = nil;
     
     
-    self.replayMessage = nil;
-    
-    
-    __block TL_localMessage *replayMessage;
+    __block TL_localMessage *replyMessage;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         NSData *serialized = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.dialog.peer_id] inCollection:REPLAY_COLLECTION];
         
         if(serialized) {
-            replayMessage = [TLClassStore deserialize:serialized];
+            replyMessage = [TLClassStore deserialize:serialized];
         }
+        
         
     }];
     
-    if(replayMessage) {
+    if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
-        self.replayMessage = [[TGReplayMessage alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) message:[[MessagesManager sharedManager] find:self.dialog.top_message]];
+        _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
         
-        [self.normalView addSubview:self.replayMessage];
+        
+        weak();
+        
+        [_replyContainer setDeleteHandler:^{
+           
+            [weakSelf.messagesViewController removeReplayMessage:YES];
+            
+        }];
+        
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
+        
+        [_replyContainer setReplyObject:replyObject];
+        
+        [self.normalView addSubview:_replyContainer];
         
         if(updateHeight) {
             [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
         }
         
-        self.replayMessage.autoresizingMask = NSViewMinYMargin;
+        _replyContainer.autoresizingMask = NSViewMinYMargin | NSViewWidthSizable;
     } else {
         
         if(updateHeight) {
@@ -979,7 +992,7 @@
     }
 
     
-    if(self.replayMessage != nil) {
+    if(self.replyContainer != nil) {
         height+= 35;
     }
     

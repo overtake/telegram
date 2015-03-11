@@ -16,13 +16,16 @@ typedef enum {
     MessageOutStateError = 2
 } MessageOutState;
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state;
 @property (nonatomic,assign) int fakeId;
 @property (nonatomic,assign) long randomId;
 @property (nonatomic,assign) DeliveryState dstate;
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 
 @property (nonatomic,strong) NSUserNotification *userNotification;
+
+
+@property (nonatomic, strong) TL_localMessage *replyMessage;
 
 -(void)save:(BOOL)updateConversation;
 
@@ -39,4 +42,7 @@ typedef enum {
 
 - (TL_conversation *)conversation;
 -(int)filterType;
+
+-(TLUser *)fromUser;
+
 @end

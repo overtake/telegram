@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.15.
+//  Auto created by Mikhail Filimonov on 09.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -301,18 +301,20 @@
 
 @interface TLAPI_messages_sendMessage : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_id;
 @property (nonatomic, strong) NSString* message;
 @property long random_id;
 
-+(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer message:(NSString*)message random_id:(long)random_id;
++(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id message:(NSString*)message random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 
-+(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer media:(TLInputMedia*)media random_id:(long)random_id;
++(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id media:(TLInputMedia*)media random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject

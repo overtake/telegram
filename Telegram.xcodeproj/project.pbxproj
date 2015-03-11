@@ -463,6 +463,8 @@
 		C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B421AA4CFA9003759B2 /* TGMentionPopup.m */; };
 		C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B451AA8684E003759B2 /* TGReplayMessage.m */; };
 		C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B481AA9BF90003759B2 /* TGKeychain.m */; };
+		C2967B4F1AAF0830003759B2 /* MessageReplyContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B4E1AAF0830003759B2 /* MessageReplyContainer.m */; };
+		C2967B521AB05E9B003759B2 /* TGReplyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B511AB05E9B003759B2 /* TGReplyObject.m */; };
 		C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */; };
 		C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955019EC267200BE893E /* GeneralSettingsViewController.m */; };
 		C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955419EC29DE00BE893E /* GeneralSettingsRowItem.m */; };
@@ -1668,6 +1670,10 @@
 		C2967B451AA8684E003759B2 /* TGReplayMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGReplayMessage.m; sourceTree = "<group>"; };
 		C2967B471AA9BF90003759B2 /* TGKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGKeychain.h; sourceTree = "<group>"; };
 		C2967B481AA9BF90003759B2 /* TGKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGKeychain.m; sourceTree = "<group>"; };
+		C2967B4D1AAF0830003759B2 /* MessageReplyContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReplyContainer.h; sourceTree = "<group>"; };
+		C2967B4E1AAF0830003759B2 /* MessageReplyContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReplyContainer.m; sourceTree = "<group>"; };
+		C2967B501AB05E9B003759B2 /* TGReplyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGReplyObject.h; sourceTree = "<group>"; };
+		C2967B511AB05E9B003759B2 /* TGReplyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGReplyObject.m; sourceTree = "<group>"; };
 		C297954819EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlockUsersBehavior.h; sourceTree = "<group>"; };
 		C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlockUsersBehavior.m; sourceTree = "<group>"; };
 		C297954F19EC267200BE893E /* GeneralSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralSettingsViewController.h; sourceTree = "<group>"; };
@@ -2948,6 +2954,10 @@
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
 				C2233DB11A0818910056594F /* MessageCellDescriptionView.m */,
+				C2967B4D1AAF0830003759B2 /* MessageReplyContainer.h */,
+				C2967B4E1AAF0830003759B2 /* MessageReplyContainer.m */,
+				C2967B501AB05E9B003759B2 /* TGReplyObject.h */,
+				C2967B511AB05E9B003759B2 /* TGReplyObject.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -5033,6 +5043,7 @@
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
+				C2967B521AB05E9B003759B2 /* TGReplyObject.m in Sources */,
 				0ACF9E3F19235FED001F9E1E /* SearchLoadMoreCell.m in Sources */,
 				C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */,
 				CEAE5D18181BF9D300C17645 /* RPCRequest.m in Sources */,
@@ -5070,6 +5081,7 @@
 				0AAAE56518C612F800A2F9F1 /* NSView-DisableSubsAdditions.m in Sources */,
 				0A6D098A19535E8500A9AC64 /* NSAttributedStringCategory.m in Sources */,
 				CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */,
+				C2967B4F1AAF0830003759B2 /* MessageReplyContainer.m in Sources */,
 				0A9EDC4E1897BA0E0037E1BC /* NSColor+RBLCGColorAdditions.m in Sources */,
 				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C22C7F2D18B2163F007C4D17 /* TelegramSerialization.m in Sources */,

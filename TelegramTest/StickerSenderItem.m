@@ -14,7 +14,7 @@
 -(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation {
     if(self = [super initWithConversation:conversation]) {
         
-        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document] dialog:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document] conversation:conversation];
         
         [self.message save:YES];
     }
@@ -29,7 +29,7 @@
     id media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash]];
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer media:media random_id:self.message.randomId];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_id:self.message.reply_to_id media:media random_id:self.message.randomId];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;

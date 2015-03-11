@@ -19,6 +19,7 @@
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "TGTimer.h"
+#import "TGProccessUpdates.h"
 @interface ChatHistoryController ()
 
 
@@ -618,88 +619,93 @@ static NSMutableArray *listeners;
                 
             } else if([self checkState:ChatHistoryStateRemote next:next]) {
                 
-                
-                
                 [_filter remoteRequest:next callback:^(id response) {
                     
-                    [queue dispatchOnQueue:^{
+                    [TL_localMessage convertReceivedMessages:[response messages]];
+                    
+                    [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response messages] asyncCompletionHandler:^{
                         
-                        if(!self.controller.conversation)
-                            return;
-                        
-                         [TL_localMessage convertReceivedMessages:[response messages]];
-                        
-                        NSArray *messages = [[response messages] copy];
-                        
-                        if(_filter.class != HistoryFilter.class || !_need_save_to_db) {
-                            [[response messages] removeAllObjects];
-                        }
-                        
-                        
-                        TL_localMessage *sync_message = [[response messages] lastObject];
-                        
-                        if(sync_message) {
-                            self.controller.conversation.sync_message_id = sync_message.n_id;
-                            [self.controller.conversation save];
-                        }
-                        
-                        
-                        if(!next) {
+                        [queue dispatchOnQueue:^{
                             
-                            TL_localMessage *last;
-                            if(messages.count > 0)
-                                last = messages[0];
+                            if(!self.controller.conversation)
+                                return;
                             
-                            ChatHistoryState old_state = _prevState;
-                            ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-                            [self setState:new_state next:next];
                             
-                            if(old_state != new_state && new_state == ChatHistoryStateLocal) {
-                                NSMutableArray *copy = [messages mutableCopy];
-                                
-                                [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
-                                    if(obj.n_id <= self.controller.conversation.sync_message_id)
-                                        [copy removeObject:obj];
-                                }];
-                                
-                                messages = copy;
+                            NSArray *messages = [[response messages] copy];
+                            
+                            if(_filter.class != HistoryFilter.class || !_need_save_to_db) {
+                                [[response messages] removeAllObjects];
                             }
                             
-                        }
-                        
-
-                        
-                        [SharedManager proccessGlobalResponse:response];
-                        
-                        for (TL_localMessage *message in messages) {
-                            if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                                [[Storage manager] insertMedia:message];
-                                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
-                                [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+                            
+                            TL_localMessage *sync_message = [[response messages] lastObject];
+                            
+                            if(sync_message) {
+                                self.controller.conversation.sync_message_id = sync_message.n_id;
+                                [self.controller.conversation save];
                             }
-                        }
+                            
+                            
+                            if(!next) {
+                                
+                                TL_localMessage *last;
+                                if(messages.count > 0)
+                                    last = messages[0];
+                                
+                                ChatHistoryState old_state = _prevState;
+                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                                [self setState:new_state next:next];
+                                
+                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
+                                    NSMutableArray *copy = [messages mutableCopy];
+                                    
+                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
+                                        if(obj.n_id <= self.controller.conversation.sync_message_id)
+                                            [copy removeObject:obj];
+                                    }];
+                                    
+                                    messages = copy;
+                                }
+                                
+                            }
+                            
+                            
+                            
+                            [SharedManager proccessGlobalResponse:response];
+                            
+                            for (TL_localMessage *message in messages) {
+                                if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
+                                    [[Storage manager] insertMedia:message];
+                                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
+                                    [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+                                }
+                            }
+                            
+                            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
+                            
+                            converted = [self sortItems:converted];
+                            
+                            [self saveId:converted next:next];
+                            
+                            
+                            
+                            
+                            if(next && converted.count <  (_selectLimit-1)) {
+                                [self setState:ChatHistoryStateFull next:next];
+                            }
+                            
+                            if(!next && (_min_id) == self.controller.conversation.top_message) {
+                                [self setState:ChatHistoryStateFull next:next];
+                            }
+                            
+                            self.filter.request = nil;
+                            
+                            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+                        }];
                         
-                        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
-                        
-                        converted = [self sortItems:converted];
-                        
-                        [self saveId:converted next:next];
-                        
-                      
-                        
-                        
-                        if(next && converted.count <  (_selectLimit-1)) {
-                            [self setState:ChatHistoryStateFull next:next];
-                        }
-                        
-                        if(!next && (_min_id) == self.controller.conversation.top_message) {
-                            [self setState:ChatHistoryStateFull next:next];
-                        }
-                        
-                         self.filter.request = nil;
-                        
-                        [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
                     }];
+                    
+                    
                     
                 }];
                 

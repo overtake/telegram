@@ -165,6 +165,8 @@ CACHE_IMAGE(RemoveStickerActive);
 CACHE_IMAGE(PasslockEnter);
 CACHE_IMAGE(PasslockEnterHighlighted);
 
+CACHE_IMAGE(CancelReply);
+
 @interface ImageUtils : NSObject
 
 

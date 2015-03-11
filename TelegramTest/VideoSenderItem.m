@@ -57,7 +57,7 @@
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
-        self.message = [MessageSender createOutMessage:@"" media:video dialog:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:video conversation:conversation];
         
         
 
@@ -90,7 +90,7 @@
             if(strongSelf.conversation.type == DialogTypeBroadcast) {
                 request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] message:@"" media:media];
             } else {
-                request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer media:media random_id:rand_long()];
+                request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer reply_to_id:strongSelf.message.reply_to_id media:media random_id:rand_long()];
             }
             
             

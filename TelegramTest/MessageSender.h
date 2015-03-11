@@ -13,7 +13,7 @@
 
 +(RPCRequest *)sendStatedMessage:(id)request successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler;
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media dialog:(TL_conversation *)dialog;
++(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation;
 +(int)getFutureMessageId;
 +(int)getFakeMessageId;
 +(void)drop;

@@ -63,7 +63,7 @@
             NSData *data = [[NSData alloc] initWithContentsOfFile:self.filePath];
             int width = 0;
             int heigth = 0;
-            if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 200 & heigth > 200)
+            if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 100 & heigth > 100)
             {
                 [attrs addObject:[TL_documentAttributeSticker create]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
@@ -105,7 +105,7 @@
         
         TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:attrs]];
         
-        self.message = [MessageSender createOutMessage:@"" media:document dialog:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation];
         
     }
     
@@ -200,7 +200,7 @@
     if(self.conversation.type == DialogTypeBroadcast) {
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer media:media random_id:rand_long()];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_id:self.message.reply_to_id media:media random_id:rand_long()];
     }
     
     

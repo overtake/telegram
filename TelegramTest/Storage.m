@@ -107,7 +107,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t121"; // 61
+    NSString *dbName = @"t127"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -191,6 +191,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)"];
         
+        
+        [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
         
         [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
@@ -429,10 +431,26 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  [result close];
                 
             }
-            
         }
         
+        
+        
+        
     }];
+    
+    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_id != 0"]];
+    
+    NSMutableArray *supportIds = [[NSMutableArray alloc] init];
+    
+    [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        [supportIds addObject:@([obj reply_to_id])];
+        
+    }];
+    
+    NSArray *support = [self selectSupportMessages:supportIds];
+    
+    [[MessagesManager sharedManager] addSupportMessages:support];
     
     if(completeHandler)
         completeHandler(messages);
@@ -440,8 +458,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
--(TLMessage *)messageById:(int)msgId {
-    __block TLMessage *message;
+-(TL_localMessage *)messageById:(int)msgId {
+    __block TL_localMessage *message;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
@@ -1595,6 +1613,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             [list addObject:broadcast];
         }
+        
+         [result close];
+        
     }];
     
     
@@ -1627,6 +1648,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [list addObject:action];
         }
         
+        [result close];
+        
         if(completeHandler) completeHandler(list);
         
     }];
@@ -1657,8 +1680,48 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [list addObject:action];
         }
         
+        [result close];
+        
         if(completeHandler) completeHandler(list);
         
+    }];
+}
+
+
+-(NSArray *)selectSupportMessages:(NSArray *)ids {
+    
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        NSString *join = [ids componentsJoinedByString:@","];
+        
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from support_messages where n_id IN (%@)",join];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        
+        while ([result next]) {
+            
+            [messages addObject:[TLClassStore deserialize:[result dataForColumn:@"serialized"]]];
+            
+        }
+        
+        [result close];
+        
+    }];
+    
+    return messages;
+    
+}
+
+
+-(void)addSupportMessages:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            [db executeUpdate:@"insert into support_messages (n_id,serialized) values (?,?)",@(obj.n_id),[TLClassStore serialize:obj]];
+        }];
     }];
 }
 

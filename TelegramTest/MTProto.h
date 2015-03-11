@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 06.03.15.
+//  Auto created by Dmitry Kondratyev on 09.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -407,6 +407,7 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
+	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -864,11 +865,12 @@
 @property int flags;
 @property int from_id;
 @property (nonatomic, strong) TLPeer* to_id;
+@property int fwd_from_id;
+@property int fwd_date;
+@property int reply_to_id;
 @property int date;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) TLMessageMedia* media;
-@property int fwd_from_id;
-@property int fwd_date;
 @property (nonatomic, strong) TLMessageAction* action;
 @end
 
@@ -876,7 +878,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
 @end
 @interface TL_messageForwarded : TLMessage
 +(TL_messageForwarded*)createWithFlags:(int)flags n_id:(int)n_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;

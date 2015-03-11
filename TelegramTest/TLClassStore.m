@@ -95,7 +95,7 @@
         [self.classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:935395612]];
         [self.classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
         [self.classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
-        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:1450613171]];
+        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-302118921]];
         [self.classes setObject:[TL_messageForwarded class] forKey:[NSNumber numberWithInt:-1553471722]];
         [self.classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:495384334]];
         [self.classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
@@ -376,7 +376,6 @@
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
         
-        
         [self.classes setObject:[TL_invokeAfter class] forKey:[NSNumber numberWithInt:-878758099]];
         
         
@@ -465,7 +464,7 @@
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        NSLog(@"Error, constructor 0x%02x not found, return nil",  (unsigned int) constructor);
+        NSLog(@"Error, constructor %d not found, return nil", constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
@@ -500,7 +499,7 @@
     [outputStream open];
     [stream setOuput:outputStream];
     [stream writeInt:0xda9b0d0d]; //invokeWithLayer
-    [stream writeInt:24];
+    [stream writeInt:25];
 
     [stream writeInt:constructor];
     

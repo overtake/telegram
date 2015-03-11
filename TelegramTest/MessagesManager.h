@@ -12,6 +12,10 @@
 @property (nonatomic,assign) int unread_count;
 
 
+
+-(void)addSupportMessages:(NSArray *)supportMessages;
+-(TL_localMessage *)supportMessage:(int)n_id;
+
 -(TL_destructMessage *)findWithRandomId:(long)random_id;
 
 -(void)addMessage:(TLMessage *)message;

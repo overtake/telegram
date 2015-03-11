@@ -87,6 +87,7 @@ typedef enum {
 - (void)sendDocument:(NSString *)file_path;
 
 - (void)addReplayMessage:(TL_localMessage *)message;
+-(void)removeReplayMessage:(BOOL)update;
 
 
 - (void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;

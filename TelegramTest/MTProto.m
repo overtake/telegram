@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.15.
+//  Auto created by Mikhail Filimonov on 09.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1672,12 +1672,15 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.to_id = to_id;
+	obj.fwd_from_id = fwd_from_id;
+	obj.fwd_date = fwd_date;
+	obj.reply_to_id = reply_to_id;
 	obj.date = date;
 	obj.message = message;
 	obj.media = media;
@@ -1688,6 +1691,9 @@
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
 	[TLClassStore TLSerialize:self.to_id stream:stream];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_id];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[TLClassStore TLSerialize:self.media stream:stream];
@@ -1697,6 +1703,9 @@
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
 	self.to_id = [TLClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
+	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+	if(self.flags & (1 << 3)) self.reply_to_id = [stream readInt];
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [TLClassStore TLDeserialize:stream];
@@ -8917,7 +8926,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 @implementation TL_gzip_packed
