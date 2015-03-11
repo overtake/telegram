@@ -531,7 +531,8 @@ void exceptionHandler(NSException * exception)
             
         }
         
-    [[Telegram rightViewController] becomeFirstResponder];
+        if(![responder isKindOfClass:[NSTextView class]] || ![responder isEditable])
+            [[Telegram rightViewController] becomeFirstResponder];
         
         return result;
     };
