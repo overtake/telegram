@@ -44,7 +44,7 @@
     
     selfString = [selfString stringByReplacingOccurrencesOfString:@"✌" withString:@"✌️"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"☺" withString:@"☺️"];
-    
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"☝" withString:@"👆"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"1⃣" withString:@"1️⃣"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"2⃣" withString:@"2️⃣"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"3⃣" withString:@"3️⃣"];

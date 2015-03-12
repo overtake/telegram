@@ -282,6 +282,13 @@ static const int bottomOffset = 58;
     [self.forwardView setHidden:YES];
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if(![[Telegram rightViewController] isModalViewActive]) {
+        self.leftNavigationBarView = nil;
+    }
+}
 
 
 

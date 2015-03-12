@@ -71,15 +71,18 @@
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    
+    if(self.isHidden)
+        [super mouseEntered:theEvent];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    
+    if(self.isHidden)
+        [super mouseExited:theEvent];
 }
 
-- (void)mouseDragged:(NSEvent *)event {
-
+- (void)mouseDragged:(NSEvent *)theEvent {
+    if(self.isHidden)
+        [super mouseDragged:theEvent];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {
@@ -88,7 +91,8 @@
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent {
-    
+     if(self.isHidden)
+         [super scrollWheel:theEvent];
 }
 
 - (NSView *)hitTest:(NSPoint)aPoint {
