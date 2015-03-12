@@ -268,7 +268,11 @@ NSString * appName() {
         [[NSApp mainWindow].contentView addSubview:panel];
         [panel prepare];
     }];
-    
-    
 }
+
+
++(BOOL)isSingleLayout {
+    return [[Telegram mainViewController] isSingleLayout];
+}
+
 @end

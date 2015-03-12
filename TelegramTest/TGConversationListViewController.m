@@ -31,6 +31,10 @@
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
 #import "TGPasslock.h"
+
+
+
+
 @interface TGConversationListViewController ()
 @property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
@@ -41,6 +45,7 @@
 
 - (void)loadView {
     [super loadView];
+    
     
     
     

@@ -102,4 +102,6 @@
 
 -(void)showPasscodeController;
 
+-(void)addFirstControllerAfterLoadMainController:(TMViewController *)viewController;
+
 @end

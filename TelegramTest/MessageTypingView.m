@@ -228,7 +228,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             for (int i = 0; i < 3; i++)
             {
                 CALayer *layer = _typingDots[i];
-                [layer addAnimation:[self _animationFromOpacity:0.0f to:1.0f duration:0.12] forKey:@"opacity"];
+                [layer addAnimation:[self _animationFromOpacity:0.0f to:1.0f duration:0.05] forKey:@"opacity"];
             }
         }
     }
@@ -245,7 +245,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     {
         for (CALayer *layer in [self typingDots])
         {
-            CAAnimation *animation = [self _animationFromOpacity:layer.opacity to:0.0f duration:0.12];
+            CAAnimation *animation = [self _animationFromOpacity:layer.opacity to:0.0f duration:0.05];
             TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:layer];
             delegate.removeLayerOnCompletion = true;
             animation.delegate = delegate;

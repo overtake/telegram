@@ -418,7 +418,6 @@ static const int navigationOffset = 48;
         
         [_odelegate setCompletion:^(BOOL finished) {
             
-            [oldView setHidden:YES];
             [oldView removeFromSuperview];
             [oldView setFrameOrigin:NSMakePoint(0, 0)];
             [oldViewController viewDidDisappear:NO];

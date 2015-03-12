@@ -49,6 +49,10 @@
     [self.controllers addObject:viewController];
 }
 
+- (void)insertController:(TMViewController *)viewController atIndex:(int)index {
+     [self.controllers insertObject:viewController atIndex:index];
+}
+
 - (TMViewController *)contollerAtIndex:(int)index {
     return self.controllers[index];
 }
@@ -67,8 +71,6 @@
 
 - (void)showController:(TMViewController *)viewController {
     
-    if(self.currentController == viewController)
-        return;
     
     if(self.currentController) {
         [self.currentController viewWillDisappear:NO];
@@ -77,6 +79,7 @@
     }
     
     self.currentController = viewController;
+    
     [self.currentController.view setFrame:self.view.bounds];
     [self.currentController viewWillAppear:NO];
     [self.view addSubview:self.currentController.view];

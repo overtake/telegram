@@ -202,7 +202,13 @@
     }
     
     if([[Telegram rightViewController] isModalViewActive]) {
-        return [[Telegram rightViewController] hideModalView:YES animation:YES];
+        
+        [[Telegram rightViewController] hideModalView:YES animation:YES];
+        
+        if(![Telegram isSingleLayout])
+        {
+            return;
+        }
     }
     
     if([self.viewController respondsToSelector:@selector(backOrClose:)]) {

@@ -200,6 +200,8 @@
         xOffset+=itemWidth;
         
     }];
+    
+    [self setSelectedIndex:self.selectedIndex respondToDelegate:NO];
 
 }
 
@@ -207,8 +209,6 @@
 
 
 -(void)setFrameSize:(NSSize)newSize {
-    
-    BOOL redraw = self.frame.size.width == 0;
     
     [super setFrameSize:newSize];
     
@@ -228,7 +228,12 @@
     }];
 }
 
+
 -(void)setSelectedIndex:(NSUInteger)selectedIndex {
+    [self setSelectedIndex:selectedIndex respondToDelegate:YES];
+}
+
+-(void)setSelectedIndex:(NSUInteger)selectedIndex respondToDelegate:(BOOL)respondToDelegate {
     
     if(selectedIndex > self.tabs.count || self.tabs.count == 0)
         return;
@@ -265,9 +270,14 @@
     
     [field setTextColor:selectItem.selectedTextColor];
     
-    [self.delegate tabItemDidChanged:selectItem index:selectedIndex];
+    if(respondToDelegate)
+        [self.delegate tabItemDidChanged:selectItem index:selectedIndex];
 }
 
+
+-(void)redrawSelectedItem {
+    
+}
 
 
 

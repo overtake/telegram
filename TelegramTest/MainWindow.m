@@ -45,7 +45,7 @@
 
 -(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
     
-   
+    [super setFrame:frameRect display:flag];
 //    
 //    if([self inLiveResize])
 //    {
@@ -63,14 +63,7 @@
 ////         }
 //    }
     
-    BOOL isSingleLayout = [[Telegram mainViewController] isSingleLayout];
     
-    [super setFrame:frameRect display:flag];
-    
-    if(isSingleLayout != [[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram mainViewController] layout];
-        [Notification perform:LAYOUT_CHANGED data:nil];
-    }
     
     
 }

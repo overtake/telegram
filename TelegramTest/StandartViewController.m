@@ -23,6 +23,13 @@
 
 @implementation ExtendView
 
+
+-(void)removeFromSuperview {
+    [super removeFromSuperview];
+    
+    
+}
+
 -(void)setFrameSize:(NSSize)newSize {
     
     

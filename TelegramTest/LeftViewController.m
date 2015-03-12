@@ -106,6 +106,11 @@
     NSRectFill(NSMakeRect(self.bounds.size.width - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, self.bounds.size.height));
 }
 
+-(void)removeFromSuperview {
+    [super removeFromSuperview];
+}
+
+
 -(void)setFrameSize:(NSSize)newSize {
     
     
@@ -157,7 +162,7 @@
 
 
 @property (nonatomic, strong) ContactsViewController *contactsViewController;
-@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
+
 
 @end
 
@@ -172,7 +177,6 @@ static const int bottomOffset = 58;
     LeftView *view = [[LeftView alloc] initWithFrame:self.view.bounds];
     
     self.view = view;
-    
     
     
     self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
@@ -247,13 +251,13 @@ static const int bottomOffset = 58;
     
     [self updateForwardActionView];
     
-    [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
-    
 
 }
 
 
 -(void)didChangedLayout:(NSNotification *)notification {
+    
+    
     [self updateForwardActionView];
 }
 
@@ -275,7 +279,7 @@ static const int bottomOffset = 58;
 }
 
 -(void)updateForwardActionView {
-    [self.forwardView setHidden:![[Telegram mainViewController] isSingleLayout] || ![[Telegram rightViewController] isModalViewActive]];
+    [self.forwardView setHidden:YES];
 }
 
 
@@ -287,6 +291,9 @@ static const int bottomOffset = 58;
 
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
     [self.tabViewController showControllerByIndex:index];
+    
+    
+    [self setCenterBarViewText:item.title];
 }
 
 
@@ -300,7 +307,7 @@ static const int bottomOffset = 58;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.tabController.frame))];
     
-    self.tabController.selectedIndex = self.tabController.selectedIndex;
+  //  self.tabController.selectedIndex = self.tabController.selectedIndex;
 }
 
 

@@ -63,4 +63,7 @@ int maxChatUsers();
 
 
 +(void)showEnterPasswordPanel;
+
++(BOOL)isSingleLayout;
+
 @end

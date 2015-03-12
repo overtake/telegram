@@ -15,6 +15,7 @@
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
+@property (nonatomic,strong) TMTextField *centerTextField;
 @end
 
 @implementation TMViewController
@@ -65,6 +66,12 @@
 }
 
 -(TMView *)standartLeftBarView {
+    
+//    if([Telegram isSingleLayout] && [Telegram rightViewController].navigationViewController.viewControllerStack.count == 1)
+//    {
+//        return nil;
+//    }
+    
     if(self.backButton)
     {
         [self.backButton updateBackButton];
@@ -79,6 +86,39 @@
     }
     
     return (TMView *) self.backButton;
+}
+
+
+-(void)setCenterBarViewText:(NSString *)text {
+    
+    
+    if(!_centerTextField) {
+        _centerTextField = [TMTextField defaultTextField];
+        [_centerTextField setAlignment:NSCenterTextAlignment];
+        [_centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+        [_centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [_centerTextField setTextColor:NSColorFromRGB(0x222222)];
+        [[_centerTextField cell] setTruncatesLastVisibleLine:YES];
+        [[_centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [_centerTextField setDrawsBackground:NO];
+        
+        
+        TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
+        
+        
+        self.centerNavigationBarView = centerView;
+        
+        [centerView addSubview:_centerTextField];
+    }
+    
+    [_centerTextField setStringValue:text];
+    
+    
+    [_centerTextField sizeToFit];
+    
+    [_centerTextField setCenterByView:self.centerNavigationBarView];
+    
+    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
 }
 
 
@@ -110,7 +150,7 @@
         return;
     }
     
-    if([[Telegram rightViewController] isModalViewActive]) {
+    if([[Telegram rightViewController] isModalViewActive] && ![Telegram isSingleLayout]) {
         [[Telegram rightViewController] hideModalView:YES animation:YES];
     } else {
         [[Telegram rightViewController] navigationGoBack];

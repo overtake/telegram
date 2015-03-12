@@ -74,4 +74,7 @@
 
 -(TMView *)standartLeftBarView;
 
+-(void)setCenterBarViewText:(NSString *)text;
+
+
 @end

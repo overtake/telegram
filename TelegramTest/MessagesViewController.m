@@ -954,6 +954,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    [Notification perform:@"ChangeDialogSelection" data:@{}];
+    
    [self.table.scrollView setHasVerticalScroller:NO];
 }
 

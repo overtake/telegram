@@ -18,6 +18,10 @@
 @property (nonatomic,strong) TGWindowArchiver *archiver;
 @property (nonatomic,strong) NSView *buttonContainer;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
+
+
+@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
+
 - (BOOL)isSearchActive;
 
 -(NSResponder *)firstResponder;
@@ -38,4 +42,7 @@
 
 
 -(void)updateForwardActionView;
+
+-(void)didChangedLayout:(NSNotification *)notification;
+
 @end

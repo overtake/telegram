@@ -64,7 +64,10 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    [[Telegram rightViewController] hideModalView:YES animation:YES];
+    if(!self.isHidden)
+        [[Telegram rightViewController] hideModalView:YES animation:YES];
+    else
+        [super mouseDown:theEvent];
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {

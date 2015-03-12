@@ -184,6 +184,8 @@
 
     [self.forwardButton setTapBlock:^{
 //        strongify();
+    
+        
         [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.messagesViewController.conversation messagesCount:strongSelf.messagesViewController.selectedMessages.count];
     }];
      

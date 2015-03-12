@@ -102,7 +102,7 @@
 -(void)update {
     
    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 50 : 15;
+    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 50 : 10;
     
     
     
@@ -127,6 +127,7 @@
     
     [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.nameTextField.frame))];
     
+    [self.messageField setAutoresizingMask:NSViewWidthSizable];
     
     [self.messageField setAttributedStringValue:_replyObject.replyText];
     

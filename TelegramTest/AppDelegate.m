@@ -531,7 +531,7 @@ void exceptionHandler(NSException * exception)
             
         }
         
-        if(![responder isKindOfClass:[NSTextView class]] || ![responder isEditable])
+        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0)
             [[Telegram rightViewController] becomeFirstResponder];
         
         return result;
@@ -677,6 +677,10 @@ void exceptionHandler(NSException * exception)
     
     
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
+    
+    
+    [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
+
 
 }
 

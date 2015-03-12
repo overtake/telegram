@@ -71,9 +71,9 @@
 @property (nonatomic, strong) NSView *currentView;
 
 @property (nonatomic, strong) TMViewController *noDialogsSelectedViewController;
+
 @property (nonatomic, strong) TMView *modalView;
 @property (nonatomic, strong) id modalObject;
- 
 
 
 @end
@@ -119,8 +119,6 @@
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
     self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
     
-    self.
-    
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
     self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:self.view.bounds];
@@ -154,9 +152,15 @@
     
     self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:self.view.bounds];
     
+    
+    
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
-
-    [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:NO];
+    
+    
+    [self.navigationViewController.viewControllerStack removeAllObjects];
+    
+   
+    
     [self.navigationViewController.view.window makeFirstResponder:nil];
     [[Telegram mainViewController] layout];
     
@@ -164,8 +168,55 @@
     
 }
 
+-(void)addFirstControllerAfterLoadMainController:(TMViewController *)viewController {
+    
+    
+    [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
+}
+
+
+-(TMViewController *)conversationsController {
+    return [Telegram leftViewController];
+}
 
 -(void)didChangedLayout:(NSNotification *)notification {
+    
+    
+    
+    if(self.navigationViewController.viewControllerStack.count == 1) {
+        
+        
+        [self.navigationViewController.viewControllerStack removeAllObjects];
+        
+        
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:NO];
+        
+       
+        
+    } else {
+        
+      //  [[self currentEmptyController].view removeFromSuperview];
+        
+        
+        NSUInteger index = [self.navigationViewController.viewControllerStack indexOfObject:[self oldEmptyController]];
+        
+        [self.navigationViewController.viewControllerStack removeObject:[self oldEmptyController]];
+        
+        [self.navigationViewController.viewControllerStack insertObject:[self currentEmptyController] atIndex:0];
+        
+        if([self isModalViewActive]) {
+            
+            
+            [self.navigationViewController pushViewController:[Telegram isSingleLayout] ? self.navigationViewController.viewControllerStack[0] : [self.navigationViewController.viewControllerStack lastObject] animated:NO];
+        }
+        
+        
+        
+    }
+    
+    [self.modalView setHidden:[Telegram isSingleLayout]];
+    
+    [[Telegram leftViewController] didChangedLayout:notification];
     
 }
 
@@ -173,12 +224,19 @@
     if([[TMAudioRecorder sharedInstance] isRecording])
         return;
     
-    [self hideModalView:YES animation:NO];
+   
+    
     
     [[[Telegram sharedInstance] firstController] closeAllPopovers];
-       
     
     [self.navigationViewController goBackWithAnimation:YES];
+    
+    
+    if([self isModalViewActive]) {
+        [self.navigationViewController.viewControllerStack insertObject:[self currentEmptyController] atIndex:0];
+    }
+    
+    [self hideModalView:YES animation:NO];
 }
 
 
@@ -186,70 +244,73 @@
 - (void)hideModalView:(BOOL)isHide animation:(BOOL)animated {
     
     if(isHide) {
-        dispatch_block_t block = ^{
-            [self.modalView removeFromSuperview];
-            [self.navigationViewController.view enableSubViews];
-            self.modalView = nil;
-            self.modalObject = nil;
-            [Notification perform:@"MODALVIEW_VISIBLE_CHANGE" data:nil];
-            [[Telegram leftViewController] updateForwardActionView];
-            
-            if([[Telegram mainViewController] isSingleLayout]) {
-                [[Telegram mainViewController] checkLayout];
-            }
-            
-        };
         
-        if(animated) {
-            [CATransaction begin];
-            {
-                [CATransaction setCompletionBlock:block];
+        
+        if(self.modalView) {
+            
+            
+            dispatch_block_t block = ^{
+                [self.modalView removeFromSuperview];
+                [self.navigationViewController.view enableSubViews];
+                self.modalView = nil;
+                self.modalObject = nil;
+                [Notification perform:@"MODALVIEW_VISIBLE_CHANGE" data:nil];
+            };
+            
+            if(animated) {
+                [CATransaction begin];
+                {
+                    [CATransaction setCompletionBlock:block];
+                    
+                    CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
+                    flash.fromValue = [NSNumber numberWithFloat:0.95];
+                    flash.toValue = [NSNumber numberWithFloat:0];
+                    flash.duration = 0.16;
+                    flash.autoreverses = NO;
+                    flash.repeatCount = 0;
+                    [self.modalView.layer removeAllAnimations];
+                    self.modalView.layer.opacity = 0;
+                    
+                    [self.modalView.layer addAnimation:flash forKey:@"flashAnimation"];
+                }
                 
+                [CATransaction commit];
+            } else {
+                block();
+            }
+
+        }
+
+       
+    } else {
+        
+       // if(!self.modalView) {
+           
+            
+            [self.modalView removeFromSuperview];
+            [self.navigationViewController.view disableSubViews];
+            [self.modalView setFrame:self.view.bounds];
+        
+        [self.modalView setHidden:[Telegram isSingleLayout]];
+        
+            [self.view addSubview:self.modalView];
+                        
+            if(animated) {
                 CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
-                flash.fromValue = [NSNumber numberWithFloat:0.95];
-                flash.toValue = [NSNumber numberWithFloat:0];
+                flash.fromValue = [NSNumber numberWithFloat:0.0];
+                flash.toValue = [NSNumber numberWithFloat:0.95];
                 flash.duration = 0.16;
                 flash.autoreverses = NO;
                 flash.repeatCount = 0;
                 [self.modalView.layer removeAllAnimations];
-                self.modalView.layer.opacity = 0;
+                self.modalView.layer.opacity = 0.95;
                 
                 [self.modalView.layer addAnimation:flash forKey:@"flashAnimation"];
+                
+                [[NSCursor arrowCursor] set];
             }
-            
-            [CATransaction commit];
-        } else {
-            block();
-        }
+     //   }
         
-       
-    } else {
-        [self.modalView removeFromSuperview];
-        [self.navigationViewController.view disableSubViews];
-        [self.modalView setFrame:self.view.bounds];
-
-        [self.view addSubview:self.modalView];
-        
-        [[Telegram leftViewController] updateForwardActionView];
-        
-        if([[Telegram mainViewController] isSingleLayout]) {
-            [[Telegram mainViewController] checkLayout];
-        }
-        
-        if(animated) {
-            CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            flash.fromValue = [NSNumber numberWithFloat:0.0];
-            flash.toValue = [NSNumber numberWithFloat:0.95];
-            flash.duration = 0.16;
-            flash.autoreverses = NO;
-            flash.repeatCount = 0;
-            [self.modalView.layer removeAllAnimations];
-            self.modalView.layer.opacity = 0.95;
-            
-            [self.modalView.layer addAnimation:flash forKey:@"flashAnimation"];
-            
-            [[NSCursor arrowCursor] set];
-        }
     }
     
    
@@ -281,6 +342,9 @@
         [alert show];
         return;
     }
+    
+    
+    
     
     if(self.modalView == [self shareContactModalView]) {
         
@@ -364,7 +428,9 @@
     [self hideModalView:YES animation:NO];
     
    
-    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
     
     TMModalView *view = [self shareContactModalView];
     
@@ -382,6 +448,11 @@
 
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
+    
     
     
     
@@ -446,7 +517,7 @@
 
 - (void)showNotSelectedDialog {
     [self.navigationViewController.viewControllerStack removeAllObjects];
-    [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:YES];
+    [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
 }
 
 - (void)logout:(NSNotification *)notify {
@@ -463,27 +534,40 @@
     
     [self hideModalView:YES animation:NO];
     
-    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController) {
+    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![[Telegram mainViewController] isSingleLayout]) {
       
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         
         [self.navigationViewController.viewControllerStack removeAllObjects];
-        [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
+        [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
         [self.navigationViewController.viewControllerStack addObject:self.messagesViewController];
         [self.navigationViewController.viewControllerStack addObject:self.navigationViewController.currentController];
         [self.navigationViewController goBackWithAnimation:YES];
     } else {
         
+        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter force:[Telegram isSingleLayout]];
         
-        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
+        if(![[Telegram mainViewController] isSingleLayout]) {
+            
+            
+            
+            [self.navigationViewController.viewControllerStack removeAllObjects];
+            [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
+            
+        }
         
-        [self.navigationViewController.viewControllerStack removeAllObjects];
-        [self.navigationViewController.viewControllerStack addObject:self.noDialogsSelectedViewController];
-        
-        [self.navigationViewController pushViewController:self.messagesViewController animated:![sender isKindOfClass:[TGConversationListViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]];
     }
 
     return YES;
+}
+
+-(TMViewController *)currentEmptyController {
+    return [[Telegram mainViewController] isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
+}
+
+-(TMViewController *)oldEmptyController {
+    return ![[Telegram mainViewController] isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
 }
 
 - (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation {
@@ -513,7 +597,7 @@
     
     
     
-    [self.navigationViewController pushViewController:self.collectionViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.collectionViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
     [self.collectionViewController setConversation:conversation];
     
@@ -528,7 +612,7 @@
     
     
     [self.broadcastInfoViewController setBroadcast:broadcast];
-    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 
@@ -539,7 +623,7 @@
     
     [self.composePickerViewController setAction:composeAction];
     
-    [self.navigationViewController pushViewController:self.composePickerViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.composePickerViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 
@@ -551,7 +635,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.composeChatCreateViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 
@@ -563,7 +647,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.composeBroadcastListViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.composeBroadcastListViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 
 }
 
@@ -578,7 +662,7 @@
     [self hideModalView:YES animation:NO];
     
     [self.chatInfoViewController setChat:chat];
-    [self.navigationViewController pushViewController:self.chatInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.chatInfoViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 
@@ -589,7 +673,7 @@
     
     [self.encryptedKeyViewController showForChat:chat];
     
-    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.encryptedKeyViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
     
 }
@@ -608,7 +692,7 @@
     
     [self hideModalView:YES animation:NO];
 
-    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.blockedUsersViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showGeneralSettings {
@@ -618,7 +702,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showSecuritySettings {
@@ -628,7 +712,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showAbout {
@@ -638,7 +722,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.aboutViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.aboutViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showUserNameController {
@@ -648,7 +732,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.userNameViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.userNameViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 -(void)showAddContactController {
@@ -658,7 +742,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.addContactViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.addContactViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showPrivacyController {
@@ -667,7 +751,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    [self.navigationViewController pushViewController:self.privacyViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.privacyViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 
 }
 
@@ -679,7 +763,7 @@
     
      [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusTimestamp]];
     
-    [self.navigationViewController pushViewController:self.lastSeenViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.lastSeenViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
    
     
@@ -698,7 +782,7 @@
     self.privacyUserListController.title = title;
     
     
-    [self.navigationViewController pushViewController:self.privacyUserListController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.privacyUserListController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 
@@ -709,7 +793,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeAlertController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.phoneChangeAlertController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 
@@ -720,7 +804,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.phoneChangeController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showPhoneChangeConfirmController:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone {
@@ -732,7 +816,7 @@
     [self.phoneChangeConfirmController setChangeParams:params phone:phone];
     
     
-    [self.navigationViewController pushViewController:self.phoneChangeConfirmController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.phoneChangeConfirmController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 - (void)showAboveController:(TMViewController *)lastController {
@@ -750,7 +834,7 @@
         
     } else {
         [self.navigationViewController.viewControllerStack removeAllObjects];
-        [self.navigationViewController pushViewController:self.noDialogsSelectedViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     }
 }
 
@@ -762,7 +846,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.passcodeViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+    [self.navigationViewController pushViewController:self.passcodeViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 @end
