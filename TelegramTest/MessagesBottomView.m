@@ -361,7 +361,8 @@
     
     
     self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.origin.x + self.inputMessageTextField.containerView.frame.size.width - 30, 17, image_smile().size.width, image_smile().size.height)];
-    [self.smileButton setAutoresizingMask:NSViewMinXMargin];
+    [self.smileButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.smileButton.layer disableActions];
     [self.smileButton setBackgroundImage:image_smile() forControlState:BTRControlStateNormal];
     [self.smileButton setBackgroundImage:image_smileHover() forControlState:BTRControlStateHover];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
@@ -936,6 +937,8 @@
     NSArray *acceptExtensions = @[@"jpg",@"png",@"tiff"];
     
     
+    BOOL needUpdate = self.attachments.count > 0;
+    
     [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
         
         [obj removeFromSuperview];
@@ -1004,8 +1007,10 @@
         
     }];
     
-    if(self.inputMessageString.length > 0)
-        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:YES];
+    needUpdate = (self.attachments.count == 0 && needUpdate) || (self.attachments.count > 0 && !needUpdate);
+    
+    if(self.inputMessageString.length > 0 && needUpdate)
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
     
 }
 
@@ -1035,14 +1040,16 @@
         if(isCleared) {
             
             
-            [[self.smileButton animator] setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame)- NSHeight(self.smileButton.frame) - 6)];
+           // [[self.smileButton animator] setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame)- NSHeight(self.smileButton.frame) - 6)];
+            
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             
             
         } else {
-            [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
+
+       //     [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
         }
@@ -1052,7 +1059,7 @@
         
         
         
-        [self.layer setNeedsDisplay];
+       // [self.layer setNeedsDisplay];
     }
 }
 

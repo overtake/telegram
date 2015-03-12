@@ -184,17 +184,14 @@ static NSMutableDictionary *keychains()
 - (NSString *)filePathForName:(NSString *)name group:(NSString *)group
 {
     static NSString *dataDirectory = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^ {
                       
-        NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
                       NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-        dataDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:_notEncryptedKeychain ? @"mtkeychain" : @"encrypt-mtkeychain"];
-                  });
+    dataDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:_notEncryptedKeychain ? @"mtkeychain" : @"encrypt-mtkeychain"];
     
     [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];
     
-        return [dataDirectory stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"%@_%@.bin", name, group]];
+    return [dataDirectory stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"%@_%@.bin", name, group]];
 }
 
 -(void)loadIfNeeded {

@@ -145,11 +145,13 @@ static const int bottomHeight = 60;
         
   //  [self setCenterByView:self.superview];
     
-    
+  
     
     [self.imageView setFrameSize:NSMakeSize(size.width - 10, size.height - 10)];
     
     [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) + 5, roundf((self.bounds.size.height - size.height ) / 2) + 5)];
+    
+    //-  [self runAnimation:currentViewerItem];
 
 }
 
@@ -168,15 +170,15 @@ static const int bottomHeight = 60;
     [self.imageView setFrameSize:contentSize];
     
 //    
-//    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-//        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]];
-//        [context setDuration:0.3];
-//        [[self animator] setFrame:to];
-//       // [[self.imageView animator] setFrameSize:contentSize];
-//        
-//    } completionHandler:^{
-//        
-//    }];
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]];
+        [context setDuration:0.3];
+        [[self animator] setFrame:to];
+       // [[self.imageView animator] setFrameSize:contentSize];
+        
+    } completionHandler:^{
+        
+    }];
     
    // self.layer.opacity = 0.2;
     
