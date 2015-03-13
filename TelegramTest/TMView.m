@@ -146,8 +146,8 @@
     if(self.callback)
         self.callback();
     else {
-        if(theEvent.clickCount == 2)
-            return;
+       // if(theEvent.clickCount == 2)
+         //   return;
         [super mouseDown:theEvent];
     }
     

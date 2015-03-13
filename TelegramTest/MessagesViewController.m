@@ -398,6 +398,7 @@
     
     self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
     
+    
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
@@ -1020,12 +1021,16 @@ static NSTextAttachment *headerMediaIcon() {
         [[self.table.scrollView animator] setFrame:newFrame];
         
         [[self.noMessagesView animator] setFrame:newFrame];
-            
+        
+        [[self.stickerPanel animator] setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
         
     } else {
         [self.table.scrollView setFrame:newFrame];
         [self.noMessagesView setFrame:newFrame];
+        
+        [self.stickerPanel setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
     }
+    
     
    
     [self jumpToBottomButtonDisplay];
@@ -1725,7 +1730,9 @@ static NSTextAttachment *headerMediaIcon() {
     
     if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
-         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
+        
+        
+        [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
     {
         [self.stickerPanel hide:YES];

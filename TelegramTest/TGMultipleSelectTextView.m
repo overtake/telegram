@@ -110,7 +110,15 @@
             
         }] atIndex:0];
         
-        [menu insertItem:[NSMenuItem separatorItem] atIndex:1];
+        [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+            
+            MessageTableItem *item = self.owner;
+            
+            [[Telegram rightViewController].messagesViewController addReplayMessage:item.message animated:YES];
+            
+        }] atIndex:1];
+        
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:2];
         
         
         [NSMenu popUpContextMenu:menu withEvent:theEvent forView:view];

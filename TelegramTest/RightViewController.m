@@ -565,7 +565,7 @@
             
         }
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]] && ![sender isKindOfClass:[AppDelegate class]]];
     }
 
     return YES;

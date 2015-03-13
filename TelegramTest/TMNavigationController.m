@@ -115,8 +115,13 @@ static const int navigationOffset = 48;
 
 
 - (void)goBackWithAnimation:(BOOL)animated {
-    if(self.viewControllerStack.count < 2 || _isLocked)
+    if(_isLocked)
         return;
+    
+    if(self.viewControllerStack.count < 2 && self.currentController != [[Telegram rightViewController] currentEmptyController])
+    {
+        [self.viewControllerStack insertObject:[[Telegram rightViewController] currentEmptyController] atIndex:0];
+    }
     
     TMViewController *controller = [self.viewControllerStack objectAtIndex:self.viewControllerStack.count-2];
     

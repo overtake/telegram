@@ -829,7 +829,7 @@
                 
                 
                 
-                [self.inputMessageTextField insertText:fullUserName replacementRange:NSMakeRange(range.location + 1, username.length)];
+                [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(range.location + 1, username.length)];
                 
             }];
         } else {
