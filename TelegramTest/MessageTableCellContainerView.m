@@ -446,20 +446,12 @@ static MessageTableItem *dateEditItem;
 
 static BOOL mouseIsDown = NO;
 
-
 -(void)mouseUp:(NSEvent *)theEvent {
     [super mouseUp:theEvent];
     
-    
-    if(theEvent.clickCount == 2 && !self.isEditable) {
-        if(self.item.message.to_id.class == [TL_peerChat class]) {
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
-        }
-        
-    }
-    
     mouseIsDown = NO;
 }
+
 
 -(void)scrollWheel:(NSEvent *)theEvent {
     [super scrollWheel:theEvent];
@@ -522,6 +514,13 @@ static BOOL dragAction = NO;
             
             return;
         }
+    }
+    
+    if(theEvent.clickCount == 2 && self.messagesViewController.state == MessagesViewControllerStateNone) {
+        if(self.item.message.to_id.class == [TL_peerChat class]) {
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+        }
+        
     }
     
     if(!self.isEditable) {

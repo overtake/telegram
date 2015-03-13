@@ -168,13 +168,14 @@
     
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
+-(void)mouseDown:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
         
         // go to message
         
-        [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id];
+        if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
+            [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id];
         
     }
     
