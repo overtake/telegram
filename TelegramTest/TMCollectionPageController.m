@@ -89,16 +89,10 @@
     
      self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
     
-    _centerTextField = [TMTextField defaultTextField];
-    [_centerTextField setAlignment:NSCenterTextAlignment];
-    [_centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [_centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [_centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[_centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[_centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [_centerTextField setDrawsBackground:NO];
     
-    [_centerTextField setClickBlock:^{
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+    
+    [self.centerTextField setClickBlock:^{
         
         TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:[strongSelf filterMenu]];
         
@@ -110,9 +104,8 @@
     
     self.centerNavigationBarView = centerView;
     
-    [centerView addSubview:_centerTextField];
     
-    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+    
     
     self.items = [[NSMutableArray alloc] init];
     
@@ -175,13 +168,7 @@
 }
 
 -(void)setTitle:(NSString *)title {
-    [_centerTextField setAttributedStringValue:[self stringForSharedMedia:title]];
-    
-    [_centerTextField sizeToFit];
-    
-    [_centerTextField setCenterByView:self.centerNavigationBarView];
-    
-    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
+    [self setCenterBarViewTextAttributed:[self stringForSharedMedia:title]];
 }
 
 

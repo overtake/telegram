@@ -79,7 +79,6 @@
 @end
 
 @interface ChatInfoViewController ()
-@property (nonatomic,strong) TMTextField *centerTextField;
 
 @end
 
@@ -104,31 +103,7 @@
     
     self.type = ChatInfoViewControllerNormal;
     
-    
-    _centerTextField = [TMTextField defaultTextField];
-    [self.centerTextField setAlignment:NSCenterTextAlignment];
-    [self.centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [self.centerTextField setDrawsBackground:NO];
-    
-    [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerView addSubview:self.centerTextField];
-    
-    [self.centerTextField sizeToFit];
-    
-    [self.centerTextField setCenterByView:centerView];
-    
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
-    
+    [self setCenterBarViewText:NSLocalizedString(@"Profile.Info", nil)];
     
     _bottomView = [[ChatBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
 

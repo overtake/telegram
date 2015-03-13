@@ -14,7 +14,6 @@
 #import "SelectUserItem.h"
 #import "NewContactsManager.h"
 @interface PrivacySettingsViewController () <TMTableViewDelegate>
-@property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TMTextButton *doneButton;
 @property (nonatomic,strong) TMTableView *tableView;
 
@@ -90,29 +89,7 @@
     ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = @"Done";
     ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.NeverShare", nil);
     
-    self.centerTextField = [TMTextField defaultTextField];
-    [self.centerTextField setAlignment:NSCenterTextAlignment];
-    [self.centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [self.centerTextField setDrawsBackground:NO];
-    
-    [self.centerTextField setStringValue:NSLocalizedString(@"PrivacySettingsController.Header", nil)];
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerView addSubview:self.centerTextField];
-    
-    [self.centerTextField sizeToFit];
-    
-    [self.centerTextField setCenterByView:centerView];
-    
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
+    [self setCenterBarViewText:NSLocalizedString(@"PrivacySettingsController.Header", nil)];
     
     
     TMView *rightView = [[TMView alloc] init];

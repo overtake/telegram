@@ -11,7 +11,6 @@
 @interface ComposeViewController : TMViewController
 
 @property (nonatomic,strong,readonly) TMTextButton *doneButton;
-@property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) ComposeAction *action;
 
 -(void)setAction:(ComposeAction *)action animated:(BOOL)animated;

@@ -289,32 +289,8 @@
     
     self.view.isFlipped = YES;
     
-    TMTextField* centerTextField = [TMTextField defaultTextField];
-    [centerTextField setAlignment:NSCenterTextAlignment];
-    [centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [centerTextField setDrawsBackground:NO];
+    [self setCenterBarViewText:NSLocalizedString(@"Profile.ChangeUserName", nil)];
     
-    [centerTextField setStringValue:NSLocalizedString(@"Profile.ChangeUserName", nil)];
-    
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerTextField sizeToFit];
-    
-    [centerTextField setCenterByView:centerView];
-    
-    [centerView addSubview:centerTextField];
-    
-    
-    
-    [centerTextField setCenterByView:centerView];
-    
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 13)];
     
     weakify();
     self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Username.setName", nil)];

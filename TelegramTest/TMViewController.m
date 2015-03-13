@@ -15,7 +15,7 @@
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
-@property (nonatomic,strong) TMTextField *centerTextField;
+
 @end
 
 @implementation TMViewController
@@ -113,6 +113,19 @@
     
     [_centerTextField setStringValue:text];
     
+    
+    [_centerTextField sizeToFit];
+    
+    [_centerTextField setCenterByView:self.centerNavigationBarView];
+    
+    [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
+}
+
+
+-(void)setCenterBarViewTextAttributed:(NSAttributedString *)text {
+    [self setCenterBarViewText:@""];
+    
+    [_centerTextField setAttributedStringValue:text];
     
     [_centerTextField sizeToFit];
     

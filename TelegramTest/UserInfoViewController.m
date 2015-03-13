@@ -21,8 +21,6 @@
 @property (nonatomic, strong) UserInfoContainerView *normalContainer;
 @property (nonatomic, strong) UserInfoEditContainerView *editContainer;
 
-@property (nonatomic,strong) TMTextField *centerTextField;
-
 
 
 @end
@@ -101,29 +99,8 @@
     [self.containerView addSubview:self.editContainer];
     
     
-    _centerTextField = [TMTextField defaultTextField];
-    [self.centerTextField setAlignment:NSCenterTextAlignment];
-    [self.centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [self.centerTextField setDrawsBackground:NO];
+    [self setCenterBarViewText:NSLocalizedString(@"Profile.Info", nil)];
     
-    [self.centerTextField setStringValue:NSLocalizedString(@"Profile.Info", nil)];
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerView addSubview:self.centerTextField];
-    
-    [self.centerTextField sizeToFit];
-    
-    [self.centerTextField setCenterByView:centerView];
-    
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
     
     _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
     

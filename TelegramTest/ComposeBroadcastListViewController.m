@@ -232,7 +232,7 @@
     
     [self.tableView cancelSelection];
     
-    [self.centerTextField setAttributedStringValue:self.action.behavior.centerTitle];
+    [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     
     [self.doneButton setStringValue:self.action.behavior.doneTitle];
     

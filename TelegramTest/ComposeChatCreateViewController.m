@@ -284,7 +284,7 @@
     [super viewWillAppear:animated];
     self.action.currentViewController = self;
 
-    [self.centerTextField setAttributedStringValue:self.action.behavior.centerTitle];
+    [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     
     
     

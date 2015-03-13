@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TMView.h"
-
+#import "TMTextField.h"
 
 @class TMPopover;
 @class TMNavigationController;
@@ -20,6 +20,8 @@
 @property (nonatomic, strong) TMView *rightNavigationBarView;
 
 @property (nonatomic, strong) TMPopover *popover;
+
+@property (nonatomic,strong,readonly) TMTextField *centerTextField;
 
 @property (nonatomic, strong) TMNavigationController *navigationViewController;
 @property (nonatomic) BOOL isNavigationBarHidden;
@@ -75,6 +77,6 @@
 -(TMView *)standartLeftBarView;
 
 -(void)setCenterBarViewText:(NSString *)text;
-
+-(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
 
 @end

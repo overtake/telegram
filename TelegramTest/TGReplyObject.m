@@ -151,9 +151,7 @@
                     }
                     
                     _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? replyMessage.media.document.thumb.location : nil placeHolder:thumb];
-                    
-                    self.replyThumb.imageSize = NSMakeSize(30, 30);
-                    
+                                        
                 }
                 
                 
@@ -161,6 +159,8 @@
             }
         }
         
+        
+        _replyThumb.imageSize = NSMakeSize(30, 30);
         
         [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];
         

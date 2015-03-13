@@ -16,31 +16,7 @@
 -(void)loadView {
     [super loadView];
     
-    
-     TMTextField* centerTextField = [TMTextField defaultTextField];
-    [centerTextField setAlignment:NSCenterTextAlignment];
-    [centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [centerTextField setDrawsBackground:NO];
-    
-    [centerTextField setStringValue:NSLocalizedString(@"Account.About", nil)];
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerView addSubview:centerTextField];
-    
-    [centerTextField sizeToFit];
-    
-    [centerTextField setCenterByView:centerView];
-    
-    [centerTextField setFrameOrigin:NSMakePoint(centerTextField.frame.origin.x, 13)];
-    
+    [self setCenterBarViewText:NSLocalizedString(@"Account.About", nil)];
     
     
     

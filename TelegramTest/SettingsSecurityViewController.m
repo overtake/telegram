@@ -26,30 +26,7 @@
     
     self.view.isFlipped = YES;
     
-    _centerTextField = [TMTextField defaultTextField];
-    [self.centerTextField setAlignment:NSCenterTextAlignment];
-    [self.centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [self.centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-    [self.centerTextField setTextColor:NSColorFromRGB(0x222222)];
-    [[self.centerTextField cell] setTruncatesLastVisibleLine:YES];
-    [[self.centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [self.centerTextField setDrawsBackground:NO];
-    
-    [self.centerTextField setStringValue:NSLocalizedString(@"GeneralSettings.Security", nil)];
-    
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    
-    self.centerNavigationBarView = centerView;
-    
-    [centerView addSubview:self.centerTextField];
-    
-    [self.centerTextField sizeToFit];
-    
-    [self.centerTextField setCenterByView:centerView];
-    
-    [self.centerTextField setFrameOrigin:NSMakePoint(self.centerTextField.frame.origin.x, 13)];
-    
+    [self setCenterBarViewText:NSLocalizedString(@"GeneralSettings.Security", nil)];
     
     
     TMView *rightView = [[TMView alloc] init];
