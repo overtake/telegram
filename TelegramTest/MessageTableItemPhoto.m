@@ -100,7 +100,6 @@
     
     self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
     
-    self.imageObject.imageSize = self.blockSize;
     
     return YES;
 }
