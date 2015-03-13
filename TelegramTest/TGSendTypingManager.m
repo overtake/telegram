@@ -42,11 +42,13 @@
     
     _isExecuting = YES;
     
-    dispatch_after_seconds(3, ^{
+    
+    
+    dispatch_after_seconds_queue(3, ^{
         
         [self cancel];
         
-    });
+    }, dispatch_get_current_queue());
     
     _request = [RPCRequest sendRequest:api successHandler:^(RPCRequest *request, id response) {
         

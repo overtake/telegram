@@ -5195,8 +5195,9 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithN_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
+	obj.flags = flags;
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.message = message;
@@ -5206,6 +5207,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
 	[stream writeString:self.message];
@@ -5214,6 +5216,7 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
 	self.message = [stream readString];
@@ -5224,8 +5227,9 @@
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithN_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
+	obj.flags = flags;
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.chat_id = chat_id;
@@ -5236,6 +5240,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
 	[stream writeInt:self.chat_id];
@@ -5245,6 +5250,7 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
 	self.chat_id = [stream readInt];
@@ -8791,6 +8797,7 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
+
 
 
 @implementation TL_gzip_packed

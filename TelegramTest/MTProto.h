@@ -402,6 +402,7 @@
 @interface TLProtoMessageCopy : TLObject
 @end
 	
+	
 @interface TLHttpWait : TLObject
 @end
 	
@@ -1578,6 +1579,7 @@
 @end
 	
 @interface TLUpdates()
+@property int flags;
 @property int n_id;
 @property int from_id;
 @property (nonatomic, strong) NSString* message;
@@ -1597,10 +1599,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates
-+(TL_updateShortMessage*)createWithN_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
 @end
 @interface TL_updateShortChatMessage : TLUpdates
-+(TL_updateShortChatMessage*)createWithN_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
 @end
 @interface TL_updateShort : TLUpdates
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
