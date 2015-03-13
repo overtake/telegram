@@ -90,14 +90,15 @@
     
     [self.centerImageView setFrameOrigin:NSMakePoint(roundf((item.blockSize.width - NSWidth(self.centerImageView.frame))/2), NSMinY(self.centerImageView.frame))];
     
+    [self.urlView setHidden:item.blockSize.width < item.social.titleSize.width];
     
-    [self.urlView setFrameSize:item.social.titleSize];
+    [self.urlView setFrameSize:NSMakeSize(item.social.titleSize.width, item.social.titleSize.height)];
     [self.urlView setString:item.social.title];
-    [self.urlView setFrameOrigin:NSMakePoint(10, NSHeight(self.imageView.frame) - 30)];
+    [self.urlView setFrameOrigin:NSMakePoint(5, NSHeight(self.imageView.frame) - 25)];
     
     [self.serviceNameView setFrameSize:item.social.serviceNameSize];
     [self.serviceNameView setString:item.social.serviceName];
-    [self.serviceNameView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(self.serviceNameView.frame) - 10, 10)];
+    [self.serviceNameView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(self.serviceNameView.frame) - 5, 5)];
 }
 
 @end

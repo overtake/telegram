@@ -35,29 +35,47 @@
     
     NSError *error = nil;
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w]{5,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w]{2,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
+    regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)#[\\w]{1,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
+    
+   
+    int bp = 0;
     
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSRange range = [obj range];
         
-        NSMutableArray *toremove = [[NSMutableArray alloc] init];
+        NSMutableArray *toremoveUsers = [[NSMutableArray alloc] init];
+        NSMutableArray *toremoveTags = [[NSMutableArray alloc] init];
         
         [userNames enumerateObjectsUsingBlock:^(id userObj, NSUInteger idx, BOOL *stop) {
             
             NSRange nameRange = [userObj range];
             
             if(range.location <= nameRange.location && (range.location+range.length) > (nameRange.location + nameRange.length)) {
-                [toremove addObject:userObj];
+                [toremoveUsers addObject:userObj];
             }
             
         }];
         
-        [userNames removeObjectsInArray:toremove];
         
+        [hashTags enumerateObjectsUsingBlock:^(id hashObj, NSUInteger idx, BOOL *stop) {
+            
+            NSRange hashRange = [hashObj range];
+            
+            if(range.location <= hashRange.location && (range.location+range.length) > (hashRange.location + hashRange.length)) {
+                [toremoveTags addObject:hashObj];
+            }
+            
+        }];
+        
+        [hashTags removeObjectsInArray:toremoveTags];
+        [userNames removeObjectsInArray:toremoveUsers];
         
     }];
     
@@ -80,7 +98,7 @@
     //return the range of URL scheme to program
     NSArray* newResult = [results arrayByAddingObjectsFromArray:schemeResult];
     
-    return [newResult arrayByAddingObjectsFromArray:userNames];;
+    return [[newResult arrayByAddingObjectsFromArray:userNames] arrayByAddingObjectsFromArray:hashTags];
     
     //return [results arrayByAddingObjectsFromArray:userNames];
 }

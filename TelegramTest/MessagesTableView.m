@@ -126,9 +126,10 @@
                 
                 if([item makeSizeByWidth:self.containerSize.width]) {
                     id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
-                    if([view isKindOfClass:[MessageTableCellTextView class]]) {
+                  //  if([view isKindOfClass:[MessageTableCellTextView class]]) {
+                    if(view)
                         [array addObject:view];
-                    }
+                  //  }
                 }
             }
             

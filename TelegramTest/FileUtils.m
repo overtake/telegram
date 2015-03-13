@@ -43,7 +43,7 @@
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
 NSString *const TLUserNamePrefix = @"@";
-
+NSString *const TLHashTagPrefix = @"#";
 -(id)init {
     if(self = [super init]) {
         NSMutableDictionary *types = [[NSMutableDictionary alloc] init];
@@ -554,6 +554,23 @@ void open_link(NSString *link) {
         open_user_by_name([link substringFromIndex:TLUserNamePrefix.length]);
         return;
     }
+    
+    if([link hasPrefix:TLHashTagPrefix]) {
+        
+        [[Telegram leftViewController] showTabControllerAtIndex:1];
+        
+        StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
+        
+        [controller searchByString:link];
+        
+        if([Telegram isSingleLayout]) {
+            [[Telegram rightViewController] showNotSelectedDialog];
+        }
+        
+        return;
+    }
+    
+    
     
     
     NSRange checkRange = [link rangeOfString:@"telegram.me/"];

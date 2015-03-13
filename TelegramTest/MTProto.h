@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 09.03.15.
+//  Auto created by Dmitry Kondratyev on 13.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -151,12 +151,6 @@
 @end
 	
 @interface TLChatLocated : TLObject
-@end
-	
-@interface TLcontacts_ForeignLink : TLObject
-@end
-	
-@interface TLcontacts_MyLink : TLObject
 @end
 	
 @interface TLcontacts_Link : TLObject
@@ -407,7 +401,6 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
-	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -867,7 +860,7 @@
 @property (nonatomic, strong) TLPeer* to_id;
 @property int fwd_from_id;
 @property int fwd_date;
-@property int reply_to_id;
+@property int reply_to_msg_id;
 @property int date;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) TLMessageMedia* media;
@@ -878,10 +871,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
-@end
-@interface TL_messageForwarded : TLMessage
-+(TL_messageForwarded*)createWithFlags:(int)flags n_id:(int)n_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
 @end
 @interface TL_messageService : TLMessage
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -1232,34 +1222,6 @@
 +(TL_chatLocated*)createWithChat_id:(int)chat_id distance:(int)distance;
 @end
 	
-@interface TLcontacts_ForeignLink()
-@property Boolean has_phone;
-@end
-
-@interface TL_contacts_foreignLinkUnknown : TLcontacts_ForeignLink
-+(TL_contacts_foreignLinkUnknown*)create;
-@end
-@interface TL_contacts_foreignLinkRequested : TLcontacts_ForeignLink
-+(TL_contacts_foreignLinkRequested*)createWithHas_phone:(Boolean)has_phone;
-@end
-@interface TL_contacts_foreignLinkMutual : TLcontacts_ForeignLink
-+(TL_contacts_foreignLinkMutual*)create;
-@end
-	
-@interface TLcontacts_MyLink()
-@property Boolean contact;
-@end
-
-@interface TL_contacts_myLinkEmpty : TLcontacts_MyLink
-+(TL_contacts_myLinkEmpty*)create;
-@end
-@interface TL_contacts_myLinkRequested : TLcontacts_MyLink
-+(TL_contacts_myLinkRequested*)createWithContact:(Boolean)contact;
-@end
-@interface TL_contacts_myLinkContact : TLcontacts_MyLink
-+(TL_contacts_myLinkContact*)create;
-@end
-	
 @interface TLcontacts_Link()
 @property (nonatomic, strong) TLContactLink* my_link;
 @property (nonatomic, strong) TLContactLink* foreign_link;
@@ -1462,7 +1424,6 @@
 @property int n_id;
 @property long random_id;
 @property (nonatomic, strong) NSMutableArray* messages;
-@property (nonatomic, strong) TLPeer* peer;
 @property int user_id;
 @property (nonatomic, strong) TLSendMessageAction* action;
 @property int chat_id;
@@ -1486,6 +1447,7 @@
 @property int version;
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property Boolean blocked;
+@property (nonatomic, strong) TLPeer* peer;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) NSString* type;
 @property (nonatomic, strong) TLMessageMedia* media;
@@ -1506,7 +1468,7 @@
 +(TL_updateReadMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateDeleteMessages : TLUpdate
-+(TL_updateDeleteMessages*)createWithPeer:(TLPeer*)peer messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
++(TL_updateDeleteMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateUserTyping : TLUpdate
 +(TL_updateUserTyping*)createWithUser_id:(int)user_id action:(TLSendMessageAction*)action;
@@ -2167,6 +2129,7 @@
 @interface TLDocumentAttribute()
 @property int w;
 @property int h;
+@property (nonatomic, strong) NSString* alt;
 @property int duration;
 @property (nonatomic, strong) NSString* file_name;
 @end
@@ -2178,7 +2141,7 @@
 +(TL_documentAttributeAnimated*)create;
 @end
 @interface TL_documentAttributeSticker : TLDocumentAttribute
-+(TL_documentAttributeSticker*)create;
++(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt;
 @end
 @interface TL_documentAttributeVideo : TLDocumentAttribute
 +(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h;

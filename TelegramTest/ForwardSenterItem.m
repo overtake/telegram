@@ -48,7 +48,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:f.from_id fwd_date:f.date reply_to_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random state:DeliveryStatePending];
+            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:f.from_id fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random state:DeliveryStatePending];
              
             [fake save:i == copy.count-1];
             
@@ -83,7 +83,7 @@
     
     NSMutableArray *random_ids = [[NSMutableArray alloc] init];
     
-    [self.fakes enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessageForwarded  *obj, NSUInteger idx, BOOL *stop) {
+    [self.fakes enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
         [random_ids addObject:@(obj.randomId)];
     }];
     

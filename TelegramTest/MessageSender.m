@@ -170,17 +170,17 @@
         
     }];
     
-    int reply_to_id = replyMessage.n_id;
+    int reply_to_msg_id = replyMessage.n_id;
     
     int flags = TGOUTUNREADMESSAGE;
     
-    if(reply_to_id > 0)
+    if(reply_to_msg_id > 0)
         flags|=TGREPLYMESSAGE;
     
     
-    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_id:reply_to_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
+    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
     
-    if(reply_to_id != 0)
+    if(reply_to_msg_id != 0)
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
         [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];

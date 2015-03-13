@@ -62,10 +62,10 @@
 @end
 
 
-#define MIN_SINGLE_LAYOUT_WIDTH 460
-#define MAX_SINGLE_LAYOUT_WIDTH 670
+#define MIN_SINGLE_LAYOUT_WIDTH 380
+#define MAX_SINGLE_LAYOUT_WIDTH 600
 
-#define MAX_LEFT_WIDTH 350
+#define MAX_LEFT_WIDTH 300
 
 @interface MainViewController () {
     NSSize oldLeftSize,oldRightSize,newLeftSize,newRightSize;
@@ -168,7 +168,7 @@
         
         
         
-        int w = 460;
+        int w = MIN_SINGLE_LAYOUT_WIDTH + 30;
         
       //  [self.splitView setPosition:NSWidth(self.splitView.frame) - w  ofDividerAtIndex:0];
         

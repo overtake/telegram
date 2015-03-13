@@ -85,11 +85,11 @@
             item = [[ShareContactSenterItem alloc] init];
         }
         
-        if([msg isKindOfClass:[TL_localMessageForwarded class]]) {
+        if(msg.fwd_from_id != 0) {
             item = [[ForwardSenterItem alloc] init];
             
             ((ForwardSenterItem *)item).fakes = @[msg];
-            ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([(TL_localMessageForwarded *)msg fwd_n_id])];
+            ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([msg n_id])];
         }
         
     } else {

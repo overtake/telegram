@@ -360,7 +360,7 @@
     
     
     
-    self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.origin.x + self.inputMessageTextField.containerView.frame.size.width - 30, 17, image_smile().size.width, image_smile().size.height)];
+    self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 7, image_smile().size.width, image_smile().size.height)];
     [self.smileButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.smileButton.layer disableActions];
     [self.smileButton setBackgroundImage:image_smile() forControlState:BTRControlStateNormal];
@@ -373,7 +373,7 @@
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
-    [self.normalView addSubview:self.smileButton];
+    [self.inputMessageTextField.containerView addSubview:self.smileButton];
     
     //self.normalView.backgroundColor = NSColorFromRGB(0x000000)
     

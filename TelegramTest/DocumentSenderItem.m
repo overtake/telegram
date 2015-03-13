@@ -65,7 +65,7 @@
             int heigth = 0;
             if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 100 & heigth > 100)
             {
-                [attrs addObject:[TL_documentAttributeSticker create]];
+                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@""]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
                 
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],randomId];
@@ -200,7 +200,7 @@
     if(self.conversation.type == DialogTypeBroadcast) {
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_id:self.message.reply_to_id media:media random_id:rand_long()];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:rand_long()];
     }
     
     

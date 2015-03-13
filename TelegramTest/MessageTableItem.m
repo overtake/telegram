@@ -194,7 +194,7 @@
     id objectReturn = nil;
 
     
-    if(object.class == [TL_localMessage class] || object.class == [TL_localMessageForwarded class] || object.class == [TL_destructMessage class]) {
+    if(object.class == [TL_localMessage class] || object.class == [TL_destructMessage class]) {
         TLMessage *message = object;
         
         
@@ -402,7 +402,7 @@
 
 
 -(BOOL)isReplyMessage {
-    return self.message.reply_to_id != 0;
+    return self.message.reply_to_msg_id != 0;
 }
 
 -(BOOL)isFwdMessage {

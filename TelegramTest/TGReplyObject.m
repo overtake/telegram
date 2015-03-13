@@ -129,8 +129,16 @@
         if([replyMessage.media isKindOfClass:[TL_messageMediaDocument class]]) {
             
             if([replyMessage.media.document isSticker]) {
+                
+                TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *)  [replyMessage.media.document attributeWithClass:TL_documentAttributeSticker.class];
                
-                [replyText appendString:NSLocalizedString(@"ChatMedia.Sticker", nil) withColor:NSColorFromRGB(0x808080)];
+                NSString *text = NSLocalizedString(@"ChatMedia.Sticker", nil);
+                
+                if(sticker.alt.length > 0) {
+                    text = [NSString stringWithFormat:@"%@ %@",sticker.alt,text];
+                }
+                
+                [replyText appendString:text withColor:NSColorFromRGB(0x808080)];
                 
             } else {
                 if(replyMessage.media.document.thumb && ![replyMessage.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {

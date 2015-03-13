@@ -1914,7 +1914,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     manager.unread_count-=_conversation.unread_count;
     
-    [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:_conversation];
+    NSArray *readed = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:_conversation];
+    
+    if(readed.count > 0) {
+        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:readed}];
+    }
     
     _conversation.unread_count = 0;
     

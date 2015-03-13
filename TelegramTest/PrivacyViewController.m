@@ -156,8 +156,8 @@
                 [self sendAccountDaysTTL:90];
             }]];
             
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL180",nil) withBlock:^(id sender) {
-                [self sendAccountDaysTTL:180];
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL182",nil) withBlock:^(id sender) {
+                [self sendAccountDaysTTL:182];
             }]];
             
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL365",nil) withBlock:^(id sender) {

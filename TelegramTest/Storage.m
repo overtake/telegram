@@ -107,7 +107,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t127"; // 61
+    NSString *dbName = @"t129"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -117,6 +117,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     if(![oldName isEqualToString:dbName]) {
         [SettingsArchiver setSupportUserId:0];
         [SettingsArchiver removeSetting:BlockedContactsSynchronized];
+        
+        [self drop:nil];
         
         [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -438,13 +440,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
     }];
     
-    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_id != 0"]];
+    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_msg_id != 0"]];
     
     NSMutableArray *supportIds = [[NSMutableArray alloc] init];
     
     [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        [supportIds addObject:@([obj reply_to_id])];
+        [supportIds addObject:@([obj reply_to_msg_id])];
         
     }];
     

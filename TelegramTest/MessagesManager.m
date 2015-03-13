@@ -347,26 +347,7 @@
 
 
 -(NSArray *)markAllInDialog:(TL_conversation *)dialog {
-    
-    __block NSMutableArray *marked = [[NSMutableArray alloc] init];
-    
-    [self.queue dispatchOnQueue:^{
-        NSArray *copy = [[self.messages allValues] copy];
-        copy = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d",dialog.peer.peer_id]];
-        for (TL_localMessage *msg in copy) {
-            
-            
-            if(msg.unread == YES)
-                [marked addObject:@([msg n_id])];
-            msg.flags&=~TGUNREADMESSAGE;
-        }
-        
-    } synchronous:YES];
-    
-   
-    [[Storage manager] markAllInDialog:dialog];
-    
-    return marked;
+    return [self markAllInConversation:dialog max_id:dialog.top_message];
 }
 
 

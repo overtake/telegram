@@ -367,7 +367,7 @@ static ASQueue *queue;
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -380,7 +380,7 @@ static ASQueue *queue;
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -417,8 +417,8 @@ static ASQueue *queue;
         
     [messages enumerateObjectsUsingBlock:^(TL_localMessage * obj, NSUInteger idx, BOOL *stop) {
             
-        if(obj.reply_to_id != 0 && obj.replyMessage == nil) {
-            [supportMessages addObject:@(obj.reply_to_id)];
+        if(obj.reply_to_msg_id != 0 && obj.replyMessage == nil) {
+            [supportMessages addObject:@(obj.reply_to_msg_id)];
         } 
             
     }];
@@ -488,13 +488,13 @@ static ASQueue *queue;
     }
     
     if([update isKindOfClass:[TL_updateReadMessages class]]) {
-        
-        for(NSNumber *mgsId in [update messages]) {
-            TL_localMessage *message = [[MessagesManager sharedManager] find:[mgsId intValue]];
-            message.flags&= ~TGUNREADMESSAGE;
-        }
-        
-        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
+//        
+//        for(NSNumber *mgsId in [update messages]) {
+//            TL_localMessage *message = [[MessagesManager sharedManager] find:[mgsId intValue]];
+//            message.flags&= ~TGUNREADMESSAGE;
+//        }
+//        
+//        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
         return;
     }
     
@@ -545,7 +545,7 @@ static ASQueue *queue;
             [conversation save];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -598,12 +598,8 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateContactLink class]]) {
         TL_updateContactLink *contactLink = (TL_updateContactLink *)update;
         
-        BOOL isContact = NO;
-        if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]]) {
-            isContact = YES;
-        } else if([contactLink.my_link isKindOfClass:[TL_contacts_myLinkRequested class]]) {
-            isContact = [contactLink.my_link isKindOfClass:[TL_contacts_myLinkContact class]];
-        }
+        BOOL isContact = [contactLink.my_link isKindOfClass:[TL_contactLinkContact class]];
+        
         
         DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
         
@@ -750,7 +746,7 @@ static ASQueue *queue;
         
         NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         

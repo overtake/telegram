@@ -12,6 +12,7 @@
 
 -(NSString *)file_name;
 -(BOOL)isSticker;
+-(TLDocumentAttribute *)attributeWithClass:(Class)className;
 -(NSSize)imageSize;
 -(BOOL)isExist;
 

@@ -516,8 +516,17 @@
 }
 
 - (void)showNotSelectedDialog {
+    
+    
     [self.navigationViewController.viewControllerStack removeAllObjects];
-    [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    
+    [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
+    
+    [self.navigationViewController.viewControllerStack addObject:self.navigationViewController.currentController];
+    
+    [self navigationGoBack];
+    
+    
 }
 
 - (void)logout:(NSNotification *)notify {

@@ -442,7 +442,6 @@
 		C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DDE19E5B24500752BAF /* TGModernAnimatedImagePlayer.m */; };
 		C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */; };
 		C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */; };
-		C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C167191797D3007B160F /* TL_localMessageForwarded.m */; };
 		C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C1771917D9C2007B160F /* DraggingControllerView.m */; };
 		C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17A1917D9D9007B160F /* DraggingItemView.m */; };
 		C281C180191AA139007B160F /* TMPreviewChatPicture.m in Sources */ = {isa = PBXBuildFile; fileRef = C281C17F191AA139007B160F /* TMPreviewChatPicture.m */; };
@@ -1629,8 +1628,6 @@
 		C277E2A118AAA69B00FFCA35 /* MessagesDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessagesDelegate.h; sourceTree = "<group>"; };
 		C277E2A218ABB44A00FFCA35 /* DialogsHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogsHistoryController.h; sourceTree = "<group>"; };
 		C277E2A318ABB44A00FFCA35 /* DialogsHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogsHistoryController.m; sourceTree = "<group>"; };
-		C281C166191797D3007B160F /* TL_localMessageForwarded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageForwarded.h; sourceTree = "<group>"; };
-		C281C167191797D3007B160F /* TL_localMessageForwarded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageForwarded.m; sourceTree = "<group>"; };
 		C281C1761917D9C2007B160F /* DraggingControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraggingControllerView.h; sourceTree = "<group>"; };
 		C281C1771917D9C2007B160F /* DraggingControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraggingControllerView.m; sourceTree = "<group>"; };
 		C281C1791917D9D9007B160F /* DraggingItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraggingItemView.h; sourceTree = "<group>"; };
@@ -3524,8 +3521,6 @@
 				C23298C918CF1A34000826E5 /* TL_conversation.m */,
 				C2200B7818F5557600F28803 /* TL_outDocument.h */,
 				C2200B7918F5557600F28803 /* TL_outDocument.m */,
-				C281C166191797D3007B160F /* TL_localMessageForwarded.h */,
-				C281C167191797D3007B160F /* TL_localMessageForwarded.m */,
 				C2182BBC19589246002469CA /* TL_localMessageService.h */,
 				C2182BBD19589246002469CA /* TL_localMessageService.m */,
 				C28261E019926C62004AC73E /* TL_peerBroadcast.h */,
@@ -4997,7 +4992,6 @@
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
 				CEDAEB8F1881AFA6006189A2 /* ContextFilterLogFormatter.m in Sources */,
-				C281C168191797D3007B160F /* TL_localMessageForwarded.m in Sources */,
 				0AD35DC91869B604007BA752 /* TMButton.m in Sources */,
 				CEDAEB6C1881AF85006189A2 /* YapDatabaseStatement.m in Sources */,
 				CEC22DF218273CEE008817D0 /* RMPhoneFormat.m in Sources */,

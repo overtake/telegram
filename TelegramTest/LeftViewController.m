@@ -269,6 +269,10 @@ static const int bottomOffset = 58;
     return [self.tabViewController currentController];
 }
 
+-(void)showTabControllerAtIndex:(int)index {
+    self.tabController.selectedIndex = index;
+}
+
 -(void)showUserSettings {
     [self.tabController setSelectedIndex:2];
     
@@ -347,14 +351,6 @@ static const int bottomOffset = 58;
 - (void) searchFieldBlur {}
 - (void) searchFieldFocus {}
 
-
-- (void) searchFieldTextChange:(NSString *)searchString {
-    
-    BOOL hidden = searchString.length > 0 ? YES : NO;
-    
-    [self.tabViewController showController:hidden ? self.searchViewController : self.dialogsViewController];    
-    [self.searchViewController searchByString:searchString ? searchString : @""];
-}
 
 
 @end

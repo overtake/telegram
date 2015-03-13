@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.03.15..
+//  Auto created by Mikhail Filimonov on 13.03.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -692,18 +692,18 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id message:(NSString*)message random_id:(long)random_id {
++(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
     obj.peer = peer;
-	obj.reply_to_id = reply_to_id;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.message = message;
 	obj.random_id = random_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-514078093];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:480793249];
 	[TLClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.reply_to_id];
+	[stream writeInt:self.reply_to_msg_id];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
@@ -711,18 +711,18 @@
 @end
 
 @implementation TLAPI_messages_sendMedia
-+(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_id:(int)reply_to_id media:(TLInputMedia*)media random_id:(long)random_id {
++(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id {
     TLAPI_messages_sendMedia* obj = [[TLAPI_messages_sendMedia alloc] init];
     obj.peer = peer;
-	obj.reply_to_id = reply_to_id;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.media = media;
 	obj.random_id = random_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1471181573];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-51478592];
 	[TLClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.reply_to_id];
+	[stream writeInt:self.reply_to_msg_id];
 	[TLClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];

@@ -8,11 +8,10 @@
 
 #import "TL_localMessage.h"
 #import "TL_localMessageService.h"
-#import "TL_localMessageForwarded.h"
 #import "HistoryFilter.h"
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -22,7 +21,7 @@
     msg.date = date;
     msg.fwd_from_id = fwd_from_id;
     msg.fwd_date = fwd_date;
-    msg.reply_to_id = reply_to_id;
+    msg.reply_to_msg_id = reply_to_msg_id;
     msg.message = message;
     msg.media = media;
     msg.dstate = state;
@@ -43,19 +42,19 @@
 
 -(TL_localMessage *)replyMessage {
     
-    if(self.reply_to_id != 0)
+    if(self.reply_to_msg_id != 0)
     {
         
         if(!_replyMessage)
         {
-            _replyMessage = [[MessagesManager sharedManager] supportMessage:self.reply_to_id];
+            _replyMessage = [[MessagesManager sharedManager] supportMessage:self.reply_to_msg_id];
             
             if(!_replyMessage)
             {
-                _replyMessage = [[MessagesManager sharedManager] find:self.reply_to_id];
+                _replyMessage = [[MessagesManager sharedManager] find:self.reply_to_msg_id];
                 
                 if(!_replyMessage)
-                    _replyMessage = [[Storage manager] messageById:self.reply_to_id];
+                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id];
                 
                 if(_replyMessage)
                 {
@@ -92,10 +91,8 @@
     
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
-    } else if([message isKindOfClass:[TL_messageForwarded class]]) {
-        msg = [TL_localMessageForwarded createWithN_id:message.n_id flags:message.flags fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date from_id:message.from_id to_id:message.to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() fwd_n_id:message.n_id state:DeliveryStateNormal];
-    } else if(![message isKindOfClass:[TL_messageEmpty class]]) {
-        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_id:message.reply_to_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+    }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
     } else {
         return (TL_localMessage *) message;
     }
@@ -126,7 +123,7 @@
 	[TLClassStore TLSerialize:self.to_id stream:stream];
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
-    if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_id];
+    if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[TLClassStore TLSerialize:self.media stream:stream];
@@ -141,7 +138,7 @@
 	self.to_id = [TLClassStore TLDeserialize:stream];
     if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
     if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
-    if(self.flags & (1 << 3)) self.reply_to_id = [stream readInt];
+    if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 	self.date = [stream readInt];
     self.message = [stream readString];
 	self.media = [TLClassStore TLDeserialize:stream];

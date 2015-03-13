@@ -226,11 +226,6 @@
         
        
         
-       
-       
-        
-        NSLog(@"fullchat loaded");
-        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
         if(callback)

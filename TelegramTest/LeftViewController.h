@@ -36,6 +36,8 @@
 
 -(TMViewController *)currentTabController;
 
+-(void)showTabControllerAtIndex:(int)index;
+
 -(void)setUnreadCount:(int)count;
 
 -(void)showUserSettings;
@@ -44,5 +46,6 @@
 -(void)updateForwardActionView;
 
 -(void)didChangedLayout:(NSNotification *)notification;
+
 
 @end

@@ -49,6 +49,14 @@
     self.previewSize = blockSize;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+     self.blockSize = resizeToMaxCorner(NSMakeSize(self.message.media.video.thumb.w, self.message.media.video.thumb.h), MIN(250,width - 60));
+    
+    return YES;
+}
+
 
 - (Class)downloadClass {
     return [DownloadVideoItem class];

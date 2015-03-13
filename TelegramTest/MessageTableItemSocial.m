@@ -28,4 +28,12 @@
     return self;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    self.blockSize = NSMakeSize(MIN(250,width - 60), MIN(250,width - 60) - 100);
+    
+    return YES;
+}
+
 @end

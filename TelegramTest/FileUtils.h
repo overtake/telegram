@@ -26,7 +26,7 @@ extern NSString *const TGImagePType;
 
 extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
-
+extern NSString *const TLHashTagPrefix;
 +(NSString*)mimetypefromExtension:(NSString *)extension;
 +(NSString*)extensionForMimetype:(NSString *)mimetype;
 

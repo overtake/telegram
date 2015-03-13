@@ -95,8 +95,7 @@
         [self.classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:935395612]];
         [self.classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
         [self.classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
-        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-302118921]];
-        [self.classes setObject:[TL_messageForwarded class] forKey:[NSNumber numberWithInt:-1553471722]];
+        [self.classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-1481959023]];
         [self.classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:495384334]];
         [self.classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
         [self.classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:-926655958]];
@@ -144,12 +143,6 @@
         [self.classes setObject:[TL_contactSuggested class] forKey:[NSNumber numberWithInt:1038193057]];
         [self.classes setObject:[TL_contactStatus class] forKey:[NSNumber numberWithInt:-748155807]];
         [self.classes setObject:[TL_chatLocated class] forKey:[NSNumber numberWithInt:909233996]];
-        [self.classes setObject:[TL_contacts_foreignLinkUnknown class] forKey:[NSNumber numberWithInt:322183672]];
-        [self.classes setObject:[TL_contacts_foreignLinkRequested class] forKey:[NSNumber numberWithInt:-1484775609]];
-        [self.classes setObject:[TL_contacts_foreignLinkMutual class] forKey:[NSNumber numberWithInt:468356321]];
-        [self.classes setObject:[TL_contacts_myLinkEmpty class] forKey:[NSNumber numberWithInt:-768992160]];
-        [self.classes setObject:[TL_contacts_myLinkRequested class] forKey:[NSNumber numberWithInt:1818882030]];
-        [self.classes setObject:[TL_contacts_myLinkContact class] forKey:[NSNumber numberWithInt:-1035932711]];
         [self.classes setObject:[TL_contacts_link class] forKey:[NSNumber numberWithInt:986597452]];
         [self.classes setObject:[TL_contacts_contactsNotModified class] forKey:[NSNumber numberWithInt:-1219778094]];
         [self.classes setObject:[TL_contacts_contacts class] forKey:[NSNumber numberWithInt:1871416498]];
@@ -178,7 +171,7 @@
         [self.classes setObject:[TL_updateNewMessage class] forKey:[NSNumber numberWithInt:522914557]];
         [self.classes setObject:[TL_updateMessageID class] forKey:[NSNumber numberWithInt:1318109142]];
         [self.classes setObject:[TL_updateReadMessages class] forKey:[NSNumber numberWithInt:777696872]];
-        [self.classes setObject:[TL_updateDeleteMessages class] forKey:[NSNumber numberWithInt:846964760]];
+        [self.classes setObject:[TL_updateDeleteMessages class] forKey:[NSNumber numberWithInt:-1576161051]];
         [self.classes setObject:[TL_updateUserTyping class] forKey:[NSNumber numberWithInt:1548249383]];
         [self.classes setObject:[TL_updateChatUserTyping class] forKey:[NSNumber numberWithInt:-1704596961]];
         [self.classes setObject:[TL_updateChatParticipants class] forKey:[NSNumber numberWithInt:125178264]];
@@ -316,7 +309,7 @@
         [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:1939758962]];
         [self.classes setObject:[TL_documentAttributeImageSize class] forKey:[NSNumber numberWithInt:1815593308]];
         [self.classes setObject:[TL_documentAttributeAnimated class] forKey:[NSNumber numberWithInt:297109817]];
-        [self.classes setObject:[TL_documentAttributeSticker class] forKey:[NSNumber numberWithInt:-83208409]];
+        [self.classes setObject:[TL_documentAttributeSticker class] forKey:[NSNumber numberWithInt:-1723033470]];
         [self.classes setObject:[TL_documentAttributeVideo class] forKey:[NSNumber numberWithInt:1494273227]];
         [self.classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:85215461]];
         [self.classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
@@ -390,7 +383,6 @@
          [self.classes setObject:[TL_inputMessagesFilterAudio class] forKey:[NSNumber numberWithInt:0xcfc87522]];
         
         [self.classes setObject:[TL_outDocument class] forKey:[NSNumber numberWithInt:6]];
-        [self.classes setObject:[TL_localMessageForwarded class] forKey:[NSNumber numberWithInt:7]];
         [self.classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:8]];
         [self.classes setObject:[TL_peerBroadcast class] forKey:[NSNumber numberWithInt:9]];
         [self.classes setObject:[TL_broadcast class] forKey:[NSNumber numberWithInt:10]];

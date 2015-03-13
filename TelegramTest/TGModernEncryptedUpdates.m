@@ -536,7 +536,7 @@ Class convertClass(NSString *c, int layer) {
         if([obj isKindOfClass:imageSizeAttr]) {
             [attrs addObject:[TL_documentAttributeImageSize createWithW:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
         } else if([obj isKindOfClass:stickerAttr]) {
-            [attrs addObject:[TL_documentAttributeSticker create]];
+            [attrs addObject:[TL_documentAttributeSticker createWithAlt:@""]];
         } else if([obj isKindOfClass:filenameAttr]) {
             [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[obj valueForKey:@"file_name"]]];
         } else if([obj isKindOfClass:videoAttr]) {

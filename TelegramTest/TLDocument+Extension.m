@@ -26,6 +26,24 @@
     return fileName;
 }
 
+
+-(TLDocumentAttribute *)attributeWithClass:(Class)className {
+    
+    __block TLDocumentAttribute *attribute;
+    
+    [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.class == className) {
+            attribute = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return attribute;
+    
+}
+
 -(BOOL)isSticker {
     __block BOOL isSticker = NO;
     

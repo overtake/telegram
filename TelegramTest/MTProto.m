@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.03.15.
+//  Auto created by Mikhail Filimonov on 13.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1672,7 +1672,7 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_id:(int)reply_to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -1680,7 +1680,7 @@
 	obj.to_id = to_id;
 	obj.fwd_from_id = fwd_from_id;
 	obj.fwd_date = fwd_date;
-	obj.reply_to_id = reply_to_id;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.date = date;
 	obj.message = message;
 	obj.media = media;
@@ -1693,7 +1693,7 @@
 	[TLClassStore TLSerialize:self.to_id stream:stream];
 	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
 	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
-	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_id];
+	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[TLClassStore TLSerialize:self.media stream:stream];
@@ -1705,45 +1705,7 @@
 	self.to_id = [TLClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
 	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
-	if(self.flags & (1 << 3)) self.reply_to_id = [stream readInt];
-	self.date = [stream readInt];
-	self.message = [stream readString];
-	self.media = [TLClassStore TLDeserialize:stream];
-}
-@end
-
-@implementation TL_messageForwarded
-+(TL_messageForwarded*)createWithFlags:(int)flags n_id:(int)n_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
-	TL_messageForwarded* obj = [[TL_messageForwarded alloc] init];
-	obj.flags = flags;
-	obj.n_id = n_id;
-	obj.fwd_from_id = fwd_from_id;
-	obj.fwd_date = fwd_date;
-	obj.from_id = from_id;
-	obj.to_id = to_id;
-	obj.date = date;
-	obj.message = message;
-	obj.media = media;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	[stream writeInt:self.n_id];
-	[stream writeInt:self.fwd_from_id];
-	[stream writeInt:self.fwd_date];
-	[stream writeInt:self.from_id];
-	[TLClassStore TLSerialize:self.to_id stream:stream];
-	[stream writeInt:self.date];
-	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.n_id = [stream readInt];
-	self.fwd_from_id = [stream readInt];
-	self.fwd_date = [stream readInt];
-	self.from_id = [stream readInt];
-	self.to_id = [TLClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [TLClassStore TLDeserialize:stream];
@@ -2896,100 +2858,6 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 	self.distance = [stream readInt];
-}
-@end
-
-
-
-@implementation TLcontacts_ForeignLink
-@end
-
-@implementation TL_contacts_foreignLinkUnknown
-+(TL_contacts_foreignLinkUnknown*)create {
-	TL_contacts_foreignLinkUnknown* obj = [[TL_contacts_foreignLinkUnknown alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-@end
-
-@implementation TL_contacts_foreignLinkRequested
-+(TL_contacts_foreignLinkRequested*)createWithHas_phone:(Boolean)has_phone {
-	TL_contacts_foreignLinkRequested* obj = [[TL_contacts_foreignLinkRequested alloc] init];
-	obj.has_phone = has_phone;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeBool:self.has_phone];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.has_phone = [stream readBool];
-}
-@end
-
-@implementation TL_contacts_foreignLinkMutual
-+(TL_contacts_foreignLinkMutual*)create {
-	TL_contacts_foreignLinkMutual* obj = [[TL_contacts_foreignLinkMutual alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-@end
-
-
-
-@implementation TLcontacts_MyLink
-@end
-
-@implementation TL_contacts_myLinkEmpty
-+(TL_contacts_myLinkEmpty*)create {
-	TL_contacts_myLinkEmpty* obj = [[TL_contacts_myLinkEmpty alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-@end
-
-@implementation TL_contacts_myLinkRequested
-+(TL_contacts_myLinkRequested*)createWithContact:(Boolean)contact {
-	TL_contacts_myLinkRequested* obj = [[TL_contacts_myLinkRequested alloc] init];
-	obj.contact = contact;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeBool:self.contact];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.contact = [stream readBool];
-}
-@end
-
-@implementation TL_contacts_myLinkContact
-+(TL_contacts_myLinkContact*)create {
-	TL_contacts_myLinkContact* obj = [[TL_contacts_myLinkContact alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
 }
 @end
 
@@ -4480,16 +4348,14 @@
 @end
 
 @implementation TL_updateDeleteMessages
-+(TL_updateDeleteMessages*)createWithPeer:(TLPeer*)peer messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count {
++(TL_updateDeleteMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count {
 	TL_updateDeleteMessages* obj = [[TL_updateDeleteMessages alloc] init];
-	obj.peer = peer;
 	obj.messages = messages;
 	obj.pts = pts;
 	obj.pts_count = pts_count;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -4504,7 +4370,6 @@
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -7777,16 +7642,16 @@
 @end
 
 @implementation TL_documentAttributeSticker
-+(TL_documentAttributeSticker*)create {
++(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt {
 	TL_documentAttributeSticker* obj = [[TL_documentAttributeSticker alloc] init];
-	
+	obj.alt = alt;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	
+	[stream writeString:self.alt];
 }
 -(void)unserialize:(SerializedData*)stream {
-	
+	self.alt = [stream readString];
 }
 @end
 

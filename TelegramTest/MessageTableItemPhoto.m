@@ -65,8 +65,10 @@
                 
        
         self.imageObject.imageSize = imageSize;
-        self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
+        
         self.previewSize = imageSize;
+        
+        [self makeSizeByWidth:310];
     }
     return self;
 }
@@ -86,6 +88,21 @@
 
 -(void)doAfterDownload {
     
+}
+
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
+    
+    
+    NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 60));
+    
+    self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
+    
+    self.imageObject.imageSize = self.blockSize;
+    
+    return YES;
 }
 
 -(BOOL)needUploader {

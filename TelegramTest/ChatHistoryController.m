@@ -388,7 +388,7 @@ static NSMutableArray *listeners;
             NSMutableArray *fakes = [[NSMutableArray alloc] init];
             NSMutableArray *ids = [[NSMutableArray alloc] init];
             [fwd enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@([(TL_localMessageForwarded *)obj.message fwd_n_id])];
+                [ids addObject:@([obj.message n_id])];
                 [fakes insertObject:obj.message atIndex:0];
             }];
             
@@ -420,7 +420,7 @@ static NSMutableArray *listeners;
              if((item.message.dstate == DeliveryStateError || item.message.dstate == DeliveryStatePending) && !item.messageSender) {
                 
                 
-                if(item.message.dstate == DeliveryStatePending && [item.message isKindOfClass:[TL_localMessageForwarded class]]) {
+                if(item.message.dstate == DeliveryStatePending && item.message.fwd_from_id != 0) {
                 
                     if(fwd_group_random != 0 && fwd_group_random != item.message.randomId)
                         fwd_block();
