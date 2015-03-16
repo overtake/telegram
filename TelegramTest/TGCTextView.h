@@ -43,4 +43,6 @@
 // its private not for use
 -(BOOL)_checkClickCount:(NSEvent *)theEvent;
 
+-(BOOL)mouseInText:(NSEvent *)theEvent;
+
 @end

@@ -110,15 +110,21 @@
             
         }] atIndex:0];
         
-        [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
-            
-            MessageTableItem *item = self.owner;
-            
-            [[Telegram rightViewController].messagesViewController addReplayMessage:item.message animated:YES];
-            
-        }] atIndex:1];
+        MessageTableItem *item = self.owner;
         
-        [menu insertItem:[NSMenuItem separatorItem] atIndex:2];
+        if(item.message.to_id.class == [TL_peerChat class] || item.message.to_id.class == [TL_peerUser class])  {
+            
+            [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+                
+                 [[Telegram rightViewController].messagesViewController addReplayMessage:item.message animated:YES];
+                
+            }] atIndex:1];
+            
+            [menu insertItem:[NSMenuItem separatorItem] atIndex:2];
+            
+        }
+        
+        
         
         
         [NSMenu popUpContextMenu:menu withEvent:theEvent forView:view];

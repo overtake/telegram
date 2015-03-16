@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 13.03.15.
+//  Auto created by Dmitry Kondratyev on 15.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -401,7 +401,6 @@
 	
 @interface TLProtoMessageCopy : TLObject
 @end
-	
 	
 @interface TLHttpWait : TLObject
 @end
@@ -1581,11 +1580,15 @@
 @interface TLUpdates()
 @property int flags;
 @property int n_id;
-@property int from_id;
+@property int user_id;
 @property (nonatomic, strong) NSString* message;
 @property int pts;
 @property int pts_count;
 @property int date;
+@property int fwd_from_id;
+@property int fwd_date;
+@property int reply_to_msg_id;
+@property int from_id;
 @property int chat_id;
 @property (nonatomic, strong) TLUpdate* update;
 @property (nonatomic, strong) NSMutableArray* updates;
@@ -1599,10 +1602,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
 @end
 @interface TL_updateShortChatMessage : TLUpdates
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
 @end
 @interface TL_updateShort : TLUpdates
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;

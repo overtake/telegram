@@ -108,7 +108,7 @@
         
         [self addMessage:message];
          
-        TL_conversation *dialog = message.conversation;
+        TL_conversation *conversation = message.conversation;
         
         [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
@@ -118,10 +118,10 @@
             return;
         }
         
+        if( conversation.isMute )
+            if((message.flags & TGMENTIONMESSAGE) == 0)
+                return;
         
-        BOOL result = dialog.isMute;
-        if(result)
-            return;
         
         TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
         

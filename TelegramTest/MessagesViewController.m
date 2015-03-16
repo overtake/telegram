@@ -2727,14 +2727,15 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    if(message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class])  {
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            [transaction setObject:[TLClassStore serialize:message] forKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+            
+        }];
         
-        [transaction setObject:[TLClassStore serialize:message] forKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
-        
-    }];
-    
-     [self.bottomView updateReplayMessage:YES animated:animated];
-    
+        [self.bottomView updateReplayMessage:YES animated:animated];
+    }
 }
 
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated {

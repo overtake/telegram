@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 13.03.15.
+//  Auto created by Mikhail Filimonov on 15.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -5195,39 +5195,48 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
-	obj.from_id = from_id;
+	obj.user_id = user_id;
 	obj.message = message;
 	obj.pts = pts;
 	obj.pts_count = pts_count;
 	obj.date = date;
+	obj.fwd_from_id = fwd_from_id;
+	obj.fwd_date = fwd_date;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
-	[stream writeInt:self.from_id];
+	[stream writeInt:self.user_id];
 	[stream writeString:self.message];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 	[stream writeInt:self.date];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
-	self.from_id = [stream readInt];
+	self.user_id = [stream readInt];
 	self.message = [stream readString];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 	self.date = [stream readInt];
+	if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
+	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 }
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -5237,6 +5246,9 @@
 	obj.pts = pts;
 	obj.pts_count = pts_count;
 	obj.date = date;
+	obj.fwd_from_id = fwd_from_id;
+	obj.fwd_date = fwd_date;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -5248,6 +5260,9 @@
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 	[stream writeInt:self.date];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
+	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -5258,6 +5273,9 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 	self.date = [stream readInt];
+	if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
+	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 }
 @end
 

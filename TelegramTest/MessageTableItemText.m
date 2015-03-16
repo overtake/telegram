@@ -132,6 +132,7 @@
     return YES;
 }
 
+
 -(void)dealloc {
     [SettingsArchiver removeEventListener:self];
 }

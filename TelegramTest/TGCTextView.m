@@ -566,6 +566,14 @@
     [self setNeedsDisplay:YES];
 }
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    
+    int currentIndex = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
+    
+    
+    return currentIndex != -1;
+}
+
 -(BOOL)_checkClickCount:(NSEvent *)theEvent {
     if(theEvent.clickCount == 3) {
         [self setSelectionRange:NSMakeRange(0, self.attributedString.length)];

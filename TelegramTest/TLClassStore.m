@@ -186,8 +186,8 @@
         [self.classes setObject:[TL_updates_difference class] forKey:[NSNumber numberWithInt:16030880]];
         [self.classes setObject:[TL_updates_differenceSlice class] forKey:[NSNumber numberWithInt:-1459938943]];
         [self.classes setObject:[TL_updatesTooLong class] forKey:[NSNumber numberWithInt:-484987010]];
-        [self.classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:1572027774]];
-        [self.classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:-1331397357]];
+        [self.classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:-312729305]];
+        [self.classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:1378061116]];
         [self.classes setObject:[TL_updateShort class] forKey:[NSNumber numberWithInt:2027216577]];
         [self.classes setObject:[TL_updatesCombined class] forKey:[NSNumber numberWithInt:1918567619]];
         [self.classes setObject:[TL_updates class] forKey:[NSNumber numberWithInt:1957577280]];
@@ -367,7 +367,7 @@
         [self.classes setObject:[TL_msgs_all_info class] forKey:[NSNumber numberWithInt:-1933520591]];
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
-        [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];;
+        [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
         
         
         

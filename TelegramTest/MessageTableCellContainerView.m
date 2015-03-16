@@ -517,10 +517,17 @@ static BOOL dragAction = NO;
     }
     
     if(theEvent.clickCount == 2 && self.messagesViewController.state == MessagesViewControllerStateNone) {
-        if(self.item.message.to_id.class == [TL_peerChat class]) {
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+        
+        BOOL accept = YES;
+        
+        if([self isKindOfClass:[MessageTableCellTextView class]]) {
+            MessageTableCellTextView *view = (MessageTableCellTextView *) self;
+            
+            accept = ![view.textView mouseInText:theEvent];
         }
         
+        if(accept)
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
     }
     
     if(!self.isEditable) {
@@ -596,14 +603,13 @@ static BOOL dragAction = NO;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    if(self.item.message.to_id.class == [TL_peerChat class]) {
+    if(self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class])  {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
             
             [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
             
         }]];
     }
-    
     
     if([self.item canShare]) {
         

@@ -820,7 +820,7 @@
             string = [string substringFromIndex:range.location +1];
             
         }
-        if(username.length > 0) {
+        if(username != nil) {
             [TGMentionPopup show:username chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:^(NSString *fullUserName) {
                 
                 NSMutableString *insert = [string mutableCopy];

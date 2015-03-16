@@ -107,10 +107,25 @@
         userName = [userName substringFromIndex:1];
     
     
-    NSArray *userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
+    NSArray *userNames;
+    NSArray *fullName;
+    
+    if(userName.length > 0) {
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
+        
+        
+        fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fullName CONTAINS[c] %@ AND self.n_id IN %@ AND self.username.length != 0",userName,uids]];
+    } else {
+        
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",uids]];
+        
+        fullName = @[];
+        
+    }
     
     
-    NSArray *fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fullName CONTAINS[c] %@ AND self.n_id IN %@ AND self.username.length != 0",userName,uids]];
+    
+    
     
     NSMutableArray *result = [[NSMutableArray alloc] initWithArray:userNames];
     
@@ -121,6 +136,8 @@
         }
         
     }];
+    
+    [result removeObject:[self currentUser]];
     
     return result;
 
