@@ -160,7 +160,7 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
             TL_updateShortChatMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+            if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
                 [self failSequence];
                 return;
             }
@@ -170,7 +170,7 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updateShortMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.user_id]) {
+            if(![[UsersManager sharedManager] find:shortMessage.user_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
                 [self failSequence];
                 return;
             }
