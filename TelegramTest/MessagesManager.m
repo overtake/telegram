@@ -228,10 +228,8 @@
                 notification.contentImage = image;
             }
             
-            [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];
+            [notification setUserInfo:@{@"peer_id":@(message.peer_id),@"msg_id":@(message.n_id)}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-            
-            message.userNotification = notification;
             
             //[NSApp requestUserAttention:NSInformationalRequest];
         }
@@ -326,7 +324,12 @@
         if(!message || message.n_id == 0) return;
         
         
+        
+        
+        
+        
         [self.messages setObject:message forKey:@(message.n_id)];
+        
         
         if([message isKindOfClass:[TL_destructMessage class]])
             [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
@@ -355,15 +358,11 @@
     
     
     [self.queue dispatchOnQueue:^{
-        NSArray *copy = [[self.messages allValues] copy];
-        copy = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d",conversation.peer.peer_id]];
+        NSArray *copy = [[self.messages allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d AND self.n_id <= %d AND self.unread == YES",conversation.peer.peer_id,max_id]];
         
         
         for (TL_localMessage *msg in copy) {
-            
-            if(msg.n_id <= max_id) {
-                msg.flags&=~TGUNREADMESSAGE;
-            }
+            msg.flags&=~TGUNREADMESSAGE;
         }
         
     } synchronous:YES];

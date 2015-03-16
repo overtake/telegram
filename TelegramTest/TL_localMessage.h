@@ -22,9 +22,10 @@ typedef enum {
 @property (nonatomic,assign) DeliveryState dstate;
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 
-@property (nonatomic,strong) NSUserNotification *userNotification;
 
 
+
+-(NSUserNotification *)userNotification;
 @property (nonatomic, strong) TL_localMessage *replyMessage;
 
 -(void)save:(BOOL)updateConversation;

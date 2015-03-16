@@ -9,6 +9,12 @@
 #import "TL_localMessage.h"
 #import "TL_localMessageService.h"
 #import "HistoryFilter.h"
+
+
+@interface TL_localMessage ()
+@property (nonatomic,strong) NSUserNotification *notification;
+@end
+
 @implementation TL_localMessage
 
 +(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
@@ -189,15 +195,17 @@
 
 -(void)setFlags:(int)flags {
     
+    int of = self.flags;
+    
     BOOL o = [self unread];
     
     [super setFlags:flags];
     
     BOOL n = [self unread];
     
-    if(o && o != n && _userNotification) {
-        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:_userNotification];
-        _userNotification = nil;
+    if(of != -1 && o && o != n && [self userNotification]) {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:[self userNotification]];
+        _notification = nil;
     }
     
 }
@@ -261,7 +269,27 @@ DYNAMIC_PROPERTY(DDialog);
     
 }
 
-
+-(NSUserNotification *)userNotification {
+    
+    if(!_notification) {
+        NSArray *notifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+        
+        
+        [notifications enumerateObjectsUsingBlock:^(NSUserNotification *obj, NSUInteger idx, BOOL *stop) {
+            
+            int msg_id = [obj.userInfo[@"msg_id"] intValue];
+            
+            if(msg_id  == self.n_id) {
+                _notification = obj;
+                *stop = YES;
+            }
+            
+        }];
+    }
+    
+    return _notification;
+    
+}
 
 
 @end
