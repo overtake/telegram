@@ -71,7 +71,7 @@
                 
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
                 
-            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 70);
+            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 65);
                 
             [_objects addObject:imgObj];
             

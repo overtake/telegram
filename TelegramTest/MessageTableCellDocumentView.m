@@ -16,7 +16,7 @@
 #import "TMCircularProgress.h"
 #import "MessageTableItemAudio.h"
 #import "TGOpusAudioPlayerAU.h"
-
+#import "StickersPanelView.h"
 #import "NSMenuItemCategory.h"
 
 
@@ -382,7 +382,11 @@ static NSImage *attachBackgroundThumb() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
+   
+    
+    
     if([self.item isset]) {
+        
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
         }]];

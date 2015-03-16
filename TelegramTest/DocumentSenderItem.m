@@ -14,6 +14,7 @@
 #import "webp/decode.h"
 #import "FileUtils.h"
 #import "EmojiViewController.h"
+#import "StickersPanelView.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -270,40 +271,8 @@
         
         
         if(message.media.document.isSticker) {
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                
-                NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-                
-                if(!stickers)
-                    stickers = @[];
-                
-                NSMutableArray *deserialized = [[NSMutableArray alloc] init];
-                
-                BOOL needSave = YES;
-                
-                for (int i = 0; i < stickers.count; i++) {
-                    [deserialized addObject:[TLClassStore deserialize:stickers[i]]];
-                    
-                    TLDocument *doc = deserialized[i];
-                    
-                    if(doc.n_id == message.media.document.n_id)
-                        needSave = NO;
-                }
-                
-                
-                if(needSave) {
-                    
-                    stickers = [stickers arrayByAddingObject:[TLClassStore serialize:self.message.media.document]];
-                    
-                    [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-                    
-                }
-                
-                
-                
-            }];
             
-            [EmojiViewController reloadStickers];
+            [StickersPanelView addLocalSticker:message.media.document];
             
         }
         

@@ -11,6 +11,7 @@
 #import "TGStickerImageView.h"
 #import "TGMessagesStickerImageObject.h"
 #import "SenderHeader.h"
+#import "EmojiViewController.h"
 @interface StickersPanelView ()
 @property (nonatomic,strong) NSScrollView *scrollView;
 
@@ -318,6 +319,77 @@ bool isRemoteStickersLoaded() {
     }];
     
     
+}
+
++(void)addLocalSticker:(TLDocument *)document {
+    
+    if(![self hasSticker:document]) {
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+            
+            if(!stickers)
+                stickers = @[];
+            
+             stickers = [stickers arrayByAddingObject:[TLClassStore serialize:document]];
+                
+            [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+        }];
+        
+        [EmojiViewController reloadStickers];
+    }
+    
+    
+}
+
++(BOOL)hasSticker:(TLDocument *)document {
+    
+    __block BOOL has = NO;
+    
+    
+    TL_documentAttributeSticker *attribute = (TL_documentAttributeSticker *) [document attributeWithClass:[TL_documentAttributeSticker class]];
+    
+    if(attribute && attribute.alt.length > 0)
+    {
+        return YES;
+    }
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        NSArray *serialized = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"serialized"];
+        
+        [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_document *ds = [TLClassStore deserialize:obj];
+            
+            if(ds.n_id == document.n_id)
+            {
+                has = YES;
+                *stop = YES;
+            }
+            
+        }];
+        
+        if(!has) {
+            serialized = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+            
+            [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_document *ds = [TLClassStore deserialize:obj];
+                
+                if(ds.n_id == document.n_id)
+                {
+                    has = YES;
+                    *stop = YES;
+                }
+            }];
+        }
+        
+        
+    }];
+    
+    return has;
 }
 
 @end

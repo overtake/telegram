@@ -84,7 +84,7 @@
         [self setState:MessagesBottomViewNormalState animated:NO];
         
 
-        
+        [[EmojiViewController instance] loadView];
         
         [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
     }

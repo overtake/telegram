@@ -8,6 +8,7 @@
 
 #import "MessageTableCellStickerView.h"
 #import "TGImageView.h"
+#import "StickersPanelView.h"
 @interface MessageTableCellStickerView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @end
@@ -43,7 +44,13 @@
 
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Sticker menu"];
-
+    
+    if(![StickersPanelView hasSticker:self.item.message.media.document])
+    {
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddCustomSticker", nil) withBlock:^(id sender) {
+            [StickersPanelView addLocalSticker:[TL_outDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash date:self.item.message.media.document.date mime_type:self.item.message.media.document.mime_type size:self.item.message.media.document.size thumb:self.item.message.media.document.thumb dc_id:self.item.message.media.document.dc_id file_path:@"" attributes:self.item.message.media.document.attributes]];
+        }]];
+    }
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
         [self performSelector:@selector(saveAs:) withObject:self];
