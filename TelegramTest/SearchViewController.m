@@ -602,7 +602,6 @@ static int insertCount = 3;
         }
     }
     
-   // int start = MAX(0, params.messages_offset - 50);
     NSRange range = NSMakeRange(params.messages_inserted, params.messages_offset - params.messages_inserted);
     
     params.messages_inserted+=range.length;
@@ -610,12 +609,10 @@ static int insertCount = 3;
     
     NSArray *insertMessagesArray = [params.messages subarrayWithRange:range];
     
-   // [self.tableView setDefaultAnimation:NSTableViewAnimationEffectNone];
     [self.tableView insert:insertMessagesArray startIndex:self.tableView.count tableRedraw:YES];
     
     
     DLog(@"count %lu", self.tableView.count);
-    
     
 }
 
@@ -664,7 +661,7 @@ static int insertCount = 3;
             
             
             //Chats
-            NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@))", searchString, transform, transformReverse]];
+            NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title BEGINSWITH[c] %@) OR (self.title BEGINSWITH[c] %@) OR (self.title BEGINSWITH[c] %@))", searchString, transform, transformReverse]];
         
             for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
@@ -675,7 +672,7 @@ static int insertCount = 3;
             }
             
             //Users
-            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) OR (self.fullName CONTAINS[c] %@) OR (self.phone CONTAINS[c] %@) ",searchString, searchString, transform, transform, transformReverse, transformReverse]];
+            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) ",searchString, searchString, transform, transform, transformReverse, transformReverse]];
             
             searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
                 if(obj1.lastSeenTime > obj2.lastSeenTime) {

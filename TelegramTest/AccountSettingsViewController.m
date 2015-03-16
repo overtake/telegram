@@ -40,12 +40,14 @@
 @implementation ExView
 
 -(void)drawRect:(NSRect)dirtyRect {
-    [NSColorFromRGB(0xffffff) set];
+    
     
     if(self.drawBlock)
         self.drawBlock();
     
-    NSRectFill(NSMakeRect(0, 0, NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, NSHeight(self.bounds)));
+    [DIALOG_BORDER_COLOR set];
+    
+    NSRectFill(NSMakeRect(NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, 0, NSWidth(self.bounds) - DIALOG_BORDER_WIDTH, NSHeight(self.bounds)));
 }
 
 @end
@@ -113,6 +115,9 @@
 @property (nonatomic,strong) TMTextField *phoneNumberTextField;
 
 
+@property (nonatomic,strong) TMView *topContainer;
+
+
 typedef enum {
     AccountSettingsStateNormal,
     AccountSettingsStateEditable
@@ -150,6 +155,8 @@ typedef enum {
     [topContainer addSubview:separator];
     
     
+    self.topContainer = topContainer;
+    
     TMTextField *header = [TMTextField defaultTextField];
     
     [header setStringValue:NSLocalizedString(@"Settings", nil)];
@@ -163,6 +170,7 @@ typedef enum {
     
     [self.view setDrawBlock:^{
         [header setCenterByView:topContainer];
+        
     }];
     
     
@@ -313,7 +321,14 @@ typedef enum {
     
     [Notification addObserver:self selector:@selector(didChangedUserName:) name:USER_UPDATE_NAME];
     
+    [Notification addObserver:self selector:@selector(didChangeLayout:) name:LAYOUT_CHANGED];
+    
+}
 
+-(void)didChangeLayout:(NSNotification *)notification
+{
+    
+    [self setState:self.state animated:NO];
     
 }
 
@@ -477,6 +492,16 @@ typedef enum {
     
     
     int height = defaultY + NSHeight(self.defaultView.frame);
+    
+    if([Telegram isSingleLayout]) {
+        
+        height+=NSHeight(self.topContainer.frame);
+        
+    }
+    
+    [self.topContainer setFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.topContainer.frame))];
+    
+    [self.scrollView setFrame:NSMakeRect(0, [Telegram isSingleLayout] ? 0 : NSHeight(self.topContainer.frame), NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.view.frame))];
     
     [self.scrollView.documentView setFrameSize:NSMakeSize(NSWidth(self.scrollView.frame), height)];
     
