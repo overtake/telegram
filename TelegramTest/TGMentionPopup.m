@@ -147,6 +147,8 @@ static TMMenuPopover *popover;
             
         }];
         
+        [item setSubtitle:[NSString stringWithFormat:@"@%@",obj.username]];
+        
         item.representedObject = [[TGMentionPhoto alloc] initWithUser:obj menuItem:item];
         
         

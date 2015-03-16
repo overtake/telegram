@@ -117,7 +117,7 @@
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fullName CONTAINS[c] %@ AND self.n_id IN %@ AND self.username.length != 0",userName,uids]];
     } else {
         
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",uids]];
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@ AND self.username.length != 0",uids]];
         
         fullName = @[];
         

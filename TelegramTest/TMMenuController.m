@@ -9,7 +9,7 @@
 #import "TMMenuController.h"
 
 
-
+#import "NSMenuItemCategory.h"
 
 @class TMMenuController;
 
@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong, readonly) BTRImageView *backgroundImageView;
 @property (nonatomic, strong) TMTextLayer *textLayer;
+@property (nonatomic, strong) TMTextLayer *subTextLayer;
 @property (nonatomic, strong) NSImageView *imageView;
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
@@ -58,6 +59,19 @@
         [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0) - 1)];
         [self.textLayer setContentsScale:self.layer.contentsScale];
         [self.layer addSublayer:self.textLayer];
+        
+        
+        self.subTextLayer = [TMTextLayer layer];
+        [self.subTextLayer disableActions];
+        [self.subTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.subTextLayer setTextColor:[NSColor grayColor]];
+        [self.subTextLayer setString:item.subtitle];
+        [self.subTextLayer sizeToFit];
+        [self.subTextLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
+        [self.subTextLayer setContentsScale:self.layer.contentsScale];
+        [self.layer addSublayer:self.subTextLayer];
+        
+        
         
         self.imageView = [[NSImageView alloc] init];
         [self.imageView setFrameSize:item.image.size];
@@ -103,7 +117,7 @@
     
     [[NSCursor arrowCursor] set];
     
-    if((self.isHover && self.controller.popover.isAutoHighlight ) || self.controller.selectedItem == self) {
+    if((self.isHover  && self.controller.popover.isAutoHighlight) || (self.controller.selectedItem == self) ) {
         
         NSImage *img = self.item.highlightedImage;
         
@@ -113,7 +127,7 @@
         
         [self.gradientLayer setColors:@[(id)BLUE_COLOR_SELECT.CGColor, (id)BLUE_COLOR_SELECT.CGColor]];
         [self.textLayer setTextColor:[NSColor whiteColor]];
-        
+        [self.subTextLayer setTextColor:[NSColor whiteColor]];
         [self.imageView setFrameSize:img.size];
         [self.imageView setFrameOrigin:CGPointMake(roundf((46 - img.size.width) / 2.f), roundf((self.bounds.size.height - img.size.height) / 2.f))];
         
@@ -122,7 +136,7 @@
     } else {
         [self.gradientLayer setColors:@[]];
         [self.textLayer setTextColor:NSColorFromRGB(0x000000)];
-        
+        [self.subTextLayer setTextColor:NSColorFromRGB(0x808080)];
         
         [self.imageView setFrameSize:self.item.image.size];
         [self.imageView setFrameOrigin:CGPointMake(roundf((46 - self.item.image.size.width) / 2.f), roundf((self.bounds.size.height - self.item.image.size.height) / 2.f))];
@@ -133,10 +147,17 @@
         
     }
     
+    [self.subTextLayer setHidden:[self.item subtitle] == nil];
+    
     if(self.imageView.image == nil) {
-        [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2))];
+        
+        
+        
+        [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2 + (self.subTextLayer.isHidden ? 0 : 8)))];
+        
+        
     } else {
-        [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0) - 1)];
+        [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0 + (self.subTextLayer.isHidden ? 0 : 8)) - 1)];
     }
 }
 

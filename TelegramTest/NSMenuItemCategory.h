@@ -18,4 +18,6 @@
 - (void)setHighlightedImage:(NSImage *)image;
 - (NSImage *)highlightedImage;
 
+-(void)setSubtitle:(NSString *)subtitle;
+-(NSString *)subtitle;
 @end

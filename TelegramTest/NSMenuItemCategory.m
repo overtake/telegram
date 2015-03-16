@@ -16,7 +16,7 @@ static char * const qBlockActionKey = "BlockActionKey";
 @implementation NSMenuItem (Category)
 
 DYNAMIC_PROPERTY(HIGHLIGHTED)
-
+DYNAMIC_PROPERTY(SUBTITLE)
 + (id) menuItemWithTitle:(NSString *)title withBlock:(void (^)(id sender))block {
     NSMenuItem *item = [[NSMenuItem alloc] init];
     [item setTitle:title];
@@ -31,6 +31,14 @@ DYNAMIC_PROPERTY(HIGHLIGHTED)
 
 - (NSImage *)highlightedImage {
     return [self getHIGHLIGHTED];
+}
+
+
+-(void)setSubtitle:(NSString *)subtitle {
+    [self setSUBTITLE:subtitle];
+}
+-(NSString *)subtitle {
+    return [self getSUBTITLE];
 }
 
 - (void)setBlockAction:(void (^)(id))block {
