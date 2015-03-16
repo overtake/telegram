@@ -458,10 +458,16 @@ static ASQueue *queue;
     
     [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[ids mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
-        [TL_localMessage convertReceivedMessages:response.messages];
+        NSMutableArray *messages = [response.messages mutableCopy];
         
-        [[Storage manager] addSupportMessages:response.messages];
-        [[MessagesManager sharedManager] addSupportMessages:response.messages];
+        [[response messages] removeAllObjects];
+        
+        [SharedManager proccessGlobalResponse:response];
+        
+        [TL_localMessage convertReceivedMessages:messages];
+        
+        [[Storage manager] addSupportMessages:messages];
+        [[MessagesManager sharedManager] addSupportMessages:messages];
         
         
         if(completionHandler == nil) {
