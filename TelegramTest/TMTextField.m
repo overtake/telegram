@@ -61,6 +61,7 @@
     [textField setDrawsBackground:NO];
     [textField setSelectable:NO];
     [textField setEditable:NO];
+    [[textField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     return textField;
 }
 

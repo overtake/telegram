@@ -61,15 +61,19 @@
         [self.layer addSublayer:self.textLayer];
         
         
-        self.subTextLayer = [TMTextLayer layer];
-        [self.subTextLayer disableActions];
-        [self.subTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-        [self.subTextLayer setTextColor:[NSColor grayColor]];
-        [self.subTextLayer setString:item.subtitle];
-        [self.subTextLayer sizeToFit];
-        [self.subTextLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
-        [self.subTextLayer setContentsScale:self.layer.contentsScale];
-        [self.layer addSublayer:self.subTextLayer];
+        if(item.subtitle) {
+            self.subTextLayer = [TMTextLayer layer];
+            [self.subTextLayer disableActions];
+            [self.subTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+            [self.subTextLayer setTextColor:[NSColor grayColor]];
+            [self.subTextLayer setString:item.subtitle];
+            [self.subTextLayer sizeToFit];
+            [self.subTextLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
+            [self.subTextLayer setContentsScale:self.layer.contentsScale];
+            [self.layer addSublayer:self.subTextLayer];
+        }
+        
+        
         
         
         
@@ -147,17 +151,13 @@
         
     }
     
-    [self.subTextLayer setHidden:[self.item subtitle] == nil];
     
     if(self.imageView.image == nil) {
         
-        
-        
-        [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2 + (self.subTextLayer.isHidden ? 0 : 8)))];
-        
+        [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2 + (self.subTextLayer == nil ? 0 : 8)))];
         
     } else {
-        [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0 + (self.subTextLayer.isHidden ? 0 : 8)) - 1)];
+        [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0 + (self.subTextLayer == nil ? 0 : 8)) - 1)];
     }
 }
 

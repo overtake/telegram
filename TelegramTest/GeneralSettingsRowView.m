@@ -34,6 +34,7 @@
         self.nextDesc.textColor = NSColorFromRGB(0x999999);
         
         
+        
         [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
         [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forControlState:BTRControlStateNormal];
         

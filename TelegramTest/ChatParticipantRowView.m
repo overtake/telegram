@@ -124,4 +124,11 @@
 }
 
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 270, NSHeight(self.nameTextField.frame))];
+    [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 270, NSHeight(self.nameTextField.frame))];
+}
+
 @end
