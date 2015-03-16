@@ -103,6 +103,8 @@
     
     [self.nextDesc sizeToFit];
     
+    
+    
     [self.switchControl setDidChangeHandler:^(BOOL isOn) {
         item.callback(item);
     }];
@@ -153,7 +155,7 @@
     [self.descriptionField sizeToFit];
     [self.subdescField.titleLabel sizeToFit];
     [self.subdescField setFrameSize:self.subdescField.titleLabel.frame.size];
-
+    
 }
 
 
@@ -171,6 +173,8 @@
     [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
     
     [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.lockedIndicator.frame), 10)];
+    
+    [self.descriptionField setFrameSize:NSMakeSize(NSWidth(self.frame) - 250, NSHeight(self.descriptionField.frame))];
 }
 
 
