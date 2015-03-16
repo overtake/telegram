@@ -160,7 +160,7 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
             TL_updateShortChatMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+            if(![[UsersManager sharedManager] find:shortMessage.user_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
                 [self failSequence];
                 return;
             }
@@ -170,7 +170,7 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updateShortMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.from_id]) {
+            if(![[UsersManager sharedManager] find:shortMessage.user_id]) {
                 [self failSequence];
                 return;
             }
@@ -362,12 +362,12 @@ static ASQueue *queue;
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:[shortMessage from_id]] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+        if(![[UsersManager sharedManager] find:[shortMessage user_id]] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
             [self failSequence];
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
         
@@ -377,12 +377,12 @@ static ASQueue *queue;
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:[shortMessage from_id]]) {
+        if(![[UsersManager sharedManager] find:[shortMessage user_id]]) {
             [self failSequence];
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage from_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:TGUNREADMESSAGE from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:UsersManager.currentUserId] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
         [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
         

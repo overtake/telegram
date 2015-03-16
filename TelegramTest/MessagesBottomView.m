@@ -823,7 +823,7 @@
         if(username != nil) {
             [TGMentionPopup show:username chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:^(NSString *fullUserName) {
                 
-                NSMutableString *insert = [string mutableCopy];
+                NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
                 
                 [insert insertString:[fullUserName substringFromIndex:username.length] atIndex:selectedRange.location];
                 
@@ -1009,7 +1009,7 @@
     
     needUpdate = (self.attachments.count == 0 && needUpdate) || (self.attachments.count > 0 && !needUpdate);
     
-    if(self.inputMessageString.length > 0 && needUpdate)
+    if(self.inputMessageString.length > 0 || needUpdate)
         [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
     
 }
