@@ -751,7 +751,7 @@
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0) {
+    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
         
         
         if(self.dialog)
@@ -768,7 +768,7 @@
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length) {
+    if(self.inputMessageTextField.stringValue.length || self.fwdContainer) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -853,8 +853,6 @@
 
 -(void)checkFwdMessages:(BOOL)updateHeight animated:(BOOL)animated {
     
-    return;
-    
     
     [_fwdContainer removeFromSuperview];
     
@@ -863,6 +861,11 @@
     
     _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
     
+    
+    TGForwardObject *fwdObj = [[TGForwardObject alloc] initWithMessages:@[[[MessagesManager sharedManager] find:self.dialog.top_message]]];
+    
+    [_fwdContainer setFwdObject:fwdObj];
+    
     _fwdContainer.autoresizingMask = NSViewWidthSizable;
     
     
@@ -870,8 +873,10 @@
     [self.normalView addSubview:_fwdContainer];
     
     
-     [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
     
+    
+    [self TMGrowingTextViewTextDidChange:nil];
     
 }
 
@@ -1091,8 +1096,8 @@
         }
         
         
-       [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
-        
+        [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
+        [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
         
         
        // [self.layer setNeedsDisplay];

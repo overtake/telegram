@@ -8,6 +8,49 @@
 
 #import "TGForwardObject.h"
 
+
+
 @implementation TGForwardObject
+
+-(id)initWithMessages:(NSArray *)messages {
+    if(self = [super init]) {
+        
+        _messages = messages;
+        
+        
+        NSMutableAttributedString *n = [[NSMutableAttributedString alloc] init];
+        
+        NSMutableArray *firstNames = [[NSMutableArray alloc] init];
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
+            
+            [firstNames addObject:obj.fromUser.first_name];
+            
+        }];
+        
+        
+        [n appendString:[firstNames componentsJoinedByString:@","] withColor:LINK_COLOR];
+        
+        [n setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:n.range];
+        
+        _names = n;
+        
+        
+         NSMutableAttributedString *d = [[NSMutableAttributedString alloc] init];
+        
+        [d appendString:[NSString stringWithFormat:@"Forward %lu messages",messages.count] withColor:NSColorFromRGB(0x808080)];
+        
+        [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:n.range];
+        
+        _fwd_desc = d;
+        
+
+        
+        
+        
+    }
+    
+    return self;
+}
 
 @end
