@@ -236,6 +236,8 @@ const static int textFieldXOffset = 30;
     
     [super setFrameSize:newSize];
     
+    [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
+    
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 100 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
     
     if([self inLiveResize]) {
