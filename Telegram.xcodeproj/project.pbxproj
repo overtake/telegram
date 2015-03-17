@@ -434,6 +434,8 @@
 		C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525D19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m */; };
 		C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */; };
 		C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526319B9ECCA00841C8A /* AddContactViewController.m */; };
+		C274C3731AB83182000DFDE4 /* TGForwardContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3721AB83182000DFDE4 /* TGForwardContainer.m */; };
+		C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1611,6 +1613,10 @@
 		C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddBroadcastMembersBehavior.m; sourceTree = "<group>"; };
 		C271526219B9ECCA00841C8A /* AddContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactViewController.h; sourceTree = "<group>"; };
 		C271526319B9ECCA00841C8A /* AddContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactViewController.m; sourceTree = "<group>"; };
+		C274C3711AB83182000DFDE4 /* TGForwardContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForwardContainer.h; sourceTree = "<group>"; };
+		C274C3721AB83182000DFDE4 /* TGForwardContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardContainer.m; sourceTree = "<group>"; };
+		C274C37A1AB831A3000DFDE4 /* TGForwardObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForwardObject.h; sourceTree = "<group>"; };
+		C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardObject.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -2943,6 +2949,8 @@
 		C20D1890193E09A50095A906 /* help */ = {
 			isa = PBXGroup;
 			children = (
+				C274C3791AB8318A000DFDE4 /* rpl */,
+				C274C3781AB83185000DFDE4 /* fwd */,
 				C20D1891193E09C00095A906 /* TMBlueAddButtonView.h */,
 				C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */,
 				C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */,
@@ -2951,10 +2959,6 @@
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
 				C2233DB11A0818910056594F /* MessageCellDescriptionView.m */,
-				C2967B4D1AAF0830003759B2 /* MessageReplyContainer.h */,
-				C2967B4E1AAF0830003759B2 /* MessageReplyContainer.m */,
-				C2967B501AB05E9B003759B2 /* TGReplyObject.h */,
-				C2967B511AB05E9B003759B2 /* TGReplyObject.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -3582,6 +3586,28 @@
 				C271525919B637D200841C8A /* ComposeViewController.m */,
 			);
 			name = ui;
+			sourceTree = "<group>";
+		};
+		C274C3781AB83185000DFDE4 /* fwd */ = {
+			isa = PBXGroup;
+			children = (
+				C274C3711AB83182000DFDE4 /* TGForwardContainer.h */,
+				C274C3721AB83182000DFDE4 /* TGForwardContainer.m */,
+				C274C37A1AB831A3000DFDE4 /* TGForwardObject.h */,
+				C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */,
+			);
+			name = fwd;
+			sourceTree = "<group>";
+		};
+		C274C3791AB8318A000DFDE4 /* rpl */ = {
+			isa = PBXGroup;
+			children = (
+				C2967B4D1AAF0830003759B2 /* MessageReplyContainer.h */,
+				C2967B4E1AAF0830003759B2 /* MessageReplyContainer.m */,
+				C2967B501AB05E9B003759B2 /* TGReplyObject.h */,
+				C2967B511AB05E9B003759B2 /* TGReplyObject.m */,
+			);
+			name = rpl;
 			sourceTree = "<group>";
 		};
 		C281C1711917D953007B160F /* dragging */ = {
@@ -5012,12 +5038,14 @@
 				0A6D098F19535E8500A9AC64 /* NSImageViewCategory.m in Sources */,
 				C248F3D119BE046C00BF658E /* picture.c in Sources */,
 				0A6758F2189672F600F4487D /* TMFastQueue.mm in Sources */,
+				C274C3731AB83182000DFDE4 /* TGForwardContainer.m in Sources */,
 				0ABC223118EE88DA00243F82 /* MessageTableCellGifView.m in Sources */,
 				0A6D099719535E8500A9AC64 /* TLContactCategory.m in Sources */,
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
+				C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */,
 				C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				CEDAEB901881AFA6006189A2 /* DispatchQueueLogFormatter.m in Sources */,

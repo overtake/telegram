@@ -187,10 +187,12 @@ static NSImage *playImage() {
 - (void)onStateChanged:(SenderItem *)item {
     [super onStateChanged:item];
     
-    if(item == self.item.messageSender) {
-        [(MessageTableItemVideo *)self.item rebuildTimeString];
-        [self updateVideoTimeView];
-    }
+    [ASQueue dispatchOnMainQueue:^{
+        if(item == self.item.messageSender) {
+            [(MessageTableItemVideo *)self.item rebuildTimeString];
+            [self updateVideoTimeView];
+        }
+    }];
 }
 
 
