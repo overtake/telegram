@@ -2686,7 +2686,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             
             if(!file_path) {
-                path = exportPath(rand_long(), @"tiff");
+                path = exportPath(rand_long(), @"jpg");
                 [data writeToFile:path atomically:YES];
             }
             

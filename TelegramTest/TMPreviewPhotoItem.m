@@ -44,7 +44,7 @@
         
         if(size.location.dc_id == 0 || size.location.secret == 0)
             return nil;
-        _url = [[NSURL alloc] initFileURLWithPath:locationFilePath(size.location, @"tiff")];
+        _url = [[NSURL alloc] initFileURLWithPath:locationFilePath(size.location, @"jpg")];
         
     }
     
@@ -108,7 +108,7 @@
         
     }  else if(sizes.count > 1) {
         size = sizes[0];
-        NSString *path = locationFilePath(size.location, @"tiff");
+        NSString *path = locationFilePath(size.location, @"jpg");
         if(checkFileSize(path, size.size)) {
             return [NSURL fileURLWithPath:path];
         }

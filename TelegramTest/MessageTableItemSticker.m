@@ -24,7 +24,7 @@
         NSData *bytes = object.media.document.thumb.bytes;
             
         if(bytes.length == 0) {
-            bytes = [NSData dataWithContentsOfFile:locationFilePath(object.media.document.thumb.location, @"tiff") options:NSDataReadingMappedIfSafe error:nil];
+            bytes = [NSData dataWithContentsOfFile:locationFilePath(object.media.document.thumb.location, @"jpg") options:NSDataReadingMappedIfSafe error:nil];
         }
             
         placeholder = [[NSImage alloc] initWithData:bytes];

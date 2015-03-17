@@ -36,7 +36,7 @@
         TL_photoSize *size = [((TL_photo *)_previewObject.media).sizes lastObject];
         
       
-        _url = [NSURL fileURLWithPath:locationFilePath(size.location, @"tiff")];
+        _url = [NSURL fileURLWithPath:locationFilePath(size.location, @"jpg")];
     }
     
     return self;

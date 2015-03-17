@@ -73,7 +73,7 @@ NSString *const TLHashTagPrefix = @"#";
 }
 
 BOOL fileExists(TLFileLocation *location) {
-    return [[NSFileManager defaultManager] fileExistsAtPath:locationFilePath(location, @"tiff")];
+    return [[NSFileManager defaultManager] fileExistsAtPath:locationFilePath(location, @"jpg")];
 }
 
 BOOL isPathExists(NSString *path) {

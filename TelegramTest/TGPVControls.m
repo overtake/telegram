@@ -280,7 +280,7 @@
              if (result == NSFileHandlingPanelOKButton) {
                  NSURL *file = [savePanel URL];
                  
-                 NSString *itemUrl = locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff");
+                 NSString *itemUrl = locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg");
                  
                  if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
                      [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
@@ -303,7 +303,7 @@
         
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff")]]];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg")]]];
         
         
     }];
@@ -410,7 +410,7 @@
         
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"tiff")]]];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg")]]];
 
         
     }];

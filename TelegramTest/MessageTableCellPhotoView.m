@@ -238,7 +238,7 @@ NSImage *fireImage() {
     if([self.imageView hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).photoLocation,@"tiff");
+        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).photoLocation,@"jpg");
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

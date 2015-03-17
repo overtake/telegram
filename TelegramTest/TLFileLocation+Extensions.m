@@ -25,7 +25,7 @@ DYNAMIC_PROPERTY(MediaFileURL)
 -(NSString *)path {
     NSString *p = [self getMediaFileURL];
     if(!p) {
-        p = locationFilePath(self, @"tiff");
+        p = locationFilePath(self, @"jpg");
         [self setMediaFileURL:p];
     }
     
@@ -38,7 +38,7 @@ DYNAMIC_PROPERTY(SquareMediaURL)
 -(NSString *)squarePath {
     NSString *p = [self getSquareMediaURL];
     if(!p) {
-        p = locationFilePathWithPrefix(self,@"200x200", @"tiff");
+        p = locationFilePathWithPrefix(self,@"200x200", @"jpg");
         [self setSquareMediaURL:p];
     }
     

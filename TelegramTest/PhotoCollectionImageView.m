@@ -81,7 +81,7 @@ static CAAnimation *photoAnimation() {
     }
     
     if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
-        obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"tiff"));
+        obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"jpg"));
         
         [[TGPhotoViewer viewer] show:obj.previewObject conversation:[Telegram rightViewController].collectionViewController.conversation];
     } else if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {

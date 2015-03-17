@@ -31,7 +31,7 @@
         
         if([previewObject.media isKindOfClass:[TL_fileLocation class]]) {
            
-            _url = [NSURL fileURLWithPath:locationFilePath(previewObject.media, @"tiff")];
+            _url = [NSURL fileURLWithPath:locationFilePath(previewObject.media, @"jpg")];
         
         } else {
          
@@ -41,7 +41,7 @@
         
        
     }
-    
+
     return self;
 }
 
