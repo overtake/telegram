@@ -127,7 +127,6 @@
     }
   
     [self.nameTextField setAttributedStringValue:[_replyObject replyHeader]];
-    [self.nameTextField sizeToFit];
     
     [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.nameTextField.frame))];
     
@@ -135,7 +134,6 @@
     
     [self.messageField setAttributedStringValue:_replyObject.replyText];
     
-    [self.messageField sizeToFit];
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.messageField.frame))];
     

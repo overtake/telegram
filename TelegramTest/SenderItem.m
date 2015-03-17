@@ -138,7 +138,7 @@ static NSMutableArray *waiting;
     self->_state = state;
     
     
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnStageQueue:^{
         [self notifyAllListeners:@selector(onStateChanged:)];
         
         if(state == MessageSendingStateSent || state == MessageSendingStateError || state == MessageSendingStateCancelled) {
@@ -235,7 +235,7 @@ static NSMutableArray *waiting;
 
 -(void)setProgress:(float)progress {
     self->_progress = progress;
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnStageQueue:^{
         [self notifyAllListeners:@selector(onProgressChanged:)];
     }];
     
@@ -256,7 +256,7 @@ static NSMutableArray *waiting;
 
 
 -(void)addEventListener:(id<SenderListener>)listener {
-     [LoopingUtils runOnMainQueueAsync:^{
+     [ASQueue dispatchOnStageQueue:^{
          if(!self.listeners)
              self.listeners = [[NSMutableArray alloc] init];
          if([self.listeners indexOfObject:listener] == NSNotFound)
@@ -273,7 +273,7 @@ static NSMutableArray *waiting;
 }
 
 -(void)removeEventListener:(id<SenderListener>)listener {
-     [LoopingUtils runOnMainQueueAsync:^{
+     [ASQueue dispatchOnStageQueue:^{
          [self.listeners removeObject:listener];
          
          [self notifyAllListeners:@selector(onRemovedListener:)];

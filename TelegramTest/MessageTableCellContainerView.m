@@ -1066,16 +1066,23 @@ static int offsetEditable = 30;
 }
 
 - (void)onProgressChanged:(SenderItem *)item {
-    if(item == self.item.messageSender) {
-        [self uploadProgressHandler:item animated:YES];
-    }
+    
+    [ASQueue dispatchOnMainQueue:^{
+        if(item == self.item.messageSender) {
+            [self uploadProgressHandler:item animated:YES];
+        }
+    }];
+    
 }
 
 - (void)onAddedListener:(SenderItem *)item {
-    if(item == self.item.messageSender) {
-        [self uploadProgressHandler:item animated:NO];
-        [self updateCellState];
-    }
+    
+    [ASQueue dispatchOnMainQueue:^{
+        if(item == self.item.messageSender) {
+            [self uploadProgressHandler:item animated:NO];
+            [self updateCellState];
+        }
+    }];
 }
 
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation {
@@ -1091,21 +1098,24 @@ static int offsetEditable = 30;
 }
 
 - (void)onStateChanged:(SenderItem *)item {
-    if(item == self.item.messageSender) {
-        [self checkState:item];
-        [self uploadProgressHandler:item animated:NO];
-        [self updateCellState];
-        
-        
-        if(item.state == MessageSendingStateError) {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        if(item == self.item.messageSender) {
             [self checkState:item];
-        }
-        
-        if(item.state == MessageSendingStateCancelled) {
-            [self deleteAndCancel];
-        }
-    } else
-        [self.item.messageSender removeEventListener:self];
+            [self uploadProgressHandler:item animated:NO];
+            [self updateCellState];
+            
+            
+            if(item.state == MessageSendingStateError) {
+                [self checkState:item];
+            }
+            
+            if(item.state == MessageSendingStateCancelled) {
+                [self deleteAndCancel];
+            }
+        } else
+            [self.item.messageSender removeEventListener:self];
+    }];
     
 }
 

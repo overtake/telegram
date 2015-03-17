@@ -27,6 +27,7 @@
 #import "TGAttachImageElement.h"
 #import "TGMentionPopup.h"
 #import "MessageReplyContainer.h"
+#import "TGForwardContainer.h"
 
 @interface MessagesBottomView()
 
@@ -63,6 +64,9 @@
 @property (nonatomic,strong) NSMutableArray *attachmentsIgnore;
 
 @property (nonatomic,strong) MessageReplyContainer *replyContainer;
+
+
+@property (nonatomic,strong) TGForwardContainer *fwdContainer;
 
 @end
 
@@ -144,6 +148,8 @@
     }
     
     [self checkReplayMessage:YES animated:NO];
+    
+    [self checkFwdMessages:YES animated:NO];
 
 }
 
@@ -843,6 +849,32 @@
     
 }
 
+
+
+-(void)checkFwdMessages:(BOOL)updateHeight animated:(BOOL)animated {
+    
+    return;
+    
+    
+    [_fwdContainer removeFromSuperview];
+    
+    _fwdContainer = nil;
+    
+    
+    _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+    
+    _fwdContainer.autoresizingMask = NSViewWidthSizable;
+    
+    
+    
+    [self.normalView addSubview:_fwdContainer];
+    
+    
+     [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    
+    
+}
+
 -(void)checkReplayMessage:(BOOL)updateHeight animated:(BOOL)animated {
     
     [self.replyContainer removeFromSuperview];
@@ -1029,6 +1061,10 @@
 
     
     if(self.replyContainer != nil) {
+        height+= 35;
+    }
+    
+    if(self.fwdContainer != nil) {
         height+= 35;
     }
     
