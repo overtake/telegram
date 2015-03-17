@@ -619,6 +619,20 @@ static ASQueue *queue;
         
         DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
         
+        
+        TLUser *user = [[[UsersManager sharedManager] find:contactLink.user_id] copy];
+        
+        if([contactLink.my_link isKindOfClass:[TL_contactLinkContact class]]) {
+            user.type = TLUserTypeContact;
+        } else if([contactLink.my_link isKindOfClass:[TL_contactLinkHasPhone class]]) {
+            user.type = TLUserTypeRequest;
+        } else {
+            user.type = TLUserTypeForeign;
+        }
+        
+        
+        [[UsersManager sharedManager] add:@[user]];
+        
         if(isContact) {
             [[NewContactsManager sharedManager] insertContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
         } else {

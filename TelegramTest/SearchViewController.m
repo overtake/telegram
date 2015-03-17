@@ -661,7 +661,7 @@ static int insertCount = 3;
             
             
             //Chats
-            NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title BEGINSWITH[c] %@) OR (self.title BEGINSWITH[c] %@) OR (self.title BEGINSWITH[c] %@))", searchString, transform, transformReverse]];
+            NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@))", searchString, transform, transformReverse]];
         
             for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
