@@ -672,7 +672,7 @@ static int insertCount = 3;
             }
             
             //Users
-            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.fullName BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) ",searchString, searchString, transform, transform, transformReverse, transformReverse]];
+            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@ ) ",searchString,searchString, searchString, transform, transform,transform, transformReverse, transformReverse,transformReverse]];
             
             searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
                 if(obj1.lastSeenTime > obj2.lastSeenTime) {
