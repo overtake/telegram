@@ -34,6 +34,11 @@
         generator.appliesPreferredTrackTransform = TRUE;
         CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
         
+        
+        TL_localMessage *msg = (TL_localMessage *)self.object;
+        
+        NSSize size = NSMakeSize(250, msg.media.document.thumb.h + (250 - msg.media.document.thumb.w));
+        
         __block NSImage *thumbImg;
         
         dispatch_semaphore_t sema = dispatch_semaphore_create(0);
@@ -44,23 +49,20 @@
                 DLog(@"couldn't generate thumbnail, error:%@", error);
             }
             
-            thumbImg = [[NSImage alloc] initWithCGImage:im size:NSMakeSize(250, 250)];
+            thumbImg = [[NSImage alloc] initWithCGImage:im size:size];
             dispatch_semaphore_signal(sema);
         };
 
         
-        CGSize maxSize = CGSizeMake(250, 250);
+        CGSize maxSize = size;
         generator.maximumSize = maxSize;
         
         [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
         
         dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
         dispatch_release(sema);
-
         
-        TL_localMessage *msg = (TL_localMessage *)self.object;
-        
-        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumbImg.size.width h:thumbImg.size.height bytes:jpegNormalizedData(thumbImg)];
+        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
         [[Storage manager] updateMessages:@[msg]];
         

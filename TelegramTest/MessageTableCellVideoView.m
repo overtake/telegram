@@ -77,7 +77,7 @@ static NSImage *playImage() {
         [self.playImage setCenterByView:self.imageView];
         [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
         
-        self.videoTimeView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(10, 10, 0, 0)];
+        self.videoTimeView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(5, 5, 0, 0)];
         [self.imageView addSubview:self.videoTimeView];
                 
         [self setProgressStyle:TMCircularProgressDarkStyle];

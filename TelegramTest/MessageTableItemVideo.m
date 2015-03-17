@@ -38,21 +38,25 @@
     
     self.videoPhotoLocation = photoSize.location;
     self.videoSize = photoSize.size;
-    NSSize blockSize = resizeToMaxCorner(NSMakeSize(photoSize.w, photoSize.h), 250);
+    
+    
+    
+    NSSize blockSize = NSMakeSize(photoSize.w , photoSize.h );
     
     self.imageObject = [[TGImageObject alloc] initWithLocation:[photoSize isKindOfClass:[TL_photoCachedSize class]] ? nil : photoSize.location placeHolder:placeholder sourceId:self.message.n_id];
     
     self.imageObject.imageSize = blockSize;
     
-    self.blockSize = blockSize;
     
     self.previewSize = blockSize;
+    
+    [self makeSizeByWidth:310];
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-     self.blockSize = resizeToMaxCorner(NSMakeSize(self.message.media.video.thumb.w, self.message.media.video.thumb.h), MIN(250,width - 60));
+     self.blockSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
     
     return YES;
 }
