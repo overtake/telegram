@@ -22,9 +22,15 @@
         
         NSMutableArray *firstNames = [[NSMutableArray alloc] init];
         
+        
+        NSMutableArray *exception = [[NSMutableArray alloc] init];
+        
         [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
             
-            [firstNames addObject:obj.fromUser.first_name];
+            if([exception indexOfObject:obj.fromUser] == NSNotFound) {
+                [firstNames addObject:obj.fromUser.first_name];
+                [exception addObject:obj.fromUser];
+            }
             
         }];
         
@@ -40,7 +46,7 @@
         
         [d appendString:[NSString stringWithFormat:@"Forward %lu messages",messages.count] withColor:NSColorFromRGB(0x808080)];
         
-        [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:n.range];
+        [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:d.range];
         
         _fwd_desc = d;
         

@@ -110,7 +110,7 @@
     }
     
     if(!self.fwdContainer) {
-        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(68, 0, self.bounds.size.width - 160, self.bounds.size.height)];
+        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(68, 0, self.bounds.size.width - 100, self.bounds.size.height)];
         [self.fwdContainer setDrawBlock:^{
             [GRAY_BORDER_COLOR set];
             
@@ -131,6 +131,7 @@
         self.fwdName = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 25)];
         [self.fwdName setBordered:NO];
         [self.fwdName setDrawsBackground:NO];
+        [[self.fwdName cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.fwdContainer addSubview:self.fwdName];
     }
     

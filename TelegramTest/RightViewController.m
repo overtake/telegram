@@ -385,25 +385,22 @@
             weakify();
             
             
-            
             dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
             dialog.last_marked_message = dialog.top_message;
             
             [dialog save];
             
-            self.messagesViewController.didUpdatedTable = ^ {
+          //  self.messagesViewController.didUpdatedTable = ^ {
                 
-                strongSelf.messagesViewController.didUpdatedTable = nil;
+             //   strongSelf.messagesViewController.didUpdatedTable = nil;
                 
-                [strongSelf.messagesViewController forwardMessages:ids conversation:dialog callback:^{
-                    
-                    
-                }];
-            };
+                [strongSelf.messagesViewController setFwdMessages:ids forConversation:dialog];
+                
+         //   };
             
-            if(self.messagesViewController.conversation == dialog) {
-                self.messagesViewController.didUpdatedTable();
-            }
+           // if(self.messagesViewController.conversation == dialog) {
+          //      self.messagesViewController.didUpdatedTable();
+          //  }
             [self hideModalView:YES animation:YES];
             
             [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
