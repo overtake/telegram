@@ -149,7 +149,7 @@
                 cacheKey = [chat.photo.photo_small cacheKey];
             }
             
-            NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), cacheKey];
+            NSString *p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
             
             
             image = [TGCache cachedImage:p group:@[AVACACHE]];

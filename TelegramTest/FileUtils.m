@@ -188,7 +188,7 @@ NSString* mediaFilePath(TLMessageMedia *media) {
     
     if([media isKindOfClass:[TL_messageMediaPhoto class]]) {
         TL_photoSize *size = [media.photo.sizes lastObject];
-        return locationFilePath(size.location, @"tiff");
+        return locationFilePath(size.location, @"jpg");
     }
     
     return nil;

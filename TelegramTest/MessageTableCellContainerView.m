@@ -969,6 +969,7 @@ static int offsetEditable = 30;
 
 - (void)updateCellState {
     
+    
     MessageTableItem *item =(MessageTableItem *)self.item;
     
     if(item.downloadItem && (item.downloadItem.downloadState != DownloadStateWaitingStart && item.downloadItem.downloadState != DownloadStateCompleted)) {
@@ -984,14 +985,13 @@ static int offsetEditable = 30;
 }
 
 - (void)checkState:(SenderItem *)sender {
-    
-    if(sender.state == MessageSendingStateSent) {
-        [self.item.messageSender removeEventListener:self];
-        self.cellState = CellStateNormal;
-        self.item.messageSender = nil;
-    }
-
-    [self checkActionState:YES];
+        if(sender.state == MessageSendingStateSent) {
+            [self.item.messageSender removeEventListener:self];
+            self.cellState = CellStateNormal;
+            self.item.messageSender = nil;
+        }
+        
+        [self checkActionState:YES];
 }
 
 

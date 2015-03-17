@@ -45,7 +45,7 @@ static dispatch_queue_t image_queue() {
 
 +(void)saveImageWithName:(id)name image:(NSImage *)image completionHandler:(void (^)(void))completionHandler {
     dispatch_async(image_queue(), ^{
-       [compressImage([image TIFFRepresentation], 0.83) writeToFile:[NSString stringWithFormat:@"%@/%@.tiff", path(), name] atomically:YES];
+       [compressImage([image TIFFRepresentation], 0.83) writeToFile:[NSString stringWithFormat:@"%@/%@.jpg", path(), name] atomically:YES];
         if(completionHandler != nil) completionHandler();
     });
 
@@ -68,7 +68,7 @@ static dispatch_queue_t image_queue() {
 
 +(void)loadFile:(id)name completeHandler:(void (^)(NSData *data))completeHandler {
     dispatch_async(image_queue(), ^{
-        NSString *p = [NSString stringWithFormat:@"%@/%@.tiff", path(), name];
+        NSString *p = [NSString stringWithFormat:@"%@/%@.jpg", path(), name];
         NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
         completeHandler(data);
     });

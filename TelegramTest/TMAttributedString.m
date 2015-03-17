@@ -148,7 +148,7 @@ DYNAMIC_PROPERTY(AttachmentsSelected);
     NSString *imgName = [image name];
     if(!imgName)
         imgName = @"image";
-    imgName = [imgName stringByAppendingPathExtension: @".tiff"];
+    imgName = [imgName stringByAppendingPathExtension: @".jpg"];
     [fwrap setFilename:imgName];
     [fwrap setPreferredFilename:imgName];
     
