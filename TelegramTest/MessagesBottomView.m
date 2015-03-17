@@ -892,12 +892,20 @@
     
     if(fwdMessages.count > 0) {
         
-        _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
         
         TGForwardObject *fwdObj = [[TGForwardObject alloc] initWithMessages:fwdMessages];
         
         [_fwdContainer setFwdObject:fwdObj];
+        
+        weak();
+        
+        [_fwdContainer setDeleteHandler:^{
+           
+            [weakSelf.messagesViewController clearFwdMessages:weakSelf.dialog];
+            
+        }];
         
         _fwdContainer.autoresizingMask = NSViewWidthSizable;
         
@@ -1136,18 +1144,21 @@
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            
+            [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
             
         } else {
 
        //     [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
+            
+            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
         }
         
         
-        [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
-        [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
+        
         
         
        // [self.layer setNeedsDisplay];

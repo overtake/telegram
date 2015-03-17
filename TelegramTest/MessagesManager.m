@@ -209,7 +209,7 @@
             
             if([TGPasslock isVisibility] || [message.to_id isSecret])
             {
-                title = nil;
+                title = appName();
                 subTitle = nil;
                 msg = NSLocalizedString(@"Notification.SecretMessage", nil);
             }

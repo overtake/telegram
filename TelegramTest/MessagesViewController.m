@@ -1846,8 +1846,6 @@ static NSTextAttachment *headerMediaIcon() {
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
         
-        
-        
         [self.noMessagesView setConversation:dialog];
         
         [globalAudioPlayer() stop];

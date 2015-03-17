@@ -37,14 +37,15 @@
         
         [n appendString:[firstNames componentsJoinedByString:@","] withColor:LINK_COLOR];
         
-        [n setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:n.range];
+        [n setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:n.range];
         
         _names = n;
         
         
+        
          NSMutableAttributedString *d = [[NSMutableAttributedString alloc] init];
         
-        [d appendString:[NSString stringWithFormat:@"Forward %lu messages",messages.count] withColor:NSColorFromRGB(0x808080)];
+        [d appendString:[NSString stringWithFormat:@"%@ %lu %@", NSLocalizedString(@"Message.Action.Forwarding", nil), messages.count, NSLocalizedString(@"messages", nil)] withColor:NSColorFromRGB(0x808080)];
         
         [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:d.range];
         

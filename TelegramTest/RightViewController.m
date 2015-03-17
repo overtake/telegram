@@ -394,7 +394,7 @@
                 
              //   strongSelf.messagesViewController.didUpdatedTable = nil;
                 
-                [strongSelf.messagesViewController setFwdMessages:ids forConversation:dialog];
+            [strongSelf.messagesViewController setFwdMessages:ids forConversation:dialog];
                 
          //   };
             

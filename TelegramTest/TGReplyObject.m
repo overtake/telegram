@@ -7,7 +7,7 @@
 //
 
 #import "TGReplyObject.h"
-
+#import "MessagesUtils.h"
 @implementation TGReplyObject
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage {
@@ -60,6 +60,8 @@
             
             [replyText appendString:replyMessage.message withColor:NSColorFromRGB(0x060606)];
             
+        } else {
+            [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:NSColorFromRGB(0x808080)];
         }
         
         
@@ -81,13 +83,6 @@
             
             _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
             
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Photo", nil) withColor:NSColorFromRGB(0x808080)];
-            
-        }
-        
-        if([replyMessage.media isKindOfClass:[TL_messageMediaContact class]]) {
-            
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Contact", nil) withColor:NSColorFromRGB(0x808080)];
             
         }
         
@@ -95,19 +90,6 @@
             
             _geoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true",replyMessage.media.geo.lat, replyMessage.media.geo.n_long, @"30x30"]];
             
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Location", nil) withColor:NSColorFromRGB(0x808080)];
-            
-        }
-        
-        if([replyMessage.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
-            
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Unsupported", nil) withColor:NSColorFromRGB(0x808080)];
-            
-        }
-        
-        if([replyMessage.media isKindOfClass:[TL_messageMediaAudio class]]) {
-            
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Audio", nil) withColor:NSColorFromRGB(0x808080)];
             
         }
         
@@ -122,25 +104,12 @@
             
             _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
             
-            [replyText appendString:NSLocalizedString(@"ChatMedia.Video", nil) withColor:NSColorFromRGB(0x808080)];
-            
         }
         
         if([replyMessage.media isKindOfClass:[TL_messageMediaDocument class]]) {
             
-            if([replyMessage.media.document isSticker]) {
+            if(![replyMessage.media.document isSticker]) {
                 
-                TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *)  [replyMessage.media.document attributeWithClass:TL_documentAttributeSticker.class];
-               
-                NSString *text = NSLocalizedString(@"ChatMedia.Sticker", nil);
-                
-                if(sticker.alt.length > 0) {
-                    text = [NSString stringWithFormat:@"%@ %@",sticker.alt,text];
-                }
-                
-                [replyText appendString:text withColor:NSColorFromRGB(0x808080)];
-                
-            } else {
                 if(replyMessage.media.document.thumb && ![replyMessage.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     
                     NSImage *thumb;
@@ -151,14 +120,14 @@
                     }
                     
                     _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? replyMessage.media.document.thumb.location : nil placeHolder:thumb];
-                                        
+                    
                 }
                 
-                
-                [replyText appendString:replyMessage.media.document.file_name withColor:NSColorFromRGB(0x808080)];
             }
         }
         
+        
+       
         
         _replyThumb.imageSize = NSMakeSize(30, 30);
         
