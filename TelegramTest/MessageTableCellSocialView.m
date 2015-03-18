@@ -14,9 +14,12 @@
 
 @interface MessageTableCellSocialView ()
 @property (nonatomic,strong) NSImageView *imageView;
-@property (nonatomic,strong) MessageCellDescriptionView *serviceNameView;
-@property (nonatomic,strong) MessageCellDescriptionView *urlView;
+@property (nonatomic,strong) TMTextField *serviceNameView;
+@property (nonatomic,strong) TMTextField *urlView;
 @property (nonatomic,strong) NSImageView *centerImageView;
+
+
+@property (nonatomic,strong) TMView *backgroundView;
 @end
 
 @implementation MessageTableCellSocialView
@@ -28,22 +31,24 @@
         
         [self.imageView setWantsLayer:YES];
         
+        [self.containerView setWantsLayer:YES];
+        [self.containerView.layer setCornerRadius:4];
+        
         self.imageView.layer.cornerRadius = 4;
         [self.imageView setImageScaling:NSImageScaleNone];
         [self.containerView addSubview:self.imageView];
         
-        self.serviceNameView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(20, 20, 50, 0)];
+        self.serviceNameView = [TMTextField defaultTextField];
         
-        [self.containerView addSubview:self.serviceNameView];
         
         self.centerImageView = [[NSImageView alloc] initWithFrame:NSZeroRect];
         
         
         [self.containerView addSubview:self.centerImageView];
         
-        self.urlView = [[MessageCellDescriptionView alloc] initWithFrame:NSMakeRect(20, 60, 0, 0)];
+        self.urlView = [TMTextField defaultTextField];
         
-        [self.containerView addSubview:self.urlView];
+        
         
         weak();
         
@@ -53,6 +58,22 @@
             
         }];
         
+        self.backgroundView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.containerView.frame), 40)];
+        
+        self.backgroundView.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.5);
+        
+        
+        self.backgroundView.autoresizingMask = NSViewWidthSizable;
+        
+        
+        [self.containerView addSubview:self.backgroundView];
+        
+        
+        [self.containerView addSubview:self.serviceNameView];
+        [self.containerView addSubview:self.urlView];
+        
+        [self.urlView setFrameOrigin:NSMakePoint(5, 16)];
+        [self.serviceNameView setFrameOrigin:NSMakePoint(5, 0)];
     }
     
     return self;
@@ -81,6 +102,8 @@
     
     [self.imageView setFrameSize:item.blockSize];
     
+    [self.containerView setFrameSize:item.blockSize];
+    
     [self.imageView setImageWithURL:[item.social imageURL]];
     
     [self.centerImageView setImage:item.social.centerImage];
@@ -90,15 +113,15 @@
     
     [self.centerImageView setFrameOrigin:NSMakePoint(roundf((item.blockSize.width - NSWidth(self.centerImageView.frame))/2), NSMinY(self.centerImageView.frame))];
     
-    [self.urlView setHidden:item.blockSize.width < item.social.titleSize.width];
     
-    [self.urlView setFrameSize:NSMakeSize(item.social.titleSize.width, item.social.titleSize.height)];
-    [self.urlView setString:item.social.title];
-    [self.urlView setFrameOrigin:NSMakePoint(5, NSHeight(self.imageView.frame) - 25)];
+    [self.urlView setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) - 5, item.social.titleSize.height)];
+    [self.urlView setAttributedStringValue:item.social.title];
     
-    [self.serviceNameView setFrameSize:item.social.serviceNameSize];
-    [self.serviceNameView setString:item.social.serviceName];
-    [self.serviceNameView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(self.serviceNameView.frame) - 5, 5)];
+    [self.serviceNameView setHidden:item.social.serviceName == nil];
+    
+    [self.serviceNameView setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) - 5, item.social.serviceNameSize.height)];
+    [self.serviceNameView setAttributedStringValue:item.social.serviceName];
+    
 }
 
 @end

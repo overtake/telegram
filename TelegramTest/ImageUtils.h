@@ -167,6 +167,8 @@ CACHE_IMAGE(PasslockEnterHighlighted);
 
 CACHE_IMAGE(CancelReply);
 
+CACHE_IMAGE(ModernMessageYoutubeButton);
+
 @interface ImageUtils : NSObject
 
 
