@@ -779,6 +779,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMNavigationController goBackWithAnimation:]:TMNavigationController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.viewControllerStack.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString

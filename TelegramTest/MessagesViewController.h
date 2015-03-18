@@ -126,4 +126,12 @@ typedef enum {
 
 
 -(void)reloadData;
+
+
+-(void)setFwdMessages:(NSArray *)messages forConversation:(TL_conversation *)conversation;
+-(NSArray *)fwdMessages:(TL_conversation *)conversation;
+-(void)clearFwdMessages:(TL_conversation *)conversation;
+
+-(void)performForward:(TL_conversation *)conversation;
+
 @end

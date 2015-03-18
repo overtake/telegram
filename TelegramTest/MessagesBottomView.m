@@ -217,6 +217,10 @@
     [self checkReplayMessage:updateHeight animated:animated];
 }
 
+-(void)updateFwdMessage:(BOOL)updateHeight animated:(BOOL)animated {
+    [self checkFwdMessages:updateHeight animated:animated];
+}
+
 - (void)setSectedMessagesCount:(NSUInteger)count {
     if(count == 0) {
         [self.messagesSelectedCount setHidden:YES];
@@ -727,6 +731,9 @@
     
     
     [self.messagesViewController sendMessage];
+    
+    [self.messagesViewController performForward:self.dialog];
+    
 }
 
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
@@ -751,7 +758,7 @@
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0) {
+    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
         
         
         if(self.dialog)
@@ -768,7 +775,7 @@
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length) {
+    if(self.inputMessageTextField.stringValue.length || self.fwdContainer) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -853,25 +860,81 @@
 
 -(void)checkFwdMessages:(BOOL)updateHeight animated:(BOOL)animated {
     
-    return;
-    
     
     [_fwdContainer removeFromSuperview];
     
     _fwdContainer = nil;
     
     
-    _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
-    
-    _fwdContainer.autoresizingMask = NSViewWidthSizable;
+    NSArray *fwdMessages = [self.messagesViewController fwdMessages:self.dialog];
     
     
+    dispatch_block_t block = ^ {
+        
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    };
     
-    [self.normalView addSubview:_fwdContainer];
+    dispatch_block_t animationBlock = ^ {
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            
+            block();
+            
+        } completionHandler:^{
+            
+        }];
+        
+    };
     
     
-     [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    if(fwdMessages.count > 0) {
+        
+        _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        
+        
+        TGForwardObject *fwdObj = [[TGForwardObject alloc] initWithMessages:fwdMessages];
+        
+        [_fwdContainer setFwdObject:fwdObj];
+        
+        weak();
+        
+        [_fwdContainer setDeleteHandler:^{
+           
+            [weakSelf.messagesViewController clearFwdMessages:weakSelf.dialog];
+            
+        }];
+        
+        _fwdContainer.autoresizingMask = NSViewWidthSizable;
+        
+        
+        
+        [self.normalView addSubview:_fwdContainer];
+        
+        if(updateHeight) {
+            if(animated)
+                animationBlock();
+            else
+                block();
+        }
+        
+        
+    } else {
+        
+        if(updateHeight) {
+            
+            if(animated)
+                animationBlock();
+            else
+                block();
+        }
+        
+    }
+   
     
+    [self TMGrowingTextViewTextDidChange:nil];
     
 }
 
@@ -1081,17 +1144,20 @@
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            
+            [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
             
         } else {
 
        //     [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
+            
+            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
         }
         
         
-       [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20)];
         
         
         

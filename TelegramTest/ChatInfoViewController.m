@@ -198,6 +198,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+     [self reloadParticipants];
+    
     [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
 }
 
@@ -210,6 +213,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+   
     
     if([_headerView.nameTextField becomeFirstResponder])
         [_headerView.nameTextField setCursorToEnd];

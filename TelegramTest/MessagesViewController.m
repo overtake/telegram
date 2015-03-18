@@ -153,6 +153,10 @@
 
 @property (nonatomic,strong) StickersPanelView *stickerPanel;
 
+
+
+@property (nonatomic,strong) NSMutableDictionary *fwdCache;
+
 @end
 
 @implementation MessagesViewController
@@ -172,7 +176,7 @@
 
 
 - (void)initialize {
-    
+    self.fwdCache = [[NSMutableDictionary alloc] init];
 }
 
 - (NoMessagesView *)noMessagesView {
@@ -402,7 +406,6 @@
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
-
 
 }
 
@@ -903,6 +906,42 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
+-(NSArray *)fwdMessages:(TL_conversation *)conversation {
+    return self.fwdCache[@(conversation.peer_id)];
+}
+
+
+-(void)clearFwdMessages:(TL_conversation *)conversation {
+    [self.fwdCache removeObjectForKey:@(conversation.peer_id)];
+    
+    if(self.conversation.peer_id == conversation.peer_id)
+    {
+        [self.bottomView updateFwdMessage:YES animated:YES];
+    }
+}
+
+-(void)setFwdMessages:(NSArray *)fwdMessages forConversation:(TL_conversation *)conversation {
+    self.fwdCache[@(conversation.peer_id)] = fwdMessages;
+    
+    if(self.conversation.peer_id == conversation.peer_id)
+    {
+        [self.bottomView updateFwdMessage:YES animated:NO];
+    }
+    
+}
+
+-(void)performForward:(TL_conversation *)conversation {
+    [ASQueue dispatchOnMainQueue:^{
+        
+        NSArray *fwdMessages = [self fwdMessages:conversation];
+        
+        if(fwdMessages.count > 0) {
+            [self forwardMessages:fwdMessages conversation:conversation callback:nil];
+            [self clearFwdMessages:conversation];
+        }
+        
+    }];
+}
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force {
     
@@ -1578,8 +1617,6 @@ static NSTextAttachment *headerMediaIcon() {
         }];
     }
     
-    
-    
 }
 
 -(void)flushMessages {
@@ -1808,8 +1845,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
-        
-        
         
         [self.noMessagesView setConversation:dialog];
         
@@ -2441,6 +2476,7 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController addItems:preparedItems conversation:_conversation callback:callback sentControllerCallback:nil];
         }
         
+        [self performForward:self.conversation];
         
     }];
 }

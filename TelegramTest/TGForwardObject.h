@@ -10,4 +10,11 @@
 
 @interface TGForwardObject : NSObject
 
+@property (nonatomic,strong,readonly) NSArray *messages;
+
+@property (nonatomic,strong,readonly) NSAttributedString *names;
+@property (nonatomic,strong,readonly) NSAttributedString *fwd_desc;
+
+-(id)initWithMessages:(NSArray *)messages;
+
 @end

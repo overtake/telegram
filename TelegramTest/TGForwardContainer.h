@@ -10,7 +10,7 @@
 #import "TGForwardObject.h"
 @interface TGForwardContainer : TMView
 
-
+@property (nonatomic,copy) dispatch_block_t deleteHandler;
 @property (nonatomic,strong) TGForwardObject *fwdObject;
 
 @end

@@ -123,6 +123,9 @@ static const int navigationOffset = 48;
         [self.viewControllerStack insertObject:[[Telegram rightViewController] currentEmptyController] atIndex:0];
     }
     
+    if(self.viewControllerStack.count < 2)
+        return;
+    
     TMViewController *controller = [self.viewControllerStack objectAtIndex:self.viewControllerStack.count-2];
     
     TMViewController *oc = [self.viewControllerStack lastObject];

@@ -13,6 +13,8 @@
 
 @property (nonatomic,strong) TMTextField *namesField;
 @property (nonatomic,strong) TMTextField *descriptionField;
+@property (nonatomic,strong) NSImageView *deleteImageView;
+
 
 @end
 
@@ -35,18 +37,37 @@
         self.descriptionField = [TMTextField defaultTextField];
         self.namesField = [TMTextField defaultTextField];
         
+        
         [self.descriptionField setStringValue:@"test"];
         
         
         [self.namesField setStringValue:@"super test"];
         
         
-        [self.namesField setFrame:NSMakeRect(15, NSHeight(frameRect) - 13, NSWidth(frameRect), 20)];
+        [self.namesField setFrame:NSMakeRect(10, NSHeight(frameRect) - 15, NSWidth(frameRect), 20)];
         
-        [self.descriptionField setFrame:NSMakeRect(15, 0, NSWidth(frameRect), 20)];
+        [self.descriptionField setFrame:NSMakeRect(10, 0, NSWidth(frameRect), 20)];
         
         [self addSubview:self.descriptionField];
         [self addSubview:self.namesField];
+        
+        
+        
+        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
+        
+        _deleteImageView.image = image_CancelReply();
+        
+        weak();
+        
+        [_deleteImageView setCallback:^{
+            
+            weakSelf.deleteHandler();
+            
+        }];
+        
+        [_deleteImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+        
+        [self addSubview:_deleteImageView];
         
     }
     
@@ -63,7 +84,8 @@
 
 -(void)updateLayout {
     
-    
+    [self.descriptionField setAttributedStringValue:_fwdObject.fwd_desc];
+    [self.namesField setAttributedStringValue:_fwdObject.names];
     
     [self setNeedsDisplay:YES];
 }

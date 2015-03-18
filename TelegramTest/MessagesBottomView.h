@@ -25,6 +25,8 @@ typedef enum {
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) TL_conversation *dialog;
 
+
+
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
@@ -34,5 +36,5 @@ typedef enum {
 -(void)closeEmoji;
 
 -(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated;
-
+-(void)updateFwdMessage:(BOOL)updateHeight animated:(BOOL)animated;
 @end
