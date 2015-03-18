@@ -100,11 +100,6 @@
         
     }];
     
-    TMView *centerView = [[TMView alloc] initWithFrame:NSZeroRect];
-    
-    self.centerNavigationBarView = centerView;
-    
-    
     
     
     self.items = [[NSMutableArray alloc] init];
