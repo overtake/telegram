@@ -25,7 +25,7 @@
     
     [super drawRect:dirtyRect];
     
-    [GRAY_BORDER_COLOR setFill];
+    [LINK_COLOR setFill];
     
     NSRectFill(NSMakeRect(0, 0, 2, NSHeight(self.frame)));
 }
@@ -53,7 +53,7 @@
         
         
         
-        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
+        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width - 10, NSHeight(self.frame) - image_CancelReply().size.height - 10, image_CancelReply().size.width + 10, image_CancelReply().size.height + 10)];
         
         _deleteImageView.image = image_CancelReply();
         

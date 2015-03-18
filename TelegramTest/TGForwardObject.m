@@ -35,7 +35,7 @@
         }];
         
         
-        [n appendString:[firstNames componentsJoinedByString:@","] withColor:LINK_COLOR];
+        [n appendString:[firstNames componentsJoinedByString:@", "] withColor:LINK_COLOR];
         
         [n setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:n.range];
         
