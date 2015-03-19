@@ -973,7 +973,7 @@ static ASQueue *queue;
         } else {
             [self updateDifference:YES];
         }
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:10 queue:queue.nativeQueue];
 
 }
 
