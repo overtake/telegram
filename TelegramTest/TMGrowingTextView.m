@@ -402,7 +402,7 @@
     //numpad enter fix
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;
-    return (flags == 0 || flags == 65536) && isEnter && !self.hasMarkedText;
+    return (flags == 0 || flags == 65536) && isEnter;
 }
 
 - (void) keyDown:(NSEvent *)theEvent {

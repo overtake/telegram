@@ -10,5 +10,5 @@
 
 - (NSArray *) arrayOfLinks:(NSArray *)results;
 - (NSArray *) locationsOfLinks;
-
+- (NSArray *) locationsOfHashtags;
 @end

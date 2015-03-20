@@ -11,7 +11,7 @@
 #import "MessageSender.h"
 #import "ImageUtils.h"
 #import "TGMentionPopup.h"
-
+#import "TGHashtagPopup.h"
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -317,15 +317,17 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    if([TGMentionPopup isVisibility]) {
+    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility]) {
         
         
         if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
             
             if(theEvent.keyCode == 125) {
                 [TGMentionPopup selectNext];
+                [TGHashtagPopup selectNext];
             } else {
                 [TGMentionPopup selectPrev];
+                [TGHashtagPopup selectPrev];
             }
             
             return;
@@ -339,7 +341,7 @@ typedef enum {
             if(result) {
                 
                 [TGMentionPopup performSelected];
-                
+                [TGHashtagPopup performSelected];
                 
                 return;
             }

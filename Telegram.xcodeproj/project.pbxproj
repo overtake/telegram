@@ -436,6 +436,7 @@
 		C274C38F1ABAD856000DFDE4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C274C3901ABAD858000DFDE4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C274C3911ABAD858000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1617,6 +1618,8 @@
 		C274C3721AB83182000DFDE4 /* TGForwardContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardContainer.m; sourceTree = "<group>"; };
 		C274C37A1AB831A3000DFDE4 /* TGForwardObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForwardObject.h; sourceTree = "<group>"; };
 		C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardObject.m; sourceTree = "<group>"; };
+		C274C3A71ABC6251000DFDE4 /* TGHashtagPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashtagPopup.h; sourceTree = "<group>"; };
+		C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHashtagPopup.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -2858,6 +2861,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C274C3A21ABC6221000DFDE4 /* hashtags */,
 				C2967B3C1AA4CF5C003759B2 /* mentions */,
 				C2C1DC161A443C9900BBCC63 /* stickers */,
 				C281C1711917D953007B160F /* dragging */,
@@ -3608,6 +3612,15 @@
 				C2967B511AB05E9B003759B2 /* TGReplyObject.m */,
 			);
 			name = rpl;
+			sourceTree = "<group>";
+		};
+		C274C3A21ABC6221000DFDE4 /* hashtags */ = {
+			isa = PBXGroup;
+			children = (
+				C274C3A71ABC6251000DFDE4 /* TGHashtagPopup.h */,
+				C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */,
+			);
+			name = hashtags;
 			sourceTree = "<group>";
 		};
 		C281C1711917D953007B160F /* dragging */ = {
@@ -5416,6 +5429,7 @@
 				0A241A9A18AB0CB200C32F45 /* MessageTableCellContainerView.m in Sources */,
 				0A9EDC4D1897BA0E0037E1BC /* NSAttributedString+RBLHTMLAdditions.m in Sources */,
 				C222773518FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.m in Sources */,
+				C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */,
 				C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */,
 				0AC7F479185DBA0800F90558 /* TMView.m in Sources */,
 				0A59068118AA32C8002ED7BA /* BTRTextField.m in Sources */,

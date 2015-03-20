@@ -64,6 +64,7 @@
 #import "RequestKeySecretSenderItem.h"
 #import "ExternalDocumentSecretSenderItem.h"
 #import "TGPasslock.h"
+#import "NSString+FindURLs.h"
 
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -2411,7 +2412,38 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendMessage:message callback:nil];
 }
 
-
+-(void)saveHashTags:(NSString *)message {
+    
+    NSArray *locations = [message locationsOfHashtags];
+    
+    if(locations.count > 0) {
+        
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            __block NSArray *list = [transaction objectForKey:@"tags" inCollection:@"hashtags"];
+            
+            if(!list)
+                list = @[];
+            
+            [locations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                NSString *tag = [[message substringWithRange:[obj range]] substringFromIndex:1];
+                
+                if([list indexOfObject:tag] == NSNotFound)
+                {
+                    list = [list arrayByAddingObject:tag];
+                }
+                
+            }];
+            
+            [transaction setObject:list forKey:@"tags" inCollection:@"hashtags"];
+            
+        }];
+        
+        
+    }
+    
+}
 
 - (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
     
@@ -2428,6 +2460,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(array.count > 0) {
         [[EmojiViewController instance] saveEmoji:array];
     }
+    
+    [self saveHashTags:message];
     
     [self readHistory:0];
     

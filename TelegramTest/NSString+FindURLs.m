@@ -101,4 +101,12 @@
     //return [results arrayByAddingObjectsFromArray:userNames];
 }
 
+- (NSArray *) locationsOfHashtags {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
+    
+    return hashTags;
+}
+
 @end
