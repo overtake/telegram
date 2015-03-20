@@ -306,6 +306,9 @@
     return [self.secureField becomeFirstResponder];
 }
 
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     

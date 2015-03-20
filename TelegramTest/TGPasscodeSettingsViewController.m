@@ -99,11 +99,15 @@
             
             [self showChangePasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
-                [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
+                if(result) {
+                    [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
+                    
+                    [self rebuildController];
+                    
+                   
+                }
                 
-                [self rebuildController];
-                
-                return YES;
+                 return result;
                 
             }];
             

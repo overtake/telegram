@@ -33,7 +33,7 @@
 
 
 +(BOOL)isEnabled {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[TGPasslock path]];
+    return [[MTNetwork instance] passcodeIsEnabled];
 }
 
 +(BOOL)checkHash:(NSString *)md5Hash {
