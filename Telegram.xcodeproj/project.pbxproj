@@ -437,6 +437,8 @@
 		C274C3901ABAD858000DFDE4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C274C3911ABAD858000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */; };
+		C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3AB1AC083AA000DFDE4 /* SearchHashtagItem.m */; };
+		C274C3AF1AC0842D000DFDE4 /* SearchHashtagCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3AE1AC0842D000DFDE4 /* SearchHashtagCellView.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1620,6 +1622,10 @@
 		C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardObject.m; sourceTree = "<group>"; };
 		C274C3A71ABC6251000DFDE4 /* TGHashtagPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashtagPopup.h; sourceTree = "<group>"; };
 		C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHashtagPopup.m; sourceTree = "<group>"; };
+		C274C3AA1AC083AA000DFDE4 /* SearchHashtagItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHashtagItem.h; sourceTree = "<group>"; };
+		C274C3AB1AC083AA000DFDE4 /* SearchHashtagItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHashtagItem.m; sourceTree = "<group>"; };
+		C274C3AD1AC0842D000DFDE4 /* SearchHashtagCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHashtagCellView.h; sourceTree = "<group>"; };
+		C274C3AE1AC0842D000DFDE4 /* SearchHashtagCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHashtagCellView.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -2163,6 +2169,8 @@
 				0ACF9E351921F2EE001F9E1E /* SearchLoaderItem.m */,
 				0ACF9E3A19235F42001F9E1E /* SearchLoadMoreItem.h */,
 				0ACF9E3B19235F42001F9E1E /* SearchLoadMoreItem.m */,
+				C274C3AA1AC083AA000DFDE4 /* SearchHashtagItem.h */,
+				C274C3AB1AC083AA000DFDE4 /* SearchHashtagItem.m */,
 			);
 			name = tableItems;
 			sourceTree = "<group>";
@@ -2693,6 +2701,8 @@
 				C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */,
 				C268C1AE19F6B1F7007F836A /* SearchMessageTableItem.h */,
 				C268C1AF19F6B1F7007F836A /* SearchMessageTableItem.m */,
+				C274C3AD1AC0842D000DFDE4 /* SearchHashtagCellView.h */,
+				C274C3AE1AC0842D000DFDE4 /* SearchHashtagCellView.m */,
 			);
 			name = tableCells;
 			sourceTree = "<group>";
@@ -5080,6 +5090,7 @@
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
 				C2967B521AB05E9B003759B2 /* TGReplyObject.m in Sources */,
 				0ACF9E3F19235FED001F9E1E /* SearchLoadMoreCell.m in Sources */,
+				C274C3AF1AC0842D000DFDE4 /* SearchHashtagCellView.m in Sources */,
 				C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */,
 				CEAE5D18181BF9D300C17645 /* RPCRequest.m in Sources */,
 				0A6E13D218A8F3CB004D1BC7 /* NewContactsManager.m in Sources */,
@@ -5121,6 +5132,7 @@
 				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C22C7F2D18B2163F007C4D17 /* TelegramSerialization.m in Sources */,
 				0AB8F64B1861B05B000E6FF3 /* ConversationTableItemView.m in Sources */,
+				C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */,
 				CEDAEB8D1881AFA6006189A2 /* DDLog.m in Sources */,
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
 				C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */,

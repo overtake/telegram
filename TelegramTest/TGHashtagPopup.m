@@ -16,18 +16,26 @@ static TMMenuPopover *popover;
 +(void)show:(NSString *)string view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;  {
     
     
-    __block NSArray *list;
+    __block NSMutableDictionary *tags;
     
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        list = [transaction objectForKey:@"tags" inCollection:@"hashtags"];
+        tags = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
         
     }];
     
+    
+    NSArray *list = [[tags allValues] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        return obj1[@"count"] < obj2[@"count"];
+        
+    }];
+    
+    
     if(string.length > 0)
     {
-        list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self BEGINSWITH[c] %@",string]];
+        list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",string]];
     }
     
     
@@ -36,11 +44,11 @@ static TMMenuPopover *popover;
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"menu"];
     
-    [list enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"#%@",obj] withBlock:^(id sender) {
+        NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"#%@",obj[@"tag"]] withBlock:^(id sender) {
             
-            callback(obj);
+            callback(obj[@"tag"]);
             
             [popover close];
             popover = nil;

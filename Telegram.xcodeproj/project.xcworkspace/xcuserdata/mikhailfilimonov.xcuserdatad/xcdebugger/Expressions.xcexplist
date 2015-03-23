@@ -798,9 +798,6 @@
          contextName = "-[DownloadOperation load]:DownloadOperation.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGProccessUpdates processUpdates:stateSeq:]:TGProccessUpdates.m">
-      </ContextState>
-      <ContextState
          contextName = "+[TMViewController showModalProgress]:TMViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1220,6 +1217,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__31-[SecretChatAccepter proccess:]_block_invoke_2:SecretChatAccepter.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[UserNameViewContainer initWithFrame:]_block_invoke_2:UserNameViewController.m">
       </ContextState>
       <ContextState
@@ -1329,6 +1329,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TGHashtagPopup show:view:ofRect:callback:]:TGHashtagPopup.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
@@ -1421,6 +1424,9 @@
                value = "self.listSelectedElementHash">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates addStatefullUpdate:seq:pts:date:qts:pts_count:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[UsersManager setUserStatus:forUser:]:UsersManager.m">
@@ -1611,6 +1617,9 @@
       <ContextState
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
+            <PersistentString
+               value = "tags">
+            </PersistentString>
             <PersistentString
                value = "self.type">
             </PersistentString>

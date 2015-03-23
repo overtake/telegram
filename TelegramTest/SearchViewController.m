@@ -21,6 +21,8 @@
 #import "TLPeer+Extensions.h"
 #import "SearchMessageCellView.h"
 #import "SearchMessageTableItem.h"
+#import "SearchHashtagItem.h"
+#import "SearchHashtagCellView.h"
 typedef enum {
     SearchSectionDialogs,
     SearchSectionContacts,
@@ -58,6 +60,8 @@ typedef enum {
 
 @property (atomic) BOOL isRemoteGlobalUsersLoaded;
 @property (atomic) BOOL isNeedGlobalUsersLoad;
+
+@property (nonatomic,strong) NSArray *suggested_hashtags;
 
 
 @end
@@ -100,6 +104,9 @@ typedef enum {
 @property (nonatomic, strong) SearchLoadMoreItem *globalUsersLoadMoreItem;
 @property (nonatomic, strong) SearchLoaderItem *messagesLoaderItem;
 
+
+@property (nonatomic,assign) BOOL dontLoadHashtagsForOneRequest;
+
 @end
 
 @implementation SearchViewController
@@ -112,7 +119,7 @@ typedef enum {
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
     
-    self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contact", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
+    self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contacts", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
     self.usersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.User", nil) pluralName:NSLocalizedString(@"Search.Separator.Users", nil)];
     self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Messages", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
     
@@ -183,6 +190,10 @@ typedef enum {
     [self addScrollEvent];
 }
 
+-(void)dontLoadHashTagsForOneRequest {
+    _dontLoadHashtagsForOneRequest = YES;
+}
+
 - (void)addScrollEvent {
     id clipView = [[self.tableView enclosingScrollView] contentView];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -239,6 +250,8 @@ typedef enum {
         return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"SearchTableCell" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
     } else if([item isKindOfClass:[SearchMessageTableItem class]]) {
         return [self.tableView cacheViewForClass:[SearchMessageTableItem class] identifier:@"SearchMessageTableItem" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
+    } else if([item isKindOfClass:[SearchHashtagItem class]]) {
+        return [self.tableView cacheViewForClass:[SearchHashtagCellView class] identifier:@"SearchHashtagCellView" withSize:NSMakeSize(self.view.bounds.size.width, 40)];
     }
     
     return nil;
@@ -258,6 +271,8 @@ typedef enum {
         return 40;
     } else if([item isKindOfClass:[SearchLoadMoreItem class]])  {
         return 40;
+    } else if([item isKindOfClass:[SearchHashtagItem class]])  {
+        return 40;
     } else {
         return DIALOG_CELL_HEIGHT;
     }
@@ -276,9 +291,6 @@ typedef enum {
         } else if(searchItem.user) {
             [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
         }
-        
-        
-        
     }
 
     return NO;
@@ -315,6 +327,14 @@ typedef enum {
                 [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
             }
             [self.tableView setSelectedByHash:item.hash];
+        }
+    } else if(item && [item isKindOfClass:[SearchHashtagItem class]]) {
+        
+        TMViewController *controller = [[Telegram leftViewController] currentTabController];
+        
+        if([controller isKindOfClass:[StandartViewController class]]) {
+            [[(StandartViewController *)controller searchViewController] dontLoadHashTagsForOneRequest];
+            [(StandartViewController *)controller searchByString:((SearchHashtagItem *)item).hashtag];
         }
     }
 }
@@ -385,7 +405,22 @@ static int insertCount = 3;
     BOOL isNeedSeparator = NO;
     BOOL isOneSearchResult = YES;
     
+    
+    if(params.suggested_hashtags.count > 0) {
+        
+        
+        [self.tableView insert:params.suggested_hashtags startIndex:[self.tableView count] tableRedraw:NO];
+        
+        isNeedSeparator = YES;
+        
+    }
+    
     if(params.dialogs.count) {
+        
+        if(isNeedSeparator) {
+            [self.tableView addItem:self.contactsSeparator tableRedraw:NO];
+            isOneSearchResult = NO;
+        }
         
         if(params.dialogs.count > insertCount) {
             for(int i = 0; i < insertCount; i++)
@@ -458,6 +493,8 @@ static int insertCount = 3;
         isNeedSeparator = YES;
     }
     
+    
+    
     if(params.messages.count > 0) {
         if(isNeedSeparator) {
             [self.tableView addItem:self.messagesSeparator tableRedraw:NO];
@@ -512,7 +549,6 @@ static int insertCount = 3;
         return;
     
     self.searchParams.isLoading = YES;
-    
     
     [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
 
@@ -697,6 +733,52 @@ static int insertCount = 3;
             if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
                 
                 
+                if([searchString hasPrefix:@"#"] && !_dontLoadHashtagsForOneRequest) {
+                    
+                    NSString *hs = [searchString substringFromIndex:1];
+                    
+                    
+                    __block NSMutableDictionary *tags;
+                    
+                    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                        
+                        tags = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
+                        
+                    }];
+                    
+                    
+                    NSArray *list = [[tags allValues] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                        
+                        return obj1[@"count"] < obj2[@"count"];
+                        
+                    }];
+                    
+                    
+                    if(hs.length > 0)
+                    {
+                        list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",hs]];
+                    }
+                    
+                    
+                    
+                    list = [list subarrayWithRange:NSMakeRange(0, MIN(20,list.count))];
+                    
+                    
+                    if(list.count > 0)
+                    {
+                        
+                        NSMutableArray *items = [[NSMutableArray alloc] init];
+                        
+                        [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                            [items addObject:[[SearchHashtagItem alloc] initWithObject:obj[@"tag"]]];
+                        }];
+                        
+                        searchParams.suggested_hashtags = items;
+                    }
+
+                }
+                
+                _dontLoadHashtagsForOneRequest = NO;
                 
                 
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
@@ -779,10 +861,29 @@ static int insertCount = 3;
             
             if((self.type & SearchTypeMessages) == SearchTypeMessages) {
                 
-                dispatch_after_seconds(0.1, ^{
-                    // [self remoteSearch:searchParams];
-                    [self localSearch:searchParams];
-                });
+                
+                NSString *string = searchParams.searchString;
+                
+                NSString *specialCharacterString = @"!~`@#$%^&*-+();:={}[],.<>?\\/\"\'";
+                NSCharacterSet *specialCharacterSet = [NSCharacterSet
+                                                       characterSetWithCharactersInString:specialCharacterString];
+                
+                
+                while ([string.lowercaseString rangeOfCharacterFromSet:specialCharacterSet].location != NSNotFound) {
+                    string = [string substringFromIndex:1];
+                }
+                
+                if(string.length == 0) {
+                    self.searchParams.isNeedRemoteLoad = NO;
+                    self.searchParams.isFinishLoading = YES;
+                } else {
+                    dispatch_after_seconds(0.1, ^{
+                        // [self remoteSearch:searchParams];
+                        [self localSearch:searchParams];
+                    });
+                }
+                
+                
             }
             
             searchParams.isNeedGlobalUsersLoad = ((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5);
@@ -800,6 +901,7 @@ static int insertCount = 3;
         
        
     });
+    
 }
 
 
@@ -858,6 +960,7 @@ static int insertCount = 3;
 
 
 -(void)localSearch:(SearchParams *)params {
+    
     
     
     self.searchParams.isLoading = YES;

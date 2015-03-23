@@ -35,7 +35,7 @@
         [self.containerView.layer setCornerRadius:4];
         
         self.imageView.layer.cornerRadius = 4;
-      //  [self.imageView setImageScaling:NSImageScaleNone];
+        [self.imageView setImageScaling:NSImageScaleNone];
         [self.containerView addSubview:self.imageView];
         
         self.serviceNameView = [TMTextField defaultTextField];

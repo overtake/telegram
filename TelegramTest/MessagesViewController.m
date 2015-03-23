@@ -2422,23 +2422,30 @@ static NSTextAttachment *headerMediaIcon() {
         
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
-            __block NSArray *list = [transaction objectForKey:@"tags" inCollection:@"hashtags"];
+            __block NSMutableDictionary *list = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
+            
+            
             
             if(!list)
-                list = @[];
+                list = [[NSMutableDictionary alloc] init];
             
             [locations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 NSString *tag = [[message substringWithRange:[obj range]] substringFromIndex:1];
                 
-                if([list indexOfObject:tag] == NSNotFound)
-                {
-                    list = [list arrayByAddingObject:tag];
-                }
+                
+                NSDictionary *localTag = list[tag];
+                
+                int count = [localTag[@"count"] intValue];
+                
+                localTag = @{@"count":@(++count),@"tag":tag};
+                
+                list[tag] = localTag;
+                
                 
             }];
             
-            [transaction setObject:list forKey:@"tags" inCollection:@"hashtags"];
+            [transaction setObject:list forKey:@"htags" inCollection:@"hashtags"];
             
         }];
         

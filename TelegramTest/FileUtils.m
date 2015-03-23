@@ -408,7 +408,15 @@ NSArray * soundsList() {
     
 }
 void playSentMessage(BOOL play) {
-    [ASQueue dispatchOnStageQueue:^{
+    
+    static ASQueue *queue;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[ASQueue alloc] initWithName:"soundQueue"];
+    });
+    
+    [queue dispatchOnQueue:^{
         static NSSound *sound ;
         
         static dispatch_once_t onceToken;

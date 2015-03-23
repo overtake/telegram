@@ -14,7 +14,8 @@ typedef enum {
     SearchItemConversation,
     SearchItemUser,
     SearchItemMessage,
-    SearchItemGlobalUser
+    SearchItemGlobalUser,
+    SearchHashtag
 } SearchItemType;
 
 @interface SearchItem : TMRowItem
