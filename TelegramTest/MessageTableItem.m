@@ -402,7 +402,7 @@
 
 
 -(BOOL)isReplyMessage {
-    return self.message.reply_to_msg_id != 0;
+    return self.message.replyMessage != nil;
 }
 
 -(BOOL)isFwdMessage {
