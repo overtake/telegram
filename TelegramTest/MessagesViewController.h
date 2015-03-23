@@ -134,4 +134,6 @@ typedef enum {
 
 -(void)performForward:(TL_conversation *)conversation;
 
+-(void)saveHashTags:(NSString *)message;
+
 @end

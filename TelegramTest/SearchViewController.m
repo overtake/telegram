@@ -333,7 +333,8 @@ typedef enum {
         TMViewController *controller = [[Telegram leftViewController] currentTabController];
         
         if([controller isKindOfClass:[StandartViewController class]]) {
-            [[(StandartViewController *)controller searchViewController] dontLoadHashTagsForOneRequest];
+            [self dontLoadHashTagsForOneRequest];
+            [[Telegram rightViewController].messagesViewController saveHashTags:((SearchHashtagItem *)item).hashtag];
             [(StandartViewController *)controller searchByString:((SearchHashtagItem *)item).hashtag];
         }
     }
@@ -760,10 +761,6 @@ static int insertCount = 3;
                     }
                     
                     
-                    
-                    list = [list subarrayWithRange:NSMakeRange(0, MIN(20,list.count))];
-                    
-                    
                     if(list.count > 0)
                     {
                         
@@ -775,10 +772,26 @@ static int insertCount = 3;
                         
                         searchParams.suggested_hashtags = items;
                     }
-
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                         [self showSearchResults:searchParams];
+                    }];
+                    
+                    
+                    
+                    
                 }
                 
+                BOOL o = _dontLoadHashtagsForOneRequest;
+                
                 _dontLoadHashtagsForOneRequest = NO;
+                
+                if([searchString hasPrefix:@"#"] && !o)
+                    return;
+                
+                
+                
+                
                 
                 
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
