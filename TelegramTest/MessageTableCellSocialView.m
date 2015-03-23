@@ -35,7 +35,7 @@
         [self.containerView.layer setCornerRadius:4];
         
         self.imageView.layer.cornerRadius = 4;
-        [self.imageView setImageScaling:NSImageScaleNone];
+      //  [self.imageView setImageScaling:NSImageScaleNone];
         [self.containerView addSubview:self.imageView];
         
         self.serviceNameView = [TMTextField defaultTextField];
@@ -63,10 +63,12 @@
         self.backgroundView.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.5);
         
         
-        self.backgroundView.autoresizingMask = NSViewWidthSizable;
         
         
         [self.containerView addSubview:self.backgroundView];
+        
+        [self.containerView setAutoresizesSubviews:NO];
+        [self.containerView setAutoresizingMask:0];
         
         
         [self.containerView addSubview:self.serviceNameView];
@@ -103,6 +105,8 @@
     [self.imageView setFrameSize:item.blockSize];
     
     [self.containerView setFrameSize:item.blockSize];
+    
+    [self.backgroundView setFrameSize:NSMakeSize(NSWidth(self.containerView.frame), NSHeight(self.backgroundView.frame))];
     
     [self.imageView setImageWithURL:[item.social imageURL]];
     

@@ -31,8 +31,8 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = NSMakeSize(MIN(250,width - 20), MIN(250,width - 20) - 80);
-    
+    self.blockSize = NSMakeSize(MIN(250,width - 20), MAX( MIN(250,width - 20) - 80, 60));
+        
     return YES;
 }
 

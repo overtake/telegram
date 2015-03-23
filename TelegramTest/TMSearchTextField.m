@@ -43,6 +43,10 @@
 - (void)initialize {
 }
 
+-(BOOL)resignFirstResponder {
+    return [super resignFirstResponder];
+}
+
 - (BOOL)becomeFirstResponder {
     
     if(!self.isInitialize) {

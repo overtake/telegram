@@ -263,7 +263,7 @@ static NSCache *cacheItems;
     
     
     if(searchString.length > 0) {
-        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@) OR (self.contact.user.fullName contains[c] %@)",searchString,transformed,reversed]];
+        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.contact.user.first_name BEGINSWITH[c] %@) OR (self.contact.user.first_name BEGINSWITH[c] %@) OR (self.contact.user.first_name BEGINSWITH[c] %@)  OR (self.contact.user.last_name BEGINSWITH[c] %@) OR (self.contact.user.last_name BEGINSWITH[c] %@) OR (self.contact.user.last_name BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed]];
     }
     
     

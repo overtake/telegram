@@ -135,9 +135,9 @@
     [self.messageField setAttributedStringValue:_replyObject.replyText];
     
     
-    [self.messageField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.messageField.frame))];
+    [self.messageField setFrameOrigin:NSMakePoint(xOffset, 0)];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 17)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 19)];
     
     
     if(_deleteHandler != nil)

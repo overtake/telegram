@@ -35,12 +35,12 @@
     
     NSError *error = nil;
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[\\w]{2,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@[A-Za-z0-9_]{2,25}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
-    regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    regex = [NSRegularExpression regularExpressionWithPattern:@"(#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
@@ -102,7 +102,7 @@
 }
 
 - (NSArray *) locationsOfHashtags {
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:nil];
     
     NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     

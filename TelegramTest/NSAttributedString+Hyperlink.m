@@ -30,14 +30,14 @@
                 NSRange range = [object range];
                 
                 if(range.location != NSNotFound) {
-                    NSURL *url = [NSURL URLWithString:link];
-                    if(url) {
-                        [self addAttribute:NSLinkAttributeName value:[url absoluteString] range:range];
+                  //  NSURL *url = [NSURL URLWithString:link];
+                  //  if(url) {
+                        [self addAttribute:NSLinkAttributeName value:link range:range];
                         [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
                         [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
                         [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
                         
-                    }
+                  //  }
                 }
             }
         }
