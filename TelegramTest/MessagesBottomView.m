@@ -798,80 +798,82 @@
 }
 
 -(void)checkMentionsOrTags {
-    if(self.dialog.type == DialogTypeChat) {
+    
         
-        NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
+    NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
+    
+    NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
+    textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
+    
+    rect.origin.x -= textViewBounds.origin.x;
+    rect.origin.y-= textViewBounds.origin.y;
+    
+    rect.origin.x += 100;
+    
+    
+    NSString *string = [self.inputMessageTextField string];
+    
+    NSRange range;
+    
+    NSString *search;
+    
+    NSRange selectedRange = self.inputMessageTextField.selectedRange;
+    
+    
+    BOOL isMention;
+    
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound) {
         
-        NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
-        textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
+        isMention = [[string substringWithRange:range] isEqualToString:@"@"];
         
-        rect.origin.x -= textViewBounds.origin.x;
-        rect.origin.y-= textViewBounds.origin.y;
+        search = [string substringFromIndex:range.location + 1];
         
-        rect.origin.x += 100;
+        NSRange space = [search rangeOfString:@" "];
         
-        
-        NSString *string = [self.inputMessageTextField string];
-        
-        NSRange range;
-        
-        NSString *search;
-        
-        NSRange selectedRange = self.inputMessageTextField.selectedRange;
+        if(space.location != NSNotFound)
+            search = [search substringToIndex:space.location];
         
         
-        BOOL isMention;
         
-        while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound) {
+        if(search.length > 0) {
             
-            isMention = [[string substringWithRange:range] isEqualToString:@"@"];
-            
-            search = [string substringFromIndex:range.location + 1];
-            
-            NSRange space = [search rangeOfString:@" "];
-            
-            if(space.location != NSNotFound)
-                search = [search substringToIndex:space.location];
-            
-            
-            
-            if(search.length > 0) {
-                
-                if(selectedRange.location == range.location + search.length + 1)
-                    break;
-                else
-                    search = nil;
-            }
-            
-            string = [string substringFromIndex:range.location +1];
-            
+            if(selectedRange.location == range.location + search.length + 1)
+                break;
+            else
+                search = nil;
         }
-        if(search != nil && ![string hasPrefix:@" "]) {
-            
-            
-            void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
-                NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
-                
-                [insert insertString:[fullUserName substringFromIndex:search.length] atIndex:selectedRange.location];
-                
-                
-                
-                [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(range.location + 1, search.length)];
-
-            };
-            
-            if(isMention) {
-                [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
-            } else {
-                [TGHashtagPopup show:search view:self.window.contentView ofRect:rect callback:callback];
-            }
-            
-        } else {
-            [TGMentionPopup close];
-            [TGHashtagPopup close];
-        }
+        
+        string = [string substringFromIndex:range.location +1];
         
     }
+    if(search != nil && ![string hasPrefix:@" "]) {
+        
+        
+        
+        
+        void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
+            NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
+            
+            [insert insertString:[fullUserName substringFromIndex:search.length] atIndex:selectedRange.location];
+            
+            
+            
+            [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(range.location + 1, search.length)];
+            
+        };
+        
+        if(isMention) {
+            if(self.dialog.type == DialogTypeChat)
+                [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
+        } else {
+            [TGHashtagPopup show:search view:self.window.contentView ofRect:rect callback:callback];
+        }
+        
+    } else {
+        [TGMentionPopup close];
+        [TGHashtagPopup close];
+    }
+    
 
 }
 

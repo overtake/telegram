@@ -288,6 +288,9 @@ static NSMutableArray *listeners;
         
         MessageTableItem *tableItem = (MessageTableItem *) [[self.controller messageTableItemsFromMessages:@[message]] lastObject];
         
+        if(!tableItem)
+            return;
+        
         NSArray *res = [self filterAndAdd:@[tableItem] isLates:YES];
         
         [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {

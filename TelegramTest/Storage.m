@@ -827,15 +827,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 - (void)parseDialogs:(FMResultSet *)result dialogs:(NSMutableArray *)dialogs messages:(NSMutableArray *)messages {
     while ([result next]) {
-        id serializedMessage =[[result resultDictionary] objectForKey:@"serialized_message"];
-        TL_localMessage *message;
-        if(![serializedMessage isKindOfClass:[NSNull class]]) {
-            message = [TLClassStore deserialize:serializedMessage];
-            message.flags = -1;
-            message.flags = [result intForColumn:@"flags"];
-            if(message)
-                [messages addObject:message];
-        }
+        
         
         TL_conversation *dialog = [[TL_conversation alloc] init];
         int type = [result intForColumn:@"type"];
@@ -845,7 +837,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         } else if(type == DialogTypeUser) {
             dialog.peer = [TL_peerUser createWithUser_id:[result intForColumn:@"peer_id"]];
         } else if(type == DialogTypeChat) {
-             dialog.peer = [TL_peerChat createWithChat_id:-[result intForColumn:@"peer_id"]];
+            dialog.peer = [TL_peerChat createWithChat_id:-[result intForColumn:@"peer_id"]];
         } else if(type == DialogTypeBroadcast) {
             dialog.peer = [TL_peerBroadcast createWithChat_id:[result intForColumn:@"peer_id"]];
         }
@@ -864,6 +856,18 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         dialog.last_marked_date = [result intForColumn:@"last_marked_date"];
         dialog.sync_message_id = [result intForColumn:@"sync_message_id"];
         dialog.last_real_message_date = [result intForColumn:@"last_real_message_date"];
+        
+        id serializedMessage =[[result resultDictionary] objectForKey:@"serialized_message"];
+        TL_localMessage *message;
+        if(![serializedMessage isKindOfClass:[NSNull class]]) {
+            message = [TLClassStore deserialize:serializedMessage];
+            message.flags = -1;
+            message.flags = [result intForColumn:@"flags"];
+            if(message)
+                [messages addObject:message];
+        }
+        
+        dialog.lastMessage = message;
         
         [dialogs addObject:dialog];
     }

@@ -211,6 +211,11 @@ static ASQueue *queue;
         return;
     }
     
+    if([statefulMessage isEmpty]) {
+        [self proccessStatefulMessage:statefulMessage needSave:NO];
+        return;
+    }
+    
     
     [_statefulUpdates addObject:statefulMessage];
     
@@ -678,7 +683,7 @@ static ASQueue *queue;
                
                 [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
                 
-                [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:nil];
+                [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
                 
             }
             

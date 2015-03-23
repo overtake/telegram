@@ -247,17 +247,41 @@ static NSImage *higlightedImage() {
             stickers = info[@"serialized"];
             
             NSMutableArray *row = [[NSMutableArray alloc] init];
-            
+                        
             
             [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                [row addObject:[TLClassStore deserialize:obj]];
+                
+                @try {
+                    TLDocument *doc = [TLClassStore deserialize:obj];
+                    
+                    if(doc)
+                    {
+                        [row addObject:doc];
+                    }
+                }
+                @catch (NSException *exception) {
+                    hash = @"";
+                }
+               
             }];
             
             
             NSArray *localStickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
             
             [localStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                [row addObject:[TLClassStore deserialize:obj]];
+                
+                @try {
+                    TLDocument *doc = [TLClassStore deserialize:obj];
+                    
+                    if(doc)
+                    {
+                        [row addObject:doc];
+                    }
+                }
+                @catch (NSException *exception) {
+                    hash = @"";
+                }
+                
             }];
             
             

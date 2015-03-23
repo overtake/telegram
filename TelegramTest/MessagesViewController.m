@@ -1838,6 +1838,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
     [self hideSearchBox:NO];
     
+    [EmojiViewController loadStickersIfNeeded];
+    
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         

@@ -168,25 +168,16 @@
 }
 
 -(TL_conversation *)conversation {
-    return [[DialogsManager sharedManager] find:_conversation.peer_id];
+    return _conversation;
 }
 
 - (void)notificationChangeMessage:(NSNotification *)notify {
     
-    
+    if(notify.userInfo[KEY_DIALOG]) {
+        _conversation = notify.userInfo[KEY_DIALOG];
+    }
         
-    [self updateLastMessage];
-    
-    //Date
-    [self generateDate];
-    [self notificationChangeUnreadCount:nil];
-    
-    if(notify)
-        [self redrawRow];
-}
-
--(void)updateLastMessage {
-    self.lastMessage = [[MessagesManager sharedManager] find:self.conversation.top_message];
+    self.lastMessage = _conversation.lastMessage;
     
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
@@ -197,7 +188,16 @@
     self.isNotRead = self.lastMessage.unread && !self.isOut;
     
     self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.conversation];
+    
+    
+    //Date
+    [self generateDate];
+    [self notificationChangeUnreadCount:nil];
+    
+    if(notify)
+        [self redrawRow];
 }
+
 
 
 
@@ -226,9 +226,7 @@
         [self redrawRow];
         return;
     }
-    
-    [self updateLastMessage];
-    
+        
     if(self.conversation.unread_count) {
         NSString *unreadTextCount;
         

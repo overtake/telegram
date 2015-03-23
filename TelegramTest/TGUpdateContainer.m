@@ -22,4 +22,8 @@
     return self;
 }
 
+-(BOOL)isEmpty {
+    return self.beginSeq == 0 && self.pts == 0 && self.qts == 0 && self.pts_count == 0;
+}
+
 @end

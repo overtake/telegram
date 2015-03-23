@@ -17,4 +17,7 @@
 @property (nonatomic,strong) id update;
 
 -(id)initWithSequence:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count update:(id)update;
+
+-(BOOL)isEmpty;
+
 @end

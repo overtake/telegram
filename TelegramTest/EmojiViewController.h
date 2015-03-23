@@ -21,6 +21,6 @@
 + (EmojiViewController *)instance;
 
 +(void)reloadStickers;
-
++(void)loadStickersIfNeeded;
 
 @end

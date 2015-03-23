@@ -137,7 +137,7 @@
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.messageField.frame))];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 20)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 17)];
     
     
     if(_deleteHandler != nil)

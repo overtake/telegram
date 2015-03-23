@@ -8,6 +8,10 @@
 
 #import "MTProto.h"
 #import "TL_broadcast.h"
+
+
+@class TL_localMessage;
+
 @interface TL_conversation : TLDialog
 
 typedef enum {
@@ -25,6 +29,9 @@ typedef enum {
 @property (nonatomic) BOOL fake;
 @property (nonatomic) DeliveryState dstate;
 @property (nonatomic) int sync_message_id;
+
+
+@property (nonatomic,strong) TL_localMessage *lastMessage;
 
 + (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date;
 

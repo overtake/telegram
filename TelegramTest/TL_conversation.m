@@ -23,6 +23,8 @@
     dialog.last_real_message_date = last_message_date;
     dialog.dstate = DeliveryStateNormal;
     
+    dialog.lastMessage = [[MessagesManager sharedManager] find:top_message];
+    
     return dialog;
 }
 

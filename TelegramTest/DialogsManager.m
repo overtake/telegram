@@ -168,8 +168,10 @@
             
             [dialog save];
             
+            dialog.lastMessage = lastMessage;
+            
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog, KEY_MESSAGE:lastMessage}];
             
             NSUInteger position = [self positionForConversation:dialog];
             
@@ -281,7 +283,7 @@
         
         [dialog save];
         
-        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:nil];
+        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         [[Storage manager] deleteMessagesInDialog:dialog completeHandler:block];
         
     };
@@ -340,6 +342,9 @@
         }
         
         dialog.top_message = message.n_id;
+        
+        dialog.lastMessage = message;
+        
         if(message.n_out) {
             dialog.last_marked_message = message.n_id;
             dialog.last_marked_date = message.date;
@@ -372,8 +377,10 @@
             
             NSUInteger position = [self positionForConversation:dialog];
             
+           
+            
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_MESSAGE:message}];
         }
 
 
@@ -408,7 +415,7 @@
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
-    
+    NSMutableDictionary *lmsgs = [[NSMutableDictionary alloc] init];
     
     [self.queue dispatchOnQueue:^{
         int totalUnread = 0;
@@ -418,6 +425,10 @@
             
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
+                
+                lmsgs[@(dialog.peer_id)] = message;
+                
+                dialog.lastMessage = message;
                 
                 int last_real_date = dialog.last_real_message_date;
                 
@@ -473,7 +484,7 @@
             [dialog save];
             
             if(checkSort) {
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_MESSAGE:lmsgs[@(dialog.peer_id)]}];
             }
         }
         

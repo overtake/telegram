@@ -202,6 +202,10 @@ static NSImage *higlightedImage() {
     [[self instance].stickersTableView load:YES];
 }
 
++(void)loadStickersIfNeeded {
+   [[self instance].stickersTableView load:NO];
+}
+
 - (void)loadView {
     [super loadView];
     
@@ -222,7 +226,6 @@ static NSImage *higlightedImage() {
     
     self.stickersTableView = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
     
-    [self.stickersTableView load:NO];
     
     [self.view addSubview:self.stickersTableView.containerView];
     
