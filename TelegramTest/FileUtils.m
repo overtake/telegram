@@ -570,9 +570,7 @@ void open_link(NSString *link) {
         StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
         
         [((StandartViewController *)controller).searchViewController dontLoadHashTagsForOneRequest];
-        
-        [[Telegram rightViewController].messagesViewController saveHashTags:link];
-        
+                
         [controller searchByString:link];
         
         if([Telegram isSingleLayout]) {

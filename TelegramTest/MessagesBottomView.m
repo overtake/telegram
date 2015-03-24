@@ -717,8 +717,6 @@
 
 - (void)sendButtonAction {
     
-    
-    
     [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
         
         if(obj.image) {
@@ -728,9 +726,6 @@
         [self.inputMessageTextField replaceCharactersInRange:obj.range withString:@""];
         
     }];
-    
-    
-   
     
     [self.attachmentsIgnore removeAllObjects];
     

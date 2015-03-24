@@ -61,7 +61,7 @@ static NSMutableArray *listeners;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
-            queue = [[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]];
+            queue = [ASQueue globalQueue];
             
             filters = [[NSMutableArray alloc] init];
             [filters addObject:[HistoryFilter class]];
