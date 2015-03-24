@@ -17,6 +17,7 @@
 #import "HistoryFilter.h"
 #import "FMDatabaseAdditions.h"
 #import "TGHashContact.h"
+#import "NSString+FindURLs.h"
 @implementation Storage
 
 
@@ -760,6 +761,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             }
            
            insertBlock(@"messages");
+            
+            if([message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+                [Telegram saveHashTags:message.message peer_id:message.peer_id];
+                
+            }
+            
             
             
         }

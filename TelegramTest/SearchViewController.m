@@ -334,7 +334,7 @@ typedef enum {
         
         if([controller isKindOfClass:[StandartViewController class]]) {
             [self dontLoadHashTagsForOneRequest];
-            [[Telegram rightViewController].messagesViewController saveHashTags:((SearchHashtagItem *)item).hashtag];
+            [Telegram saveHashTags:((SearchHashtagItem *)item).hashtag peer_id:0];
             [(StandartViewController *)controller searchByString:((SearchHashtagItem *)item).hashtag];
         }
     }
@@ -777,18 +777,10 @@ static int insertCount = 3;
                          [self showSearchResults:searchParams];
                     }];
                     
-                    
-                    
-                    
-                }
+               }
                 
-                BOOL o = _dontLoadHashtagsForOneRequest;
                 
                 _dontLoadHashtagsForOneRequest = NO;
-                
-                if([searchString hasPrefix:@"#"] && !o)
-                    return;
-                
                 
                 
                 

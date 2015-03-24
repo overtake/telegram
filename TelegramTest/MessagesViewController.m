@@ -158,6 +158,8 @@
 
 @property (nonatomic,strong) NSMutableDictionary *fwdCache;
 
+@property (nonatomic,strong) NSMutableArray *replyMsgsStack;
+
 @end
 
 @implementation MessagesViewController
@@ -230,6 +232,8 @@
 
 - (void)loadView {
     [super loadView];
+    
+    _replyMsgsStack = [[NSMutableArray alloc] init];
     
     self.typingReservation = [[NSMutableDictionary alloc] init];
     
@@ -1780,9 +1784,12 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)showMessage:(int)messageId {
+- (void)showMessage:(int)messageId addToStack:(BOOL)addToStack {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
+    
+    if(addToStack)
+        [_replyMsgsStack addObject:@(messageId)];
     
     if(item)
     {
@@ -1840,8 +1847,12 @@ static NSTextAttachment *headerMediaIcon() {
     
     [EmojiViewController loadStickersIfNeeded];
     
+    
+    
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
+        
+        [_replyMsgsStack removeAllObjects];
         
         self.jumpMessageId = messageId;
         _conversation = dialog;
@@ -2414,45 +2425,7 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendMessage:message callback:nil];
 }
 
--(void)saveHashTags:(NSString *)message {
-    
-    NSArray *locations = [message locationsOfHashtags];
-    
-    if(locations.count > 0) {
-        
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            
-            __block NSMutableDictionary *list = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
-            
-            
-            
-            if(!list)
-                list = [[NSMutableDictionary alloc] init];
-            
-            [locations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                NSString *tag = [[message substringWithRange:[obj range]] substringFromIndex:1];
-                
-                
-                NSDictionary *localTag = list[tag];
-                
-                int count = [localTag[@"count"] intValue];
-                
-                localTag = @{@"count":@(++count),@"tag":tag};
-                
-                list[tag] = localTag;
-                
-                
-            }];
-            
-            [transaction setObject:list forKey:@"htags" inCollection:@"hashtags"];
-            
-        }];
-        
-        
-    }
-    
-}
+
 
 - (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
     
@@ -2470,7 +2443,7 @@ static NSTextAttachment *headerMediaIcon() {
         [[EmojiViewController instance] saveEmoji:array];
     }
     
-    [self saveHashTags:message];
+    [Telegram saveHashTags:message peer_id:0];
     
     [self readHistory:0];
     

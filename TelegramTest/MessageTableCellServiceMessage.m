@@ -52,6 +52,7 @@
 }
 
 
+
 - (void) setItem:(MessageTableItemServiceMessage *)item {
     [super setItem:item];
 

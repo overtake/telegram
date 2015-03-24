@@ -173,7 +173,7 @@
         // go to message
         
         if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-            [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id];
+            [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id addToStack:YES];
         
     }
     

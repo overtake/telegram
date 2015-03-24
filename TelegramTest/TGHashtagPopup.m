@@ -13,7 +13,7 @@
 
 static TMMenuPopover *popover;
 
-+(void)show:(NSString *)string view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;  {
++(void)show:(NSString *)string peer_id:(int)peer_id view:(NSView *)view  ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;  {
     
     
     __block NSMutableDictionary *tags;
@@ -21,7 +21,11 @@ static TMMenuPopover *popover;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        tags = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
+        tags = [[transaction objectForKey:@"htags" inCollection:@"hashtags"] mutableCopy];
+        
+        NSMutableDictionary *prs = [transaction objectForKey:[NSString stringWithFormat:@"htags_%d",peer_id] inCollection:@"hashtags"];
+        
+        [tags addEntriesFromDictionary:prs];
         
     }];
     

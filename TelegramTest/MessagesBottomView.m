@@ -795,8 +795,6 @@
     
     
     
-    
-    
 }
 
 -(void)checkMentionsOrTags {
@@ -868,7 +866,7 @@
             if(self.dialog.type == DialogTypeChat)
                 [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
         } else {
-            [TGHashtagPopup show:search view:self.window.contentView ofRect:rect callback:callback];
+            [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
         }
         
     } else {
@@ -1064,7 +1062,7 @@
     [self.attachments removeAllObjects];
     
     
-    __block int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    __block int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 16;
     
     __block int k = 0;
     
@@ -1166,6 +1164,9 @@
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            
+            
+            
             [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
             
         } else {
@@ -1174,8 +1175,12 @@
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
-            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
+            int offset = self.attachments.count > 0 ? 95 : 20;
+            
+            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
+            
+            
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (self.replyContainer ? 40 : 0))];
         }
         
         

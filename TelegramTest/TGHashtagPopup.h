@@ -10,7 +10,7 @@
 
 @interface TGHashtagPopup : NSObject
 
-+(void)show:(NSString *)string view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;
++(void)show:(NSString *)string peer_id:(int)peer_id view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;
 
 +(BOOL)isVisibility;
 

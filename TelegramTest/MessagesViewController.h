@@ -61,7 +61,7 @@ typedef enum {
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force;
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
-- (void)showMessage:(int)messageId;
+- (void)showMessage:(int)messageId addToStack:(BOOL)addToStack;
 
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
@@ -133,7 +133,5 @@ typedef enum {
 -(void)clearFwdMessages:(TL_conversation *)conversation;
 
 -(void)performForward:(TL_conversation *)conversation;
-
--(void)saveHashTags:(NSString *)message;
 
 @end

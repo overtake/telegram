@@ -66,4 +66,7 @@ int maxChatUsers();
 
 +(BOOL)isSingleLayout;
 
+
++(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;
+
 @end

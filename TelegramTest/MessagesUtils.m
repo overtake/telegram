@@ -406,6 +406,11 @@
     } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
         return  [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
     } else {
+        
+        if(message.action != nil) {
+            return [self serviceMessage:message forAction:message.action];
+        }
+        
         return NSLocalizedString(@"ChatMedia.Unsupported", nil);
     }
     

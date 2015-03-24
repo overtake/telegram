@@ -10,7 +10,7 @@
 #import "DialogsManager.h"
 #import "TGTimer.h"
 #import "TGEnterPasswordPanel.h"
-
+#import "NSString+FindURLs.h"
 #define ONLINE_EXPIRE 120
 #define OFFLINE_AFTER 5
 
@@ -273,6 +273,50 @@ NSString * appName() {
 
 +(BOOL)isSingleLayout {
     return [[Telegram mainViewController] isSingleLayout];
+}
+
+
++(void)saveHashTags:(NSString *)message peer_id:(int)peer_id {
+    
+    NSArray *locations = [message locationsOfHashtags];
+    
+    if(locations.count > 0) {
+        
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            NSString *key = @"htags";
+            
+            if(peer_id != 0)
+                key = [NSString stringWithFormat:@"htags_%d",peer_id];
+            
+            __block NSMutableDictionary *list = [transaction objectForKey:key inCollection:@"hashtags"];
+            
+            
+            
+            if(!list)
+                list = [[NSMutableDictionary alloc] init];
+            
+            [locations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                NSString *tag = [[message substringWithRange:[obj range]] substringFromIndex:1];
+                
+                
+                NSDictionary *localTag = list[tag];
+                
+                int count = [localTag[@"count"] intValue];
+                
+                localTag = @{@"count":@(++count),@"tag":tag};
+                
+                list[tag] = localTag;
+                
+                
+            }];
+            
+            [transaction setObject:list forKey:key inCollection:@"hashtags"];
+            
+        }];
+    }
+    
 }
 
 @end
