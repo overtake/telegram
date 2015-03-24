@@ -725,10 +725,17 @@
             [self.messagesViewController sendImage:nil file_data:[obj.image TIFFRepresentation]];
         }
         
+        [self.inputMessageTextField replaceCharactersInRange:obj.range withString:@""];
+        
     }];
+    
+    
+   
     
     [self.attachmentsIgnore removeAllObjects];
     
+    
+    [self checkAttachImages];
     
     [self.messagesViewController sendMessage];
     

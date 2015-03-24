@@ -122,7 +122,7 @@
     
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.textAttributed.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
     
-    textSize.width= width;
+    textSize.width= ceil(textSize.width);
     textSize.height = ceil(textSize.height);
     
     

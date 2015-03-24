@@ -138,6 +138,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     self.leftNavigationBarView = [self standartLeftBarView];
+    
+    
+    if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController)
+    {
+        self.leftNavigationBarView = nil;
+    }
 }
 
 

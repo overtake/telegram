@@ -215,6 +215,12 @@
         NSString *userResponse = notification.response.string;
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            TL_localMessage *msg = [[MessagesManager sharedManager] find:[[userInfo objectForKey:@"msg_id"] intValue]];
+            
+            if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
+            
+            
             [[Telegram rightViewController].messagesViewController sendMessage:userResponse];
         });
         

@@ -198,6 +198,7 @@
     
     
     CGPathAddRect(path, NULL, self.bounds);
+
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.attributedString);
     

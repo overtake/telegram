@@ -618,7 +618,7 @@ void open_link(NSString *link) {
     
     
     
-    NSURL *url = [NSURL URLWithString:link];
+    NSURL *url = [[NSURL alloc] initWithString: [link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     if([SettingsArchiver checkMaskedSetting:OpenLinksInBackground]) {
         [[NSWorkspace sharedWorkspace] openURLs:@[url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
     } else {
