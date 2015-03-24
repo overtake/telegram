@@ -284,33 +284,28 @@
        
     } else {
         
-       // if(!self.modalView) {
-           
-            
-            [self.modalView removeFromSuperview];
-            [self.navigationViewController.view disableSubViews];
-            [self.modalView setFrame:self.view.bounds];
+        [self.modalView removeFromSuperview];
+      //  [self.navigationViewController.view disableSubViews];
+        [self.modalView setFrame:self.view.bounds];
         
         [self.modalView setHidden:[Telegram isSingleLayout]];
         
-            [self.view addSubview:self.modalView];
-                        
-            if(animated) {
-                CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
-                flash.fromValue = [NSNumber numberWithFloat:0.0];
-                flash.toValue = [NSNumber numberWithFloat:0.95];
-                flash.duration = 0.16;
-                flash.autoreverses = NO;
-                flash.repeatCount = 0;
-                [self.modalView.layer removeAllAnimations];
-                self.modalView.layer.opacity = 0.95;
-                
-                [self.modalView.layer addAnimation:flash forKey:@"flashAnimation"];
-                
-                [[NSCursor arrowCursor] set];
-            }
-     //   }
+        [self.view addSubview:self.modalView];
         
+        if(animated && ![Telegram isSingleLayout]) {
+            CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            flash.fromValue = [NSNumber numberWithFloat:0.0];
+            flash.toValue = [NSNumber numberWithFloat:0.95];
+            flash.duration = 0.16;
+            flash.autoreverses = NO;
+            flash.repeatCount = 0;
+            [self.modalView.layer removeAllAnimations];
+            self.modalView.layer.opacity = 0.95;
+            
+            [self.modalView.layer addAnimation:flash forKey:@"flashAnimation"];
+            
+            [[NSCursor arrowCursor] set];
+        }
     }
     
    

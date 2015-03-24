@@ -93,7 +93,7 @@
         [self.field setStringValue:NSLocalizedString(@"Close", nil)];
     }
     
-    [self.imageView setHidden:self.controller.navigationViewController.viewControllerStack.count <= 2 && ![[Telegram mainViewController] isSingleLayout]];
+    [self.imageView setHidden:self.controller.navigationViewController.viewControllerStack.count <= 2 && ![Telegram isSingleLayout]];
     
     
     [self.backUnreadMarkView setHidden:!([self.controller.navigationViewController.currentController isKindOfClass:[MessagesViewController class]] && [[Telegram mainViewController] isSingleLayout])];

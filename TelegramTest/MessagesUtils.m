@@ -169,7 +169,7 @@
             //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
             //  else
             if(message.conversation.type != DialogTypeSecretChat)
-                chatUserNameString = userLast ? userLast.dialogFullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
+                chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
@@ -230,7 +230,7 @@
         }
         
         if(userSecond) {
-            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.dialogFullName] withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.fullName] withColor:NSColorFromRGB(0x808080)];
         }
         
     } else {

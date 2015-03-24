@@ -290,7 +290,7 @@ static const int bottomOffset = 58;
     [super viewWillAppear:animated];
     
     if(![[Telegram rightViewController] isModalViewActive]) {
-        self.leftNavigationBarView = nil;
+       // self.leftNavigationBarView = nil;
     }
 }
 
