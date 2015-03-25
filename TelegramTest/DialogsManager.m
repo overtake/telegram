@@ -415,7 +415,6 @@
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
-    NSMutableDictionary *lmsgs = [[NSMutableDictionary alloc] init];
     
     [self.queue dispatchOnQueue:^{
         int totalUnread = 0;
@@ -425,8 +424,6 @@
             
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
-                
-                lmsgs[@(dialog.peer_id)] = message;
                 
                 dialog.lastMessage = message;
                 
@@ -484,7 +481,7 @@
             [dialog save];
             
             if(checkSort) {
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_MESSAGE:lmsgs[@(dialog.peer_id)]}];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             }
         }
         
