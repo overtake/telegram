@@ -413,6 +413,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__57-[MessagesManager notifyMessage:update_real_date:notify:]_block_invoke:MessagesManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TL_conversation inputPeer]:TL_conversation.m">
       </ContextState>
       <ContextState
@@ -519,6 +522,14 @@
             </PersistentString>
             <PersistentString
                value = "message.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageInputGrowingTextView paste:]:MessageInputGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "url">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -705,6 +716,9 @@
                value = "self.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[MessageSenderItem performRequest]_block_invoke:MessageSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
@@ -2036,6 +2050,9 @@
                value = "item">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController searchByString:]:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
