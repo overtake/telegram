@@ -55,7 +55,7 @@
             
             NSRange nameRange = [userObj range];
             
-            if(range.location <= nameRange.location && (range.location+range.length) > (nameRange.location + nameRange.length)) {
+            if(range.location <= nameRange.location && (range.location+range.length) >= (nameRange.location + nameRange.length)) {
                 [toremoveUsers addObject:userObj];
             }
             
@@ -66,7 +66,7 @@
             
             NSRange hashRange = [hashObj range];
             
-            if(range.location <= hashRange.location && (range.location+range.length) > (hashRange.location + hashRange.length)) {
+            if(range.location <= hashRange.location && (range.location+range.length) >= (hashRange.location + hashRange.length)) {
                 [toremoveTags addObject:hashObj];
             }
             

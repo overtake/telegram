@@ -55,6 +55,7 @@
     selfString = [selfString stringByReplacingOccurrencesOfString:@"8⃣" withString:@"8️⃣"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"9⃣" withString:@"9️⃣"];
     selfString = [selfString stringByReplacingOccurrencesOfString:@"0⃣" withString:@"0️⃣"];
+    selfString = [selfString stringByReplacingOccurrencesOfString:@"❤" withString:@"❤️"];
     
     
     return selfString;
