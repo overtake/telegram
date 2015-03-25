@@ -25,7 +25,6 @@
 -(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
-+(void)statedMessage:(TL_messages_statedMessage*)response;
 +(void)addAndUpdateMessage:(TL_localMessage *)message;
 +(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date;

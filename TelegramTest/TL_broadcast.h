@@ -21,6 +21,7 @@
 -(void)removeParticipant:(int)n_id;
 
 - (NSMutableArray *)inputContacts;
+- (NSMutableArray *)generateRandomIds;
 
 -(TL_conversation *)conversation;
 

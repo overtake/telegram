@@ -89,13 +89,17 @@
     
     TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.conversation.inputPeer n_id:[self.msg_ids mutableCopy] random_id:random_ids];
     
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessages *response) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
-         NSArray *messages = [response.messages reversedArray];
         
-        [response.messages removeAllObjects];
-
-        [SharedManager proccessGlobalResponse:response];
+        NSMutableArray *messages = [[NSMutableArray alloc] initWithCapacity:response.updates.count];
+        
+        [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
+            
+        }];
+        
         
         for(int i = 0; i < messages.count; i++) {
             

@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.03.15.
+//  Auto created by Mikhail Filimonov on 25.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -477,10 +477,11 @@
 
 @interface TLAPI_messages_sendBroadcast : TLApiObject
 @property (nonatomic, strong) NSMutableArray* contacts;
+@property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) TLInputMedia* media;
 
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts message:(NSString*)message media:(TLInputMedia*)media;
++(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media;
 @end
 
 @interface TLAPI_geochats_getLocated : TLApiObject
@@ -789,5 +790,17 @@
 @property int period;
 
 +(TLAPI_account_updateDeviceLocked*)createWithPeriod:(int)period;
+@end
+
+@interface TLAPI_account_getAuthorizations : TLApiObject
+
+
++(TLAPI_account_getAuthorizations*)create;
+@end
+
+@interface TLAPI_account_resetAuthorization : TLApiObject
+@property long n_hash;
+
++(TLAPI_account_resetAuthorization*)createWithN_hash:(long)n_hash;
 @end
 

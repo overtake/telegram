@@ -34,27 +34,28 @@
         
         TL_broadcast *broadcast = self.conversation.broadcast;
         
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] message:self.message.message media:media];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:media];
     }
     
-    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage * response) {
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
+                
         
-        [SharedManager proccessGlobalResponse:response];
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[0] message])];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             
-            self.message.n_id = response.message.n_id;
-            self.message.date = response.message.date;
+            self.message.n_id = msg.n_id;
+            self.message.date = msg.date;
             
         } else {
             
-            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-            [TL_localMessage convertReceivedMessages:stated.messages];
+          //  TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
+          //  [TL_localMessage convertReceivedMessages:stated.messages];
             
-            [SharedManager proccessGlobalResponse:stated];
+          //  [SharedManager proccessGlobalResponse:stated];
             
-            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
+          //  [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
+          //  [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
             
         }
         

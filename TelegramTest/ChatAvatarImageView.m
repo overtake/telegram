@@ -241,7 +241,7 @@
     dispatch_block_t groupBlock = ^{
         [strongSelf calcProgress];
         
-        updaterItem.request = [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
+        updaterItem.request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             if([self lockId] == lockId) {
                 [strongSelf calcProgress];
             }

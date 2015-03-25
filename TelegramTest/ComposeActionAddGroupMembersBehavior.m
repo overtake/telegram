@@ -56,9 +56,8 @@
     
     [members removeObjectAtIndex:0];
     
-    [MessageSender sendStatedMessage:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:item.contact.user.inputUser fwd_limit:50] successHandler:^(RPCRequest *request, id response) {
-        
-        
+    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:item.contact.user.inputUser fwd_limit:50] successHandler:^(RPCRequest *request, id response) {
+                
         if(self.chat) {
             [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:item.contact.user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
             [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(self.chat.n_id)}];

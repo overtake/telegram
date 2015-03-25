@@ -31,13 +31,13 @@
     
     TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithPeer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId];
     
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage * response) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
+        
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[0] message])];
         
         
-        [SharedManager proccessGlobalResponse:response];
-        
-        ((TL_localMessage *)self.message).n_id = response.message.n_id;
-        ((TL_localMessage *)self.message).date = response.message.date;
+        ((TL_localMessage *)self.message).n_id = msg.n_id;
+        ((TL_localMessage *)self.message).date = msg.date;
         ((TL_localMessage *)self.message).dstate = DeliveryStateNormal;
         
         [self.message save:YES];

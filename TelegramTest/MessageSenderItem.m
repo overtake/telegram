@@ -42,10 +42,11 @@
         
         TL_broadcast *broadcast = self.conversation.broadcast;
         
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] message:self.message.message media:[TL_inputMediaEmpty create]];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentMessage * response) {
+        
         
         
         if(self.conversation.type != DialogTypeBroadcast)  {
@@ -54,13 +55,15 @@
             self.message.date = response.date;
             
         } else {
-            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-            [TL_localMessage convertReceivedMessages:stated.messages];
             
-            [SharedManager proccessGlobalResponse:stated];
             
-            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
+//            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
+//            [TL_localMessage convertReceivedMessages:stated.messages];
+//            
+//            [SharedManager proccessGlobalResponse:stated];
+//            
+//            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
+//            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
             
         }
         

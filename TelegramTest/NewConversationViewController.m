@@ -653,13 +653,11 @@
     }
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.chatTitle] successHandler:^(RPCRequest *request, TL_messages_statedMessage* response) {
+    [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.chatTitle] successHandler:^(RPCRequest *request, TLUpdates *response) {
+                
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[0] message])];
         
-    
-        
-        [MessagesManager statedMessage:response];
-        
-        [[FullChatManager sharedManager] performLoad:((TL_localMessage *)response.message).conversation.chat.n_id callback:^{
+        [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
             [[Telegram sharedInstance] showMessagesFromDialog:((TL_localMessage *)response.message).conversation sender:self];
         }];
         

@@ -75,19 +75,6 @@
     [Notification removeObserver:self];
 }
 
-+ (void)statedMessage:(TL_messages_statedMessage*)response {
-    
-    if(response == nil)
-        return;
-    
-    response.message = [TL_localMessage convertReceivedMessage:[response message]];
-    
-    
-    [SharedManager proccessGlobalResponse:response];
-    
-    
-    [MessagesManager addAndUpdateMessage:[response message]];
-}
 
 
 +(void)addAndUpdateMessage:(TL_localMessage *)message {
@@ -102,7 +89,7 @@
 -(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     [self.queue dispatchOnQueue:^{
       
-        if(!message)
+        if(!message || [self find:message.n_id])
             return;
         
         
@@ -324,15 +311,9 @@
         if(!message || message.n_id == 0) return;
         
         
+       [self.messages setObject:message forKey:@(message.n_id)];
         
-        
-        
-        
-        [self.messages setObject:message forKey:@(message.n_id)];
-        
-        
-        if([message isKindOfClass:[TL_destructMessage class]])
-            [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
+        [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
     }];
 }
 

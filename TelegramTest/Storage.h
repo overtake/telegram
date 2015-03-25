@@ -205,4 +205,7 @@ extern NSString *const FILE_NAMES;
 -(NSArray *)selectSupportMessages:(NSArray *)ids;
 -(void)addSupportMessages:(NSArray *)messages;
 
+
+-(void)updateMessageId:(long)random_id msg_id:(int)n_id;
+
 @end

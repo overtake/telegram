@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 15.03.15.
+//  Auto created by Dmitry Kondratyev on 25.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -177,12 +177,6 @@
 @interface TLmessages_Message : TLObject
 @end
 	
-@interface TLmessages_StatedMessages : TLObject
-@end
-	
-@interface TLmessages_StatedMessage : TLObject
-@end
-	
 @interface TLmessages_SentMessage : TLObject
 @end
 	
@@ -340,6 +334,15 @@
 @end
 	
 @interface TLContactLink : TLObject
+@end
+	
+@interface TLWebPage : TLObject
+@end
+	
+@interface TLAuthorization : TLObject
+@end
+	
+@interface TLaccount_Authorizations : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -887,6 +890,7 @@
 @property int user_id;
 @property (nonatomic, strong) TLDocument* document;
 @property (nonatomic, strong) TLAudio* audio;
+@property (nonatomic, strong) TLWebPage* webpage;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia
@@ -912,6 +916,9 @@
 @end
 @interface TL_messageMediaAudio : TLMessageMedia
 +(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
+@end
+@interface TL_messageMediaWebPage : TLMessageMedia
++(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
 	
 @interface TLMessageAction()
@@ -1313,43 +1320,10 @@
 +(TL_messages_messageEmpty*)create;
 @end
 	
-@interface TLmessages_StatedMessages()
-@property (nonatomic, strong) NSMutableArray* messages;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int pts;
-@property int pts_count;
-@property (nonatomic, strong) NSMutableArray* links;
-@property int seq;
-@end
-
-@interface TL_messages_statedMessages : TLmessages_StatedMessages
-+(TL_messages_statedMessages*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count;
-@end
-@interface TL_messages_statedMessagesLinks : TLmessages_StatedMessages
-+(TL_messages_statedMessagesLinks*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
-@end
-	
-@interface TLmessages_StatedMessage()
-@property (nonatomic, strong) TLMessage* message;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int pts;
-@property int pts_count;
-@property (nonatomic, strong) NSMutableArray* links;
-@property int seq;
-@end
-
-@interface TL_messages_statedMessage : TLmessages_StatedMessage
-+(TL_messages_statedMessage*)createWithMessage:(TLMessage*)message chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count;
-@end
-@interface TL_messages_statedMessageLink : TLmessages_StatedMessage
-+(TL_messages_statedMessageLink*)createWithMessage:(TLMessage*)message chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
-@end
-	
 @interface TLmessages_SentMessage()
 @property int n_id;
 @property int date;
+@property (nonatomic, strong) TLMessageMedia* media;
 @property int pts;
 @property int pts_count;
 @property (nonatomic, strong) NSMutableArray* links;
@@ -1357,10 +1331,10 @@
 @end
 
 @interface TL_messages_sentMessage : TLmessages_SentMessage
-+(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date pts:(int)pts pts_count:(int)pts_count;
++(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_messages_sentMessageLink : TLmessages_SentMessage
-+(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
++(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
 @end
 	
 @interface TLmessages_Chats()
@@ -1456,6 +1430,7 @@
 @property (nonatomic, strong) NSMutableArray* rules;
 @property (nonatomic, strong) NSString* phone;
 @property int max_id;
+@property (nonatomic, strong) TLWebPage* webpage;
 @end
 
 @interface TL_updateNewMessage : TLUpdate
@@ -1541,6 +1516,9 @@
 @end
 @interface TL_updateReadHistoryOutbox : TLUpdate
 +(TL_updateReadHistoryOutbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateWebPage : TLUpdate
++(TL_updateWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
 	
 @interface TLupdates_State()
@@ -1668,6 +1646,7 @@
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property int chat_size_max;
 @property int broadcast_size_max;
+@property int forwarded_count_max;
 @property int online_update_period_ms;
 @property int offline_blur_timeout_ms;
 @property int offline_idle_timeout_ms;
@@ -1679,7 +1658,7 @@
 @end
 
 @interface TL_config : TLConfig
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2225,6 +2204,51 @@
 @end
 @interface TL_contactLinkContact : TLContactLink
 +(TL_contactLinkContact*)create;
+@end
+	
+@interface TLWebPage()
+@property long n_id;
+@property int date;
+@property (nonatomic, strong) NSString* display_url;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* description;
+@property (nonatomic, strong) TLPhoto* photo;
+@end
+
+@interface TL_webPageEmpty : TLWebPage
++(TL_webPageEmpty*)createWithN_id:(long)n_id;
+@end
+@interface TL_webPagePending : TLWebPage
++(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
+@end
+@interface TL_webPage : TLWebPage
++(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title description:(NSString*)description photo:(TLPhoto*)photo;
+@end
+	
+@interface TLAuthorization()
+@property long n_hash;
+@property int flags;
+@property (nonatomic, strong) NSString* device_model;
+@property (nonatomic, strong) NSString* platform;
+@property (nonatomic, strong) NSString* system_version;
+@property int api_id;
+@property (nonatomic, strong) NSString* app_name;
+@property (nonatomic, strong) NSString* app_version;
+@property int date_created;
+@property int date_active;
+@property (nonatomic, strong) NSString* ip;
+@end
+
+@interface TL_authorization : TLAuthorization
++(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip;
+@end
+	
+@interface TLaccount_Authorizations()
+@property (nonatomic, strong) NSMutableArray* authorizations;
+@end
+
+@interface TL_account_authorizations : TLaccount_Authorizations
++(TL_account_authorizations*)createWithAuthorizations:(NSMutableArray*)authorizations;
 @end
 	
 @interface TLProtoMessage()

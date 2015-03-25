@@ -1746,4 +1746,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
+
+
+-(void)updateMessageId:(long)random_id msg_id:(int)n_id {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db intForQuery:@"update media set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
+        
+        [db executeUpdate:@"update messages set n_id = (?) where random_id = ?",@(n_id),@(random_id)];
+        
+    }];
+}
+
 @end

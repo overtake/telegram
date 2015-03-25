@@ -212,21 +212,6 @@
 
 
 
-+(RPCRequest *)sendStatedMessage:(id)request successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler
-{
-    return [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-        [MessagesManager statedMessage:response];
-        
-        if(successHandler)
-            successHandler(request, response);
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(errorHandler)
-            errorHandler(request, error);
-    } timeout:10];
-
-}
-
 
 
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData {

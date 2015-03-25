@@ -40,21 +40,23 @@
     TLInputMedia *media = [TL_inputMediaContact createWithPhone_number:self.message.media.phone_number first_name:self.message.media.first_name last_name:self.message.media.last_name];
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:rand_long()];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId];
     } else {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:self.message.message media:media];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:self.message.message media:media];
     }
     
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage * response) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
+        
+        TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[0] message])];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
-            self.message.n_id = response.message.n_id;
-            self.message.date = response.message.date;
+            self.message.n_id = msg.n_id;
+            self.message.date = msg.date;
             
         } else {
-            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
+           // TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
+          //  [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
+          //  [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
             
         }
         
