@@ -62,6 +62,9 @@
 #define TGMENTIONMESSAGE 16
 
 
+#define TGSESSIONCURRENT 0x1
+#define TGSESSIONOFFICIAL 0x2
+
 #define TGMINFAKEID 1500000000
 #define TGMINSECRETID 800000000
 //#define NSLocalizedString(key, comment) \

@@ -444,10 +444,12 @@ void exceptionHandler(NSException * exception)
             
         } else if(incomingEvent.keyCode == 53) {
             
-            if([Telegram rightViewController].messagesViewController.conversation == nil && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
+            if([Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].currentEmptyController && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
                 
                 if(![responder isKindOfClass:[NSTextView class]] || ![((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                     [[Telegram leftViewController] becomeFirstResponder];
+                    
+                    return [[NSEvent alloc] init];
                 } else if([((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                     [((NSTextView *)responder) setString:@""];
                     [((NSTextView *)responder) didChangeText];

@@ -153,6 +153,8 @@
     self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:self.view.bounds];
     
     
+    self.sessionsViewContoller = [[TGSessionsViewController alloc] initWithFrame:self.view.bounds];
+    
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     
@@ -848,6 +850,16 @@
     
     
     [self.navigationViewController pushViewController:self.passcodeViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+-(void)showSessionsController {
+    if(self.navigationViewController.currentController == self.sessionsViewContoller)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.sessionsViewContoller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 @end

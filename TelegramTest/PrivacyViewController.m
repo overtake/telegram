@@ -85,7 +85,9 @@
     
     GeneralSettingsRowItem *terminateSessions = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
-        [self terminateSessions];
+        [[Telegram rightViewController] showSessionsController];
+        
+      //  [self terminateSessions];
         
     } description:NSLocalizedString(@"PrivacyAndSecurity.TerminateSessions", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @(YES);

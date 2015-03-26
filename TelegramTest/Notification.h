@@ -76,6 +76,8 @@ extern NSString *const PUSHNOTIFICATION_UPDATE;
 extern NSString *const UPDATE_MESSAGE_ITEM;
 
 extern NSString *const UPDATE_WEB_PAGE_ITEMS;
+extern NSString *const UPDATE_NEW_AUTH;
+
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 

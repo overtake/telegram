@@ -135,6 +135,10 @@
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.searchTextField becomeFirstResponder];
+}
+
 -(void)showComposeMenu {
     
     [self.topButton setSelected:YES];

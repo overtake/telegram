@@ -441,6 +441,9 @@
 		C274C3B31AC217CB000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C274C3BF1AC446EB000DFDE4 /* MessageTableItemWebPage.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3BE1AC446EB000DFDE4 /* MessageTableItemWebPage.m */; };
 		C274C3C21AC448BB000DFDE4 /* MessageTableCellWebPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C11AC448BB000DFDE4 /* MessageTableCellWebPageView.m */; };
+		C274C3C61AC488CE000DFDE4 /* TGSessionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C51AC488CE000DFDE4 /* TGSessionsViewController.m */; };
+		C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C81AC48F6B000DFDE4 /* TGSessionRowitem.m */; };
+		C274C3CC1AC48F7C000DFDE4 /* TGSessionRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1632,6 +1635,12 @@
 		C274C3BE1AC446EB000DFDE4 /* MessageTableItemWebPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemWebPage.m; sourceTree = "<group>"; };
 		C274C3C01AC448BB000DFDE4 /* MessageTableCellWebPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellWebPageView.h; sourceTree = "<group>"; };
 		C274C3C11AC448BB000DFDE4 /* MessageTableCellWebPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellWebPageView.m; sourceTree = "<group>"; };
+		C274C3C41AC488CE000DFDE4 /* TGSessionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSessionsViewController.h; sourceTree = "<group>"; };
+		C274C3C51AC488CE000DFDE4 /* TGSessionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSessionsViewController.m; sourceTree = "<group>"; };
+		C274C3C71AC48F6B000DFDE4 /* TGSessionRowitem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSessionRowitem.h; sourceTree = "<group>"; };
+		C274C3C81AC48F6B000DFDE4 /* TGSessionRowitem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSessionRowitem.m; sourceTree = "<group>"; };
+		C274C3CA1AC48F7C000DFDE4 /* TGSessionRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSessionRowView.h; sourceTree = "<group>"; };
+		C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSessionRowView.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -3566,6 +3575,7 @@
 		C270D2EA1A1CD73500522FB0 /* pravicy */ = {
 			isa = PBXGroup;
 			children = (
+				C274C3C31AC488B2000DFDE4 /* sessions */,
 				C244358C1A1E1B8F00F9BB38 /* privacyuserlist */,
 				C270D2EF1A1CD8BA00522FB0 /* PrivacyViewController.h */,
 				C270D2F01A1CD8BA00522FB0 /* PrivacyViewController.m */,
@@ -3641,6 +3651,19 @@
 				C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */,
 			);
 			name = hashtags;
+			sourceTree = "<group>";
+		};
+		C274C3C31AC488B2000DFDE4 /* sessions */ = {
+			isa = PBXGroup;
+			children = (
+				C274C3C41AC488CE000DFDE4 /* TGSessionsViewController.h */,
+				C274C3C51AC488CE000DFDE4 /* TGSessionsViewController.m */,
+				C274C3C71AC48F6B000DFDE4 /* TGSessionRowitem.h */,
+				C274C3C81AC48F6B000DFDE4 /* TGSessionRowitem.m */,
+				C274C3CA1AC48F7C000DFDE4 /* TGSessionRowView.h */,
+				C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */,
+			);
+			name = sessions;
 			sourceTree = "<group>";
 		};
 		C281C1711917D953007B160F /* dragging */ = {
@@ -5007,6 +5030,7 @@
 				C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */,
 				C2A5C00718E17C630021BE68 /* SettingsWindowController.m in Sources */,
 				C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */,
+				C274C3CC1AC48F7C000DFDE4 /* TGSessionRowView.m in Sources */,
 				0ABC223918F2D65900243F82 /* TLAPIAdd.m in Sources */,
 				C268C18819F0519C007F836A /* POPAnimationExtras.mm in Sources */,
 				CEB09E6F17DAFC250055F150 /* AppDelegate.m in Sources */,
@@ -5176,6 +5200,7 @@
 				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
 				C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */,
 				C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */,
+				C274C3C61AC488CE000DFDE4 /* TGSessionsViewController.m in Sources */,
 				0A62CC9A181F24270098720C /* RightViewController.m in Sources */,
 				C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */,
 				CEDAEB6D1881AF85006189A2 /* YapMemoryTable.m in Sources */,
@@ -5431,6 +5456,7 @@
 				C256E91418D21A96008FFA04 /* DownloadPhotoItem.m in Sources */,
 				0A59068618AA32C8002ED7BA /* NSView+BTRAdditions.m in Sources */,
 				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
+				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
 				C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */,
 				0AB8F64E1861B07C000E6FF3 /* TMRowView.m in Sources */,
