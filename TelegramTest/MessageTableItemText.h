@@ -15,7 +15,22 @@
 
 @property (nonatomic,strong) SearchSelectItem *mark;
 
+@property (nonatomic,assign) NSSize textSize;
+
+
+@property (nonatomic,strong,readonly) NSAttributedString *webPageTitle;
+@property (nonatomic,strong,readonly) TGImageObject *webPageImageObject;
+@property (nonatomic,strong,readonly) NSAttributedString *webPageDesc;
+@property (nonatomic,strong,readonly) NSString *webPageToolTip;
+
+
 -(void)updateMessageFont;
 
+-(void)updateWebPage;
+
+
+-(BOOL)isWebPage;
+
+-(NSSize)webBlockSize;
 
 @end

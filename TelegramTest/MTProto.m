@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.03.15.
+//  Auto created by Mikhail Filimonov on 26.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7589,19 +7589,19 @@
 @end
 
 @implementation TL_disabledFeature
-+(TL_disabledFeature*)createWithFeature:(NSString*)feature description:(NSString*)description {
++(TL_disabledFeature*)createWithFeature:(NSString*)feature n_description:(NSString*)n_description {
 	TL_disabledFeature* obj = [[TL_disabledFeature alloc] init];
 	obj.feature = feature;
-	obj.description = description;
+	obj.n_description = n_description;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.feature];
-	[stream writeString:self.description];
+	[stream writeString:self.n_description];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.feature = [stream readString];
-	self.description = [stream readString];
+	self.n_description = [stream readString];
 }
 @end
 
@@ -7725,12 +7725,12 @@
 @end
 
 @implementation TL_webPage
-+(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title description:(NSString*)description photo:(TLPhoto*)photo {
++(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo {
 	TL_webPage* obj = [[TL_webPage alloc] init];
 	obj.n_id = n_id;
 	obj.display_url = display_url;
 	obj.title = title;
-	obj.description = description;
+	obj.n_description = n_description;
 	obj.photo = photo;
 	return obj;
 }
@@ -7738,14 +7738,14 @@
 	[stream writeLong:self.n_id];
 	[stream writeString:self.display_url];
 	[stream writeString:self.title];
-	[stream writeString:self.description];
+	[stream writeString:self.n_description];
 	[TLClassStore TLSerialize:self.photo stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 	self.display_url = [stream readString];
 	self.title = [stream readString];
-	self.description = [stream readString];
+	self.n_description = [stream readString];
 	self.photo = [TLClassStore TLDeserialize:stream];
 }
 @end
@@ -8647,7 +8647,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 

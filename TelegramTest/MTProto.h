@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 25.03.15.
+//  Auto created by Dmitry Kondratyev on 26.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2173,11 +2173,11 @@
 	
 @interface TLDisabledFeature()
 @property (nonatomic, strong) NSString* feature;
-@property (nonatomic, strong) NSString* description;
+@property (nonatomic, strong) NSString* n_description;
 @end
 
 @interface TL_disabledFeature : TLDisabledFeature
-+(TL_disabledFeature*)createWithFeature:(NSString*)feature description:(NSString*)description;
++(TL_disabledFeature*)createWithFeature:(NSString*)feature n_description:(NSString*)n_description;
 @end
 	
 @interface TLmessages_AffectedMessages()
@@ -2211,7 +2211,7 @@
 @property int date;
 @property (nonatomic, strong) NSString* display_url;
 @property (nonatomic, strong) NSString* title;
-@property (nonatomic, strong) NSString* description;
+@property (nonatomic, strong) NSString* n_description;
 @property (nonatomic, strong) TLPhoto* photo;
 @end
 
@@ -2222,7 +2222,7 @@
 +(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
 @end
 @interface TL_webPage : TLWebPage
-+(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title description:(NSString*)description photo:(TLPhoto*)photo;
++(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo;
 @end
 	
 @interface TLAuthorization()

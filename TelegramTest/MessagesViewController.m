@@ -242,6 +242,7 @@
     
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
+    [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -425,6 +426,30 @@
     if(index != NSNotFound)
         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     
+    
+}
+
+-(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
+    
+    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
+    
+    NSArray *items = [self.messages filteredArrayUsingPredicate:predicate];
+    
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+       
+        NSUInteger index = [self indexOfObject:obj];
+
+        [obj updateWebPage];
+        
+        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+        
+        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        
+    }];
     
 }
 
@@ -2962,6 +2987,18 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!cell) {
             cell = [[MessageTableCellStickerView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+        
+        
+    } else if(item.class == [MessageTableItemWebPage class]) {
+        
+        static NSString *const kRowIdentifier = @"sticker_cell";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellWebPageView alloc] initWithFrame:self.view.bounds];
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }

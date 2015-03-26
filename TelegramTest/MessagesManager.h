@@ -16,7 +16,9 @@
 -(void)addSupportMessages:(NSArray *)supportMessages;
 -(TL_localMessage *)supportMessage:(int)n_id;
 
--(TL_destructMessage *)findWithRandomId:(long)random_id;
+-(TL_localMessage *)findWithRandomId:(long)random_id;
+
+-(NSArray *)findWithWebPageId:(long)webpage_id;
 
 -(void)addMessage:(TLMessage *)message;
 -(void)TGsetMessage:(TLMessage *)message;

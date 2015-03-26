@@ -43,6 +43,9 @@
 @property (nonatomic,strong) DownloadEventListener *downloadListener;
 
 
+@property (nonatomic,assign,readonly) int blockWidth;
+
+
 @property (nonatomic,strong,readonly) TGReplyObject *replyObject;
 
 - (id) initWithObject:(id)object;

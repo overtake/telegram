@@ -14,6 +14,21 @@
 #import "TGTimer.h"
 #import "TGKeychain.h"
 #import "NSData+Extensions.h"
+
+
+@interface GlobalDispatchAction : NSObject
+@property (nonatomic,assign) int time;
+@property (nonatomic,copy) dispatch_block_t callback;
+@property (nonatomic,assign) dispatch_queue_t queue;
+@property (nonatomic,strong) id internalId;
+@end
+
+@implementation GlobalDispatchAction
+
+
+@end
+
+
 @interface MTNetwork ()
 {
     MTContext *_context;
@@ -28,6 +43,8 @@
     TGDatacenterWatchdogActor *_datacenterWatchdog;
     TGTimer *_executeTimer;
     ASQueue *_queue;
+    TGTimer *_globalTimer;
+    NSMutableArray *_dispatchTimers;
 }
 
 @end
@@ -59,6 +76,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
     self = [super init];
     if (self != nil)
     {
+        
+        _dispatchTimers = [[NSMutableArray alloc] init];
         
         _queue = [[ASQueue alloc] initWithName:"mtnetwork"];
         
@@ -546,5 +565,90 @@ static int MAX_WORKER_POLL = 5;
       
     }
 }
+
+id dispatch_in_time(int time, dispatch_block_t callback) {
+    
+    
+    assert(callback != nil);
+    
+    GlobalDispatchAction *action = [[GlobalDispatchAction alloc] init];
+    
+    action.time = time;
+    action.callback = callback;
+    action.queue = dispatch_get_current_queue();
+    action.internalId = [[NSObject alloc] init];
+    
+    [[MTNetwork instance]->_queue dispatchOnQueue:^{
+        
+        [[MTNetwork instance]->_dispatchTimers addObject:action];
+        
+        if(![MTNetwork instance]->_globalTimer)
+        {
+            [MTNetwork instance]->_globalTimer = [[TGTimer alloc] initWithTimeout:3 repeat:YES completion:^{
+                
+                
+                NSMutableArray *remove = [[NSMutableArray alloc] init];
+                
+                [[MTNetwork instance]->_dispatchTimers enumerateObjectsUsingBlock:^(GlobalDispatchAction *obj, NSUInteger idx, BOOL *stop) {
+                    
+                    
+                    if([[MTNetwork instance] getTime] >= obj.time)
+                    {
+                        dispatch_async(obj.queue, ^{
+                            obj.callback();
+                        });
+                        
+                        [remove addObject:obj];
+                        
+                    }
+                    
+                }];
+                
+                [[MTNetwork instance]->_dispatchTimers removeObjectsInArray:remove];
+                
+                
+                if([MTNetwork instance]->_dispatchTimers.count == 0)
+                {
+                    [[MTNetwork instance]->_globalTimer invalidate];
+                    [MTNetwork instance]->_globalTimer = nil;
+                }
+                
+            } queue:[MTNetwork instance]->_queue.nativeQueue];
+            
+            [[MTNetwork instance]->_globalTimer start];
+        } else {
+            [[MTNetwork instance]->_globalTimer fire];
+        }
+        
+    }];
+    
+    return action.internalId;
+    
+}
+
+void remove_global_dispatcher(id internalId) {
+    
+    if(!internalId)
+        return;
+    
+    [[MTNetwork instance]->_queue dispatchOnQueue:^{
+        
+        NSMutableArray *objs = [[NSMutableArray alloc] init];
+        
+        [[MTNetwork instance]->_dispatchTimers enumerateObjectsUsingBlock:^(GlobalDispatchAction *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj.internalId == internalId)
+            {
+                [objs addObject:obj];
+            }
+            
+        }];
+        
+        [[MTNetwork instance]->_dispatchTimers removeObjectsInArray:objs];
+        
+    }];
+    
+}
+
 
 @end

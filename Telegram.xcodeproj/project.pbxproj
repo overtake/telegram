@@ -439,6 +439,8 @@
 		C274C3B11AC217C7000DFDE4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C274C3B21AC217CB000DFDE4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C274C3B31AC217CB000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C274C3BF1AC446EB000DFDE4 /* MessageTableItemWebPage.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3BE1AC446EB000DFDE4 /* MessageTableItemWebPage.m */; };
+		C274C3C21AC448BB000DFDE4 /* MessageTableCellWebPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C11AC448BB000DFDE4 /* MessageTableCellWebPageView.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1626,6 +1628,10 @@
 		C274C3AB1AC083AA000DFDE4 /* SearchHashtagItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHashtagItem.m; sourceTree = "<group>"; };
 		C274C3AD1AC0842D000DFDE4 /* SearchHashtagCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHashtagCellView.h; sourceTree = "<group>"; };
 		C274C3AE1AC0842D000DFDE4 /* SearchHashtagCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHashtagCellView.m; sourceTree = "<group>"; };
+		C274C3BD1AC446EB000DFDE4 /* MessageTableItemWebPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemWebPage.h; sourceTree = "<group>"; };
+		C274C3BE1AC446EB000DFDE4 /* MessageTableItemWebPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemWebPage.m; sourceTree = "<group>"; };
+		C274C3C01AC448BB000DFDE4 /* MessageTableCellWebPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellWebPageView.h; sourceTree = "<group>"; };
+		C274C3C11AC448BB000DFDE4 /* MessageTableCellWebPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellWebPageView.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -2386,6 +2392,8 @@
 				C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */,
 				C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */,
 				C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */,
+				C274C3BD1AC446EB000DFDE4 /* MessageTableItemWebPage.h */,
+				C274C3BE1AC446EB000DFDE4 /* MessageTableItemWebPage.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -2423,6 +2431,8 @@
 				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
 				C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */,
 				C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */,
+				C274C3C01AC448BB000DFDE4 /* MessageTableCellWebPageView.h */,
+				C274C3C11AC448BB000DFDE4 /* MessageTableCellWebPageView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -4966,6 +4976,7 @@
 				CEDAEB511881AF85006189A2 /* YapDatabaseFilteredViewConnection.m in Sources */,
 				0A59068218AA32C8002ED7BA /* BTRView.m in Sources */,
 				CEDAEB501881AF85006189A2 /* YapDatabaseFilteredView.m in Sources */,
+				C274C3C21AC448BB000DFDE4 /* MessageTableCellWebPageView.m in Sources */,
 				CEACBA81181FD76300AB11D1 /* Notification.m in Sources */,
 				0A6D099219535E8500A9AC64 /* NSStringCategory.m in Sources */,
 				0AB8F2B61948778F0074E4E7 /* TMAudioRecorder.m in Sources */,
@@ -5523,6 +5534,7 @@
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,
+				C274C3BF1AC446EB000DFDE4 /* MessageTableItemWebPage.m in Sources */,
 				0AC9FD431868DF5B00F7E95C /* TMNineImage.m in Sources */,
 				C282485218BBB67200131533 /* SelfDestructionController.m in Sources */,
 				C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */,

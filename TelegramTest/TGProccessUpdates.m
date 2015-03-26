@@ -495,6 +495,28 @@ static ASQueue *queue;
 
 -(void)proccessUpdate:(TLUpdate *)update {
     
+    if([update isKindOfClass:[TL_updateWebPage class]]) {
+        
+        TLWebPage *page = [update webpage];
+        
+        NSArray *updateMessages = [[MessagesManager sharedManager] findWithWebPageId:page.n_id];
+        
+        NSMutableArray *ids = [[NSMutableArray alloc] initWithCapacity:updateMessages.count];
+        
+        [updateMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            obj.media.webpage = page;
+            
+            [ids addObject:@(obj.n_id)];
+        
+        }];
+        
+        [[Storage manager] updateMessages:updateMessages];
+        
+        [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:ids}];
+        
+    }
+    
     if([update isKindOfClass:[TL_updateMessageID class]]) {
         
         TL_localMessage *msg = [[MessagesManager sharedManager] findWithRandomId:[update random_id]];

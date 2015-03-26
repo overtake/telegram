@@ -37,4 +37,7 @@
 -(BOOL)passcodeIsEnabled;
 
 
+id dispatch_in_time(int time, dispatch_block_t callback);
+void remove_global_dispatcher(id internalId);
+
 @end

@@ -265,14 +265,36 @@
     }];
 }
 
--(TL_destructMessage *)findWithRandomId:(long)random_id {
-    __block TL_destructMessage *object;
+-(TL_localMessage *)findWithRandomId:(long)random_id {
+    __block TL_localMessage *object;
     
     [self.queue dispatchOnQueue:^{
         object = [self.messages_with_random_ids objectForKey:@(random_id)];
     } synchronous:YES];
     
     return object;
+}
+
+
+-(NSArray *)findWithWebPageId:(long)webpage_id {
+   
+    
+    NSMutableArray *msgs = [[NSMutableArray alloc] init];
+    
+    [self.queue dispatchOnQueue:^{
+        
+        [self.messages enumerateKeysAndObjectsUsingBlock:^(id key, TL_localMessage *obj, BOOL *stop) {
+            
+            if(obj.media.webpage.n_id == webpage_id && [msgs indexOfObject:obj] == NSNotFound)
+            {
+                [msgs addObject:obj];
+            }
+            
+        }];
+        
+    } synchronous:YES];
+    
+    return msgs;
 }
 
 

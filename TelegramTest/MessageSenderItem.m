@@ -49,10 +49,18 @@
         
         
         
+        
+        
         if(self.conversation.type != DialogTypeBroadcast)  {
             
             self.message.n_id = response.n_id;
             self.message.date = response.date;
+            self.message.media = response.media;
+            
+            if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
+            {
+                [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+            }
             
         } else {
             
