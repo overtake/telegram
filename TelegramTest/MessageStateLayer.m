@@ -35,6 +35,7 @@
 -(void)setState:(MessageTableCellState)state {
     _state = state;
     
+    
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
             self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 4, 15, 15)];

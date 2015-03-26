@@ -138,22 +138,6 @@
 
 
 
-- (void)updateCellState {
-    
-    MessageTableItem *item =(MessageTableItem *)self.item;
-    
-    if(item.downloadItem && (item.downloadItem.downloadState != DownloadStateWaitingStart && item.downloadItem.downloadState != DownloadStateCompleted)) {
-        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
-    } else if(item.messageSender && item.messageSender.state != MessageSendingStateSent ) {
-        self.cellState = item.messageSender.state == MessageSendingStateCancelled ? CellStateCancelled : CellStateSending;
-    } else if(![self.item isset]) {
-        self.cellState = CellStateNeedDownload;
-    } else {
-        self.cellState = CellStateNormal;
-    }
-    
-}
-
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
     
@@ -161,9 +145,9 @@
     
     
     
-    if([item isWebPage] && [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_webPageContainerView.frame]) {
-        open_link(item.message.media.webpage.display_url);
-    }
+   // if([item isWebPage] && [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_webPageContainerView.frame]) {
+      //  open_link(item.message.media.webpage.display_url);
+   // }
 }
 
 - (void) setItem:(MessageTableItemText *)item {
