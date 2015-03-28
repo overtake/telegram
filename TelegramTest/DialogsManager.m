@@ -161,17 +161,19 @@
                 dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
-                                
+                
+                dialog.lastMessage = lastMessage;
+                
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
             }
             
             [dialog save];
             
-            dialog.lastMessage = lastMessage;
+            
             
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog, KEY_MESSAGE:lastMessage}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             
             NSUInteger position = [self positionForConversation:dialog];
             
