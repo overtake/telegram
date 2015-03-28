@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 26.03.15.
+//  Auto created by Dmitry Kondratyev on 27.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -312,9 +312,6 @@
 @interface TLaccount_SentChangePhoneCode : TLObject
 @end
 	
-@interface TLaccount_Password : TLObject
-@end
-	
 @interface TLDocumentAttribute : TLObject
 @end
 	
@@ -343,6 +340,18 @@
 @end
 	
 @interface TLaccount_Authorizations : TLObject
+@end
+	
+@interface TLaccount_Password : TLObject
+@end
+	
+@interface TLaccount_PasswordSettings : TLObject
+@end
+	
+@interface TLaccount_PasswordInputSettings : TLObject
+@end
+	
+@interface TLauth_PasswordRecovery : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -2097,19 +2106,6 @@
 +(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout;
 @end
 	
-@interface TLaccount_Password()
-@property (nonatomic, strong) NSData* n_salt;
-@property (nonatomic, strong) NSData* current_salt;
-@property (nonatomic, strong) NSString* hint;
-@end
-
-@interface TL_account_noPassword : TLaccount_Password
-+(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
-@end
-@interface TL_account_password : TLaccount_Password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint;
-@end
-	
 @interface TLDocumentAttribute()
 @property int w;
 @property int h;
@@ -2237,10 +2233,12 @@
 @property int date_created;
 @property int date_active;
 @property (nonatomic, strong) NSString* ip;
+@property (nonatomic, strong) NSString* country;
+@property (nonatomic, strong) NSString* region;
 @end
 
 @interface TL_authorization : TLAuthorization
-+(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip;
++(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip country:(NSString*)country region:(NSString*)region;
 @end
 	
 @interface TLaccount_Authorizations()
@@ -2249,6 +2247,48 @@
 
 @interface TL_account_authorizations : TLaccount_Authorizations
 +(TL_account_authorizations*)createWithAuthorizations:(NSMutableArray*)authorizations;
+@end
+	
+@interface TLaccount_Password()
+@property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSData* current_salt;
+@property (nonatomic, strong) NSString* hint;
+@property Boolean has_recovery;
+@end
+
+@interface TL_account_noPassword : TLaccount_Password
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
+@end
+@interface TL_account_password : TLaccount_Password
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery;
+@end
+	
+@interface TLaccount_PasswordSettings()
+@property (nonatomic, strong) NSString* email;
+@end
+
+@interface TL_account_passwordSettings : TLaccount_PasswordSettings
++(TL_account_passwordSettings*)createWithEmail:(NSString*)email;
+@end
+	
+@interface TLaccount_PasswordInputSettings()
+@property int flags;
+@property NSData *n_salt;
+@property NSData *n_password_hash;
+@property NSString *hint;
+@property NSString  *email;
+@end
+
+@interface TL_account_passwordInputSettings : TLaccount_PasswordInputSettings
++(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData *)n_salt n_password_hash:(NSData *)n_password_hash hint:(NSString *)hint email:(NSString *)email;
+@end
+	
+@interface TLauth_PasswordRecovery()
+@property (nonatomic, strong) NSString* email_pattern;
+@end
+
+@interface TL_auth_passwordRecovery : TLauth_PasswordRecovery
++(TL_auth_passwordRecovery*)createWithEmail_pattern:(NSString*)email_pattern;
 @end
 	
 @interface TLProtoMessage()

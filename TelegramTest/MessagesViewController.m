@@ -3,7 +3,7 @@
 //  MessagesViewController.m
 //  TelegramTest
 //
-//  Created by Dmitry Kondratyev on 10/29/13.
+//  Created by keepcedr on 10/29/13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 #import "TGSendTypingManager.h"
@@ -433,11 +433,9 @@
     
     NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
     
-    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
     
-    NSArray *items = [self.messages filteredArrayUsingPredicate:predicate];
-    
+    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        
@@ -445,11 +443,15 @@
 
         [obj updateWebPage];
         
-        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
-        
-        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        if(index != NSNotFound) {
+            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
         
     }];
+    
+    
     
 }
 

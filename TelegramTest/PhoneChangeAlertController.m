@@ -98,7 +98,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.centerTextField setStringValue:[UsersManager currentUser].phoneWithFormat];
+    [self setCenterBarViewText:[UsersManager currentUser].phoneWithFormat];
     
 }
 

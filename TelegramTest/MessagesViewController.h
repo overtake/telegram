@@ -2,7 +2,7 @@
 //  MessagesViewController.h
 //  TelegramTest
 //
-//  Created by Dmitry Kondratyev on 10/29/13.
+//  Created by keepcoder on 10/29/13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 

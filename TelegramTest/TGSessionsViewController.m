@@ -140,7 +140,7 @@
 }
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return [self.tableView cacheViewForClass:[TGSessionRowView class] identifier:@"TGSessionRowView" withSize:NSMakeSize(NSWidth(self.view.frame), 60)];
+    return [self.tableView cacheViewForClass:[TGSessionRowView class] identifier:@"TGSessionRowView" withSize:NSMakeSize(NSWidth(self.view.frame), 50)];
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(TMRowItem *) item {

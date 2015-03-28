@@ -33,6 +33,9 @@
 #import "TGOpacityViewController.h"
 #import "TGPasscodeSettingsViewController.h"
 #import "TGSessionsViewController.h"
+#import "TGPasswosdMainViewController.h"
+#import "TGPasswordSetViewController.h"
+#import "TGPasswordEmailViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -60,6 +63,8 @@
 @property (nonatomic, strong) TGPasscodeSettingsViewController *passcodeViewController;
 
 @property (nonatomic, strong) TGSessionsViewController *sessionsViewContoller;
+@property (nonatomic, strong) TGPasswosdMainViewController *passwordMainViewController;
+@property (nonatomic, strong) TGPasswordSetViewController *passwordSetViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -109,5 +114,7 @@
 -(TMViewController *)currentEmptyController;
 
 -(void)showSessionsController;
-
+-(void)showPasswordMainController;
+-(void)showSetPasswordWithAction:(TGSetPasswordAction *)action;
+-(void)showEmailPasswordWithAction:(TGSetPasswordAction *)action;
 @end

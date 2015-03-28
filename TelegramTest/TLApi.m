@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 26.03.15..
+//  Auto created by Mikhail Filimonov on 27.03.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1749,51 +1749,6 @@
 }
 @end
 
-@implementation TLAPI_account_getPassword
-+(TLAPI_account_getPassword*)create {
-    TLAPI_account_getPassword* obj = [[TLAPI_account_getPassword alloc] init];
-    
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1418342645];
-	
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_account_setPassword
-+(TLAPI_account_setPassword*)createWithCurrent_password_hash:(NSData*)current_password_hash n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint {
-    TLAPI_account_setPassword* obj = [[TLAPI_account_setPassword alloc] init];
-    obj.current_password_hash = current_password_hash;
-	obj.n_salt = n_salt;
-	obj.n_password_hash = n_password_hash;
-	obj.hint = hint;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-584430193];
-	[stream writeByteArray:self.current_password_hash];
-	[stream writeByteArray:self.n_salt];
-	[stream writeByteArray:self.n_password_hash];
-	[stream writeString:self.hint];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_auth_checkPassword
-+(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash {
-    TLAPI_auth_checkPassword* obj = [[TLAPI_auth_checkPassword alloc] init];
-    obj.password_hash = password_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
-	[stream writeByteArray:self.password_hash];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_getStickers
 +(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash {
     TLAPI_messages_getStickers* obj = [[TLAPI_messages_getStickers alloc] init];
@@ -1857,6 +1812,86 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:-545786948];
 	[stream writeLong:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_getPassword
++(TLAPI_account_getPassword*)create {
+    TLAPI_account_getPassword* obj = [[TLAPI_account_getPassword alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1418342645];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_getPasswordSettings
++(TLAPI_account_getPasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash {
+    TLAPI_account_getPasswordSettings* obj = [[TLAPI_account_getPasswordSettings alloc] init];
+    obj.current_password_hash = current_password_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1131605573];
+	[stream writeByteArray:self.current_password_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_updatePasswordSettings
++(TLAPI_account_updatePasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash new_settings:(TLaccount_PasswordInputSettings*)new_settings {
+    TLAPI_account_updatePasswordSettings* obj = [[TLAPI_account_updatePasswordSettings alloc] init];
+    obj.current_password_hash = current_password_hash;
+	obj.n_settings = new_settings;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-92517498];
+	[stream writeByteArray:self.current_password_hash];
+	[TLClassStore TLSerialize:self.n_settings stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_checkPassword
++(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash {
+    TLAPI_auth_checkPassword* obj = [[TLAPI_auth_checkPassword alloc] init];
+    obj.password_hash = password_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
+	[stream writeByteArray:self.password_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_requestPasswordRecovery
++(TLAPI_auth_requestPasswordRecovery*)create {
+    TLAPI_auth_requestPasswordRecovery* obj = [[TLAPI_auth_requestPasswordRecovery alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-661144474];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_recoverPassword
++(TLAPI_auth_recoverPassword*)createWithCode:(NSString*)code {
+    TLAPI_auth_recoverPassword* obj = [[TLAPI_auth_recoverPassword alloc] init];
+    obj.code = code;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1319464594];
+	[stream writeString:self.code];
 	return [stream getOutput];
 }
 @end

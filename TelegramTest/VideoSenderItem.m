@@ -100,7 +100,7 @@
                 [SharedManager proccessGlobalResponse:response];
                 
                 
-                TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[0] message])];
+                TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
                 
                 
                 if(strongSelf.conversation.type != DialogTypeBroadcast)  {

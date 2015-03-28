@@ -444,6 +444,10 @@
 		C274C3C61AC488CE000DFDE4 /* TGSessionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C51AC488CE000DFDE4 /* TGSessionsViewController.m */; };
 		C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3C81AC48F6B000DFDE4 /* TGSessionRowitem.m */; };
 		C274C3CC1AC48F7C000DFDE4 /* TGSessionRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */; };
+		C274C3D01AC57201000DFDE4 /* TGPasswosdMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3CF1AC57201000DFDE4 /* TGPasswosdMainViewController.m */; };
+		C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D21AC585C1000DFDE4 /* TGPasswordSetViewController.m */; };
+		C274C3D61AC58639000DFDE4 /* TGSetPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D51AC58639000DFDE4 /* TGSetPasswordAction.m */; };
+		C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D81AC5A683000DFDE4 /* TGPasswordEmailViewController.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1641,6 +1645,14 @@
 		C274C3C81AC48F6B000DFDE4 /* TGSessionRowitem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSessionRowitem.m; sourceTree = "<group>"; };
 		C274C3CA1AC48F7C000DFDE4 /* TGSessionRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSessionRowView.h; sourceTree = "<group>"; };
 		C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSessionRowView.m; sourceTree = "<group>"; };
+		C274C3CE1AC57201000DFDE4 /* TGPasswosdMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswosdMainViewController.h; sourceTree = "<group>"; };
+		C274C3CF1AC57201000DFDE4 /* TGPasswosdMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswosdMainViewController.m; sourceTree = "<group>"; };
+		C274C3D11AC585C1000DFDE4 /* TGPasswordSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordSetViewController.h; sourceTree = "<group>"; };
+		C274C3D21AC585C1000DFDE4 /* TGPasswordSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordSetViewController.m; sourceTree = "<group>"; };
+		C274C3D41AC58639000DFDE4 /* TGSetPasswordAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSetPasswordAction.h; sourceTree = "<group>"; };
+		C274C3D51AC58639000DFDE4 /* TGSetPasswordAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSetPasswordAction.m; sourceTree = "<group>"; };
+		C274C3D71AC5A683000DFDE4 /* TGPasswordEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordEmailViewController.h; sourceTree = "<group>"; };
+		C274C3D81AC5A683000DFDE4 /* TGPasswordEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordEmailViewController.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -3575,6 +3587,7 @@
 		C270D2EA1A1CD73500522FB0 /* pravicy */ = {
 			isa = PBXGroup;
 			children = (
+				C274C3CD1AC56FE8000DFDE4 /* password */,
 				C274C3C31AC488B2000DFDE4 /* sessions */,
 				C244358C1A1E1B8F00F9BB38 /* privacyuserlist */,
 				C270D2EF1A1CD8BA00522FB0 /* PrivacyViewController.h */,
@@ -3664,6 +3677,21 @@
 				C274C3CB1AC48F7C000DFDE4 /* TGSessionRowView.m */,
 			);
 			name = sessions;
+			sourceTree = "<group>";
+		};
+		C274C3CD1AC56FE8000DFDE4 /* password */ = {
+			isa = PBXGroup;
+			children = (
+				C274C3CE1AC57201000DFDE4 /* TGPasswosdMainViewController.h */,
+				C274C3CF1AC57201000DFDE4 /* TGPasswosdMainViewController.m */,
+				C274C3D11AC585C1000DFDE4 /* TGPasswordSetViewController.h */,
+				C274C3D21AC585C1000DFDE4 /* TGPasswordSetViewController.m */,
+				C274C3D41AC58639000DFDE4 /* TGSetPasswordAction.h */,
+				C274C3D51AC58639000DFDE4 /* TGSetPasswordAction.m */,
+				C274C3D71AC5A683000DFDE4 /* TGPasswordEmailViewController.h */,
+				C274C3D81AC5A683000DFDE4 /* TGPasswordEmailViewController.m */,
+			);
+			name = password;
 			sourceTree = "<group>";
 		};
 		C281C1711917D953007B160F /* dragging */ = {
@@ -5016,6 +5044,7 @@
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
 				C248F3BF19BE03F600BF658E /* opusenc.c in Sources */,
 				C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */,
+				C274C3D61AC58639000DFDE4 /* TGSetPasswordAction.m in Sources */,
 				0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */,
 				C2C1DC201A444CCE00BBCC63 /* TGStickerImageView.m in Sources */,
@@ -5120,6 +5149,7 @@
 				0AB43B9E18D43DC000FB805A /* TMGifImageView.m in Sources */,
 				C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
+				C274C3D01AC57201000DFDE4 /* TGPasswosdMainViewController.m in Sources */,
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
@@ -5240,6 +5270,7 @@
 				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
+				C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */,
 				C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */,
 				C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */,
 				C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */,
@@ -5325,6 +5356,7 @@
 				0A241AA318AB2FF200C32F45 /* MessageTableItemPhoto.m in Sources */,
 				0AB43BC318D8A4AC00FB805A /* CNGridView.m in Sources */,
 				0A6D098E19535E8500A9AC64 /* NSImageCategory.m in Sources */,
+				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,
 				0A7EB71B183A873D00F02E04 /* NSString+Extended.m in Sources */,
 				0A241A9D18AB176B00C32F45 /* MessageTableCellTextView.m in Sources */,

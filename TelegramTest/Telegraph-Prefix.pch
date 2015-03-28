@@ -82,7 +82,7 @@
 #define  keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
-#define MAX_FILE_SIZE 1073741824
+#define MAX_FILE_SIZE 1500000000
 
 #define MIN_FILE_DOWNLOAD_SIZE 10*1024*1024
 

@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 26.03.15.
+//  Auto created by Mikhail Filimonov on 27.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7275,45 +7275,6 @@
 
 
 
-@implementation TLaccount_Password
-@end
-
-@implementation TL_account_noPassword
-+(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt {
-	TL_account_noPassword* obj = [[TL_account_noPassword alloc] init];
-	obj.n_salt = n_salt;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeByteArray:self.n_salt];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.n_salt = [stream readByteArray];
-}
-@end
-
-@implementation TL_account_password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint {
-	TL_account_password* obj = [[TL_account_password alloc] init];
-	obj.current_salt = current_salt;
-	obj.n_salt = n_salt;
-	obj.hint = hint;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeByteArray:self.current_salt];
-	[stream writeByteArray:self.n_salt];
-	[stream writeString:self.hint];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.current_salt = [stream readByteArray];
-	self.n_salt = [stream readByteArray];
-	self.hint = [stream readString];
-}
-@end
-
-
-
 @implementation TLDocumentAttribute
 @end
 
@@ -7756,7 +7717,7 @@
 @end
 
 @implementation TL_authorization
-+(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip {
++(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip country:(NSString*)country region:(NSString*)region {
 	TL_authorization* obj = [[TL_authorization alloc] init];
 	obj.n_hash = n_hash;
 	obj.flags = flags;
@@ -7769,6 +7730,8 @@
 	obj.date_created = date_created;
 	obj.date_active = date_active;
 	obj.ip = ip;
+	obj.country = country;
+	obj.region = region;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -7783,6 +7746,8 @@
 	[stream writeInt:self.date_created];
 	[stream writeInt:self.date_active];
 	[stream writeString:self.ip];
+	[stream writeString:self.country];
+	[stream writeString:self.region];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_hash = [stream readLong];
@@ -7796,6 +7761,8 @@
 	self.date_created = [stream readInt];
 	self.date_active = [stream readInt];
 	self.ip = [stream readString];
+	self.country = [stream readString];
+	self.region = [stream readString];
 }
 @end
 
@@ -7834,6 +7801,117 @@
 			[self.authorizations addObject:obj];
 		}
 	}
+}
+@end
+
+
+
+@implementation TLaccount_Password
+@end
+
+@implementation TL_account_noPassword
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt {
+	TL_account_noPassword* obj = [[TL_account_noPassword alloc] init];
+	obj.n_salt = n_salt;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeByteArray:self.n_salt];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_salt = [stream readByteArray];
+}
+@end
+
+@implementation TL_account_password
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery {
+	TL_account_password* obj = [[TL_account_password alloc] init];
+	obj.current_salt = current_salt;
+	obj.n_salt = n_salt;
+	obj.hint = hint;
+	obj.has_recovery = has_recovery;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeByteArray:self.current_salt];
+	[stream writeByteArray:self.n_salt];
+	[stream writeString:self.hint];
+	[stream writeBool:self.has_recovery];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.current_salt = [stream readByteArray];
+	self.n_salt = [stream readByteArray];
+	self.hint = [stream readString];
+	self.has_recovery = [stream readBool];
+}
+@end
+
+
+
+@implementation TLaccount_PasswordSettings
+@end
+
+@implementation TL_account_passwordSettings
++(TL_account_passwordSettings*)createWithEmail:(NSString*)email {
+	TL_account_passwordSettings* obj = [[TL_account_passwordSettings alloc] init];
+	obj.email = email;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.email];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.email = [stream readString];
+}
+@end
+
+
+
+@implementation TLaccount_PasswordInputSettings
+@end
+
+@implementation TL_account_passwordInputSettings
++(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData *)n_salt n_password_hash:(NSData *)n_password_hash hint:(NSString *)hint email:(NSString *)email {
+	TL_account_passwordInputSettings* obj = [[TL_account_passwordInputSettings alloc] init];
+	obj.flags = flags;
+	obj.n_salt = n_salt;
+	obj.n_password_hash = n_password_hash;
+	obj.hint = hint;
+	obj.email = email;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 1)) [stream writeByteArray:self.n_salt];
+	if(self.flags & (1 << 1)) [stream writeByteArray:self.n_password_hash];
+	if(self.flags & (1 << 1)) [stream writeString:self.hint];
+	if(self.flags & (1 << 2)) [stream writeString:self.email];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
+	if(self.flags & (1 << 1)) self.n_salt = [stream readByteArray];
+	if(self.flags & (1 << 1)) self.n_password_hash = [stream readByteArray];
+	if(self.flags & (1 << 1)) self.hint = [stream readString];
+	if(self.flags & (1 << 2)) self.email = [stream readString];
+}
+@end
+
+
+
+@implementation TLauth_PasswordRecovery
+@end
+
+@implementation TL_auth_passwordRecovery
++(TL_auth_passwordRecovery*)createWithEmail_pattern:(NSString*)email_pattern {
+	TL_auth_passwordRecovery* obj = [[TL_auth_passwordRecovery alloc] init];
+	obj.email_pattern = email_pattern;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.email_pattern];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.email_pattern = [stream readString];
 }
 @end
 
@@ -8647,7 +8725,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 @implementation TL_gzip_packed

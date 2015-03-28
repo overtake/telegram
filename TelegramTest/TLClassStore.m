@@ -301,8 +301,6 @@
         [self.classes setObject:[TL_accountDaysTTL class] forKey:[NSNumber numberWithInt:-1194283041]];
         [self.classes setObject:[TL_account_sentChangePhoneCode class] forKey:[NSNumber numberWithInt:-1527411636]];
         [self.classes setObject:[TL_updateUserPhone class] forKey:[NSNumber numberWithInt:314130811]];
-        [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
-        [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:1939758962]];
         [self.classes setObject:[TL_documentAttributeImageSize class] forKey:[NSNumber numberWithInt:1815593308]];
         [self.classes setObject:[TL_documentAttributeAnimated class] forKey:[NSNumber numberWithInt:297109817]];
         [self.classes setObject:[TL_documentAttributeSticker class] forKey:[NSNumber numberWithInt:-1723033470]];
@@ -327,8 +325,13 @@
         [self.classes setObject:[TL_webPagePending class] forKey:[NSNumber numberWithInt:-981018084]];
         [self.classes setObject:[TL_webPage class] forKey:[NSNumber numberWithInt:969002745]];
         [self.classes setObject:[TL_messageMediaWebPage class] forKey:[NSNumber numberWithInt:-1557277184]];
-        [self.classes setObject:[TL_authorization class] forKey:[NSNumber numberWithInt:-1215061577]];
+        [self.classes setObject:[TL_authorization class] forKey:[NSNumber numberWithInt:2079516406]];
         [self.classes setObject:[TL_account_authorizations class] forKey:[NSNumber numberWithInt:307276766]];
+        [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
+        [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:133374398]];
+        [self.classes setObject:[TL_account_passwordSettings class] forKey:[NSNumber numberWithInt:-1212732749]];
+        [self.classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-967702863]];
+        [self.classes setObject:[TL_auth_passwordRecovery class] forKey:[NSNumber numberWithInt:326715557]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
         [self.classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];
@@ -371,6 +374,7 @@
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
+        
         
         
         

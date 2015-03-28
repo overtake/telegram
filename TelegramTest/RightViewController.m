@@ -155,6 +155,10 @@
     
     self.sessionsViewContoller = [[TGSessionsViewController alloc] initWithFrame:self.view.bounds];
     
+    self.passwordMainViewController = [[TGPasswosdMainViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:self.view.bounds];
+    
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     
@@ -860,6 +864,45 @@
     
     
     [self.navigationViewController pushViewController:self.sessionsViewContoller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+-(void)showPasswordMainController {
+    if(self.navigationViewController.currentController == self.passwordMainViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.passwordMainViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    
+    
+}
+
+-(void)showSetPasswordWithAction:(TGSetPasswordAction *)action {
+    
+    [self hideModalView:YES animation:NO];
+    
+    TGPasswordSetViewController *controller = [[TGPasswordSetViewController alloc] initWithFrame:self.view.bounds];
+    
+    [controller setAction:action];
+    
+    
+    
+    [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
+-(void)showEmailPasswordWithAction:(TGSetPasswordAction *)action {
+    [self hideModalView:YES animation:NO];
+    
+    TGPasswordEmailViewController *controller = [[TGPasswordEmailViewController alloc] initWithFrame:self.view.bounds];
+    
+    [controller setAction:action];
+    
+    
+    
+    [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
 }
 
 @end
