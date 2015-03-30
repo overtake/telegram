@@ -2179,12 +2179,16 @@ static NSTextAttachment *headerMediaIcon() {
         
         NSRect rect = [self.table rectOfRow:index];
         
+        rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
         
-        [self scrollToRect:rect isCenter:centered animated:animated];
+     //   if(self.table.scrollView.documentSize.height > NSHeight(self.table.containerView.frame))
+       //     rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
         
-        if(highlight) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+     //   if(rect.origin.y < 0)
+       //     rect.origin.y = 0;
+        
+        [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
+            if(highlight) {
                 
                 if(index != NSNotFound) {
                     MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
@@ -2202,9 +2206,16 @@ static NSTextAttachment *headerMediaIcon() {
                         [cell searchSelection];
                     }
                 }
-            });
-            
-        }
+                
+            }
+        }];
+        
+        
+
+        
+      //  [self scrollToRect:rect isCenter:centered animated:animated];
+        
+        
         
     }
 }
