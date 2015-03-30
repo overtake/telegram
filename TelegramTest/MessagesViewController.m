@@ -2094,11 +2094,12 @@ static NSTextAttachment *headerMediaIcon() {
             self.historyController.nextState = self.historyController.prevState;
         }
         
-        
-        NSUInteger pos = prev ? 0 : self.messages.count;
+       NSUInteger pos = prev ? 0 : self.messages.count;
         if(isFirst && prev) {
             
             [_historyController request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
+                
+               
                 
                 self.isMarkIsset = YES;
                 
@@ -2146,6 +2147,8 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 if(result.count < _historyController.selectLimit)
                     [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
+                
+               
                 
             }];
             
