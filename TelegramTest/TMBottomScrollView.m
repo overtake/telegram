@@ -126,6 +126,8 @@
 - (void)setHidden:(BOOL)flag {
     [super setHidden:flag];
     
+    NSLog(@"flg:%d",flag);
+    
     if(flag) {
         [self setMessagesCount:0];
         [self sizeToFit];

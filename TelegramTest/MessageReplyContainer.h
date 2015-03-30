@@ -14,4 +14,6 @@
 
 @property (nonatomic,strong) TGReplyObject *replyObject;
 
+@property (nonatomic,weak) MessageTableItem *item;
+
 @end

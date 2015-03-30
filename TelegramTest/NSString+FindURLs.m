@@ -35,7 +35,7 @@
     
     NSError *error = nil;
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[A-Za-z0-9_]{2,25}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[A-Za-z0-9_]{2,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     

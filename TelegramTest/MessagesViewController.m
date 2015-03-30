@@ -196,6 +196,17 @@
     
     BOOL animated = YES;
     
+    
+    if(self.replyMsgsStack.count > 0)
+    {
+        int msg_id = [[self.replyMsgsStack lastObject] intValue];
+        
+        [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
+        
+        [self showMessage:msg_id fromMsgId:0];
+        return;
+    }
+    
     if(_historyController.prevState != ChatHistoryStateFull) {
         
         
@@ -1197,9 +1208,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     float offset = self.table.scrollView.documentOffset.y;
     
-    if(self.table.scrollView.documentOffset.y < SCROLLDOWNBUTTON_OFFSET) {
-        [self.jumpToBottomButton setHidden:YES];
-    }
+    
     
     if(abs(_lastBottomScrollOffset - offset) < 100 || [self.table.scrollView isAnimating])
         return;
@@ -1209,12 +1218,19 @@ static NSTextAttachment *headerMediaIcon() {
     
     BOOL hide = !(self.table.scrollView.documentSize.height > min_go_size && offset > min_go_size);
     
+    
+    
     if(hide) {
         hide = !(self.isMarkIsset && offset > max_go_size);
     }
     
     if(hide && (offset - self.table.scrollView.bounds.size.height) > SCROLLDOWNBUTTON_OFFSET) {
         hide = self.jumpToBottomButton.messagesCount == 0;
+    }
+    
+    if(hide)
+    {
+        hide = self.replyMsgsStack.count == 0;
     }
     
     
@@ -1784,12 +1800,12 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)showMessage:(int)messageId addToStack:(BOOL)addToStack {
+- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
-    if(addToStack)
-        [_replyMsgsStack addObject:@(messageId)];
+    if(fromMsgId != 0)
+        [_replyMsgsStack addObject:@(fromMsgId)];
     
     if(item)
     {
@@ -2179,13 +2195,17 @@ static NSTextAttachment *headerMediaIcon() {
         
         NSRect rect = [self.table rectOfRow:index];
         
-        rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
         
-     //   if(self.table.scrollView.documentSize.height > NSHeight(self.table.containerView.frame))
-       //     rect.origin.y-=NSHeight(self.table.scrollView.frame)-rect.size.height;
         
-     //   if(rect.origin.y < 0)
-       //     rect.origin.y = 0;
+    //
+        
+        if(self.table.scrollView.documentOffset.y > rect.origin.y)
+            rect.origin.y -= roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+        else
+            rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+//        
+//        if(rect.origin.y < 0)
+//            rect.origin.y = 0;
         
         [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
             if(highlight) {
@@ -2207,6 +2227,7 @@ static NSTextAttachment *headerMediaIcon() {
                     }
                 }
                 
+                [self updateScrollBtn];
             }
         }];
         

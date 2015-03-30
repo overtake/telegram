@@ -811,6 +811,7 @@ static BOOL dragAction = NO;
     {
         [self initReplyContainer];
         
+        [_replyContainer setItem:item];
         
         [_replyContainer setReplyObject:item.replyObject];
         
