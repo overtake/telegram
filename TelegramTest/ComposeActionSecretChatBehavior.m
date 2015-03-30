@@ -41,7 +41,7 @@
         
         SelectUserItem *item = self.action.result.multiObjects[0];
         
-        [MessageSender startEncryptedChat:item.contact.user callback:^{
+        [MessageSender startEncryptedChat:item.user callback:^{
             [self.delegate behaviorDidEndRequest:nil];
         }];
     }

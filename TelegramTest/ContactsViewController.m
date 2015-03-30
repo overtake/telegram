@@ -325,7 +325,7 @@
     for(TL_contact *contact in all) {
         
         if(contact.user.type != TLUserTypeEmpty && contact.user.type != TLUserTypeDeleted) {
-            ContactUserItem *item = [[ContactUserItem alloc] initWithObject:contact];
+            ContactUserItem *item = [[ContactUserItem alloc] initWithObject:contact.user];
             [contacts addObject:item];
         }
     }
@@ -398,7 +398,7 @@
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(ContactUserItem *) item {
     if(row != 0 && [[Telegram rightViewController] isModalViewActive]) {
-        [[Telegram rightViewController] modalViewSendAction:item.contact.user.dialog];
+        [[Telegram rightViewController] modalViewSendAction:item.user.dialog];
         return NO;
     }
     return ![Telegram rightViewController].navigationViewController.isLocked;
@@ -408,7 +408,7 @@
     
     if([item isKindOfClass:[ContactUserItem class]]) {
          ContactUserItem *searchItem = (ContactUserItem *) item;
-        [[Telegram sharedInstance] showMessagesWidthUser:searchItem.contact.user sender:self];
+        [[Telegram sharedInstance] showMessagesWidthUser:searchItem.user sender:self];
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
         [[Telegram rightViewController] showAddContactController];

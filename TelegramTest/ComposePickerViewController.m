@@ -86,7 +86,7 @@
     
     [self.action.result.multiObjects enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
         
-        [ids addObject:@(obj.contact.user_id)];
+        [ids addObject:@(obj.user.n_id)];
     }];
     
     self.tableView.selectedItems = ids;

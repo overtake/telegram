@@ -10,12 +10,12 @@
 #import "TLUserCategory.h"
 @implementation SelectUserItem
 
-- (id)initWithObject:(TLContact *)object {
+- (id)initWithObject:(TLUser *)object {
     if(self = [super initWithObject:object]) {
         self.title = [[NSMutableAttributedString alloc] init];
         self.lastSeen = [[NSMutableAttributedString alloc] init];
         
-        self.contact = object;
+        self.user = object;
         self.titleSize = NSZeroSize;
         self.lastSeenSize = NSMakeSize(200, 20);
         
@@ -37,15 +37,15 @@
 
 
 -(id)copy {
-    return [[SelectUserItem alloc] initWithObject:self.contact];
+    return [[SelectUserItem alloc] initWithObject:self.user];
 }
 
 - (NSObject *)itemForHash {
-    return self.contact;
+    return self.user;
 }
 
-+ (NSUInteger) hash:(TLContact *)object {
-    return object.user_id;
++ (NSUInteger) hash:(TLUser *)object {
+    return object.n_id;
 }
 
 @end

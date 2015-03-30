@@ -73,7 +73,7 @@
     NSMutableArray *users = [[NSMutableArray alloc] init];
     
     for (SelectUserItem *item in items) {
-        [users addObject:@(item.contact.user.n_id)];
+        [users addObject:@(item.user.n_id)];
     }
     
     [self unblock:users block:YES];

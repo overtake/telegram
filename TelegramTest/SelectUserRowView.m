@@ -89,11 +89,11 @@ static int offsetEditable = 30;
     
     [super redrawRow];
     
-    [self.titleTextField setUser:[self rowItem].contact.user];
+    [self.titleTextField setUser:[self rowItem].user];
     
    // [self.titleTextField setAttributedStringValue:[self rowItem].title];
     
-    [self.lastSeenTextField setUser:[self rowItem].contact.user];
+    [self.lastSeenTextField setUser:[self rowItem].user];
 
     
     [self setSelected:[[self rowItem] isSelected]];
@@ -116,7 +116,7 @@ static int offsetEditable = 30;
     [self.avatarImageView setFrameOrigin:self.isEditable ? [self rowItem].avatarPoint : [self rowItem].noSelectAvatarPoint];
     
     
-    [self.avatarImageView setUser:[self rowItem].contact.user];
+    [self.avatarImageView setUser:[self rowItem].user];
     [self setNeedsDisplay:YES];
     
 }

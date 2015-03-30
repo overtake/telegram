@@ -46,7 +46,7 @@
         NSMutableArray *added = [[NSMutableArray alloc] init];
         
         [strongSelf.allowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-            [added addObject:@(obj.contact.user_id)];
+            [added addObject:@(obj.user.n_id)];
         }];
         
         strongSelf.changedPrivacy.allowUsers = [strongSelf.changedPrivacy.allowUsers arrayByAddingObjectsFromArray:added];
@@ -67,7 +67,7 @@
         NSMutableArray *added = [[NSMutableArray alloc] init];
         
         [strongSelf.disallowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-            [added addObject:@(obj.contact.user_id)];
+            [added addObject:@(obj.user.n_id)];
         }];
         
         strongSelf.changedPrivacy.disallowUsers = [strongSelf.changedPrivacy.disallowUsers arrayByAddingObjectsFromArray:added];
