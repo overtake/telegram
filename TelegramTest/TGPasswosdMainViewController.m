@@ -11,6 +11,8 @@
 #import "GeneralSettingsBlockHeaderView.h"
 #import "GeneralSettingsRowItem.h"
 #import "TGSetPasswordAction.h"
+#import "NSMutableData+Extension.h"
+#import <MtProtoKit/MTEncryption.h>
 @interface TGPasswosdMainViewController ()<TMTableViewDelegate>
 
 
@@ -72,6 +74,8 @@
                             
                             emailAction.callback = ^BOOL (NSString *email) {
                                 
+                                
+                                [self setPassword:fp email:email hint:@""];
                                 
                                 return !email || NSStringIsValidEmail(email);
                             };
@@ -148,6 +152,53 @@
     
     
     [self.tableView reloadData];
+    
+}
+
+
+-(void)setPassword:(NSString *)password email:(NSString *)email hint:(NSString *)hint {
+    
+    [self showModalProgress];
+    
+    
+     NSData *newsalt = [self.passwordResult n_salt];
+    
+    
+    NSMutableData *hashData = [NSMutableData dataWithData:newsalt];
+    
+    [hashData appendData:[password dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [hashData appendData:newsalt];
+    
+    NSData *passhash =  MTSha256(hashData);
+    
+    
+    int flags = 1;
+    
+    if(email.length > 0)
+    {
+        flags|=2;
+    }
+    
+    [RPCRequest sendRequest:[TLAPI_account_updatePasswordSettings createWithCurrent_password_hash:[[NSData alloc] init] new_settings:[TL_account_passwordInputSettings createWithFlags:flags n_salt:newsalt n_password_hash:passhash hint:hint email:email]] successHandler:^(RPCRequest *request, id response) {
+        
+        
+        int bp = 0;
+        
+        
+        [[Telegram rightViewController].navigationViewController.viewControllerStack removeAllObjects];
+        
+        [[Telegram rightViewController] showPrivacyController];
+        
+        [self hideModalProgress];
+        
+        
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+    }];
+    
+    
     
 }
 

@@ -2253,14 +2253,14 @@
 @property (nonatomic, strong) NSData* n_salt;
 @property (nonatomic, strong) NSData* current_salt;
 @property (nonatomic, strong) NSString* hint;
-@property Boolean has_recovery;
+@property BOOL has_recovery;
 @end
 
 @interface TL_account_noPassword : TLaccount_Password
 +(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
 @end
 @interface TL_account_password : TLaccount_Password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery;
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(BOOL)has_recovery;
 @end
 	
 @interface TLaccount_PasswordSettings()
