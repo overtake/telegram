@@ -202,7 +202,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(TGKeychain *)nKeychain {
     if(isTestServer())
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
-    else
+    //else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
 }
 
