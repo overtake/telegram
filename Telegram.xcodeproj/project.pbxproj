@@ -448,6 +448,7 @@
 		C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D21AC585C1000DFDE4 /* TGPasswordSetViewController.m */; };
 		C274C3D61AC58639000DFDE4 /* TGSetPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D51AC58639000DFDE4 /* TGSetPasswordAction.m */; };
 		C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3D81AC5A683000DFDE4 /* TGPasswordEmailViewController.m */; };
+		C274C3E81ACAB97D000DFDE4 /* TGNotifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3E71ACAB97D000DFDE4 /* TGNotifyViewController.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1653,6 +1654,8 @@
 		C274C3D51AC58639000DFDE4 /* TGSetPasswordAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSetPasswordAction.m; sourceTree = "<group>"; };
 		C274C3D71AC5A683000DFDE4 /* TGPasswordEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordEmailViewController.h; sourceTree = "<group>"; };
 		C274C3D81AC5A683000DFDE4 /* TGPasswordEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordEmailViewController.m; sourceTree = "<group>"; };
+		C274C3E61ACAB97D000DFDE4 /* TGNotifyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGNotifyViewController.h; sourceTree = "<group>"; };
+		C274C3E71ACAB97D000DFDE4 /* TGNotifyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNotifyViewController.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -3712,6 +3715,8 @@
 				C291C7B91836C39900ABBB50 /* Background.m */,
 				C291C7BA1836C39900ABBB50 /* LBProgressBar.h */,
 				C291C7BB1836C39900ABBB50 /* LBProgressBar.m */,
+				C274C3E61ACAB97D000DFDE4 /* TGNotifyViewController.h */,
+				C274C3E71ACAB97D000DFDE4 /* TGNotifyViewController.m */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -5354,6 +5359,7 @@
 				0A9EDC611897BA0E0037E1BC /* RBLViewController.m in Sources */,
 				CEDAEB661881AF85006189A2 /* YapDatabaseViewTransaction.m in Sources */,
 				0A241AA318AB2FF200C32F45 /* MessageTableItemPhoto.m in Sources */,
+				C274C3E81ACAB97D000DFDE4 /* TGNotifyViewController.m in Sources */,
 				0AB43BC318D8A4AC00FB805A /* CNGridView.m in Sources */,
 				0A6D098E19535E8500A9AC64 /* NSImageCategory.m in Sources */,
 				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,

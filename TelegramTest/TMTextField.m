@@ -196,7 +196,14 @@
 
 
 
-
+-(void)keyDown:(NSEvent *)theEvent {
+    if(theEvent.keyCode != 53) {
+        [super keyDown:theEvent];
+    } else {
+        [self.superview keyDown:theEvent];
+    }
+    
+}
 
 //- (void) drawRect:(NSRect)dirtyRect {
 //    [super drawRect:dirtyRect];

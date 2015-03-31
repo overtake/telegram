@@ -221,6 +221,12 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
+        if([error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
+            
+            
+            return;
+        }
+        
         
         if([error.error_msg isEqualToString:@"PHONE_CODE_EXPIRED"]) {
             [self.startMessagingView showErrorWithText:NSLocalizedString(@"Login.ExpiredCode", nil)];

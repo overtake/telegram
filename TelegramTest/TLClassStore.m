@@ -330,7 +330,7 @@
         [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
         [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:133374398]];
         [self.classes setObject:[TL_account_passwordSettings class] forKey:[NSNumber numberWithInt:-1212732749]];
-        [self.classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-967702863]];
+        [self.classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-1124314324]];
         [self.classes setObject:[TL_auth_passwordRecovery class] forKey:[NSNumber numberWithInt:326715557]];
         [self.classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
         [self.classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
@@ -374,7 +374,6 @@
         [self.classes setObject:[TL_msg_detailed_info class] forKey:[NSNumber numberWithInt:661470918]];
         [self.classes setObject:[TL_msg_new_detailed_info class] forKey:[NSNumber numberWithInt:-2137147681]];
         [self.classes setObject:[TL_msg_resend_req class] forKey:[NSNumber numberWithInt:2105940488]];
-        
         
         
         
@@ -501,7 +500,7 @@
     [outputStream open];
     [stream setOuput:outputStream];
     [stream writeInt:0xda9b0d0d]; //invokeWithLayer
-    [stream writeInt:26];
+    [stream writeInt:27];
 
     [stream writeInt:constructor];
     

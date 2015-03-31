@@ -161,7 +161,7 @@
     [RPCRequest sendRequest:[TLAPI_auth_signUp createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash phone_code:self.phone_code first_name:self.firstNameTextField.stringValue last_name:self.lastNameTextField.stringValue] successHandler:^(RPCRequest *request, id response) {
         
         [[Telegram sharedInstance] onAuthSuccess];
-        
+                
         if(self.avatarImageView.photo) {
             [[UsersManager sharedManager] updateAccountPhotoByNSImage:self.avatarImageView.photo completeHandler:^(TLUser *user) {
                 

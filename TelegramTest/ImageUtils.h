@@ -169,6 +169,8 @@ CACHE_IMAGE(CancelReply);
 
 CACHE_IMAGE(ModernMessageYoutubeButton);
 
+CACHE_IMAGE(ProgressWindowCheck);
+
 @interface ImageUtils : NSObject
 
 

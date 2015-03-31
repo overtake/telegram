@@ -176,6 +176,8 @@ CACHE_IMAGE(CancelReply);
 CACHE_IMAGE(ModernMessageYoutubeButton);
 
 
+CACHE_IMAGE(ProgressWindowCheck);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

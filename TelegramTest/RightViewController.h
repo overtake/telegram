@@ -117,4 +117,6 @@
 -(void)showPasswordMainController;
 -(void)showSetPasswordWithAction:(TGSetPasswordAction *)action;
 -(void)showEmailPasswordWithAction:(TGSetPasswordAction *)action;
+
+-(void)clearStack;
 @end

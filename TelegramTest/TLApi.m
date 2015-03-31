@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.03.15..
+//  Auto created by Mikhail Filimonov on 30.03.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1843,10 +1843,10 @@
 @end
 
 @implementation TLAPI_account_updatePasswordSettings
-+(TLAPI_account_updatePasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash new_settings:(TLaccount_PasswordInputSettings*)new_settings {
++(TLAPI_account_updatePasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash n_settings:(TLaccount_PasswordInputSettings*)n_settings {
     TLAPI_account_updatePasswordSettings* obj = [[TLAPI_account_updatePasswordSettings alloc] init];
     obj.current_password_hash = current_password_hash;
-	obj.n_settings = new_settings;
+	obj.n_settings = n_settings;
     return obj;
 }
 - (NSData*)getData {

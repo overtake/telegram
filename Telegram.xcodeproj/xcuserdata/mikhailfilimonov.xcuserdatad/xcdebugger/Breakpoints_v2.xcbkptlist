@@ -83,7 +83,7 @@
                   symbolName = "-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449338790.006992"
+                  timestampString = "449526139.507291"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "382"
@@ -97,7 +97,7 @@
                   symbolName = "__80-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]_block_invoke"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449338790.00742"
+                  timestampString = "449526139.507757"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "382"
@@ -129,7 +129,7 @@
                   symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449338790.008282"
+                  timestampString = "449526139.509369"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "416"
@@ -143,7 +143,7 @@
                   symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke_2"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449338790.008541"
+                  timestampString = "449526139.509699"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "416"
@@ -151,22 +151,6 @@
                   offsetFromSymbolStart = "61">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGPasswosdMainViewController.m"
-            timestampString = "449338045.813595"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "-setPassword:email:hint:"
-            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

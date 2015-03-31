@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.03.15.
+//  Auto created by Mikhail Filimonov on 30.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1672,7 +1672,7 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -4875,7 +4875,7 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -4916,7 +4916,7 @@
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -7871,7 +7871,7 @@
 @end
 
 @implementation TL_account_passwordInputSettings
-+(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData *)n_salt n_password_hash:(NSData *)n_password_hash hint:(NSString *)hint email:(NSString *)email {
++(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint email:(NSString*)email {
 	TL_account_passwordInputSettings* obj = [[TL_account_passwordInputSettings alloc] init];
 	obj.flags = flags;
 	obj.n_salt = n_salt;
@@ -7882,17 +7882,17 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
-	if(self.flags & (1 << 1)) [stream writeByteArray:self.n_salt];
-	if(self.flags & (1 << 1)) [stream writeByteArray:self.n_password_hash];
-	if(self.flags & (1 << 1)) [stream writeString:self.hint];
-	if(self.flags & (1 << 2)) [stream writeString:self.email];
+	if(self.flags & (1 << 0)) [stream writeByteArray:self.n_salt];
+	if(self.flags & (1 << 0)) [stream writeByteArray:self.n_password_hash];
+	if(self.flags & (1 << 0)) [stream writeString:self.hint];
+	if(self.flags & (1 << 1)) [stream writeString:self.email];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
-	if(self.flags & (1 << 1)) self.n_salt = [stream readByteArray];
-	if(self.flags & (1 << 1)) self.n_password_hash = [stream readByteArray];
-	if(self.flags & (1 << 1)) self.hint = [stream readString];
-	if(self.flags & (1 << 2)) self.email = [stream readString];
+	if(self.flags & (1 << 0)) self.n_salt = [stream readByteArray];
+	if(self.flags & (1 << 0)) self.n_password_hash = [stream readByteArray];
+	if(self.flags & (1 << 0)) self.hint = [stream readString];
+	if(self.flags & (1 << 1)) self.email = [stream readString];
 }
 @end
 
@@ -8725,6 +8725,7 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
+
 
 
 @implementation TL_gzip_packed

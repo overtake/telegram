@@ -338,14 +338,16 @@
 
 -(NSPoint)textContainerOrigin {
     
-    [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-    NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
+    if([self numberOfLines] <= 10) {
+        [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
+        NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
+        
+        int yOffset = [self.string getEmojiFromString].count > 0 ? 0 : 1;
+        
+        return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
+    }
     
-    int yOffset = [self.string getEmojiFromString].count > 0 ? 0 : 1;
-    
-    return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
-    
-    
+    return [super textContainerOrigin];
 }
 
 -(NSUInteger)numberOfLines {

@@ -19,4 +19,10 @@ typedef BOOL (^actionBlock)(NSString *inputPassword);
 @property (nonatomic,strong) NSString *title;
 @property (nonatomic,strong) NSString *desc;
 
+@property (nonatomic,weak) id controller;
+
+@property (nonatomic,strong) NSString *defaultValue;
+
+@property (nonatomic,assign) BOOL hasButton;
+
 @end

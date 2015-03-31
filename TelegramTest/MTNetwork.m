@@ -444,7 +444,7 @@ static int MAX_WORKER_POLL = 5;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
                   {
-         dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
+         dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
                       
         sequentialMessageClasses = @[
             [TLAPI_messages_sendMessage class],
@@ -499,7 +499,7 @@ static int MAX_WORKER_POLL = 5;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            noAuthClasses = @[[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
+            noAuthClasses = @[[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
         });
         
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {
@@ -560,7 +560,7 @@ static int MAX_WORKER_POLL = 5;
         bool passwordRequired = [context isPasswordInputRequiredForDatacenterWithId:datacenterId];
         
         if(passwordRequired) {
-             [Telegram showEnterPasswordPanel];
+            [Telegram showEnterPasswordPanel];
         }
       
     }

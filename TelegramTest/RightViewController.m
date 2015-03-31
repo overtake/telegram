@@ -875,6 +875,8 @@
     
     [self.navigationViewController pushViewController:self.passwordMainViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
+    [self.passwordMainViewController reload];
+    
     
 }
 
@@ -886,6 +888,7 @@
     
     [controller setAction:action];
     
+    action.controller = controller;
     
     
     [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
@@ -899,10 +902,17 @@
     
     [controller setAction:action];
     
-    
+    action.controller = controller;
     
     [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 
+}
+
+
+-(void)clearStack {
+    [self.navigationViewController.viewControllerStack removeAllObjects];
+    
+    [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
 }
 
 @end

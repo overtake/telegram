@@ -13,6 +13,7 @@
 #import "SettingsWindowController.h"
 #import "ASQueue.h"
 #import "ConnectionStatusViewControllerView.h"
+#import "TGEnterPasswordPanel.h"
 @interface Telegram : NSObjectController
 
 + (Telegram *)sharedInstance;
@@ -65,6 +66,8 @@ int maxChatUsers();
 +(void)showEnterPasswordPanel;
 
 +(BOOL)isSingleLayout;
+
++(TGEnterPasswordPanel *)enterPasswordPanel;
 
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;

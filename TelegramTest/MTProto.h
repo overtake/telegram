@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 27.03.15.
+//  Auto created by Dmitry Kondratyev on 30.03.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -883,7 +883,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
 @end
 @interface TL_messageService : TLMessage
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -1589,10 +1589,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
 @end
 @interface TL_updateShortChatMessage : TLUpdates
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
 @end
 @interface TL_updateShort : TLUpdates
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -2253,14 +2253,14 @@
 @property (nonatomic, strong) NSData* n_salt;
 @property (nonatomic, strong) NSData* current_salt;
 @property (nonatomic, strong) NSString* hint;
-@property BOOL has_recovery;
+@property Boolean has_recovery;
 @end
 
 @interface TL_account_noPassword : TLaccount_Password
 +(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
 @end
 @interface TL_account_password : TLaccount_Password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(BOOL)has_recovery;
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery;
 @end
 	
 @interface TLaccount_PasswordSettings()
@@ -2273,14 +2273,14 @@
 	
 @interface TLaccount_PasswordInputSettings()
 @property int flags;
-@property NSData *n_salt;
-@property NSData *n_password_hash;
-@property NSString *hint;
-@property NSString  *email;
+@property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSData* n_password_hash;
+@property (nonatomic, strong) NSString* hint;
+@property (nonatomic, strong) NSString* email;
 @end
 
 @interface TL_account_passwordInputSettings : TLaccount_PasswordInputSettings
-+(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData *)n_salt n_password_hash:(NSData *)n_password_hash hint:(NSString *)hint email:(NSString *)email;
++(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint email:(NSString*)email;
 @end
 	
 @interface TLauth_PasswordRecovery()

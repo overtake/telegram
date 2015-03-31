@@ -12,6 +12,7 @@
 @interface TMProgressModalView ()
 @property (nonatomic,strong) TMView *progressContainer;
 @property (nonatomic,strong) ITProgressIndicator *progressIndicator;
+@property (nonatomic,strong) NSImageView *successImageView;
 @end
 
 @implementation TMProgressModalView
@@ -22,6 +23,13 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _successImageView = imageViewWithImage(image_ProgressWindowCheck());
+        
+        
+        [_successImageView setCenterByView:self];
+        
+        
         
         [self setWantsLayer:YES];
         [self setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -42,7 +50,7 @@
         [self addSubview:self.progressContainer];
         
         self.progressIndicator = [[ITProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
-        [self addSubview:self.progressIndicator];
+        
         
         self.progressIndicator.color = [NSColor whiteColor];
         
@@ -58,12 +66,26 @@
         
         [self addSubview:self.progressIndicator];
         
+        [self addSubview:_successImageView];
+        
+        _successImageView.autoresizingMask = self.progressIndicator.autoresizingMask = self.progressContainer.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
         
         
-        self.progressIndicator.autoresizingMask = self.progressContainer.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+        [self progressAction];
 
     }
     return self;
+}
+
+
+-(void)successAction {
+    [_progressIndicator setHidden:YES];
+    [_successImageView setHidden:NO];
+}
+
+-(void)progressAction {
+    [_progressIndicator setHidden:NO];
+    [_successImageView setHidden:YES];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -100,5 +122,7 @@
     
     // Drawing code here.
 }
+
+
 
 @end

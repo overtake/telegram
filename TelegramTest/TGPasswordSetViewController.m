@@ -81,7 +81,7 @@
         
         if(!res)
         {
-            [self shake];
+            [self performShake];
         }
         
     }];
@@ -110,28 +110,16 @@
     
     if(!res)
     {
-        [self shake];
+        [self performShake];
     }
 }
 
--(void)shake {
-    float a = 3;
-    float duration = 0.04;
-    
-    NSBeep();
-    
-    [self.textView.textView prepareForAnimation];
-    
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:^{
+-(void)performShake {
+    [self.textView.textView performShake:^{
         [self.textView.textView setWantsLayer:NO];
         [self.textView.textView.window makeFirstResponder:self.textView.textView];
         [self.textView.textView setSelectionRange:NSMakeRange(0, self.textView.textView.stringValue.length)];
     }];
-    
-    [self.textView.textView setAnimation:[TMAnimations shakeWithDuration:duration fromValue:CGPointMake(-a + self.textView.textView.layer.position.x, self.textView.textView.layer.position.y) toValue:CGPointMake(a + self.textView.textView.layer.position.x, self.textView.textView.layer.position.y)] forKey:@"position"];
-    [CATransaction commit];
-
 }
 
 -(void)setAction:(TGSetPasswordAction *)action {

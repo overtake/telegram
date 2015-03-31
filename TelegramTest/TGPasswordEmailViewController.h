@@ -13,4 +13,6 @@
 
 @property (nonatomic,strong) TGSetPasswordAction *action;
 
+-(void)performShake;
+
 @end

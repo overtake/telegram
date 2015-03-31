@@ -14,7 +14,7 @@
 #include <IOKit/IOKitLib.h>
 
 #import <CoreFoundation/CoreFoundation.h>
-
+#import <MtProtoKit/MTEncryption.h>
 
 @implementation OpenWithObject
 
@@ -326,7 +326,7 @@ void alert(NSString *text, NSString *info) {
     
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSInformationalAlertStyle];
-    [alert setMessageText:text];
+    [alert setMessageText:text.length > 0 ? text : appName()];
     [alert setInformativeText:info];
     [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
@@ -845,6 +845,18 @@ int64_t SystemIdleTime(void) {
     }
     
     return idlesecs;
+}
+
+NSData *passwordHash(NSString *password, NSData *currentSalt) {
+    
+    
+    NSMutableData *hashData = [NSMutableData dataWithData:currentSalt];
+    
+    [hashData appendData:[password dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [hashData appendData:currentSalt];
+    
+    return  MTSha256(hashData);
 }
 
 

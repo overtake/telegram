@@ -361,7 +361,17 @@ void exceptionHandler(NSException * exception)
         if(result.window != self.mainWindow) {
             
             if(incomingEvent.keyCode == 53 && ![result.window respondsToSelector:@selector(popover)]) {
+                
+                if([[Telegram enterPasswordPanel] superview] != nil) {
+                    [[Telegram enterPasswordPanel] showEnterPassword];
+                    
+                    return [[NSEvent alloc] init];
+                }
+                
+                
                 [result.window close];
+                
+                
                 
                 return result;
             }
@@ -689,7 +699,8 @@ void exceptionHandler(NSException * exception)
     
     [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
-
+    
+    
 }
 
 - (void)initializeLoginWindow {
@@ -700,6 +711,8 @@ void exceptionHandler(NSException * exception)
     self.loginWindow = loginWindow;
     
     
+    //[Telegram showEnterPasswordPanel];
+
 }
 
 - (void)releaseWindows {

@@ -11,4 +11,6 @@
 @interface TGPasswosdMainViewController : TMViewController
 
 
+-(void)reload;
+
 @end

@@ -253,21 +253,27 @@ NSString * appName() {
     return [[Telegram rightViewController] isModalViewActive];
 }
 
+static TGEnterPasswordPanel *panel;
+
 +(void)showEnterPasswordPanel {
     
     [ASQueue dispatchOnMainQueue:^{
-        static TGEnterPasswordPanel *panel;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            panel = [[TGEnterPasswordPanel alloc] initWithFrame:[[[NSApp mainWindow] contentView] bounds]];
-        });
         
+        [panel removeFromSuperview];
+        panel = nil;
+        
+        panel = [[TGEnterPasswordPanel alloc] initWithFrame:[[[[self delegate] window] contentView] bounds]];
+
         if(panel.superview)
             return;
         
-        [[NSApp mainWindow].contentView addSubview:panel];
+        [[[self delegate] window].contentView addSubview:panel];
         [panel prepare];
     }];
+}
+
++(TGEnterPasswordPanel *)enterPasswordPanel {
+    return panel;
 }
 
 

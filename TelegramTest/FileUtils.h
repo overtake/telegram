@@ -72,7 +72,7 @@ NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
 int64_t SystemIdleTime(void);
-
+NSData *passwordHash(NSString *password, NSData *salt);
 
 + (void) fillAppByUrl:(NSURL*)url bundle:(NSString**)bundle name:(NSString**)name version:(NSString**)version icon:(NSImage**)icon;
 

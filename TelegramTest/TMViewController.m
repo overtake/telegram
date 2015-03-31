@@ -183,13 +183,13 @@ static TGPasslockModalView *passlockView;
 +(void)showModalProgress {
     
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[[[Telegram delegate] mainWindow].contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[[[Telegram delegate] window].contentView bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:[[Telegram delegate] mainWindow].contentView];
+        [progressView setCenterByView:[[Telegram delegate] window].contentView];
         
-         [[[Telegram delegate] mainWindow].contentView addSubview:progressView];
+         [[[Telegram delegate] window].contentView addSubview:progressView];
     }
     
    
@@ -216,9 +216,9 @@ static TGPasslockModalView *passlockView;
 
 +(void)hideModalProgress {
     
-    progressView.layer.opacity = 0.8;
+  //  progressView.layer.opacity = 0.8;
     
-    [(MainWindow *)[[Telegram delegate] mainWindow] setAcceptEvents:YES];
+    [(MainWindow *)[[Telegram delegate] window] setAcceptEvents:YES];
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
     
@@ -229,6 +229,22 @@ static TGPasslockModalView *passlockView;
     
     [progressView.layer pop_addAnimation:anim forKey:@"fade"];
 
+}
+
+-(void)hideModalProgressWithSuccess {
+    [TMViewController hideModalProgressWithSuccess];
+}
+
++(void)hideModalProgressWithSuccess {
+    
+    [progressView successAction];
+    
+    dispatch_after_seconds(0.5, ^{
+        
+        [self hideModalProgress];
+        
+    });
+    
 }
 
 -(void)showModalProgress {

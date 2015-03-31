@@ -45,9 +45,12 @@
 +(void)showModalProgress;
 +(void)hideModalProgress;
 
+
 -(void)showModalProgress;
 -(void)hideModalProgress;
 
+-(void)hideModalProgressWithSuccess;
++(void)hideModalProgressWithSuccess;
 
 
 +(void)showPasslock:(passlockCallback)callback;
@@ -78,5 +81,6 @@
 
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
+
 
 @end
