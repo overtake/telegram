@@ -1238,6 +1238,10 @@ static NSTextAttachment *headerMediaIcon() {
             
             hide = CGRectContainsRect([self.table visibleRect], [self.table rectOfRow:[self indexOfObject:item]]);
             
+            if(hide) {
+                [_replyMsgsStack removeLastObject];
+            }
+            
         }
     }
     
