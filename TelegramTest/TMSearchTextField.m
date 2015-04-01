@@ -168,11 +168,7 @@ const static int textFieldXOffset = 30;
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
      
-      
         
-        
-        
-    //    [self.textField setPlaceholderPoint:NSMakePoint(2, 5)];
         [self.textField setBackgroundColor:[NSColor clearColor]];
         [self.textField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
@@ -242,7 +238,7 @@ const static int textFieldXOffset = 30;
     
     [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
-    [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 100 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
+    [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
     
     if([self inLiveResize]) {
         if(self.textField.window.firstResponder != self.textField.textView) {

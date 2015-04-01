@@ -1656,7 +1656,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)deleteMessages:(NSArray *)ids {
     
-    [self.table beginUpdates];
+  //  [self.table beginUpdates];
     
     if(self.messages.count > 0) {
         NSUInteger count = self.selectedMessages.count;
@@ -1673,6 +1673,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [message clean];
             }
         }
+
         
         __block NSInteger row = self.messages.count - 1;
         __block MessageTableItem *backItem = nil;
@@ -1699,7 +1700,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-    [self.table endUpdates];
+   // [self.table endUpdates];
     
 }
 
@@ -2317,6 +2318,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     return NSMakeRange(pos, array.count);
 }
+
+
 
 
 - (void)isHeaderMessage:(MessageTableItem *)item prevItem:(MessageTableItem *)prevItem {
