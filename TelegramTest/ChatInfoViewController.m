@@ -255,6 +255,16 @@
     [_headerView reload];
     
     
+//    [self.fullChat.participants.participants enumerateObjectsUsingBlock:^(TL_chatParticipant *obj, NSUInteger idx, BOOL *stop) {
+//        
+//        if(obj.user_id == [UsersManager currentUserId]) {
+//            
+//            NSLog(@"inviter:%@, inviteDate:%@",[[[UsersManager sharedManager] find:obj.inviter_id] fullName],[NSDate dateWithTimeIntervalSince1970:obj.date]);
+//            
+//        }
+//        
+//    }];
+    
    // [_tableView.con setFrameOrigin:NSMakePoint(_tableView.frame.origin.x, _headerView.frame.size.height)];
     
     [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
