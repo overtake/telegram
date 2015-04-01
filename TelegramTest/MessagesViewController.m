@@ -1231,6 +1231,14 @@ static NSTextAttachment *headerMediaIcon() {
     if(hide)
     {
         hide = self.replyMsgsStack.count == 0;
+        
+        if(!hide)
+        {
+            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] intValue]];
+            
+            hide = CGRectContainsRect([self.table visibleRect], [self.table rectOfRow:[self indexOfObject:item]]);
+            
+        }
     }
     
     
@@ -1864,8 +1872,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     [EmojiViewController loadStickersIfNeeded];
     
-    
-    
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         
@@ -2315,16 +2321,20 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(pos != 1 && idx < pos) {
             if(isCHdr != current.isHeaderMessage ||
-               isCFwdHdr != current.isHeaderForwardedMessage ||
-               isBHdr != backItem.isHeaderMessage ||
-               isBFwdHdr != backItem.isHeaderForwardedMessage)
+               isCFwdHdr != current.isHeaderForwardedMessage)
             {
                 [rld addIndex:idx];
+            }
+            
+            if(isBHdr != backItem.isHeaderMessage ||
+               isBFwdHdr != backItem.isHeaderForwardedMessage) {
+                [rld addIndex:idx-1];
             }
         }
         
         
         [current makeSizeByWidth:self.table.containerSize.width];
+        [backItem makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
         
     }];
