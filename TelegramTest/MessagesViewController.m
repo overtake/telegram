@@ -2275,7 +2275,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-    [self.table beginUpdates];
+ //   [self.table beginUpdates];
     
     if(back != NULL)
         *back = array;
@@ -2298,14 +2298,44 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSRange range = NSMakeRange(1, backItem ? max - 1 : max);
     
-    [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
+    NSMutableIndexSet *rld = [[NSMutableIndexSet alloc] init];
     
+    [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
+        
+        
+        BOOL isCHdr = current.isHeaderMessage;
+        BOOL isCFwdHdr = current.isHeaderForwardedMessage;
+
+        BOOL isBHdr = backItem.isHeaderMessage;
+        BOOL isBFwdHdr = backItem.isHeaderForwardedMessage;
+        
+        
         [self isHeaderMessage:current prevItem:backItem];
+        
+        
+        if(pos != 1 && idx < pos) {
+            if(isCHdr != current.isHeaderMessage ||
+               isCFwdHdr != current.isHeaderForwardedMessage ||
+               isBHdr != backItem.isHeaderMessage ||
+               isBFwdHdr != backItem.isHeaderForwardedMessage)
+            {
+                [rld addIndex:idx];
+            }
+        }
+        
+        
         [current makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
         
     }];
     
+    
+    if(rld.count > 0)
+    {
+        [[NSAnimationContext currentContext] setDuration:0];
+        [self.table noteHeightOfRowsWithIndexesChanged:rld];
+        [self.table reloadDataForRowIndexes:rld columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    }
     
 
     if(needCheckLastMessage && pos > 1) {
@@ -2314,7 +2344,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
     
-    [self.table endUpdates];
+   // [self.table endUpdates];
     
     
     [self tryRead];
