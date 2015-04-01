@@ -2082,7 +2082,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSSize size = self.table.scrollView.documentSize;
     
-    int count = size.height/30;
+    int count =15; // size.height/30;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     
@@ -2264,6 +2264,9 @@ static NSTextAttachment *headerMediaIcon() {
     assert([NSThread isMainThread]);
     
     
+   // if(pos != 1)
+   //     return NSMakeRange(pos, 0);
+    
     if(![[NSApplication sharedApplication] isActive] && checkActive) {
         
         if(!self.unreadMark) {
@@ -2288,12 +2291,12 @@ static NSTextAttachment *headerMediaIcon() {
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
     
     
-    NSInteger max = MIN(pos + array.count + 1, self.messages.count );
+    NSInteger max = MIN(pos + array.count + 1, self.messages.count-1 );
 
-    __block MessageTableItem *backItem = max == self.messages.count ? nil : self.messages[max - 1];
+    __block MessageTableItem *backItem = max == self.messages.count-1 ? nil : self.messages[max - 1];
     
     
-    NSRange range = NSMakeRange(0, backItem ? max - 1 : max);
+    NSRange range = NSMakeRange(1, backItem ? max - 1 : max);
     
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
     
@@ -2306,7 +2309,7 @@ static NSTextAttachment *headerMediaIcon() {
     
 
     if(needCheckLastMessage && pos > 1) {
-        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos-1)];
+        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos - 2)];
         [self.table noteHeightOfRowsWithIndexesChanged:set];
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
