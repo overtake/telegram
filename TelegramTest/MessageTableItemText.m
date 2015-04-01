@@ -12,7 +12,7 @@
 #import "MessagesUtils.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "NSString+Extended.h"
-
+#import "TGWebpageYTObject.h"
 #define MAX_WIDTH 400
 
 @interface MessageTableItemText()<SettingsListener>
@@ -115,6 +115,8 @@
 - (BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    [_webpage makeSize:width];
+    
     width -= self.dateSize.width+10;
     
     if(self.isForwadedMessage) {
@@ -135,7 +137,7 @@
     _textSize = textSize;
     
     
-    self.blockSize = NSMakeSize(width, textSize.height + [self webBlockSize].height + 5);
+    self.blockSize = NSMakeSize(width, textSize.height + [_webpage size].height + 5);
     
     return YES;
 }
@@ -148,51 +150,13 @@
         
         remove_global_dispatcher(_requestKey);
         
-        NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
         
+        _webpage = [[TGWebpageYTObject alloc] initWithWebPage:self.message.media.webpage]; // its only youtube.
         
-        [title appendString:self.message.media.webpage.title withColor:[NSColor whiteColor]];
-        [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:title.range];
-        
-        _webPageTitle = title;
-        
-        NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
-        
-        
-        NSString *d = self.message.media.webpage.n_description.length > 0 ? self.message.media.webpage.n_description : self.message.media.webpage.display_url;
-        
-        [desc appendString:d withColor:[NSColor whiteColor]];
-        
-        
-        [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:desc.range];
-        
-        _webPageDesc = desc;
-        
-        
-        _webPageToolTip = [NSString stringWithFormat:@"%@\n\n%@",title.string,desc.string];
-        
-        
-        NSArray *photo = [self.message.media.webpage.photo sizes];
-        
-        TLPhotoSize *photoSize = [photo lastObject];
-        
-        __block NSImage *thumb;
-        
-        [photo enumerateObjectsUsingBlock:^(TLPhotoSize *obj, NSUInteger idx, BOOL *stop) {
-            
-            if([obj isKindOfClass:[TL_photoCachedSize class]]) {
-                thumb = [[NSImage alloc] initWithData:obj.bytes];
-                *stop = YES;
-            }
-            
-        }];
-        
-        
-        _webPageImageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:thumb sourceId:0 size:photoSize.size];
-        
-        _webPageImageObject.imageSize = [self webBlockSize];
         
         [self makeSizeByWidth:self.blockWidth];
+        
+        
     } else if([self isWebPagePending]) {
         
         remove_global_dispatcher(_requestKey);
@@ -221,8 +185,6 @@
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
                 
-                
-                
             }];
             
             
@@ -246,21 +208,7 @@
     return isPathExists(((TLPhotoSize *)[self.message.media.webpage.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
 }
 
--(NSSize)webBlockSize {
-    
-    if([self isWebPage]) {
-        TLPhotoSize *photoSize = [[self.message.media.webpage.photo sizes] lastObject];
-        
-        
-        NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,self.blockWidth - 40));
-        
-        
-        return imageSize;
-    }
-    
-    
-    return NSZeroSize;
-}
+
 
 
 -(void)dealloc {

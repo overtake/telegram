@@ -12,6 +12,7 @@
 #import "TGTimerTarget.h"
 #import "POPCGUtils.h"
 #import "TGImageView.h"
+#import "XCDYouTubeKit.h"
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -59,9 +60,10 @@
     
     
     if(_webPageContainerView == nil) {
+        
         MessageTableItemText *item = (MessageTableItemText *)[self item];
         
-        _webPageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, item.textSize.height + 5, item.webBlockSize.width, item.webBlockSize.height)];
+        _webPageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
         
         _webPageContainerView.wantsLayer = YES;
         
@@ -102,12 +104,11 @@
         }
         
         
-        
-        
         [_webPageContainerView setBackgroundColor:[NSColor grayColor]];
         
         
         [self.containerView addSubview:_webPageContainerView];
+        
     }
     
 }
@@ -143,11 +144,6 @@
     
     MessageTableItemText *item = (MessageTableItemText *)[self item];
     
-    
-    
-   // if([item isWebPage] && [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_webPageContainerView.frame]) {
-      //  open_link(item.message.media.webpage.display_url);
-   // }
 }
 
 - (void) setItem:(MessageTableItemText *)item {
@@ -157,30 +153,31 @@
     
     
     if([item isWebPage]) {
+        
         [self initWebPageContainerView];
         
-        [_webPageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webBlockSize.width, item.webBlockSize.height)];
+        [_webPageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
         
-        [_webPageImageView setFrameSize:item.webBlockSize];
+        [_webPageImageView setFrameSize:[item.webpage size]];
         
         [_webPageMarkView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame), 40)];
         
-        [_webPageImageView setObject:item.webPageImageObject];
+        [_webPageImageView setObject:item.webpage.imageObject];
         
         [_webPageTitleView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame) - 5, 20)];
-        [_webPageTitleView setAttributedStringValue:item.webPageTitle];
+        [_webPageTitleView setAttributedStringValue:item.webpage.title];
         
         [_webPageDescView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame) - 5, 20)];
-        [_webPageDescView setAttributedStringValue:item.webPageDesc];
+        [_webPageDescView setAttributedStringValue:item.webpage.desc];
         
         
-        [_webPageTitleView setToolTip:item.webPageToolTip];
-        [_webPageMarkView setToolTip:item.webPageToolTip];
-        [_webPageDescView setToolTip:item.webPageToolTip];
-        [_webPageContainerView setToolTip:item.webPageToolTip];
-        [_webPageImageView setToolTip:item.webPageToolTip];
+        [_webPageTitleView setToolTip:item.webpage.toolTip];
+        [_webPageMarkView setToolTip:item.webpage.toolTip];
+        [_webPageDescView setToolTip:item.webpage.toolTip];
+        [_webPageContainerView setToolTip:item.webpage.toolTip];
+        [_webPageImageView setToolTip:item.webpage.toolTip];
         
-        [item.webPageImageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+        [item.webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -190,7 +187,7 @@
             
         }];
         
-        [item.webPageImageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+        [item.webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -228,7 +225,7 @@
     
     [self.progressView setState:cellState];
     
-    [self.progressView setProgress:50 + (item.webPageImageObject.downloadItem.progress/2) animated:NO];
+    [self.progressView setProgress:50 + (item.webpage.imageObject.downloadItem.progress/2) animated:NO];
     
     [self.progressView setProgress:self.progressView.currentProgress animated:YES];
     

@@ -25,7 +25,6 @@
 #import "NSString+Extended.h"
 #import "MessageTableHeaderItem.h"
 #import "MessageTableItemSocial.h"
-#import "MessageTableItemWebPage.h"
 @interface MessageTableItem()
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;

@@ -2994,18 +2994,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-    } else if(item.class == [MessageTableItemWebPage class]) {
-        
-        static NSString *const kRowIdentifier = @"sticker_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellWebPageView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-        
-        
     } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         
         assert(NO);

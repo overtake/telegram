@@ -23,8 +23,6 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [super drawRect:dirtyRect];
-    
     [LINK_COLOR setFill];
     
     NSRectFill(NSMakeRect(0, 0, 2, NSHeight(self.frame)));

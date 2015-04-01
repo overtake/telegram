@@ -1,0 +1,33 @@
+//
+//  TGWebPageObject.h
+//  Telegram
+//
+//  Created by keepcoder on 01.04.15.
+//  Copyright (c) 2015 keepcoder. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface TGWebpageObject : NSObject
+
+@property (nonatomic,strong,readonly) NSAttributedString *title;
+@property (nonatomic,strong,readonly) TGImageObject *imageObject;
+@property (nonatomic,strong,readonly) NSAttributedString *desc;
+
+@property (nonatomic,strong,readonly) NSString *toolTip;
+@property (nonatomic,strong,readonly) NSString *date;
+@property (nonatomic,strong,readonly) NSString *author;
+
+@property (nonatomic,strong,readonly) TLWebPage *webpage;
+
+@property (nonatomic,assign,readonly) NSSize size;
+
+-(id)initWithWebPage:(TLWebPage *)webpage;
+
+
+-(void)makeSize:(int)width;
+
+
+-(Class)webpageContainer;
+
+@end
