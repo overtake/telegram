@@ -397,11 +397,12 @@
 
 - (BOOL)isEnterEvent:(NSEvent *)e {
     NSUInteger flags = (e.modifierFlags & NSDeviceIndependentModifierFlagsMask);
-    BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
-//    DLog(@"log %lu", (unsigned long)flags);
-    //numpad enter fix
-    if(!isEnter && e.keyCode ==  0x4C)
-        return YES;
+    //    DLog(@"log %lu", (unsigned long)flags);
+    //numpad enter (0x4C) fix
+    BOOL isEnter = (e.keyCode == 0x24 || e.keyCode ==  0x4C); // VK_RETURN
+    // Fix some IME if marked text (select characters) do not send Enter. ex. Chinese, Japenese.
+    if ([self hasMarkedText]) // AppKit NSTextInputClient
+        return NO;
     return (flags == 0 || flags == 65536) && isEnter;
 }
 
