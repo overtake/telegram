@@ -2340,6 +2340,7 @@ static NSTextAttachment *headerMediaIcon() {
 
     if(needCheckLastMessage && pos > 1) {
         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos - 2)];
+        [[NSAnimationContext currentContext] setDuration:0];
         [self.table noteHeightOfRowsWithIndexesChanged:set];
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
