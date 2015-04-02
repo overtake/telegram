@@ -2330,15 +2330,10 @@ static NSTextAttachment *headerMediaIcon() {
                 [rld addIndex:idx];
             }
             
-            if(isBHdr != backItem.isHeaderMessage ||
-               isBFwdHdr != backItem.isHeaderForwardedMessage) {
-                [rld addIndex:idx-1];
-            }
         }
         
         
         [current makeSizeByWidth:self.table.containerSize.width];
-        [backItem makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
         
     }];
