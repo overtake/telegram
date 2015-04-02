@@ -951,30 +951,44 @@
     
     NSArray *links = [self locationsOfLinks];
     
+    BOOL (^checkInLinksRange)(NSRange emojiRange) = ^BOOL (NSRange emojiRange)
+    {
+        __block BOOL res = NO;
+        
+        [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            NSRange linkRange = [obj range];
+            
+            if((linkRange.location <= emojiRange.location && (linkRange.location+linkRange.length) >= (emojiRange.location + emojiRange.length))) {
+                res = YES;
+            }
+            
+        }];
+        
+        return res;
+    };
+
     
     [replaces enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         
-        [links enumerateObjectsUsingBlock:^(id linkObj, NSUInteger linkIdx, BOOL *linkStop) {
-            
-            NSRange range = [linkObj range];
-            
+        
             NSRange emojiRange;
             
             NSRange nextRange = NSMakeRange(0, text.length);
             
             while ((emojiRange = [text rangeOfString:key options:0 range:nextRange]).location != NSNotFound) {
                 
-                if(!(range.location <= emojiRange.location && (range.location+range.length) > (emojiRange.location + emojiRange.length))) {
+                NSUInteger length = emojiRange.length;
+                
+                if(!checkInLinksRange(emojiRange)) {
                     text = [text stringByReplacingCharactersInRange:emojiRange withString:obj];
+                    length = [obj length];
                 }
                 
-                nextRange = NSMakeRange(emojiRange.location + emojiRange.length, text.length - emojiRange.location - emojiRange.length);
+                nextRange = NSMakeRange(emojiRange.location + length, text.length - emojiRange.location - length);
                 
             }
             
-            
-        }];
-        
        
     }];
     

@@ -2047,7 +2047,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
            // });
         } else {
-            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
+             [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
             [self.table reloadData];
             [self didUpdateTable];
             self.locked = NO;
@@ -2092,7 +2092,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSSize size = self.table.scrollView.documentSize;
     
-    int count =15; // size.height/30;
+    int count = size.height/30;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     
