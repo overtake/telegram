@@ -45,7 +45,7 @@
         self.textField = [TMTextField defaultTextField];
         [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [self.textField setTextColor:NSColorFromRGB(0x999999)];
-        
+        [[self.textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
         [self.textField setFrameOrigin:NSMakePoint(100, 0)];
         
         [self addSubview:self.textField];
@@ -63,6 +63,12 @@
     
     [self.textField sizeToFit];
     
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - 200, NSHeight(self.frame))];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

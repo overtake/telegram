@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/UsersManager.m"
-            timestampString = "448199952.076455"
+            timestampString = "449617015.933192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
+            startingLineNumber = "385"
+            endingLineNumber = "385"
             landmarkName = "-updateAccountPhoto:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
             <Locations>
@@ -83,11 +83,11 @@
                   symbolName = "-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449587049.664478"
+                  timestampString = "449651789.936939"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "382"
-                  endingLineNumber = "382"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
                   offsetFromSymbolStart = "247">
                </Location>
                <Location
@@ -97,11 +97,11 @@
                   symbolName = "__80-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]_block_invoke"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449587049.665427"
+                  timestampString = "449651789.938121"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "382"
-                  endingLineNumber = "382"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
                   offsetFromSymbolStart = "78">
                </Location>
             </Locations>
@@ -114,11 +114,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/UsersManager.m"
-            timestampString = "448199952.076455"
+            timestampString = "449617015.933192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "415"
-            endingLineNumber = "415"
+            startingLineNumber = "418"
+            endingLineNumber = "418"
             landmarkName = "-updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
             <Locations>
@@ -129,11 +129,11 @@
                   symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449587050.631426"
+                  timestampString = "449651789.940883"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "416"
-                  endingLineNumber = "416"
+                  startingLineNumber = "419"
+                  endingLineNumber = "419"
                   offsetFromSymbolStart = "86">
                </Location>
                <Location
@@ -143,11 +143,11 @@
                   symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke_2"
                   moduleName = "Telegram"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
-                  timestampString = "449587050.632017"
+                  timestampString = "449651789.94168"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "416"
-                  endingLineNumber = "416"
+                  startingLineNumber = "419"
+                  endingLineNumber = "419"
                   offsetFromSymbolStart = "61">
                </Location>
             </Locations>

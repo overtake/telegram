@@ -7,7 +7,13 @@
 //
 
 #import "TGWebpageObject.h"
-
+#import "XCDYouTubeKit.h"
 @interface TGWebpageYTObject : TGWebpageObject
+
+@property (nonatomic,assign,readonly) NSSize descriptionSize;
+
+@property (nonatomic,strong,readonly) XCDYouTubeVideo *video;
+
+-(void)loadVideo:(void (^)(XCDYouTubeVideo *video))callback;
 
 @end

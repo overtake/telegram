@@ -76,6 +76,11 @@
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
+            if(response.updates.count < 2)
+            {
+                [weakSelf cancel];
+                return;
+            }
             
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
             

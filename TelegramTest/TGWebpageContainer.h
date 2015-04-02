@@ -7,7 +7,21 @@
 //
 
 #import "TMView.h"
-
+#import "TGWebPageObject.h"
+#import "TMLoaderView.h"
+#import "TGImageView.h"
+#import "MessageTableItem.h"
 @interface TGWebpageContainer : TMView
+
+@property (nonatomic,strong,readonly) TMLoaderView *loaderView;
+@property (nonatomic,strong,readonly) TGImageView *imageView;
+
+
+@property (nonatomic,weak) TGWebpageObject *webpage;
+@property (nonatomic,weak) MessageTableItem *item;
+
+-(void)updateState:(TMLoaderViewState)state;
+
+-(NSSize)containerSize;
 
 @end

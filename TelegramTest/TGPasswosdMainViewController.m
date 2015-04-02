@@ -13,6 +13,7 @@
 #import "TGSetPasswordAction.h"
 #import "NSMutableData+Extension.h"
 #import <MtProtoKit/MTEncryption.h>
+
 @interface TGPasswosdMainViewController ()<TMTableViewDelegate>
 
 
@@ -47,221 +48,231 @@
     
     [self.tableView removeAllItems:NO];
     
+    TL_account_password *pwd = _passwordResult;
     
-    if([self.passwordResult isKindOfClass:[TL_account_noPassword class]]) {
-        GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
-            
-            TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
-            
-            firstAction.title = NSLocalizedString(@"PasswordSettings.SetPassword", nil);
-            
-            firstAction.callback = ^BOOL (NSString *fp) {
+    
+    if([self.passwordResult email_unconfirmed_pattern].length == 0) {
+        if([self.passwordResult isKindOfClass:[TL_account_noPassword class]]) {
+            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
                 
-                if(fp.length > 0) {
-                    TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
+                TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
+                
+                firstAction.title = NSLocalizedString(@"PasswordSettings.SetPassword", nil);
+                
+                firstAction.callback = ^BOOL (NSString *fp) {
                     
-                    confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
-                    
-                    confirmAction.callback = ^BOOL (NSString *sp) {
+                    if(fp.length > 0) {
+                        TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
                         
-                       
-                        if([sp isEqualToString:fp]) {
-                            
-                            TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
-                            
-                            emailAction.title = NSLocalizedString(@"PasswordSettings.RecoveryEmail", nil);
-                            emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
-                            
-                            emailAction.hasButton = YES;
-                            
-                            emailAction.callback = ^BOOL (NSString *email) {
-                                
-                                
-                                [self setPassword:fp current_pswd_hash:[[NSData alloc] init] email:email hint:@"" flags:1 | (NSStringIsValidEmail(email) ? 2 : 0) successCallback:^{
-                                    
-                                    if(NSStringIsValidEmail(email)) {
-                                        alert(nil, NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
-                                    } else {
-                                        alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessActivatedDescription", nil));
-                                    }
-                                    
-                                    
-                                    
-                                }];
-                                
-                                return !email || NSStringIsValidEmail(email);
-                            };
-                            
-                            [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
-                        }
-                         
-                        return [sp isEqualToString:fp];
-                    };
-                    
-                    [[Telegram rightViewController] showSetPasswordWithAction:confirmAction];
-                    
-                    return YES;
-                }
-                
-                return NO;
-                
-                
-            };
-            
-            [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
-            
-            
-        } description:NSLocalizedString(@"PasswordSettings.TurnOnPassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
-            return @(NO);
-        }];
-        
-        [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
-        
-    } else {
-        
-         TL_account_password *pwd = _passwordResult;
-        
-        
-        GeneralSettingsRowItem *changePassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
-            
-            
-            TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
-            
-            sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
-            
-            __weak TGSetPasswordAction *asWeak = sAction;
-            
-            sAction.callback = ^BOOL (NSString *password) {
-                
-                
-                NSData *phash = passwordHash(password,[pwd current_salt]);
-                
-                [self showModalProgress];
-                
-                [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
-                    
-                    
-                    if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                        confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
                         
-                        TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
-                        
-                        firstAction.title = NSLocalizedString(@"PasswordSettings.InputNewPassword", nil);
-                        
-                        firstAction.callback = ^BOOL (NSString *fp) {
+                        confirmAction.callback = ^BOOL (NSString *sp) {
                             
-                            if(fp.length > 0) {
-                                TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
+                            
+                            if([sp isEqualToString:fp]) {
                                 
-                                confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
+                                TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
                                 
-                                confirmAction.callback = ^BOOL (NSString *sp) {
+                                emailAction.title = NSLocalizedString(@"PasswordSettings.RecoveryEmail", nil);
+                                emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
+                                
+                                emailAction.hasButton = YES;
+                                
+                                
+                                __weak TGSetPasswordAction *wEAction = emailAction;
+                                
+                                emailAction.callback = ^BOOL (NSString *email) {
                                     
                                     
-                                    if([sp isEqualToString:fp]) {
+                                    [self setPassword:fp current_pswd_hash:[[NSData alloc] init] email:email hint:@"" flags:1 | (NSStringIsValidEmail(email) ? 2 : 0) successCallback:^{
                                         
-                                        [self setPassword:fp current_pswd_hash:phash email:[response email] hint:[pwd hint] flags:3 successCallback:^{
-                                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessChangedDescription", nil));
-                                        }];
-                                    }
+                                        if(NSStringIsValidEmail(email)) {
+                                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
+                                        } else {
+                                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessActivatedDescription", nil));
+                                        }
+                                        
+                                        
+                                        
+                                    } errorCallback:^{
+                                        [wEAction.controller performSelector:@selector(performShake) withObject:nil];
+                                    }];
                                     
-                                    return [sp isEqualToString:fp];
+                                    return !email || NSStringIsValidEmail(email);
                                 };
                                 
-                                [[Telegram rightViewController] showSetPasswordWithAction:confirmAction];
-                                
-                                return YES;
+                                [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
                             }
                             
-                            return NO;
-                            
-                            
+                            return [sp isEqualToString:fp];
                         };
                         
-                        [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
+                        [[Telegram rightViewController] showSetPasswordWithAction:confirmAction];
                         
-                        
+                        return YES;
                     }
                     
-                    [self hideModalProgressWithSuccess];
+                    return NO;
                     
                     
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [self hideModalProgress];
-                    
-                    [asWeak.controller performSelector:@selector(performShake) withObject:nil];
-                    
-                }];
+                };
+                
+                [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
                 
                 
-                
-                return YES;
-            };
+            } description:NSLocalizedString(@"PasswordSettings.TurnOnPassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+                return @(NO);
+            }];
             
-            [[Telegram rightViewController] showSetPasswordWithAction:sAction];
+            [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
             
-            
-        } description: NSLocalizedString(@"PasswordSettings.ChangePassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
-            return @(NO);
-        }];
-        
-        [self.tableView insert:changePassword atIndex:self.tableView.list.count tableRedraw:NO];
-        
-
-        
-        GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+        } else {
             
             
-            TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
             
-            sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
             
-            __weak TGSetPasswordAction *asWeak = sAction;
-            
-            sAction.callback = ^BOOL (NSString *password) {
+            GeneralSettingsRowItem *changePassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
                 
                 
-                NSData *phash = passwordHash(password,[pwd current_salt]);
+                TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
                 
-                [self showModalProgress];
+                sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
                 
-                [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
+                __weak TGSetPasswordAction *asWeak = sAction;
+                
+                sAction.callback = ^BOOL (NSString *password) {
                     
                     
-                    if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                    NSData *phash = passwordHash(password,[pwd current_salt]);
+                    
+                    [self showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
                         
-                        [self setPassword:@"" current_pswd_hash:phash email:[response email] hint:[pwd hint] flags:1 successCallback:^{
-                            
-                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessDeactivatedDescription", nil));
-                            
-                        }];
                         
-                    }
+                        if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                            
+                            TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
+                            
+                            firstAction.title = NSLocalizedString(@"PasswordSettings.InputNewPassword", nil);
+                            
+                            firstAction.callback = ^BOOL (NSString *fp) {
+                                
+                                if(fp.length > 0) {
+                                    TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
+                                    
+                                    confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
+                                    
+                                    confirmAction.callback = ^BOOL (NSString *sp) {
+                                        
+                                        
+                                        if([sp isEqualToString:fp]) {
+                                            
+                                            [self setPassword:fp current_pswd_hash:phash email:[response email] hint:[pwd hint] flags:3 successCallback:^{
+                                                alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessChangedDescription", nil));
+                                            } errorCallback:nil];
+                                        }
+                                        
+                                        return [sp isEqualToString:fp];
+                                    };
+                                    
+                                    [[Telegram rightViewController] showSetPasswordWithAction:confirmAction];
+                                    
+                                    return YES;
+                                }
+                                
+                                return NO;
+                                
+                                
+                            };
+                            
+                            [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
+                            
+                            
+                        }
+                        
+                        [self hideModalProgressWithSuccess];
+                        
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [self hideModalProgress];
+                        
+                        [asWeak.controller performSelector:@selector(performShake) withObject:nil];
+                        
+                    }];
                     
                     
                     
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [self hideModalProgress];
+                    return YES;
+                };
+                
+                [[Telegram rightViewController] showSetPasswordWithAction:sAction];
+                
+                
+            } description: NSLocalizedString(@"PasswordSettings.ChangePassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+                return @(NO);
+            }];
+            
+            [self.tableView insert:changePassword atIndex:self.tableView.list.count tableRedraw:NO];
+            
+            
+            
+            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+                
+                
+                TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
+                
+                sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
+                
+                __weak TGSetPasswordAction *asWeak = sAction;
+                
+                sAction.callback = ^BOOL (NSString *password) {
                     
-                    [asWeak.controller performSelector:@selector(performShake) withObject:nil];
                     
-                }];
+                    NSData *phash = passwordHash(password,[pwd current_salt]);
+                    
+                    [self showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
+                        
+                        
+                        if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                            
+                            [self setPassword:@"" current_pswd_hash:phash email:[response email] hint:[pwd hint] flags:1 successCallback:^{
+                                
+                                alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessDeactivatedDescription", nil));
+                                
+                            } errorCallback:^{
+                                [asWeak.controller performSelector:@selector(performShake) withObject:nil];
+                            }];
+                            
+                        }
+                        
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [self hideModalProgress];
+                        
+                        [asWeak.controller performSelector:@selector(performShake) withObject:nil];
+                        
+                    }];
+                    
+                    
+                    
+                    return YES;
+                };
+                
+                [[Telegram rightViewController] showSetPasswordWithAction:sAction];
                 
                 
                 
-                return YES;
-            };
+            } description: NSLocalizedString(@"PasswordSettings.TurnOffPassword", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+                return @(NO);
+            }];
             
-            [[Telegram rightViewController] showSetPasswordWithAction:sAction];
-
+            [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
             
-            
-        } description: NSLocalizedString(@"PasswordSettings.TurnOffPassword", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-            return @(NO);
-        }];
-        
-        [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
-        
             GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
                 
                 
@@ -283,7 +294,7 @@
                         
                         if([response isKindOfClass:[TL_account_passwordSettings class]]) {
                             
-                        
+                            
                             
                             TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
                             
@@ -298,6 +309,8 @@
                             
                             emailAction.defaultValue = [response email];
                             
+                            __weak TGSetPasswordAction *wEAction;
+                            
                             emailAction.callback = ^BOOL (NSString *email) {
                                 
                                 if(NSStringIsValidEmail(email)) {
@@ -305,6 +318,8 @@
                                         
                                         alert(NSLocalizedString(@"PasswordSettings.AlertConfirmEmail", nil), NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
                                         
+                                    } errorCallback:^{
+                                        [wEAction.controller performSelector:@selector(performShake) withObject:nil];
                                     }];
                                 }
                                 
@@ -340,8 +355,186 @@
             }];
             
             [self.tableView insert:recoveryEmail atIndex:self.tableView.list.count tableRedraw:NO];
+            
+        }
+
+    } else {
         
+        if(![_passwordResult isKindOfClass:[TL_account_noPassword class]]) {
+            
+            GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+                
+                
+                TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
+                
+                sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
+                
+                __weak TGSetPasswordAction *asWeak = sAction;
+                
+                
+                void (^changeEmail)(NSString *password,NSData *phash,NSString *email) = ^(NSString *password,NSData *phash,NSString *email) {
+                    
+                    
+                    TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
+                    
+                    if(pwd.has_recovery) {
+                        emailAction.title = NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil);
+                        emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
+                    } else {
+                        emailAction.title = NSLocalizedString(@"PasswordSettings.RecoveryEmail", nil);
+                        emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
+                    }
+                    
+                    
+                    emailAction.defaultValue = email;
+                    
+                    __weak TGSetPasswordAction *wEAction = emailAction;
+                    
+                    emailAction.callback = ^BOOL (NSString *email) {
+                        
+                        if(NSStringIsValidEmail(email)) {
+                            [self setPassword:password current_pswd_hash:phash email:email hint:pwd.hint flags:2 successCallback:^{
+                                
+                                alert(NSLocalizedString(@"PasswordSettings.AlertConfirmEmail", nil), NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
+                                
+                            } errorCallback:^{
+                                [wEAction.controller performSelector:@selector(performShake) withObject:nil];
+                            }];
+                        }
+                        
+                        return !email || NSStringIsValidEmail(email);
+                    };
+                    
+                    
+                    [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
+                    
+                };
+                
+                
+                sAction.callback = ^BOOL (NSString *password) {
+                    
+                    NSData *phash = passwordHash(password,[pwd current_salt]);
+                    
+                    [self showModalProgress];
+                    
+                    
+                    [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
+                        
+                        
+                        if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                            
+                            changeEmail(password,phash,[response email]);
+                            
+                        }
+                        
+                        
+                        [self hideModalProgressWithSuccess];
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [self hideModalProgress];
+                        
+                        [asWeak.controller performSelector:@selector(performShake) withObject:nil];
+                        
+                    }];
+                    
+                    
+                    
+                    return YES;
+                };
+                
+                [[Telegram rightViewController] showSetPasswordWithAction:sAction];
+                
+                
+                
+            } description:NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+                return @(NO);
+            }];
+            
+            [self.tableView insert:recoveryEmail atIndex:self.tableView.list.count tableRedraw:NO];
+            
+        }
+        
+        
+        
+        
+        
+        GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            
+            
+            if([_passwordResult isKindOfClass:[TL_account_noPassword class]]) {
+                
+                
+                [self setPassword:@"" current_pswd_hash:[[NSData alloc] init] email:@"" hint:@"" flags:2 successCallback:^{
+                    
+                    alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessDeactivatedDescription", nil));
+                    
+                } errorCallback:nil];
+                
+            } else {
+                
+                TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
+                
+                sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
+                
+                __weak TGSetPasswordAction *asWeak = sAction;
+                
+                sAction.callback = ^BOOL (NSString *password) {
+                    
+                    
+                    NSData *phash = passwordHash(password,[pwd current_salt]);
+                    
+                    [self showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_account_getPasswordSettings createWithCurrent_password_hash:phash] successHandler:^(RPCRequest *request, TL_account_passwordSettings *response) {
+                        
+                        
+                        if([response isKindOfClass:[TL_account_passwordSettings class]]) {
+                            
+                            [self setPassword:@"" current_pswd_hash:phash email:@"" hint:@"" flags:2 | 1 successCallback:^{
+                                
+                                alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessDeactivatedDescription", nil));
+                                
+                            } errorCallback:^{
+                                [asWeak performSelector:@selector(performShake) withObject:nil];
+                            }];
+                            
+                        }
+                        
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [self hideModalProgress];
+                    }];
+                    
+                    
+                    
+                    return YES;
+                };
+                
+                [[Telegram rightViewController] showSetPasswordWithAction:sAction];
+                
+            }
+            
+            
+            
+            
+            
+        } description: NSLocalizedString(@"PasswordSettings.AbortPassword", nil) height:self.tableView.count == 0 ? 82 : 42 stateback:^id(GeneralSettingsRowItem *item) {
+            return @(NO);
+        }];
+        
+        [self.tableView insert:turnPassword atIndex:self.tableView.count tableRedraw:NO];
+        
+        
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.ConfrimEmailDescription", nil),[_passwordResult email_unconfirmed_pattern]]];
+        
+        description.height = 400;
+        
+        
+        [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     }
+    
+
     
     
     [self.tableView reloadData];
@@ -351,7 +544,7 @@
 
 
 
--(void)setPassword:(NSString *)password current_pswd_hash:(NSData *)current_pswd_hash email:(NSString *)email hint:(NSString *)hint flags:(int)flags successCallback:(dispatch_block_t)successCallback {
+-(void)setPassword:(NSString *)password current_pswd_hash:(NSData *)current_pswd_hash email:(NSString *)email hint:(NSString *)hint flags:(int)flags successCallback:(dispatch_block_t)successCallback errorCallback:(dispatch_block_t)errorCallback {
     
     [self showModalProgress];
     
@@ -365,13 +558,7 @@
         
         [newsalt addRandomBytes:8];
         
-        NSMutableData *hashData = [NSMutableData dataWithData:newsalt];
-        
-        [hashData appendData:[password dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [hashData appendData:newsalt];
-        
-         passhash =  MTSha256(hashData);
+        passhash = passwordHash(password, newsalt);
         
     }
     
@@ -396,18 +583,27 @@
         
         if(error.error_code == 400) {
             
-            [[Telegram rightViewController] clearStack];
-            
-            [[Telegram rightViewController] showPrivacyController];
-            
-            [self hideModalProgressWithSuccess];
-            
-            if(successCallback)
-            {
-                successCallback();
+            if([error.error_msg isEqualToString:@"EMAIL_UNCONFIRMED"]) {
+                [[Telegram rightViewController] clearStack];
+                
+                [[Telegram rightViewController] showPrivacyController];
+                
+                [self hideModalProgressWithSuccess];
+                
+                if(successCallback)
+                {
+                    successCallback();
+                }
+                
+                 return;
             }
             
-            return;
+
+        }
+        
+        if(errorCallback)
+        {
+            errorCallback();
         }
         
         [self hideModalProgress];

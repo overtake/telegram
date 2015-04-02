@@ -257,6 +257,7 @@ static const int controlsHeight = 75;
 }
 
 -(void)resort {
+    
     [ASQueue dispatchOnStageQueue:^{
         
         [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];

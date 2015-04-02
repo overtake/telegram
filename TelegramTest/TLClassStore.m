@@ -327,8 +327,8 @@
         [self.classes setObject:[TL_messageMediaWebPage class] forKey:[NSNumber numberWithInt:-1557277184]];
         [self.classes setObject:[TL_authorization class] forKey:[NSNumber numberWithInt:2079516406]];
         [self.classes setObject:[TL_account_authorizations class] forKey:[NSNumber numberWithInt:307276766]];
-        [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:1467017129]];
-        [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:133374398]];
+        [self.classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:-1764049896]];
+        [self.classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:2081952796]];
         [self.classes setObject:[TL_account_passwordSettings class] forKey:[NSNumber numberWithInt:-1212732749]];
         [self.classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-1124314324]];
         [self.classes setObject:[TL_auth_passwordRecovery class] forKey:[NSNumber numberWithInt:326715557]];

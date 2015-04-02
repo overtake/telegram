@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 30.03.15.
+//  Auto created by Dmitry Kondratyev on 01.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2251,16 +2251,17 @@
 	
 @interface TLaccount_Password()
 @property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSString* email_unconfirmed_pattern;
 @property (nonatomic, strong) NSData* current_salt;
 @property (nonatomic, strong) NSString* hint;
 @property Boolean has_recovery;
 @end
 
 @interface TL_account_noPassword : TLaccount_Password
-+(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern;
 @end
 @interface TL_account_password : TLaccount_Password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery;
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern;
 @end
 	
 @interface TLaccount_PasswordSettings()

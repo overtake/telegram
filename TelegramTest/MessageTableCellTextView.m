@@ -13,6 +13,8 @@
 #import "POPCGUtils.h"
 #import "TGImageView.h"
 #import "XCDYouTubeKit.h"
+#import "TGWebpageContainer.h"
+
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -23,13 +25,8 @@
 @interface MessageTableCellTextView() <TMHyperlinkTextFieldDelegate>
 
 
-// webpage container view;
-@property (nonatomic,strong) TMView *webPageContainerView;
-@property (nonatomic,strong) TGImageView *webPageImageView;
-@property (nonatomic,strong) TMTextField *webPageTitleView;
-@property (nonatomic,strong) TMTextField *webPageDescView;
-@property (nonatomic,strong) TMView *webPageMarkView;
 
+@property (nonatomic,strong) TGWebpageContainer *webpageContainerView;
 
 @end
 
@@ -56,70 +53,7 @@
 }
 
 
--(void)initWebPageContainerView {
-    
-    
-    if(_webPageContainerView == nil) {
-        
-        MessageTableItemText *item = (MessageTableItemText *)[self item];
-        
-        _webPageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
-        
-        _webPageContainerView.wantsLayer = YES;
-        
-        _webPageContainerView.layer.cornerRadius = 4;
-        
-        
-        {
-            _webPageImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
-            
-            
-            [_webPageContainerView addSubview:_webPageImageView];
-            
-            
-            
-            _webPageTitleView = [TMTextField defaultTextField];
-            _webPageDescView = [TMTextField defaultTextField];
-            
-            
-            _webPageMarkView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_webPageContainerView.frame), 40)];
-            
-            _webPageMarkView.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.6);
-            
-            
-            
-            [_webPageContainerView addSubview:_webPageMarkView];
-            
-            [_webPageContainerView addSubview:_webPageTitleView];
-            [_webPageContainerView addSubview:_webPageDescView];
-            
-            [_webPageTitleView setFrameOrigin:NSMakePoint(5, 20)];
-            [_webPageDescView setFrameOrigin:NSMakePoint(5, 0)];
-            
-            
-            [self setProgressToView:_webPageContainerView];
-            
-            [self.progressView setStyle:TMCircularProgressDarkStyle];
-            
-        }
-        
-        
-        [_webPageContainerView setBackgroundColor:[NSColor grayColor]];
-        
-        
-        [self.containerView addSubview:_webPageContainerView];
-        
-    }
-    
-}
 
-
--(void)deallocWebPageContainerView {
-    
-    [_webPageContainerView removeFromSuperview];
-    
-    _webPageContainerView = nil;
-}
 
 - (void) textField:(id)textField handleURLClick:(NSString *)url {
     open_link(url);
@@ -154,52 +88,23 @@
     
     if([item isWebPage]) {
         
-        [self initWebPageContainerView];
-        
-        [_webPageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
-        
-        [_webPageImageView setFrameSize:[item.webpage size]];
-        
-        [_webPageMarkView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame), 40)];
-        
-        [_webPageImageView setObject:item.webpage.imageObject];
-        
-        [_webPageTitleView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame) - 5, 20)];
-        [_webPageTitleView setAttributedStringValue:item.webpage.title];
-        
-        [_webPageDescView setFrameSize:NSMakeSize(NSWidth(_webPageContainerView.frame) - 5, 20)];
-        [_webPageDescView setAttributedStringValue:item.webpage.desc];
-        
-        
-        [_webPageTitleView setToolTip:item.webpage.toolTip];
-        [_webPageMarkView setToolTip:item.webpage.toolTip];
-        [_webPageDescView setToolTip:item.webpage.toolTip];
-        [_webPageContainerView setToolTip:item.webpage.toolTip];
-        [_webPageImageView setToolTip:item.webpage.toolTip];
-        
-        [item.webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+        if(!_webpageContainerView || _webpageContainerView.class != item.webpage.webpageContainer) {
+            _webpageContainerView = [[item.webpage.webpageContainer alloc] initWithFrame:NSZeroRect];
             
-            [ASQueue dispatchOnMainQueue:^{
-                
-                [self.progressView setProgress:50 + (item.progress/2) animated:YES];
-                
-            }];
-            
-        }];
+            [self.containerView addSubview:_webpageContainerView];
+        }
         
-        [item.webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
-            
-            [ASQueue dispatchOnMainQueue:^{
-                
-                [self updateCellState];
-                
-            }];
-            
-        }];
+        
+        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
+        
+        [_webpageContainerView setWebpage:item.webpage];
+        
+        [_webpageContainerView setItem:item];
         
         
     } else {
-        [self deallocWebPageContainerView];
+        [_webpageContainerView removeFromSuperview];
+        _webpageContainerView = nil;
     }
     
     [self updateCellState];
@@ -221,15 +126,8 @@
     
     MessageTableItemText *item = (MessageTableItemText *)[self item];
     
-    [self.progressView setHidden:self.item.isset];
+    [self.webpageContainerView updateState:cellState];
     
-    [self.progressView setState:cellState];
-    
-    [self.progressView setProgress:50 + (item.webpage.imageObject.downloadItem.progress/2) animated:NO];
-    
-    [self.progressView setProgress:self.progressView.currentProgress animated:YES];
-    
-    [self.progressView setCenterByView:_webPageContainerView];
 }
 
 - (NSMenu *)contextMenu {

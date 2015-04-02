@@ -33,7 +33,7 @@
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
         
-        if([obj.media isKindOfClass:[TL_photoSize class]]) {
+        if([obj.media isKindOfClass:[TLPhotoSize class]]) {
             
             TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:[(TL_photoSize *)obj.media location] placeHolder:obj.reservedObject sourceId:_user.n_id size:0];
             

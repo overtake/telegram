@@ -112,7 +112,7 @@
 }
 
 
-+ (NSDictionary *)videoParams:(NSString *)path {
++ (NSDictionary *)videoParams:(NSString *)path thumbSize:(NSSize)thumbSize {
     
     
     
@@ -137,12 +137,12 @@
             DLog(@"couldn't generate thumbnail, error:%@", error);
         }
         
-        thumbImg = [[NSImage alloc] initWithCGImage:im size:NSMakeSize(90, 90)];
+        thumbImg = [[NSImage alloc] initWithCGImage:im size:thumbSize];
         dispatch_semaphore_signal(sema);
     };
     
     
-    CGSize maxSize = CGSizeMake(90, 90);
+    CGSize maxSize = thumbSize;
     generator.maximumSize = maxSize;
     
     [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];

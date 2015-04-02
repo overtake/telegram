@@ -123,21 +123,11 @@
         width -= 50;
     }
 
-    
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.textAttributed);
-    
-    CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.textAttributed.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
-    
-    textSize.width= ceil(textSize.width);
-    textSize.height = ceil(textSize.height);
+
+    _textSize = [_textAttributed sizeForTextFieldForWidth:width];
     
     
-    CFRelease(framesetter);
-        
-    _textSize = textSize;
-    
-    
-    self.blockSize = NSMakeSize(width, textSize.height + [_webpage size].height + 5);
+    self.blockSize = NSMakeSize(width, _textSize.height + [_webpage size].height + 5);
     
     return YES;
 }

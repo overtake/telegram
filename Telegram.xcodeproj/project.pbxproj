@@ -459,6 +459,7 @@
 		C274C4201ACC09B0000DFDE4 /* XCDYouTubeVideoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C4181ACC09B0000DFDE4 /* XCDYouTubeVideoOperation.m */; };
 		C274C4221ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C41C1ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m */; };
 		C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C274C4231ACC0D4D000DFDE4 /* JavaScriptCore.framework */; };
+		C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C274C42D1ACC5B3A000DFDE4 /* AVKit.framework */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1689,6 +1690,7 @@
 		C274C41B1ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCDYouTubeVideoWebpage.h; sourceTree = "<group>"; };
 		C274C41C1ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCDYouTubeVideoWebpage.m; sourceTree = "<group>"; };
 		C274C4231ACC0D4D000DFDE4 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		C274C42D1ACC5B3A000DFDE4 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -2181,6 +2183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
 				C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */,
 				C20A7E8019DC1887008844F2 /* ImageIO.framework in Frameworks */,
@@ -4347,6 +4350,7 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C274C42D1ACC5B3A000DFDE4 /* AVKit.framework */,
 				C274C4231ACC0D4D000DFDE4 /* JavaScriptCore.framework */,
 				C2BC529C1A695A270004A8FE /* IOKit.framework */,
 				C20A7E7F19DC1887008844F2 /* ImageIO.framework */,

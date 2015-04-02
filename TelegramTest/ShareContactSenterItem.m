@@ -47,6 +47,12 @@
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
+        if(response.updates.count < 2)
+        {
+            [self cancel];
+            return;
+        }
+        
         TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         if(self.conversation.type != DialogTypeBroadcast)  {

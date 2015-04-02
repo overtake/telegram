@@ -28,7 +28,7 @@
     if(self = [super init]) {
         self.path_for_file = path_for_file;
         self.conversation = conversation;
-        NSDictionary *params = [[MessageSender videoParams:path_for_file] mutableCopy];
+        NSDictionary *params = [[MessageSender videoParams:path_for_file thumbSize:strongsize(NSMakeSize(640, 480), 90)] mutableCopy];
         
         int duration = [[params objectForKey:@"duration"] intValue];
         NSSize size = NSSizeFromString([params objectForKey:@"size"]);
@@ -74,6 +74,14 @@
     int duration = self.message.media.video.duration;
     NSSize size = NSMakeSize(self.message.media.video.w, self.message.media.video.h);
     
+    
+    NSString *export = exportPath(self.message.randomId,@"mp4");
+    
+    if(!self.path_for_file)
+        self.path_for_file = export;
+    
+
+    
     self.uploader = [[UploadOperation alloc] init];
     
     weakify();
@@ -90,7 +98,7 @@
             if(strongSelf.conversation.type == DialogTypeBroadcast) {
                 request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
             } else {
-                request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:rand_long()];
+                request = [TLAPI_messages_sendMedia createWithPeer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId];
             }
             
             
@@ -98,6 +106,13 @@
 
                 
                 [SharedManager proccessGlobalResponse:response];
+               
+                
+                if(response.updates.count < 2)
+                {
+                    [strongSelf cancel];
+                    return;
+                }
                 
                 
                 TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
@@ -131,6 +146,10 @@
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message.media) error:nil];
             
+                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message.media) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
+                
+                
+                strongSelf.message.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
                 
                 strongSelf.uploader = nil;
                 

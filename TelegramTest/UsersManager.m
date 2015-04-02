@@ -160,7 +160,10 @@
         for (TLUser *newUser in all) {
             TLUser *currentUser = [keys objectForKey:[newUser valueForKey:key]];
             
-            
+            if(newUser.first_name.length == 0 && newUser.last_name.length == 0)
+            {
+                newUser.first_name =  NSLocalizedString(@"User.Deleted", nil);
+            }
             
             BOOL needUpdateUserInDB = NO;
             if(currentUser) {

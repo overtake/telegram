@@ -11,11 +11,15 @@
 #import "MessageTableElements.h"
 #import "TGPhotoViewer.h"
 #import "SelfDestructionController.h"
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 @interface TGPVContainer ()
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
 @property (nonatomic,strong) TMTextField *dateTextField;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
+
+@property (nonatomic,strong) AVPlayerView *videoPlayerView;
 
 @end
 
@@ -79,7 +83,17 @@
 }
 
 - (NSSize)contentFullSize:(TGPhotoViewerItem *)item {
-     return convertSize(item.imageObject.imageSize, [self maxSize]);
+    
+    
+    NSSize size = item.imageObject.imageSize;
+    
+    if([item.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
+        
+        size = [item.previewObject.reservedObject[@"size"] sizeValue];
+        
+    }
+    
+     return convertSize(size, [self maxSize]);
 }
 
 -(void)copy:(id)sender {
@@ -105,7 +119,10 @@
 static const int bottomHeight = 60;
 
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
+    
     _currentViewerItem = currentViewerItem;
+    
+  
     
     self.imageView.object = currentViewerItem.imageObject;
     
@@ -151,7 +168,36 @@ static const int bottomHeight = 60;
     
     [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) + 5, roundf((self.bounds.size.height - size.height ) / 2) + 5)];
     
-    //-  [self runAnimation:currentViewerItem];
+    
+    
+    
+    if([currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
+        
+        NSDictionary *video = currentViewerItem.previewObject.reservedObject;
+        
+        NSURL *url = video[@"url"];
+        
+        CMTime time = [video[@"time"] CMTimeValue];
+        
+        if(!_videoPlayerView) {
+            _videoPlayerView = [[AVPlayerView alloc] initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
+            
+            [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
+            [self addSubview:_videoPlayerView];
+            
+            AVPlayer *player = [AVPlayer playerWithURL:url];
+            _videoPlayerView.player = player;
+            [player seekToTime:time];
+            [player play];
+        }
+        
+        
+    } else {
+        [_videoPlayerView.player pause];
+        _videoPlayerView.player = nil;
+        [_videoPlayerView removeFromSuperview];
+        _videoPlayerView = nil;
+    }
 
 }
 

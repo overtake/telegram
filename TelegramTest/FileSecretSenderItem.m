@@ -92,7 +92,7 @@
         [self.message save:YES];
         
     } else if( self.uploadType == UploadVideoType ) {
-        NSDictionary *params = [MessageSender videoParams:self.filePath];
+        NSDictionary *params = [MessageSender videoParams:self.filePath thumbSize:strongsize(NSMakeSize(640, 480), 90)];
         
         NSImage *thumb = [params objectForKey:@"image"];
         int duration = [[params objectForKey:@"duration"] intValue];

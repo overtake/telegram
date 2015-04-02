@@ -40,7 +40,8 @@
 -(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
     if(self = [super init]) {
         _location = location;
-        _placeholder = placeHolder;
+        if([placeHolder isKindOfClass:[NSImage class]])
+            _placeholder = placeHolder;
         _sourceId = sourceId;
         _size = size;
     }

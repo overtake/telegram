@@ -21,6 +21,7 @@
 @property (nonatomic,strong,readonly) TLWebPage *webpage;
 
 @property (nonatomic,assign,readonly) NSSize size;
+@property (nonatomic,assign,readonly) NSSize imageSize;
 
 -(id)initWithWebPage:(TLWebPage *)webpage;
 

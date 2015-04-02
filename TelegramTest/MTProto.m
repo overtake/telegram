@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.03.15.
+//  Auto created by Mikhail Filimonov on 01.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7810,26 +7810,30 @@
 @end
 
 @implementation TL_account_noPassword
-+(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt {
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern {
 	TL_account_noPassword* obj = [[TL_account_noPassword alloc] init];
 	obj.n_salt = n_salt;
+	obj.email_unconfirmed_pattern = email_unconfirmed_pattern;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeByteArray:self.n_salt];
+	[stream writeString:self.email_unconfirmed_pattern];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_salt = [stream readByteArray];
+	self.email_unconfirmed_pattern = [stream readString];
 }
 @end
 
 @implementation TL_account_password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery {
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern {
 	TL_account_password* obj = [[TL_account_password alloc] init];
 	obj.current_salt = current_salt;
 	obj.n_salt = n_salt;
 	obj.hint = hint;
 	obj.has_recovery = has_recovery;
+	obj.email_unconfirmed_pattern = email_unconfirmed_pattern;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -7837,12 +7841,14 @@
 	[stream writeByteArray:self.n_salt];
 	[stream writeString:self.hint];
 	[stream writeBool:self.has_recovery];
+	[stream writeString:self.email_unconfirmed_pattern];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.current_salt = [stream readByteArray];
 	self.n_salt = [stream readByteArray];
 	self.hint = [stream readString];
 	self.has_recovery = [stream readBool];
+	self.email_unconfirmed_pattern = [stream readString];
 }
 @end
 
@@ -8725,7 +8731,6 @@
 	self.orig_message = [TLClassStore TLDeserialize:stream];
 }
 @end
-
 
 
 @implementation TL_gzip_packed

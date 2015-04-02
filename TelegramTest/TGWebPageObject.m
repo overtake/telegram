@@ -13,27 +13,22 @@
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super init]) {
         
+        _webpage = webpage;
         
         NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
         
         
-        [title appendString:webpage.title withColor:[NSColor whiteColor]];
+        [title appendString:webpage.title withColor:[NSColor blackColor]];
         [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:title.range];
         
         _title = title;
+                
+    
+               
+        if(webpage.n_description.length > 0) {
+            _toolTip = [NSString stringWithFormat:@"%@",webpage.n_description];
+        }
         
-        NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
-        
-        
-        NSString *d = webpage.n_description.length > 0 ? webpage.n_description : webpage.display_url;
-        
-        [desc appendString:d withColor:[NSColor whiteColor]];
-        
-        
-        [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:desc.range];
-        
-        
-        _toolTip = [NSString stringWithFormat:@"%@\n\n%@",webpage.title,d];
         
         
         if(![webpage.photo isKindOfClass:[TL_photoEmpty class]]) {
@@ -56,7 +51,7 @@
             _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:thumb sourceId:0 size:photoSize.size];
             
             
-            NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 350);
+            NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 320);
             
             
             _imageObject.imageSize = imageSize;
@@ -72,7 +67,9 @@
 
 -(void)makeSize:(int)width {
     
-    _size = _imageObject.imageSize;
+    _imageSize = strongsize(_imageObject.imageSize, width - 67);
+    
+    _size = _imageSize;
     
 }
 
