@@ -170,7 +170,6 @@
     [self.navigationViewController.view.window makeFirstResponder:nil];
     [[Telegram mainViewController] layout];
     
-    [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
     
 }
 
@@ -178,6 +177,8 @@
     
     
     [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
+    
+    
 }
 
 
@@ -185,7 +186,7 @@
     return [Telegram leftViewController];
 }
 
--(void)didChangedLayout:(NSNotification *)notification {
+-(void)didChangedLayout {
     
     
     
@@ -222,7 +223,7 @@
     
     [self.modalView setHidden:[Telegram isSingleLayout]];
     
-    [[Telegram leftViewController] didChangedLayout:notification];
+    [[Telegram leftViewController] didChangedLayout:nil];
     
 }
 

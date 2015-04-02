@@ -815,7 +815,7 @@ static BOOL dragAction = NO;
         
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 15, NSWidth(self.bounds) - 170, NSHeight(_replyContainer.frame))];
+        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 15, NSWidth(self.containerView.frame) , NSHeight(_replyContainer.frame))];
         
         
     } else {

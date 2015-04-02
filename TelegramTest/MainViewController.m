@@ -11,6 +11,12 @@
 #import "NotSelectedDialogsViewController.h"
 
 
+
+#define MIN_SINGLE_LAYOUT_WIDTH 380
+#define MAX_SINGLE_LAYOUT_WIDTH 600
+
+#define MAX_LEFT_WIDTH 300
+
 @interface MainViewController ()
 -(void)checkLeftView;
 @end
@@ -25,15 +31,22 @@
 -(void)setFrame:(NSRect)frame {
     
     
-    BOOL isSingleLayout = [[Telegram mainViewController] isSingleLayout];
+    BOOL currentLayout = ![[Telegram mainViewController] isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
     
     [super setFrame:frame];
     
-    if(isSingleLayout != [[Telegram mainViewController] isSingleLayout]) {
-        [[Telegram mainViewController] layout];
-        [Notification perform:LAYOUT_CHANGED data:nil];
+    BOOL nextLayout = ![[Telegram mainViewController] isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+    
+    if(currentLayout != nextLayout) {
         
-        [[Telegram mainViewController] checkLeftView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[Telegram mainViewController] layout];
+            [[Telegram rightViewController] didChangedLayout];
+            [[Telegram mainViewController] checkLeftView];
+        });
+        
+   //     [Notification perform:LAYOUT_CHANGED data:nil];
+        //
         
     }
 }
@@ -62,13 +75,10 @@
 @end
 
 
-#define MIN_SINGLE_LAYOUT_WIDTH 380
-#define MAX_SINGLE_LAYOUT_WIDTH 600
-
-#define MAX_LEFT_WIDTH 300
 
 @interface MainViewController () {
     NSSize oldLeftSize,oldRightSize,newLeftSize,newRightSize;
+    BOOL _singleLayout;
 }
 @property (nonatomic,strong) MainSplitView *splitView;
 
@@ -155,8 +165,11 @@
 -(void)layout {
     
 
+    _singleLayout = ![self isMinimisze] && (self.view.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+    
     if([self isSingleLayout]) {
 
+        
 
         [self.leftViewContainer setFrameSize:NSMakeSize([self isConversationListShown] ? NSWidth(self.view.frame) : 0,NSHeight(self.leftViewContainer.frame))];
         
@@ -174,7 +187,7 @@
         
         
         if(NSWidth(self.leftViewContainer.frame) != 70) {
-            [self.leftViewContainer setFrameSize:NSMakeSize( NSWidth(self.leftViewContainer.frame) == 0 ?  NSWidth(self.view.frame) - w : MIN(MIN(NSWidth(self.leftViewContainer.frame),MAX_LEFT_WIDTH),NSWidth(self.view.frame) - w),NSHeight(self.leftViewContainer.frame))];
+            [self.leftViewContainer setFrameSize:NSMakeSize( NSWidth(self.leftViewContainer.frame) == 0 ?  MIN(NSWidth(self.view.frame) - w, MAX_LEFT_WIDTH) : MIN(MIN(NSWidth(self.leftViewContainer.frame),MAX_LEFT_WIDTH),NSWidth(self.view.frame) - w),NSHeight(self.leftViewContainer.frame))];
         }
         
         
@@ -225,7 +238,7 @@
 
 
 -(BOOL)isSingleLayout {
-    return ![self isMinimisze] && (self.view.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+    return _singleLayout;
 }
 
 
@@ -235,12 +248,17 @@
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
     
+    BOOL res = NO;
+    
     if(subview == self.leftViewContainer)
-        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
+        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
     else {        
-        return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+        
+        NSLog(@"%d",res);
     }
     
+    return res;
 }
 
 

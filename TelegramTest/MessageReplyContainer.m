@@ -166,9 +166,9 @@
     
 }
 
--(void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
-    
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+        
     [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 19)];
 }
 

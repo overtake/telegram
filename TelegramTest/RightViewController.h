@@ -119,4 +119,5 @@
 -(void)showEmailPasswordWithAction:(TGSetPasswordAction *)action;
 
 -(void)clearStack;
+-(void)didChangedLayout;
 @end

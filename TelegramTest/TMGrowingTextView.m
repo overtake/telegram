@@ -338,7 +338,7 @@
 
 -(NSPoint)textContainerOrigin {
     
-    if([self numberOfLines] <= 10) {
+    if([self numberOfLines] < 10) {
         [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         
@@ -348,6 +348,7 @@
     }
     
     return [super textContainerOrigin];
+    
 }
 
 -(NSUInteger)numberOfLines {
