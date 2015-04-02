@@ -11,11 +11,16 @@
 #import "TMLoaderView.h"
 #import "TGImageView.h"
 #import "MessageTableItem.h"
+#import "TGCTextView.h"
 @interface TGWebpageContainer : TMView
 
 @property (nonatomic,strong,readonly) TMLoaderView *loaderView;
 @property (nonatomic,strong,readonly) TGImageView *imageView;
 
+@property (nonatomic,strong) TMTextField *author;
+@property (nonatomic,strong) TMTextField *date;
+
+@property (nonatomic,strong) TGCTextView *descriptionField;
 
 @property (nonatomic,weak) TGWebpageObject *webpage;
 @property (nonatomic,weak) MessageTableItem *item;

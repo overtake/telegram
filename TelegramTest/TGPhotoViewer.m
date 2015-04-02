@@ -454,6 +454,16 @@ static const int controlsHeight = 75;
 
 -(void)show:(PreviewObject *)item {
     
+    if([item.reservedObject isKindOfClass:[NSDictionary class]]) {
+        
+        if (floor(NSAppKitVersionNumber) <= 1187)  { // video avaiable only on 10.9 +
+            
+            return;
+           
+        }
+        
+    }
+    
     _behavior = [[TGPVEmptyBehavior alloc] init];
     
     [ASQueue dispatchOnStageQueue:^{

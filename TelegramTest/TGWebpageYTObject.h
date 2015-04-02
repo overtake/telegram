@@ -10,7 +10,9 @@
 #import "XCDYouTubeKit.h"
 @interface TGWebpageYTObject : TGWebpageObject
 
-@property (nonatomic,assign,readonly) NSSize descriptionSize;
+
+@property (nonatomic, strong) NSAttributedString *videoTimeAttributedString;
+@property (nonatomic) NSSize videoTimeSize;
 
 @property (nonatomic,strong,readonly) XCDYouTubeVideo *video;
 

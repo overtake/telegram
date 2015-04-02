@@ -187,6 +187,7 @@
         
         
         if(NSWidth(self.leftViewContainer.frame) != 70) {
+            
             [self.leftViewContainer setFrameSize:NSMakeSize( NSWidth(self.leftViewContainer.frame) == 0 ?  MIN(NSWidth(self.view.frame) - w, MAX_LEFT_WIDTH) : MIN(MIN(NSWidth(self.leftViewContainer.frame),MAX_LEFT_WIDTH),NSWidth(self.view.frame) - w),NSHeight(self.leftViewContainer.frame))];
         }
         
@@ -250,13 +251,12 @@
     
     BOOL res = NO;
     
-    if(subview == self.leftViewContainer)
+    if(subview == self.leftViewContainer) {
         res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
-    else {        
+    } else {
         res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
-        
-        NSLog(@"%d",res);
     }
+    
     
     return res;
 }

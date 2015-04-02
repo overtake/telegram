@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.04.15.
+//  Auto created by Mikhail Filimonov on 02.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7686,28 +7686,58 @@
 @end
 
 @implementation TL_webPage
-+(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo {
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:()embed_width embed_height:()embed_height duration:()duration author:(NSString*)author {
 	TL_webPage* obj = [[TL_webPage alloc] init];
+	obj.flags = flags;
 	obj.n_id = n_id;
+	obj.url = url;
 	obj.display_url = display_url;
+	obj.type = type;
+	obj.site_name = site_name;
 	obj.title = title;
 	obj.n_description = n_description;
 	obj.photo = photo;
+	obj.embed_url = embed_url;
+	obj.embed_type = embed_type;
+	obj.embed_width = embed_width;
+	obj.embed_height = embed_height;
+	obj.duration = duration;
+	obj.author = author;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeLong:self.n_id];
+	[stream writeString:self.url];
 	[stream writeString:self.display_url];
-	[stream writeString:self.title];
-	[stream writeString:self.n_description];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	if(self.flags & (1 << 0)) [stream writeString:self.type];
+	if(self.flags & (1 << 1)) [stream writeString:self.site_name];
+	if(self.flags & (1 << 2)) [stream writeString:self.title];
+	if(self.flags & (1 << 3)) [stream writeString:self.n_description];
+	if(self.flags & (1 << 4)) [TLClassStore TLSerialize:self.photo stream:stream];
+	if(self.flags & (1 << 5)) [stream writeString:self.embed_url];
+	if(self.flags & (1 << 5)) [stream writeString:self.embed_type];
+	if(self.flags & (1 << 6)) [stream writeInt:self.embed_width];
+	if(self.flags & (1 << 6)) [stream writeInt:self.embed_height];
+	if(self.flags & (1 << 7)) [stream writeInt:self.duration];
+	if(self.flags & (1 << 8)) [stream writeString:self.author];
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.n_id = [stream readLong];
+	self.url = [stream readString];
 	self.display_url = [stream readString];
-	self.title = [stream readString];
-	self.n_description = [stream readString];
-	self.photo = [TLClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 0)) self.type = [stream readString];
+	if(self.flags & (1 << 1)) self.site_name = [stream readString];
+	if(self.flags & (1 << 2)) self.title = [stream readString];
+	if(self.flags & (1 << 3)) self.n_description = [stream readString];
+	if(self.flags & (1 << 4)) self.photo = [TLClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 5)) self.embed_url = [stream readString];
+	if(self.flags & (1 << 5)) self.embed_type = [stream readString];
+	if(self.flags & (1 << 6)) self.embed_width = [stream readInt];
+	if(self.flags & (1 << 6)) self.embed_height = [stream readInt];
+	if(self.flags & (1 << 7)) self.duration = [stream readInt];
+	if(self.flags & (1 << 8)) self.author = [stream readString];
 }
 @end
 

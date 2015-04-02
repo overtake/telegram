@@ -13,6 +13,27 @@
 
 @synthesize size = _size;
 
+-(id)initWithWebPage:(TLWebPage *)webpage {
+    if(self = [super initWithWebPage:webpage]) {
+        
+        NSString *sizeInfo = [NSString durationTransformedValue:self.webpage.duration];
+        
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:sizeInfo attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
+
+        
+        _videoTimeAttributedString = attr;
+        
+        
+        NSSize size = [_videoTimeAttributedString size];
+        size.width = ceil(size.width + 14);
+        size.height = ceil(size.height + 7);
+        _videoTimeSize = size;
+        
+    }
+    
+    return self;
+}
 
 
 -(void)makeSize:(int)width {
@@ -21,11 +42,7 @@
     
     _size = self.imageSize;
     
-    
-    _descriptionSize = [self.title sizeForTextFieldForWidth:width-60];
-    
-    
-    _size.height+=_descriptionSize.height+8;
+    _size.height+=self.titleSize.height + (!self.author ?:17) + (self.imageObject ? 8 : 0);
     
     _size.width = width - 60;
     

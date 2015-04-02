@@ -164,9 +164,9 @@ static const int bottomHeight = 60;
     
   
     
-    [self.imageView setFrameSize:NSMakeSize(size.width - 10, size.height - 10)];
+    [self.imageView setFrameSize:NSMakeSize(size.width , size.height )];
     
-    [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) + 5, roundf((self.bounds.size.height - size.height ) / 2) + 5)];
+    [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height ) / 2) )];
     
     
     

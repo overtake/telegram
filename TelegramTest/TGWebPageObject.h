@@ -11,8 +11,14 @@
 @interface TGWebpageObject : NSObject
 
 @property (nonatomic,strong,readonly) NSAttributedString *title;
+@property (nonatomic,assign,readonly) NSSize titleSize;
+
 @property (nonatomic,strong,readonly) TGImageObject *imageObject;
+
+
 @property (nonatomic,strong,readonly) NSAttributedString *desc;
+@property (nonatomic,assign,readonly) NSSize descSize;
+
 
 @property (nonatomic,strong,readonly) NSString *toolTip;
 @property (nonatomic,strong,readonly) NSString *date;
@@ -23,6 +29,7 @@
 @property (nonatomic,assign,readonly) NSSize size;
 @property (nonatomic,assign,readonly) NSSize imageSize;
 
+
 -(id)initWithWebPage:(TLWebPage *)webpage;
 
 
@@ -30,5 +37,7 @@
 
 
 -(Class)webpageContainer;
+
++(id)objectForWebpage:(TLWebPage *)webpage;
 
 @end

@@ -296,7 +296,7 @@
             
             
             
-        }];
+        } timeout:10];
         
     }];
     
@@ -467,7 +467,7 @@
         
         [TMViewController hideModalProgress];
         
-    }];
+    } timeout:10];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {

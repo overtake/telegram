@@ -326,6 +326,7 @@
                 }
                 
                 
+                
                 if(startIndex > endIndex) {
                     startIndex = endIndex+startIndex;
                     endIndex = startIndex - endIndex;
@@ -433,6 +434,7 @@
  
     return [super respondsToSelector:aSelector];
 }
+
 
 -(void)copy:(id)sender {
     
@@ -559,10 +561,12 @@
     if(!_isEditable)
         return;
     
-    startSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    [self becomeFirstResponder];
     
     currentSelectPosition = NSMakePoint(-1, -1);
     [self setSelectionRange:NSMakeRange(NSNotFound, 0)];
+    
+    startSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     [self setNeedsDisplay:YES];
 }

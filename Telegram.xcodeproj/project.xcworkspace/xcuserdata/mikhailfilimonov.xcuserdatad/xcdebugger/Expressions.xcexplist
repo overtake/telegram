@@ -1471,6 +1471,9 @@
          contextName = "-[ChatInfoViewController setChat:]:ChatInfoViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke262:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__25-[MTNetwork sendRequest:]_block_invoke:MTNetwork.m">
          <PersistentStrings>
             <PersistentString

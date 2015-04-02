@@ -323,7 +323,7 @@
         [self.classes setObject:[TL_updateWebPage class] forKey:[NSNumber numberWithInt:751004017]];
         [self.classes setObject:[TL_webPageEmpty class] forKey:[NSNumber numberWithInt:-350980120]];
         [self.classes setObject:[TL_webPagePending class] forKey:[NSNumber numberWithInt:-981018084]];
-        [self.classes setObject:[TL_webPage class] forKey:[NSNumber numberWithInt:969002745]];
+        [self.classes setObject:[TL_webPage class] forKey:[NSNumber numberWithInt:-1558273867]];
         [self.classes setObject:[TL_messageMediaWebPage class] forKey:[NSNumber numberWithInt:-1557277184]];
         [self.classes setObject:[TL_authorization class] forKey:[NSNumber numberWithInt:2079516406]];
         [self.classes setObject:[TL_account_authorizations class] forKey:[NSNumber numberWithInt:307276766]];

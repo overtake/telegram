@@ -460,6 +460,10 @@
 		C274C4311ACD3656000DFDE4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C274C4361ACD365C000DFDE4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C274C4371ACD365C000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C274C4401ACD8223000DFDE4 /* TGWebpageIGObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C43F1ACD8223000DFDE4 /* TGWebpageIGObject.m */; };
+		C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C4461ACD99E7000DFDE4 /* TGWebpageTWObject.m */; };
+		C274C44A1ACD9FF5000DFDE4 /* TGWebpageStandartObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */; };
+		C274C44D1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C44C1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m */; };
 		C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DC719DEAD0800752BAF /* SelectTextManager.m */; };
 		C2753DCB19DEBE6500752BAF /* TGMultipleSelectTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DCA19DEBE6500752BAF /* TGMultipleSelectTextView.m */; };
 		C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2753DD119E4282000752BAF /* SearchMessagesView.m */; };
@@ -1691,6 +1695,14 @@
 		C274C41C1ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCDYouTubeVideoWebpage.m; sourceTree = "<group>"; };
 		C274C4231ACC0D4D000DFDE4 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		C274C42D1ACC5B3A000DFDE4 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
+		C274C43E1ACD8223000DFDE4 /* TGWebpageIGObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageIGObject.h; sourceTree = "<group>"; };
+		C274C43F1ACD8223000DFDE4 /* TGWebpageIGObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageIGObject.m; sourceTree = "<group>"; };
+		C274C4451ACD99E7000DFDE4 /* TGWebpageTWObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageTWObject.h; sourceTree = "<group>"; };
+		C274C4461ACD99E7000DFDE4 /* TGWebpageTWObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageTWObject.m; sourceTree = "<group>"; };
+		C274C4481ACD9FF5000DFDE4 /* TGWebpageStandartObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageStandartObject.h; sourceTree = "<group>"; };
+		C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageStandartObject.m; sourceTree = "<group>"; };
+		C274C44B1ACDA00A000DFDE4 /* TGWebpageStandartContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageStandartContainer.h; sourceTree = "<group>"; };
+		C274C44C1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageStandartContainer.m; sourceTree = "<group>"; };
 		C2753DC619DEAD0800752BAF /* SelectTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTextManager.h; sourceTree = "<group>"; };
 		C2753DC719DEAD0800752BAF /* SelectTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTextManager.m; sourceTree = "<group>"; };
 		C2753DC919DEBE6500752BAF /* TGMultipleSelectTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleSelectTextView.h; sourceTree = "<group>"; };
@@ -3751,6 +3763,8 @@
 				C274C3FE1ACBF780000DFDE4 /* TGWebpageTWContainer.m */,
 				C274C4031ACBFF33000DFDE4 /* TGWebpageContainer.h */,
 				C274C4041ACBFF33000DFDE4 /* TGWebpageContainer.m */,
+				C274C44B1ACDA00A000DFDE4 /* TGWebpageStandartContainer.h */,
+				C274C44C1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -3762,6 +3776,12 @@
 				C274C4011ACBF7A5000DFDE4 /* TGWebpageObject.m */,
 				C274C4081ACC015D000DFDE4 /* TGWebpageYTObject.h */,
 				C274C4091ACC015D000DFDE4 /* TGWebpageYTObject.m */,
+				C274C43E1ACD8223000DFDE4 /* TGWebpageIGObject.h */,
+				C274C43F1ACD8223000DFDE4 /* TGWebpageIGObject.m */,
+				C274C4451ACD99E7000DFDE4 /* TGWebpageTWObject.h */,
+				C274C4461ACD99E7000DFDE4 /* TGWebpageTWObject.m */,
+				C274C4481ACD9FF5000DFDE4 /* TGWebpageStandartObject.h */,
+				C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */,
 			);
 			name = objects;
 			sourceTree = "<group>";
@@ -5164,6 +5184,7 @@
 				0A59068018AA32C8002ED7BA /* BTRSecureTextField.m in Sources */,
 				CEB26165180C928A00378932 /* RpcError.m in Sources */,
 				0A6D098D19535E8500A9AC64 /* NSEventCategory.m in Sources */,
+				C274C44D1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m in Sources */,
 				C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */,
 				C282485518BBB7FB00131533 /* Destructor.m in Sources */,
 				0AACA3F618B752C000621564 /* TMTextButton.m in Sources */,
@@ -5229,6 +5250,7 @@
 				0A6D099719535E8500A9AC64 /* TLContactCategory.m in Sources */,
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
+				C274C4401ACD8223000DFDE4 /* TGWebpageIGObject.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
 				C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */,
@@ -5282,6 +5304,7 @@
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
+				C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */,
 				C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */,
 				CEAE5D2E181E4C6F00C17645 /* TLFileLocation+Extensions.m in Sources */,
 				C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */,
@@ -5650,6 +5673,7 @@
 				C20D188B193CBC230095A906 /* AudioSenderItem.m in Sources */,
 				C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */,
 				C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */,
+				C274C44A1ACD9FF5000DFDE4 /* TGWebpageStandartObject.m in Sources */,
 				C248F3CF19BE046C00BF658E /* diag_range.c in Sources */,
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
 				CEDAEB621881AF85006189A2 /* YapDatabaseViewRangeOptions.m in Sources */,

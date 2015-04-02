@@ -1,23 +1,15 @@
 //
-//  TGWebPageYTContainer.m
+//  TGWebpageStandartContainer.m
 //  Telegram
 //
-//  Created by keepcoder on 01.04.15.
+//  Created by keepcoder on 02.04.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "TGWebPageIGContainer.h"
-#import "TGImageView.h"
-#import "TMLoaderView.h"
+#import "TGWebpageStandartContainer.h"
+#import "TGWebpageStandartObject.h"
 #import "TGPhotoViewer.h"
-#import "TGWebpageIGObject.h"
-@interface TGWebpageIGContainer ()
-
-
-@end
-
-@implementation TGWebpageIGContainer
-
+@implementation TGWebpageStandartContainer
 
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
@@ -29,12 +21,6 @@
             
             previewObject.reservedObject = self.imageView.image;
             
-            if([self.webpage.webpage.type isEqualToString:@"video"]) {
-                
-                previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
-                
-            }
-            
             [[TGPhotoViewer viewer] show:previewObject];
             
         };
@@ -42,26 +28,13 @@
         
         [self.imageView setTapBlock:block];
         
-
+        
     }
     
     return self;
 }
 
--(void)setWebpage:(TGWebpageIGObject *)webpage {
-    
-    
-    
-    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
-    
-    [self.imageView setObject:webpage.imageObject];
-    
-    [self.loaderView setCenterByView:self.imageView];
-    
-    [self.descriptionField setFrame:NSMakeRect(0, 20, webpage.descSize.width , webpage.descSize.height )];
-    
-    [self.descriptionField setAttributedString:webpage.desc];
-    
+-(void)setWebpage:(TGWebpageStandartObject *)webpage {
     
     
     [self.author setHidden:!webpage.author];
@@ -79,6 +52,18 @@
         [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.author.frame) + 4, 0)];
     }
     
+    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
+    
+    [self.imageView setObject:webpage.imageObject];
+    
+    [self.loaderView setCenterByView:self.imageView];
+    
+    [self.descriptionField setFrame:NSMakeRect(0, !self.author.isHidden ? 20 : -4, webpage.descSize.width , webpage.descSize.height )];
+    
+    [self.descriptionField setAttributedString:webpage.desc];
+    
+    
+    
     [super setWebpage:webpage];
     
 }
@@ -87,6 +72,5 @@
     [super updateState:state];
     
 }
-
 
 @end

@@ -43,6 +43,7 @@
 #import "NSTextView+EmojiExtension.h"
 #import "TGPhotoViewer.h"
 #import "TGPasslock.h"
+#import "TGCTextView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -549,7 +550,7 @@ void exceptionHandler(NSException * exception)
             
         }
         
-        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0)
+        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]])
             [[Telegram rightViewController] becomeFirstResponder];
         
         return result;

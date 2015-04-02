@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 01.04.15.
+//  Auto created by Dmitry Kondratyev on 02.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2205,10 +2205,20 @@
 @interface TLWebPage()
 @property long n_id;
 @property int date;
+@property int flags;
+@property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* display_url;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* site_name;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* n_description;
 @property (nonatomic, strong) TLPhoto* photo;
+@property (nonatomic, strong) NSString* embed_url;
+@property (nonatomic, strong) NSString* embed_type;
+@property int embed_width;
+@property int embed_height;
+@property int duration;
+@property (nonatomic, strong) NSString* author;
 @end
 
 @interface TL_webPageEmpty : TLWebPage
@@ -2218,7 +2228,7 @@
 +(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
 @end
 @interface TL_webPage : TLWebPage
-+(TL_webPage*)createWithN_id:(long)n_id display_url:(NSString*)display_url title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo;
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:()embed_width embed_height:()embed_height duration:()duration author:(NSString*)author;
 @end
 	
 @interface TLAuthorization()

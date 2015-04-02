@@ -89,6 +89,8 @@
     if([item isWebPage]) {
         
         if(!_webpageContainerView || _webpageContainerView.class != item.webpage.webpageContainer) {
+            [_webpageContainerView removeFromSuperview];
+            
             _webpageContainerView = [[item.webpage.webpageContainer alloc] initWithFrame:NSZeroRect];
             
             [self.containerView addSubview:_webpageContainerView];

@@ -16,9 +16,10 @@
 #import "YoutubeServiceDescription.h"
 #import "ITProgressIndicator.h"
 #import "TGPhotoViewer.h"
+#import "MessageCellDescriptionView.h"
 @interface TGWebpageYTContainer ()
 
-@property (nonatomic,strong) TGCTextView *descriptionField;
+@property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
 
 
 
@@ -29,8 +30,6 @@
 @property (nonatomic,strong) ITProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) TMView *blackContainer;
-
-@property (nonatomic,strong) NSImageView *fullScreenImageView;
 
 @end
 
@@ -65,8 +64,6 @@
         
         _youtubeImage = imageViewWithImage(image_ModernMessageYoutubeButton());
         
-        _fullScreenImageView = imageViewWithImage(image_PasslockEnter());
-        
         
         dispatch_block_t block = ^{
             
@@ -76,28 +73,17 @@
         };
         
         
-        dispatch_block_t fullScreenBlock = ^{
-            
-            
-            [self playFullScreen];
-            
-        };
         
         [self.imageView setTapBlock:block];
         
-        [_fullScreenImageView setCallback:fullScreenBlock];
-        
-        _descriptionField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        
-        
-        [self addSubview:_descriptionField];
-        
-        
-        [_descriptionField setFrameOrigin:NSMakePoint(5, 20)];
         
         [self.imageView addSubview:_youtubeImage];
         
         
+        _videoTimeView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
+        
+        [self.imageView addSubview:_videoTimeView];
+
     }
     
     return self;
@@ -105,21 +91,40 @@
 
 -(void)setWebpage:(TGWebpageYTObject *)webpage {
     
+    [self.author setHidden:!webpage.author];
+    [self.date setHidden:!webpage.date];
     
-    [self clearPlayer];
+    if(webpage.author ) {
+        [self.author setStringValue:webpage.author];
+        [self.date setStringValue:webpage.date];
+        
+        [self.author sizeToFit];
+        [self.date sizeToFit];
+        
+        [self.author setFrameOrigin:NSMakePoint(0, NSMaxY(self.frame) - NSHeight(self.author.frame))];
+        [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.frame) - NSWidth(self.author.frame), NSMaxY(self.frame) - NSHeight(self.author.frame))];
+        
+    }
     
     [_blackContainer removeFromSuperview];
     
-    [self.imageView setFrame:NSMakeRect(0, 0, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
     [self.imageView setObject:webpage.imageObject];
     
     [self.loaderView setCenterByView:self.imageView];
     [self.youtubeImage setCenterByView:self.imageView];
     
-    [self.descriptionField setFrame:NSMakeRect(0, NSHeight(self.imageView.frame) + 10, webpage.descriptionSize.width , webpage.descriptionSize.height )];
+    [self.descriptionField setFrame:NSMakeRect(0, !self.author.isHidden ? 20 : 0, webpage.titleSize.width , webpage.titleSize.height )];
+    [self.descriptionField setAttributedString:webpage.title];
     
-    [_descriptionField setAttributedString:webpage.title];
+    
+    
+    [_videoTimeView setString:webpage.videoTimeAttributedString];
+    [_videoTimeView setFrameSize:webpage.videoTimeSize];
+    [_videoTimeView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(_videoTimeView.frame) - 5, 5)];
+    
+    
     
     
     [super setWebpage:webpage];
@@ -150,10 +155,9 @@
             
             [_progressIndicator setAnimates:YES];
             
-            [self addSubview:_blackContainer];
+            [self.imageView addSubview:_blackContainer];
         }
         
-        __block BOOL PLAY = NO;
         
         [(TGWebpageYTObject *)self.webpage loadVideo:^(XCDYouTubeVideo *video) {
             
@@ -205,8 +209,6 @@
 -(void)playFullScreen {
     
    
-    
-    
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:rand_long() media:[self.webpage.webpage.photo.sizes lastObject] peer_id:0];
     
     

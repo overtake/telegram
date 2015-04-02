@@ -10,6 +10,10 @@
 #import "EmojiViewController.h"
 #import "RBLPopover.h"
 
+@interface TMTextField ()
+@property (nonatomic,assign) BOOL isf;
+@end
+
 @implementation PlaceholderTextView
 
 - (id)init {
@@ -81,7 +85,13 @@
     [super keyUp:theEvent];
 }
 
+-(BOOL)isFlipped {
+    return _isf;
+}
 
+-(void)setFlipped:(BOOL)isFlipped {
+    _isf = isFlipped;
+}
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)fieldEditor doCommandBySelector:(SEL)commandSelector
 {

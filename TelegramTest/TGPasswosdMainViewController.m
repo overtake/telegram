@@ -198,7 +198,7 @@
                                 
                                 
                             };
-                            
+                            [[Telegram rightViewController].navigationViewController.viewControllerStack removeLastObject];
                             [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
                             
                             
@@ -213,7 +213,7 @@
                         
                         [asWeak.controller performSelector:@selector(performShake) withObject:nil];
                         
-                    }];
+                    } timeout:10];
                     
                     
                     
@@ -269,7 +269,7 @@
                         
                         [asWeak.controller performSelector:@selector(performShake) withObject:nil];
                         
-                    }];
+                    } timeout:10];
                     
                     
                     
@@ -339,7 +339,7 @@
                                 return !email || NSStringIsValidEmail(email);
                             };
                             
-                            
+                            [[Telegram rightViewController].navigationViewController.viewControllerStack removeLastObject];
                             [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
                             
                         }
@@ -352,7 +352,7 @@
                         
                         [asWeak.controller performSelector:@selector(performShake) withObject:nil];
                         
-                    }];
+                    } timeout:10];
                     
                     
                     
@@ -418,7 +418,7 @@
                         return !email || NSStringIsValidEmail(email);
                     };
                     
-                    
+                    [[Telegram rightViewController].navigationViewController.viewControllerStack removeLastObject];
                     [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
                     
                 };
@@ -448,7 +448,7 @@
                         
                         [asWeak.controller performSelector:@selector(performShake) withObject:nil];
                         
-                    }];
+                    } timeout:10];
                     
                     
                     
@@ -517,7 +517,7 @@
                         
                     } errorHandler:^(RPCRequest *request, RpcError *error) {
                         [self hideModalProgress];
-                    }];
+                    } timeout:10];
                     
                     
                     
@@ -621,7 +621,7 @@
         
         [self hideModalProgress];
         
-    }];
+    } timeout:10];
     
     
     

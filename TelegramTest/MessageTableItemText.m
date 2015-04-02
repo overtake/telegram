@@ -140,8 +140,10 @@
         
         remove_global_dispatcher(_requestKey);
         
+
         
-        _webpage = [[TGWebpageYTObject alloc] initWithWebPage:self.message.media.webpage]; // its only youtube.
+        
+        _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage]; // its only youtube.
         
         
         [self makeSizeByWidth:self.blockWidth];

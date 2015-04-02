@@ -1,0 +1,27 @@
+//
+//  TGWebpageTWObject.m
+//  Telegram
+//
+//  Created by keepcoder on 02.04.15.
+//  Copyright (c) 2015 keepcoder. All rights reserved.
+//
+
+#import "TGWebpageTWObject.h"
+
+@implementation TGWebpageTWObject
+
+@synthesize size = _size;
+
+-(Class)webpageContainer {
+    return NSClassFromString(@"TGWebpageTWContainer");
+}
+
+-(void)makeSize:(int)width {
+    
+    [super makeSize:width];
+    
+    _size = [super size];
+    
+}
+
+@end
