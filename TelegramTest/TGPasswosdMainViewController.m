@@ -16,6 +16,7 @@
 
 @interface TGPasswosdMainViewController ()<TMTableViewDelegate>
 
+@property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,strong) id passwordResult;
@@ -31,11 +32,23 @@
 -(void)loadView {
     [super loadView];
     
+    
     [self setCenterBarViewText:NSLocalizedString(@"PrivacyAndSecurity.TwoStepVerification", nil)];
     
     self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     
     self.tableView.tm_delegate = self;
+    
+    
+    self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
+    
+    [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+    
+    [self setCenterBarViewText:NSLocalizedString(@"Authorization.Authorizations", nil)];
+    
+    [self.view addSubview:self.progressIndicator];
+    
+    [self.progressIndicator setCenterByView:self.view];
     
     
     [self.view addSubview:self.tableView.containerView];
@@ -617,7 +630,19 @@
 -(void)reload {
     [self.tableView removeAllItems:YES];
     
+    [self.progressIndicator setHidden:NO];
+    
+    [self.progressIndicator startAnimation:self.view];
+    
+    [self.progressIndicator setCenterByView:self.view];
+    
+    [self.tableView.containerView setHidden:YES];
+    
     [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, id response) {
+        
+        [self.progressIndicator stopAnimation:self.view];
+        [self.progressIndicator setHidden:YES];
+        [self.tableView.containerView setHidden:NO];
         
         _passwordResult = response;
         

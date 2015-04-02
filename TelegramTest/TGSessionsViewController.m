@@ -24,16 +24,18 @@
     
     self.authorizations = [[NSMutableArray alloc] init];
     
-    self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
     
-    [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
-    
-    [self setCenterBarViewText:NSLocalizedString(@"Authorization.Authorizations", nil)];
     
     
     self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     
     self.tableView.tm_delegate = self;
+    
+    self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
+    
+    [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+    
+    [self setCenterBarViewText:NSLocalizedString(@"Authorization.Authorizations", nil)];
     
     [self.view addSubview:self.progressIndicator];
     

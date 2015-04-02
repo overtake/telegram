@@ -162,27 +162,29 @@
             
             
             
-            if (video && !PLAY)
-            {
-                PLAY = YES;
-                
-                [self clearPlayer];
-                
-                _playerView = [[AVPlayerView alloc] initWithFrame:self.imageView.bounds];
-                
-                [_fullScreenImageView setCenterByView:_playerView];
-                
-                
-                [self addSubview:_playerView];
-                
-                NSDictionary *streamURLs = video.streamURLs;
-                NSURL *url = streamURLs[XCDYouTubeVideoQualityHTTPLiveStreaming] ?: streamURLs[@(XCDYouTubeVideoQualityHD720)] ?: streamURLs[@(XCDYouTubeVideoQualityMedium360)] ?: streamURLs[@(XCDYouTubeVideoQualitySmall240)];
-                AVPlayer *player = [AVPlayer playerWithURL:url];
-                _playerView.player = player;
-                [player play];
-                
-                [_playerView addSubview:_fullScreenImageView];
-            }
+            [self playFullScreen];
+            
+//            if (video && !PLAY)
+//            {
+//                PLAY = YES;
+//                
+//                [self clearPlayer];
+//                
+//                _playerView = [[AVPlayerView alloc] initWithFrame:self.imageView.bounds];
+//                
+//                [_fullScreenImageView setCenterByView:_playerView];
+//                
+//                
+//                [self addSubview:_playerView];
+//                
+//                NSDictionary *streamURLs = video.streamURLs;
+//                NSURL *url = streamURLs[XCDYouTubeVideoQualityHTTPLiveStreaming] ?: streamURLs[@(XCDYouTubeVideoQualityHD720)] ?: streamURLs[@(XCDYouTubeVideoQualityMedium360)] ?: streamURLs[@(XCDYouTubeVideoQualitySmall240)];
+//                AVPlayer *player = [AVPlayer playerWithURL:url];
+//                _playerView.player = player;
+//                [player play];
+//                
+//                [_playerView addSubview:_fullScreenImageView];
+//            }
             
         }];
     } else {
