@@ -2301,12 +2301,12 @@ static NSTextAttachment *headerMediaIcon() {
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
     
     
-    NSInteger max = MIN(pos + array.count + 1, self.messages.count-1 );
-
-    __block MessageTableItem *backItem = max == self.messages.count-1 ? nil : self.messages[max - 1];
+    NSInteger max = MIN(pos + array.count + 1, self.messages.count );
+    
+    __block MessageTableItem *backItem = max == self.messages.count ? nil : self.messages[max - 1];
     
     
-    NSRange range = NSMakeRange(1, backItem ? max - 1 : max);
+    NSRange range = NSMakeRange(0, backItem ? max - 1 : max);
     
     NSMutableIndexSet *rld = [[NSMutableIndexSet alloc] init];
     
@@ -2330,10 +2330,15 @@ static NSTextAttachment *headerMediaIcon() {
                 [rld addIndex:idx];
             }
             
+            if(isBHdr != backItem.isHeaderMessage ||
+               isBFwdHdr != backItem.isHeaderForwardedMessage) {
+                [rld addIndex:idx-1];
+            }
         }
         
         
         [current makeSizeByWidth:self.table.containerSize.width];
+        [backItem makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
         
     }];
