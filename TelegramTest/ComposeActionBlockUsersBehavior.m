@@ -52,7 +52,7 @@
     
     [members removeObjectAtIndex:0];
     
-    [[BlockedUsersManager sharedManager] block:item.contact.user_id completeHandler:^(BOOL response) {
+    [[BlockedUsersManager sharedManager] block:item.user.n_id completeHandler:^(BOOL response) {
         
         if(members.count == 0) {
             [self.delegate behaviorDidEndRequest:nil];

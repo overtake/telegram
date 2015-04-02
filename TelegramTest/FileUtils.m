@@ -616,7 +616,30 @@ void open_link(NSString *link) {
     
     
     
-    NSURL *url = [[NSURL alloc] initWithString: [link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSMutableString *escaped = [[link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+    
+    [escaped replaceOccurrencesOfString:@"%24" withString:@"$" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%26" withString:@"&" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%2B" withString:@"+" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%2C" withString:@"," options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%2F" withString:@"/" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3A" withString:@":" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3B" withString:@";" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3D" withString:@"=" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3F" withString:@"?" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%40" withString:@"@" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%20" withString:@" " options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%09" withString:@"\t" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%23" withString:@"#" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3C" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%3E" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%22" withString:@"\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    [escaped replaceOccurrencesOfString:@"%0A" withString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
+    
+     NSURL *url = [[NSURL alloc] initWithString: escaped];
+    
+    
     if([SettingsArchiver checkMaskedSetting:OpenLinksInBackground]) {
         [[NSWorkspace sharedWorkspace] openURLs:@[url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
     } else {
@@ -624,6 +647,16 @@ void open_link(NSString *link) {
     }
 }
 
+
+static inline NSString *hxURLEscape(NSString *v) {
+    static CFStringRef _hxURLEscapeChars = CFSTR("￼=,!$&'()*+;@?\r\n\"<>#\t :/");
+    return ((__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                                                                  NULL,
+                                                                                  (__bridge CFStringRef)[v mutableCopy],
+                                                                                  NULL, 
+                                                                                  _hxURLEscapeChars, 
+                                                                                  kCFStringEncodingUTF8));
+}
 
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
 {

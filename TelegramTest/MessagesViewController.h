@@ -61,7 +61,7 @@ typedef enum {
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force;
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
-- (void)showMessage:(int)messageId addToStack:(BOOL)addToStack;
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId;
 
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;

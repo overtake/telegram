@@ -189,6 +189,12 @@
     }
     return result;
 }
+- (IBAction)toogleFloatOnTop:(NSMenuItem *)sender {
+    
+    [[Telegram delegate].mainWindow setLevel:!sender.state ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
+    
+    [sender setState:!sender.state];
+}
 
 - (void)backOrClose:(NSMenuItem *)sender {
     

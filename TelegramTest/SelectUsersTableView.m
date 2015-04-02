@@ -17,6 +17,7 @@
 @property (nonatomic,strong) NSMutableArray *items;
 @property (nonatomic,strong) TGSearchRowView *searchView;
 @property (nonatomic,strong) TGSearchRowItem *searchItem;
+@property (nonatomic,strong) RPCRequest *request;
 @end
 
 @implementation SelectUsersTableView
@@ -51,10 +52,10 @@ static NSCache *cacheItems;
     
     
     
-    [contacts enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
+    [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
         
-        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-        item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
+        item.isSelected = [_selectedItems indexOfObject:@(obj.user.n_id)] != NSNotFound;
         [items addObject:item];
         
         if(items.count == 30)
@@ -62,7 +63,7 @@ static NSCache *cacheItems;
     }];
     
     
-    [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
+    [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
 //    
 //    [items sortUsingComparator:^NSComparisonResult(SelectUserItem* obj1, SelectUserItem* obj2) {
@@ -111,7 +112,7 @@ static NSCache *cacheItems;
         
         [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
             
-             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
              item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
              [items addObject:item];
             
@@ -175,7 +176,7 @@ static NSCache *cacheItems;
             }
             
             [copy enumerateObjectsUsingBlock:^(SelectUserItem * obj, NSUInteger idx, BOOL *stop) {
-                if(obj.contact.user_id == [exception intValue]) {
+                if(obj.user.n_id == [exception intValue]) {
                     [self removeItem:obj];
                     [self.items removeObject:obj];
                     *stop = YES;
@@ -195,7 +196,7 @@ static NSCache *cacheItems;
     [self.selectDelegate selectTableDidChangedItem:item];
     
     if(self.multipleCallback != nil) {
-        self.multipleCallback(@[item.contact]);
+        self.multipleCallback(@[item.user]);
     }
     
 }
@@ -259,11 +260,11 @@ static NSCache *cacheItems;
     CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
     
     
-    __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.contact.user.n_id != %d",[UsersManager currentUserId]]];
+    __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
     
     if(searchString.length > 0) {
-        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.contact.user.first_name BEGINSWITH[c] %@) OR (self.contact.user.first_name BEGINSWITH[c] %@) OR (self.contact.user.first_name BEGINSWITH[c] %@)  OR (self.contact.user.last_name BEGINSWITH[c] %@) OR (self.contact.user.last_name BEGINSWITH[c] %@) OR (self.contact.user.last_name BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed]];
+        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@)  OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed]];
     }
     
     
@@ -274,16 +275,14 @@ static NSCache *cacheItems;
         NSMutableArray *ids = [[NSMutableArray alloc] init];
         
         [sorted enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-            [ids addObject:@(obj.contact.user_id)];
+            [ids addObject:@(obj.user.n_id)];
         }];
         
         NSArray *usersByName = [usernames filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
         
         [usersByName enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
             
-            if([obj isKindOfClass:[TL_userContact class]]) {
-                sorted = [sorted arrayByAddingObject:[[SelectUserItem alloc] initWithObject:obj.contact]];
-            }
+            sorted = [sorted arrayByAddingObject:[[SelectUserItem alloc] initWithObject:obj]];
             
         }];
     }
@@ -306,10 +305,43 @@ static NSCache *cacheItems;
     [self insert:sorted startIndex:1 tableRedraw:YES];
     
     
+    [_request cancelRequest];
    
-
+    dispatch_after_seconds(0.2, ^{
+        [self remoteSearchByUserName:searchString];
+    });
+    
 }
 
+
+-(void)remoteSearchByUserName:(NSString *)userName {
+    
+    if(userName.length > 4) {
+        _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
+                        
+            NSMutableArray *converted = [[NSMutableArray alloc] init];
+            
+            [[response users] enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+                
+                [obj rebuildNames];
+                
+               // if([obj isKindOfClass:[TL_userContact class]]) {
+                    [converted addObject:[[SelectUserItem alloc] initWithObject:obj]];
+              //  }
+                
+            }];
+            
+            [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndex:0]];
+            
+            [self insert:converted startIndex:self.count tableRedraw:YES];
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            
+        }];
+    }
+   
+}
 
 
 -(BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *)item {

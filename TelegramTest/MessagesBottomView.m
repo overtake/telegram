@@ -1046,6 +1046,9 @@
     
     //
     
+    if(self.dialog.type == DialogTypeSecretChat)
+        return;
+    
     NSArray *links = [self.inputMessageTextField.stringValue locationsOfLinks];
     
     NSArray *acceptExtensions = @[@"jpg",@"png",@"tiff"];

@@ -203,10 +203,16 @@ static CVReturn BTRScrollingCallback(CVDisplayLinkRef displayLink, const CVTimeS
 	CGPoint o = self.bounds.origin;
 	CGPoint lastOrigin = o;
 	CGFloat deceleration = self.decelerationRate;
+    
+    /*
+     var linear = function(percent,elapsed,start,end,total) {
+     return start+(end-start)*percent;
+     }
+     */
 	
 	// Calculate the next origin on a basic ease-out curve.
-	o.x = ceil(o.x * deceleration + self.destinationOrigin.x * (1 - self.decelerationRate));
-	o.y = ceil(o.y * deceleration + self.destinationOrigin.y * (1 - self.decelerationRate));
+	o.x = ceil(o.x + (self.destinationOrigin.x - o.x) * (1 - self.decelerationRate));
+	o.y = ceil(o.y + (self.destinationOrigin.y - o.y) * (1 - self.decelerationRate));
 	
     
     

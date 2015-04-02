@@ -196,6 +196,17 @@
     
     BOOL animated = YES;
     
+    
+    if(self.replyMsgsStack.count > 0)
+    {
+        int msg_id = [[self.replyMsgsStack lastObject] intValue];
+        
+        [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
+        
+        [self showMessage:msg_id fromMsgId:0];
+        return;
+    }
+    
     if(_historyController.prevState != ChatHistoryStateFull) {
         
         
@@ -1224,9 +1235,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     float offset = self.table.scrollView.documentOffset.y;
     
-    if(self.table.scrollView.documentOffset.y < SCROLLDOWNBUTTON_OFFSET) {
-        [self.jumpToBottomButton setHidden:YES];
-    }
+    
     
     if(abs(_lastBottomScrollOffset - offset) < 100 || [self.table.scrollView isAnimating])
         return;
@@ -1236,12 +1245,31 @@ static NSTextAttachment *headerMediaIcon() {
     
     BOOL hide = !(self.table.scrollView.documentSize.height > min_go_size && offset > min_go_size);
     
+    
+    
     if(hide) {
         hide = !(self.isMarkIsset && offset > max_go_size);
     }
     
     if(hide && (offset - self.table.scrollView.bounds.size.height) > SCROLLDOWNBUTTON_OFFSET) {
         hide = self.jumpToBottomButton.messagesCount == 0;
+    }
+    
+    if(hide)
+    {
+        hide = self.replyMsgsStack.count == 0;
+        
+        if(!hide)
+        {
+            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] intValue]];
+            
+            hide = CGRectContainsRect([self.table visibleRect], [self.table rectOfRow:[self indexOfObject:item]]);
+            
+            if(hide) {
+                [_replyMsgsStack removeLastObject];
+            }
+            
+        }
     }
     
     
@@ -1667,7 +1695,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)deleteMessages:(NSArray *)ids {
     
-    [self.table beginUpdates];
+  //  [self.table beginUpdates];
     
     if(self.messages.count > 0) {
         NSUInteger count = self.selectedMessages.count;
@@ -1684,6 +1712,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [message clean];
             }
         }
+
         
         __block NSInteger row = self.messages.count - 1;
         __block MessageTableItem *backItem = nil;
@@ -1710,7 +1739,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-    [self.table endUpdates];
+   // [self.table endUpdates];
     
 }
 
@@ -1811,12 +1840,12 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)showMessage:(int)messageId addToStack:(BOOL)addToStack {
+- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
-    if(addToStack)
-        [_replyMsgsStack addObject:@(messageId)];
+    if(fromMsgId != 0)
+        [_replyMsgsStack addObject:@(fromMsgId)];
     
     if(item)
     {
@@ -1873,8 +1902,6 @@ static NSTextAttachment *headerMediaIcon() {
     [self hideSearchBox:NO];
     
     [EmojiViewController loadStickersIfNeeded];
-    
-    
     
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
@@ -2092,7 +2119,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSSize size = self.table.scrollView.documentSize;
     
-    int count = size.height/30;
+    int count =15; // size.height/30;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     
@@ -2105,11 +2132,12 @@ static NSTextAttachment *headerMediaIcon() {
             self.historyController.nextState = self.historyController.prevState;
         }
         
-        
-        NSUInteger pos = prev ? 0 : self.messages.count;
+       NSUInteger pos = prev ? 0 : self.messages.count;
         if(isFirst && prev) {
             
             [_historyController request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
+                
+               
                 
                 self.isMarkIsset = YES;
                 
@@ -2157,6 +2185,8 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 if(result.count < _historyController.selectLimit)
                     [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
+                
+               
                 
             }];
             
@@ -2207,11 +2237,19 @@ static NSTextAttachment *headerMediaIcon() {
         NSRect rect = [self.table rectOfRow:index];
         
         
-        [self scrollToRect:rect isCenter:centered animated:animated];
         
-        if(highlight) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+    //
+        
+        if(self.table.scrollView.documentOffset.y > rect.origin.y)
+            rect.origin.y -= roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+        else
+            rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+//        
+//        if(rect.origin.y < 0)
+//            rect.origin.y = 0;
+        
+        [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
+            if(highlight) {
                 
                 if(index != NSNotFound) {
                     MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
@@ -2229,9 +2267,17 @@ static NSTextAttachment *headerMediaIcon() {
                         [cell searchSelection];
                     }
                 }
-            });
-            
-        }
+                
+                [self updateScrollBtn];
+            }
+        }];
+        
+        
+
+        
+      //  [self scrollToRect:rect isCenter:centered animated:animated];
+        
+        
         
     }
 }
@@ -2255,6 +2301,9 @@ static NSTextAttachment *headerMediaIcon() {
     assert([NSThread isMainThread]);
     
     
+   // if(pos != 1)
+   //     return NSMakeRange(pos, 0);
+    
     if(![[NSApplication sharedApplication] isActive] && checkActive) {
         
         if(!self.unreadMark) {
@@ -2263,7 +2312,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-    [self.table beginUpdates];
+ //   [self.table beginUpdates];
     
     if(back != NULL)
         *back = array;
@@ -2279,36 +2328,73 @@ static NSTextAttachment *headerMediaIcon() {
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
     
     
-    NSInteger max = MIN(pos + array.count + 1, self.messages.count );
+    NSInteger max = MIN(pos + array.count + 1, self.messages.count-1 );
 
-    __block MessageTableItem *backItem = max == self.messages.count ? nil : self.messages[max - 1];
+    __block MessageTableItem *backItem = max == self.messages.count-1 ? nil : self.messages[max - 1];
     
     
-    NSRange range = NSMakeRange(0, backItem ? max - 1 : max);
+    NSRange range = NSMakeRange(1, backItem ? max - 1 : max);
+    
+    NSMutableIndexSet *rld = [[NSMutableIndexSet alloc] init];
     
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
-    
+        
+        
+        BOOL isCHdr = current.isHeaderMessage;
+        BOOL isCFwdHdr = current.isHeaderForwardedMessage;
+
+        BOOL isBHdr = backItem.isHeaderMessage;
+        BOOL isBFwdHdr = backItem.isHeaderForwardedMessage;
+        
+        
         [self isHeaderMessage:current prevItem:backItem];
+        
+        
+        if(pos != 1 && idx < pos) {
+            if(isCHdr != current.isHeaderMessage ||
+               isCFwdHdr != current.isHeaderForwardedMessage)
+            {
+                [rld addIndex:idx];
+            }
+            
+            if(isBHdr != backItem.isHeaderMessage ||
+               isBFwdHdr != backItem.isHeaderForwardedMessage) {
+                [rld addIndex:idx-1];
+            }
+        }
+        
+        
         [current makeSizeByWidth:self.table.containerSize.width];
+        [backItem makeSizeByWidth:self.table.containerSize.width];
         backItem = current;
         
     }];
     
     
+    if(rld.count > 0)
+    {
+        [[NSAnimationContext currentContext] setDuration:0];
+        [self.table noteHeightOfRowsWithIndexesChanged:rld];
+        [self.table reloadDataForRowIndexes:rld columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    }
+    
 
     if(needCheckLastMessage && pos > 1) {
-        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos-1)];
+        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, pos - 2)];
+        [[NSAnimationContext currentContext] setDuration:0];
         [self.table noteHeightOfRowsWithIndexesChanged:set];
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
     
-    [self.table endUpdates];
+   // [self.table endUpdates];
     
     
     [self tryRead];
     
     return NSMakeRange(pos, array.count);
 }
+
+
 
 
 - (void)isHeaderMessage:(MessageTableItem *)item prevItem:(MessageTableItem *)prevItem {

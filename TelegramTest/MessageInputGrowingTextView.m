@@ -139,10 +139,20 @@ typedef enum {
         //Web browser copy Image;
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
         
-        if(!objectsToPaste.count) {
-            [super paste:sender];
+        
+        
+       // if(!objectsToPaste.count) {
+        NSUInteger c = self.string.length;
+        
+        [super paste:sender];
+        
+        if(c != self.string.length)
+        {
             return;
         }
+        
+         //   return;
+      //  }
         
         image = [objectsToPaste objectAtIndex:0];
         if(!image) {

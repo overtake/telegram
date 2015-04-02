@@ -221,6 +221,8 @@
         [self.clipView scrollRectToVisible:NSMakeRect(point.x, point.y, NSWidth(self.frame), NSHeight(self.frame)) animated:NO];
         
     } else {
+        
+        
         if(self.scrollAnimation.isAnimating) {
             if(self.scrollAnimation.targetPoint.y < point.y)
                 [self.scrollAnimation setTargetPoint:point];

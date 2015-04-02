@@ -125,7 +125,7 @@
 
 - (void)setHidden:(BOOL)flag {
     [super setHidden:flag];
-    
+        
     if(flag) {
         [self setMessagesCount:0];
         [self sizeToFit];

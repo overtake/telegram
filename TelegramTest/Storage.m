@@ -384,8 +384,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         //718606
         int currentDate = maxDate;
-        
-        
+
+                
         if(localMaxId != 0 && currentDate == 0) {
             FMResultSet *selectedMessageDateResult = [db executeQuery:@"SELECT date FROM messages WHERE n_id=?",@(localMaxId)];
             if([selectedMessageDateResult next])
@@ -408,7 +408,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
-       
+        
         while ([result next]) {
             TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
@@ -417,9 +417,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         [result close];
         
+      //  test_step_group(@"history");
+        
         TL_localMessage *lastMessage = [messages lastObject];
         
         if(lastMessage) {
+            
             NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
            
             int localCount = [db intForQuery:@"SELECT count(*) from messages where date = ? and peer_id = ?",@(lastMessage.date),@(lastMessage.peer_id)];
@@ -444,6 +447,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
     }];
+    
     
     NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_msg_id != 0"]];
     

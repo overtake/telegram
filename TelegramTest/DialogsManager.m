@@ -161,17 +161,21 @@
                 dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
-                                
+                
+                
+                
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
             }
             
-            [dialog save];
-            
             dialog.lastMessage = lastMessage;
             
+            [dialog save];
+            
+            
+            
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog, KEY_MESSAGE:lastMessage}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             
             NSUInteger position = [self positionForConversation:dialog];
             
@@ -380,7 +384,7 @@
            
             
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_MESSAGE:message}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         }
 
 
@@ -415,7 +419,6 @@
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
-    NSMutableDictionary *lmsgs = [[NSMutableDictionary alloc] init];
     
     [self.queue dispatchOnQueue:^{
         int totalUnread = 0;
@@ -425,8 +428,6 @@
             
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
-                
-                lmsgs[@(dialog.peer_id)] = message;
                 
                 dialog.lastMessage = message;
                 
@@ -484,7 +485,7 @@
             [dialog save];
             
             if(checkSort) {
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_MESSAGE:lmsgs[@(dialog.peer_id)]}];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             }
         }
         

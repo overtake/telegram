@@ -37,7 +37,7 @@
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
         
-        NSSize size = NSMakeSize(250, msg.media.document.thumb.h + (250 - msg.media.document.thumb.w));
+        NSSize size = NSMakeSize(250, msg.media.video.thumb.h + (250 - msg.media.video.thumb.w));
         
         __block NSImage *thumbImg;
         
