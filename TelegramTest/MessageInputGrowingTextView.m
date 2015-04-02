@@ -140,25 +140,24 @@ typedef enum {
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
         
         
-        
-       // if(!objectsToPaste.count) {
-        NSUInteger c = self.string.length;
-        
-        [super paste:sender];
-        
-        if(c != self.string.length)
-        {
-            return;
-        }
-        
-         //   return;
-      //  }
-        
-        image = [objectsToPaste objectAtIndex:0];
-        if(!image) {
+        if(objectsToPaste.count > 0) {
+            
+            image = [objectsToPaste objectAtIndex:0];
+            
+            image = prettysize(image);
+            
+            if(!image || image.size.width == 0 || image.size.height == 0) {
+                [super paste:sender];
+                return;
+            }
+        } else {
             [super paste:sender];
             return;
         }
+        
+        
+        
+        
         type = PasteBoardItemTypeImage;
         iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
     }

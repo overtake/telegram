@@ -100,7 +100,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             _context = [[MTContext alloc] initWithSerialization:serialization apiEnvironment:apiEnvironment];
             
             
-            __block TGKeychain *keychain = [self nKeychain];
+            __block  TGKeychain *keychain = [self nKeychain];
             
             
 
@@ -123,6 +123,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
                         
                         if(acceptHash) {
                             [_queue dispatchOnQueue:^{
+                                
+                                assert(keychain != nil);
+                                
                                 [self startWithKeychain:keychain];
                                 [self initConnectionWithId:_masterDatacenter];
                                 
@@ -357,7 +360,7 @@ static int MAX_WORKER_POLL = 5;
             [_mtProto addMessageService:_updateService];
             
             [self resetWorkers];
-        }
+        } 
 
     }];
     

@@ -36,6 +36,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGPasslockModalView checkPassword]:TGPasslockModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.secureField.stringValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController scrollViewDocumentOffsetChangingNotificationHandler:]:TMCollectionPageController.m">
          <PersistentStrings>
             <PersistentString
@@ -92,6 +100,9 @@
                value = "self.lastMessage">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__95-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:successCallback:]_block_invoke314:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
          contextName = "__36-[MTKeychain filePathForName:group:]_block_invoke:MTKeychain.m">
@@ -1272,6 +1283,9 @@
          contextName = "__31-[SecretChatAccepter proccess:]_block_invoke_2:SecretChatAccepter.m">
       </ContextState>
       <ContextState
+         contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke_4235:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[UserNameViewContainer initWithFrame:]_block_invoke_2:UserNameViewController.m">
       </ContextState>
       <ContextState
@@ -1382,6 +1396,9 @@
       </ContextState>
       <ContextState
          contextName = "+[TGHashtagPopup show:view:ofRect:callback:]:TGHashtagPopup.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController isHeaderMessage:prevItem:]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">

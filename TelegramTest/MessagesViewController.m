@@ -2074,7 +2074,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
            // });
         } else {
-            [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
+             [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
             [self.table reloadData];
             [self didUpdateTable];
             self.locked = NO;
@@ -2119,7 +2119,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSSize size = self.table.scrollView.documentSize;
     
-    int count =15; // size.height/30;
+    int count = size.height/30;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     
@@ -2328,12 +2328,12 @@ static NSTextAttachment *headerMediaIcon() {
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
     
     
-    NSInteger max = MIN(pos + array.count + 1, self.messages.count-1 );
-
-    __block MessageTableItem *backItem = max == self.messages.count-1 ? nil : self.messages[max - 1];
+    NSInteger max = MIN(pos + array.count + 1, self.messages.count );
+    
+    __block MessageTableItem *backItem = max == self.messages.count ? nil : self.messages[max - 1];
     
     
-    NSRange range = NSMakeRange(1, backItem ? max - 1 : max);
+    NSRange range = NSMakeRange(0, backItem ? max - 1 : max);
     
     NSMutableIndexSet *rld = [[NSMutableIndexSet alloc] init];
     
