@@ -9,8 +9,9 @@
 #import "TMRowView.h"
 
 @interface GeneralSettingsBlockHeaderItem : TMRowItem
-@property (nonatomic,strong,readonly) NSString *header;
+@property (nonatomic,strong,readonly) NSAttributedString *header;
 @property (nonatomic,assign) int height;
+@property (nonatomic,assign) BOOL isFlipped;
 
 @end
 

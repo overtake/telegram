@@ -17,6 +17,9 @@ typedef BOOL (^actionBlock)(NSString *inputPassword);
 @property (nonatomic,copy) actionBlock callback;
 
 @property (nonatomic,strong) NSString *title;
+
+@property (nonatomic,strong) NSString *header;
+
 @property (nonatomic,strong) NSString *desc;
 
 @property (nonatomic,weak) id controller;

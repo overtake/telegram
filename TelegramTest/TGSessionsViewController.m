@@ -8,13 +8,16 @@
 
 #import "TGSessionsViewController.h"
 #import "TGSessionRowView.h"
-
+#import "GeneralSettingsBlockHeaderView.h"
+#import "GeneralSettingsRowView.h"
+#import "TGTimer.h"
 @interface TGSessionsViewController ()<TMTableViewDelegate>
-@property (nonatomic,strong) BTRButton *terminateAllSessions;
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) NSMutableArray *authorizations;
+@property (nonatomic,strong) TL_authorization *current;
+@property (nonatomic,strong) TGTimer *updateTimer;
 @end
 
 @implementation TGSessionsViewController
@@ -50,9 +53,25 @@
     
 }
 
+-(BOOL)becomeFirstResponder {
+    
+    [self reload];
+    
+    return [super becomeFirstResponder];
+}
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [_updateTimer invalidate];
+    _updateTimer = nil;
+    _updateTimer  = [[TGTimer alloc] initWithTimeout:5 repeat:YES completion:^{
+        
+        if([[NSApplication sharedApplication] isActive])
+            [self reload];
+        
+    } queue:[ASQueue mainQueue].nativeQueue];
     
     [self.tableView removeAllItems:YES];
     
@@ -64,6 +83,13 @@
     
     [self.tableView.containerView setHidden:YES];
     
+    [self reload];
+    
+}
+
+-(void)reload {
+    
+    
     
     [RPCRequest sendRequest:[TLAPI_account_getAuthorizations create] successHandler:^(RPCRequest *request, TL_account_authorizations *response) {
         
@@ -71,19 +97,99 @@
         [self.progressIndicator setHidden:YES];
         [self.tableView.containerView setHidden:NO];
         
-        [response.authorizations enumerateObjectsUsingBlock:^(TL_authorization *obj, NSUInteger idx, BOOL *stop) {
+        
+        [self.authorizations removeAllObjects];
+        
+        self.current = response.authorizations[0];
+        
+        
+        [response.authorizations enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, response.authorizations.count - 1)] options:0 usingBlock:^(TL_authorization *obj, NSUInteger idx, BOOL *stop) {
+            
+            
             
             [self.authorizations addObject:[[TGSessionRowitem alloc] initWithObject:obj]];
             
+            
+            
         }];
         
-        [self.tableView insert:self.authorizations startIndex:0 tableRedraw:YES];
+        [self rebuild];
+        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         
         
     } timeout:10];
+
+}
+
+
+-(void)rebuild {
+    
+    [self.tableView removeAllItems:NO];
+    
+    GeneralSettingsBlockHeaderItem *selfHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.CurrentSession", nil)];
+    
+    selfHeader.height = 62;
+    
+    [self.tableView insert:selfHeader atIndex:self.tableView.count tableRedraw:NO];
+    
+    
+    [self.tableView insert:[[TGSessionRowitem alloc] initWithObject:self.current] atIndex:self.tableView.count tableRedraw:NO];
+    
+    
+    
+    GeneralSettingsRowItem *terminate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [self terminateSessions];
+        
+        
+    } description:NSLocalizedString(@"AuthSessions.TerminateOtherSessions", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+    }];
+    
+    
+    [self.tableView insert:terminate atIndex:self.tableView.count tableRedraw:NO];
+    
+    GeneralSettingsBlockHeaderItem *otherHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.OtherSessions", nil)];
+    
+    otherHeader.height = 62;
+    
+    [self.tableView insert:otherHeader atIndex:self.tableView.count tableRedraw:NO];
+    
+    
+   
+    
+    [self.tableView insert:self.authorizations startIndex:self.tableView.count tableRedraw:NO];
+    
+    
+    [self.tableView reloadData];
+
+}
+
+- (void)terminateSessions {
+    
+    confirm(NSLocalizedString(@"Confirm", nil), NSLocalizedString(@"Confirm.TerminateSessions", nil), ^ {
+        
+        [self showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_auth_resetAuthorizations create] successHandler:^(RPCRequest *request, id response) {
+            
+            alert(NSLocalizedString(@"Success", nil), NSLocalizedString(@"Confirm.SuccessResetSessions", nil));
+            
+            [self hideModalProgress];
+            
+            [self rebuild];
+            
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [self hideModalProgress];
+            
+        } timeout:5];
+    },nil);
+    
     
 }
 
@@ -131,17 +237,32 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [Notification removeObserver:self];
+    [_updateTimer invalidate];
+    _updateTimer = nil;
 }
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 103 : 50;
+    if([item isKindOfClass:[GeneralSettingsRowItem class]] || [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
+        return [(GeneralSettingsRowItem *)item height];
+    }
+    
+    return 60;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;
 }
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
+    
+    if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
+        return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowView"];
+    }
+    
+    if([item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
+        return [self.tableView cacheViewForClass:[GeneralSettingsBlockHeaderView class] identifier:@"GeneralSettingsBlockHeaderView"];
+    }
+    
     return [self.tableView cacheViewForClass:[TGSessionRowView class] identifier:@"TGSessionRowView" withSize:NSMakeSize(NSWidth(self.view.frame), 50)];
 }
 

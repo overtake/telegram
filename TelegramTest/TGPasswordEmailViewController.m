@@ -143,7 +143,7 @@
     
     [self.descriptionField setStringValue:action.desc];
     
-    [self setCenterBarViewText:action.title];
+    [self setCenterBarViewText:action.header ?: action.title];
     
 }
 

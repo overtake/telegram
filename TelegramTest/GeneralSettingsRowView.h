@@ -7,7 +7,7 @@
 //
 
 #import "TMRowView.h"
-
+#import "GeneralSettingsRowItem.h"
 @interface GeneralSettingsRowView : TMRowView
 @property (nonatomic,strong) BTRButton *subdescField;
 @end

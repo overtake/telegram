@@ -694,7 +694,7 @@
 
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
-    if([self hitTest:location]) {
+    if([self mouse:location inRect:self.bounds]) {
         CFArrayRef lines = CTFrameGetLines(CTFrame);
         
         CGPoint origins[CFArrayGetCount(lines)];
@@ -737,7 +737,7 @@
 -(void)checkCursor:(NSEvent *)theEvent {
     NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    if([self hitTest:location]) {
+    if([self mouse:location inRect:self.bounds]) {
         
         BOOL hitTest;
         

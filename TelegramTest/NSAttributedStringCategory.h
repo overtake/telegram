@@ -11,6 +11,8 @@
 @interface NSAttributedString (Category)
 
 - (NSSize)sizeForTextFieldForWidth:(int)width;
+- (NSSize)coreTextSizeForTextFieldForWidth:(int)width;
+
 - (NSRange)range;
 
 -(NSRange)selectRange:(NSSize)frameSize startPoint:(NSPoint)startPoint currentPoint:(NSPoint)currentPoint;

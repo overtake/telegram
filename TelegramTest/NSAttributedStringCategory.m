@@ -25,6 +25,17 @@ static NSTextField *testTextField() {
 
 - (NSSize)sizeForTextFieldForWidth:(int)width {
     
+    NSTextField *textField = testTextField();
+    [textField setAttributedStringValue:self];
+    NSSize size = [[textField cell] cellSizeForBounds:NSMakeRect(0, 0, width, FLT_MAX)];
+    size.width = ceil(size.width);
+    size.height = ceil(size.height);
+    return size;
+    
+
+}
+
+-(NSSize)coreTextSizeForTextFieldForWidth:(int)width {
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self);
     
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);

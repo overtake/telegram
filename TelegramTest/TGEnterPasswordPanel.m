@@ -292,6 +292,7 @@
             
             if(error.error_code == 400) {
                 alert(NSLocalizedString(@"Alert.Sorry", nil), NSLocalizedString(error.error_msg, nil));
+                [weakSelf enableReset];
             }
             
             
@@ -377,6 +378,9 @@
     [resetDescription setFrameOrigin:NSMakePoint(NSMinX(separator.frame),  NSMaxY(self.resetAccount.frame) + 15)];
     
     [_enterPasswordContainer addSubview:resetDescription];
+    
+    [resetDescription setHidden:YES];
+    [self.resetAccount setHidden:YES];
     
     return _enterPasswordContainer;
 }
@@ -520,9 +524,19 @@
     }
 }
 
+-(void)enableReset {
+    [_enterPasswordContainer.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj setHidden:NO];
+        
+    }];
+}
+
 -(void)switchControllers {
     
     static BOOL locked = NO;
+    
+    [self enableReset];
     
     
     if(!locked) {

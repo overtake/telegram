@@ -141,7 +141,7 @@
     [[self.textView textView].cell setPlaceholderAttributedString:str];
    // [[self.textView textView] setPlaceholderPoint:NSMakePoint(0, 0)];
     
-    [self setCenterBarViewText:action.title];
+    [self setCenterBarViewText:action.header ?: action.title];
     
 }
 

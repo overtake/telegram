@@ -261,6 +261,7 @@
     
     
 }
+
 - (void)logOut {
     confirm(NSLocalizedString(@"Confirm", nil),NSLocalizedString(@"Confirm.ConfirmLogout", nil), ^ {
         [[Telegram delegate] logoutWithForce:NO];

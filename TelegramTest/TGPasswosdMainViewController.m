@@ -13,14 +13,14 @@
 #import "TGSetPasswordAction.h"
 #import "NSMutableData+Extension.h"
 #import <MtProtoKit/MTEncryption.h>
-
+#import "TGTimer.h"
 @interface TGPasswosdMainViewController ()<TMTableViewDelegate>
 
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,strong) id passwordResult;
-
+@property (nonatomic,strong) TGTimer *updateTimer;
 @end
 
 @implementation TGPasswosdMainViewController
@@ -44,7 +44,6 @@
     
     [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
     
-    [self setCenterBarViewText:NSLocalizedString(@"Authorization.Authorizations", nil)];
     
     [self.view addSubview:self.progressIndicator];
     
@@ -71,50 +70,70 @@
                 TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
                 
                 firstAction.title = NSLocalizedString(@"PasswordSettings.SetPassword", nil);
-                
+                firstAction.header = NSLocalizedString(@"PasswordSettings.YourPassword", nil);
                 firstAction.callback = ^BOOL (NSString *fp) {
                     
                     if(fp.length > 0) {
                         TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
                         
                         confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
-                        
+                        confirmAction.header = NSLocalizedString(@"PasswordSettings.YourPassword", nil);
                         confirmAction.callback = ^BOOL (NSString *sp) {
                             
                             
                             if([sp isEqualToString:fp]) {
                                 
-                                TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
+                                TGSetPasswordAction *hintAction = [[TGSetPasswordAction alloc] init];
                                 
-                                emailAction.title = NSLocalizedString(@"PasswordSettings.RecoveryEmail", nil);
-                                emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
+                               
                                 
-                                emailAction.hasButton = YES;
+                                hintAction.title = NSLocalizedString(@"PasswordSettings.SetupHint", nil);
+                                hintAction.header =  NSLocalizedString(@"PasswordSettings.SetupHintTitle", nil);
                                 
                                 
-                                __weak TGSetPasswordAction *wEAction = emailAction;
-                                
-                                emailAction.callback = ^BOOL (NSString *email) {
+                                hintAction.callback = ^BOOL (NSString *hint) {
+                                    
+                                    TGSetPasswordAction *emailAction = [[TGSetPasswordAction alloc] init];
+                                    
+                                    emailAction.title = NSLocalizedString(@"PasswordSettings.RecoveryEmail", nil);
+                                    emailAction.desc =  NSLocalizedString(@"PasswordSettings.RecoveryEmailDesc", nil);
+                                    
+                                    emailAction.hasButton = YES;
                                     
                                     
-                                    [self setPassword:fp current_pswd_hash:[[NSData alloc] init] email:email hint:@"" flags:1 | (NSStringIsValidEmail(email) ? 2 : 0) successCallback:^{
+                                    __weak TGSetPasswordAction *wEAction = emailAction;
+                                    
+                                    emailAction.callback = ^BOOL (NSString *email) {
                                         
-                                        if(NSStringIsValidEmail(email)) {
-                                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
-                                        } else {
-                                            alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessActivatedDescription", nil));
+                                        if(!email || NSStringIsValidEmail(email)) {
+                                            [self setPassword:fp current_pswd_hash:[[NSData alloc] init] email:email hint:hint flags:1 | (NSStringIsValidEmail(email) ? 2 : 0) successCallback:^{
+                                                
+                                                if(NSStringIsValidEmail(email)) {
+                                                    alert(nil, NSLocalizedString(@"PasswordSettings.AlertConfirmEmailDescription", nil));
+                                                } else {
+                                                    alert(nil, NSLocalizedString(@"PasswordSettings.AlertSuccessActivatedDescription", nil));
+                                                }
+                                                
+                                                
+                                                
+                                            } errorCallback:^{
+                                                [wEAction.controller performSelector:@selector(performShake) withObject:nil];
+                                            }];
+
                                         }
                                         
                                         
-                                        
-                                    } errorCallback:^{
-                                        [wEAction.controller performSelector:@selector(performShake) withObject:nil];
-                                    }];
+                                        return !email || NSStringIsValidEmail(email);
+                                    };
                                     
-                                    return !email || NSStringIsValidEmail(email);
+                                    [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
+                                    
+                                    
+                                    return YES;
+                                    
                                 };
                                 
-                                [[Telegram rightViewController] showEmailPasswordWithAction:emailAction];
+                                [[Telegram rightViewController] showEmailPasswordWithAction:hintAction];
                             }
                             
                             return [sp isEqualToString:fp];
@@ -139,6 +158,15 @@
             
             [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
             
+            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PasswordSettings.AdditionDescription", nil)];
+            
+            description.height = 60;
+            
+            
+            [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
+
+            
+            
         } else {
             
             
@@ -150,7 +178,7 @@
                 TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
                 
                 sAction.title = NSLocalizedString(@"PasswordSettings.InputPassword", nil);
-                
+                sAction.header =  NSLocalizedString(@"PasswordSettings.YourPassword", nil);
                 __weak TGSetPasswordAction *asWeak = sAction;
                 
                 sAction.callback = ^BOOL (NSString *password) {
@@ -168,14 +196,14 @@
                             TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
                             
                             firstAction.title = NSLocalizedString(@"PasswordSettings.InputNewPassword", nil);
-                            
+                            firstAction.header =  NSLocalizedString(@"PasswordSettings.YourPassword", nil);
                             firstAction.callback = ^BOOL (NSString *fp) {
                                 
                                 if(fp.length > 0) {
                                     TGSetPasswordAction *confirmAction = [[TGSetPasswordAction alloc] init];
                                     
                                     confirmAction.title = NSLocalizedString(@"PasswordSettings.ConfirmPassword", nil);
-                                    
+                                    confirmAction.header =  NSLocalizedString(@"PasswordSettings.YourPassword", nil);
                                     confirmAction.callback = ^BOOL (NSString *sp) {
                                         
                                         
@@ -541,7 +569,7 @@
         
         GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.ConfrimEmailDescription", nil),[_passwordResult email_unconfirmed_pattern]]];
         
-        description.height = 400;
+        description.height = 100;
         
         
         [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
@@ -627,7 +655,22 @@
     
 }
 
+-(void)backgroundReload {
+    [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, id response) {
+        
+        
+        _passwordResult = response;
+        
+        [self rebuildController];
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        
+    }];
+}
+
 -(void)reload {
+    
     [self.tableView removeAllItems:YES];
     
     [self.progressIndicator setHidden:NO];
@@ -639,6 +682,8 @@
     [self.tableView.containerView setHidden:YES];
     
     [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(RPCRequest *request, id response) {
+        
+        
         
         [self.progressIndicator stopAnimation:self.view];
         [self.progressIndicator setHidden:YES];
@@ -654,11 +699,38 @@
     }];
 }
 
+-(BOOL)becomeFirstResponder {
+    
+    [self backgroundReload];
+    
+    [_updateTimer invalidate];
+    _updateTimer = nil;
+    
+    _updateTimer  = [[TGTimer alloc] initWithTimeout:5 repeat:YES completion:^{
+        
+        if([[NSApplication sharedApplication] isActive])
+            [self backgroundReload];
+        
+    } queue:[ASQueue mainQueue].nativeQueue];
+    
+    return [super becomeFirstResponder];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [_updateTimer invalidate];
+    _updateTimer = nil;
+}
+
+
+
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     
-    
+    [self becomeFirstResponder];
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {

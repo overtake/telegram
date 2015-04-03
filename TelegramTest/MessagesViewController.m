@@ -451,6 +451,8 @@
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        
         NSUInteger index = [self indexOfObject:obj];
+        
+        obj.isHeaderMessage = YES;
 
         [obj updateWebPage];
         
@@ -2404,8 +2406,8 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if(prevItem.message && item.message) {
-        if(!prevItem.message.action && !item.message.action && ![prevItem isReplyMessage]) {
+    if(prevItem.message && item.message && ![prevItem isReplyMessage] && ![item isReplyMessage] && ![item.message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        if(!prevItem.message.action && !item.message.action) {
             if(prevItem.message.from_id == item.message.from_id && ABS(prevItem.message.date - item.message.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderMessage = NO;
             }

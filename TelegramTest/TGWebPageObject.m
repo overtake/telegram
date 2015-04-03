@@ -12,6 +12,7 @@
 #import "TGWebpageYTObject.h"
 #import "TGWebpageTWObject.h"
 #import "TGWebpageStandartObject.h"
+#import "NSAttributedString+Hyperlink.h"
 @implementation TGWebpageObject
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
@@ -40,6 +41,8 @@
             [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:desc.range];
             
             _desc = desc;
+            
+            [desc detectExternalLinks];
         }
         
        
@@ -87,8 +90,8 @@
     
     _imageSize = strongsize(_imageObject.imageSize, width - 67);
     
-    _titleSize = [self.title sizeForTextFieldForWidth:_imageSize.width ? : width-67];
-    _descSize = [self.desc sizeForTextFieldForWidth:_imageSize.width ? : width-67];
+    _titleSize = [self.title coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
+    _descSize = [self.desc coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
     
     _size = _imageSize;
     
