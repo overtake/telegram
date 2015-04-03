@@ -75,6 +75,36 @@
             endingLineNumber = "385"
             landmarkName = "-updateAccountPhoto:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]"
+                  moduleName = "Telegram"
+                  urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
+                  timestampString = "449767563.499479"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
+                  offsetFromSymbolStart = "247">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__80-[UsersManager updateAccountPhoto:completeHandler:progressHandler:errorHandler:]_block_invoke"
+                  moduleName = "Telegram"
+                  urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
+                  timestampString = "449767563.502015"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
+                  offsetFromSymbolStart = "78">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -91,6 +121,36 @@
             endingLineNumber = "418"
             landmarkName = "-updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke"
+                  moduleName = "Telegram"
+                  urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
+                  timestampString = "449767563.508715"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "419"
+                  endingLineNumber = "419"
+                  offsetFromSymbolStart = "86">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__89-[UsersManager updateAccountPhotoByNSImage:completeHandler:progressHandler:errorHandler:]_block_invoke_2"
+                  moduleName = "Telegram"
+                  urlString = "file:///Users/mikhailfilimonov/Dropbox/telegramosx/TelegramTest/UsersManager.m"
+                  timestampString = "449767563.510312"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "419"
+                  endingLineNumber = "419"
+                  offsetFromSymbolStart = "61">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

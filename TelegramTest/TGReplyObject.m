@@ -81,8 +81,11 @@
             
             TLPhotoSize *photoSize = photo.sizes[0];
             
+            
+            
             _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
             
+            _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 30);
             
         }
         
@@ -102,7 +105,11 @@
                 thumb = [[NSImage alloc] initWithData:photoSize.bytes];
             }
             
+            
+            
             _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
+            
+            _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 30);
             
         }
         
@@ -116,10 +123,12 @@
                     
                     if(replyMessage.media.document.thumb.bytes) {
                         thumb = [[NSImage alloc] initWithData:replyMessage.media.document.thumb.bytes];
-                        thumb = renderedImage(thumb, NSMakeSize(30, 30));
+                        thumb = renderedImage(thumb, strongsize(NSMakeSize(replyMessage.media.document.thumb.w, replyMessage.media.document.thumb.h), 30));
                     }
                     
                     _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? replyMessage.media.document.thumb.location : nil placeHolder:thumb];
+                    
+                    _replyThumb.imageSize = strongsize(NSMakeSize(replyMessage.media.document.thumb.w, replyMessage.media.document.thumb.h), 30);
                     
                 }
                 
@@ -129,7 +138,7 @@
         
        
         
-        _replyThumb.imageSize = NSMakeSize(30, 30);
+        
         
         [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];
         

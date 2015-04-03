@@ -131,6 +131,9 @@
 +(id)objectForWebpage:(TLWebPage *)webpage {
     
     
+    if(!ACCEPT_FEATURE)
+        return nil;
+    
     static NSArray *supportTypes;
     
     static dispatch_once_t onceToken;

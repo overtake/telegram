@@ -64,7 +64,7 @@
         
         self.locationImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(15, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
-        
+        [self.thumbImageView setContentMode:BTRViewContentModeCenter];
         
         self.locationImageView.layer.cornerRadius = 3;
         
