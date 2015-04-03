@@ -108,7 +108,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t129"; // 61
+    NSString *dbName = @"t130"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -118,8 +118,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     if(![oldName isEqualToString:dbName]) {
         [SettingsArchiver setSupportUserId:0];
         [SettingsArchiver removeSetting:BlockedContactsSynchronized];
-        
-        [self drop:nil];
         
         [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
         [[NSUserDefaults standardUserDefaults] synchronize];
