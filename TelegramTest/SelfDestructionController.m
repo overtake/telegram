@@ -67,7 +67,7 @@
     for (TL_destructMessage *msg in copy) {
         if(msg.destruction_time != 0 && msg.destruction_time < [[NSDate date] timeIntervalSince1970]) {
             [self.targets removeObject:msg];
-            [todelete addObject:@(msg.n_id)];
+            [todelete addObject:@(msg.randomId)];
             
             if(msg.params.layer > 1 && [msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                 NSMutableArray *array = [remoteDelete objectForKey:@(msg.peer_id)];
