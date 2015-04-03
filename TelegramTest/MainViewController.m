@@ -247,18 +247,55 @@
    
 }
 
+-(BOOL)shouldAdjustSizeOfSubview:(NSView *)subview {
+    BOOL res = NO;
+    
+    if(subview == self.leftViewContainer) {
+        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH ))) );
+        
+    } else {
+        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+    }
+
+    
+    return res;
+}
+
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
+    
     
     BOOL res = NO;
     
     if(subview == self.leftViewContainer) {
-        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
+        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH ))) );
+        
     } else {
         res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
     }
     
     
     return res;
+    
+//    
+//    BOOL res = [self shouldAdjustSizeOfSubview:subview];
+//    
+//    if(subview == self.leftViewContainer) {
+//        
+//        if([self shouldAdjustSizeOfSubview:self.rightViewController.view]) {
+//            return YES;
+//        }
+//        
+//    } else {
+//        
+//        if([self shouldAdjustSizeOfSubview:self.leftViewContainer]) {
+//            return YES;
+//        }
+//        
+//    }
+//    
+//   
+//    
+//    return res;
 }
 
 
