@@ -158,8 +158,8 @@
 +(id)objectForWebpage:(TLWebPage *)webpage {
     
     
-    //if(!ACCEPT_FEATURE)
-    //    return nil;
+    if(!ACCEPT_FEATURE)
+        return nil;
     
     static NSArray *supportTypes;
     

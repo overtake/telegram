@@ -38,9 +38,7 @@
     [super setWebpage:webpage];
     
     [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
-        
-    [self.loaderView setCenterByView:self.imageView];
-    
+            
     [self.descriptionField setFrame:NSMakeRect([self textX], 20, webpage.descSize.width , webpage.descSize.height + 20 > NSHeight(self.frame) ? NSHeight(self.frame) - 20 : webpage.descSize.height )];
     
     [self.descriptionField setAttributedString:webpage.desc];

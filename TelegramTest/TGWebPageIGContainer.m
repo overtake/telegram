@@ -39,9 +39,6 @@
     
    
     
-    [self.loaderView setCenterByView:self.imageView];
-    
-    
     if([webpage.webpage.type isEqualToString:@"video"]) {
         
         _playVideo = imageViewWithImage(image_WebpageInstagramVideoPlay());

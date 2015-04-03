@@ -98,12 +98,10 @@
     
     [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
-    [self.loaderView setCenterByView:self.imageView];
     [self.youtubeImage setCenterByView:self.imageView];
     
-    [self.descriptionField setFrame:NSMakeRect(0, !self.author.isHidden ? 20 : 0, webpage.titleSize.width , webpage.titleSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 20 : 0, webpage.titleSize.width , webpage.titleSize.height )];
     [self.descriptionField setAttributedString:webpage.title];
-    
     
     
     [_videoTimeView setString:webpage.videoTimeAttributedString];

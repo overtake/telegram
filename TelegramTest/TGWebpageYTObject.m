@@ -12,6 +12,7 @@
 @implementation TGWebpageYTObject
 
 @synthesize size = _size;
+@synthesize author = _author;
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super initWithWebPage:webpage]) {
@@ -30,6 +31,8 @@
         size.height = ceil(size.height + 7);
         _videoTimeSize = size;
         
+        _author = nil;
+
     }
     
     return self;

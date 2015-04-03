@@ -356,7 +356,7 @@
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
         
-    [window setMinSize:NSMakeSize( 70 + MIN_SINGLE_LAYOUT_WIDTH, 400)];
+     [window setMinSize:NSMakeSize( [self isMinimisze] ? MIN_SINGLE_LAYOUT_WIDTH + 70 : MIN_SINGLE_LAYOUT_WIDTH, 400)];
     
    // [self layout];
     

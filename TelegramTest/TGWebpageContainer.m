@@ -47,12 +47,6 @@
         
         [self addSubview:_imageView];
         
-        _loaderView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
-        
-        [_loaderView setStyle:TMCircularProgressDarkStyle];
-        
-        
-        [_imageView addSubview:_loaderView];
         
         
         dispatch_block_t block = ^ {
@@ -67,7 +61,7 @@
         [self addSubview:_descriptionField];
         
         [_descriptionField setEditable:YES];
-        
+                
         
         self.author = [TMTextField defaultTextField];
         self.date = [TMTextField defaultTextField];
@@ -140,15 +134,33 @@
 
 -(void)updateState:(TMLoaderViewState)state {
     
-    [self.loaderView setHidden:self.item.isset];
     
-    [self.loaderView setState:state];
     
-    [self.loaderView setProgress:self.webpage.imageObject.downloadItem.progress animated:NO];
-    
-    [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
-    
-    [self.loaderView setCenterByView:_imageView];
+    if(!self.item.isset) {
+        [_loaderView removeFromSuperview];
+        
+        _loaderView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
+        
+        [_loaderView setStyle:TMCircularProgressDarkStyle];
+        
+        
+        [_imageView addSubview:_loaderView];
+        [self.loaderView setCenterByView:_imageView];
+        
+        [self.loaderView setState:state];
+        
+        [self.loaderView setProgress:self.webpage.imageObject.downloadItem.progress animated:NO];
+        
+        if(self.loaderView.currentProgress > 0) {
+            [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
+        }
+        
+        
+        
+
+    } else  {
+        [_loaderView removeFromSuperview];
+    }
 
 }
 
