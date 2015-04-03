@@ -137,7 +137,10 @@
         
         
        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
         
+        [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
         
         
         [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];

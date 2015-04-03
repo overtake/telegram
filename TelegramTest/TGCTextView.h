@@ -40,6 +40,8 @@
 -(int)currentIndexInLocation:(NSPoint)location;
 -(BOOL)indexIsSelected:(int)index;
 
+
+
 // its private not for use
 -(BOOL)_checkClickCount:(NSEvent *)theEvent;
 

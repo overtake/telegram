@@ -695,7 +695,9 @@
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
     if([self mouse:location inRect:self.bounds]) {
+        
         CFArrayRef lines = CTFrameGetLines(CTFrame);
+        
         
         CGPoint origins[CFArrayGetCount(lines)];
         CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
