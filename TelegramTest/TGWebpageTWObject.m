@@ -24,4 +24,9 @@
     
 }
 
+
+-(NSImage *)siteIcon  {
+    return image_WebpageTwitterIcon();
+}
+
 @end

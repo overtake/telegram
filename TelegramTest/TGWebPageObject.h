@@ -22,7 +22,7 @@
 
 @property (nonatomic,strong,readonly) NSString *toolTip;
 @property (nonatomic,strong,readonly) NSString *date;
-@property (nonatomic,strong,readonly) NSString *author;
+@property (nonatomic,strong,readonly) NSAttributedString *author;
 
 @property (nonatomic,strong,readonly) TLWebPage *webpage;
 
@@ -39,5 +39,7 @@
 -(Class)webpageContainer;
 
 +(id)objectForWebpage:(TLWebPage *)webpage;
+
+-(NSImage *)siteIcon;
 
 @end

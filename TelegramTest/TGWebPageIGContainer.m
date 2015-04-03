@@ -68,7 +68,7 @@
     [self.date setHidden:!webpage.date];
     
     if(webpage.author ) {
-        [self.author setStringValue:webpage.author];
+        [self.author setAttributedStringValue:webpage.author];
         [self.author sizeToFit];
         [self.author setFrameOrigin:NSMakePoint(0, -4)];
     }

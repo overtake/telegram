@@ -21,11 +21,32 @@
         _webpage = webpage;
         
         
-        _author = webpage.author;
+        if(webpage.author) {
+            
+            NSMutableAttributedString *author = [[NSMutableAttributedString alloc] init];
+            
+            if([self siteIcon]) {
+                
+                [author appendAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[[self siteIcon] imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 5)]]]];
+                
+            }
+            
+            [author appendString:webpage.author withColor:DARK_BLACK];
+            
+            [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:author.range];
+            
+            _author = author;
+            
+        }
+        
+        
         _date = webpage.date == 0 ? nil : [TGDateUtils stringForMessageListDate:webpage.date];
         
         if(webpage.title) {
             NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
+            
+            
+            
             
             
             [title appendString:webpage.title withColor:[NSColor blackColor]];
@@ -108,6 +129,18 @@
 }
 
 +(id)objectForWebpage:(TLWebPage *)webpage {
+    
+    
+    static NSArray *supportTypes;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        supportTypes = @[@"video",@"article",@"photo"];
+    });
+    
+    if([supportTypes indexOfObject:webpage.type] == NSNotFound)
+        return nil;
+    
     if([webpage.site_name isEqualToString:@"YouTube"])
     {
         return [[TGWebpageYTObject alloc] initWithWebPage:webpage];
@@ -130,5 +163,10 @@
     
     return nil;
 }
+
+-(NSImage *)siteIcon  {
+    return nil;
+}
+
 
 @end

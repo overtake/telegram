@@ -64,9 +64,7 @@
         
         self.author = [TMTextField defaultTextField];
         self.date = [TMTextField defaultTextField];
-        
-        [self.author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
-        
+                
         
         [self addSubview:self.author];
         [self addSubview:self.date];

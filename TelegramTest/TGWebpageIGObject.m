@@ -33,4 +33,8 @@
     
 }
 
+-(NSImage *)siteIcon {
+    return image_WebpageInstagramIcon();
+}
+
 @end
