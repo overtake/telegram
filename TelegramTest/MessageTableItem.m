@@ -402,7 +402,7 @@
 
 
 -(BOOL)isReplyMessage {
-    return self.message.replyMessage != nil;
+    return self.message.replyMessage != nil && [self.message.replyMessage isKindOfClass:[TL_localMessage class]];
 }
 
 -(BOOL)isFwdMessage {
