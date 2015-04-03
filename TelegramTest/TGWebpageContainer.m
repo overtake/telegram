@@ -8,6 +8,7 @@
 
 #import "TGWebpageContainer.h"
 #import "TGCTextView.h"
+#import "TGPhotoViewer.h"
 @interface TGWebpageContainer ()
 @property (nonatomic,strong,readonly) TMView *containerView;
 @end
@@ -54,6 +55,12 @@
         [_imageView addSubview:_loaderView];
         
         
+        dispatch_block_t block = ^ {
+            [self showPhoto];
+        };
+        
+        [_imageView setTapBlock:block];
+        
         _descriptionField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
         
@@ -85,6 +92,25 @@
 
 -(void)setWebpage:(TGWebpageObject *)webpage {
     _webpage = webpage;
+    
+    
+    [self.author setHidden:!webpage.author];
+    [self.date setHidden:!webpage.date];
+    
+    if(webpage.author ) {
+        [self.author setAttributedStringValue:webpage.author];
+        [self.author setFrameSize:NSMakeSize([self maxTextWidth], 20)];
+        [self.author setFrameOrigin:NSMakePoint([self textX], -4)];
+    }
+    
+    if(webpage.date && webpage.author) {
+        [self.date setStringValue:webpage.date];
+        [self.date sizeToFit];
+        [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.author.frame) + 4, 0)];
+    }
+    
+    
+    [_imageView setObject:webpage.imageObject];
     
     [webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
         
@@ -130,64 +156,47 @@
     return _containerView.frame.size;
 }
 
+-(int)maxTextWidth {
+    
+    int width = self.containerSize.width;
+    
+    if([self.webpage.webpage.type isEqualToString:@"profile"]) {
+        width = width - 75;
+    }
+    
+    return width;
+}
+
+-(int)textX {
+    
+    if([self.webpage.webpage.type isEqualToString:@"profile"]) {
+        return 65; // 60 + 5
+    }
+    
+    return 0;
+}
+
+-(void)showPhoto {
+    
+    if(![self.webpage.webpage.type isEqualToString:@"profile"] && self.webpage.imageObject) {
+        
+        PreviewObject *previewObject =[[PreviewObject alloc] initWithMsdId:self.webpage.webpage.photo.n_id media:[self.webpage.webpage.photo.sizes lastObject] peer_id:0];
+        
+        previewObject.reservedObject = self.imageView.image;
+        
+        if([self.webpage.webpage.type isEqualToString:@"video"] && [self.webpage.webpage.embed_type isEqualToString:@"video/mp4"]) {
+            
+            previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
+            
+        }
+        
+        [[TGPhotoViewer viewer] show:previewObject];
+        
+    } else {
+        if([self.webpage.webpage.type isEqualToString:@"profile"]) {
+            open_link(self.webpage.webpage.display_url);
+        }
+    }
+}
+
 @end
-
-
-/*
- -(void)initWebPageContainerView {
- 
- 
- if(_webPageContainerView == nil) {
- 
- MessageTableItemText *item = (MessageTableItemText *)[self item];
- 
- _webPageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
- 
- _webPageContainerView.wantsLayer = YES;
- 
- _webPageContainerView.layer.cornerRadius = 4;
- 
- 
- {
- _webPageImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
- 
- 
- [_webPageContainerView addSubview:_webPageImageView];
- 
- 
- 
- _webPageTitleView = [TMTextField defaultTextField];
- _webPageDescView = [TMTextField defaultTextField];
- 
- 
- _webPageMarkView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_webPageContainerView.frame), 40)];
- 
- _webPageMarkView.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.6);
- 
- 
- 
- [_webPageContainerView addSubview:_webPageMarkView];
- 
- [_webPageContainerView addSubview:_webPageTitleView];
- [_webPageContainerView addSubview:_webPageDescView];
- 
- [_webPageTitleView setFrameOrigin:NSMakePoint(5, 20)];
- [_webPageDescView setFrameOrigin:NSMakePoint(5, 0)];
- 
- 
- [self setProgressToView:_webPageContainerView];
- 
- [self.progressView setStyle:TMCircularProgressDarkStyle];
- 
- }
- 
- 
- [_webPageContainerView setBackgroundColor:[NSColor grayColor]];
- 
- 
- [self.containerView addSubview:_webPageContainerView];
- 
- }
- 
- }
-*/

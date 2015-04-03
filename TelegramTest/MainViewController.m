@@ -360,7 +360,7 @@
     
    // [self layout];
     
-//    [self.rightViewController.view setFrameSize:NSMakeSize(NSWidth(self.view.frame) - NSWidth(self.leftViewContainer.frame), NSHeight(self.rightViewController.view.frame))];
+  //  [self.rightViewController.view setFrameSize:NSMakeSize(MAX(NSWidth(self.rightViewController.view.frame), MIN_SINGLE_LAYOUT_WIDTH), NSHeight(self.rightViewController.view.frame))];
     
     
     if(window.minSize.width > window.frame.size.width) {

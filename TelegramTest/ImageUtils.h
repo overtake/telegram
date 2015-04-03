@@ -174,6 +174,8 @@ CACHE_IMAGE(ProgressWindowCheck);
 CACHE_IMAGE(WebpageInstagramIcon);
 CACHE_IMAGE(WebpageTwitterIcon);
 
+CACHE_IMAGE(WebpageInstagramVideoPlay);
+
 @interface ImageUtils : NSObject
 
 

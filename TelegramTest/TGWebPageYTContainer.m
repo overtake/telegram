@@ -91,26 +91,12 @@
 
 -(void)setWebpage:(TGWebpageYTObject *)webpage {
     
-    [self.author setHidden:!webpage.author];
-    [self.date setHidden:!webpage.date];
+    [super setWebpage:webpage];
     
-    if(webpage.author ) {
-        [self.author setAttributedStringValue:webpage.author];
-        [self.date setStringValue:webpage.date];
-        
-        [self.author sizeToFit];
-        [self.date sizeToFit];
-        
-        [self.author setFrameOrigin:NSMakePoint(0, NSMaxY(self.frame) - NSHeight(self.author.frame))];
-        [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.frame) - NSWidth(self.author.frame), NSMaxY(self.frame) - NSHeight(self.author.frame))];
-        
-    }
-    
+
     [_blackContainer removeFromSuperview];
     
     [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
-    
-    [self.imageView setObject:webpage.imageObject];
     
     [self.loaderView setCenterByView:self.imageView];
     [self.youtubeImage setCenterByView:self.imageView];
@@ -125,9 +111,6 @@
     [_videoTimeView setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(_videoTimeView.frame) - 5, 5)];
     
     
-    
-    
-    [super setWebpage:webpage];
     
 }
 
@@ -164,31 +147,8 @@
             [_progressIndicator setAnimates:NO];
             [_blackContainer removeFromSuperview];
             
-            
-            
             [self playFullScreen];
             
-//            if (video && !PLAY)
-//            {
-//                PLAY = YES;
-//                
-//                [self clearPlayer];
-//                
-//                _playerView = [[AVPlayerView alloc] initWithFrame:self.imageView.bounds];
-//                
-//                [_fullScreenImageView setCenterByView:_playerView];
-//                
-//                
-//                [self addSubview:_playerView];
-//                
-//                NSDictionary *streamURLs = video.streamURLs;
-//                NSURL *url = streamURLs[XCDYouTubeVideoQualityHTTPLiveStreaming] ?: streamURLs[@(XCDYouTubeVideoQualityHD720)] ?: streamURLs[@(XCDYouTubeVideoQualityMedium360)] ?: streamURLs[@(XCDYouTubeVideoQualitySmall240)];
-//                AVPlayer *player = [AVPlayer playerWithURL:url];
-//                _playerView.player = player;
-//                [player play];
-//                
-//                [_playerView addSubview:_fullScreenImageView];
-//            }
             
         }];
     } else {

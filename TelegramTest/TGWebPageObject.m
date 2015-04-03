@@ -21,6 +21,10 @@
         _webpage = webpage;
         
         
+        NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        style.alignment = NSLeftTextAlignment;
+        
         if(webpage.author) {
             
             NSMutableAttributedString *author = [[NSMutableAttributedString alloc] init];
@@ -35,6 +39,8 @@
             
             [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:author.range];
             
+            [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
+            
             _author = author;
             
         }
@@ -47,12 +53,22 @@
             
             
             
-            
-            
             [title appendString:webpage.title withColor:[NSColor blackColor]];
             [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:title.range];
             
             _title = title;
+        }
+        
+        if(!_author) {
+            
+            NSMutableAttributedString *copy = [_title mutableCopy];
+            
+            [copy insertAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[[self siteIcon] imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 5)]]] atIndex:0];
+            
+            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:copy.range];
+            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
+            _author = copy;
+            
         }
         
         if(webpage.n_description) {
@@ -109,14 +125,25 @@
 
 -(void)makeSize:(int)width {
     
-    _imageSize = strongsize(_imageObject.imageSize, width - 67);
+    if(![self.webpage.type isEqualToString:@"profile"]) {
+        _imageSize = strongsize(_imageObject.imageSize, width - 67);
+        
+        _titleSize = [self.title coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
+        _descSize = [self.desc coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
+        
+        _size = _imageSize;
+        
+        _size.height+=self.titleSize.height + self.descSize.height + (!self.author ?:17) + (((_title || _desc) && _imageObject) ? 8 : 0);
+    } else {
+        _imageSize = strongsize(_imageObject.imageSize, 60);
+        
+        _titleSize = [self.title coreTextSizeForTextFieldForWidth: width-132];
+        _descSize = [self.desc coreTextSizeForTextFieldForWidth: width-132];
+        
+        _size = _imageSize;
+    }
     
-    _titleSize = [self.title coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
-    _descSize = [self.desc coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
     
-    _size = _imageSize;
-    
-    _size.height+=self.titleSize.height + self.descSize.height + (!self.author ?:17) + (((_title || _desc) && _imageObject) ? 8 : 0);
     
     
     
@@ -131,14 +158,14 @@
 +(id)objectForWebpage:(TLWebPage *)webpage {
     
     
-    if(!ACCEPT_FEATURE)
-        return nil;
+    //if(!ACCEPT_FEATURE)
+    //    return nil;
     
     static NSArray *supportTypes;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        supportTypes = @[@"video",@"article",@"photo"];
+        supportTypes = @[@"video",@"article",@"photo",@"profile"];
     });
     
     if([supportTypes indexOfObject:webpage.type] == NSNotFound)

@@ -15,18 +15,6 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        dispatch_block_t block = ^{
-            
-            PreviewObject *previewObject =[[PreviewObject alloc] initWithMsdId:self.webpage.webpage.photo.n_id media:[self.webpage.webpage.photo.sizes lastObject] peer_id:0];
-            
-            previewObject.reservedObject = self.imageView.image;
-            
-            [[TGPhotoViewer viewer] show:previewObject];
-            
-        };
-        
-        
-        [self.imageView setTapBlock:block];
         
         
     }
@@ -36,25 +24,11 @@
 
 -(void)setWebpage:(TGWebpageStandartObject *)webpage {
     
+    [super setWebpage:webpage];
     
-    [self.author setHidden:!webpage.author];
-    [self.date setHidden:!webpage.date];
-    
-    if(webpage.author ) {
-        [self.author setStringValue:webpage.author];
-        [self.author sizeToFit];
-        [self.author setFrameOrigin:NSMakePoint(0, -4)];
-    }
-    
-    if(webpage.date && webpage.author) {
-        [self.date setStringValue:webpage.date];
-        [self.date sizeToFit];
-        [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.author.frame) + 4, 0)];
-    }
     
     [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
-    [self.imageView setObject:webpage.imageObject];
     
     [self.loaderView setCenterByView:self.imageView];
     
@@ -62,9 +36,6 @@
     
     [self.descriptionField setAttributedString:webpage.desc];
     
-    
-    
-    [super setWebpage:webpage];
     
 }
 

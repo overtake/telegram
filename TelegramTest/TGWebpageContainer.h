@@ -28,5 +28,9 @@
 -(void)updateState:(TMLoaderViewState)state;
 
 -(NSSize)containerSize;
+-(int)maxTextWidth;
+-(int)textX;
+
+-(void)showPhoto;
 
 @end

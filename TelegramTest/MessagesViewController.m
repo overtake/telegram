@@ -452,9 +452,11 @@
        
         NSUInteger index = [self indexOfObject:obj];
         
-        obj.isHeaderMessage = YES;
+        
 
         [obj updateWebPage];
+        
+        obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
         
         if(index != NSNotFound) {
             [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];

@@ -31,6 +31,7 @@
     
     _size = [super size];
     
+    
 }
 
 -(NSImage *)siteIcon {
