@@ -80,27 +80,28 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
+    if(![TGPasslock isEnabled]) {
+        [self initialize];
+    }
+    
+    
+    
+    
+}
+
+-(void)initialize {
     [[Storage manager] users:^(NSArray *result) {
         
         [[UsersManager sharedManager] addFromDB:result];
-                
-        [[BroadcastManager sharedManager] loadBroadcastList:^{
         
+        [[BroadcastManager sharedManager] loadBroadcastList:^{
+            
             [[Storage manager] loadChats:^(NSArray *chats) {
                 [[ChatsManager sharedManager] add:chats];
                 
                 [ASQueue dispatchOnMainQueue:^{
                     [self initConversations];
                     
-                    if([TGPasslock isEnabled]) {
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            
-                            [TMViewController showBlockPasslock:nil];
-                            
-                        });
-                        
-                    }
                     
                 }];
             }];
@@ -111,9 +112,7 @@
     [[Storage manager] unreadCount:^(int count) {
         [[MessagesManager sharedManager] setUnread_count:count];
     }];
-    
-    
-    
+
 }
 
 

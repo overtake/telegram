@@ -45,6 +45,7 @@
     ASQueue *_queue;
     TGTimer *_globalTimer;
     NSMutableArray *_dispatchTimers;
+    TGKeychain *_keychain;
 }
 
 @end
@@ -100,37 +101,40 @@ static NSString *kDefaultDatacenter = @"default_dc";
             _context = [[MTContext alloc] initWithSerialization:serialization apiEnvironment:apiEnvironment];
             
             
-            __block  TGKeychain *keychain = [self nKeychain];
+            _keychain = [self nKeychain];
             
             
 
             
-            [keychain loadIfNeeded];
+            [_keychain loadIfNeeded];
             
-            if(keychain.isNeedPasscode) {
+            if(_keychain.isNeedPasscode) {
                 
                 dispatch_block_t block = ^ {
                     
                     [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
                         
+                        [SharedManager drop];
+                        
                         __block BOOL acceptHash;
                         
                         [_queue dispatchOnQueue:^{
                             
-                            acceptHash = [keychain updatePasscodeHash:[md5Hash dataUsingEncoding:NSUTF8StringEncoding] save:NO];
+                            acceptHash = [_keychain updatePasscodeHash:[md5Hash dataUsingEncoding:NSUTF8StringEncoding] save:NO];
                             
                         } synchronous:YES];
                         
                         if(acceptHash) {
                             [_queue dispatchOnQueue:^{
                                 
-                                assert(keychain != nil);
                                 
-                                [self startWithKeychain:keychain];
+                                [self startWithKeychain:_keychain];
                                 [self initConnectionWithId:_masterDatacenter];
+                                
                                 
                             }];
                             
+                             [Telegram initializeDatabase];
                             
                             if(![self isAuth]) {
                                 [[Telegram delegate] logoutWithForce:YES];
@@ -152,7 +156,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 
             } else {
-                [self startWithKeychain:keychain];
+                [self startWithKeychain:_keychain];
                 
                 if(![self isAuth]) {
                     [[Telegram delegate] logoutWithForce:YES];
@@ -214,7 +218,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        TGKeychain *keychain = (TGKeychain *)_keychain;
         
         [keychain updatePasscodeHash:md5Hash save:YES];
         
@@ -229,7 +233,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        TGKeychain *keychain = (TGKeychain *)_keychain;
         
         result = [md5Hash isEqualToData:[keychain md5PasscodeHash]];
         
@@ -245,7 +249,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)self.context.keychain;
+        TGKeychain *keychain = (TGKeychain *)_keychain;
         
         result = [keychain passcodeIsEnabled];
         
@@ -344,6 +348,7 @@ static int MAX_WORKER_POLL = 5;
 
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
+    
     
     [_queue dispatchOnQueue:^{
         

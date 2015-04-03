@@ -69,6 +69,8 @@ int maxChatUsers();
 
 +(TGEnterPasswordPanel *)enterPasswordPanel;
 
++(void)initializeDatabase;
+
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;
 

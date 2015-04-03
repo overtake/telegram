@@ -307,6 +307,8 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
+    [MTNetwork instance];
+    
  //   if([[MTNetwork instance] isAuth]) {
         [self initializeMainWindow];
    // } else {

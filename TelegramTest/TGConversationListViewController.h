@@ -11,4 +11,6 @@
 #import "StandartViewController.h"
 @interface TGConversationListViewController : StandartViewController<TMTableViewDelegate>
 + (void)showPopupMenuForDialog:(TL_conversation *)dialog withEvent:(NSEvent *)theEvent forView:(NSView *)view;
+-(void)initialize;
+
 @end

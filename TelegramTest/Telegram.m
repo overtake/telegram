@@ -325,4 +325,8 @@ static TGEnterPasswordPanel *panel;
     
 }
 
++(void)initializeDatabase {
+    [self.leftViewController.dialogsViewController initialize];
+}
+
 @end
