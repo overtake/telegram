@@ -15,6 +15,7 @@
     
     NSString *searchedString = [error error_message];
     
+    
     RpcError *rpcError = [[RpcError alloc] init];
     rpcError.error_code = [error error_code];
     

@@ -31,11 +31,13 @@
 -(void)setFrame:(NSRect)frame {
     
     
-    BOOL currentLayout = ![[Telegram mainViewController] isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+    MainViewController *controller = [Telegram mainViewController];
+    
+    BOOL currentLayout = ![controller isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
     
     [super setFrame:frame];
     
-    BOOL nextLayout = ![[Telegram mainViewController] isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
+    BOOL nextLayout = ![controller isMinimisze] && (self.frame.size.width < MAX_SINGLE_LAYOUT_WIDTH);
     
     if(currentLayout != nextLayout) {
         
@@ -250,11 +252,9 @@
 -(BOOL)shouldAdjustSizeOfSubview:(NSView *)subview {
     BOOL res = NO;
     
-    if(subview == self.leftViewContainer) {
-        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH ))) );
+    if(subview == self.rightViewController.view) {
+        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH); // ![self isMinimisze] && ( [self isSingleLayout] || NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH );
         
-    } else {
-        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
     }
 
     
@@ -267,10 +267,13 @@
     BOOL res = NO;
     
     if(subview == self.leftViewContainer) {
-        res = ![self isMinimisze] && ( ([self isSingleLayout] || ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH ))) );
-        
+       // res = ![self isMinimisze] && ( (![self isSingleLayout] ) );
+       
+        res = ![self shouldAdjustSizeOfSubview:self.rightViewController.view];
     } else {
-        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+      //  res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+       //
+        res = [self shouldAdjustSizeOfSubview:self.rightViewController.view];
     }
     
     
@@ -353,7 +356,7 @@
 -(void)updateWindowMinSize {
     MainWindow *window = (MainWindow *)self.view.window;
         
-    [window setMinSize:NSMakeSize( [self isMinimisze] ? MIN_SINGLE_LAYOUT_WIDTH + 70 : MIN_SINGLE_LAYOUT_WIDTH, 400)];
+    [window setMinSize:NSMakeSize( 70 + MIN_SINGLE_LAYOUT_WIDTH, 400)];
     
    // [self layout];
     

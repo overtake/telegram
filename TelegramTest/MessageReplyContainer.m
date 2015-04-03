@@ -58,11 +58,11 @@
         
         
         
-        self.thumbImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(15, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
+        self.thumbImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
         self.thumbImageView.cornerRadius = 3;
         
-        self.locationImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(15, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
+        self.locationImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
         [self.thumbImageView setContentMode:BTRViewContentModeCenter];
         
@@ -106,7 +106,7 @@
 -(void)update {
     
    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 50 : 10;
+    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 5;
     
     
     

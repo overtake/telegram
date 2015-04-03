@@ -594,27 +594,32 @@ static NSMutableArray *listeners;
                 
                 
                 [_filter storageRequest:next callback:^(NSArray *result) {
-                    [[MessagesManager sharedManager] add:result];
                     
-                    
-                    NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:result] isLates:NO];
+                    [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
                         
-                    converted = [self sortItems:converted];
-                    
-                    [self saveId:converted next:next];
-                    
-                    
-                    if(result.count < _selectLimit) {
-                        [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
+                        [[MessagesManager sharedManager] add:result];
                         
-                        if(!next && (_min_id) == self.controller.conversation.top_message) {
-                            [self setState:ChatHistoryStateFull next:NO];
+                        
+                        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:result] isLates:NO];
+                        
+                        converted = [self sortItems:converted];
+                        
+                        [self saveId:converted next:next];
+                        
+                        
+                        if(result.count < _selectLimit) {
+                            [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
+                            
+                            if(!next && (_min_id) == self.controller.conversation.top_message) {
+                                [self setState:ChatHistoryStateFull next:NO];
+                            }
                         }
-                    }
+                        
+                        [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+                        
+                    }];
                     
-                    [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                    
-                    
+                     
                     
                 }];
                 
