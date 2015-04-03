@@ -15,7 +15,7 @@
 #import "FileUtils.h"
 #import "MessageCellDescriptionView.h"
 
-
+#import "TGPhotoViewer.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
@@ -116,12 +116,30 @@ static NSImage *playImage() {
 }
 
 - (void)open {
-    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    TMPreviewVideoItem *item = [[TMPreviewVideoItem alloc] initWithItem:previewObject];
-    if(item) {
-        [[TMMediaController controller] show:item];
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message.media.video.thumb peer_id:self.item.message.peer_id];
+    
+    if (floor(NSAppKitVersionNumber) > 1187)  {
+        
+        NSURL *url = [NSURL fileURLWithPath:mediaFilePath(self.item.message.media)];
+        
+        NSSize size = NSMakeSize(self.item.message.media.video.w, self.item.message.media.video.h);
+        
+        previewObject.reservedObject = @{@"url":url,@"size":[NSValue valueWithSize:size]};
+        [[TGPhotoViewer viewer] show:previewObject];
+    } else {
+        
+        TMPreviewVideoItem *item = [[TMPreviewVideoItem alloc] initWithItem:previewObject];
+        if(item) {
+            [[TMMediaController controller] show:item];
+        }
     }
+    
+    
+    
+    
+//    
+
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -131,9 +149,13 @@ static NSImage *playImage() {
     
     [self.progressView setState:cellState];
     
-    self.imageView.object = ((MessageTableItemVideo *)self.item).imageObject;
+    BOOL needBlur = self.item.message.media.video.thumb.w != 250;
     
-    [self.imageView setIsAlwaysBlur:self.item.message.media.video.thumb.w != 250];
+    if(self.imageView.isAlwaysBlur != needBlur)
+        [self.imageView setIsAlwaysBlur:needBlur];
+    
+    self.imageView.object = ((MessageTableItemVideo *)self.item).imageObject;
+
 }
 
 - (NSMenu *)contextMenu {
@@ -170,9 +192,7 @@ static NSImage *playImage() {
     
      [self.imageView setFrameSize:item.blockSize];
     
-    
-    self.imageView.object = item.imageObject;
-    
+        
     [self updateVideoTimeView];
 }
 
@@ -185,14 +205,21 @@ static NSImage *playImage() {
 }
 
 - (void)onStateChanged:(SenderItem *)item {
-    [super onStateChanged:item];
+    
     
     [ASQueue dispatchOnMainQueue:^{
         if(item == self.item.messageSender) {
             [(MessageTableItemVideo *)self.item rebuildTimeString];
             [self updateVideoTimeView];
+            
+            if(item.state == MessageSendingStateSent) {
+                [self.item doAfterDownload];
+            }
         }
+        
     }];
+    
+    [super onStateChanged:item];
 }
 
 

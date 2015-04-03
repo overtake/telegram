@@ -106,7 +106,6 @@ static NSMutableArray *listeners;
         
         [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
         
-
     }
     
     return self;

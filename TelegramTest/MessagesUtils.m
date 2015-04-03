@@ -212,7 +212,7 @@
         
         
         if(!message.action) {
-            if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+            if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
                 msgText = [MessagesUtils mediaMessage:message];
             } else {
                 msgText = message.message ? [message.message fixEmoji] : @"";

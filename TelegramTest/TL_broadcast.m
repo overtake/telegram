@@ -58,6 +58,17 @@
     return input;
 }
 
+- (NSMutableArray *)generateRandomIds {
+    NSMutableArray *random = [[NSMutableArray alloc] initWithCapacity:self.participants.count];
+    
+    [self.participants enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [random addObject:@(rand_long())];
+    }];
+    
+    
+    return random;
+}
+
 -(NSString *)partString {
     return [NSString stringWithFormat:self.participants.count > 1 ? NSLocalizedString(@"Broadcast.participantsTitle", nil) : NSLocalizedString(@"Broadcast.participantTitle", nil),self.participants.count];
 }

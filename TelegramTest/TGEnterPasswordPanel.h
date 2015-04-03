@@ -10,4 +10,5 @@
 
 @interface TGEnterPasswordPanel : TMView
 -(void)prepare;
+-(void)showEnterPassword;
 @end

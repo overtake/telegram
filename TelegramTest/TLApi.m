@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.03.15..
+//  Auto created by Mikhail Filimonov on 02.04.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -720,7 +720,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-51478592];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:871814540];
 	[TLClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.reply_to_msg_id];
 	[TLClassStore TLSerialize:self.media stream:stream];
@@ -738,7 +738,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-556523451];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1440838285];
 	[TLClassStore TLSerialize:self.peer stream:stream];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
@@ -807,7 +807,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1262720843];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-599447467];
 	[stream writeInt:self.chat_id];
 	[stream writeString:self.title];
 	return [stream getOutput];
@@ -822,7 +822,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-662601187];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-900957736];
 	[stream writeInt:self.chat_id];
 	[TLClassStore TLSerialize:self.photo stream:stream];
 	return [stream getOutput];
@@ -838,7 +838,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:787082910];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-106911223];
 	[stream writeInt:self.chat_id];
 	[TLClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeInt:self.fwd_limit];
@@ -854,7 +854,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1010447069];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-530505962];
 	[stream writeInt:self.chat_id];
 	[TLClassStore TLSerialize:self.user_id stream:stream];
 	return [stream getOutput];
@@ -869,7 +869,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1100847854];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:164303470];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1113,7 +1113,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:66319602];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:865483769];
 	[TLClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.random_id];
@@ -1122,15 +1122,16 @@
 @end
 
 @implementation TLAPI_messages_sendBroadcast
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts message:(NSString*)message media:(TLInputMedia*)media {
++(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media {
     TLAPI_messages_sendBroadcast* obj = [[TLAPI_messages_sendBroadcast alloc] init];
     obj.contacts = contacts;
+	obj.random_id = random_id;
 	obj.message = message;
 	obj.media = media;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1102776690];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1082919718];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1139,6 +1140,16 @@
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.contacts objectAtIndex:i];
 			[TLClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.random_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			NSNumber* obj = [self.random_id objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
 		}
 	}
 	[stream writeString:self.message];
@@ -1738,51 +1749,6 @@
 }
 @end
 
-@implementation TLAPI_account_getPassword
-+(TLAPI_account_getPassword*)create {
-    TLAPI_account_getPassword* obj = [[TLAPI_account_getPassword alloc] init];
-    
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1418342645];
-	
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_account_setPassword
-+(TLAPI_account_setPassword*)createWithCurrent_password_hash:(NSData*)current_password_hash n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint {
-    TLAPI_account_setPassword* obj = [[TLAPI_account_setPassword alloc] init];
-    obj.current_password_hash = current_password_hash;
-	obj.n_salt = n_salt;
-	obj.n_password_hash = n_password_hash;
-	obj.hint = hint;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-584430193];
-	[stream writeByteArray:self.current_password_hash];
-	[stream writeByteArray:self.n_salt];
-	[stream writeByteArray:self.n_password_hash];
-	[stream writeString:self.hint];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_auth_checkPassword
-+(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash {
-    TLAPI_auth_checkPassword* obj = [[TLAPI_auth_checkPassword alloc] init];
-    obj.password_hash = password_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
-	[stream writeByteArray:self.password_hash];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_getStickers
 +(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash {
     TLAPI_messages_getStickers* obj = [[TLAPI_messages_getStickers alloc] init];
@@ -1820,6 +1786,112 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:954152242];
 	[stream writeInt:self.period];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_getAuthorizations
++(TLAPI_account_getAuthorizations*)create {
+    TLAPI_account_getAuthorizations* obj = [[TLAPI_account_getAuthorizations alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-484392616];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_resetAuthorization
++(TLAPI_account_resetAuthorization*)createWithN_hash:(long)n_hash {
+    TLAPI_account_resetAuthorization* obj = [[TLAPI_account_resetAuthorization alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-545786948];
+	[stream writeLong:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_getPassword
++(TLAPI_account_getPassword*)create {
+    TLAPI_account_getPassword* obj = [[TLAPI_account_getPassword alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1418342645];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_getPasswordSettings
++(TLAPI_account_getPasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash {
+    TLAPI_account_getPasswordSettings* obj = [[TLAPI_account_getPasswordSettings alloc] init];
+    obj.current_password_hash = current_password_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1131605573];
+	[stream writeByteArray:self.current_password_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_updatePasswordSettings
++(TLAPI_account_updatePasswordSettings*)createWithCurrent_password_hash:(NSData*)current_password_hash n_settings:(TLaccount_PasswordInputSettings*)n_settings {
+    TLAPI_account_updatePasswordSettings* obj = [[TLAPI_account_updatePasswordSettings alloc] init];
+    obj.current_password_hash = current_password_hash;
+	obj.n_settings = n_settings;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-92517498];
+	[stream writeByteArray:self.current_password_hash];
+	[TLClassStore TLSerialize:self.n_settings stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_checkPassword
++(TLAPI_auth_checkPassword*)createWithPassword_hash:(NSData*)password_hash {
+    TLAPI_auth_checkPassword* obj = [[TLAPI_auth_checkPassword alloc] init];
+    obj.password_hash = password_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
+	[stream writeByteArray:self.password_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_requestPasswordRecovery
++(TLAPI_auth_requestPasswordRecovery*)create {
+    TLAPI_auth_requestPasswordRecovery* obj = [[TLAPI_auth_requestPasswordRecovery alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-661144474];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_recoverPassword
++(TLAPI_auth_recoverPassword*)createWithCode:(NSString*)code {
+    TLAPI_auth_recoverPassword* obj = [[TLAPI_auth_recoverPassword alloc] init];
+    obj.code = code;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1319464594];
+	[stream writeString:self.code];
 	return [stream getOutput];
 }
 @end

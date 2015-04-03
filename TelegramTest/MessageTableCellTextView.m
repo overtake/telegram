@@ -1,3 +1,4 @@
+
 //
 //  MessageTableCellTextView.m
 //  Telegram P-Edition
@@ -10,6 +11,10 @@
 #import "MessageTableItemText.h"
 #import "TGTimerTarget.h"
 #import "POPCGUtils.h"
+#import "TGImageView.h"
+#import "XCDYouTubeKit.h"
+#import "TGWebpageContainer.h"
+
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -18,6 +23,11 @@
 
 
 @interface MessageTableCellTextView() <TMHyperlinkTextFieldDelegate>
+
+
+
+@property (nonatomic,strong) TGWebpageContainer *webpageContainerView;
+
 @end
 
 @implementation MessageTableCellTextView
@@ -29,13 +39,21 @@
     if (self) {
         
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
+        
         [self.containerView addSubview:self.textView];
+        
+        [self.containerView setIsFlipped:YES];
+        
+        
         _textView.wantsLayer = YES;
         
         
     }
     return self;
 }
+
+
+
 
 - (void) textField:(id)textField handleURLClick:(NSString *)url {
     open_link(url);
@@ -53,13 +71,47 @@
     [self.textView setEditable:!editable];
 }
 
+
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    MessageTableItemText *item = (MessageTableItemText *)[self item];
+    
+}
+
 - (void) setItem:(MessageTableItemText *)item {
     
  
     [super setItem:item];
     
     
-    [self.textView setFrameSize:NSMakeSize(item.blockSize.width , item.blockSize.height)];
+    if([item isWebPage]) {
+        
+        if(!_webpageContainerView || _webpageContainerView.class != item.webpage.webpageContainer) {
+            [_webpageContainerView removeFromSuperview];
+            
+            _webpageContainerView = [[item.webpage.webpageContainer alloc] initWithFrame:NSZeroRect];
+            
+            [self.containerView addSubview:_webpageContainerView];
+        }
+        
+        
+        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
+        
+        [_webpageContainerView setWebpage:item.webpage];
+        
+        [_webpageContainerView setItem:item];
+        
+        
+    } else {
+        [_webpageContainerView removeFromSuperview];
+        _webpageContainerView = nil;
+    }
+    
+    [self updateCellState];
+    
+    [self.textView setFrameSize:NSMakeSize(item.textSize.width , item.textSize.height)];
     [self.textView setAttributedString:item.textAttributed];
     
     [self.textView setOwner:item];
@@ -70,6 +122,15 @@
     
 }
 
+
+-(void)setCellState:(CellState)cellState {
+    [super setCellState:cellState];
+    
+    MessageTableItemText *item = (MessageTableItemText *)[self item];
+    
+    [self.webpageContainerView updateState:cellState];
+    
+}
 
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Text menu"];

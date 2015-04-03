@@ -15,6 +15,7 @@
 - (id)initWithTimeout:(NSTimeInterval)timeout repeat:(bool)repeat completion:(dispatch_block_t)completion queue:(dispatch_queue_t)queue;
 - (void)start;
 - (void)fireAndInvalidate;
+- (void)fire;
 - (void)invalidate;
 - (bool)isScheduled;
 - (void)resetTimeout:(NSTimeInterval)timeout;

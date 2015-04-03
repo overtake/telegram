@@ -56,7 +56,7 @@
         
         NSMutableAttributedString *replyText = [[NSMutableAttributedString alloc] init];
         
-        if([replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        if([replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]] || [replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             
             [replyText appendString:replyMessage.message withColor:NSColorFromRGB(0x060606)];
             

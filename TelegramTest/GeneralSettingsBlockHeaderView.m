@@ -16,7 +16,13 @@
 
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
-        _header = object;
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:object withColor:NSColorFromRGB(0x999999)];
+        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
+        
+        _header = attr;
         _rand = arc4random();
     }
     
@@ -43,10 +49,11 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         self.textField = [TMTextField defaultTextField];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-        [self.textField setTextColor:NSColorFromRGB(0x999999)];
-        
+
+        [[self.textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
         [self.textField setFrameOrigin:NSMakePoint(100, 0)];
+       
+        
         
         [self addSubview:self.textField];
     }
@@ -59,10 +66,17 @@
     
     GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
     
-    [self.textField setStringValue:item.header];
+    [self.textField setAttributedStringValue:item.header];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
     
-    [self.textField sizeToFit];
+    GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
     
+    NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - 200];
+    
+    [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - 200, s.height )];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

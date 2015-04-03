@@ -43,6 +43,7 @@
 #import "NSTextView+EmojiExtension.h"
 #import "TGPhotoViewer.h"
 #import "TGPasslock.h"
+#import "TGCTextView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -361,7 +362,17 @@ void exceptionHandler(NSException * exception)
         if(result.window != self.mainWindow) {
             
             if(incomingEvent.keyCode == 53 && ![result.window respondsToSelector:@selector(popover)]) {
+                
+                if([[Telegram enterPasswordPanel] superview] != nil) {
+                    [[Telegram enterPasswordPanel] showEnterPassword];
+                    
+                    return [[NSEvent alloc] init];
+                }
+                
+                
                 [result.window close];
+                
+                
                 
                 return result;
             }
@@ -444,10 +455,12 @@ void exceptionHandler(NSException * exception)
             
         } else if(incomingEvent.keyCode == 53) {
             
-            if([Telegram rightViewController].messagesViewController.conversation == nil && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
+            if([Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].currentEmptyController && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
                 
                 if(![responder isKindOfClass:[NSTextView class]] || ![((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                     [[Telegram leftViewController] becomeFirstResponder];
+                    
+                    return [[NSEvent alloc] init];
                 } else if([((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                     [((NSTextView *)responder) setString:@""];
                     [((NSTextView *)responder) didChangeText];
@@ -537,7 +550,7 @@ void exceptionHandler(NSException * exception)
             
         }
         
-        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0)
+        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]])
             [[Telegram rightViewController] becomeFirstResponder];
         
         return result;
@@ -687,7 +700,8 @@ void exceptionHandler(NSException * exception)
     
     [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
-
+    
+    
 }
 
 - (void)initializeLoginWindow {
@@ -698,6 +712,8 @@ void exceptionHandler(NSException * exception)
     self.loginWindow = loginWindow;
     
     
+    //[Telegram showEnterPasswordPanel];
+
 }
 
 - (void)releaseWindows {

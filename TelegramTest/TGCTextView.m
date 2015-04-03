@@ -326,6 +326,7 @@
                 }
                 
                 
+                
                 if(startIndex > endIndex) {
                     startIndex = endIndex+startIndex;
                     endIndex = startIndex - endIndex;
@@ -433,6 +434,7 @@
  
     return [super respondsToSelector:aSelector];
 }
+
 
 -(void)copy:(id)sender {
     
@@ -559,10 +561,12 @@
     if(!_isEditable)
         return;
     
-    startSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    [self becomeFirstResponder];
     
     currentSelectPosition = NSMakePoint(-1, -1);
     [self setSelectionRange:NSMakeRange(NSNotFound, 0)];
+    
+    startSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     [self setNeedsDisplay:YES];
 }
@@ -690,7 +694,7 @@
 
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
-    if([self hitTest:location]) {
+    if([self mouse:location inRect:self.bounds]) {
         CFArrayRef lines = CTFrameGetLines(CTFrame);
         
         CGPoint origins[CFArrayGetCount(lines)];
@@ -733,7 +737,7 @@
 -(void)checkCursor:(NSEvent *)theEvent {
     NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    if([self hitTest:location]) {
+    if([self mouse:location inRect:self.bounds]) {
         
         BOOL hitTest;
         

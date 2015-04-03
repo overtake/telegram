@@ -92,6 +92,11 @@
     [self invalidate];
 }
 
+- (void)fire {
+    if (self.completion)
+        self.completion();
+}
+
 - (void)invalidate
 {
     _timeoutDate = 0;

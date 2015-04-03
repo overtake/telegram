@@ -3,7 +3,7 @@
 //  MessagesViewController.m
 //  TelegramTest
 //
-//  Created by Dmitry Kondratyev on 10/29/13.
+//  Created by keepcedr on 10/29/13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
 #import "TGSendTypingManager.h"
@@ -253,6 +253,7 @@
     
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
+    [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -435,6 +436,34 @@
     
     if(index != NSNotFound)
         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    
+    
+}
+
+-(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
+    
+    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
+    
+    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+       
+        NSUInteger index = [self indexOfObject:obj];
+        
+        obj.isHeaderMessage = YES;
+
+        [obj updateWebPage];
+        
+        if(index != NSNotFound) {
+            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+    }];
+    
     
     
 }
@@ -2377,8 +2406,8 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if(prevItem.message && item.message) {
-        if(!prevItem.message.action && !item.message.action && ![prevItem isReplyMessage]) {
+    if(prevItem.message && item.message && ![item isReplyMessage] && ![item.message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        if(!prevItem.message.action && !item.message.action) {
             if(prevItem.message.from_id == item.message.from_id && ABS(prevItem.message.date - item.message.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderMessage = NO;
             }
@@ -3138,13 +3167,15 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(dialog.chat.left) {
-        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+            
             [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
+            
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
         }];
     } else {
-        [MessageSender sendStatedMessage:request successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             

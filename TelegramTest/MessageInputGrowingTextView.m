@@ -127,7 +127,7 @@ typedef enum {
             }
             
         } else if (UTTypeConformsTo(fileUTI, kUTTypeMovie)) {
-            NSDictionary *dictionary = [MessageSender videoParams:path];
+            NSDictionary *dictionary = [MessageSender videoParams:path thumbSize:strongsize(NSMakeSize(640, 480), 90)];
             
             iconImage = cropCenterWithSize([dictionary objectForKey:@"image"], NSMakeSize(70, 70));
             type = PasteBoardItemTypeVideo;

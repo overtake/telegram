@@ -199,28 +199,32 @@
     id request = nil;
     
     if(self.conversation.type == DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] message:@"" media:media];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:rand_long()];
+        request = [TLAPI_messages_sendMedia createWithPeer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId];
     }
     
     
     weakify();
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_statedMessage *obj) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
+        if(response.updates.count < 2)
+        {
+            [strongSelf cancel];
+            return;
+        }
         
-        [SharedManager proccessGlobalResponse:obj];
-        
-        TLMessage *msg;
+        TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         if(strongSelf.conversation.type != DialogTypeBroadcast)  {
-            msg = [obj message];
-        } else {
-            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) obj;
-            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
             
-            msg = stated.messages[0];
+            strongSelf.message.n_id = msg.n_id;
+            strongSelf.message.date = msg.date;
+            
+        } else {
+         //   [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
+         //   [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
+            
             
         }
         

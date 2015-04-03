@@ -15,6 +15,8 @@ typedef enum {
 
 @interface NewContactsManager : SharedManager
 
+-(void)iCloudSync;
+
 - (void) fullReload;
 
 - (void) insertContact:(TLContact *)contact;

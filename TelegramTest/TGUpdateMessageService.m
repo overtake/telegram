@@ -135,13 +135,10 @@
     if([incomingMessage.body isKindOfClass:[TL_rpc_result class]]) {
         
         
-        if([[incomingMessage.body result] isKindOfClass:[TL_messages_statedMessage class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_statedMessageLink class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_sentMessage class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_statedMessages class]] ||
+        if([[incomingMessage.body result] isKindOfClass:[TL_messages_sentMessage class]] ||
            [[incomingMessage.body result] isKindOfClass:[TL_gzip_packed class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_affectedHistory class]])
+           [[incomingMessage.body result] isKindOfClass:[TL_messages_affectedHistory class]] ||
+           [[incomingMessage.body result] isKindOfClass:[TL_updates class]])
                 [self addMessageToQueueAndScheduleProcessing:incomingMessage];
     }
 }
@@ -187,12 +184,9 @@
             rpc.result = [TLClassStore deserialize:[[rpc.result packed_data] gzipInflate]];
         }
         
-        if([[rpc result] isKindOfClass:[TL_messages_statedMessage class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_statedMessageLink class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_sentMessage class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_statedMessages class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_affectedHistory class]])
+        if([[rpc result] isKindOfClass:[TL_messages_sentMessage class]] ||
+           [[rpc result] isKindOfClass:[TL_messages_affectedHistory class]] ||
+           [[rpc result] isKindOfClass:[TL_updates class]])
             [_updateProccessor addUpdate:[rpc result]];
     } else {
         [_updateProccessor addUpdate:[incomingMessage body]];

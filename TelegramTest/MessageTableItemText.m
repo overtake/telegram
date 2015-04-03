@@ -12,12 +12,13 @@
 #import "MessagesUtils.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "NSString+Extended.h"
-
+#import "TGWebpageYTObject.h"
 #define MAX_WIDTH 400
 
 @interface MessageTableItemText()<SettingsListener>
 @property (nonatomic, strong) NSMutableAttributedString *nameAttritutedString;
 @property (nonatomic, strong) NSMutableAttributedString *forwardAttributedString;
+@property (nonatomic,strong) id requestKey;
 
 
 @end
@@ -92,11 +93,14 @@
         [self.forwardAttributedString setFont:[NSFont fontWithName:@"Helvetica-Bold" size:11.5] forRange:range2];
     }
     
+    [self updateWebPage];
+    
     
   //  [self makeSizeByWidth:280];
     
     return self;
 }
+
 
 
 -(void)updateMessageFont {
@@ -111,26 +115,92 @@
 - (BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    [_webpage makeSize:width];
+    
     width -= self.dateSize.width+10;
     
     if(self.isForwadedMessage) {
         width -= 50;
     }
 
-    
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.textAttributed);
-    
-    CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.textAttributed.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
-    
-    textSize.width= ceil(textSize.width);
-    textSize.height = ceil(textSize.height);
+
+    _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     
-    CFRelease(framesetter);
-        
-    self.blockSize = textSize;
+    self.blockSize = NSMakeSize(width, _textSize.height + [_webpage size].height + 5);
+    
     return YES;
 }
+
+
+-(void)updateWebPage {
+    
+    
+    if([self isWebPage]) {
+        
+        remove_global_dispatcher(_requestKey);
+        
+
+        
+        
+        _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage]; // its only youtube.
+        
+        
+        [self makeSizeByWidth:self.blockWidth];
+        
+        
+    } else if([self isWebPagePending]) {
+        
+        remove_global_dispatcher(_requestKey);
+        
+        
+        _requestKey = dispatch_in_time(self.message.media.webpage.date, ^{
+            
+            
+            [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(self.message.n_id)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+                
+                if(response.messages.count == 1) {
+                    
+                    TLMessage *msg = response.messages[0];
+                    
+                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                        self.message.media = msg.media;
+                    }
+                    
+                    [[Storage manager] updateMessages:@[self.message]];
+                    
+                    [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+                    
+                }
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                
+            }];
+            
+            
+            
+        });
+        
+    }
+
+}
+
+-(BOOL)isWebPage {
+    return [self.message.media.webpage isKindOfClass:[TL_webPage class]];
+}
+
+-(BOOL)isWebPagePending {
+    return [self.message.media.webpage isKindOfClass:[TL_webPagePending class]];
+}
+
+
+-(BOOL)isset {
+    return isPathExists(((TLPhotoSize *)[self.message.media.webpage.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
+}
+
+
 
 
 -(void)dealloc {

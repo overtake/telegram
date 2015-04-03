@@ -45,6 +45,8 @@
 
 - (void) fullReload {
     
+    int bp = 0;
+    
     [self.queue dispatchOnQueue:^{
         [self->keys removeAllObjects];
         [self->list removeAllObjects];
@@ -59,17 +61,7 @@
             
             [self remoteCheckContacts:^{
                 
-//               if( [SettingsArchiver checkMaskedSetting:iCloudSynch] ) {
-//                   dispatch_after_seconds(2, ^{
-//                       [[Storage manager] importedContacts:^(NSSet *imported) {
-//                           
-//                           [self.queue dispatchOnQueue:^{
-//                                [self importCloudContacts:imported];
-//                           }];
-//                           
-//                       }];
-//                    });
-//                }
+                [self iCloudSync];
                 
             }];
             
@@ -79,6 +71,20 @@
         
         
     }];
+}
+
+
+-(void)iCloudSync {
+    
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"icloudsync"]) {
+        [[Storage manager] importedContacts:^(NSSet *imported) {
+            
+            [self.queue dispatchOnQueue:^{
+                [self importCloudContacts:imported];
+            }];
+            
+        }];
+    }
 }
 
 
@@ -187,43 +193,16 @@
                 
                 [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
                 
+                
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"icloudsync"];
+                
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                
             } timeout:10 queue:self.queue.nativeQueue];
+        } else {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"icloudsync"];
         }
         
-        if(deleteSet.count > 0) {
-            
-            NSMutableArray *delete = [[NSMutableArray alloc] init];
-            NSMutableArray *contacts = [[NSMutableArray alloc] init];
-            [deleteSet enumerateObjectsUsingBlock:^(TGHashContact *obj, BOOL *stop) {
-                if(obj.user) {
-                    [delete addObject:obj.user.inputUser];
-                    TL_contact *contact = [self find:obj.user.n_id withCustomKey:@"user_id"];
-                    if(contact)
-                        [contacts addObject:contact];
-                }
-                
-                
-            }];
-            
-            [RPCRequest sendRequest:[TLAPI_contacts_deleteContacts createWithN_id:delete] successHandler:^(RPCRequest *request, id response) {
-                
-                [self remove:contacts withCustomKey:@"user_id"];
-                
-                [contacts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    [[Storage manager] removeContact:obj ];
-                }];
-                
-                [[Storage manager] deleteImportedContacts:deleteSet];
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-                
-                
-            } timeout:10 queue:self.queue.nativeQueue];
-            
-        }
         
     }];
     

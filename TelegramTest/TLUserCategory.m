@@ -117,6 +117,8 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
 - (void) rebuildNames {
     
     
+    
+    
     //Fullname
     NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
     NSString *fullNameFull = fullName;
@@ -302,6 +304,7 @@ DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
 - (NSAttributedString *) encryptedTitleForMessage {
     return [self getENCRYPTED_TITLE_FOR_MESSAGE];
 }
+
 
 
 

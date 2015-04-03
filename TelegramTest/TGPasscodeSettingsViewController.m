@@ -92,6 +92,17 @@
     
     [self.tableView insert:turnPasscode atIndex:self.tableView.list.count tableRedraw:NO];
     
+    if(![[MTNetwork instance] passcodeIsEnabled]) {
+        
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PasscodeSettings.TurnOnDescription", nil)];
+        
+        
+        description.height = 40;
+        
+        [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
+    }
+    
+    
     
     if([[MTNetwork instance] passcodeIsEnabled]) {
         

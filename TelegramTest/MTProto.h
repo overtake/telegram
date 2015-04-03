@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 15.03.15.
+//  Auto created by Dmitry Kondratyev on 02.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -177,12 +177,6 @@
 @interface TLmessages_Message : TLObject
 @end
 	
-@interface TLmessages_StatedMessages : TLObject
-@end
-	
-@interface TLmessages_StatedMessage : TLObject
-@end
-	
 @interface TLmessages_SentMessage : TLObject
 @end
 	
@@ -318,9 +312,6 @@
 @interface TLaccount_SentChangePhoneCode : TLObject
 @end
 	
-@interface TLaccount_Password : TLObject
-@end
-	
 @interface TLDocumentAttribute : TLObject
 @end
 	
@@ -340,6 +331,27 @@
 @end
 	
 @interface TLContactLink : TLObject
+@end
+	
+@interface TLWebPage : TLObject
+@end
+	
+@interface TLAuthorization : TLObject
+@end
+	
+@interface TLaccount_Authorizations : TLObject
+@end
+	
+@interface TLaccount_Password : TLObject
+@end
+	
+@interface TLaccount_PasswordSettings : TLObject
+@end
+	
+@interface TLaccount_PasswordInputSettings : TLObject
+@end
+	
+@interface TLauth_PasswordRecovery : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -871,7 +883,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
 @end
 @interface TL_messageService : TLMessage
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -887,6 +899,7 @@
 @property int user_id;
 @property (nonatomic, strong) TLDocument* document;
 @property (nonatomic, strong) TLAudio* audio;
+@property (nonatomic, strong) TLWebPage* webpage;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia
@@ -912,6 +925,9 @@
 @end
 @interface TL_messageMediaAudio : TLMessageMedia
 +(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
+@end
+@interface TL_messageMediaWebPage : TLMessageMedia
++(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
 	
 @interface TLMessageAction()
@@ -1313,43 +1329,10 @@
 +(TL_messages_messageEmpty*)create;
 @end
 	
-@interface TLmessages_StatedMessages()
-@property (nonatomic, strong) NSMutableArray* messages;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int pts;
-@property int pts_count;
-@property (nonatomic, strong) NSMutableArray* links;
-@property int seq;
-@end
-
-@interface TL_messages_statedMessages : TLmessages_StatedMessages
-+(TL_messages_statedMessages*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count;
-@end
-@interface TL_messages_statedMessagesLinks : TLmessages_StatedMessages
-+(TL_messages_statedMessagesLinks*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
-@end
-	
-@interface TLmessages_StatedMessage()
-@property (nonatomic, strong) TLMessage* message;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int pts;
-@property int pts_count;
-@property (nonatomic, strong) NSMutableArray* links;
-@property int seq;
-@end
-
-@interface TL_messages_statedMessage : TLmessages_StatedMessage
-+(TL_messages_statedMessage*)createWithMessage:(TLMessage*)message chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count;
-@end
-@interface TL_messages_statedMessageLink : TLmessages_StatedMessage
-+(TL_messages_statedMessageLink*)createWithMessage:(TLMessage*)message chats:(NSMutableArray*)chats users:(NSMutableArray*)users pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
-@end
-	
 @interface TLmessages_SentMessage()
 @property int n_id;
 @property int date;
+@property (nonatomic, strong) TLMessageMedia* media;
 @property int pts;
 @property int pts_count;
 @property (nonatomic, strong) NSMutableArray* links;
@@ -1357,10 +1340,10 @@
 @end
 
 @interface TL_messages_sentMessage : TLmessages_SentMessage
-+(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date pts:(int)pts pts_count:(int)pts_count;
++(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_messages_sentMessageLink : TLmessages_SentMessage
-+(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
++(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
 @end
 	
 @interface TLmessages_Chats()
@@ -1456,6 +1439,7 @@
 @property (nonatomic, strong) NSMutableArray* rules;
 @property (nonatomic, strong) NSString* phone;
 @property int max_id;
+@property (nonatomic, strong) TLWebPage* webpage;
 @end
 
 @interface TL_updateNewMessage : TLUpdate
@@ -1542,6 +1526,9 @@
 @interface TL_updateReadHistoryOutbox : TLUpdate
 +(TL_updateReadHistoryOutbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id pts:(int)pts pts_count:(int)pts_count;
 @end
+@interface TL_updateWebPage : TLUpdate
++(TL_updateWebPage*)createWithWebpage:(TLWebPage*)webpage;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -1602,10 +1589,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
 @end
 @interface TL_updateShortChatMessage : TLUpdates
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
 @end
 @interface TL_updateShort : TLUpdates
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1668,6 +1655,7 @@
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property int chat_size_max;
 @property int broadcast_size_max;
+@property int forwarded_count_max;
 @property int online_update_period_ms;
 @property int offline_blur_timeout_ms;
 @property int offline_idle_timeout_ms;
@@ -1679,7 +1667,7 @@
 @end
 
 @interface TL_config : TLConfig
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2118,19 +2106,6 @@
 +(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout;
 @end
 	
-@interface TLaccount_Password()
-@property (nonatomic, strong) NSData* n_salt;
-@property (nonatomic, strong) NSData* current_salt;
-@property (nonatomic, strong) NSString* hint;
-@end
-
-@interface TL_account_noPassword : TLaccount_Password
-+(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt;
-@end
-@interface TL_account_password : TLaccount_Password
-+(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint;
-@end
-	
 @interface TLDocumentAttribute()
 @property int w;
 @property int h;
@@ -2194,11 +2169,11 @@
 	
 @interface TLDisabledFeature()
 @property (nonatomic, strong) NSString* feature;
-@property (nonatomic, strong) NSString* description;
+@property (nonatomic, strong) NSString* n_description;
 @end
 
 @interface TL_disabledFeature : TLDisabledFeature
-+(TL_disabledFeature*)createWithFeature:(NSString*)feature description:(NSString*)description;
++(TL_disabledFeature*)createWithFeature:(NSString*)feature n_description:(NSString*)n_description;
 @end
 	
 @interface TLmessages_AffectedMessages()
@@ -2225,6 +2200,106 @@
 @end
 @interface TL_contactLinkContact : TLContactLink
 +(TL_contactLinkContact*)create;
+@end
+	
+@interface TLWebPage()
+@property long n_id;
+@property int date;
+@property int flags;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* display_url;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* site_name;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) TLPhoto* photo;
+@property (nonatomic, strong) NSString* embed_url;
+@property (nonatomic, strong) NSString* embed_type;
+@property int embed_width;
+@property int embed_height;
+@property int duration;
+@property (nonatomic, strong) NSString* author;
+@end
+
+@interface TL_webPageEmpty : TLWebPage
++(TL_webPageEmpty*)createWithN_id:(long)n_id;
+@end
+@interface TL_webPagePending : TLWebPage
++(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
+@end
+@interface TL_webPage : TLWebPage
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:()embed_width embed_height:()embed_height duration:()duration author:(NSString*)author;
+@end
+	
+@interface TLAuthorization()
+@property long n_hash;
+@property int flags;
+@property (nonatomic, strong) NSString* device_model;
+@property (nonatomic, strong) NSString* platform;
+@property (nonatomic, strong) NSString* system_version;
+@property int api_id;
+@property (nonatomic, strong) NSString* app_name;
+@property (nonatomic, strong) NSString* app_version;
+@property int date_created;
+@property int date_active;
+@property (nonatomic, strong) NSString* ip;
+@property (nonatomic, strong) NSString* country;
+@property (nonatomic, strong) NSString* region;
+@end
+
+@interface TL_authorization : TLAuthorization
++(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip country:(NSString*)country region:(NSString*)region;
+@end
+	
+@interface TLaccount_Authorizations()
+@property (nonatomic, strong) NSMutableArray* authorizations;
+@end
+
+@interface TL_account_authorizations : TLaccount_Authorizations
++(TL_account_authorizations*)createWithAuthorizations:(NSMutableArray*)authorizations;
+@end
+	
+@interface TLaccount_Password()
+@property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSString* email_unconfirmed_pattern;
+@property (nonatomic, strong) NSData* current_salt;
+@property (nonatomic, strong) NSString* hint;
+@property Boolean has_recovery;
+@end
+
+@interface TL_account_noPassword : TLaccount_Password
++(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern;
+@end
+@interface TL_account_password : TLaccount_Password
++(TL_account_password*)createWithCurrent_salt:(NSData*)current_salt n_salt:(NSData*)n_salt hint:(NSString*)hint has_recovery:(Boolean)has_recovery email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern;
+@end
+	
+@interface TLaccount_PasswordSettings()
+@property (nonatomic, strong) NSString* email;
+@end
+
+@interface TL_account_passwordSettings : TLaccount_PasswordSettings
++(TL_account_passwordSettings*)createWithEmail:(NSString*)email;
+@end
+	
+@interface TLaccount_PasswordInputSettings()
+@property int flags;
+@property (nonatomic, strong) NSData* n_salt;
+@property (nonatomic, strong) NSData* n_password_hash;
+@property (nonatomic, strong) NSString* hint;
+@property (nonatomic, strong) NSString* email;
+@end
+
+@interface TL_account_passwordInputSettings : TLaccount_PasswordInputSettings
++(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint email:(NSString*)email;
+@end
+	
+@interface TLauth_PasswordRecovery()
+@property (nonatomic, strong) NSString* email_pattern;
+@end
+
+@interface TL_auth_passwordRecovery : TLauth_PasswordRecovery
++(TL_auth_passwordRecovery*)createWithEmail_pattern:(NSString*)email_pattern;
 @end
 	
 @interface TLProtoMessage()

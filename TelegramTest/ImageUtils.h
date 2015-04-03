@@ -169,6 +169,11 @@ CACHE_IMAGE(CancelReply);
 
 CACHE_IMAGE(ModernMessageYoutubeButton);
 
+CACHE_IMAGE(ProgressWindowCheck);
+
+CACHE_IMAGE(WebpageInstagramIcon);
+CACHE_IMAGE(WebpageTwitterIcon);
+
 @interface ImageUtils : NSObject
 
 

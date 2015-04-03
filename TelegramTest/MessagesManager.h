@@ -16,7 +16,9 @@
 -(void)addSupportMessages:(NSArray *)supportMessages;
 -(TL_localMessage *)supportMessage:(int)n_id;
 
--(TL_destructMessage *)findWithRandomId:(long)random_id;
+-(TL_localMessage *)findWithRandomId:(long)random_id;
+
+-(NSArray *)findWithWebPageId:(long)webpage_id;
 
 -(void)addMessage:(TLMessage *)message;
 -(void)TGsetMessage:(TLMessage *)message;
@@ -25,7 +27,6 @@
 -(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
 
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
-+(void)statedMessage:(TL_messages_statedMessage*)response;
 +(void)addAndUpdateMessage:(TL_localMessage *)message;
 +(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date;

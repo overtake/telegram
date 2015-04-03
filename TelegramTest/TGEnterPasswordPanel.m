@@ -8,13 +8,26 @@
 
 #import "TGEnterPasswordPanel.h"
 #import <MtProtoKit/MTEncryption.h>
+#import "UserInfoShortTextEditView.h"
+
 @interface TGEnterPasswordPanel ()<NSTextFieldDelegate>
+
 @property (nonatomic,strong) NSSecureTextField *secureField;
-@property (nonatomic,strong) TMTextField *titleField;
-@property (nonatomic,strong) TMView *contentView;
+@property (nonatomic,strong) UserInfoShortTextEditView *emailCodeField;
+
 @property (nonatomic,strong) TMTextButton *resetPass;
 @property (nonatomic,strong) TMTextButton *logout;
-@property (nonatomic,strong) TMTextButton *confirm;
+@property (nonatomic,strong) TMTextButton *resetAccount;
+
+
+@property (nonatomic,strong) TMView *enterPasswordContainer;
+@property (nonatomic,strong) TMView *confirmEmailCodeContainer;
+
+@property (nonatomic,strong) TMTextButton *backButton;
+
+
+@property (nonatomic,strong) TMView *currentController;
+
 @end
 
 @implementation TGEnterPasswordPanel
@@ -22,167 +35,355 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
+        self.backButton = [TMTextButton standartMessageNavigationButtonWithTitle:@"Back"];
         
-        self.contentView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 250)];
+        [self.backButton setHidden:YES];
+        [self.backButton setFrameOrigin:NSMakePoint(20, NSHeight(frameRect) - NSHeight(self.backButton.frame) - 20)];
         
-     //   self.contentView.backgroundColor = [NSColor blueColor];
+        weak();
+        [self.backButton setTapBlock:^{
+            [weakSelf switchControllers];
+        }];
         
-        self.contentView.isFlipped = YES;
+        _currentController = [self enterPasswordContainer];
         
-        [self.contentView setCenterByView:self];
+        [self addSubview:[self enterPasswordContainer]];
         
-        [self addSubview:self.contentView];
+        
+        [self addSubview:self.backButton];
         
         self.backgroundColor = NSColorFromRGB(0xffffff);
-        
-        
-        self.secureField = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 30)];
-        
-        NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
-        
-        [attrs appendString:NSLocalizedString(@"Password.password", nil) withColor:NSColorFromRGB(0x999999)];
-        
-        [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
-        
-        [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
-        
-        [[self.secureField cell] setPlaceholderAttributedString:attrs];
-        
-        [self.secureField setAlignment:NSCenterTextAlignment];
-        
-        [self.secureField setCenterByView:[self contentView]];
-        
-        [self.secureField setBordered:NO];
-        [self.secureField setDrawsBackground:NO];
-        [self.secureField setFocusRingType:NSFocusRingTypeNone];
-        
-        [self.secureField setAction:@selector(checkPassword)];
-        [self.secureField setTarget:self];
-        
-        [self.secureField setFrameOrigin:NSMakePoint(NSMinX(self.secureField.frame), 90)];
-        
-        [self.contentView addSubview:self.secureField];
-        
-        
-        TMView *separator = [[TMView alloc] initWithFrame:self.secureField.frame];
-        
-        [separator setFrame:NSMakeRect(NSMinX(separator.frame), NSMinY(separator.frame) + NSHeight(self.secureField.frame) + 1, NSWidth(separator.frame), 1)];
-        
-        separator.backgroundColor = GRAY_BORDER_COLOR;
-        
-        [self.contentView addSubview:separator];
-        
-        
-        self.titleField = [TMTextField defaultTextField];
-        
-        
-        [self.titleField setStringValue:NSLocalizedString(@"Password.EnterYourPassword", nil)];
-        
-       
-        
-        [self.titleField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        
-        [self.titleField setTextColor:NSColorFromRGB(0x999999)];
-        
-        [self.titleField sizeToFit];
-        
-        
-        [self.titleField setCenterByView:self.contentView];
-        
-        [self.titleField setFrameOrigin:NSMakePoint(NSMinX(self.titleField.frame),  40)];
-        
-        [self.contentView addSubview:self.titleField];
-        
-        
-        self.resetPass = [[TMTextButton alloc] initWithFrame:NSZeroRect];
-        
-        self.resetPass.stringValue = NSLocalizedString(@"Password.ResetPassword", nil);
-        self.resetPass.textColor = BLUE_UI_COLOR;
-        self.resetPass.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
-        
-        [self.resetPass sizeToFit];
-        
-        [self.resetPass setFrameOrigin:NSMakePoint(NSMinX(separator.frame), NSHeight(self.contentView.frame) - NSHeight(self.resetPass.frame) - 5)];
-        
-        weakify();
-        
-        [self.resetPass setTapBlock:^ {
-            
-            
-            confirm(NSLocalizedString(@"ALERT", nil), NSLocalizedString(@"Password.resetAlert", nil), ^{
-                
-                [TMViewController showModalProgress];
-                
-                [RPCRequest sendRequest:[TLAPI_account_deleteAccount createWithReason:@"Forgot password"] successHandler:^(RPCRequest *request, id response) {
-                    
-                   [[Telegram delegate] logoutWithForce:YES];
-                    
-                    [strongSelf hide];
-                    
-                    [TMViewController hideModalProgress];
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    
-                     [TMViewController hideModalProgress];
-                    
-                } timeout:10];
-                
-            },nil);
-            
-            
-           
-        }];
-        
-        
-        [self.contentView addSubview:self.resetPass];
-        
-        
-        self.logout = [[TMTextButton alloc] initWithFrame:NSZeroRect];
-        
-        self.logout.stringValue = NSLocalizedString(@"Password.logout", nil);
-        self.logout.textColor = BLUE_UI_COLOR;
-        self.logout.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
-        
-        [self.logout sizeToFit];
-        
-        [self.logout setFrameOrigin:NSMakePoint(NSMaxX(separator.frame) - NSWidth(self.logout.frame),  NSHeight(self.contentView.frame) - NSHeight(self.resetPass.frame) - 5)];
-        
-        
-        [self.logout setTapBlock:^ {
-            [[Telegram delegate] logoutWithForce:YES];
-        }];
-        
-        
-        [self.contentView addSubview:self.logout];
-        
-        
-        
-        self.confirm = [[TMTextButton alloc] initWithFrame:NSZeroRect];
-        
-        self.confirm = [[TMTextButton alloc] initWithFrame:NSZeroRect];
-        
-        self.confirm.stringValue = NSLocalizedString(@"Password.confirm", nil);
-        self.confirm.textColor = BLUE_UI_COLOR;
-        self.confirm.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
-        
-        [self.confirm sizeToFit];
-        
-        [self.confirm setCenterByView:self.contentView];
-        
-        [self.confirm setFrameOrigin:NSMakePoint(NSMinX(self.confirm.frame),  NSMaxY(separator.frame) + 15)];
-        
-        [self.confirm setTapBlock:^ {
-            [strongSelf checkPassword];
-        }];
-        
-        
-        [self.contentView addSubview:self.confirm];
-        
     }
     
     return self;
 }
 
+
+-(TMView *)confirmEmailCodeContainer {
+    if(_confirmEmailCodeContainer)
+        return _confirmEmailCodeContainer;
+    
+    _confirmEmailCodeContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 250)];
+    
+
+    
+    _confirmEmailCodeContainer.isFlipped = YES;
+    
+    [_confirmEmailCodeContainer setCenterByView:self];
+    
+    
+    _emailCodeField = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(0, 0, 250, 30)];
+    
+    NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
+    
+    [attrs appendString:NSLocalizedString(@"Code", nil) withColor:DARK_GRAY];
+    
+    [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
+    
+    [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
+    
+    [_emailCodeField.textView.cell setPlaceholderAttributedString:attrs];
+    
+    [_emailCodeField.textView setAlignment:NSCenterTextAlignment];
+    [_emailCodeField.textView setFrameOrigin:NSZeroPoint];
+    
+    [_emailCodeField setCenterByView:_confirmEmailCodeContainer];
+    
+    [_emailCodeField.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [_emailCodeField.textView setTextColor:DARK_BLACK];
+    
+    
+    _emailCodeField.textView.delegate = self;
+    
+    [_emailCodeField.textView setBordered:NO];
+    [_emailCodeField.textView setDrawsBackground:NO];
+    [_emailCodeField setFocusRingType:NSFocusRingTypeNone];
+    
+    [_emailCodeField.textView setAction:@selector(checkCode)];
+    [_emailCodeField.textView setTarget:self];
+    
+    [_emailCodeField setFrameOrigin:NSMakePoint(NSMinX(_emailCodeField.frame), 50)];
+    
+    [_confirmEmailCodeContainer addSubview:_emailCodeField];
+    
+    
+    
+    
+    
+    TMTextField *codeDescription = [TMTextField defaultTextField];
+    
+    [[codeDescription cell] setLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [codeDescription setStringValue:NSLocalizedString(@"EnterPassword.EnterCodeDescription", nil)];
+    
+    
+    [codeDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    
+    [codeDescription setTextColor:NSColorFromRGB(0x808080)];
+    
+    [codeDescription setFrameSize:NSMakeSize(NSWidth(_emailCodeField.frame), 200)];
+    
+    [codeDescription setFrameOrigin:NSMakePoint(NSMinX(_emailCodeField.frame),  NSMaxY(_emailCodeField.frame) + 15)];
+    
+    [_confirmEmailCodeContainer addSubview:codeDescription];
+    
+    TMTextButton *troubleAccess = [[TMTextButton alloc] initWithFrame:NSZeroRect];
+    
+    troubleAccess.stringValue = [NSString stringWithFormat:NSLocalizedString(@"EnterPassword.TroubleEmailAccess", nil)];
+    troubleAccess.textColor = BLUE_UI_COLOR;
+    troubleAccess.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    
+    [troubleAccess sizeToFit];
+    
+    [troubleAccess setCenterByView:_confirmEmailCodeContainer];
+    
+    
+    
+    [troubleAccess setFrameOrigin:NSMakePoint(NSMinX(_emailCodeField.frame), NSHeight(_confirmEmailCodeContainer.frame) - NSHeight(self.resetPass.frame) - 90)];
+    
+    
+    [troubleAccess setTapBlock:^ {
+        
+        alert(NSLocalizedString(@"Alert.Sorry", nil), NSLocalizedString(@"EnterPassword.AlertTroubleEmailAccess", nil));
+        
+    }];
+    
+    
+    [_confirmEmailCodeContainer addSubview:troubleAccess];
+
+    
+    
+    return _confirmEmailCodeContainer;
+}
+
+
+-(TMView *)enterPasswordContainer {
+    
+    if(_enterPasswordContainer)
+        return _enterPasswordContainer;
+    
+    _enterPasswordContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 340)];
+    
+    
+    _enterPasswordContainer.isFlipped = YES;
+    
+    [_enterPasswordContainer setCenterByView:self];
+    
+    
+    
+    
+    
+    
+    TMTextField *titleField = [TMTextField defaultTextField];
+    
+    
+    [titleField setStringValue:NSLocalizedString(@"Password.EnterYourPassword", nil)];
+    
+    
+    
+    [titleField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    
+    [titleField setTextColor:DARK_BLACK];
+    
+    [titleField sizeToFit];
+    
+    
+    [titleField setCenterByView:_enterPasswordContainer];
+    
+    [titleField setFrameOrigin:NSMakePoint(NSMinX(titleField.frame),  0)];
+    
+    [_enterPasswordContainer addSubview:titleField];
+    
+    
+    
+    self.secureField = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 30)];
+    
+    NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
+    
+    [attrs appendString:NSLocalizedString(@"Password.password", nil) withColor:DARK_GRAY];
+    
+    [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
+    
+    [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
+    
+    [self.secureField.cell setPlaceholderAttributedString:attrs];
+    
+    [self.secureField setAlignment:NSCenterTextAlignment];
+    
+    [self.secureField setCenterByView:_enterPasswordContainer];
+    
+    [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.secureField setTextColor:DARK_BLACK];
+    
+    [self.secureField setBordered:NO];
+    [self.secureField setDrawsBackground:NO];
+    [self.secureField setFocusRingType:NSFocusRingTypeNone];
+    
+    [self.secureField setAction:@selector(checkPassword)];
+    [self.secureField setTarget:self];
+    
+    [self.secureField setFrameOrigin:NSMakePoint(NSMinX(self.secureField.frame), NSMaxY(titleField.frame) + 30)];
+    
+    [_enterPasswordContainer addSubview:self.secureField];
+    
+    
+    TMView *separator = [[TMView alloc] initWithFrame:self.secureField.frame];
+    
+    [separator setFrame:NSMakeRect(NSMinX(separator.frame), NSMinY(separator.frame) + NSHeight(self.secureField.frame) + 1, NSWidth(separator.frame), 1)];
+    
+    separator.backgroundColor = GRAY_BORDER_COLOR;
+    
+    [_enterPasswordContainer addSubview:separator];
+    
+    
+    
+    
+    TMTextField *passwordDescription = [TMTextField defaultTextField];
+    
+    [[passwordDescription cell] setLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [passwordDescription setStringValue:NSLocalizedString(@"EnterPassword.EnterPasswordDescription", nil)];
+    
+    
+    [passwordDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    
+    [passwordDescription setTextColor:NSColorFromRGB(0x808080)];
+    
+    [passwordDescription setFrameSize:NSMakeSize(NSWidth(separator.frame), 200)];
+    
+    [passwordDescription setFrameOrigin:NSMakePoint(NSMinX(separator.frame),  NSMaxY(separator.frame) + 15)];
+    
+    [_enterPasswordContainer addSubview:passwordDescription];
+    
+    
+    
+    self.resetPass = [[TMTextButton alloc] initWithFrame:NSZeroRect];
+    
+    self.resetPass.stringValue = NSLocalizedString(@"EnterPassword.forgotPassword", nil);
+    self.resetPass.textColor = BLUE_UI_COLOR;
+    self.resetPass.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    
+    [self.resetPass sizeToFit];
+    
+    [self.resetPass setCenterByView:_enterPasswordContainer];
+    
+    weak();
+    
+    [self.resetPass setFrameOrigin:NSMakePoint(NSMinX(self.resetPass.frame), NSHeight(_enterPasswordContainer.frame) - NSHeight(self.resetPass.frame) - 140)];
+    
+    
+    [self.resetPass setTapBlock:^ {
+        
+        [TMViewController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_auth_requestPasswordRecovery create] successHandler:^(RPCRequest *request, TL_auth_passwordRecovery *response) {
+            
+            
+            [TMViewController hideModalProgressWithSuccess];
+            
+            alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"Password.SentRecoryCode", nil),[response email_pattern]]);
+            
+            [weakSelf switchControllers];
+            
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [TMViewController hideModalProgress];
+            
+            if(error.error_code == 400) {
+                alert(NSLocalizedString(@"Alert.Sorry", nil), NSLocalizedString(error.error_msg, nil));
+                [weakSelf enableReset];
+            }
+            
+            
+            
+        } timeout:10];
+        
+    }];
+    
+    
+    [_enterPasswordContainer addSubview:self.resetPass];
+    
+    
+    
+    
+    TMView *s2 = [[TMView alloc] initWithFrame:self.secureField.frame];
+    
+    [s2 setFrame:NSMakeRect(NSMinX(s2.frame), NSMaxY(self.resetPass.frame) + 15, NSWidth(s2.frame), 1)];
+    
+    s2.backgroundColor = GRAY_BORDER_COLOR;
+    
+    [_enterPasswordContainer addSubview:s2];
+    
+    
+    
+    self.resetAccount = [[TMTextButton alloc] initWithFrame:NSZeroRect];
+    
+    self.resetAccount.stringValue = NSLocalizedString(@"EnterPassword.ResetAccount", nil);
+    self.resetAccount.textColor = [NSColor redColor];
+    self.resetAccount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    
+    [self.resetAccount sizeToFit];
+    
+    [self.resetAccount setCenterByView:_enterPasswordContainer];
+    
+    [self.resetAccount setFrameOrigin:NSMakePoint(NSMinX(self.resetAccount.frame),  NSMaxY(self.resetPass.frame) + 30)];
+    
+    
+    [self.resetAccount setTapBlock:^ {
+        
+        confirm(NSLocalizedString(@"Alert.Warning", nil), NSLocalizedString(@"Password.ResetAlertDescription", nil), ^{
+            
+            [TMViewController showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_account_deleteAccount createWithReason:@"Forgot password"] successHandler:^(RPCRequest *request, id response) {
+                
+                 [[[MTNetwork instance] context] updatePasswordInputRequiredForDatacenterWithId:[[MTNetwork instance] currentDatacenter] required:NO];
+                
+                [[Telegram delegate] logoutWithForce:YES];
+                
+               
+                [weakSelf hide];
+                
+                [TMViewController hideModalProgress];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                [TMViewController hideModalProgress];
+                
+            } timeout:10];
+            
+        },nil);
+        //
+        
+    }];
+    
+    
+    [_enterPasswordContainer addSubview:self.resetAccount];
+    
+    
+    TMTextField *resetDescription = [TMTextField defaultTextField];
+    
+    [[resetDescription cell] setLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [resetDescription setStringValue:NSLocalizedString(@"EnterPassword.ResetAccountDescription", nil)];
+    
+    
+    [resetDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    
+    [resetDescription setTextColor:NSColorFromRGB(0x808080)];
+    
+    [resetDescription setFrameSize:NSMakeSize(NSWidth(separator.frame), 200)];
+    
+    [resetDescription setFrameOrigin:NSMakePoint(NSMinX(separator.frame),  NSMaxY(self.resetAccount.frame) + 15)];
+    
+    [_enterPasswordContainer addSubview:resetDescription];
+    
+    [resetDescription setHidden:YES];
+    [self.resetAccount setHidden:YES];
+    
+    return _enterPasswordContainer;
+}
 
 -(void)checkPassword {
     
@@ -206,23 +407,67 @@
             
             [RPCRequest sendRequest:[TLAPI_auth_checkPassword createWithPassword_hash:passhash] successHandler:^(RPCRequest *request, id response) {
                
-                [TMViewController hideModalProgress];
-                [self hide];
+                [TMViewController hideModalProgressWithSuccess];
+                
                 [[[MTNetwork instance] context] updatePasswordInputRequiredForDatacenterWithId:[[MTNetwork instance] currentDatacenter] required:NO];
                 [[Telegram sharedInstance] onAuthSuccess];
+                
+                [self hide];
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
                 if(error.error_code == 400) {
-                    alert(NSLocalizedString(@"Password.error", nil), NSLocalizedString(error.error_msg, nil));
+                    [self.secureField performShake:^{
+                        
+                        [self.secureField setWantsLayer:NO];
+                        [self.secureField.window makeFirstResponder:self.secureField];
+                        [self.secureField setSelectionRange:NSMakeRange(0, self.secureField.stringValue.length)];
+                        
+                    }];
                 }
                 
                 [TMViewController hideModalProgress];
+                
             } timeout:10];
             
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        [TMViewController hideModalProgress];
+        
+    } timeout:10];
+}
+
+-(void)checkCode {
+    
+    
+    if(self.emailCodeField.textView.stringValue.length < 6)
+        return;
+    
+    [TMViewController showModalProgress];
+    
+    [RPCRequest sendRequest:[TLAPI_auth_recoverPassword createWithCode:self.emailCodeField.textView.stringValue] successHandler:^(RPCRequest *request, id response) {
+        
+        [TMViewController hideModalProgressWithSuccess];
+        [[[MTNetwork instance] context] updatePasswordInputRequiredForDatacenterWithId:[[MTNetwork instance] currentDatacenter] required:NO];
+        [[Telegram sharedInstance] onAuthSuccess];
+        
+        [self hide];
+        
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        if(error.error_code == 400) {
+            alert(appName(), NSLocalizedString(@"EnterPassword.BadEmailCode", nil));
+        }
+        
+        [self.emailCodeField performShake:^{
+            
+            [self.emailCodeField.textView becomeFirstResponder];
+            [self.emailCodeField.textView setSelectionRange:NSMakeRange(0, self.emailCodeField.textView.textView.string.length)];
+            
+        }];
         
         [TMViewController hideModalProgress];
         
@@ -245,6 +490,16 @@
     
 }
 
+-(void)keyDown:(NSEvent *)theEvent {
+    [super keyDown:theEvent];
+}
+
+-(void)showEnterPassword {
+    if(_currentController != [self enterPasswordContainer]) {
+        [self switchControllers];
+    }
+}
+
 -(void)prepare {
     [self.secureField setStringValue:@""];
     [self.window makeFirstResponder:self.secureField];
@@ -254,9 +509,95 @@
     [self removeFromSuperview];
 }
 
+- (void)controlTextDidChange:(NSNotification *)obj {
+    
+    NSString *res = [[self.emailCodeField.textView.stringValue componentsSeparatedByCharactersInSet:
+                      [[NSCharacterSet decimalDigitCharacterSet] invertedSet]]
+                     componentsJoinedByString:@""];
+    
+    res = [res substringWithRange:NSMakeRange(0, MIN(6, res.length))];
+    
+    [self.emailCodeField.textView setStringValue:res];
+    
+    if(res.length == 6) {
+        [self checkCode];
+    }
+}
 
-/*
+-(void)enableReset {
+    [_enterPasswordContainer.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj setHidden:NO];
+        
+    }];
+}
 
- */
+-(void)switchControllers {
+    
+    static BOOL locked = NO;
+    
+    [self enableReset];
+    
+    
+    if(!locked) {
+        
+        locked = YES;
+        
+        TMView *nextController;
+        
+        BOOL next = NO;
+        
+        if(_currentController != [self enterPasswordContainer]) {
+            nextController = [self enterPasswordContainer];
+            next = YES;
+        } else {
+            nextController = [self confirmEmailCodeContainer];
+            
+        }
+        
+        [self.backButton setHidden:NO];
+        [self.backButton setAlphaValue:next];
+        
+        [nextController setFrameOrigin:NSMakePoint(!next ? NSMaxX(_currentController.frame) : 0, NSMinY(nextController.frame))];
+        
+        [self addSubview:nextController];
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            
+            [[_currentController animator] setFrameOrigin:NSMakePoint(next ? NSMaxX(_currentController.frame) : 0, NSMinY(_currentController.frame))];
+            
+            [[_currentController animator] setAlphaValue:0];
+            
+            [[nextController animator] setFrameOrigin:NSMakePoint(roundf((NSWidth(self.frame) - NSWidth(nextController.frame)) / 2), NSMinY(nextController.frame))];
+            
+            [[nextController animator] setAlphaValue:1];
+            
+            [[self.backButton animator] setAlphaValue:!next];
+            
+        } completionHandler:^{
+            
+            [_currentController removeFromSuperview];
+            
+            [_currentController setAlphaValue:1];
+            [nextController setAlphaValue:1];
+            
+            [self.backButton setHidden:next];
+            _currentController = nextController;
+            locked = NO;
+            
+            if(_currentController == [self enterPasswordContainer]) {
+                [self.secureField becomeFirstResponder];
+            } else {
+                [self.emailCodeField becomeFirstResponder];
+            }
+            
+        }];
+    }
+    
+   
+    
+}
 
 @end

@@ -76,12 +76,14 @@
         
     }
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] successHandler:^(RPCRequest *request, TL_messages_statedMessage* response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
-        [MessagesManager statedMessage:response];
         
-        [[FullChatManager sharedManager] performLoad:((TL_localMessage *)response.message).conversation.chat.n_id callback:^{
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+        
+        
+        [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
             
             [self.delegate behaviorDidEndRequest:response];
             

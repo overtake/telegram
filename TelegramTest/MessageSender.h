@@ -11,7 +11,6 @@
 #import "EncryptedParams.h"
 @interface MessageSender : NSObject
 
-+(RPCRequest *)sendStatedMessage:(id)request successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler;
 
 +(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation;
 +(int)getFutureMessageId;
@@ -23,7 +22,9 @@
 +(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
 +(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
 
-+ (NSDictionary *)videoParams:(NSString *)path;
++ (NSDictionary *)videoParams:(NSString *)path thumbSize:(NSSize)thumbSize;
+
+
 +(void)compressVideo:(NSString *)path randomId:(long)randomId completeHandler:(void (^)(BOOL success,NSString *compressedPath))completeHandler progressHandler:(void (^)(float progress))progressHandler;
 
 +(id)requestForDeleteEncryptedMessages:(NSMutableArray *)ids dialog:(TL_conversation *)dialog;

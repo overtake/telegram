@@ -117,11 +117,8 @@ static ASQueue *queue;
 -(void)addUpdate:(id)update {
     
     [queue dispatchOnQueue:^{
-        if([update isKindOfClass:[TL_messages_statedMessage class]] ||
-           [update isKindOfClass:[TL_messages_statedMessageLink class]] ||
-           [update isKindOfClass:[TL_messages_statedMessages class]] ||
-           [update isKindOfClass:[TL_messages_statedMessagesLinks class]] ||
-           [update isKindOfClass:[TL_messages_sentMessage class]] ||
+        
+        if([update isKindOfClass:[TL_messages_sentMessage class]] ||
            [update isKindOfClass:[TL_messages_affectedHistory class]]) {
             
             [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
@@ -498,6 +495,45 @@ static ASQueue *queue;
 
 -(void)proccessUpdate:(TLUpdate *)update {
     
+    if([update isKindOfClass:[TL_updateWebPage class]]) {
+        
+        TLWebPage *page = [update webpage];
+        
+        NSArray *updateMessages = [[MessagesManager sharedManager] findWithWebPageId:page.n_id];
+        
+        NSMutableArray *ids = [[NSMutableArray alloc] initWithCapacity:updateMessages.count];
+        
+        [updateMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            obj.media.webpage = page;
+            
+            [ids addObject:@(obj.n_id)];
+        
+        }];
+        
+        [[Storage manager] updateMessages:updateMessages];
+        
+        [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:ids}];
+        
+    }
+    
+    if([update isKindOfClass:[TL_updateMessageID class]]) {
+        
+        TL_localMessage *msg = [[MessagesManager sharedManager] findWithRandomId:[update random_id]];
+        
+        msg.n_id = [update n_id];
+        
+        if(msg) {
+            [[MessagesManager sharedManager] add:@[msg]];
+        }
+        
+        
+        
+        [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
+        
+        return;
+        
+    }
     
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         

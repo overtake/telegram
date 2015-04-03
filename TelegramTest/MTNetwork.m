@@ -14,6 +14,21 @@
 #import "TGTimer.h"
 #import "TGKeychain.h"
 #import "NSData+Extensions.h"
+
+
+@interface GlobalDispatchAction : NSObject
+@property (nonatomic,assign) int time;
+@property (nonatomic,copy) dispatch_block_t callback;
+@property (nonatomic,assign) dispatch_queue_t queue;
+@property (nonatomic,strong) id internalId;
+@end
+
+@implementation GlobalDispatchAction
+
+
+@end
+
+
 @interface MTNetwork ()
 {
     MTContext *_context;
@@ -28,6 +43,8 @@
     TGDatacenterWatchdogActor *_datacenterWatchdog;
     TGTimer *_executeTimer;
     ASQueue *_queue;
+    TGTimer *_globalTimer;
+    NSMutableArray *_dispatchTimers;
 }
 
 @end
@@ -59,6 +76,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
     self = [super init];
     if (self != nil)
     {
+        
+        _dispatchTimers = [[NSMutableArray alloc] init];
         
         _queue = [[ASQueue alloc] initWithName:"mtnetwork"];
         
@@ -186,7 +205,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(TGKeychain *)nKeychain {
     if(isTestServer())
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
-    else
+    //else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
 }
 
@@ -428,7 +447,7 @@ static int MAX_WORKER_POLL = 5;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
                   {
-         dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
+         dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
                       
         sequentialMessageClasses = @[
             [TLAPI_messages_sendMessage class],
@@ -483,7 +502,7 @@ static int MAX_WORKER_POLL = 5;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            noAuthClasses = @[[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class]];
+            noAuthClasses = @[[TLAPI_auth_sendCall class], [TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_auth_sendSms class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
         });
         
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {
@@ -544,10 +563,95 @@ static int MAX_WORKER_POLL = 5;
         bool passwordRequired = [context isPasswordInputRequiredForDatacenterWithId:datacenterId];
         
         if(passwordRequired) {
-             [Telegram showEnterPasswordPanel];
+            [Telegram showEnterPasswordPanel];
         }
       
     }
 }
+
+id dispatch_in_time(int time, dispatch_block_t callback) {
+    
+    
+    assert(callback != nil);
+    
+    GlobalDispatchAction *action = [[GlobalDispatchAction alloc] init];
+    
+    action.time = time;
+    action.callback = callback;
+    action.queue = dispatch_get_current_queue();
+    action.internalId = [[NSObject alloc] init];
+    
+    [[MTNetwork instance]->_queue dispatchOnQueue:^{
+        
+        [[MTNetwork instance]->_dispatchTimers addObject:action];
+        
+        if(![MTNetwork instance]->_globalTimer)
+        {
+            [MTNetwork instance]->_globalTimer = [[TGTimer alloc] initWithTimeout:3 repeat:YES completion:^{
+                
+                
+                NSMutableArray *remove = [[NSMutableArray alloc] init];
+                
+                [[MTNetwork instance]->_dispatchTimers enumerateObjectsUsingBlock:^(GlobalDispatchAction *obj, NSUInteger idx, BOOL *stop) {
+                    
+                    
+                    if([[MTNetwork instance] getTime] >= obj.time)
+                    {
+                        dispatch_async(obj.queue, ^{
+                            obj.callback();
+                        });
+                        
+                        [remove addObject:obj];
+                        
+                    }
+                    
+                }];
+                
+                [[MTNetwork instance]->_dispatchTimers removeObjectsInArray:remove];
+                
+                
+                if([MTNetwork instance]->_dispatchTimers.count == 0)
+                {
+                    [[MTNetwork instance]->_globalTimer invalidate];
+                    [MTNetwork instance]->_globalTimer = nil;
+                }
+                
+            } queue:[MTNetwork instance]->_queue.nativeQueue];
+            
+            [[MTNetwork instance]->_globalTimer start];
+        } else {
+            [[MTNetwork instance]->_globalTimer fire];
+        }
+        
+    }];
+    
+    return action.internalId;
+    
+}
+
+void remove_global_dispatcher(id internalId) {
+    
+    if(!internalId)
+        return;
+    
+    [[MTNetwork instance]->_queue dispatchOnQueue:^{
+        
+        NSMutableArray *objs = [[NSMutableArray alloc] init];
+        
+        [[MTNetwork instance]->_dispatchTimers enumerateObjectsUsingBlock:^(GlobalDispatchAction *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj.internalId == internalId)
+            {
+                [objs addObject:obj];
+            }
+            
+        }];
+        
+        [[MTNetwork instance]->_dispatchTimers removeObjectsInArray:objs];
+        
+    }];
+    
+}
+
 
 @end

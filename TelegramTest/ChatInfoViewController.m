@@ -186,7 +186,7 @@
     };
     
     if(![_headerView.title isEqualToString:self.chat.title]) {
-        [MessageSender sendStatedMessage:[TLAPI_messages_editChatTitle createWithChat_id:self.chat.n_id title:_headerView.title] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_editChatTitle createWithChat_id:self.chat.n_id title:_headerView.title] successHandler:^(RPCRequest *request, id response) {
             block();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             block();
@@ -281,7 +281,9 @@
     
     weakify();
     
-    [MessageSender sendStatedMessage:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
+        
+        
         
         
         TLChatParticipants *participants = strongSelf.fullChat.participants;

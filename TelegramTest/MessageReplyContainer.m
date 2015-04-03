@@ -166,6 +166,12 @@
     
 }
 
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+        
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 19)];
+}
+
 -(void)mouseDown:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {

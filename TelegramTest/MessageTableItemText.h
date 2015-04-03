@@ -8,6 +8,7 @@
 
 #import "MessageTableItem.h"
 #import "TGCTextMark.h"
+#import "TGWebpageObject.h"
 @interface MessageTableItemText : MessageTableItem
 
 @property (nonatomic, strong) NSMutableAttributedString *textAttributed;
@@ -15,7 +16,17 @@
 
 @property (nonatomic,strong) SearchSelectItem *mark;
 
+@property (nonatomic,assign) NSSize textSize;
+
+@property (nonatomic,strong,readonly) TGWebpageObject *webpage;
+
+
 -(void)updateMessageFont;
+
+-(void)updateWebPage;
+
+
+-(BOOL)isWebPage;
 
 
 @end

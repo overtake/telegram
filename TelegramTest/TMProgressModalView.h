@@ -10,4 +10,7 @@
 
 @interface TMProgressModalView : TMView
 
+-(void)successAction;
+-(void)progressAction;
+
 @end

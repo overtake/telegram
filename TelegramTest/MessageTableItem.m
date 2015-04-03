@@ -199,14 +199,14 @@
         
         
         
-        if([message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        if([message.media isKindOfClass:[TL_messageMediaEmpty class]] || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
             
-            Class socialClass = [MessageTableItem socialClass:message.message];
+          //  Class socialClass = [MessageTableItem socialClass:message.message];
             
-            if(socialClass == [NSNull class])
+           // if(socialClass == [NSNull class])
                 objectReturn = [[MessageTableItemText alloc] initWithObject:object];
-            else
-                objectReturn = [[MessageTableItemSocial alloc] initWithObject:object socialClass:socialClass];
+          //  else
+           //     objectReturn = [[MessageTableItemSocial alloc] initWithObject:object socialClass:socialClass];
             
         } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
             
@@ -237,15 +237,15 @@
             
         } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
             
-            objectReturn = [[MessageTableItemContact alloc] initWithObject:object ];
+            objectReturn = [[MessageTableItemContact alloc] initWithObject:object];
             
         } else if([message.media isKindOfClass:[TL_messageMediaGeo class]]) {
             
-            objectReturn = [[MessageTableItemGeo alloc] initWithObject:object ];
+            objectReturn = [[MessageTableItemGeo alloc] initWithObject:object];
             
         } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
             
-            objectReturn = [[MessageTableItemAudio alloc] initWithObject:object ];
+            objectReturn = [[MessageTableItemAudio alloc] initWithObject:object];
             
         }
     } else if([object isKindOfClass:[TL_localMessageService class]] || [object isKindOfClass:[TL_secretServiceMessage class]]) {
@@ -410,6 +410,7 @@
 }
 
 - (BOOL)makeSizeByWidth:(int)width {
+    _blockWidth = width;
     return NO;
 }
 

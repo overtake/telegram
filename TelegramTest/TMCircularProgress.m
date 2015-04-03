@@ -131,7 +131,7 @@ float ease(float t, float b, float c, float d) {
 	[super drawRect:dirtyRect];
     
     
-    const int topPadding = 1;
+    const int topPadding = 3;
     
     int radius = roundf(self.frame.size.width / 2 - topPadding);
     

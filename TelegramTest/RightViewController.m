@@ -153,6 +153,12 @@
     self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:self.view.bounds];
     
     
+    self.sessionsViewContoller = [[TGSessionsViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.passwordMainViewController = [[TGPasswosdMainViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:self.view.bounds];
+    
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
     
@@ -164,7 +170,6 @@
     [self.navigationViewController.view.window makeFirstResponder:nil];
     [[Telegram mainViewController] layout];
     
-    [Notification addObserver:self selector:@selector(didChangedLayout:) name:LAYOUT_CHANGED];
     
 }
 
@@ -172,6 +177,8 @@
     
     
     [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
+    
+    
 }
 
 
@@ -179,7 +186,7 @@
     return [Telegram leftViewController];
 }
 
--(void)didChangedLayout:(NSNotification *)notification {
+-(void)didChangedLayout {
     
     
     
@@ -216,7 +223,7 @@
     
     [self.modalView setHidden:[Telegram isSingleLayout]];
     
-    [[Telegram leftViewController] didChangedLayout:notification];
+    [[Telegram leftViewController] didChangedLayout:nil];
     
 }
 
@@ -848,6 +855,65 @@
     
     
     [self.navigationViewController pushViewController:self.passcodeViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+-(void)showSessionsController {
+    if(self.navigationViewController.currentController == self.sessionsViewContoller)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.sessionsViewContoller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+-(void)showPasswordMainController {
+    if(self.navigationViewController.currentController == self.passwordMainViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    
+    [self.navigationViewController pushViewController:self.passwordMainViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    
+    [self.passwordMainViewController reload];
+    
+    
+}
+
+-(void)showSetPasswordWithAction:(TGSetPasswordAction *)action {
+    
+    [self hideModalView:YES animation:NO];
+    
+    TGPasswordSetViewController *controller = [[TGPasswordSetViewController alloc] initWithFrame:self.view.bounds];
+    
+    [controller setAction:action];
+    
+    action.controller = controller;
+    
+    
+    [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
+-(void)showEmailPasswordWithAction:(TGSetPasswordAction *)action {
+    [self hideModalView:YES animation:NO];
+    
+    TGPasswordEmailViewController *controller = [[TGPasswordEmailViewController alloc] initWithFrame:self.view.bounds];
+    
+    [controller setAction:action];
+    
+    action.controller = controller;
+    
+    [self.navigationViewController pushViewController:controller animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
+
+-(void)clearStack {
+    [self.navigationViewController.viewControllerStack removeAllObjects];
+    
+    [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
 }
 
 @end

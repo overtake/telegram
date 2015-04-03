@@ -40,6 +40,27 @@
     }
 }
 
+-(void)performShake:(dispatch_block_t)completeBlock {
+    float a = 3;
+    float duration = 0.04;
+    
+    NSBeep();
+    
+    [self prepareForAnimation];
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        [self setWantsLayer:NO];
+        if(completeBlock)
+        {
+            completeBlock();
+        }
+    }];
+    
+    [self setAnimation:[TMAnimations shakeWithDuration:duration fromValue:CGPointMake(-a + self.layer.position.x, self.layer.position.y) toValue:CGPointMake(a + self.layer.position.x, self.layer.position.y)] forKey:@"position"];
+    [CATransaction commit];
+}
+
 - (void)setAnimation:(CAAnimation *)anim forKey:(NSString *)key {
 //    if(!self.wantsLayer)
 //        return;
@@ -88,5 +109,6 @@ static CALAyerAnimationInstance *instance() {
             break;
     }
 }
+
 
 @end

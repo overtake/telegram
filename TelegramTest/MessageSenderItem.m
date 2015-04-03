@@ -42,25 +42,32 @@
         
         TL_broadcast *broadcast = self.conversation.broadcast;
         
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] message:self.message.message media:[TL_inputMediaEmpty create]];
+        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentMessage * response) {
+        
+        
+        
         
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             
             self.message.n_id = response.n_id;
             self.message.date = response.date;
+            self.message.media = response.media;
+            
             
         } else {
-            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-            [TL_localMessage convertReceivedMessages:stated.messages];
             
-            [SharedManager proccessGlobalResponse:stated];
             
-            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
+//            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
+//            [TL_localMessage convertReceivedMessages:stated.messages];
+//            
+//            [SharedManager proccessGlobalResponse:stated];
+//            
+//            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
+//            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
             
         }
         
@@ -69,8 +76,13 @@
         [self.message save:YES];
         
         self.state = MessageSendingStateSent;
+        
+        if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
+        {
+            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+        }
 
-               
+        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         self.state = MessageSendingStateError;
     }];
