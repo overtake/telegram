@@ -14,7 +14,7 @@
 #import "TGTimer.h"
 #import "TGKeychain.h"
 #import "NSData+Extensions.h"
-
+#import "NSMutableData+Extension.h"
 
 @interface GlobalDispatchAction : NSObject
 @property (nonatomic,assign) int time;
@@ -110,12 +110,12 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             if(_keychain.isNeedPasscode) {
                 
+                [_keychain updatePasscodeHash:[[NSMutableData alloc] initWithRandomBytes:32] save:NO];
+                
                 dispatch_block_t block = ^ {
                     
                     [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
-                        
-                        [SharedManager drop];
-                        
+                                                
                         __block BOOL acceptHash;
                         
                         [_queue dispatchOnQueue:^{

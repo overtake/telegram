@@ -108,6 +108,7 @@ extern NSString *const FILE_NAMES;
 - (void)users:(void (^)(NSArray *result))completeHandler;
 - (void)updateLastSeen:(TLUser *)user;
 
+
 -(void)insertContacst:(NSArray *)contacts;
 
 -(void)contacts:(void (^)(NSArray *))completeHandler;
@@ -207,6 +208,8 @@ extern NSString *const FILE_NAMES;
 
 
 -(void)updateMessageId:(long)random_id msg_id:(int)n_id;
+
+
 
 
 @end

@@ -357,8 +357,10 @@
             
             if(modalObject && modalObject.phone) {
                 
+                [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                
                 [self.messagesViewController shareContact:modalObject conversation:dialog callback:^{
-                    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                    
                 }];
                 
             }

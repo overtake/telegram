@@ -1055,6 +1055,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
+
+
 - (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
     [self insertUsers:@[user] completeHandler:completeHandler];
 }
@@ -1755,7 +1757,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db intForQuery:@"update media set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
         
-        [db executeUpdate:@"update messages set n_id = (?) where random_id = ?",@(n_id),@(random_id)];
+        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(random_id),@(DeliveryStateNormal)];
         
     }];
 }

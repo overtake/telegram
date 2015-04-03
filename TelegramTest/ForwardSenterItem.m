@@ -92,11 +92,19 @@
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
         
-        NSMutableArray *messages = [[NSMutableArray alloc] initWithCapacity:response.updates.count];
+        if(response.updates.count < 2)
+        {
+            [self cancel];
+            return;
+        }
+        
+        NSMutableArray *messages = [[NSMutableArray alloc] init];
         
         [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
+            if([obj isKindOfClass:[TL_updateNewMessage class]]) {
+                [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
+            }
             
         }];
         
@@ -104,7 +112,7 @@
         for(int i = 0; i < messages.count; i++) {
             
             TL_localMessage *fake = self.fakes[i];
-            TLMessage *stated = messages[i];
+            TL_localMessage *stated = messages[i];
             
             fake.date = stated.date;
             fake.n_id = stated.n_id;

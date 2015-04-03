@@ -191,6 +191,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TL_localMessage save:]:TL_localMessage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTableView tableView:heightOfRow:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -222,6 +230,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer show:user:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWebpageIGContainer setWebpage:]:TGWebpageIGContainer.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
@@ -485,6 +496,14 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke_2:ForwardSenterItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response.updates">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
@@ -846,6 +865,9 @@
          contextName = "-[DownloadOperation load]:DownloadOperation.m">
       </ContextState>
       <ContextState
+         contextName = "+[TGWebpageObject objectForWebpage:]:TGWebpageObject.m">
+      </ContextState>
+      <ContextState
          contextName = "+[TMViewController showModalProgress]:TMViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -897,6 +919,9 @@
                value = "msg">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MTNetwork constructRequest:]:MTNetwork.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
@@ -1363,6 +1388,9 @@
                value = "self.tableItem">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWebpageTWContainer setWebpage:]:TGWebpageTWContainer.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
@@ -2092,6 +2120,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke82:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGUser(Category) rebuildNames]:TGUserCategory.m">
          <PersistentStrings>
             <PersistentString
@@ -2190,6 +2221,9 @@
                value = "abset.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWebpageObject initWithWebPage:]:TGWebpageObject.m">
       </ContextState>
       <ContextState
          contextName = "-[TGImageObject cacheKey]:TGImageObject.m">

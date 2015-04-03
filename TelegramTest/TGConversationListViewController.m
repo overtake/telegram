@@ -79,18 +79,12 @@
     [Notification addObserver:self selector:@selector(notificationDialogChangePosition:) name:DIALOG_MOVE_POSITION];
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
-    
-    if(![TGPasslock isEnabled]) {
-        [self initialize];
-    }
-    
-    
-    
-    
-}
 
--(void)initialize {
+    
+    
     [[Storage manager] users:^(NSArray *result) {
+        
+        [MTNetwork instance];
         
         [[UsersManager sharedManager] addFromDB:result];
         
@@ -100,8 +94,10 @@
                 [[ChatsManager sharedManager] add:chats];
                 
                 [ASQueue dispatchOnMainQueue:^{
-                    [self initConversations];
                     
+                    if(![TGPasslock isEnabled]) {
+                        [self initialize];
+                    }
                     
                 }];
             }];
@@ -112,6 +108,13 @@
     [[Storage manager] unreadCount:^(int count) {
         [[MessagesManager sharedManager] setUnread_count:count];
     }];
+    
+    
+    
+}
+
+-(void)initialize {
+    [self initConversations];
 
 }
 

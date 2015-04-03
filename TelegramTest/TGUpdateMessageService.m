@@ -186,7 +186,7 @@
         
         if([[rpc result] isKindOfClass:[TL_messages_sentMessage class]] ||
            [[rpc result] isKindOfClass:[TL_messages_affectedHistory class]] ||
-           [[rpc result] isKindOfClass:[TL_updates class]])
+           [[rpc result] isKindOfClass:[TL_updates class]] )
             [_updateProccessor addUpdate:[rpc result]];
     } else {
         [_updateProccessor addUpdate:[incomingMessage body]];
