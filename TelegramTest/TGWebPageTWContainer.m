@@ -37,12 +37,14 @@
     
     [super setWebpage:webpage];
     
-    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
-            
-    [self.descriptionField setFrame:NSMakeRect([self textX], 20, webpage.descSize.width , webpage.descSize.height + 20 > NSHeight(self.frame) ? NSHeight(self.frame) - 20 : webpage.descSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 28 : 12, webpage.descSize.width , webpage.descSize.height )];
+    
+    
+    [self.imageView setFrame:NSMakeRect(0, NSMaxY(self.descriptionField.frame) + 4, webpage.imageSize.width, webpage.imageSize.height)];
+    
+
     
     [self.descriptionField setAttributedString:webpage.desc];
-    
     
 }
 
