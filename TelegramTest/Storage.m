@@ -667,7 +667,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         
-        FMResultSet *result = [db executeQuery:@"select n_id from messages where random_id IN (%@)",mark];
+        NSString *sql = [NSString stringWithFormat:@"select n_id from messages where random_id IN (%@)",mark];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         NSMutableArray *ids = [[NSMutableArray alloc] init];
         
@@ -681,7 +683,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSString *sids = [ids componentsJoinedByString:@","];
         
         
-        NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE n_id IN (%@)",sids];
+        sql = [NSString stringWithFormat:@"delete from messages WHERE n_id IN (%@)",sids];
         [db executeUpdateWithFormat:sql,nil];
         
         sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE message_id IN (%@)",sids];

@@ -1487,6 +1487,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageArticle makeSize:]:TGWebpageArticle.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController convertedRows:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -1655,6 +1658,14 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellWebPageView setItem:]:MessageTableCellWebPageView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__55-[Storage deleteMessagesWithRandomIds:completeHandler:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">

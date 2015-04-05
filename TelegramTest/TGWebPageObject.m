@@ -173,7 +173,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        supportTypes = @[@"video",@"article",@"photo",@"profile"];
+        supportTypes = @[@"video",@"article",@"photo",@"profile",@"app",@"document"];
     });
     
     if([supportTypes indexOfObject:webpage.type] == NSNotFound)
@@ -195,7 +195,7 @@
     }
     
     
-    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
+    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"] || [webpage.type isEqualToString:@"document"])
     {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
     }

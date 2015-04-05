@@ -23,6 +23,8 @@
     [super setWebpage:webpage];
     
     
+    [self.author setHidden:webpage.title != nil];
+        
     [self.imageView setFrame:NSMakeRect(NSWidth(self.frame) - 67, 20, webpage.imageSize.width, webpage.imageSize.height)];
     
     if(webpage.imageObject) {
