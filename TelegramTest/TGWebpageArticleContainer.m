@@ -30,7 +30,7 @@
     if(webpage.imageObject) {
         [self.descriptionField setDrawRects:@[[NSValue valueWithRect:NSMakeRect(0, webpage.size.height - 80, webpage.size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, webpage.size.width - 7, webpage.size.height - 80)]]];
         
-        [self.descriptionField setFrame:NSMakeRect([self textX], 17, webpage.size.width - 7 , webpage.size.height - 20 )];
+        [self.descriptionField setFrame:NSMakeRect([self textX], 16, webpage.size.width - 7 , webpage.size.height - 20 )];
     } else {
         [self.descriptionField setFrame:NSMakeRect([self textX], 30, webpage.descSize.width , webpage.descSize.height )];
     }
