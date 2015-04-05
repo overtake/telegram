@@ -100,7 +100,7 @@
     
     [self.youtubeImage setCenterByView:self.imageView];
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 20 : 0, webpage.titleSize.width , webpage.titleSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], 14, webpage.titleSize.width , webpage.titleSize.height )];
     [self.descriptionField setAttributedString:webpage.title];
     
     

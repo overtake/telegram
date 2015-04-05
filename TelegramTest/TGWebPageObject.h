@@ -30,6 +30,9 @@
 @property (nonatomic,assign,readonly) NSSize imageSize;
 
 
+@property (nonatomic,strong) NSAttributedString *siteName;
+
+
 -(id)initWithWebPage:(TLWebPage *)webpage;
 
 

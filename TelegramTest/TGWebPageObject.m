@@ -141,7 +141,7 @@
         
         _size = _imageSize;
         
-        _size.height+=self.titleSize.height + self.descSize.height + (!self.author ?:17) + (((_title || _desc) && _imageObject) ? 8 : 0) + 12;
+        _size.height+= self.descSize.height + (_imageObject ? 8 : 0) + (self.author ? 16 : 0) + 14;
     } else {
         _imageSize = strongsize(_imageObject.imageSize, 60);
         

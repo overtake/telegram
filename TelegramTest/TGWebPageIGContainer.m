@@ -35,8 +35,10 @@
     [_playVideo removeFromSuperview];
     _playVideo = nil;
     
-    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 28 : 12, webpage.descSize.width , webpage.descSize.height )];
     
+    
+    [self.imageView setFrame:NSMakeRect(0, NSMaxY(self.descriptionField.frame) + 4, webpage.imageSize.width, webpage.imageSize.height)];
    
     
     if([webpage.webpage.type isEqualToString:@"video"]) {
@@ -47,8 +49,6 @@
         
         [_playVideo setCenterByView:self.imageView];
     }
-    
-    [self.descriptionField setFrame:NSMakeRect([self textX], 30, webpage.descSize.width , webpage.descSize.height + 20 > NSHeight(self.frame) ? NSHeight(self.frame) - 20 : webpage.descSize.height )];
     
     [self.descriptionField setAttributedString:webpage.desc];
     

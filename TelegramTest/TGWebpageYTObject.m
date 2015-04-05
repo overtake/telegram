@@ -45,7 +45,7 @@
     
     _size = self.imageSize;
     
-    _size.height+=self.titleSize.height + (!self.author ?:17) + (self.imageObject ? 8 : 0);
+    _size.height+=self.titleSize.height + (14) + (self.imageObject ? 8 : 0);
     
     _size.width = width - 60;
     
