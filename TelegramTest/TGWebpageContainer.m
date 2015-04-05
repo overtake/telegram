@@ -38,14 +38,12 @@
         
         _containerView.wantsLayer = YES;
         
+        [_containerView setBackgroundColor:[NSColor yellowColor]];
+        
         [super addSubview:_containerView];
         
         
-        _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
-        _imageView.cornerRadius = 4;
-        
-        [self addSubview:_imageView];
         
         
         
@@ -69,6 +67,14 @@
         
         [self addSubview:self.author];
         [self addSubview:self.date];
+        
+        
+        _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
+        
+        _imageView.cornerRadius = 4;
+        
+        
+        [self addSubview:_imageView];
     }
     
     return self;

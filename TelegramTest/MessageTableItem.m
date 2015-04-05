@@ -166,7 +166,7 @@
             if(viewSize.height < 50)
                 viewSize.height = 50;
         } else {
-            viewSize.height += 12;
+            viewSize.height += 10;
             
             if(self.isForwadedMessage)
                 viewSize.height += 24;

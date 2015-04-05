@@ -140,6 +140,7 @@
         }
     };
     
+    
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.timer invalidate];
         self.timer = nil;

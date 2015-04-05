@@ -156,6 +156,15 @@
     }
 }
 
+-(void)setDrawRects:(NSArray *)drawRects {
+    _drawRects = drawRects;
+    
+    
+    
+    [self setNeedsDisplay:YES];
+    
+}
+
 -(void)setBackgroundColor:(NSColor *)backgroundColor {
     self->_backgroundColor = backgroundColor;
     
@@ -196,8 +205,18 @@
     
     CGMutablePathRef path = CGPathCreateMutable();
     
+    if(self.drawRects.count == 0) {
+        CGPathAddRect(path, NULL, self.bounds);
+    } else {
+        [self.drawRects enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+            
+            CGPathAddRect(path, NULL, [obj rectValue]);
+            
+        }];
+    }
     
-    CGPathAddRect(path, NULL, self.bounds);
+    
+    
 
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.attributedString);

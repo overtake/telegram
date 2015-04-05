@@ -76,7 +76,7 @@
 
 -(void)iCloudSync {
     
-    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"icloudsync"]) {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"icloudsync"]) {
         [[Storage manager] importedContacts:^(NSSet *imported) {
             
             [self.queue dispatchOnQueue:^{
@@ -194,13 +194,13 @@
                 [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
                 
                 
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"icloudsync"];
+                [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"icloudsync"];
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                
             } timeout:10 queue:self.queue.nativeQueue];
         } else {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"icloudsync"];
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"icloudsync"];
         }
         
         

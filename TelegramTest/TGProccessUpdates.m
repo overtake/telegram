@@ -58,6 +58,20 @@ static ASQueue *queue;
     return self;
 }
 
+-(id)initWithQueue:(ASQueue *)q {
+    if(self = [self init]) {
+        self.holdUpdates = NO;
+        _statefulUpdates = [[NSMutableArray alloc] init];
+        
+        _updateState = [[Storage manager] updateState];
+        
+        _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
+        
+        queue = q;
+    }
+    return self;
+}
+
 - (void)resetStateAndSync {
     
     [queue dispatchOnQueue:^{

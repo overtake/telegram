@@ -32,6 +32,10 @@
 
 @property (nonatomic,weak) id <SelectTextDelegate> owner;
 
+
+@property (nonatomic,strong) NSArray *drawRects;
+
+
 -(void)setSelectionRange:(NSRange)selectionRange;
 
 -(void)addMark:(TGCTextMark *)mark;
@@ -39,6 +43,8 @@
 
 -(int)currentIndexInLocation:(NSPoint)location;
 -(BOOL)indexIsSelected:(int)index;
+
+
 
 
 

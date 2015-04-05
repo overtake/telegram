@@ -154,6 +154,8 @@
             if(!message.n_out) {
                 userLast = [[UsersManager sharedManager] find:message.from_id];
                 chatUserNameString = [userLast ? userLast.dialogFullName : @"" stringByAppendingString:@"\n"];
+            } else {
+                chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
             }
         }
         

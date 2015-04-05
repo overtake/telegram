@@ -38,15 +38,21 @@ static NSTextField *testTextField() {
 -(NSSize)coreTextSizeForTextFieldForWidth:(int)width {
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self);
     
+    
+    
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
     
-    textSize.width= ceil(textSize.width)+1;
-    textSize.height = ceil(textSize.height)+1;
+    textSize.width= ceil(textSize.width);
+    textSize.height = ceil(textSize.height);
     
     
     CFRelease(framesetter);
     
     return textSize;
+}
+
+- (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths {
+    
 }
 
 - (NSRange)range {

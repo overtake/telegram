@@ -12,6 +12,7 @@
 #import "TGWebpageYTObject.h"
 #import "TGWebpageTWObject.h"
 #import "TGWebpageStandartObject.h"
+#import "TGWebpageArticle.h"
 #import "NSAttributedString+Hyperlink.h"
 @implementation TGWebpageObject
 
@@ -77,6 +78,11 @@
             [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
             [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:desc.range];
             
+            NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+            style.lineBreakMode = NSLineBreakByWordWrapping;
+            style.alignment = NSLeftTextAlignment;
+            
+            [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
             _desc = desc;
             
             [desc detectExternalLinks];
@@ -186,7 +192,13 @@
         return [[TGWebpageTWObject alloc] initWithWebPage:webpage];
     }
     
-    if([webpage.type isEqualToString:@"photo"] || [webpage.type isEqualToString:@"article"] || ([webpage.type isEqualToString:@"video"] && [webpage.embed_type isEqualToString:@"video/mp4"]))
+    
+    if([webpage.type isEqualToString:@"article"])
+    {
+        return [[TGWebpageArticle alloc] initWithWebPage:webpage];
+    }
+    
+    if([webpage.type isEqualToString:@"photo"] || ([webpage.type isEqualToString:@"video"] && [webpage.embed_type isEqualToString:@"video/mp4"]))
     {
         return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
     }

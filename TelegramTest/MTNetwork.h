@@ -7,6 +7,7 @@
 #import <MTProtoKit/MTKeychain.h>
 #import "TelegramSerialization.h"
 #import "TGUpdateMessageService.h"
+#import <MtProtoKit/MTQueue.h>
 @interface MTNetwork : NSObject<MTContextChangeListener>
 
 + (MTNetwork *)instance;
@@ -31,6 +32,8 @@
 -(MTContext *)context;
 
 -(void)update;
+
+-(MTQueue *)queue;
 
 -(void)updatePasscode:(NSData *)md5Hash;
 -(BOOL)checkPasscode:(NSData *)md5Hash;

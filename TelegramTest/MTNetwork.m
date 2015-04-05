@@ -206,6 +206,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 }
 
+-(MTQueue *)queue {
+    return [_mtProto messageServiceQueue];
+}
+
 -(TGKeychain *)nKeychain {
     if(isTestServer())
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
@@ -493,8 +497,12 @@ static int MAX_WORKER_POLL = 5;
         blockedRequest.response = result;
         if(error)
             blockedRequest.error = [RpcErrorParser parseRpcError:error];
-        [blockedRequest completeHandler];
-        blockedRequest = nil;
+        
+        dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+            [blockedRequest completeHandler];
+            blockedRequest = nil;
+        });
+         
     }];
     
     return mtrequest;

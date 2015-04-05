@@ -162,6 +162,10 @@
     return self;
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.textView becomeFirstResponder];
+}
+
 
 -(void)controlTextDidChange:(NSNotification *)obj {
     [self setName:self.textView.stringValue];
@@ -322,6 +326,10 @@
     [self.doneButton setDisable:self.headerView.textView.stringValue.length == 0];
     
     self.action.result.singleObject = self.headerView.chat.title;
+}
+
+-(BOOL)becomeFirstResponder {
+    return [self.headerView becomeFirstResponder];
 }
 
 

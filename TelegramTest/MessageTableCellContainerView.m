@@ -790,9 +790,6 @@ static BOOL dragAction = NO;
         
     }
 
-    
-    
-    
     if(item.isHeaderMessage) {
         [self initHeader];
         [self.nameTextField setAttributedStringValue:item.headerName];
@@ -804,7 +801,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.containerOffset, 10, self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage || item.isForwadedMessage ? 10 : 10, self.containerView.bounds.size.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])

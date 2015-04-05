@@ -13,6 +13,8 @@
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width;
 
+- (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths;
+
 - (NSRange)range;
 
 -(NSRange)selectRange:(NSSize)frameSize startPoint:(NSPoint)startPoint currentPoint:(NSPoint)currentPoint;

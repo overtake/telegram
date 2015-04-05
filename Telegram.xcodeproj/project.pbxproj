@@ -563,6 +563,8 @@
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
+		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
+		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -1907,6 +1909,10 @@
 		C2D235C11A3A2D6000765BA1 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
+		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
+		C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageArticle.m; sourceTree = "<group>"; };
+		C2DE4FAC1AD08C47001EC26C /* TGWebpageArticleContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticleContainer.h; sourceTree = "<group>"; };
+		C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageArticleContainer.m; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = System/Library/Frameworks/PreferencePanes.framework; sourceTree = SDKROOT; };
 		C2E40E2D19D58E430079046E /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -3765,6 +3771,8 @@
 				C274C4041ACBFF33000DFDE4 /* TGWebpageContainer.m */,
 				C274C44B1ACDA00A000DFDE4 /* TGWebpageStandartContainer.h */,
 				C274C44C1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m */,
+				C2DE4FAC1AD08C47001EC26C /* TGWebpageArticleContainer.h */,
+				C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -3782,6 +3790,8 @@
 				C274C4461ACD99E7000DFDE4 /* TGWebpageTWObject.m */,
 				C274C4481ACD9FF5000DFDE4 /* TGWebpageStandartObject.h */,
 				C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */,
+				C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */,
+				C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */,
 			);
 			name = objects;
 			sourceTree = "<group>";
@@ -5201,6 +5211,7 @@
 				C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */,
 				CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */,
 				C274C41D1ACC09B0000DFDE4 /* XCDYouTubeClient.m in Sources */,
+				C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */,
 				CEDAEB521881AF85006189A2 /* YapDatabaseFilteredViewTransaction.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
 				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
@@ -5522,6 +5533,7 @@
 				0A9EDC5D1897BA0E0037E1BC /* RBLSlidingContainerView.m in Sources */,
 				CEDAEB5C1881AF85006189A2 /* YapDatabaseSecondaryIndexSetup.m in Sources */,
 				0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */,
+				C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,

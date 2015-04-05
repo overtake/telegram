@@ -25,7 +25,12 @@
 - (void)add:(NSArray *)all withCustomKey:(NSString*)key {
     
     
+    
     [self.queue dispatchOnQueue:^{
+        
+        int bp = 0;
+        
+        
         for (id obj in all) {
             if([obj isKindOfClass:[TL_chatEmpty class]])
                 continue;

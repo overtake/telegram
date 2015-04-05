@@ -14,6 +14,7 @@
 -(void)updateDifference;
 -(void)drop;
 
+-(id)initWithQueue:(ASQueue *)queue;
 
 -(void)resetStateAndSync;
 

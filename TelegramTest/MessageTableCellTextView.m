@@ -45,6 +45,8 @@
         [self.containerView setIsFlipped:YES];
         
         
+        
+        
         _textView.wantsLayer = YES;
         
         
@@ -112,6 +114,8 @@
     [self updateCellState];
     
     [self.textView setFrameSize:NSMakeSize(item.textSize.width , item.textSize.height)];
+    
+    
     [self.textView setAttributedString:item.textAttributed];
     
     [self.textView setOwner:item];

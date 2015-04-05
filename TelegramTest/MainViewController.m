@@ -263,43 +263,53 @@
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
     
-    
-    BOOL res = NO;
-    
-    if(subview == self.leftViewContainer) {
-       // res = ![self isMinimisze] && ( (![self isSingleLayout] ) );
-       
-        res = ![self shouldAdjustSizeOfSubview:self.rightViewController.view];
-    } else {
-      //  res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
-       //
-        res = [self shouldAdjustSizeOfSubview:self.rightViewController.view];
+    if(subview == self.leftViewContainer)
+        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
+    else {
+        return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
     }
     
-    
-    return res;
-    
+}
+
+//- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
 //    
-//    BOOL res = [self shouldAdjustSizeOfSubview:subview];
+//    
+//    BOOL res = NO;
 //    
 //    if(subview == self.leftViewContainer) {
-//        
-//        if([self shouldAdjustSizeOfSubview:self.rightViewController.view]) {
-//            return YES;
-//        }
-//        
+//       // res = ![self isMinimisze] && ( (![self isSingleLayout] ) );
+//       
+//        res = ![self shouldAdjustSizeOfSubview:self.rightViewController.view];
 //    } else {
-//        
-//        if([self shouldAdjustSizeOfSubview:self.leftViewContainer]) {
-//            return YES;
-//        }
-//        
+//      //  res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+//       //
+//        res = [self shouldAdjustSizeOfSubview:self.rightViewController.view];
 //    }
 //    
-//   
 //    
 //    return res;
-}
+//    
+////    
+////    BOOL res = [self shouldAdjustSizeOfSubview:subview];
+////    
+////    if(subview == self.leftViewContainer) {
+////        
+////        if([self shouldAdjustSizeOfSubview:self.rightViewController.view]) {
+////            return YES;
+////        }
+////        
+////    } else {
+////        
+////        if([self shouldAdjustSizeOfSubview:self.leftViewContainer]) {
+////            return YES;
+////        }
+////        
+////    }
+////    
+////   
+////    
+////    return res;
+//}
 
 
 

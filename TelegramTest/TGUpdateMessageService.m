@@ -35,7 +35,9 @@
     if (self != nil)
     {
         _messagesToProcess = [[NSMutableArray alloc] init];
-        _updateProccessor = [[TGProccessUpdates alloc] init];
+        
+        
+        
     }
     return self;
 }
@@ -71,6 +73,7 @@
 - (void)mtProtoWillAddService:(MTProto *)mtProto
 {
     _queue = [mtProto messageServiceQueue];
+    _updateProccessor = [[TGProccessUpdates alloc] initWithQueue:_queue];
 }
 
 - (void)mtProtoNetworkAvailabilityChanged:(MTProto *)__unused mtProto isNetworkAvailable:(bool)isNetworkAvailable
@@ -186,7 +189,7 @@
         
         if([[rpc result] isKindOfClass:[TL_messages_sentMessage class]] ||
            [[rpc result] isKindOfClass:[TL_messages_affectedHistory class]] ||
-           [[rpc result] isKindOfClass:[TL_updates class]] )
+           [[rpc result] isKindOfClass:[TL_updates class]])
             [_updateProccessor addUpdate:[rpc result]];
     } else {
         [_updateProccessor addUpdate:[incomingMessage body]];

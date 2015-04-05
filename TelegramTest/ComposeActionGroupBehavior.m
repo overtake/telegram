@@ -80,14 +80,16 @@
         
         
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
         
         
         [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
             
             [self.delegate behaviorDidEndRequest:response];
             
-            [[Telegram sharedInstance] showMessagesFromDialog:((TL_localMessage *)response.message).conversation sender:self];
+            [[Telegram rightViewController] clearStack];
+            
+            [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
         }];
         
         
