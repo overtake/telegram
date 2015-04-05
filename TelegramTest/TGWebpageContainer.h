@@ -20,6 +20,8 @@
 @property (nonatomic,strong) TMTextField *author;
 @property (nonatomic,strong) TMTextField *date;
 
+@property (nonatomic,strong) TMTextField *siteName;
+
 @property (nonatomic,strong) TGCTextView *descriptionField;
 
 @property (nonatomic,weak) TGWebpageObject *webpage;

@@ -30,15 +30,10 @@
             
             NSMutableAttributedString *author = [[NSMutableAttributedString alloc] init];
             
-            if([self siteIcon]) {
-                
-                [author appendAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[[self siteIcon] imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 5)]]]];
-                
-            }
             
             [author appendString:webpage.author withColor:DARK_BLACK];
             
-            [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:author.range];
+            [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:author.range];
             
             [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
             
@@ -55,7 +50,7 @@
             
             
             [title appendString:webpage.title withColor:[NSColor blackColor]];
-            [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:title.range];
+            [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:title.range];
             
             _title = title;
         }
@@ -64,19 +59,26 @@
             
             NSMutableAttributedString *copy = [_title mutableCopy];
             
-            [copy insertAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[[self siteIcon] imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 5)]]] atIndex:0];
-            
-            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:copy.range];
+            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:copy.range];
             [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
             _author = copy;
             
         }
         
+        NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
+        
+        [siteName appendString:webpage.site_name withColor:LINK_COLOR];
+        
+        [siteName setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:siteName.range];
+        [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
+        
+        _siteName = siteName;
+        
         if(webpage.n_description) {
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
             [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
-            [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:desc.range];
+            [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:desc.range];
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
             style.lineBreakMode = NSLineBreakByWordWrapping;
@@ -95,7 +97,7 @@
         
         
         
-        if(![webpage.photo isKindOfClass:[TL_photoEmpty class]]) {
+        if(![webpage.photo isKindOfClass:[TL_photoEmpty class]] && webpage.photo.sizes.count > 0) {
             NSArray *photo = [webpage.photo sizes];
             
             TLPhotoSize *photoSize = [photo lastObject];
@@ -139,7 +141,7 @@
         
         _size = _imageSize;
         
-        _size.height+=self.titleSize.height + self.descSize.height + (!self.author ?:17) + (((_title || _desc) && _imageObject) ? 8 : 0);
+        _size.height+=self.titleSize.height + self.descSize.height + (!self.author ?:17) + (((_title || _desc) && _imageObject) ? 8 : 0) + 12;
     } else {
         _imageSize = strongsize(_imageObject.imageSize, 60);
         

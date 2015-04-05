@@ -53,6 +53,46 @@ static NSTextField *testTextField() {
 
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths {
     
+    CTFrameRef CTFrame;
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    
+    [paths enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+            
+        CGPathAddRect(path, NULL, [obj rectValue]);
+        
+        
+            
+    }];
+
+    
+    
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self);
+    
+    
+    CTFrame = CTFramesetterCreateFrame(framesetter,
+                                       CFRangeMake(0, 0), path, NULL);
+    
+    
+    CFArrayRef lines = CTFrameGetLines(CTFrame);
+    
+    
+    int height = 0;
+    
+    for (int i = 0; i < CFArrayGetCount(lines); i++) {
+        CTLineRef line = CFArrayGetValueAtIndex(CTFrameGetLines(CTFrame), i);
+        
+        CGFloat ascent, descent, leading;
+        
+        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        
+        height+= floor(ascent + ceil(descent) + leading);
+    }
+    
+    
+    
+    return NSMakeSize(width, height );
+    
 }
 
 - (NSRange)range {

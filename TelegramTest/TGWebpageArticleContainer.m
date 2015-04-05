@@ -22,26 +22,20 @@
     
     [super setWebpage:webpage];
     
-
-    [self.author setHidden:YES];
     
+    [self.imageView setFrame:NSMakeRect(NSWidth(self.frame) - 67, 20, webpage.imageSize.width, webpage.imageSize.height)];
     
+    if(webpage.imageObject) {
+        [self.descriptionField setDrawRects:@[[NSValue valueWithRect:NSMakeRect(0, webpage.size.height - 80, webpage.size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, webpage.size.width - 7, webpage.size.height - 80)]]];
+        
+        [self.descriptionField setFrame:NSMakeRect([self textX], 17, webpage.size.width - 7 , webpage.size.height - 20 )];
+    } else {
+        [self.descriptionField setFrame:NSMakeRect([self textX], 30, webpage.descSize.width , webpage.descSize.height )];
+    }
+     
     
-    [self.imageView setBackgroundColor:[NSColor redColor]];
-
-    [self.imageView setFrame:NSMakeRect(NSWidth(self.frame) - 67, 0, 60, 60)];
-    
-    [self.descriptionField setDrawRects:@[[NSValue valueWithRect:NSMakeRect(0, NSHeight(self.frame) - 60, NSWidth(self.frame) - 60, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, NSWidth(self.frame) , NSHeight(self.frame) - 60)]]];
-    
-    
-    
-    
-    [self.descriptionField setFrame:NSMakeRect(0, 0, NSWidth(self.frame) , NSHeight(self.frame)  )];
     
     [self.descriptionField setAttributedString:webpage.desc];
-    
-    [self.descriptionField setBackgroundColor:[NSColor blueColor]];
-    
     
     
 }

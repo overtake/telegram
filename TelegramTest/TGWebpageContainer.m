@@ -37,9 +37,7 @@
         [_containerView setIsFlipped:YES];
         
         _containerView.wantsLayer = YES;
-        
-        [_containerView setBackgroundColor:[NSColor yellowColor]];
-        
+                
         [super addSubview:_containerView];
         
         
@@ -51,7 +49,6 @@
             [self showPhoto];
         };
         
-        [_imageView setTapBlock:block];
         
         _descriptionField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
@@ -62,19 +59,22 @@
                 
         
         self.author = [TMTextField defaultTextField];
-        self.date = [TMTextField defaultTextField];
-                
+        
         
         [self addSubview:self.author];
-        [self addSubview:self.date];
         
         
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
         _imageView.cornerRadius = 4;
         
+        [_imageView setTapBlock:block];
         
         [self addSubview:_imageView];
+        
+        _siteName = [TMTextField defaultTextField];
+        
+        [self addSubview:_siteName];
     }
     
     return self;
@@ -95,19 +95,17 @@
     
     
     [self.author setHidden:!webpage.author];
-    [self.date setHidden:!webpage.date];
     
     if(webpage.author ) {
         [self.author setAttributedStringValue:webpage.author];
         [self.author setFrameSize:NSMakeSize([self maxTextWidth], 20)];
-        [self.author setFrameOrigin:NSMakePoint([self textX], -4)];
+        [self.author setFrameOrigin:NSMakePoint([self textX] - 2, 10)];
     }
+
     
-    if(webpage.date && webpage.author) {
-        [self.date setStringValue:webpage.date];
-        [self.date sizeToFit];
-        [self.date setFrameOrigin:NSMakePoint(NSMaxX(self.author.frame) + 4, 0)];
-    }
+    [self.siteName setAttributedStringValue:webpage.siteName];
+    [self.siteName setFrameSize:NSMakeSize([self maxTextWidth], 20)];
+    [self.siteName setFrameOrigin:NSMakePoint([self textX] - 2, -6)];
     
     
     [_imageView setObject:webpage.imageObject];

@@ -17,8 +17,7 @@
     if([webpage.type isEqualToString:@"photo"]) {
         webpage.n_description = nil;
         webpage.title = nil;
-        webpage.author = nil;
-        webpage.date = 0;
+        webpage.author = webpage.site_name;
     }
     
     if(self = [super initWithWebPage:webpage]) {
