@@ -195,7 +195,7 @@
     }
     
     
-    if([webpage.type isEqualToString:@"article"])
+    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
     {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
     }
