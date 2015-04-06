@@ -134,4 +134,8 @@ typedef enum {
 
 -(void)performForward:(TL_conversation *)conversation;
 
+-(void)checkWebpage:(NSString *)link;
+-(void)removeWebpage;
+-(void)updateWebpage;
+
 @end

@@ -209,7 +209,7 @@ extern NSString *const FILE_NAMES;
 
 -(void)updateMessageId:(long)random_id msg_id:(int)n_id;
 
-
-
++(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link;
++(TLWebPage *)findWebpage:(NSString *)link;
 
 @end

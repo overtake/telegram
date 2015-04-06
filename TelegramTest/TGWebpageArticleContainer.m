@@ -12,13 +12,10 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    
-    // Drawing code here.
 }
 
 
 -(void)setWebpage:(TGWebpageObject *)webpage {
-    
     
     [super setWebpage:webpage];
     

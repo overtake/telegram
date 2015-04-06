@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.04.15..
+//  Auto created by Mikhail Filimonov on 06.04.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -692,18 +692,20 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id {
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
-    obj.peer = peer;
+    obj.flags = flags;
+	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.message = message;
 	obj.random_id = random_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:480793249];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:-1696755930];
+	[stream writeInt:self.flags];
 	[TLClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.reply_to_msg_id];
+	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
@@ -711,18 +713,20 @@
 @end
 
 @implementation TLAPI_messages_sendMedia
-+(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id {
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id {
     TLAPI_messages_sendMedia* obj = [[TLAPI_messages_sendMedia alloc] init];
-    obj.peer = peer;
+    obj.flags = flags;
+	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.media = media;
 	obj.random_id = random_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:871814540];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:762913713];
+	[stream writeInt:self.flags];
 	[TLClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.reply_to_msg_id];
+	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[TLClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
@@ -1786,6 +1790,19 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:954152242];
 	[stream writeInt:self.period];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getWebPagePreview
++(TLAPI_messages_getWebPagePreview*)createWithMessage:(NSString*)message {
+    TLAPI_messages_getWebPagePreview* obj = [[TLAPI_messages_getWebPagePreview alloc] init];
+    obj.message = message;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:623001124];
+	[stream writeString:self.message];
 	return [stream getOutput];
 }
 @end

@@ -527,6 +527,8 @@ static ASQueue *queue;
         
         [[Storage manager] updateMessages:updateMessages];
         
+        [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
+        
         [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:ids}];
         
     }

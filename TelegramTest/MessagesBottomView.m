@@ -29,6 +29,7 @@
 #import "MessageReplyContainer.h"
 #import "TGForwardContainer.h"
 #import "TGHashtagPopup.h"
+#import "TGWebpageAttach.h"
 @interface MessagesBottomView()
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -36,7 +37,7 @@
 @property (nonatomic, strong) TMView *secretInfoView;
 
 
-@property (nonatomic, strong) MessageInputGrowingTextView *inputMessageTextField;
+
 @property (nonatomic, strong) BTRButton *attachButton;
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) TMButton *sendButton;
@@ -67,6 +68,8 @@
 
 
 @property (nonatomic,strong) TGForwardContainer *fwdContainer;
+
+@property (nonatomic,strong) TGWebpageAttach *webpageAttach;
 
 @end
 
@@ -150,6 +153,8 @@
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
+    
+    [self updateWebpage:NO];
 
 }
 
@@ -888,27 +893,6 @@
     NSArray *fwdMessages = [self.messagesViewController fwdMessages:self.dialog];
     
     
-    dispatch_block_t block = ^ {
-        
-        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
-    };
-    
-    dispatch_block_t animationBlock = ^ {
-        
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            
-            [context setDuration:0.2];
-            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-            
-            block();
-            
-        } completionHandler:^{
-            
-        }];
-        
-    };
-    
-    
     if(fwdMessages.count > 0) {
         
         _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
@@ -933,21 +917,14 @@
         [self.normalView addSubview:_fwdContainer];
         
         if(updateHeight) {
-            if(animated)
-                animationBlock();
-            else
-                block();
+            [self updateBottomHeight:animated];
         }
         
         
     } else {
         
         if(updateHeight) {
-            
-            if(animated)
-                animationBlock();
-            else
-                block();
+            [self updateBottomHeight:animated];
         }
         
     }
@@ -956,6 +933,35 @@
     [self TMGrowingTextViewTextDidChange:nil];
     
 }
+
+-(void)updateBottomHeight:(BOOL)animated
+{
+    dispatch_block_t block = ^ {
+        
+        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+    };
+    
+    dispatch_block_t animationBlock = ^ {
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            
+            block();
+            
+        } completionHandler:^{
+            
+        }];
+        
+    };
+    
+    if(animated)
+        animationBlock();
+    else
+        block();
+}
+
 
 -(void)checkReplayMessage:(BOOL)updateHeight animated:(BOOL)animated {
     
@@ -979,25 +985,7 @@
     
     
     
-    dispatch_block_t block = ^ {
-        
-        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
-    };
-    
-    dispatch_block_t animationBlock = ^ {
-      
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            
-            [context setDuration:0.2];
-            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-            
-            block();
-            
-        } completionHandler:^{
-            
-        }];
-        
-    };
+   
     
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
@@ -1021,25 +1009,44 @@
         [self.normalView addSubview:_replyContainer];
         
         if(updateHeight) {
-            if(animated)
-                animationBlock();
-            else
-                block();
+            [self updateBottomHeight:animated];
         }
         
         
     } else {
         
         if(updateHeight) {
-            
-            if(animated)
-                animationBlock();
-             else
-                block();
+            [self updateBottomHeight:animated];
         }
         
     }
+}
+
+-(void)updateWebpage:(BOOL)animated {
+    
+    TLWebPage *webpage = [Storage findWebpage:self.inputMessageString];
    
+    if(webpage) {
+        
+        
+        [_webpageAttach removeFromSuperview];
+        _webpageAttach = nil;
+        
+        int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+        
+        _webpageAttach = [[TGWebpageAttach alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) webpage:webpage link:[self.inputMessageString webpageLink]];
+        
+        _webpageAttach.autoresizingMask = NSViewWidthSizable;
+        
+        [self.normalView addSubview:_webpageAttach];
+        
+    } else {
+        [_webpageAttach removeFromSuperview];
+        _webpageAttach = nil;
+    }
+    
+    [self updateBottomHeight:animated];
+    
 }
 
 -(void)checkAttachImages {
@@ -1153,6 +1160,10 @@
         height+= 35;
     }
     
+    if(self.webpageAttach != nil) {
+        height+= 35;
+    }
+    
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
         
@@ -1166,11 +1177,13 @@
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+            int offset = self.attachments.count > 0 ? 95 : 20;
             
+            [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
+            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
             
-            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 + (self.replyContainer ? 40 : 0))];
+            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? _replyContainer ? 80 : 40 : 0))];
             
         } else {
 
@@ -1183,7 +1196,9 @@
             [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
             
-            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (self.replyContainer ? 40 : 0))];
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
+            
+            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? _fwdContainer ? 80 : 40 : 0))];
         }
         
         

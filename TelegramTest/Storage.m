@@ -1780,4 +1780,32 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
++(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link {
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction setObject:[TLClassStore serialize:webpage] forKey:link inCollection:@"webpage"];
+        
+    }];
+      
+    
+}
+
++(TLWebPage *)findWebpage:(NSString *)link {
+    
+    __block TLWebPage *webpage;
+    
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        NSData *wp = [transaction objectForKey:link inCollection:@"webpage"];
+        if(wp)
+            webpage = [TLClassStore deserialize:wp];
+        
+    }];
+    
+    return webpage;
+    
+}
+
 @end

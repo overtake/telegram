@@ -12,11 +12,13 @@
 #import "ImageUtils.h"
 #import "TGMentionPopup.h"
 #import "TGHashtagPopup.h"
+#import "NSString+FindURLs.h"
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
     PasteBoardItemTypeImage,
-    PasteBoardItemTypeGif
+    PasteBoardItemTypeGif,
+    PasteBoardTypeLink
 } PasteBoardItemType;
 
 @implementation MessageInputGrowingTextView
@@ -58,6 +60,7 @@ typedef enum {
     
     return NO;
 }
+
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
      NSPasteboard *pst = [sender draggingPasteboard];
@@ -152,6 +155,7 @@ typedef enum {
             }
         } else {
             [super paste:sender];
+            
             return;
         }
         
@@ -232,14 +236,17 @@ typedef enum {
     
 }
 
-/*
- NSImage * pic = image_AppIcon();
- NSTextAttachmentCell *attachmentCell = [[NSTextAttachmentCell alloc] initImageCell:pic];
- NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
- [attachment setAttachmentCell: attachmentCell ];
- NSAttributedString *attributedString = [NSAttributedString  attributedStringWithAttachment: attachment];
- [[self textStorage] appendAttributedString:attributedString];
- */
+
+
+-(void)checkWebpages {
+    
+    NSString *link = [self.string webpageLink];
+    
+    [[Telegram rightViewController].messagesViewController checkWebpage:link];
+    
+}
+
+
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
     [self updateFont];
@@ -252,7 +259,10 @@ typedef enum {
     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
 }
 
-
+-(void)textDidChange:(NSNotification *)notification {
+    [super textDidChange:notification];
+    [self checkWebpages];
+}
 
 - (void)initialize {
     

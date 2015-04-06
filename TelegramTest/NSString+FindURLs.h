@@ -8,7 +8,8 @@
 @interface NSString (NSString_FindURLs)
 
 
-- (NSArray *) arrayOfLinks:(NSArray *)results;
-- (NSArray *) locationsOfLinks;
-- (NSArray *) locationsOfHashtags;
+- (NSArray *)arrayOfLinks:(NSArray *)results;
+- (NSArray *)locationsOfLinks;
+- (NSArray *)locationsOfHashtags;
+- (NSString *)webpageLink;
 @end

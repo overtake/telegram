@@ -10,5 +10,4 @@
 #import "SettingsArchiver.h"
 @interface MessageInputGrowingTextView : TMGrowingTextView<SettingsListener>
 
-
 @end

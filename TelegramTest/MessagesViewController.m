@@ -160,6 +160,8 @@
 
 @property (nonatomic,strong) NSMutableArray *replyMsgsStack;
 
+@property (nonatomic,strong) RPCRequest *webPageRequest;
+
 @end
 
 @implementation MessagesViewController
@@ -2934,6 +2936,46 @@ static NSTextAttachment *headerMediaIcon() {
     return replyMessage;
     
 }
+
+
+-(void)checkWebpage:(NSString *)link {
+    
+    NSString *text = self.inputText;
+    
+    TL_conversation *conversation = _conversation;
+    
+    
+    __block TLWebPage *localWebpage =  [Storage findWebpage:link];
+    
+
+    
+    if(!localWebpage) {
+        
+        _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
+            
+            if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
+                [Storage addWebpage:response.webpage forLink:link];
+                [self updateWebpage];
+                
+            }
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
+        
+    } else  {
+        
+        [self updateWebpage];
+    }
+    
+    
+}
+
+
+-(void)updateWebpage {
+    [self.bottomView updateWebpage:YES];
+}
+
 
 //Table methods
 

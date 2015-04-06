@@ -77,7 +77,7 @@ extern NSString *const UPDATE_MESSAGE_ITEM;
 
 extern NSString *const UPDATE_WEB_PAGE_ITEMS;
 extern NSString *const UPDATE_NEW_AUTH;
-
+extern NSString *const UPDATE_WEB_PAGES;
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 
@@ -102,6 +102,8 @@ extern NSString *const KEY_MEDIA;
 extern NSString *const KEY_PEER_ID;
 extern NSString *const KEY_IS_MUTE;
 extern NSString *const KEY_PARTICIPANTS;
+
+extern NSString *const KEY_WEBPAGE;
 
 extern NSString *const KEY_PRIVACY;
 extern NSString *const PRIVACY_UPDATE;

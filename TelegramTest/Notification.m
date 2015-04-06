@@ -78,6 +78,8 @@ NSString *const UPDATE_MESSAGE_ITEM = @"UPDATE_MESSAGE_ITEM";
 
 
 NSString *const UPDATE_WEB_PAGE_ITEMS = @"UPDATE_WEB_PAGE_ITEM";
+NSString *const UPDATE_WEB_PAGES = @"UPDATE_WEB_PAGES";
+
 NSString *const UPDATE_NEW_AUTH = @"UPDATE_NEW_AUTH";
 
 NSString *const FULLCHAT_LOADED = @"FULLCHAT_LOADED";
@@ -105,6 +107,8 @@ NSString *const KEY_MEDIA = @"media";
 NSString *const KEY_PEER_ID = @"peer_id";
 NSString *const KEY_IS_MUTE = @"is_mute";
 NSString *const KEY_PARTICIPANTS = @"participants";
+
+NSString *const KEY_WEBPAGE = @"WEBPAGE";
 
 NSString *const LOGOUT_EVENT = @"logout";
 

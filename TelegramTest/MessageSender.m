@@ -29,6 +29,7 @@
 #import "TLFileLocation+Extensions.h"
 #import "Telegram.h"
 #import "TGTimer.h"
+#import "NSString+FindURLs.h"
 @implementation MessageSender
 
 
@@ -162,13 +163,23 @@
     
     __block TL_localMessage *replyMessage;
     
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    __block TLWebPage *webpage;
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
         if(data)
             replyMessage = [TLClassStore deserialize:data];
         
+        
+        
+        
     }];
+    
+    if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        
+        webpage = [Storage findWebpage:[message webpageLink]];
+    }
     
     int reply_to_msg_id = replyMessage.n_id;
     
@@ -180,12 +191,17 @@
     
     TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
     
+    if(webpage)
+    {
+        outMessage.media = [TL_messageMediaWebPage createWithWebpage:webpage];
+    }
+    
     if(reply_to_msg_id != 0)
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
         [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];
     }
-
+    
     if(replyMessage)
     {
         
@@ -199,11 +215,12 @@
             [ASQueue dispatchOnMainQueue:^{
                 
                 [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
-                
             }];
         }
         
         
+    } else {
+    
     }
     
     return  outMessage;

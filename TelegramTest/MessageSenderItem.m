@@ -37,7 +37,7 @@
     id request;
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMessage createWithPeer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId]];
+        request = [TLAPI_messages_sendMessage createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId]];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;

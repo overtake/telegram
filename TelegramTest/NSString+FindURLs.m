@@ -109,4 +109,15 @@
     return hashTags;
 }
 
+-(NSString *)webpageLink
+{
+    
+    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
+    
+    NSArray *arrayOfLinks = [self arrayOfLinks:[detect matchesInString:self options:0 range:NSMakeRange(0, [self length])]];
+    
+    return arrayOfLinks.count > 0 ? arrayOfLinks[0] : nil;
+    
+}
+
 @end

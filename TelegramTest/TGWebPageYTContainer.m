@@ -98,6 +98,8 @@
     
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
+    [self.youtubeImage setHidden:YES];
+    
     [self.youtubeImage setCenterByView:self.imageView];
     
     [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.titleSize.width , webpage.titleSize.height )];

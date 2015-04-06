@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.04.15.
+//  Auto created by Mikhail Filimonov on 06.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -300,21 +300,23 @@
 @end
 
 @interface TLAPI_messages_sendMessage : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSString* message;
 @property long random_id;
 
-+(TLAPI_messages_sendMessage*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 
-+(TLAPI_messages_sendMedia*)createWithPeer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
@@ -769,6 +771,12 @@
 @property int period;
 
 +(TLAPI_account_updateDeviceLocked*)createWithPeriod:(int)period;
+@end
+
+@interface TLAPI_messages_getWebPagePreview : TLApiObject
+@property (nonatomic, strong) NSString* message;
+
++(TLAPI_messages_getWebPagePreview*)createWithMessage:(NSString*)message;
 @end
 
 @interface TLAPI_account_getAuthorizations : TLApiObject

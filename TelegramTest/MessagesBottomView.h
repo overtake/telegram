@@ -25,7 +25,7 @@ typedef enum {
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) TL_conversation *dialog;
 
-
+@property (nonatomic, strong) MessageInputGrowingTextView *inputMessageTextField;
 
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
 
@@ -37,4 +37,7 @@ typedef enum {
 
 -(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated;
 -(void)updateFwdMessage:(BOOL)updateHeight animated:(BOOL)animated;
+
+-(void)updateWebpage:(BOOL)animated;
+
 @end

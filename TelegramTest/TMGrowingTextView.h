@@ -46,6 +46,7 @@ typedef enum {
 - (BOOL)isEnterEvent:(NSEvent *)e;
 - (BOOL)isControlEnterEvent:(NSEvent *)e;
 - (BOOL)isCommandEnterEvent:(NSEvent *)e;
+
 @end
 
 
