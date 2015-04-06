@@ -314,7 +314,9 @@ static TGPasslockModalView *passlockView;
 -(void)showBlockPasslock:(passlockCallback)callback {
     [TMViewController showBlockPasslock:callback];
 }
-
++(void)becomePasslock {
+    [passlockView becomeFirstResponder];
+}
 
 +(void)hidePasslock {
     

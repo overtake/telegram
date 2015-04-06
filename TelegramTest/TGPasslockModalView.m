@@ -303,6 +303,8 @@
 
 -(BOOL)becomeFirstResponder
 {
+    [self.window makeFirstResponder:self.secureField];
+    
     return [self.secureField becomeFirstResponder];
 }
 

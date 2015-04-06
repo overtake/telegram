@@ -2943,9 +2943,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     __block TLWebPage *localWebpage =  [Storage findWebpage:link];
     
-
-    
-    if(![localWebpage isKindOfClass:[TL_webPage class]] && link) {
+    if((!localWebpage || ![localWebpage isKindOfClass:[TL_webPageEmpty class]]) && link && ![localWebpage isKindOfClass:[TL_webPage class]]) {
         
         _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
             

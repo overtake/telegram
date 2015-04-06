@@ -37,8 +37,7 @@
 
 
 -(void)makeSize:(int)width;
-
-
+-(int)blockHeight;
 -(Class)webpageContainer;
 
 +(id)objectForWebpage:(TLWebPage *)webpage;

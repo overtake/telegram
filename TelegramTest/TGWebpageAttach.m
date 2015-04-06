@@ -10,12 +10,13 @@
 
 @interface TGWebpageAttach ()
 @property (nonatomic,strong) TLWebPage *webpage;
-@property (nonatomic,strong) NSString *link;
 @property (nonatomic,assign) int peer_id;
 
 @property (nonatomic,strong) TMTextField *titleField;
 @property (nonatomic,strong) TMTextField *stateField;
 @property (nonatomic,strong) id internalId;
+
+@property (nonatomic,strong) NSImageView *deleteImageView;
 
 @end
 
@@ -80,20 +81,20 @@
 
 -(void)updateWithWebpage:(TLWebPage *)webpage {
     
-    [Storage addWebpage:webpage forLink:webpage.url];
-    
-    if(_peer_id == [Telegram rightViewController].messagesViewController.conversation.peer_id) {
-        [[Telegram rightViewController].messagesViewController updateWebpage];
-    }
+    [self updateLayout];
 }
 
 -(void)didUpdateWebpage:(NSNotification *)notify {
     
     TLWebPage *webpage = notify.userInfo[KEY_WEBPAGE];
     
+    [Storage addWebpage:webpage forLink:_link];
+    
     if(_webpage.n_id == webpage.n_id)
     {
-        [self updateWithWebpage:webpage];
+        _webpage = webpage;
+        
+        [self updateLayout];
     }
 
 }

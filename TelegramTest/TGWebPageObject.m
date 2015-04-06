@@ -169,7 +169,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        supportTypes = @[@"video",@"article",@"photo",@"profile",@"app",@"document"];
+        supportTypes = @[@"video",@"article",@"photo",@"profile",@"app",@"document",@"audio"];
     });
     
     if([supportTypes indexOfObject:webpage.type] == NSNotFound)
@@ -196,7 +196,7 @@
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
     }
     
-    if([webpage.type isEqualToString:@"photo"] || ([webpage.type isEqualToString:@"video"] && [webpage.embed_type isEqualToString:@"video/mp4"]))
+    if([webpage.type isEqualToString:@"audio"] || [webpage.type isEqualToString:@"photo"] || ([webpage.type isEqualToString:@"video"] && [webpage.embed_type isEqualToString:@"video/mp4"]))
     {
         return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
     }

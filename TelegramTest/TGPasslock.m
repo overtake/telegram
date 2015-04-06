@@ -144,6 +144,8 @@
 
 -(NSUInteger)autoLockTime {
     
+    return 1;
+    
     id time = [[NSUserDefaults standardUserDefaults] objectForKey:@"auto-passlock"];
     
     if(!time) {

@@ -1027,10 +1027,13 @@
     if(!ACCEPT_FEATURE)
         return;
     
+    
+    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]])
+        return;
+        
     TLWebPage *webpage = [Storage findWebpage:[self.inputMessageString webpageLink]];
    
-    if([webpage isKindOfClass:[TL_webPage class]]) {
-        
+    if([webpage isKindOfClass:[TL_webPage class]] || [webpage isKindOfClass:[TL_webPagePending class]]) {
         
         [_webpageAttach removeFromSuperview];
         _webpageAttach = nil;

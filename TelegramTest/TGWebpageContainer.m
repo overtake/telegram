@@ -71,8 +71,8 @@
         _siteName = [TMTextField defaultTextField];
         
         
-        [self.siteName setFrameOrigin:NSMakePoint(5, -7)];
-        [self.author setFrameOrigin:NSMakePoint(5, 7)];
+        [self.siteName setFrameOrigin:NSMakePoint(5, -6)];
+        [self.author setFrameOrigin:NSMakePoint(5, 8)];
         
         [super addSubview:_siteName];
     }

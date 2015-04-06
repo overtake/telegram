@@ -70,6 +70,7 @@
 +(void)showBlockPasslock:(passlockCallback)callback;
 -(void)showBlockPasslock:(passlockCallback)callback;
 
++(void)becomePasslock;
 
 -(void)_didStackRemoved;
 

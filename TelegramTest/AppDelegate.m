@@ -44,6 +44,7 @@
 #import "TGPhotoViewer.h"
 #import "TGPasslock.h"
 #import "TGCTextView.h"
+#import "TGPasslockModalView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -553,6 +554,14 @@ void exceptionHandler(NSException * exception)
         
         if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]])
             [[Telegram rightViewController] becomeFirstResponder];
+        
+        if([TGPasslock isVisibility]) {
+            [TMViewController becomePasslock];
+            
+            if(![responder isKindOfClass:NSClassFromString(@"NSSecureTextView")]) {
+               // return [[NSEvent alloc] init];
+            }
+        }
         
         return result;
     };

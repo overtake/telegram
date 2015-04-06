@@ -152,17 +152,20 @@
     
     [self.tableView insert:terminate atIndex:self.tableView.count tableRedraw:NO];
     
-    GeneralSettingsBlockHeaderItem *otherHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.OtherSessions", nil)];
-    
-    otherHeader.height = 62;
-    
-    [self.tableView insert:otherHeader atIndex:self.tableView.count tableRedraw:NO];
-    
-    
+    if(self.authorizations.count > 0) {
+        
+        GeneralSettingsBlockHeaderItem *otherHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.OtherSessions", nil)];
+        
+        otherHeader.height = 62;
+        
+        [self.tableView insert:otherHeader atIndex:self.tableView.count tableRedraw:NO];
+        
+        
+        
+        
+        [self.tableView insert:self.authorizations startIndex:self.tableView.count tableRedraw:NO];
+    }
    
-    
-    [self.tableView insert:self.authorizations startIndex:self.tableView.count tableRedraw:NO];
-    
     
     [self.tableView reloadData];
 
