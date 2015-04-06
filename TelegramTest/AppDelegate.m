@@ -556,10 +556,10 @@ void exceptionHandler(NSException * exception)
             [[Telegram rightViewController] becomeFirstResponder];
         
         if([TGPasslock isVisibility]) {
-            [TMViewController becomePasslock];
+           
             
             if(![responder isKindOfClass:NSClassFromString(@"NSSecureTextView")]) {
-               // return [[NSEvent alloc] init];
+                [TMViewController becomePasslock];
             }
         }
         
