@@ -13,7 +13,7 @@
 
 @synthesize size = _size;
 @synthesize author = _author;
-
+@synthesize desc = _desc;
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super initWithWebPage:webpage]) {
         
@@ -25,6 +25,8 @@
         
         _videoTimeAttributedString = attr;
         
+        
+        _desc = [super title];
         
         NSSize size = [_videoTimeAttributedString size];
         size.width = ceil(size.width + 14);
@@ -43,12 +45,8 @@
     
     [super makeSize:width];
     
-    _size = self.imageSize;
-    
-    _size.height+=self.titleSize.height + (14) + (self.imageObject ? 8 : 0);
-    
-    _size.width = width - 60;
-    
+    _size = [super size];
+        
 }
 
 -(Class)webpageContainer {

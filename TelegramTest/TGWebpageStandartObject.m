@@ -11,17 +11,11 @@
 @implementation TGWebpageStandartObject
 
 @synthesize size = _size;
+@synthesize desc = _desc;
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
-    
-    if([webpage.type isEqualToString:@"photo"]) {
-        webpage.n_description = nil;
-        webpage.title = nil;
-    }
-    
     if(self = [super initWithWebPage:webpage]) {
         
-
     }
     
     return self;

@@ -27,15 +27,7 @@
     [super setWebpage:webpage];
     
     
-    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
-    
-    
-    [self.loaderView setCenterByView:self.imageView];
-    
-    [self.descriptionField setFrame:NSMakeRect(0, !self.author.isHidden ? 20 : -4, webpage.descSize.width , webpage.descSize.height )];
-    
-    [self.descriptionField setAttributedString:webpage.desc];
-    
+    [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
 }
 

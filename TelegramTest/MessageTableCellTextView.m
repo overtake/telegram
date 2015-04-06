@@ -98,8 +98,7 @@
             [self.containerView addSubview:_webpageContainerView];
         }
         
-        
-        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.size.height)];
+        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.blockHeight)];
         
         [_webpageContainerView setWebpage:item.webpage];
         

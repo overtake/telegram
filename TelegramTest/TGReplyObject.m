@@ -142,7 +142,6 @@
         
         [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
         
-        
         [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];
         
         _replyText = replyText;

@@ -96,11 +96,11 @@
 
     [_blackContainer removeFromSuperview];
     
-    [self.imageView setFrame:NSMakeRect(0, NSHeight(self.frame) - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
     [self.youtubeImage setCenterByView:self.imageView];
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], 14, webpage.titleSize.width , webpage.titleSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.titleSize.width , webpage.titleSize.height )];
     [self.descriptionField setAttributedString:webpage.title];
     
     

@@ -35,10 +35,10 @@
     [_playVideo removeFromSuperview];
     _playVideo = nil;
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 28 : 12, webpage.descSize.width , webpage.descSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 32 : 12, webpage.descSize.width , webpage.descSize.height )];
     
     
-    [self.imageView setFrame:NSMakeRect(0, NSMaxY(self.descriptionField.frame) + 4, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(0, [webpage.webpage.type isEqualToString:@"profile"] ? 0 : NSMaxY(self.descriptionField.frame) + 4, webpage.imageSize.width, webpage.imageSize.height)];
    
     
     if([webpage.webpage.type isEqualToString:@"video"]) {

@@ -127,7 +127,7 @@
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     
-    self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage size].height + 5 : 0));
+    self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + 5 : 0));
     
     return YES;
 }

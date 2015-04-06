@@ -41,10 +41,6 @@
         [super addSubview:_containerView];
         
         
-        
-        
-        
-        
         dispatch_block_t block = ^ {
             [self showPhoto];
         };
@@ -61,7 +57,7 @@
         self.author = [TMTextField defaultTextField];
         
         
-        [self addSubview:self.author];
+        [super addSubview:self.author];
         
         
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
@@ -74,7 +70,11 @@
         
         _siteName = [TMTextField defaultTextField];
         
-        [self addSubview:_siteName];
+        
+        [self.siteName setFrameOrigin:NSMakePoint(5, -7)];
+        [self.author setFrameOrigin:NSMakePoint(5, 7)];
+        
+        [super addSubview:_siteName];
     }
     
     return self;
@@ -83,7 +83,8 @@
 
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
-    [_containerView setFrame:NSMakeRect(7,0,NSWidth(frame) - 7,NSHeight(frame))];
+    
+    [_containerView setFrame:NSMakeRect(7, self.webpage.author ? 30 : 14,NSWidth(frame) - 7,self.webpage.size.height )];
 }
 
 -(void)addSubview:(NSView *)aView {
@@ -94,19 +95,18 @@
     _webpage = webpage;
     
     
+    [_containerView setFrame:NSMakeRect(7, self.webpage.author ? 30 : 14,NSWidth(self.frame) - 7,self.webpage.size.height )];
+    
     [self.author setHidden:!webpage.author];
     
     if(webpage.author ) {
         [self.author setAttributedStringValue:webpage.author];
         [self.author setFrameSize:NSMakeSize([self maxTextWidth], 20)];
-        [self.author setFrameOrigin:NSMakePoint([self textX] - 2, 10)];
     }
 
-    
-    [self.siteName setAttributedStringValue:webpage.siteName];
     [self.siteName setFrameSize:NSMakeSize([self maxTextWidth], 20)];
-    [self.siteName setFrameOrigin:NSMakePoint([self textX] - 2, -6)];
-    
+    [self.siteName setAttributedStringValue:webpage.siteName];
+
     
     [_imageView setObject:webpage.imageObject];
     
@@ -192,6 +192,7 @@
     return 0;
 }
 
+
 -(void)showPhoto {
     
     if(![self.webpage.webpage.type isEqualToString:@"profile"] && self.webpage.imageObject) {
@@ -214,5 +215,8 @@
         }
     }
 }
+
+
+
 
 @end

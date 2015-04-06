@@ -134,14 +134,14 @@
 -(void)makeSize:(int)width {
     
     if(![self.webpage.type isEqualToString:@"profile"]) {
-        _imageSize = strongsize(_imageObject.imageSize, width - 67);
+        _imageSize = strongsize(_imageObject.imageSize, MIN(320, width - 67));
         
         _titleSize = [self.title coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
         _descSize = [self.desc coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
         
         _size = _imageSize;
         
-        _size.height+= self.descSize.height + (_imageObject ? 8 : 0) + (self.author ? 16 : 0) + 14;
+        _size.height+= _descSize.height + (_imageObject ? 5 : 0) ;
     } else {
         _imageSize = strongsize(_imageObject.imageSize, 60);
         
@@ -150,10 +150,6 @@
         
         _size = _imageSize;
     }
-    
-    
-    
-    
     
     _size.width = width - 60;
     
@@ -210,6 +206,10 @@
 
 -(NSImage *)siteIcon  {
     return nil;
+}
+
+-(int)blockHeight {
+    return self.size.height + (self.author ? 30 : 14);
 }
 
 

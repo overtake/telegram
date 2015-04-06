@@ -35,4 +35,7 @@
 
 -(void)showPhoto;
 
+-(int)textY;
+
+
 @end

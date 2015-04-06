@@ -22,20 +22,15 @@
     
     [super setWebpage:webpage];
     
-    
-    [self.author setHidden:webpage.title != nil];
-        
-    [self.imageView setFrame:NSMakeRect(NSWidth(self.frame) - 67, 20, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(NSWidth(self.frame) - 67, 0, webpage.imageSize.width, webpage.imageSize.height)];
     
     if(webpage.imageObject) {
-        [self.descriptionField setDrawRects:@[[NSValue valueWithRect:NSMakeRect(0, webpage.size.height - 80, webpage.size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, webpage.size.width - 7, webpage.size.height - 80)]]];
+        [self.descriptionField setDrawRects:@[[NSValue valueWithRect:NSMakeRect(0, webpage.size.height - 60, webpage.size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, webpage.size.width - 7, webpage.size.height - 60)]]];
         
-        [self.descriptionField setFrame:NSMakeRect([self textX], 16, webpage.size.width - 7 , webpage.size.height - 20 )];
+        [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.size.width - 7 , webpage.size.height )];
     } else {
-        [self.descriptionField setFrame:NSMakeRect([self textX], 30, webpage.descSize.width , webpage.descSize.height )];
+        [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
     }
-     
-    
     
     [self.descriptionField setAttributedString:webpage.desc];
     

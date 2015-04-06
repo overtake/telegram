@@ -37,10 +37,10 @@
     
     [super setWebpage:webpage];
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], !self.author.isHidden ? 28 : 12, webpage.descSize.width , webpage.descSize.height )];
+    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
     
     
-    [self.imageView setFrame:NSMakeRect(0, NSMaxY(self.descriptionField.frame) + 4, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
 
     
@@ -50,7 +50,6 @@
 
 -(void)updateState:(TMLoaderViewState)state {
     [super updateState:state];
-    
 }
 
 

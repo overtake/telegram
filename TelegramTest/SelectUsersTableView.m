@@ -331,9 +331,12 @@ static NSCache *cacheItems;
                 
             }];
             
-            [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndex:0]];
+            if(converted.count > 0) {
+                [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndex:0]];
+                
+                [self insert:converted startIndex:self.count tableRedraw:YES];
+            }
             
-            [self insert:converted startIndex:self.count tableRedraw:YES];
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
