@@ -2939,22 +2939,20 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)checkWebpage:(NSString *)link {
-    
-    NSString *text = self.inputText;
-    
-    TL_conversation *conversation = _conversation;
-    
+        
     
     __block TLWebPage *localWebpage =  [Storage findWebpage:link];
     
 
     
-    if(!localWebpage) {
+    if(![localWebpage isKindOfClass:[TL_webPage class]] && link) {
         
         _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
             
+            [Storage addWebpage:response.webpage forLink:link];
+            
             if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
-                [Storage addWebpage:response.webpage forLink:link];
+                
                 [self updateWebpage];
                 
             }
@@ -2964,7 +2962,6 @@ static NSTextAttachment *headerMediaIcon() {
         }];
         
     } else  {
-        
         [self updateWebpage];
     }
     

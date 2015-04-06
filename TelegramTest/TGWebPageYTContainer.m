@@ -102,8 +102,8 @@
     
     [self.youtubeImage setCenterByView:self.imageView];
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.titleSize.width , webpage.titleSize.height )];
-    [self.descriptionField setAttributedString:webpage.title];
+    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
+    [self.descriptionField setAttributedString:webpage.desc];
     
     
     [_videoTimeView setString:webpage.videoTimeAttributedString];

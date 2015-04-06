@@ -1024,9 +1024,12 @@
 
 -(void)updateWebpage:(BOOL)animated {
     
-    TLWebPage *webpage = [Storage findWebpage:self.inputMessageString];
+    if(!ACCEPT_FEATURE)
+        return;
+    
+    TLWebPage *webpage = [Storage findWebpage:[self.inputMessageString webpageLink]];
    
-    if(webpage) {
+    if([webpage isKindOfClass:[TL_webPage class]]) {
         
         
         [_webpageAttach removeFromSuperview];
