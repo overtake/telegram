@@ -140,5 +140,4 @@ typedef enum {
 
 -(void)markAsNoWebpage;
 -(BOOL)noWebpage;
--(void)markAsNeedWebpage;
 @end

@@ -136,8 +136,8 @@
     if(![self.webpage.type isEqualToString:@"profile"]) {
         _imageSize = strongsize(_imageObject.imageSize, MIN(320, width - 67));
         
-        _titleSize = [self.title coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
-        _descSize = [self.desc coreTextSizeForTextFieldForWidth:_imageSize.width ? : width-67];
+        _titleSize = [self.title coreTextSizeForTextFieldForWidth: width-67];
+        _descSize = [self.desc coreTextSizeForTextFieldForWidth: width-67];
         
         _size = _imageSize;
         

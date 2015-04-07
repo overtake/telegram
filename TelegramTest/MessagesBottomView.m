@@ -763,8 +763,6 @@
     [self.messagesViewController saveInputText];
     
     
-    [self.messagesViewController markAsNeedWebpage];
-    
     if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
         
         

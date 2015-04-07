@@ -2938,36 +2938,31 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
--(void)markAsNeedWebpage {
-    _noWebpageString = nil;
-    
-    [self checkWebpage:[self.inputText webpageLink]];
-}
 
 -(void)markAsNoWebpage {
     
-    _noWebpageString = self.inputText;
+    _noWebpageString = [self.inputText webpageLink];
     
-    [self checkWebpage:_noWebpageString];
+    [self checkWebpage:nil];
     
 }
 
 -(BOOL)noWebpage {
-    return [_noWebpageString isEqualToString:self.inputText];
+    return [_noWebpageString isEqualToString:[self.inputText webpageLink]];
 }
 
 -(void)checkWebpage:(NSString *)link {
     
-    if(self.conversation.type == DialogTypeSecretChat)
+    if(self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast)
         return;
     
     
-    if(![link isEqualToString:_noWebpageString])
+    if([link isEqualToString:_noWebpageString] && _noWebpageString != nil)
     {
-      _noWebpageString = nil;
-    } else {
-        link = nil;
+        [self updateWebpage];
+        return;
     }
+    
     
     __block TLWebPage *localWebpage =  [Storage findWebpage:link];
     

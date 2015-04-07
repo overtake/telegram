@@ -120,8 +120,24 @@
 -(void)updateLayout {
     [_titleField setStringValue:[_webpage isKindOfClass:[TL_webPagePending class]] ? NSLocalizedString(@"Webpage.GettingLinkInfo", nil) : _webpage.site_name];
     
-    [_stateField setStringValue:_link];
+    NSString *desc = _link;
+    
+    [_stateField setTextColor:DARK_BLACK];
+    
+    if([_webpage isKindOfClass:[TL_webPage class]]) {
+        desc = _webpage.title;
+        if(!desc)
+            desc = _webpage.n_description;
+        if(!desc)
+            desc = _webpage.author;
+        
+        [_stateField setTextColor:NSColorFromRGB(0x808080)];
+    }
+    
+    [_stateField setStringValue:desc];
    
+    
+    
     
     [_stateField sizeToFit];
     [_titleField sizeToFit];
