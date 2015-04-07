@@ -990,6 +990,8 @@
         
         _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
+        [_replyContainer setBackgroundColor:NSColorFromRGB(0xfafafa)];
+        
         _replyContainer.autoresizingMask = NSViewWidthSizable;
         
         weak();

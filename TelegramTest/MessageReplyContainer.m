@@ -46,8 +46,10 @@
         
         self.messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
-        
+        [self.messageField setBackgroundColor:[NSColor whiteColor]];
+
         [self.messageField setFrameOrigin:NSMakePoint(15, 0)];
+        
         
         
         [self addSubview:self.messageField];
@@ -126,14 +128,17 @@
     
     [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.nameTextField.frame))];
     
-    [self.messageField setAutoresizingMask:NSViewWidthSizable];
+
+    
+    
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 15)];
+
     
     [self.messageField setAttributedString:_replyObject.replyText];
     
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset, 0)];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 12)];
     
     
     if(_deleteHandler != nil)
@@ -164,8 +169,16 @@
 
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
-        
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 15)];
+    
+    int width = NSWidth(self.frame) - NSMinX(self.messageField.frame);
+            
+    [self.messageField setFrameSize:NSMakeSize(width, 15)];
+}
+
+-(void)setBackgroundColor:(NSColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    
+    [self.messageField setBackgroundColor:backgroundColor];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
