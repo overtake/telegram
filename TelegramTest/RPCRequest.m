@@ -133,7 +133,7 @@
                 
                 
                 if(self.error.error_code == 502) {
-                    alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
+                   // alert(NSLocalizedString(@"App.ConnectionError", nil), NSLocalizedString(@"App.ConnectionErrorDesc", nil));
                 }
                 
             }
