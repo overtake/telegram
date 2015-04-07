@@ -109,7 +109,7 @@
         }];
         
         
-        for(int i = 0; i < messages.count; i++) {
+        for(int i = (int) messages.count - 1; i <=0; i--) {
             
             TL_localMessage *fake = self.fakes[i];
             TL_localMessage *stated = messages[i];
