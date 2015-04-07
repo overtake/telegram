@@ -161,6 +161,7 @@
 @property (nonatomic,strong) NSMutableArray *replyMsgsStack;
 
 @property (nonatomic,strong) RPCRequest *webPageRequest;
+@property (nonatomic,strong) NSString *noWebpageString;
 
 @end
 
@@ -2937,9 +2938,36 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+-(void)markAsNeedWebpage {
+    _noWebpageString = nil;
+    
+    [self checkWebpage:[self.inputText webpageLink]];
+}
+
+-(void)markAsNoWebpage {
+    
+    _noWebpageString = self.inputText;
+    
+    [self checkWebpage:_noWebpageString];
+    
+}
+
+-(BOOL)noWebpage {
+    return [_noWebpageString isEqualToString:self.inputText];
+}
 
 -(void)checkWebpage:(NSString *)link {
-        
+    
+    if(self.conversation.type == DialogTypeSecretChat)
+        return;
+    
+    
+    if(![link isEqualToString:_noWebpageString])
+    {
+      _noWebpageString = nil;
+    } else {
+        link = nil;
+    }
     
     __block TLWebPage *localWebpage =  [Storage findWebpage:link];
     

@@ -65,7 +65,7 @@
         
         [_deleteImageView setCallback:^{
             
-            
+            [[Telegram rightViewController].messagesViewController markAsNoWebpage];
             
         }];
         

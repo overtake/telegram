@@ -138,4 +138,7 @@ typedef enum {
 -(void)removeWebpage;
 -(void)updateWebpage;
 
+-(void)markAsNoWebpage;
+-(BOOL)noWebpage;
+-(void)markAsNeedWebpage;
 @end

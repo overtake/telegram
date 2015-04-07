@@ -762,7 +762,9 @@
     
     [self.messagesViewController saveInputText];
     
-        
+    
+    [self.messagesViewController markAsNeedWebpage];
+    
     if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
         
         
@@ -1026,12 +1028,12 @@
         return;
     
     
-    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]])
+    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage)
         return;
     
 
         
-    TLWebPage *webpage = [Storage findWebpage:[self.inputMessageString webpageLink]];
+    TLWebPage *webpage = !self.messagesViewController.noWebpage ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
    
     if([webpage isKindOfClass:[TL_webPage class]] || [webpage isKindOfClass:[TL_webPagePending class]]) {
         

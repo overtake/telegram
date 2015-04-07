@@ -21,6 +21,11 @@
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
+        if([[Telegram rightViewController].messagesViewController noWebpage])
+        {
+            self.message.media = [TL_messageMediaEmpty create];
+        }
+        
         [self.message save:YES];
         
     }
@@ -37,7 +42,12 @@
     id request;
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMessage createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId]];
+        
+        int flags = self.message.reply_to_msg_id != 0 ? 1 : 0;
+        
+        flags|=([Telegram rightViewController].messagesViewController.noWebpage ? 2 : 0);
+        
+        request = [TLAPI_messages_sendMessage createWithFlags:flags peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId]];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;
