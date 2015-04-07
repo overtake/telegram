@@ -12,7 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TMHyperlinkTextField *nameTextField;
-@property (nonatomic,strong) TMTextField *messageField;
+@property (nonatomic,strong) TGCTextView *messageField;
 @property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
 @property (nonatomic,strong) NSImageView *locationImageView;
@@ -44,15 +44,11 @@
         
        // [self addSubview:self.dateField];
         
-        self.messageField = [TMTextField defaultTextField];
+        self.messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
-        [self.messageField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
-        [self.messageField setTextColor:NSColorFromRGB(0x060606)];
         
         [self.messageField setFrameOrigin:NSMakePoint(15, 0)];
         
-        [[self.messageField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [[self.messageField cell] setTruncatesLastVisibleLine:YES];
         
         [self addSubview:self.messageField];
         
@@ -132,12 +128,12 @@
     
     [self.messageField setAutoresizingMask:NSViewWidthSizable];
     
-    [self.messageField setAttributedStringValue:_replyObject.replyText];
+    [self.messageField setAttributedString:_replyObject.replyText];
     
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset, 0)];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 19)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 12)];
     
     
     if(_deleteHandler != nil)
@@ -169,7 +165,7 @@
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
         
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 19)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 15)];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {

@@ -94,7 +94,7 @@
 
 
 #ifdef TGDEBUG
-#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch"] indexOfObject:[UsersManager currentUser].username] != NSNotFound) 
+#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch"@"MarcoK"] indexOfObject:[UsersManager currentUser].username] != NSNotFound) 
 #else 
 #define ACCEPT_FEATURE
 #endif

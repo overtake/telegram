@@ -153,7 +153,7 @@
             
             if(!message.n_out) {
                 userLast = [[UsersManager sharedManager] find:message.from_id];
-                chatUserNameString = [userLast ? userLast.dialogFullName : @"" stringByAppendingString:@"\n"];
+                chatUserNameString = [userLast ? userLast.fullName : @"" stringByAppendingString:@"\n"];
             } else {
                 chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
             }
@@ -411,6 +411,10 @@
         
         if(message.action != nil) {
             return [self serviceMessage:message forAction:message.action];
+        }
+        
+        if([message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+            return message.message;
         }
         
         return NSLocalizedString(@"ChatMedia.Unsupported", nil);

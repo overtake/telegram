@@ -56,6 +56,24 @@
         [self addSubview:_titleField];
         [self addSubview:_stateField];
         
+        
+        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
+        
+        _deleteImageView.image = image_CancelReply();
+        
+        weak();
+        
+        [_deleteImageView setCallback:^{
+            
+            
+            
+        }];
+        
+        [_deleteImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+        
+        [self addSubview:_deleteImageView];
+
+        
         [self updateLayout];
         
         if([_webpage isKindOfClass:[TL_webPagePending class]]) {
@@ -107,6 +125,9 @@
     
     [_stateField sizeToFit];
     [_titleField sizeToFit];
+    
+    [_stateField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_stateField.frame), NSHeight(_stateField.frame))];
+    [_titleField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_titleField.frame), NSHeight(_titleField.frame))];
 }
 
 -(void)dealloc {

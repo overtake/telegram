@@ -153,8 +153,6 @@
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
-    
-    [self updateWebpage:NO];
 
 }
 
@@ -764,7 +762,7 @@
     
     [self.messagesViewController saveInputText];
     
-    
+        
     if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
         
         
@@ -1030,6 +1028,8 @@
     
     if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]])
         return;
+    
+
         
     TLWebPage *webpage = [Storage findWebpage:[self.inputMessageString webpageLink]];
    
@@ -1266,6 +1266,9 @@
     
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
+    
+    [self updateWebpage:NO];
+
     
     [self.inputMessageTextField textDidChange:nil];
 

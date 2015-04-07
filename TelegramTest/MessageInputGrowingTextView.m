@@ -261,6 +261,7 @@ typedef enum {
 
 -(void)textDidChange:(NSNotification *)notification {
     [super textDidChange:notification];
+    
     [self checkWebpages];
 }
 

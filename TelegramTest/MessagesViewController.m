@@ -2945,6 +2945,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     if((!localWebpage || ![localWebpage isKindOfClass:[TL_webPageEmpty class]]) && link && ![localWebpage isKindOfClass:[TL_webPage class]]) {
         
+        [_webPageRequest cancelRequest];
+        
         _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
             
             [Storage addWebpage:response.webpage forLink:link];
