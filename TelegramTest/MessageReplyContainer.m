@@ -130,8 +130,7 @@
     
 
     
-    
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), 15)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
 
     
     [self.messageField setAttributedString:_replyObject.replyText];
@@ -170,9 +169,9 @@
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
     
-    int width = NSWidth(self.frame) - NSMinX(self.messageField.frame);
-            
-    [self.messageField setFrameSize:NSMakeSize(width, 15)];
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
+    
+    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(frame) - 13)];
 }
 
 -(void)setBackgroundColor:(NSColor *)backgroundColor {

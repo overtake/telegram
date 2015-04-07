@@ -146,6 +146,10 @@
         
         _replyText = replyText;
         
+        _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;
+        
+        _containerHeight = 15 + _replyHeight;
+        
     }
     
     return self;

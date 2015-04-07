@@ -988,7 +988,12 @@
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
-        _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
+        
+        
+        _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
+        
+        [_replyContainer setReplyObject:replyObject];
         
         [_replyContainer setBackgroundColor:NSColorFromRGB(0xfafafa)];
         
@@ -1002,9 +1007,7 @@
             
         }];
         
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
         
-        [_replyContainer setReplyObject:replyObject];
         
         [self.normalView addSubview:_replyContainer];
         
@@ -1161,7 +1164,7 @@
 
     
     if(self.replyContainer != nil) {
-        height+= 35;
+        height+= self.replyContainer.replyObject.containerHeight + 5;
     }
     
     if(self.fwdContainer != nil) {

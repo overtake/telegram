@@ -173,7 +173,7 @@
         }
         
         if([self isReplyMessage]) {
-            viewSize.height +=40;
+            viewSize.height +=self.replyObject.containerHeight+10;
         }
         
         if(self.isForwadedMessage && self.isHeaderForwardedMessage)
