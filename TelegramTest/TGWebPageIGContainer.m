@@ -47,7 +47,7 @@
         
         [self.imageView addSubview:_playVideo];
         
-        [_playVideo setCenterByView:self.imageView];
+        [_playVideo setFrameOrigin:NSMakePoint(NSWidth(self.imageView.frame) - NSWidth(_playVideo.frame) - 15, NSHeight(self.imageView.frame) - NSHeight(_playVideo.frame) - 15)];
     }
     
     [self.descriptionField setAttributedString:webpage.desc];
