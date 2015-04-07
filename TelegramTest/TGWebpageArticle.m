@@ -7,13 +7,14 @@
 //
 
 #import "TGWebpageArticle.h"
-
+#import "TGArticleImageObject.h"
 @implementation TGWebpageArticle
 
 @synthesize size = _size;
 @synthesize desc = _desc;
 @synthesize imageSize = _imageSize;
 @synthesize author = _author;
+@synthesize imageObject = _imageObject;
 
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
@@ -43,7 +44,14 @@
             _desc = [super desc];
         }
         
-        
+        if([webpage.photo isKindOfClass:[TL_photo class]]) {
+            
+            TLPhotoSize *size = [webpage.photo.sizes lastObject];
+            
+            _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:[super imageObject].size];
+            
+            _imageObject.imageSize = strongsize(NSMakeSize(size.w, size.h), 60);
+        }
         
     }
     

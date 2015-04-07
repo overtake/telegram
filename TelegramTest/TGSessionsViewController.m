@@ -100,10 +100,12 @@
         
         [self.authorizations removeAllObjects];
         
-        self.current = response.authorizations[0];
+        self.current = [response.authorizations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_hash == 0"]][0];
+        
+        [response.authorizations removeObject:self.current];
         
         
-        [response.authorizations enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, response.authorizations.count - 1)] options:0 usingBlock:^(TL_authorization *obj, NSUInteger idx, BOOL *stop) {
+        [response.authorizations enumerateObjectsUsingBlock:^(TL_authorization *obj, NSUInteger idx, BOOL *stop) {
             
             
             

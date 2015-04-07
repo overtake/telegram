@@ -566,6 +566,7 @@
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
+		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -1916,6 +1917,8 @@
 		C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageArticleContainer.m; sourceTree = "<group>"; };
 		C2DE4FAF1AD2E5D6001EC26C /* TGWebpageAttach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageAttach.h; sourceTree = "<group>"; };
 		C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageAttach.m; sourceTree = "<group>"; };
+		C2DE4FB31AD43ED0001EC26C /* TGArticleImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGArticleImageObject.h; sourceTree = "<group>"; };
+		C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGArticleImageObject.m; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = System/Library/Frameworks/PreferencePanes.framework; sourceTree = SDKROOT; };
 		C2E40E2D19D58E430079046E /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -3757,6 +3760,7 @@
 		C274C3F61ACBF714000DFDE4 /* webpgs */ = {
 			isa = PBXGroup;
 			children = (
+				C2DE4FB21AD43EBC001EC26C /* h */,
 				C274C4071ACC0133000DFDE4 /* objects */,
 				C274C4061ACC0125000DFDE4 /* views */,
 			);
@@ -4246,6 +4250,15 @@
 				C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */,
 			);
 			name = password;
+			sourceTree = "<group>";
+		};
+		C2DE4FB21AD43EBC001EC26C /* h */ = {
+			isa = PBXGroup;
+			children = (
+				C2DE4FB31AD43ED0001EC26C /* TGArticleImageObject.h */,
+				C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */,
+			);
+			name = h;
 			sourceTree = "<group>";
 		};
 		C2FA78D819237996001A9D1B /* filter */ = {
@@ -5626,6 +5639,7 @@
 				C2C3A8911A2C7D57008C4C4A /* TLApi.m in Sources */,
 				0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */,
 				C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */,
+				C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */,
 				C2200B7A18F5557600F28803 /* TL_outDocument.m in Sources */,
 				0A59067B18AA32C8002ED7BA /* BTRImage.m in Sources */,
 				C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */,
