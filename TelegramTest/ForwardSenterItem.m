@@ -108,11 +108,14 @@
             
         }];
         
+        int k = (int) messages.count;
         
-        for(int i = (int) messages.count - 1; i <=0; i--) {
+        for(int i = 0; i < self.fakes.count; i++) {
+            
+            --k;
             
             TL_localMessage *fake = self.fakes[i];
-            TL_localMessage *stated = messages[i];
+            TL_localMessage *stated = messages[k];
             
             fake.date = stated.date;
             fake.n_id = stated.n_id;
@@ -122,7 +125,7 @@
                 [[Storage manager] insertMedia:fake];
             }
             
-            [fake save:i == 0];
+            [fake save:i == messages.count - 1];
         }
         
         self.state = MessageSendingStateSent;

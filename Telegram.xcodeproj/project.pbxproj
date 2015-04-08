@@ -456,10 +456,6 @@
 		C274C4221ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C41C1ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m */; };
 		C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C274C4231ACC0D4D000DFDE4 /* JavaScriptCore.framework */; };
 		C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C274C42D1ACC5B3A000DFDE4 /* AVKit.framework */; };
-		C274C4301ACD3656000DFDE4 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C274C4311ACD3656000DFDE4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C274C4361ACD365C000DFDE4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C274C4371ACD365C000DFDE4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C274C4401ACD8223000DFDE4 /* TGWebpageIGObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C43F1ACD8223000DFDE4 /* TGWebpageIGObject.m */; };
 		C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C4461ACD99E7000DFDE4 /* TGWebpageTWObject.m */; };
 		C274C44A1ACD9FF5000DFDE4 /* TGWebpageStandartObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */; };
@@ -567,6 +563,10 @@
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
+		C2DE4FB61AD4B354001EC26C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2DE4FB71AD4B354001EC26C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2DE4FB81AD4B35A001EC26C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2DE4FB91AD4B35A001EC26C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -744,8 +744,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C274C4301ACD3656000DFDE4 /* Sparkle.framework in Copy Files (6 items) */,
-				C274C4311ACD3656000DFDE4 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2DE4FB61AD4B354001EC26C /* Sparkle.framework in Copy Files (6 items) */,
+				C2DE4FB71AD4B354001EC26C /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2207,8 +2207,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C274C4361ACD365C000DFDE4 /* Sparkle.framework in Frameworks */,
-				C274C4371ACD365C000DFDE4 /* HockeySDK.framework in Frameworks */,
+				C2DE4FB81AD4B35A001EC26C /* Sparkle.framework in Frameworks */,
+				C2DE4FB91AD4B35A001EC26C /* HockeySDK.framework in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
 				C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */,

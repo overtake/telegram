@@ -83,10 +83,16 @@
     
     
     
+    BOOL accept = YES;
+    
+#ifdef TGDEBUG
+    
+  //  accept = ACCEPT_FEATURE;
+    
+#endif
     
     
-    
-    if(ACCEPT_FEATURE) {
+    if(accept) {
         
         GeneralSettingsRowItem *terminateSessions = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
             

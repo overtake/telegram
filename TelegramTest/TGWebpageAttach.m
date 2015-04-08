@@ -118,7 +118,7 @@
 }
 
 -(void)updateLayout {
-    [_titleField setStringValue:[_webpage isKindOfClass:[TL_webPagePending class]] ? NSLocalizedString(@"Webpage.GettingLinkInfo", nil) : _webpage.site_name];
+    [_titleField setStringValue:[_webpage isKindOfClass:[TL_webPagePending class]] ? NSLocalizedString(@"Webpage.GettingLinkInfo", nil) : (_webpage.site_name ? _webpage.site_name : @"Link Preview")];
     
     NSString *desc = _link;
     

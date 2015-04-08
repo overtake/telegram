@@ -1027,8 +1027,12 @@
 
 -(void)updateWebpage:(BOOL)animated {
     
-    if(!ACCEPT_FEATURE)
-        return;
+#ifdef TGDEBUG
+    
+  //  if(!ACCEPT_FEATURE)
+    //    return;
+    
+#endif
     
     
     if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage)
