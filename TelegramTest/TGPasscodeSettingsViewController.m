@@ -121,6 +121,7 @@
                     
                     [self rebuildController];
                     
+                    [TMViewController hidePasslock];
                    
                 }
                 

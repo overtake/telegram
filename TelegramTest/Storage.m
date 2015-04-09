@@ -149,9 +149,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
     }];
     
-    if(!res) {
-        int bp = 0;
-    }
     
     NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
     
