@@ -36,8 +36,8 @@ extern NSString *const FILE_NAMES;
 -(void)drop:(void (^)())completeHandler;
 
 
-+(void)setKey:(NSString *)key;
-+(void)rekey:(NSString *)rekey;
++(void)dbSetKey:(NSString *)key;
++(void)dbRekey:(NSString *)rekey;
 
 +(Storage *)manager;
 +(YapDatabaseConnection *)yap;

@@ -18,6 +18,7 @@
 #import "FMDatabaseAdditions.h"
 #import "TGHashContact.h"
 #import "NSString+FindURLs.h"
+#import "NSData+Extensions.h"
 @implementation Storage
 
 
@@ -70,21 +71,25 @@ NSString *const FILE_NAMES = @"file_names";
     return path;
 }
 
-static NSString *encryptionKey = @"DefaultPassKey";
 
-+(void)setKey:(NSString *)key {
-    encryptionKey = key ?: @"DefaultPassKey";
+static NSString *encryptionKey = @"";
+
+
++(void)dbSetKey:(NSString *)key {
+    
+    [Storage manager];
+    
+    encryptionKey = key;
 }
 
-+(void)rekey:(NSString *)rekey {
++(void)dbRekey:(NSString *)rekey {
     
-    encryptionKey = rekey ?: @"DefaultPassKey";
-    
-    [[Storage manager] rekey:encryptionKey];
+    [[Storage manager] dbRekey:encryptionKey];
     
 }
 
--(void)rekey:(NSString *)rekey {
+-(void)dbRekey:(NSString *)rekey {
+    
     [queue inDatabase:^(FMDatabase *db) {
         
         [db rekey:rekey];
@@ -144,7 +149,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
     }];
     
-    
+    if(!res) {
+        int bp = 0;
+    }
     
     NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
     
@@ -315,6 +322,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [self->queue inDatabase:^(FMDatabase *db) {
         [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
         [[NSFileManager defaultManager] removeItemAtPath:[Storage path] error:nil];
+        encryptionKey = @"";
         [self open:completeHandler];
     }];
     

@@ -57,7 +57,7 @@
                 if(res) {
                     [[MTNetwork instance] updatePasscode:[[NSData alloc] initWithEmptyBytes:32]];
                     
-                    [Storage rekey:nil];
+                //    [Storage rekey:nil];
                     
                     [self rebuildController];
                     
@@ -75,7 +75,7 @@
                 
                 [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                 
-                [Storage rekey:md5Hash];
+            //    [Storage rekey:md5Hash];
                 
                 [TMViewController hidePasslock];
                 
@@ -115,7 +115,7 @@
                 
                 if(result) {
                     
-                    [Storage rekey:md5Hash];
+                 //   [Storage rekey:md5Hash];
                     
                     [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                     

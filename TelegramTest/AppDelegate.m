@@ -772,19 +772,38 @@ void exceptionHandler(NSException * exception)
         
          [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
-            
-            block();
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-            [TMViewController hideModalProgress];
-            
-             confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
-                [self logoutWithForce:YES];
-            },nil);
-            
-        } timeout:5];
+        
+        dispatch_block_t clearCache = ^ {
+            [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
+                
+                block();
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                [TMViewController hideModalProgress];
+                
+                confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
+                    [self logoutWithForce:YES];
+                },nil);
+                
+            } timeout:5];
+        };
+        
+        
+        [ASQueue dispatchOnStageQueue:^{
+             
+            [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];
+             
+            [[NSFileManager defaultManager] createDirectoryAtPath:path()
+                                       withIntermediateDirectories:YES
+                                                        attributes:nil
+                                                             error:nil];
+             
+            clearCache();
+             
+        }];
+        
+        
     } else {
         block();
     }

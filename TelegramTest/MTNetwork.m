@@ -125,9 +125,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
                         } synchronous:YES];
                         
                         if(acceptHash) {
-                            
-                            [Storage setKey:md5Hash];
-                            
+                                                        
                             [_queue dispatchOnQueue:^{
                                 
                                 [self startWithKeychain:_keychain];
@@ -389,10 +387,12 @@ static int MAX_WORKER_POLL = 5;
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     
-    NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+    NSString * mtkeychain = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
     
-    [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
     
+    
+    [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
     
     [self.updateService drop];
     [self setDatacenter:1];

@@ -248,6 +248,18 @@ static NSMutableDictionary *keychains()
     
     [self loadIfNeeded];
     
+    if(!_isNeedPasscode) {
+        
+        NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
+        
+       [Storage dbSetKey:pass];
+        
+        if(save) {
+            [Storage dbRekey:pass];
+        }
+    }
+    
+    
     
     return !_isNeedPasscode;
     

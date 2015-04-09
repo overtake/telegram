@@ -1973,6 +1973,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TL_localMessage unserialize:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke122:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -2018,6 +2021,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGImageObject cacheKey]:TGImageObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[Storage open:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "encryptionKey">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__43-[TMCircularProgress setProgress:animated:]_block_invoke:TMCircularProgress.m">
@@ -2208,6 +2219,9 @@
                value = "self.lastMessage">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_initConnection getData]:TLAPIAdd.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPVContainer initWithFrame:]:TGPVContainer.m">
