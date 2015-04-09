@@ -50,7 +50,7 @@
             
             
             [title appendString:webpage.title withColor:[NSColor blackColor]];
-            [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:title.range];
+            [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
             
             _title = title;
         }
