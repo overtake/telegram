@@ -149,7 +149,7 @@ static NSImage *higlightedImage() {
         [self.userEmoji insertObject:emoji atIndex:0];
     }
     
-    [[Storage manager] saveEmoji:self.userEmoji];
+    [Storage saveEmoji:self.userEmoji];
     
     if(self.currentButton.index == 1) {
         [self bottomButtonClick:self.currentButton];
@@ -171,7 +171,7 @@ static NSImage *higlightedImage() {
         
         
         
-        self.userEmoji = [[Storage manager] emoji];
+        self.userEmoji = [Storage emoji];
         
         NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕" componentsSeparatedByString:@" "] mutableCopy];
         

@@ -35,6 +35,10 @@ extern NSString *const FILE_NAMES;
 
 -(void)drop:(void (^)())completeHandler;
 
+
++(void)setKey:(NSString *)key;
++(void)rekey:(NSString *)rekey;
+
 +(Storage *)manager;
 +(YapDatabaseConnection *)yap;
 
@@ -63,12 +67,12 @@ extern NSString *const FILE_NAMES;
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 
 
-- (NSMutableDictionary *)inputTextForPeers;
-- (void)saveInputTextForPeers:(NSMutableDictionary *)dictionary;
++ (NSMutableDictionary *)inputTextForPeers;
++ (void)saveInputTextForPeers:(NSMutableDictionary *)dictionary;
 
 
-- (NSMutableArray *)emoji;
-- (void)saveEmoji:(NSMutableArray *)emoji;
++ (NSMutableArray *)emoji;
++ (void)saveEmoji:(NSMutableArray *)emoji;
 
 
 - (void)updateDialog:(TL_conversation *)dialog;

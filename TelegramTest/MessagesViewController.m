@@ -252,7 +252,7 @@
     self.typingReservation = [[NSMutableDictionary alloc] init];
     
     self.locked = NO;
-    self.cacheTextForPeer = [[Storage manager] inputTextForPeers];
+    self.cacheTextForPeer = [Storage inputTextForPeers];
     
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
@@ -1823,7 +1823,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     
     [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:_conversation.cacheKey];
-    [[Storage manager] saveInputTextForPeers:self.cacheTextForPeer];
+    [Storage saveInputTextForPeers:self.cacheTextForPeer];
     
     
     if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)

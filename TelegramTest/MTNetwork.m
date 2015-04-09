@@ -125,8 +125,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
                         } synchronous:YES];
                         
                         if(acceptHash) {
+                            
+                            [Storage setKey:md5Hash];
+                            
                             [_queue dispatchOnQueue:^{
-                                
                                 
                                 [self startWithKeychain:_keychain];
                                 [self initConnectionWithId:_masterDatacenter];

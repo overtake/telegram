@@ -70,17 +70,38 @@ NSString *const FILE_NAMES = @"file_names";
     return path;
 }
 
+static NSString *encryptionKey = @"DefaultPassKey";
+
++(void)setKey:(NSString *)key {
+    encryptionKey = key ?: @"DefaultPassKey";
+}
+
++(void)rekey:(NSString *)rekey {
+    
+    encryptionKey = rekey ?: @"DefaultPassKey";
+    
+    [[Storage manager] rekey:encryptionKey];
+    
+}
+
+-(void)rekey:(NSString *)rekey {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db rekey:rekey];
+        
+    }];
+}
 
 static NSString *kEmoji = @"kEmoji";
 
 
-- (NSMutableArray *)emoji {
++ (NSMutableArray *)emoji {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSArray *array = [defaults objectForKey:kEmoji];
     return array ? [NSMutableArray arrayWithArray:array] : [NSMutableArray array];
 }
 
-- (void)saveEmoji:(NSMutableArray *)emoji {
++ (void)saveEmoji:(NSMutableArray *)emoji {
     if(!emoji)
         return;
     
@@ -91,13 +112,13 @@ static NSString *kEmoji = @"kEmoji";
 
 static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
-- (NSMutableDictionary *)inputTextForPeers {
++ (NSMutableDictionary *)inputTextForPeers {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *dictionary = [defaults objectForKey:kInputTextForPeers];
     return dictionary ? [NSMutableDictionary dictionaryWithDictionary:dictionary] : [NSMutableDictionary dictionary];
 }
 
-- (void)saveInputTextForPeers:(NSMutableDictionary *)dictionary {
++ (void)saveInputTextForPeers:(NSMutableDictionary *)dictionary {
     if(!dictionary)
         return;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -105,12 +126,24 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [defaults synchronize];
 }
 
+
+
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t130"; // 61
+    NSString *dbName = @"t137.sqlite"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
+    
+    __block BOOL res = NO;
+    
+    
+     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        res = [db setKey:encryptionKey];
+        
+    }];
+    
     
     
     NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
@@ -228,9 +261,55 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
     }];
+    
+    
+   
 }
 
-
+//
+//-(void) createAndCheckDatabase
+//{
+//    BOOL success;
+//    
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    
+//    NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],@"encrypted.sqlite"];
+//    
+//    success = [fileManager fileExistsAtPath:dbPath];
+//    
+//    if (success) return;
+//
+//    NSString *databasePathFromApp = dbPath;
+//    
+//    [fileManager copyItemAtPath:databasePathFromApp toPath:dbPath error:nil]; // Make a copy of the file in the Documents folder
+//    
+//    // Set the new encrypted database path to be in the Documents Folder
+//    NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+//    
+//    // SQL Query. NOTE THAT DATABASE IS THE FULL PATH NOT ONLY THE NAME
+//    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
+//    
+//    sqlite3 *unencrypted_DB;
+//    if (sqlite3_open([dbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
+//        
+//        // Attach empty encrypted database to unencrypted database
+//        sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
+//        
+//        // export database
+//        sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
+//        
+//        // Detach encrypted database
+//        sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
+//        
+//        sqlite3_close(unencrypted_DB);
+//    }
+//    else {
+//        sqlite3_close(unencrypted_DB);
+//        NSAssert1(NO, @"Failed to open database with message '%s'.", sqlite3_errmsg(unencrypted_DB));
+//    }
+//    
+//}
+//
 
 -(void)drop:(void (^)())completeHandler {
     [self->queue inDatabase:^(FMDatabase *db) {
@@ -284,6 +363,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             while ([results next]) {
                 TLMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
                 msg.flags = -1;
+                msg.message = [results stringForColumn:@"message_text"];
                 msg.flags = [results intForColumn:@"flags"];
                 [messages addObject:msg];
             }
@@ -346,15 +426,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         NSString *tableName = @"messages";
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
         
         
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TLMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
+            msg.message = [result stringForColumn:@"message_text"];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -400,7 +481,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         
         
@@ -410,6 +491,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         while ([result next]) {
             TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
+            msg.message = [result stringForColumn:@"message_text"];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -426,13 +508,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             int localCount = [db intForQuery:@"SELECT count(*) from messages where date = ? and peer_id = ?",@(lastMessage.date),@(lastMessage.peer_id)];
             if(selectedCount.count < localCount) {
                 
-                NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where date = %d and n_id != %d and peer_id = %d order by n_id desc",lastMessage.date,lastMessage.n_id,lastMessage.peer_id];
+                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where date = %d and n_id != %d and peer_id = %d order by n_id desc",lastMessage.date,lastMessage.n_id,lastMessage.peer_id];
                 
                  FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
                  while ([result next]) {
                     TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
                      msg.flags = -1;
+                     msg.message = [result stringForColumn:@"message_text"];
                      msg.flags = [result intForColumn:@"flags"];
                      [messages addObject:msg];
                  }
@@ -472,11 +555,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where n_id = %d",msgId];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where n_id = %d",msgId];
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         while ([result next]) {
-            message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             message.flags = -1;
+            message.message = [result stringForColumn:@"message_text"];
             message.flags = [result intForColumn:@"flags"];
         }
         [result close];
@@ -498,13 +582,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from messages where %@ in (%@) order by date DESC",random ? @"randomId" : @"n_id",strIds];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where %@ in (%@) order by date DESC",random ? @"randomId" : @"n_id",strIds];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TLMessage *msg = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
+            msg.message = [result stringForColumn:@"message_text"];
             msg.flags = [result intForColumn:@"flags"];
             [messages addObject:msg];
         }
@@ -553,8 +638,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
             
             if([result next]) {
-                message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
                 message.flags = -1;
+                message.message = [result stringForColumn:@"message_text"];
                 message.flags = [result intForColumn:@"flags"];
             }
             
@@ -743,6 +829,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSArray *msgs = [messages copy];
         for (TL_localMessage *message in msgs) {
             
+            TL_localMessage *m = [message copy];
+            m.message = @"";
+            
             int destruct_time = INT32_MAX;
             if([message isKindOfClass:[TL_destructMessage class]]) {
                 if(((TL_destructMessage *)message).destruction_time != 0)
@@ -761,7 +850,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  @(message.from_id),
                  @(message.flags),
                  @(peer_id),
-                 [TLClassStore serialize:message isCacheSerialize:NO],
+                 [TLClassStore serialize:m],
                  @(destruct_time),
                  message.message,
                  @(mask),
@@ -889,6 +978,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(![serializedMessage isKindOfClass:[NSNull class]]) {
             message = [TLClassStore deserialize:serializedMessage];
             message.flags = -1;
+            message.message = [result stringForColumn:@"message_text"];
             message.flags = [result intForColumn:@"flags"];
             if(message)
                 [messages addObject:message];
@@ -918,7 +1008,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         if(peers.count) {
-            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id where dialogs.peer_id in (%@) ORDER BY dialogs.last_message_date DESC", [peers componentsJoinedByString:@","]]];
+            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id where dialogs.peer_id in (%@) ORDER BY dialogs.last_message_date DESC", [peers componentsJoinedByString:@","]]];
             
             
             [self parseDialogs:result dialogs:dialogs messages:messages];
@@ -943,7 +1033,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         
         
-        FMResultSet *result = [db executeQuery:@"select messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",[NSNumber numberWithInt:limit],[NSNumber numberWithInt:offset]];
+        FMResultSet *result = [db executeQuery:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",[NSNumber numberWithInt:limit],[NSNumber numberWithInt:offset]];
         
         [self parseDialogs:result dialogs:dialogs messages:messages];
         
@@ -1084,6 +1174,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         for (TLUser *user in users) {
             
+            if([user isKindOfClass:[TL_userSelf class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:[TLClassStore serialize:user] forKey:@"selfUser"];
+            }
             
             [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate)];
         }

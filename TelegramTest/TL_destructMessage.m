@@ -63,4 +63,8 @@
     return [EncryptedParams findAndCreate:self.peer_id];
 }
 
+-(id)copy {
+    return [TL_destructMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id date:self.date message:self.message media:self.media destruction_time:self.destruction_time randomId:self.randomId fakeId:self.fakeId ttl_seconds:self.ttl_seconds out_seq_no:self.out_seq_no dstate:self.dstate];
+}
+
 @end

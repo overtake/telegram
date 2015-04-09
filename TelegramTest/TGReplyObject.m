@@ -58,7 +58,9 @@
         
         if([replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]] || [replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             
-            [replyText appendString:replyMessage.message withColor:NSColorFromRGB(0x060606)];
+            NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            
+            [replyText appendString:str withColor:NSColorFromRGB(0x060606)];
             
         } else {
             [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:NSColorFromRGB(0x808080)];
@@ -145,6 +147,7 @@
         [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];
         
         _replyText = replyText;
+        
         
         _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;
         

@@ -82,9 +82,20 @@
 
     
     
+    [MTNetwork instance];
+    
+    if(![TGPasslock isEnabled]) {
+        [self initialize];
+    }
+    
+    
+}
+
+-(void)initialize {
+    
     [[Storage manager] users:^(NSArray *result) {
         
-        [MTNetwork instance];
+        
         
         [[UsersManager sharedManager] addFromDB:result];
         
@@ -95,9 +106,7 @@
                 
                 [ASQueue dispatchOnMainQueue:^{
                     
-                    if(![TGPasslock isEnabled]) {
-                        [self initialize];
-                    }
+                    [self initConversations];
                     
                 }];
             }];
@@ -111,10 +120,6 @@
     
     
     
-}
-
--(void)initialize {
-    [self initConversations];
 
 }
 

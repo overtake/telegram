@@ -398,8 +398,8 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     [SettingsArchiver setAutoDownloadLimitSize:[self downloadSizeForIndex:[sender indexOfSelectedItem]]];
 }
 - (IBAction)clearCache:(id)sender {
-    [[Storage manager] saveEmoji:[NSMutableArray array]];
-    [[Storage manager] saveInputTextForPeers:[NSMutableDictionary dictionary]];
+    [Storage saveEmoji:[NSMutableArray array]];
+    [Storage saveInputTextForPeers:[NSMutableDictionary dictionary]];
     [ImageStorage clearCache];
 }
 - (IBAction)terminateSessions:(id)sender {

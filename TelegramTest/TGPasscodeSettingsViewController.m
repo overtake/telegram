@@ -57,6 +57,7 @@
                 if(res) {
                     [[MTNetwork instance] updatePasscode:[[NSData alloc] initWithEmptyBytes:32]];
                     
+                    [Storage rekey:nil];
                     
                     [self rebuildController];
                     
@@ -73,6 +74,8 @@
             [self showCreatePasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
                 [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
+                
+                [Storage rekey:md5Hash];
                 
                 [TMViewController hidePasslock];
                 
@@ -111,6 +114,9 @@
             [self showChangePasslock:^BOOL(BOOL result, NSString *md5Hash) {
                 
                 if(result) {
+                    
+                    [Storage rekey:md5Hash];
+                    
                     [[MTNetwork instance] updatePasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                     
                     [self rebuildController];

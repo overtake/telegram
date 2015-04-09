@@ -50,8 +50,8 @@
     int y = 60;
     
     self.clearCache = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Settings.ClearCache", nil) tapBlock:^{
-        [[Storage manager] saveEmoji:[NSMutableArray array]];
-        [[Storage manager] saveInputTextForPeers:[NSMutableDictionary dictionary]];
+        [Storage saveEmoji:[NSMutableArray array]];
+        [Storage saveInputTextForPeers:[NSMutableDictionary dictionary]];
         [ImageStorage clearCache];
     }];
     

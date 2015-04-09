@@ -297,10 +297,19 @@
 
 
 + (TLUser *)currentUser {
-    return [[UsersManager sharedManager] userSelf];
+    
+    TLUser *user = [[UsersManager sharedManager] userSelf];
+    
+    if(!user) {
+        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"selfUser"];
+        if(data) {
+            user = [TLClassStore deserialize:data];
+        }
+        
+    }
+    
+    return user;
 }
-
-
 
 
 
