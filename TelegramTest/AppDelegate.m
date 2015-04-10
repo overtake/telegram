@@ -299,7 +299,6 @@ void exceptionHandler(NSException * exception)
     
     
     
-    [SecretChatAccepter instance];
     
     [self initializeUpdater];
     [self initializeKeyDownHandler];

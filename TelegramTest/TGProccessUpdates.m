@@ -79,7 +79,7 @@ static ASQueue *queue;
         
         [self saveUpdateState];
         
-        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date];
+        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:YES];
     }];
 }
 
@@ -245,7 +245,7 @@ static ASQueue *queue;
     [self cancelSequenceTimer];
     [_statefulUpdates removeAllObjects];
    
-    [self updateDifference];
+    [self updateDifference:NO updateConnectionState:NO];
 }
 
 -(void)checkSequence {
@@ -385,7 +385,10 @@ static ASQueue *queue;
         
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
         
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
+         if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
+             [self failSequence];
+             return NO;
+         }
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -406,7 +409,10 @@ static ASQueue *queue;
             message.to_id.user_id = [UsersManager currentUserId];
         }
         
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
+        if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
+            [self failSequence];
+            return NO;
+        }
         
         [MessagesManager addAndUpdateMessage:message];
     }
@@ -504,6 +510,7 @@ static ASQueue *queue;
     }
     
    
+    int bp = 0;
 }
 
 
@@ -880,10 +887,10 @@ static ASQueue *queue;
 }
 
 -(void)updateDifference {
-    [self updateDifference:NO];
+    [self updateDifference:NO updateConnectionState:YES];
 }
 
--(void)updateDifference:(BOOL)force {
+-(void)updateDifference:(BOOL)force updateConnectionState:(BOOL)updateConnectionState  {
     
    if(_holdUpdates || ![[MTNetwork instance] isAuth] ) return;
    
@@ -903,12 +910,12 @@ static ASQueue *queue;
             
             _holdUpdates = NO;
             
-            [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date];
+            [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:updateConnectionState];
             
         } errorHandler:nil];
     } else {
         _holdUpdates = NO;
-        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date];
+        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:updateConnectionState];
     }
 }
 
@@ -916,13 +923,14 @@ static ASQueue *queue;
 
 
 
--(void)uptodate:(int)pts qts:(int)qts date:(int)date {
+-(void)uptodate:(int)pts qts:(int)qts date:(int)date updateConnectionState:(BOOL)updateConnectionState  {
     
     if(_holdUpdates || ![[MTNetwork instance] isAuth] ) return;
     
     _holdUpdates = YES;
     
-    [Telegram setConnectionState:ConnectingStatusTypeUpdating];
+    if(updateConnectionState)
+        [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:pts date:date qts:qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
@@ -992,43 +1000,52 @@ static ASQueue *queue;
         [SharedManager proccessGlobalResponse:updates];
         
         
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response n_messages]];
-        
         for (TLUpdate *update in [updates other_updates]) {
             [self proccessUpdate:update];
         }
         
-        if([response n_messages].count > 0) {
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-            [Notification perform:MESSAGE_LIST_RECEIVE object:[response n_messages]];
-        }
+        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response n_messages] asyncCompletionHandler:^{
+            
+           
+            [queue dispatchOnQueue:^{
+                
+                if([response n_messages].count > 0) {
+                    [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+                    [Notification perform:MESSAGE_LIST_RECEIVE object:[response n_messages]];
+                }
+                
+                
+                _updateState.checkMinimum = NO;
+                _updateState.qts = stateQts;
+                _updateState.pts = statePts;
+                _updateState.date = stateDate;
+                _updateState.seq = stateSeq;
+                _updateState.checkMinimum = YES;
+                
+                [self saveUpdateState];
+                
+                _holdUpdates = NO;
+                
+                if(intstate != nil) {
+                    [self uptodate:statePts qts:stateQts date:stateDate updateConnectionState:updateConnectionState];
+                } else {
+                    [Notification perform:PROTOCOL_UPDATED data:nil];
+                    [Telegram setConnectionState:ConnectingStatusTypeNormal];
+                }
+
+            }];
+            
+        }];
         
-        
-        _updateState.checkMinimum = NO;
-        _updateState.qts = stateQts;
-        _updateState.pts = statePts;
-        _updateState.date = stateDate;
-        _updateState.seq = stateSeq;
-        _updateState.checkMinimum = YES;
-        
-        [self saveUpdateState];
-        
-        _holdUpdates = NO;
-        
-        if(intstate != nil) {
-            [self uptodate:statePts qts:stateQts date:stateDate];
-        } else {
-            [Notification perform:PROTOCOL_UPDATED data:nil];
-            [Telegram setConnectionState:ConnectingStatusTypeNormal];
-        }
+       
        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         _holdUpdates = NO;
         if(error.error_code == 502) {
-            [self uptodate:pts qts:qts date:date];
+            [self uptodate:pts qts:qts date:date updateConnectionState:updateConnectionState];
         } else {
-            [self updateDifference:YES];
+            [self updateDifference:YES updateConnectionState:updateConnectionState];
         }
     } timeout:10 queue:queue.nativeQueue];
 

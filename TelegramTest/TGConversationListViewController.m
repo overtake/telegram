@@ -31,7 +31,7 @@
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
 #import "TGPasslock.h"
-
+#import "SecretChatAccepter.h"
 
 
 
@@ -125,6 +125,8 @@
 
 
 -(void)initConversations {
+    
+    [SecretChatAccepter instance];
 
     
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {

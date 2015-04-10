@@ -563,11 +563,11 @@
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
-		C2DE4FBA1AD59B21001EC26C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2DE4FBB1AD59B21001EC26C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C2DE4FBC1AD59B24001EC26C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2DE4FBD1AD59B25001EC26C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */; };
+		C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -752,8 +752,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C2DE4FBC1AD59B24001EC26C /* Sparkle.framework in Copy Files (6 items) */,
-				C2DE4FBD1AD59B25001EC26C /* HockeySDK.framework in Copy Files (6 items) */,
+				C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */,
+				C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2217,8 +2217,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */,
-				C2DE4FBA1AD59B21001EC26C /* Sparkle.framework in Frameworks */,
-				C2DE4FBB1AD59B21001EC26C /* HockeySDK.framework in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
 				C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */,
@@ -2253,6 +2251,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */,
+				C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
