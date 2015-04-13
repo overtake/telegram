@@ -1270,7 +1270,10 @@ static NSTextAttachment *headerMediaIcon() {
         {
             MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] intValue]];
             
-            hide = CGRectContainsRect([self.table visibleRect], [self.table rectOfRow:[self indexOfObject:item]]);
+            NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
+            
+            hide = CGRectContainsRect([self.table visibleRect], rowRect) || self.table.scrollView.documentOffset.y < rowRect.origin.y;
+            
             
             if(hide) {
                 [_replyMsgsStack removeLastObject];

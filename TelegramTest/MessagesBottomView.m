@@ -737,8 +737,6 @@
     
     [self.messagesViewController sendMessage];
     
-    [self.messagesViewController performForward:self.dialog];
-    
 }
 
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
@@ -1038,9 +1036,14 @@
     if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage)
         return;
     
-
+    
+    
         
     TLWebPage *webpage = !self.messagesViewController.noWebpage ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
+    
+    if(!webpage && !self.webpageAttach)
+        return;
+    
    
     if([webpage isKindOfClass:[TL_webPage class]] || [webpage isKindOfClass:[TL_webPagePending class]]) {
         
@@ -1276,7 +1279,6 @@
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
     
-    [self updateWebpage:NO];
 
     
     [self.inputMessageTextField textDidChange:nil];

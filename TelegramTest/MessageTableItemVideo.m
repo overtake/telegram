@@ -56,8 +56,7 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = strongsize(NSMakeSize(self.message.media.video.thumb.w, self.message.media.video.thumb.h), width - 60);
-    
+     self.blockSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
     
     return YES;
 }
