@@ -2972,13 +2972,18 @@ static NSTextAttachment *headerMediaIcon() {
         
         _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
             
-            [Storage addWebpage:response.webpage forLink:link];
-            
-            if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
+            if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
                 
-                [self updateWebpage];
+                [Storage addWebpage:response.webpage forLink:link];
                 
+                if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
+                    
+                    [self updateWebpage];
+                    
+                }
             }
+            
+            
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             

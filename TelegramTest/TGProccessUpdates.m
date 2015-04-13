@@ -41,7 +41,7 @@ static ASQueue *queue;
 @synthesize holdUpdates = _holdUpdates;
 
 
--(id)init {
+-(id)init { 
     if(self = [super init]) {
         self.holdUpdates = NO;
         _statefulUpdates = [[NSMutableArray alloc] init];

@@ -136,7 +136,7 @@
     [self.messageField setAttributedString:_replyObject.replyText];
     
     
-    [self.messageField setFrameOrigin:NSMakePoint(xOffset, 0)];
+    [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
     
     

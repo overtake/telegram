@@ -54,8 +54,9 @@
     return self;
 }
 
--(void)setFrame:(NSRect)frameRect {
-    [super setFrame:frameRect];
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
     
     float x = roundf((NSWidth(self.frame) - NSWidth(self.changerView.frame) - 100) / 2);
     
@@ -67,7 +68,6 @@
 
 
 @interface PhoneChangeController ()
-@property (nonatomic,strong) TMTextField *centerTextField;
 
 @end
 
@@ -129,5 +129,6 @@
 -(void)sendSmsCode {
     
 }
+
 
 @end
