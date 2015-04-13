@@ -1862,47 +1862,37 @@ static NSTextAttachment *headerMediaIcon() {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
     } else {
         
-        [TMViewController showModalProgress];
+        TL_localMessage *msg = [[Storage manager] messageById:messageId];
         
-        [ASQueue dispatchOnStageQueue:^{
+        
+        if(!msg) {
             
-            TL_localMessage *msg = [[Storage manager] messageById:messageId];
+            [TMViewController showModalProgress];
             
-            if(!msg) {
+            [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
                 
-                [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
-                    
-                    TLMessage *msg = response.messages[0];
-                    
-                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                        [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
-                    }
-                    
-                    [TMViewController hideModalProgress];
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    
-                    [TMViewController hideModalProgress];
-                    
-                } timeout:10];
-
+                TLMessage *msg = response.messages[0];
                 
-            } else {
-                
-                
-                dispatch_after_seconds(0.2, ^{
-                    
-                    [TMViewController hideModalProgress];
-                    
+                if(![msg isKindOfClass:[TL_messageEmpty class]]) {
                     [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
-                });
+                }
                 
-            }
+                [TMViewController hideModalProgress];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                [TMViewController hideModalProgress];
+                
+            } timeout:10];
             
-        }];
+            
+        } else {
+            [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
+        }
+    
         
-        
-        
+    
+    
         
     }
     

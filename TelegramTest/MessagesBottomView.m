@@ -737,6 +737,8 @@
     
     [self.messagesViewController sendMessage];
     
+    [self.messagesViewController performForward:self.dialog];
+    
 }
 
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {

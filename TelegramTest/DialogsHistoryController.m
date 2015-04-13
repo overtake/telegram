@@ -88,7 +88,7 @@
         for (TL_conversation *dialog in [dialogs dialogs]) {
             
             TLMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
-            [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date]];
+            [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date sync_message_id:msg.n_id]];
     
             
             

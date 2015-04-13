@@ -10,7 +10,7 @@
 #import "TLPeer+Extensions.h"
 #import "TGPasslock.h"
 @implementation TL_conversation
-+(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date {
++(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id {
     TL_conversation *dialog = [[TL_conversation alloc] init];
     dialog.peer = peer;
     dialog.top_message = top_message;
@@ -22,7 +22,7 @@
     dialog.last_marked_date = last_marked_date;
     dialog.last_real_message_date = last_message_date;
     dialog.dstate = DeliveryStateNormal;
-    
+    dialog.sync_message_id = sync_message_id;
     dialog.lastMessage = [[MessagesManager sharedManager] find:top_message];
     
     return dialog;
@@ -38,7 +38,7 @@
     [stream writeInt:self.top_message_fake];
     [stream writeInt:self.last_marked_date];
     [stream writeInt:self.last_real_message_date];
-
+    [stream writeInt:self.sync_message_id];
 
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -51,6 +51,7 @@
     self.top_message_fake = [stream readInt];
     self.last_marked_date = [stream readInt];
     self.last_real_message_date = [stream readInt];
+    self.sync_message_id = [stream readInt];
 }
 
 -(void)setLast_message_date:(int)last_message_date {
