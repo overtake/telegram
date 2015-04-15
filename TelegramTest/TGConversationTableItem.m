@@ -26,12 +26,58 @@
         [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"unread_count" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
+        
+        
+        [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:conversation action:@"typing"]];
        
         [self update];
+        
+        [self didChangeTyping:nil];
 
     }
     
     return self;
+}
+
+-(void)didChangeTyping:(NSNotification *)notify {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        NSArray *actions;
+        
+        if(!notify) {
+            actions = [[TGModernTypingManager typingForConversation:_conversation] currentActions];
+        } else {
+            actions = notify.userInfo[@"users"];
+        }
+        
+        if(actions.count > 0) {
+            
+            NSString *string;
+            
+            if(actions.count == 1) {
+                
+                TGActionTyping *action = actions[0];
+                
+                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+                if(user)
+                    string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
+
+            } else {
+                
+                string = [NSString stringWithFormat:NSLocalizedString(@"Typing.PeopleTyping", nil), (int)actions.count];
+            }
+            
+            _typing = string;
+            
+        } else {
+            _typing = nil;
+        }
+        
+        
+        [self performReload];
+    }];
+    
 }
 
 
@@ -39,11 +85,14 @@
         
     [self update];
     
+    [self performReload];
+    
+}
+
+-(void)performReload {
     [ASQueue dispatchOnMainQueue:^{
         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.table indexOfItem:self]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }];
-    
-    
 }
 
 -(void)dealloc {
@@ -52,6 +101,8 @@
     [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
     [_conversation removeObserver:self forKeyPath:@"unread_count" context:NULL];
     [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
+    
+    [Notification removeObserver:self];
 }
 
 -(void)update {

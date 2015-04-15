@@ -274,40 +274,10 @@ static int unreadOffsetRight = 13;
 }
 
 
--(void)didChangeTyping:(NSNotification *)notify {
+-(void)checkMessageState {
     
-    NSArray *actions;
-    
-    if(!notify) {
-        actions = [[TGModernTypingManager typingForConversation:_item.conversation] currentActions];
-    } else {
-        actions = notify.userInfo[@"users"];
-    }
-
-    if(actions.count > 0) {
-        
-        NSString *string;
-        
-        if(actions.count == 1) {
-            
-            TGActionTyping *action = actions[0];
-            
-           // if(_item.conversation.type == DialogTypeChat) {
-                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
-                if(user)
-                    string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
-         //   } else {
-          //      string = NSLocalizedString(@"Typing.Typing", nil);
-         //   }
-            
-        } else {
-            
-            string = [NSString stringWithFormat:NSLocalizedString(@"Typing.PeopleTyping", nil), (int)actions.count];
-            
-        }
-        
-        [self startAnimationWithMainString:string];
-        
+    if(_item.typing) {
+        [self startAnimation];
     } else {
         [_messageField setAttributedStringValue:_item.messageText];
         [_timer invalidate];
@@ -318,7 +288,7 @@ static int unreadOffsetRight = 13;
 }
 
 
--(void)startAnimationWithMainString:(NSString *)string {
+-(void)startAnimation {
     
     [_timer invalidate];
     _timer = nil;
@@ -327,10 +297,9 @@ static int unreadOffsetRight = 13;
         
         _dots = [NSString stringWithFormat:@"%@.",[_dots substringWithRange:NSMakeRange(0, _dots.length >=3 ? 0 : _dots.length)]];
         
-        
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:[NSString stringWithFormat:@"%@%@",string,_dots] withColor:NSColorFromRGB(0x999999)];
+        [attr appendString:[NSString stringWithFormat:@"%@%@",_item.typing,_dots] withColor:NSColorFromRGB(0x999999)];
         [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x999999)];
         [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
         [attr setSelected:self.isSelected];
@@ -345,10 +314,7 @@ static int unreadOffsetRight = 13;
 
 -(void)setItem:(TGConversationTableItem *)item {
     _item = item;
-    
-    [Notification removeObserver:self];
-    
-    [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:item.conversation action:@"typing"]];
+ 
     
     [_photoImageView updateWithConversation:item.conversation];
     
@@ -383,7 +349,7 @@ static int unreadOffsetRight = 13;
     [_nameField updateWithConversation:item.conversation];
     
     
-    [self didChangeTyping:nil];
+    [self checkMessageState];
     
     
     [self.dateField setAttributedStringValue:item.dateText];

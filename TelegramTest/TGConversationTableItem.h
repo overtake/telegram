@@ -25,6 +25,8 @@
 
 @property (nonatomic,assign,readonly) NSSize dateSize;
 
+@property (nonatomic,strong) NSString *typing;
+
 -(id)initWithConversation:(TL_conversation *)conversation;
 
 
