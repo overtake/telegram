@@ -148,6 +148,8 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [dialogTitleAttributedString appendString:fullName withColor:colorByNameOrPhone];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
+    
+    
 
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     [self setDIALOGTITLE:dialogTitleAttributedString];

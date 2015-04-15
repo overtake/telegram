@@ -28,8 +28,6 @@
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString;
 
 
--(void)setFlipped:(BOOL)isFlipped;
-
 @property (nonatomic) NSPoint placeholderPoint;
 
 @property (nonatomic,assign) NSSize textOffset;

@@ -82,4 +82,6 @@
 - (void) redrawAll;
 - (NSUInteger) count;
 
+- (BOOL) setSelectedObject:(NSObject *)item ;
+
 @end

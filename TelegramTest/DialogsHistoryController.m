@@ -76,6 +76,7 @@
 
 -(void)loadremote:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback  {
     DLog(@"load remote!!! offset %d", offset);
+    
     [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:offset max_id:0 limit:limit]successHandler:^(RPCRequest *request, id response) {
         
         TL_messages_dialogs *dialogs = response;
@@ -85,10 +86,12 @@
         
         
         NSMutableArray *converted = [[NSMutableArray alloc] init];
-        for (TL_conversation *dialog in [dialogs dialogs]) {
+        for (TL_dialog *dialog in [dialogs dialogs]) {
             
             TLMessage *msg = [[MessagesManager sharedManager] find:dialog.top_message];
-            [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date sync_message_id:msg.n_id]];
+            
+            if(![[DialogsManager sharedManager] find:dialog.peer.peer_id])
+                [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date sync_message_id:msg.n_id]];
     
             
             

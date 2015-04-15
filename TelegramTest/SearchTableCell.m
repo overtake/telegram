@@ -9,7 +9,7 @@
 #import "SearchTableCell.h"
 #import "SearchItem.h"
 #import "TMAvatarImageView.h"
-
+#import "TGConversationListViewController.h"
 @interface SearchTableCell()
 @property (nonatomic, strong) TMNameTextField *titleTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;

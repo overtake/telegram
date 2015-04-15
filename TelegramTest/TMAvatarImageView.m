@@ -39,6 +39,16 @@ static const TGTwoColors colors[] = {
     { .top = 0xffaf51, .bottom = 0xffaf51 },
 };
 
+//static const TGTwoColors colors[] = {
+//    { .top = 0xfc7791, .bottom = 0xff8059 },
+//    { .top = 0xff9e59, .bottom = 0xffbf40 },
+//    { .top = 0x52b8b5, .bottom = 0x65d795 },
+//    { .top = 0x62b0f5, .bottom = 0x66dfe3 },
+//    { .top = 0x7a8ff5, .bottom = 0x85bff2 },
+//    { .top = 0x9a8ec4, .bottom = 0xc994d9 },
+//};
+
+
 @interface TMAvatarImageView()<TGImageObjectDelegate>
 @property (nonatomic, strong) DownloadPhotoItem *downloadItem;
 @property (nonatomic, strong) DownloadEventListener *downloadListener;
@@ -282,6 +292,25 @@ static const TGTwoColors colors[] = {
     [self rebuild:NO];
 }
 
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    
+    switch (conversation.type) {
+        case DialogTypeBroadcast:
+            [self setBroadcast:conversation.broadcast];
+            break;
+        case DialogTypeChat:
+            [self setChat:conversation.chat];
+            break;
+        case DialogTypeSecretChat: case DialogTypeUser:
+            [self setUser:conversation.user];
+            break;
+        default:
+            break;
+    }
+    
+}
+
 - (void) setText:(NSString *)text {
     if([self.text isEqualToString:text])
         return;
@@ -437,6 +466,7 @@ static CAAnimation *ani2() {
     
     int uid = [[object valueForKey:@"n_id"] intValue];
     
+    
     __block int colorMask = 0;
     
     
@@ -451,11 +481,15 @@ static CAAnimation *ani2() {
     if(cacheColorIds[@(uid)]) {
         colorMask = [cacheColorIds[@(uid)] intValue];
     } else {
-        const int numColors = 8;
+        const int numColors = [object isKindOfClass:[TLUser class]] ? 8 : 4;
         
         if(uid != -1) {
             char buf[16];
-            snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
+            
+            if(![object isKindOfClass:[TLUser class]])
+                snprintf(buf, 16, "%d", -uid);
+             else
+                snprintf(buf, 16, "%d%d", uid, [UsersManager currentUserId]);
             unsigned char digest[CC_MD5_DIGEST_LENGTH];
             CC_MD5(buf, (unsigned) strlen(buf), digest);
             colorMask = ABS(digest[ABS(uid % 16)]) % numColors;
@@ -470,6 +504,13 @@ static CAAnimation *ani2() {
     
 
 }
+
+
+//char buf[16];
+//snprintf(buf, 16, "%lld", groupId);
+//unsigned char digest[CC_MD5_DIGEST_LENGTH];
+//CC_MD5(buf, strlen(buf), digest);
+//colorIndex = ABS(digest[ABS(groupId % 16)]) % numColors;
 
 + (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font offsetY:(int)offset {
     

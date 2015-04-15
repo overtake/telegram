@@ -66,8 +66,6 @@
             
             for (TL_conversation *dialog in updateDialogs.allValues) {
                 [dialog save];
-                [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
             }
             
             manager.unread_count-=total;
@@ -173,9 +171,6 @@
             [dialog save];
             
             
-            
-            [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             
             NSUInteger position = [self positionForConversation:dialog];
             
@@ -287,7 +282,6 @@
         
         [dialog save];
         
-        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         [[Storage manager] deleteMessagesInDialog:dialog completeHandler:block];
         
     };
@@ -381,10 +375,7 @@
             
             NSUInteger position = [self positionForConversation:dialog];
             
-           
-            
-            [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+           [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
         }
 
 
@@ -395,7 +386,6 @@
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
      NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog];
     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
-    [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
 }
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id {
@@ -484,9 +474,6 @@
         for (TL_conversation *dialog in last.allValues) {
             [dialog save];
             
-            if(checkSort) {
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
-            }
         }
         
        // if(!checkSort) {

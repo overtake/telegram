@@ -741,9 +741,7 @@ static ASQueue *queue;
                 }
                
                 [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
-                
-                [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
-                
+                                
             }
             
             if([chat isKindOfClass:[TL_encryptedChatDiscarded class]]) {
@@ -757,9 +755,7 @@ static ASQueue *queue;
                 EncryptedParams *params = [EncryptedParams findAndCreate:[chat n_id]];
                 [params setState:EncryptedDiscarted];
                 [params save];
-                
-                [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:nil];
-                
+                                
                 
                 [SecretChatAccepter removeChatId:chat.n_id];
                 

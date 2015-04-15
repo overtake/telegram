@@ -10,6 +10,14 @@
 #import "TL_broadcast.h"
 
 
+@protocol TLConversationDelegate <NSObject>
+
+@required
+-(void)willChangeValue;
+-(void)didChangeValue;
+
+@end
+
 @class TL_localMessage;
 
 @interface TL_conversation : TLDialog

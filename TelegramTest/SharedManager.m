@@ -128,6 +128,17 @@ static NSMutableArray *managers;
     
 }
 
+-(id)lastItem {
+    __block id object;
+    
+    [_queue dispatchOnQueue:^{
+        object = [self->list lastObject];
+    } synchronous:YES];
+    
+    
+    return object;
+}
+
 -(NSArray*)all {
     __block NSArray *object;
     

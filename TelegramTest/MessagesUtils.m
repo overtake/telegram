@@ -250,6 +250,8 @@
         [paragraph setLineSpacing:0];
         [paragraph setMinimumLineHeight:5];
         [paragraph setMaximumLineHeight:16];
+      //  [paragraph ]
+        
     });
     
     [messageText setAlignment:NSLeftTextAlignment range:NSMakeRange(0, messageText.length)];

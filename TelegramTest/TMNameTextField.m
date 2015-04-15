@@ -142,6 +142,27 @@
     
 }
 
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    
+    switch (conversation.type) {
+        case DialogTypeBroadcast:
+            [self setBroadcast:conversation.broadcast];
+            break;
+        case DialogTypeChat:
+            [self setChat:conversation.chat];
+            break;
+        case DialogTypeSecretChat:
+            [self setUser:conversation.user isEncrypted:YES];
+            break;
+        case DialogTypeUser:
+            [self setUser:conversation.user];
+        default:
+            break;
+    }
+    
+}
+
 - (void)setAttributedStringValue:(NSMutableAttributedString *)obj {
     
     
@@ -158,7 +179,16 @@
         [NSMutableAttributedString selectText:self.selectText fromAttributedString:obj selectionColor:BLUE_UI_COLOR];
     }
     
-    [super setAttributedStringValue:obj];
+    NSMutableAttributedString *copy = obj;
+    
+    if((self.selected && self.selectedAttach) ||  (!self.selected && self.attach))
+    {
+        copy = [obj mutableCopy];
+        
+        [copy appendAttributedString:[NSAttributedString attributedStringWithAttachment:self.selected ? self.selectedAttach : self.attach]];
+    }
+    
+    [super setAttributedStringValue:copy];
     
     if(self.nameDelegate) {
         [self.nameDelegate TMNameTextFieldDidChanged:self];
@@ -181,6 +211,14 @@
         self.chat = chat;
     else if(broadcast)
         self.broadcast = broadcast;
+}
+
+-(void)clear {
+    self.chat = nil;
+    self.user = nil;
+    self->_broadcast = nil;
+    
+    self.attributedStringValue = nil;
 }
 
 

@@ -25,6 +25,7 @@ typedef enum {
 @property (nonatomic, strong) TL_broadcast *broadcast;
 @property (nonatomic, strong) NSString *text;
 
+
 @property (nonatomic, strong, readonly) TMAvaImageObject *imageObject;
 
 @property (nonatomic, strong) NSFont *font;
@@ -43,5 +44,8 @@ typedef void (^TapTMAvatarImageView)(void);
 
 +(int)colorMask:(NSObject *)object;
 +(NSString *)text:(NSObject *)object;
+
+
+-(void)updateWithConversation:(TL_conversation *)conversation;
 
 @end

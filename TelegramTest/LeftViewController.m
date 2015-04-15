@@ -13,8 +13,7 @@
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
 #import "ContactsViewController.h"
-
-
+#import "TGConversationListViewController.h"
 @interface TMForwardView : TMView
 
 @property (nonatomic,strong) TMTextButton *cancelButton;
@@ -226,8 +225,9 @@ static const int bottomOffset = 58;
     self.contactsViewController = [[ContactsViewController alloc] initWithFrame:controllerRect];
     [self.tabViewController addController:self.contactsViewController];
     
-    self.dialogsViewController = [[TGConversationListViewController alloc] initWithFrame:controllerRect];
-    [self.tabViewController addController:self.dialogsViewController];
+    
+    _conversationsViewController = [[TGConversationsViewController alloc] initWithFrame:controllerRect];
+    [self.tabViewController addController:_conversationsViewController];
     
     
     self.settingsViewController = [[AccountSettingsViewController alloc] initWithFrame:controllerRect];
@@ -323,7 +323,7 @@ static const int bottomOffset = 58;
 
 
 -(BOOL)canMinimisize {
-    return  !self.dialogsViewController.isSearchActive;
+    return  !_conversationsViewController.isSearchActive;
 }
 
 -(BOOL)isChatOpened {

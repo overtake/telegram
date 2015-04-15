@@ -43,4 +43,13 @@ typedef enum {
 - (void) setUser:(TLUser *)user isEncrypted:(BOOL)isEncrypted;
 
 - (void)update;
+
+- (void)updateWithConversation:(TL_conversation *)conversation;
+
+
+@property (nonatomic,strong) NSTextAttachment *attach;
+@property (nonatomic,strong) NSTextAttachment *selectedAttach;
+
+-(void)clear;
+
 @end

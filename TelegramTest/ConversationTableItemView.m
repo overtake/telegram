@@ -17,6 +17,7 @@
 #import "DialogTableView.h"
 #import "ImageUtils.h"
 #import "TGImageView.h"
+#import "TGConversationListViewController.h"
 @interface DialogShortUnreadCount : NSView
 @property (nonatomic, strong) NSString *unreadCount;
 @property (nonatomic) NSSize undreadSize;

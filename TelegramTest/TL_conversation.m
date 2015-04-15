@@ -130,8 +130,6 @@
 }
 
 
-
-
 -(void)setUnread_count:(int)unread_count {
     
     if(unread_count >= 0)
@@ -292,6 +290,11 @@ static void *kType;
     if(self.peer.user_id) {
         return  [[UsersManager sharedManager] find:self.peer.user_id];
     }
+    
+    if(self.type == DialogTypeSecretChat) {
+        return self.encryptedChat.peerUser;
+    }
+    
     return nil;
 }
 

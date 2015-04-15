@@ -30,7 +30,7 @@
 -(void)remove:(NSArray *)all;
 -(void)remove:(NSArray*)all withCustomKey:(NSString*)key;
 -(void)removeObjectWithKey:(id)key;
-
+-(id)lastItem;
 
 +(void)proccessGlobalResponse:(id)response;
 

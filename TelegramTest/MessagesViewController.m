@@ -2033,9 +2033,7 @@ static NSTextAttachment *headerMediaIcon() {
     _conversation.unread_count = 0;
     
     [_conversation save];
-    
-    [Notification perform:[Notification notificationNameByDialog:_conversation action:@"unread_count"] data:@{KEY_DIALOG:_conversation}];
-    
+        
     ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"peer":_conversation.peer}];
     
     [TMTaskRequest addTask:task];
@@ -3297,9 +3295,5 @@ static NSTextAttachment *headerMediaIcon() {
     [self deleteDialog:dialog callback:nil];
 }
 
-
-CACHE_IMAGE(actions)
-CACHE_IMAGE(actionsHover)
-CACHE_IMAGE(actionsActive)
 
 @end

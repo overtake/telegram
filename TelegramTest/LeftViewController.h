@@ -8,10 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "RightViewController.h"
-#import "TGConversationListViewController.h"
 #import "TelegramPopover.h"
 #import "NewConversationViewController.h"
 #import "TGWindowArchiver.h"
+
+#import "TGConversationsViewController.h"
 @interface LeftViewController : TMViewController<TMSearchTextFieldDelegate>
 
 
@@ -20,7 +21,7 @@
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
 
 
-@property (nonatomic, strong) TGConversationListViewController *dialogsViewController;
+@property (nonatomic, strong,readonly) TGConversationsViewController *conversationsViewController;
 
 - (BOOL)isSearchActive;
 
