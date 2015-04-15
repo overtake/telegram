@@ -395,8 +395,13 @@ static int unreadOffsetRight = 13;
 
 - (void) checkSelected:(BOOL)isSelected {
     
-    
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    [super rightMouseDown:theEvent];
+    
+    [TGConversationsViewController showPopupMenuForDialog:_item.conversation withEvent:theEvent forView:self];
+
+}
 
 @end

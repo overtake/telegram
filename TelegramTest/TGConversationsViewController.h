@@ -12,6 +12,7 @@
 @interface TGConversationsViewController : StandartViewController
 @property (nonatomic, strong,readonly) TGConversationTableItem *selectedItem;
 
++ (void)showPopupMenuForDialog:(TL_conversation *)dialog withEvent:(NSEvent *)theEvent forView:(NSView *)view;
 -(void)initialize;
 
 @end

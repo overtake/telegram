@@ -200,10 +200,11 @@
         dispatch_block_t block = ^{
             [[Storage manager] deleteDialog:dialog completeHandler:^{
                 [self.queue dispatchOnQueue:^{
-                    [self->list removeObject:dialog];
-                    [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
                     
                     [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
+                    
+                    [self->list removeObject:dialog];
+                    [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
                     
                     MessagesManager *manager = [MessagesManager sharedManager];
                     
@@ -467,7 +468,7 @@
         
         manager.unread_count += totalUnread;
         
-        BOOL checkSort = [self resortAndCheck];
+        [self resortAndCheck];
         
         [self add:last.allValues];
         
