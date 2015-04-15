@@ -21,19 +21,12 @@
         _conversation = conversation;
         
         
-        [conversation addObserver:self
-               forKeyPath:@"lastMessage"
-                  options:0
-                  context:NULL];
-        
-        [conversation addObserver:self
-                       forKeyPath:@"lastMessage.flags"
-                          options:0
-                          context:NULL];
-        
+        [conversation addObserver:self forKeyPath:@"lastMessage" options:0 context:NULL];
+        [conversation addObserver:self forKeyPath:@"lastMessage.flags" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"unread_count" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
+       
         [self update];
 
     }

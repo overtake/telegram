@@ -327,15 +327,28 @@
     [[Storage manager] insertMessage:message  completeHandler:nil];
 }
 
--(void)TGsetMessage:(TLMessage *)message {
+-(void)TGsetMessage:(TL_localMessage *)message {
     
     [self.queue dispatchOnQueue:^{
         if(!message || message.n_id == 0) return;
         
+        TL_localMessage *m = self.messages[@(message.n_id)];
         
-       [self.messages setObject:message forKey:@(message.n_id)];
         
-        [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
+        if(m) {
+            m.message = message.message;
+            m.flags = message.flags;
+            m.dstate = message.dstate;
+            m.media = message.media;
+            m.action = message.action;
+            m.randomId = message.randomId;
+            m.fakeId = message.fakeId;
+        } else {
+            [self.messages setObject:message forKey:@(message.n_id)];
+            
+            [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
+        }
+        
     }];
 }
 

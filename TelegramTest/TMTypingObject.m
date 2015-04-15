@@ -71,7 +71,7 @@
 
 @interface TMTypingObject()
 @property (nonatomic, strong) NSMutableDictionary *actions;
-@property (nonatomic, strong) TL_conversation *conversation;
+@property (nonatomic, weak) TL_conversation *conversation;
 @property (nonatomic, strong) TGTimer *timer;
 @end
 

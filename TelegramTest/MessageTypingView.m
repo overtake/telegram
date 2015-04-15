@@ -9,7 +9,6 @@
 #import "MessageTypingView.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TMAttributedString.h"
-#import "TMTypingManager.h"
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
 #import "TGModernTypingManager.h"

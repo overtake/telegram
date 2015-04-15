@@ -143,7 +143,6 @@
             [Notification perform:APP_RUN object:nil];
             
             [SelfDestructionController initialize];
-            [TMTypingManager sharedManager];
             
             [TGModernTypingManager initialize];
             

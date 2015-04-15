@@ -213,7 +213,6 @@
 		0AEE20851821352D00F348F2 /* MessagesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE20841821352D00F348F2 /* MessagesTableView.m */; };
 		0AF4061E18192B7E00160DB4 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4061D18192B7E00160DB4 /* NSString+MD5.m */; };
 		0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F496189A696A004BA4DF /* TMScrollAnimation.m */; };
-		0AF4F49B189AA2B3004BA4DF /* TMTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F49A189AA2B3004BA4DF /* TMTypingManager.m */; };
 		0AF4F49E189AA378004BA4DF /* TMTypingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F49D189AA378004BA4DF /* TMTypingObject.m */; };
 		0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4A1189ABDCC004BA4DF /* MessageTypingView.m */; };
 		0AF4F4AA189D5C72004BA4DF /* MessageTableItemServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */; };
@@ -1202,8 +1201,6 @@
 		0AF4061D18192B7E00160DB4 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		0AF4F495189A696A004BA4DF /* TMScrollAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMScrollAnimation.h; sourceTree = "<group>"; };
 		0AF4F496189A696A004BA4DF /* TMScrollAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMScrollAnimation.m; sourceTree = "<group>"; };
-		0AF4F499189AA2B3004BA4DF /* TMTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTypingManager.h; sourceTree = "<group>"; };
-		0AF4F49A189AA2B3004BA4DF /* TMTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTypingManager.m; sourceTree = "<group>"; };
 		0AF4F49C189AA378004BA4DF /* TMTypingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTypingObject.h; sourceTree = "<group>"; };
 		0AF4F49D189AA378004BA4DF /* TMTypingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTypingObject.m; sourceTree = "<group>"; };
 		0AF4F4A0189ABDCC004BA4DF /* MessageTypingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTypingView.h; sourceTree = "<group>"; };
@@ -2935,8 +2932,6 @@
 				0A241A9318AAEF2900C32F45 /* TMTextField.m */,
 				0A073FD018BF953300BAA928 /* TMTextView.h */,
 				0A073FD118BF953300BAA928 /* TMTextView.m */,
-				0AF4F499189AA2B3004BA4DF /* TMTypingManager.h */,
-				0AF4F49A189AA2B3004BA4DF /* TMTypingManager.m */,
 				0AF4F49C189AA378004BA4DF /* TMTypingObject.h */,
 				0AF4F49D189AA378004BA4DF /* TMTypingObject.m */,
 				0AC7F477185DBA0800F90558 /* TMView.h */,
@@ -5822,7 +5817,6 @@
 				C282485218BBB67200131533 /* SelfDestructionController.m in Sources */,
 				C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */,
 				C2FA78D3191CDBF6001A9D1B /* ProfileSharedMediaView.m in Sources */,
-				0AF4F49B189AA2B3004BA4DF /* TMTypingManager.m in Sources */,
 				C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */,
 				C2AA4F0618A8ED5500E20C68 /* TGObserverProxy.m in Sources */,
 				0A9EDC121896FE010037E1BC /* TMHyperlinkTextField.m in Sources */,

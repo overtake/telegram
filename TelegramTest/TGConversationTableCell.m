@@ -8,7 +8,7 @@
 
 #import "TGConversationTableCell.h"
 #import "TGCTextView.h"
-
+#import "TGTimer.h"
 
 @interface ShortUnread : NSView
 @property (nonatomic, strong) NSString *unreadCount;
@@ -87,6 +87,10 @@ static NSDictionary *attributes() {
 
 @property (nonatomic,strong) NSImageView *stateImageView;
 @property (nonatomic,strong) ShortUnread *shortUnread;
+
+@property (nonatomic,strong) TGTimer *timer;
+@property (nonatomic,strong) NSString *dots;
+
 @end
 
 
@@ -269,8 +273,82 @@ static int unreadOffsetRight = 13;
     
 }
 
+
+-(void)didChangeTyping:(NSNotification *)notify {
+    
+    NSArray *actions;
+    
+    if(!notify) {
+        actions = [[TGModernTypingManager typingForConversation:_item.conversation] currentActions];
+    } else {
+        actions = notify.userInfo[@"users"];
+    }
+
+    if(actions.count > 0) {
+        
+        NSString *string;
+        
+        if(actions.count == 1) {
+            
+            TGActionTyping *action = actions[0];
+            
+           // if(_item.conversation.type == DialogTypeChat) {
+                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+                if(user)
+                    string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
+         //   } else {
+          //      string = NSLocalizedString(@"Typing.Typing", nil);
+         //   }
+            
+        } else {
+            
+            string = [NSString stringWithFormat:NSLocalizedString(@"Typing.PeopleTyping", nil), (int)actions.count];
+            
+        }
+        
+        [self startAnimationWithMainString:string];
+        
+    } else {
+        [_messageField setAttributedStringValue:_item.messageText];
+        [_timer invalidate];
+        _timer = nil;
+        _dots = @"";
+    }
+    
+}
+
+
+-(void)startAnimationWithMainString:(NSString *)string {
+    
+    [_timer invalidate];
+    _timer = nil;
+    
+    _timer = [[TGTimer alloc] initWithTimeout:0.25 repeat:YES completion:^{
+        
+        _dots = [NSString stringWithFormat:@"%@.",[_dots substringWithRange:NSMakeRange(0, _dots.length >=3 ? 0 : _dots.length)]];
+        
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:[NSString stringWithFormat:@"%@%@",string,_dots] withColor:NSColorFromRGB(0x999999)];
+        [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x999999)];
+        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
+        [attr setSelected:self.isSelected];
+        
+        [_messageField setAttributedStringValue:attr];
+        
+    } queue:[ASQueue mainQueue].nativeQueue];
+    
+    [_timer start];
+    [_timer fire];
+}
+
 -(void)setItem:(TGConversationTableItem *)item {
     _item = item;
+    
+    [Notification removeObserver:self];
+    
+    [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:item.conversation action:@"typing"]];
     
     [_photoImageView updateWithConversation:item.conversation];
     
@@ -305,9 +383,7 @@ static int unreadOffsetRight = 13;
     [_nameField updateWithConversation:item.conversation];
     
     
-    
-    
-    [_messageField setAttributedStringValue:item.messageText];
+    [self didChangeTyping:nil];
     
     
     [self.dateField setAttributedStringValue:item.dateText];
@@ -402,6 +478,10 @@ static int unreadOffsetRight = 13;
     
     [TGConversationsViewController showPopupMenuForDialog:_item.conversation withEvent:theEvent forView:self];
 
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 @end

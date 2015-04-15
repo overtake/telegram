@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
+#import "TMTypingObject.h"
 @interface TGModernTypingManager : NSObject
 
 + (TMTypingObject *) typingForConversation:(TL_conversation *)conversation;

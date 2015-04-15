@@ -33,7 +33,7 @@
 #import "TMFastQueue.h"
 #import "TMHyperlinkTextField.h"
 #import "TMStatusTextField.h"
-#import "TMTypingManager.h"
+#import "TGModernTypingManager.h"
 #import "TMInAppLinks.h"
 #import "TMNameTextField.h"
 #import "Butter.h"
