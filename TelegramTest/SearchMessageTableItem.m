@@ -31,10 +31,7 @@
         _message = message;
         
         _selectText = selectedText;
-        
-        [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
-        [Notification addObserver:self selector:@selector(notificationChangedDeliveryState:) name:MESSAGE_CHANGED_DSTATE];
-        
+                
         [self update];
         
     }
