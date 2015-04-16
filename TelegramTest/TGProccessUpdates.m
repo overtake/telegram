@@ -510,7 +510,6 @@ static ASQueue *queue;
     }
     
    
-    int bp = 0;
 }
 
 
@@ -740,7 +739,7 @@ static ASQueue *queue;
                    
                 }
                 
-                chat.dialog.lastMessage = chat.dialog.lastMessage;
+                [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
                
                 [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
                                 
@@ -758,7 +757,7 @@ static ASQueue *queue;
                 [params setState:EncryptedDiscarted];
                 [params save];
                 
-                local.dialog.lastMessage = local.dialog.lastMessage;
+                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
                 
                 
                 [SecretChatAccepter removeChatId:chat.n_id];

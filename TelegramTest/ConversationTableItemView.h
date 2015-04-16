@@ -8,7 +8,7 @@
 
 #import "TMElements.h"
 #import "ConversationTableItem.h"
-#import "DialogSwipeTableControll.h"
+#import "TGSwipeTableControll.h"
 
 
 #define DIALOG_CELL_HEIGHT 66

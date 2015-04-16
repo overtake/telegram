@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "ConversationTableItemView.h"
+#import "TGConversationTableCell.h"
 
-@interface SearchMessageCellView : ConversationTableItemView
+@interface SearchMessageCellView : TGConversationTableCell
 
 @end

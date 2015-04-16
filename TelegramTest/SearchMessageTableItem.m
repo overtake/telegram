@@ -9,80 +9,74 @@
 #import "SearchMessageTableItem.h"
 #import "MessagesUtils.h"
 #import "TGDateUtils.h"
+
+@interface SearchMessageTableItem ()
+@property (nonatomic,strong) TL_localMessage *message;
+@end
+
 @implementation SearchMessageTableItem
+
+
+@synthesize conversation = _conversation;
+@synthesize messageText = _messageText;
+@synthesize dateSize = _dateSize;
+@synthesize dateText = _dateText;
+@synthesize selectText = _selectText;
 
 
 -(id)initWithMessage:(TL_localMessage *)message selectedText:(NSString *)selectedText {
     if(self = [super init]) {
         
-        self.lastMessage = message;
-        self.conversation = message.conversation;
-        self.selectString = selectedText;
+        _conversation = message.conversation;
+        _message = message;
+        
+        _selectText = selectedText;
         
         [Notification addObserver:self selector:@selector(notificationChangeMute:) name:PUSHNOTIFICATION_UPDATE];
         [Notification addObserver:self selector:@selector(notificationChangedDeliveryState:) name:MESSAGE_CHANGED_DSTATE];
         
-        self.type = self.conversation.type;
+        [self update];
         
-        switch (self.type) {
-                
-            case DialogTypeUser: {
-                self.user = self.conversation.user;
-                break;
-            }
-                
-            case DialogTypeChat: {
-                self.chat = self.conversation.chat;
-                break;
-            }
-                
-            case DialogTypeSecretChat: {
-                TLEncryptedChat *chat = self.conversation.encryptedChat;
-                self.user = [chat peerUser];
-                break;
-            }
-                
-            case DialogTypeBroadcast: {
-                self.broadcast = self.conversation.broadcast;
-                break;
-            }
-            default:
-                break;
-        }
-        
-        self.isMuted = self.conversation.isMute;
-        
-        NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
-        [messageText beginEditing];
-        
-        self.isOut = [UsersManager currentUserId] == self.lastMessage.from_id;
-        self.isRead = !message.unread;
-        
-        
-        self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.conversation];
-        
-        int time = self.lastMessage.date;
-        time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
-        
-        self.dateSize = NSZeroSize;
-        self.date = [[NSMutableAttributedString alloc] init];
-        [self.date setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
-        [self.date setSelectionColor:NSColorFromRGB(0x999999) forColor:NSColorFromRGB(0x333333)];
-        [self.date setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
-        
-        if(self.messageText.length > 0) {
-            NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
-            [self.date appendString:dateStr withColor:NSColorFromRGB(0x999999)];
-        } else {
-            [self.date appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
-        }   
     }
     
     return self;
 }
 
--(NSUInteger)hash {
-    return[[NSString stringWithFormat:@"search_message_%d",self.lastMessage.n_id] hash];
+-(void)update {
+    [super update];
+    
+    
+    _messageText = [MessagesUtils conversationLastText:_message conversation:_conversation];
+    
+    int time = _message.date;
+    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
+    
+    _dateText = [[NSMutableAttributedString alloc] init];
+    [_dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
+    [_dateText setSelectionColor:NSColorFromRGB(0x999999) forColor:NSColorFromRGB(0x333333)];
+    [_dateText setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
+    
+    if(self.messageText.length > 0) {
+        NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
+        [_dateText appendString:dateStr withColor:NSColorFromRGB(0x999999)];
+    } else {
+        [_dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
+    }
+    
+    _dateSize = [_dateText size];
+    _dateSize.width+=5;
+    _dateSize.width = ceil(_dateSize.width);
+    _dateSize.height = ceil(_dateSize.height);
+    
 }
+
+-(TL_localMessage *)message {
+    return _message;
+}
+
+-(NSUInteger)hash {
+    return[[NSString stringWithFormat:@"search_message_%d",_message.n_id] hash];
+}
+
 
 @end

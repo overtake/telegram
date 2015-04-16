@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "DialogRedButtonView.h"
+#import "TGSwipeRedView.h"
 
-@implementation DialogRedButtonView
+@implementation TGSwipeRedView
 
 - (id)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
@@ -41,7 +41,7 @@
         [super mouseUp:theEvent];
     } else {
         if(!self.disable) {
-            ConversationTableItem *item = (ConversationTableItem *)[self.itemView rowItem];
+            TGConversationTableItem *item = (TGConversationTableItem *)[self.itemView rowItem];
             [[[Telegram rightViewController] messagesViewController] deleteDialog:item.conversation];
         } else {
             [super mouseUp:theEvent];

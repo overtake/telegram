@@ -15,7 +15,6 @@
 #import "DialogTableView.h"
 #import "TLEncryptedChatCategory.h"
 #import "TLEncryptedChat+Extensions.h"
-#import "ConversationTableItemView.h"
 #import "SearchLoadMoreCell.h"
 #import "HackUtils.h"
 #import "TLPeer+Extensions.h"
@@ -23,6 +22,7 @@
 #import "SearchMessageTableItem.h"
 #import "SearchHashtagItem.h"
 #import "SearchHashtagCellView.h"
+
 typedef enum {
     SearchSectionDialogs,
     SearchSectionContacts,
@@ -238,19 +238,14 @@ typedef enum {
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     if([item isKindOfClass:[SearchSeparatorItem class]]) {
         return [self.tableView cacheViewForClass:[SearchSeparatorTableCell class] identifier:@"SearchSeparatorTableCell" withSize:NSMakeSize(self.view.bounds.size.width, 27)];
-    } else if ([item isKindOfClass:[ConversationTableItem class]]) {
-        ConversationTableItemView *view = (ConversationTableItemView *)[self.tableView cacheViewForClass:[ConversationTableItemView class] identifier:@"SearchTableItem"];
-        [view setSwipePanelActive:NO];
-        return view;
-        
-    } if ([item isKindOfClass:[SearchLoaderItem class]]) {
-        return [self.tableView cacheViewForClass:[SearchLoaderCell class] identifier:@"SearchTableLoader" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
+    } else if ([item isKindOfClass:[SearchLoaderItem class]]) {
+        return [self.tableView cacheViewForClass:[SearchLoaderCell class] identifier:@"SearchTableLoader" withSize:NSMakeSize(self.view.bounds.size.width, 66)];
     } if ([item isKindOfClass:[SearchLoadMoreItem class]]) {
         return [self.tableView cacheViewForClass:[SearchLoadMoreCell class] identifier:@"SearchTableLoadMore" withSize:NSMakeSize(self.view.bounds.size.width, 40)];
     } else if([item isKindOfClass:[SearchItem class]]) {
-        return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"SearchTableCell" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
+        return [self.tableView cacheViewForClass:[SearchTableCell class] identifier:@"SearchTableCell" withSize:NSMakeSize(self.view.bounds.size.width, 66)];
     } else if([item isKindOfClass:[SearchMessageTableItem class]]) {
-        return [self.tableView cacheViewForClass:[SearchMessageTableItem class] identifier:@"SearchMessageTableItem" withSize:NSMakeSize(self.view.bounds.size.width, DIALOG_CELL_HEIGHT)];
+        return [self.tableView cacheViewForClass:[SearchMessageCellView class] identifier:@"SearchMessageTableItem" withSize:NSMakeSize(self.view.bounds.size.width, 66)];
     } else if([item isKindOfClass:[SearchHashtagItem class]]) {
         return [self.tableView cacheViewForClass:[SearchHashtagCellView class] identifier:@"SearchHashtagCellView" withSize:NSMakeSize(self.view.bounds.size.width, 40)];
     }
@@ -275,7 +270,7 @@ typedef enum {
     } else if([item isKindOfClass:[SearchHashtagItem class]])  {
         return 40;
     } else {
-        return DIALOG_CELL_HEIGHT;
+        return 66;
     }
 }
 
@@ -285,13 +280,13 @@ typedef enum {
     }
     
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
-        ConversationTableItem *searchItem = (ConversationTableItem *)item;
+        TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
         
         if(searchItem.conversation) {
             [[Telegram rightViewController] modalViewSendAction:searchItem.conversation];
-        } else if(searchItem.user) {
-            [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
-        }
+        } //else if(searchItem.user) {
+           // [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
+       // }
     }
 
     return NO;
@@ -301,7 +296,7 @@ typedef enum {
 
 - (void)selectionDidChange:(NSInteger)row item:(TMRowItem *)item {
     
-    if(item && ([item isKindOfClass:[ConversationTableItem class]] || [item isKindOfClass:[SearchItem class]])) {
+    if(item && ([item isKindOfClass:[TGConversationTableItem class]] || [item isKindOfClass:[SearchItem class]])) {
         SearchItem *searchItem = (SearchItem *) item;
         
         TL_conversation *dialog = searchItem.conversation;
@@ -312,7 +307,7 @@ typedef enum {
         int msg_id = [searchItem respondsToSelector:@selector(message)] ? searchItem.message.n_id : 0;
         
         if([item isKindOfClass:[SearchMessageTableItem class]]) {
-            msg_id = [[(SearchMessageTableItem *)searchItem lastMessage] n_id];
+            msg_id = [[(SearchMessageTableItem *)searchItem message] n_id];
         } else {
             TMViewController *controller = [[Telegram leftViewController] currentTabController];
             
@@ -584,7 +579,7 @@ static int insertCount = 3;
         NSMutableArray *filterIds = [[NSMutableArray alloc] init];
         
         [params.messages enumerateObjectsUsingBlock:^(SearchMessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            [filterIds addObject:@(obj.lastMessage.n_id)];
+            [filterIds addObject:@(obj.message.n_id)];
         }];
         
         NSArray *filtred = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",filterIds]];

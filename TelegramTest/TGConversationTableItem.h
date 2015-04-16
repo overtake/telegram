@@ -7,18 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TMRowItem.h"
 
-
-@interface TGConversationTableItem : NSObject
+@interface TGConversationTableItem : TMRowItem
 
 @property (nonatomic,weak) TMTableView *table;
 
-@property (nonatomic,weak,readonly) TL_conversation *conversation;
+@property (nonatomic,strong,readonly) TL_conversation *conversation;
 
 -(TL_localMessage *)message;
 
 @property (nonatomic,strong,readonly) NSMutableAttributedString *messageText;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *dateText;
+@property (nonatomic,strong,readonly) NSString *selectText;
 
 @property (nonatomic, strong,readonly) NSString *unreadText;
 @property (nonatomic,assign,readonly) NSSize unreadTextSize;
@@ -31,5 +32,5 @@
 
 
 -(void)update;
-
+-(void)performReload;
 @end

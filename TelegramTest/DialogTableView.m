@@ -59,7 +59,7 @@
 - (void)scrollToPoint:(NSPoint)newOrigin {
     [super scrollToPoint:newOrigin];
     
-    DialogSwipeTableControll *controll = self.tableView.swipeView;
+    TGSwipeTableControll *controll = self.tableView.swipeView;
     if(controll) {
         [controll hideButton];
         self.tableView.swipeView = nil;
@@ -69,7 +69,7 @@
 - (void)scrollWheel:(NSEvent *)theEvent {
     [super scrollWheel:theEvent];
     
-    DialogSwipeTableControll *controll = self.tableView.swipeView;
+    TGSwipeTableControll *controll = self.tableView.swipeView;
     if(controll) {
         [controll hideButton];
         self.tableView.swipeView = nil;
@@ -115,7 +115,7 @@
     [super selectRowIndexes:indexes byExtendingSelection:extend];
     
     
-    DialogSwipeTableControll *controll = self.swipeView;
+    TGSwipeTableControll *controll = self.swipeView;
     if(controll) {
         [controll hideButton];
         self.swipeView = nil;

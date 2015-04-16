@@ -21,7 +21,6 @@
 @interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
 @property (nonatomic, strong) DialogsHistoryController *history;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
-
 @property (nonatomic, strong) NSMutableArray *list;
 
 @end
@@ -48,8 +47,6 @@
     
     self.tableView = [[TGConversationsTableView alloc] initWithFrame:tableRect];
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
     self.tableView.tm_delegate = self;
     [self.view addSubview:self.tableView.containerView];
     
@@ -91,11 +88,7 @@
             [[Storage manager] loadChats:^(NSArray *chats) {
                 [[ChatsManager sharedManager] add:chats];
                 
-                [ASQueue dispatchOnMainQueue:^{
-                    
                     [self initConversations];
-                    
-                }];
             }];
         }];
         
@@ -116,6 +109,7 @@
     [SecretChatAccepter instance];
     
     
+    
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
         [[MTNetwork instance] startNetwork];
@@ -126,7 +120,8 @@
             
             [TMTaskRequest executeAll];
             
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:result}];
+            [self insertAll:result];
+            
             [Notification perform:APP_RUN object:nil];
             
             [SelfDestructionController initialize];
@@ -180,6 +175,8 @@
 }
 
 -(void)loadhistory:(int)limit  {
+    
+    
     
     int offset = (int) self.tableView.count;
     
@@ -267,26 +264,30 @@
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
     
-    [self.tableView removeAllItems:NO];
-    NSArray *current = [[DialogsManager sharedManager] all];
-    
-    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
-    
     [ASQueue dispatchOnStageQueue:^{
         
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        NSArray *current = [[DialogsManager sharedManager] all];
+        
         for(TL_conversation *conversation in current) {
+            
             if(!conversation.isAddToList)
                 continue;
             
             TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
             
-            [dialogs addObject:item];
+            [items addObject:item];
         }
-    } synchronous:YES];
-    
-    
-    [self.tableView insert:dialogs startIndex:0 tableRedraw:NO];
-    [self.tableView reloadData];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self.tableView removeAllItems:NO];
+            [self.tableView insert:items startIndex:0 tableRedraw:NO];
+            [self.tableView reloadData];
+            
+        }];
+    }];
 }
 
 - (void)notificationDialogToTop:(NSNotification *)notify {
@@ -321,32 +322,22 @@
     
 }
 
-- (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView {
-    return self.tableView.count;
-}
-
-
-- (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
+- (CGFloat) rowHeight:(NSUInteger)row item:(TMRowItem *)item {
     return 66;
 }
 
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    
-    
-    static NSString *const kRowIdentifier = @"tgconvcell";
-    TGConversationTableCell *cell = [self.tableView makeViewWithIdentifier:kRowIdentifier owner:self];
-    if(!cell) {
-        cell = [[TGConversationTableCell alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), 66)];
-        cell.identifier = kRowIdentifier;
-    }
-    
-    
-    [cell setItem:self.tableView.list[row]];
-    
-    
-    return cell;
+- (BOOL) isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
+    return NO;
 }
 
+- (NSView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
+    
+    TGConversationTableCell *view = (TGConversationTableCell *)[self.tableView cacheViewForClass:[TGConversationTableCell class] identifier:@"tgconvcell" withSize:NSMakeSize(NSWidth(self.view.frame), 66)];
+    
+    return view;
+    
+    
+}
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(TGConversationTableItem *) item {
     
@@ -354,6 +345,7 @@
         [[Telegram rightViewController] modalViewSendAction:item.conversation];
         return NO;
     }
+    
     
     return ![Telegram rightViewController].navigationViewController.isLocked;
 }

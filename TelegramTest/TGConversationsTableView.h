@@ -9,5 +9,6 @@
 #import "TMTableView.h"
 
 @interface TGConversationsTableView : TMTableView
-
+@property (nonatomic) BOOL isSwipeContainerOpen;
+@property (nonatomic, strong) id swipeView;
 @end

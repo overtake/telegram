@@ -7,15 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ConversationTableItemView.h"
+#import "TGConversationTableCell.h"
 
 @class ConversationTableItemView;
 
-@interface DialogRedButtonView : NSView
+@interface TGSwipeRedView : NSView
 
 @property (nonatomic, strong) NSAttributedString *attributedString;
 @property (nonatomic) NSSize size;
 @property (nonatomic) BOOL disable;
-@property (nonatomic, strong) ConversationTableItemView *itemView;
+@property (nonatomic, weak) TGConversationTableCell *itemView;
 
 @end

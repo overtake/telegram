@@ -92,7 +92,7 @@ static NSDictionary *attributes() {
 @property (nonatomic, strong) DialogShortUnreadCount *shortUnreadCount;
 @property (nonatomic, strong) TGTimer *timer;
 
-@property (nonatomic, strong) DialogSwipeTableControll *controll;
+@property (nonatomic, strong) TGSwipeTableControll *controll;
 
 - (ConversationTableItem *)rowItem;
 
@@ -146,7 +146,7 @@ static NSDictionary *attributes() {
         
         weak();
         
-        self.controll = [[DialogSwipeTableControll alloc] initWithFrame:self.bounds itemView:self];
+        self.controll = [[TGSwipeTableControll alloc] initWithFrame:self.bounds itemView:self];
         [self.controll setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [self.controll setDrawBlock:^{
             
@@ -268,7 +268,7 @@ static NSDictionary *attributes() {
 
 - (void)setTableView:(DialogTableView *)tableView {
     self->_tableView = tableView;
-    self.controll.tableView = tableView;
+  //  self.controll.tableView = tableView;
 }
 
 - (void)dealloc {

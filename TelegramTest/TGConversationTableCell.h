@@ -8,7 +8,10 @@
 
 #import "TMView.h"
 #import "TGConversationTableItem.h"
-@interface TGConversationTableCell : TMView
+
+@class TGConversationsTableView;
+
+@interface TGConversationTableCell : TMRowView
 
 
 typedef enum {
@@ -17,10 +20,12 @@ typedef enum {
 } ConversationTableCellStyle;
 
 
+
 @property (nonatomic,assign) ConversationTableCellStyle style;
 
+@property (nonatomic,assign,setter=setSwipePanelActive:) BOOL isSwipePanelActive;
 
--(void)setItem:(TGConversationTableItem *)item;
 
+-(TGConversationsTableView *)tableView;
 
 @end

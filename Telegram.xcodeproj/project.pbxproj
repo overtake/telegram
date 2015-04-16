@@ -98,8 +98,8 @@
 		0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6D098019535E8500A9AC64 /* TLUserCategory.m */; };
 		0A6D09A219535EED00A9AC64 /* TLUserStatusCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6D09A119535EED00A9AC64 /* TLUserStatusCategory.m */; };
 		0A6E13D218A8F3CB004D1BC7 /* NewContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6E13D118A8F3CB004D1BC7 /* NewContactsManager.m */; };
-		0A7517CC193A04590088C806 /* DialogSwipeTableControll.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7517CB193A04590088C806 /* DialogSwipeTableControll.m */; };
-		0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7517D1193A053A0088C806 /* DialogRedButtonView.m */; };
+		0A7517CC193A04590088C806 /* TGSwipeTableControll.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7517CB193A04590088C806 /* TGSwipeTableControll.m */; };
+		0A7517D2193A053A0088C806 /* TGSwipeRedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7517D1193A053A0088C806 /* TGSwipeRedView.m */; };
 		0A7C78C71947701A001617DB /* TMMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7C78C61947701A001617DB /* TMMenuController.m */; };
 		0A7C78CF194773BB001617DB /* TMMenuPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7C78CE194773BB001617DB /* TMMenuPopover.m */; };
 		0A7EB71B183A873D00F02E04 /* NSString+Extended.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EB71A183A873D00F02E04 /* NSString+Extended.m */; };
@@ -967,10 +967,10 @@
 		0A6E13D018A8F3CB004D1BC7 /* NewContactsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewContactsManager.h; sourceTree = "<group>"; };
 		0A6E13D118A8F3CB004D1BC7 /* NewContactsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewContactsManager.m; sourceTree = "<group>"; };
 		0A6E13D618A921A9004D1BC7 /* Managers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Managers.h; sourceTree = "<group>"; };
-		0A7517CA193A04590088C806 /* DialogSwipeTableControll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogSwipeTableControll.h; sourceTree = "<group>"; };
-		0A7517CB193A04590088C806 /* DialogSwipeTableControll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogSwipeTableControll.m; sourceTree = "<group>"; };
-		0A7517D0193A053A0088C806 /* DialogRedButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogRedButtonView.h; sourceTree = "<group>"; };
-		0A7517D1193A053A0088C806 /* DialogRedButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogRedButtonView.m; sourceTree = "<group>"; };
+		0A7517CA193A04590088C806 /* TGSwipeTableControll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSwipeTableControll.h; sourceTree = "<group>"; };
+		0A7517CB193A04590088C806 /* TGSwipeTableControll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSwipeTableControll.m; sourceTree = "<group>"; };
+		0A7517D0193A053A0088C806 /* TGSwipeRedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSwipeRedView.h; sourceTree = "<group>"; };
+		0A7517D1193A053A0088C806 /* TGSwipeRedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSwipeRedView.m; sourceTree = "<group>"; };
 		0A7C78C51947701A001617DB /* TMMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMMenuController.h; sourceTree = "<group>"; };
 		0A7C78C61947701A001617DB /* TMMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMMenuController.m; sourceTree = "<group>"; };
 		0A7C78CD194773BB001617DB /* TMMenuPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMMenuPopover.h; sourceTree = "<group>"; };
@@ -2406,10 +2406,6 @@
 			children = (
 				0AB8F6491861B05B000E6FF3 /* ConversationTableItemView.h */,
 				0AB8F64A1861B05B000E6FF3 /* ConversationTableItemView.m */,
-				0A7517CA193A04590088C806 /* DialogSwipeTableControll.h */,
-				0A7517CB193A04590088C806 /* DialogSwipeTableControll.m */,
-				0A7517D0193A053A0088C806 /* DialogRedButtonView.h */,
-				0A7517D1193A053A0088C806 /* DialogRedButtonView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -4124,6 +4120,7 @@
 		C2ACCE531ADD298800ABEE78 /* conversations */ = {
 			isa = PBXGroup;
 			children = (
+				C2ACCE681ADFFE9100ABEE78 /* swipe */,
 				C2ACCE541ADD2A0600ABEE78 /* TGConversationsViewController.h */,
 				C2ACCE551ADD2A0600ABEE78 /* TGConversationsViewController.m */,
 				C2ACCE571ADD2CD100ABEE78 /* TGConversationTableItem.h */,
@@ -4134,6 +4131,17 @@
 				C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */,
 			);
 			name = conversations;
+			sourceTree = "<group>";
+		};
+		C2ACCE681ADFFE9100ABEE78 /* swipe */ = {
+			isa = PBXGroup;
+			children = (
+				0A7517CA193A04590088C806 /* TGSwipeTableControll.h */,
+				0A7517CB193A04590088C806 /* TGSwipeTableControll.m */,
+				0A7517D0193A053A0088C806 /* TGSwipeRedView.h */,
+				0A7517D1193A053A0088C806 /* TGSwipeRedView.m */,
+			);
+			name = swipe;
 			sourceTree = "<group>";
 		};
 		C2ADB457191BBA0200305CC8 /* collection */ = {
@@ -5381,7 +5389,7 @@
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,
 				C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
-				0A7517D2193A053A0088C806 /* DialogRedButtonView.m in Sources */,
+				0A7517D2193A053A0088C806 /* TGSwipeRedView.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
@@ -5650,7 +5658,7 @@
 				C21D486319B08E64000F06E1 /* TMTokenField.m in Sources */,
 				CEDAEB671881AF85006189A2 /* YapCache.m in Sources */,
 				0AA014601831140D00901B7A /* NSTextView+AutomaticLinkDetection.m in Sources */,
-				0A7517CC193A04590088C806 /* DialogSwipeTableControll.m in Sources */,
+				0A7517CC193A04590088C806 /* TGSwipeTableControll.m in Sources */,
 				CEDAEB5A1881AF85006189A2 /* YapDatabaseSecondaryIndex.m in Sources */,
 				C21C7B3B18D769E400253A7A /* SenderItem.m in Sources */,
 				0AE2E3F41867263C004926A7 /* TMSearchTextField.m in Sources */,

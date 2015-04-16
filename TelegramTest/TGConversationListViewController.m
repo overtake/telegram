@@ -284,26 +284,32 @@
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
     
-    [self.tableView removeAllItems:NO];
-    NSArray *current = [[DialogsManager sharedManager] all];
-    
-    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
-    
     [ASQueue dispatchOnStageQueue:^{
         
-        for(TL_conversation *dialog in current) {
-            if(!dialog.isAddToList)
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        NSArray *current = [[DialogsManager sharedManager] all];
+        
+        for(TL_conversation *conversation in current) {
+            
+            if(!conversation.isAddToList)
                 continue;
             
-            ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
+            ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:conversation];
             
-            [dialogs addObject:item];
+            [items addObject:item];
         }
-    } synchronous:YES];
-    
         
-    [self.tableView insert:dialogs startIndex:0 tableRedraw:NO];
-    [self.tableView reloadData];
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self.tableView removeAllItems:NO];
+            [self.tableView insert:items startIndex:0 tableRedraw:NO];
+            [self.tableView reloadData];
+            
+        }];
+    }];
+    
+    
 }
 
 - (void)notificationDialogToTop:(NSNotification *)notify {

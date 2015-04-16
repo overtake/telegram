@@ -21,10 +21,11 @@
         _conversation = conversation;
         
         
-        [conversation addObserver:self forKeyPath:@"lastMessage" options:0 context:NULL];
-        [conversation addObserver:self forKeyPath:@"lastMessage.flags" options:0 context:NULL];
+        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
+        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
+        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:self.conversation action:@"typing"]];
+
         [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
-        [conversation addObserver:self forKeyPath:@"unread_count" options:0 context:NULL];
         [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
         
         
@@ -37,6 +38,18 @@
     }
     
     return self;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        [self update];
+        
+        [self performReload];
+        
+    }];
+    
 }
 
 -(void)didChangeTyping:(NSNotification *)notify {
@@ -81,30 +94,31 @@
 }
 
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+-(void)needUpdateItem:(NSNotification *)notification {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        [self update];
         
-    [self update];
-    
-    [self performReload];
-    
+        [self performReload];
+    }];
+
 }
 
 -(void)performReload {
+    
     [ASQueue dispatchOnMainQueue:^{
-        
-        NSUInteger idx = [self.table indexOfItem:self];
-        
-        if(idx != NSNotFound)
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self redrawRow];
     }];
+    
 }
 
 -(void)dealloc {
-    [_conversation removeObserver:self forKeyPath:@"lastMessage" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"lastMessage.flags" context:NULL];
+//    [_conversation removeObserver:self forKeyPath:@"lastMessage" context:NULL];
+//    [_conversation removeObserver:self forKeyPath:@"lastMessage.flags" context:NULL];
     [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"unread_count" context:NULL];
     [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
+//    [_conversation removeObserver:self forKeyPath:@"unread_count" context:NULL];
+    
     
     [Notification removeObserver:self];
 }

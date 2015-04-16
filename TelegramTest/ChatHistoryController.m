@@ -106,9 +106,73 @@ static NSMutableArray *listeners;
         
         [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
         
+                
+        
     }
     
     return self;
+}
+
+
+
+-(void)checkMaxItems {
+    
+    for (Class filterClass in filters) {
+        
+        NSMutableArray *filterItems = [filterClass messageItems];
+        NSMutableDictionary *filterKeys = [filterClass messageKeys];
+        
+        const int max = 300;
+        
+        if(filterItems.count >= max) {
+            
+            NSLog(@"h_items_count:%lu",filterItems.count);
+            
+            NSMutableDictionary *peers = [[NSMutableDictionary alloc] init];
+            
+            
+            [filterItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                
+                NSMutableArray *items = peers[@(obj.message.peer_id)];
+                
+                if(!items) {
+                    items = [[NSMutableArray alloc] init];
+                    
+                    peers[@(obj.message.peer_id)] = items;
+                }
+                if(obj.message.dstate == DeliveryStateNormal || obj.message.dstate == DeliveryStateError)
+                    [items addObject:obj];
+                
+            }];
+            
+            NSUInteger average = max/2/peers.count;
+            
+            [filterItems removeAllObjects];
+            
+            [filterKeys removeAllObjects];
+            
+            [peers enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id peerItems, BOOL *stop) {
+                
+                NSArray *items = [self sortItems:peerItems];
+                
+                items = [items subarrayWithRange:NSMakeRange(0, MIN(average,items.count))];
+                
+                [filterItems addObjectsFromArray:items];
+                
+                [items enumerateObjectsUsingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL *stop) {
+                    
+                    filterKeys[@(item.message.n_id)] = item;
+                    
+                }];
+                
+            }];
+            
+            NSLog(@"h_items_count:%lu",filterItems.count);
+        }
+        
+    }
+    
+
 }
 
 
@@ -213,9 +277,10 @@ static NSMutableArray *listeners;
 
         }];
         
+        [ASQueue dispatchOnMainQueue:^{
+            self.isProccessing = NO;
+        }];
         
-        
-        self.isProccessing = NO;
     }];
     
 }
@@ -336,6 +401,7 @@ static NSMutableArray *listeners;
         NSMutableArray *filterItems = [filterClass messageItems];
         NSMutableDictionary *filterKeys = [filterClass messageKeys];
         
+        
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
@@ -365,6 +431,8 @@ static NSMutableArray *listeners;
                 }
             }
         }];
+        
+        
         
     }
     

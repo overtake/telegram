@@ -1867,8 +1867,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!msg) {
             
-            [TMViewController showModalProgress];
-            
             [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
                 
                 TLMessage *msg = response.messages[0];
@@ -1877,11 +1875,9 @@ static NSTextAttachment *headerMediaIcon() {
                     [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
                 }
                 
-                [TMViewController hideModalProgress];
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
-                [TMViewController hideModalProgress];
                 
             } timeout:10];
             

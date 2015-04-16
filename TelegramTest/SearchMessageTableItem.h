@@ -6,9 +6,12 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "ConversationTableItem.h"
+#import "TGConversationTableItem.h"
 
-@interface SearchMessageTableItem : ConversationTableItem
+@interface SearchMessageTableItem : TGConversationTableItem
+
+
+
 
 -(id)initWithMessage:(TL_localMessage *)message selectedText:(NSString *)selectedText;
 

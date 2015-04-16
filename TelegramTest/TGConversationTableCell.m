@@ -9,6 +9,7 @@
 #import "TGConversationTableCell.h"
 #import "TGCTextView.h"
 #import "TGTimer.h"
+#import "TGSwipeTableControll.h"
 
 @interface ShortUnread : NSView
 @property (nonatomic, strong) NSString *unreadCount;
@@ -90,6 +91,9 @@ static NSDictionary *attributes() {
 
 @property (nonatomic,strong) TGTimer *timer;
 @property (nonatomic,strong) NSString *dots;
+@property (nonatomic,strong) TGSwipeTableControll *swipe;
+
+@property (nonatomic,strong) TMView *containerView;
 
 @end
 
@@ -99,85 +103,17 @@ static NSDictionary *attributes() {
 
 @implementation TGConversationTableCell
 
-- (void)drawRect:(NSRect)dirtyRect {
-    
-    [super drawRect:dirtyRect];
-    
-    NSColor *color = nil;
-    if(!self.isSelected) {
-        color = [NSColor whiteColor];
-        [color set];
-        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
-        
-        
-        [DIALOG_BORDER_COLOR setFill];
-        NSRectFill(NSMakeRect(NSMinX(_nameTextField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameTextField.frame), 1));
-        
-    } else {
-        color = BLUE_COLOR_SELECT;
-        [color set];
-        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
-    }
-    
-    
-    if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle)
-        [self drawUnreadCount];
-    
-    
-}
 
-
-static int unreadCountRadius = 10;
-static int unreadOffsetRight = 13;
-
-- (void)drawUnreadCount {
-    
-    static int offsetY = 9;
-    
-    int sizeWidth = MAX(_item.unreadTextSize.width + 12, unreadCountRadius * 2);
-    
-    int offset2 = self.bounds.size.width - unreadOffsetRight - unreadCountRadius;
-    int offset1 = offset2 - (sizeWidth - unreadCountRadius * 2);
-    
-    NSBezierPath * path = [NSBezierPath bezierPath];
-    NSPoint center1 = {
-        offset1,
-        offsetY + unreadCountRadius
-    };
-    [path moveToPoint: center1];
-    [path appendBezierPathWithArcWithCenter: center1 radius: unreadCountRadius startAngle: 90 endAngle: -90];
-    
-    NSPoint center2 = {
-        offset2,
-        offsetY + unreadCountRadius
-    };
-    [path moveToPoint: center2];
-    [path appendBezierPathWithArcWithCenter: center2 radius: unreadCountRadius startAngle: -90 endAngle: 90];
-    
-    [path appendBezierPathWithRect:NSMakeRect(center1.x, center1.y-unreadCountRadius, center2.x-center1.x, unreadCountRadius*2)];
-    if(self.isSelected) {
-        [NSColorFromRGB(0xffffff) set];
-        
-    } else {
-        [NSColorFromRGB(0x4ba3e2) set];
-    }
-    [path fill];
-    [path closePath];
-    
-    int offsetX = (sizeWidth - _item.unreadTextSize.width)/2;
-    [_item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
-}
-
--(BOOL)isSelected {
-    return self.item.table.selectedItem == self.item;
-}
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.wantsLayer = YES;
+       // self.wantsLayer = YES;
         
-        self.layer.backgroundColor = DIALOG_BORDER_COLOR.CGColor;
+        _swipe = [[TGSwipeTableControll alloc] initWithFrame:frameRect itemView:self];
+        
+        [self setSwipePanelActive:YES];
+        
         
         _photoImageView = [TMAvatarImageView standartTableAvatar];
         _photoImageView.wantsLayer = YES;
@@ -213,17 +149,56 @@ static int unreadOffsetRight = 13;
         
       
         
-        [self addSubview:_dateField];
-        [self.layer addSublayer:_photoImageView.layer];
+        [_swipe addSubview:_dateField];
+        [_swipe addSubview:_photoImageView];
         
-        [self addSubview:_messageField];
+        [_swipe addSubview:_messageField];
         
-        [self addSubview:_nameTextField];
+        [_swipe addSubview:_nameTextField];
+        
+        [self addSubview:_swipe];
+        
+        
+        dispatch_block_t block = ^{
+            NSColor *color = nil;
+            if(!self.isSelected) {
+                
+                 _swipe.layer.backgroundColor = [NSColor clearColor].CGColor;
+                
+                color = [NSColor whiteColor];
+                [color set];
+                NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+                
+                
+                [DIALOG_BORDER_COLOR setFill];
+                NSRectFill(NSMakeRect(NSMinX(_nameTextField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameTextField.frame), 1));
+                
+            } else {
+                color = BLUE_COLOR_SELECT;
+                [color set];
+                NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+                 _swipe.layer.backgroundColor = color.CGColor;
+            }
+            
+         //
+            
+            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle)
+                [self drawUnreadCount];
+            
+            
+        };
+        
+        
+        
+        
+        [_swipe.containerView setDrawBlock:block];
         
     }
     
     return self;
 }
+
+
 
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -264,6 +239,7 @@ static int unreadOffsetRight = 13;
         _shortUnread = nil;
     }
     
+    [_swipe.containerView setNeedsDisplay:YES];
 }
 
 
@@ -305,7 +281,15 @@ static int unreadOffsetRight = 13;
     [_timer fire];
 }
 
+
+-(void)redrawRow {
+    self.item = (TGConversationTableItem *) [self rowItem];
+}
+
 -(void)setItem:(TGConversationTableItem *)item {
+    
+    
+    
     _item = item;
  
     
@@ -357,7 +341,7 @@ static int unreadOffsetRight = 13;
         if(!_stateImageView) {
             _stateImageView = imageViewWithImage(stateImage[@"image"]);
             
-            [self addSubview:_stateImageView];
+            [_swipe addSubview:_stateImageView];
         } else {
             _stateImageView.image = stateImage[@"image"];
             [_stateImageView setFrameSize:_stateImageView.image.size];
@@ -428,8 +412,55 @@ static int unreadOffsetRight = 13;
 }
 
 
-- (void) checkSelected:(BOOL)isSelected {
+- (void)drawRect:(NSRect)dirtyRect {
     
+       
+}
+
+
+static int unreadCountRadius = 10;
+static int unreadOffsetRight = 13;
+
+- (void)drawUnreadCount {
+    
+    static int offsetY = 9;
+    
+    int sizeWidth = MAX(_item.unreadTextSize.width + 12, unreadCountRadius * 2);
+    
+    int offset2 = self.bounds.size.width - unreadOffsetRight - unreadCountRadius;
+    int offset1 = offset2 - (sizeWidth - unreadCountRadius * 2);
+    
+    NSBezierPath * path = [NSBezierPath bezierPath];
+    NSPoint center1 = {
+        offset1,
+        offsetY + unreadCountRadius
+    };
+    [path moveToPoint: center1];
+    [path appendBezierPathWithArcWithCenter: center1 radius: unreadCountRadius startAngle: 90 endAngle: -90];
+    
+    NSPoint center2 = {
+        offset2,
+        offsetY + unreadCountRadius
+    };
+    [path moveToPoint: center2];
+    [path appendBezierPathWithArcWithCenter: center2 radius: unreadCountRadius startAngle: -90 endAngle: 90];
+    
+    [path appendBezierPathWithRect:NSMakeRect(center1.x, center1.y-unreadCountRadius, center2.x-center1.x, unreadCountRadius*2)];
+    if(self.isSelected) {
+        [NSColorFromRGB(0xffffff) set];
+        
+    } else {
+        [NSColorFromRGB(0x4ba3e2) set];
+    }
+    [path fill];
+    [path closePath];
+    
+    int offsetX = (sizeWidth - _item.unreadTextSize.width)/2;
+    [_item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
+}
+
+-(BOOL)isSelected {
+    return self.item.table.selectedItem == self.item;
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
@@ -441,6 +472,10 @@ static int unreadOffsetRight = 13;
 
 -(void)dealloc {
     [Notification removeObserver:self];
+}
+
+-(TGConversationsTableView *)tableView {
+    return (TGConversationsTableView *) _item.table;
 }
 
 @end

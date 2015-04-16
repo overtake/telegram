@@ -6,23 +6,26 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "DialogSwipeTableControll.h"
+#import "TGSwipeTableControll.h"
 
-@interface DialogSwipeTableControll()
+@interface TGSwipeTableControll()
 
-@property (nonatomic, strong) DialogRedButtonView *buttonView;
+@property (nonatomic, strong) TGSwipeRedView *buttonView;
 @property (nonatomic) BOOL isClossed;
 @property (nonatomic) NSPoint startDragPoint;
 @property (nonatomic) NSPoint startContainerPosition;
 @end
 
-@implementation DialogSwipeTableControll
+@implementation TGSwipeTableControll
 
-- (id)initWithFrame:(NSRect)frameRect itemView:(ConversationTableItemView *)itemView {
+- (id)initWithFrame:(NSRect)frameRect itemView:(TGConversationTableCell *)itemView {
     self = [super initWithFrame:frameRect];
     if(self) {
         self.wantsLayer = YES;
-        self.buttonView = [[DialogRedButtonView alloc] initWithFrame:NSMakeRect(0, 0, 0, self.bounds.size.height)];
+        
+        
+        _itemView = itemView;
+        self.buttonView = [[TGSwipeRedView alloc] initWithFrame:NSMakeRect(0, 0, 0, self.bounds.size.height)];
         [self.buttonView setFrameOrigin:NSMakePoint(self.bounds.size.width - self.buttonView.bounds.size.width, 0)];
         [self.buttonView setHidden:YES];
         [self.buttonView setAutoresizingMask:NSViewMinXMargin];
@@ -32,6 +35,8 @@
         self.containerView = [[TMView alloc] initWithFrame:frameRect];
         [self.containerView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
         [super addSubview:self.containerView];
+        
+        
     }
     return self;
 }
@@ -55,7 +60,7 @@
 
 - (BOOL)checkIsSwipe {
     if(self.tableView.swipeView && self.tableView.swipeView != self) {
-        DialogSwipeTableControll *view = self.tableView.swipeView;
+        TGSwipeTableControll *view = self.tableView.swipeView;
         [view hideButton];
         self.tableView.swipeView = nil;
         return YES;
@@ -101,7 +106,7 @@
     if(theEvent.clickCount != 0) {
         if(!self.isClossed) {
             if(self.tableView.swipeView) {
-                DialogSwipeTableControll *view = self.tableView.swipeView;
+                TGSwipeTableControll *view = self.tableView.swipeView;
                 [view hideButton];
                 self.tableView.swipeView = nil;
             } else {
@@ -129,13 +134,11 @@
     [self.containerView.layer removeAllAnimations];
     [self.containerView.layer setPosition:toPoint];
     self.buttonView.disable = YES;
-    [CATransaction begin];
     [CATransaction setCompletionBlock:^{
         [self setContainerPosition:toPoint];
         self.buttonView.disable = NO;
     }];
     [self.containerView.layer addAnimation:[TMAnimations postionWithDuration:0 fromValue:fromPoint toValue:toPoint] forKey:@"position"];
-    [CATransaction commit];
     
     self.tableView.isSwipeContainerOpen = NO;
 }
@@ -147,12 +150,10 @@
     [self.containerView.layer removeAllAnimations];
     [self setContainerPosition:toPoint];
     self.buttonView.disable = YES;
-    [CATransaction begin];
     [CATransaction setCompletionBlock:^{
         self.buttonView.disable = NO;
     }];
     [self.containerView.layer addAnimation:[TMAnimations postionWithDuration:0 fromValue:fromPoint toValue:toPoint] forKey:@"position"];
-    [CATransaction commit];
     
     self.tableView.isSwipeContainerOpen = YES;
     self.tableView.swipeView = self;
@@ -200,6 +201,10 @@
     if(self.drawBlock)
         self.drawBlock();
     
+}
+
+-(TGConversationsTableView *)tableView {
+    return _itemView.tableView;
 }
 
 @end

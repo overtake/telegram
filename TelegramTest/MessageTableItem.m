@@ -414,6 +414,9 @@
     return NO;
 }
 
+-(void)dealloc {
+    NSLog(@"%@",NSStringFromClass(self.class));
+}
 
 
 + (NSDateFormatter *)dateFormatter {

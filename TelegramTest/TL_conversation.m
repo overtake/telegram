@@ -9,6 +9,13 @@
 #import "TL_conversation.h"
 #import "TLPeer+Extensions.h"
 #import "TGPasslock.h"
+
+
+@interface TL_conversation ()
+@property (nonatomic,strong,readonly) TLUser *p_user;
+@property (nonatomic,strong,readonly) TLChat *p_chat;
+@end
+
 @implementation TL_conversation
 +(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id {
     TL_conversation *dialog = [[TL_conversation alloc] init];
@@ -275,10 +282,11 @@ static void *kType;
 }
 
 - (TLChat *) chat {
-    if(self.peer.chat_id) {
-        return [[ChatsManager sharedManager] find:self.peer.chat_id];
+    
+    if(!_p_chat && self.peer.chat_id != 0) {
+        _p_chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
     }
-    return nil;
+    return _p_chat;
 }
 
 
@@ -287,15 +295,21 @@ static void *kType;
 }
 
 - (TLUser *) user {
-    if(self.peer.user_id) {
-        return  [[UsersManager sharedManager] find:self.peer.user_id];
+    
+    if(!_p_user && (self.peer.user_id != 0 || self.type == DialogTypeSecretChat)) {
+        
+        if(self.peer.user_id != 0) {
+            _p_user = [[UsersManager sharedManager] find:self.peer.user_id];
+        }
+        
+        if(self.type == DialogTypeSecretChat) {
+            _p_user = self.encryptedChat.peerUser;
+        }
+        
     }
     
-    if(self.type == DialogTypeSecretChat) {
-        return self.encryptedChat.peerUser;
-    }
-    
-    return nil;
+    return _p_user;
 }
+
 
 @end
