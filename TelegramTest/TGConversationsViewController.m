@@ -37,7 +37,7 @@
     
     int topOffset = 48;
     
-    self.view.wantsLayer = YES;
+ //   self.view.wantsLayer = NO;
     
     
     _history = [DialogsHistoryController sharedController];

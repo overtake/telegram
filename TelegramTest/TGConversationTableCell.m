@@ -82,7 +82,7 @@ static NSDictionary *attributes() {
 
 @property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TMTextField *messageField;
-@property (nonatomic,strong) TMNameTextField *nameField;
+@property (nonatomic,strong) TMNameTextField *nameTextField;
 @property (nonatomic,strong) TMAvatarImageView *photoImageView;
 
 @property (nonatomic,strong) NSImageView *stateImageView;
@@ -101,6 +101,7 @@ static NSDictionary *attributes() {
 
 - (void)drawRect:(NSRect)dirtyRect {
     
+    [super drawRect:dirtyRect];
     
     NSColor *color = nil;
     if(!self.isSelected) {
@@ -110,7 +111,7 @@ static NSDictionary *attributes() {
         
         
         [DIALOG_BORDER_COLOR setFill];
-        NSRectFill(NSMakeRect(NSMinX(_nameField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameField.frame), 1));
+        NSRectFill(NSMakeRect(NSMinX(_nameTextField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameTextField.frame), 1));
         
     } else {
         color = BLUE_COLOR_SELECT;
@@ -182,17 +183,13 @@ static int unreadOffsetRight = 13;
         _photoImageView.wantsLayer = YES;
         
         
-        _nameField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(68, 40, 0, 18)];
-         _nameField.wantsLayer = YES;
+        _nameTextField = [[TMNameTextField alloc] init];
         
-        [_nameField setSelector:@selector(dialogTitle)];
-        [_nameField setEncryptedSelector:@selector(dialogTitleEncrypted)];
-        [[_nameField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         
-        [_nameField setDrawsBackground:NO];
-      //  [_nameField setBackgroundColor:[NSColor redColor]];
+        [_nameTextField setFrameOrigin:NSMakePoint(68, 40)];
         
-       
+        _nameTextField.wantsLayer = YES;
+
         
         _messageField = [TMTextField defaultTextField];
         
@@ -214,18 +211,14 @@ static int unreadOffsetRight = 13;
         [_dateField setAutoresizingMask:NSViewMinXMargin];
         [_dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         
-        [self addSubview:_nameField];
+      
         
-        
-    
-        
-        
-        [self.layer addSublayer:_dateField.layer];
+        [self addSubview:_dateField];
         [self.layer addSublayer:_photoImageView.layer];
         
-        [self.layer addSublayer:_messageField.layer];
+        [self addSubview:_messageField];
         
-        
+        [self addSubview:_nameTextField];
         
     }
     
@@ -245,8 +238,8 @@ static int unreadOffsetRight = 13;
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
-    [_nameField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameField.frame) - NSWidth(_dateField.frame) - 10 - (_item.message.n_out ? 18 : 0), 23)];
-    [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameField.frame) -40, 36)];
+    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (_item.message.n_out ? 18 : 0), 23)];
+    [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - _item.dateSize.width - 10, _dateField.frame.origin.y)];
     
     NSValue *point = [self stateImage][@"point"];
@@ -318,12 +311,12 @@ static int unreadOffsetRight = 13;
     
     [_photoImageView updateWithConversation:item.conversation];
     
-    _nameField.attach = nil;
-    _nameField.selectedAttach = nil;
+    _nameTextField.attach = nil;
+    _nameTextField.selectedAttach = nil;
     
     
-    [_nameField clear];
-    [_nameField setSelected:self.isSelected];
+    [_nameTextField clear];
+    [_nameTextField setSelected:self.isSelected];
     
     
     [item.messageText setSelected:self.isSelected];
@@ -340,13 +333,13 @@ static int unreadOffsetRight = 13;
             selectedAttach = [NSMutableAttributedString textAttachmentByImage:[image_mutedSld() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
         });
         
-        _nameField.attach = attach;
-        _nameField.selectedAttach = selectedAttach;
+        _nameTextField.attach = attach;
+        _nameTextField.selectedAttach = selectedAttach;
     }
     
     
     
-    [_nameField updateWithConversation:item.conversation];
+    [_nameTextField updateWithConversation:item.conversation];
     
     
     [self checkMessageState];
@@ -428,10 +421,10 @@ static int unreadOffsetRight = 13;
     
     _style = style;
     
-    [self.nameField setHidden:style == ConversationTableCellShortStyle];
-    [self.messageField setHidden:style == ConversationTableCellShortStyle];
-    [self.dateField setHidden:style == ConversationTableCellShortStyle];
-    [self.stateImageView setHidden:style == ConversationTableCellShortStyle];
+    [_nameTextField setHidden:style == ConversationTableCellShortStyle];
+    [_messageField setHidden:style == ConversationTableCellShortStyle];
+    [_dateField setHidden:style == ConversationTableCellShortStyle];
+    [_stateImageView setHidden:style == ConversationTableCellShortStyle];
 }
 
 

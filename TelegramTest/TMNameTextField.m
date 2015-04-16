@@ -39,7 +39,7 @@
     [self setBordered:NO];
     [self setEditable:NO];
     [self setSelectable:NO];
-    [[self cell] setTruncatesLastVisibleLine:YES];
+    [self setDrawsBackground:NO];
     [[self cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     
     self.selector = @selector(dialogTitle);

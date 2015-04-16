@@ -91,7 +91,11 @@
 
 -(void)performReload {
     [ASQueue dispatchOnMainQueue:^{
-        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.table indexOfItem:self]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        
+        NSUInteger idx = [self.table indexOfItem:self];
+        
+        if(idx != NSNotFound)
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }];
 }
 
@@ -126,7 +130,8 @@
     
     _dateSize = [_dateText size];
     _dateSize.width+=5;
-    
+    _dateSize.width = ceil(_dateSize.width);
+    _dateSize.height = ceil(_dateSize.height);
     
     
     if(_conversation.unread_count) {
