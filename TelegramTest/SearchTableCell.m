@@ -9,7 +9,6 @@
 #import "SearchTableCell.h"
 #import "SearchItem.h"
 #import "TMAvatarImageView.h"
-#import "TGConversationListViewController.h"
 @interface SearchTableCell()
 @property (nonatomic, strong) TMNameTextField *titleTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
@@ -77,7 +76,7 @@
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
-    [TGConversationListViewController showPopupMenuForDialog:[self rowItem].conversation withEvent:theEvent forView:self];
+    [TGConversationsViewController showPopupMenuForDialog:[self rowItem].conversation withEvent:theEvent forView:self];
 }
 
 - (void) checkSelected:(BOOL)isSelected {

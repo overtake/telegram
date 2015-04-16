@@ -13,7 +13,6 @@
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
 #import "ContactsViewController.h"
-#import "TGConversationListViewController.h"
 @interface TMForwardView : TMView
 
 @property (nonatomic,strong) TMTextButton *cancelButton;

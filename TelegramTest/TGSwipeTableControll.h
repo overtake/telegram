@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TGConversationTableCell.h"
-#import "DialogTableView.h"
 #import "TGSwipeRedView.h"
 #import "TGConversationsTableView.h"
 @class ConversationTableItemView;

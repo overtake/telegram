@@ -12,7 +12,6 @@
 #import "SearchItem.h"
 #import "SearchTableCell.h"
 #import "Telegram.h"
-#import "DialogTableView.h"
 #import "TLEncryptedChatCategory.h"
 #import "TLEncryptedChat+Extensions.h"
 #import "SearchLoadMoreCell.h"
@@ -22,7 +21,7 @@
 #import "SearchMessageTableItem.h"
 #import "SearchHashtagItem.h"
 #import "SearchHashtagCellView.h"
-
+#import "TGConversationsTableView.h"
 typedef enum {
     SearchSectionDialogs,
     SearchSectionContacts,
@@ -88,7 +87,7 @@ typedef enum {
 @interface SearchViewController()
 
 @property (nonatomic, strong) SearchParams *searchParams;
-@property (nonatomic, strong) DialogTableView *tableView;
+@property (nonatomic, strong) TMTableView *tableView;
 @property (nonatomic, strong) TMView *noResultsView;
 @property (nonatomic, strong) NSImageView *noResultsImageView;
 
@@ -177,7 +176,7 @@ typedef enum {
     [self.view addSubview:self.noResultsView];
     
     
-    self.tableView = [[DialogTableView alloc] initWithFrame:self.view.bounds];
+    self.tableView = [[TGConversationsTableView alloc] initWithFrame:self.view.bounds];
     self.tableView.tm_delegate = self;
     [self.tableView addItem:[[SearchLoaderItem alloc] init] tableRedraw:NO];
     [self.tableView reloadData];

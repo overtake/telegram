@@ -10,7 +10,6 @@
 #import "SearchTableCell.h"
 #import "SearchItem.h"
 #import "SearchSeparatorItem.h"
-#import "ConversationTableItemView.h"
 
 #import "SelectUserItem.h"
 #import "SelectUserRowView.h"
@@ -18,6 +17,7 @@
 #import "RBLPopover.h"
 #import "TLPeer+Extensions.h"
 #import "AddContactViewController.h"
+#import "TGConversationsTableView.h"
 @interface ContactFirstItem : TMRowItem
 
 @end
@@ -220,7 +220,7 @@
     self.addContactViewController.rbl = [[RBLPopover alloc] initWithContentViewController:self.addContactViewController];
     self.addContactViewController.rbl.canBecomeKey = YES;
     
-    self.tableView = [[DialogTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset)];
+    self.tableView = [[TGConversationsTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset)];
     self.tableView.tm_delegate = self;
     
     [self.view addSubview:self.tableView.containerView];

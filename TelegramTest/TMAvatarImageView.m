@@ -11,7 +11,6 @@
 
 #import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
-#import "ConversationTableItemView.h"
 #import "DownloadPhotoItem.h"
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.currentHash;
 #define HASH_CHECK() if(self.currentHash != hash) return;
@@ -89,7 +88,7 @@ static const TGTwoColors colors[] = {
 }
 
 + (instancetype)standartTableAvatar {
-    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((DIALOG_CELL_HEIGHT - 50) / 2.0), 50, 50)];
+    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
     return avatarImageView;
