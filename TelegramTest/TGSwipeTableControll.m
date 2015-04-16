@@ -203,6 +203,11 @@
     
 }
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    [_containerView setFrameSize:newSize];
+}
+
 -(TGConversationsTableView *)tableView {
     return _itemView.tableView;
 }

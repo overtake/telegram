@@ -124,7 +124,11 @@
         
         [self setProgressStyle:TMCircularProgressLightStyle];
         
+        [self setProgressFrameSize:NSMakeSize(35, 35)];
+        
         [self setProgressToView:self.playerButton];
+        
+        
         
     }
     return self;

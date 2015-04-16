@@ -204,7 +204,7 @@ static NSDictionary *attributes() {
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    
+    [_swipe setFrameSize:newSize];
     
     [self updateFrames];
 }
