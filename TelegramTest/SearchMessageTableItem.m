@@ -32,10 +32,6 @@
         
         _selectText = selectedText;
         
-        
-        [_conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
-        [_conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
-        
                 
         [self update];
         
@@ -44,22 +40,8 @@
     return self;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        [self update];
-        
-        [self performReload];
-        
-    }];
-    
-}
 
--(void)dealloc {
-    [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
-}
+
 
 -(void)update {
     [super update];

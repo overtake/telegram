@@ -360,13 +360,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 - (void)searchMessagesBySearchString:(NSString *)searchString offset:(int)offset completeHandler:(void (^)(NSInteger count, NSArray *messages))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
-        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text,flags FROM messages WHERE message_text LIKE ? order by date desc LIMIT 50 OFFSET %d",offset];
+        NSString *searchSql = [NSString stringWithFormat:@"SELECT serialized, message_text,flags FROM messages WHERE instr(message_text,'%@') > 0  order by date desc LIMIT 50 OFFSET %d",[searchString lowercaseString],offset];
 
-        FMResultSet *results = [db executeQuery:searchSql, [searchString lowercaseString]];
+        FMResultSet *results = [db executeQueryWithFormat:searchSql, nil];
         NSMutableArray *messages = [[NSMutableArray alloc] init];
-        if(results) {
-            while ([results next]) {
-                TLMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
+        while ([results next]) {
+            TL_localMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
+            
+            if(msg.dstate == DeliveryStateNormal) {
                 msg.flags = -1;
                 msg.message = [results stringForColumn:@"message_text"];
                 msg.flags = [results intForColumn:@"flags"];
