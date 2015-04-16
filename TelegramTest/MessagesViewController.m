@@ -1832,13 +1832,13 @@ static NSTextAttachment *headerMediaIcon() {
     if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
-    NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString];
+    NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString:NO];
     
     
     
     if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
-        
+        emoji = [self.bottomView.inputMessageString getEmojiFromString:YES];
         
         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
@@ -2545,7 +2545,7 @@ static NSTextAttachment *headerMediaIcon() {
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
         message = [message replaceSmilesToEmoji];
     
-    NSArray *array = [message getEmojiFromString];
+    NSArray *array = [message getEmojiFromString:NO];
     if(array.count > 0) {
         [[EmojiViewController instance] saveEmoji:array];
     }

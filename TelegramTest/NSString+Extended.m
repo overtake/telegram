@@ -1001,7 +1001,7 @@
 
 
 
-- (NSArray *)getEmojiFromString {
+- (NSArray *)getEmojiFromString:(BOOL)checkColor {
     
     __block NSMutableDictionary *temp = [NSMutableDictionary dictionary];
 
@@ -1061,7 +1061,39 @@
 //         }
      }];
     
+    if(checkColor) {
+        NSMutableDictionary *t = [[NSMutableDictionary alloc] init];
+        
+        [temp enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            
+            NSData *data = [obj dataUsingEncoding:NSNonLossyASCIIStringEncoding];
+            NSString *e = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            NSArray *s = [e componentsSeparatedByString:@"\\"];
+            
+            
+            
+            if(s.count == 5) {
+                e = [NSString stringWithFormat:@"\\%@",[[s subarrayWithRange:NSMakeRange(1, 2)] componentsJoinedByString:@"\\"]];
+            }
+            
+            
+            data = [e dataUsingEncoding:NSUTF8StringEncoding];
+            
+            e = [[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding];
+            
+            [t setObject:e forKey:key];
+            
+            
+            
+        }];
+        
+        return [t allValues];
+    }
+    
+    
     return [temp allValues];
+    
 }
 
 static NSTextField *testTextField() {

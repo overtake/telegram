@@ -418,7 +418,7 @@ static CAAnimation *ani2() {
         } else {
             
             
-            NSArray *emoji = [[object valueForKey:@"first_name"] getEmojiFromString];
+            NSArray *emoji = [[object valueForKey:@"first_name"] getEmojiFromString:NO];
             
             __block NSString *firstName = [object valueForKey:@"first_name"];
             
@@ -426,7 +426,7 @@ static CAAnimation *ani2() {
                 firstName = [firstName stringByReplacingOccurrencesOfString:obj withString:@""];
             }];
             
-            emoji = [[object valueForKey:@"last_name"] getEmojiFromString];
+            emoji = [[object valueForKey:@"last_name"] getEmojiFromString:NO];
             
             __block NSString *lastName = [object valueForKey:@"last_name"];
             
@@ -439,7 +439,7 @@ static CAAnimation *ani2() {
         
     } else if([object isKindOfClass:[TLChat class]]) {
         
-        NSArray *emoji = [[object valueForKey:@"title"] getEmojiFromString];
+        NSArray *emoji = [[object valueForKey:@"title"] getEmojiFromString:NO];
         
         __block NSString *textResult = [object valueForKey:@"title"];
         
@@ -561,7 +561,7 @@ static CAAnimation *ani2() {
         
          __block NSString *textResult = [text uppercaseString];
        
-         NSArray *emoji = [textResult getEmojiFromString];
+         NSArray *emoji = [textResult getEmojiFromString:NO];
         
         [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             textResult = [textResult stringByReplacingOccurrencesOfString:obj withString:@""];

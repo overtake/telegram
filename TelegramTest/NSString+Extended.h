@@ -14,8 +14,8 @@
 - (NSString *)singleLine;
 - (NSString *)URLDecode;
 - (NSSize)sizeForTextFieldForWidth:(int)width;
-- (NSArray *)getEmojiFromString;
--(NSString *)replaceSmilesToEmoji;
+- (NSArray *)getEmojiFromString:(BOOL)checkColor;
+- (NSString *)replaceSmilesToEmoji;
 
 -(NSString *)fixEmoji;
 

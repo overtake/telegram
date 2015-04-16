@@ -342,7 +342,7 @@
         [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         
-        int yOffset = [self.string getEmojiFromString].count > 0 ? 0 : 1;
+        int yOffset = [self.string getEmojiFromString:NO].count > 0 ? 0 : 1;
         
         return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
     }
