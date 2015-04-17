@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong,readonly) NSString *emoji;
 
+-(BOOL)makeWithEmoji:(NSString *)emoji;
 @property (nonatomic,weak) EmojiViewController *controller;
 
 -(id)initWithFrame:(NSRect)frame emoji:(NSString *)emoji;

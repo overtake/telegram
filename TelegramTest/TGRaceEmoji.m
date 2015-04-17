@@ -46,23 +46,19 @@ static NSDictionary *elements;
         }
         
         
-        _currentElements = elements[_emoji];
         
-        if(!_currentElements)
-        {
-            
-            return nil;
-        }
     }
     
     return self;
 }
 
-
-
--(void)loadView {
-    [super loadView];
+-(BOOL)makeWithEmoji:(NSString *)emoji {
     
+    _emoji = emoji;
+    
+    _currentElements = elements[_emoji];
+    
+    [self.view removeAllSubviews];
     
     for(int i = 0; i < _currentElements.count; i++) {
         EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(2+ (34 * i), 2, 34, 34)];
@@ -72,6 +68,16 @@ static NSDictionary *elements;
         
         [self.view addSubview:button];
     }
+
+    return _currentElements != nil;
+    
+}
+
+-(void)loadView {
+    [super loadView];
+    
+    
+    
     
 }
 

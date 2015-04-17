@@ -70,35 +70,48 @@
 
 -(void)emojiLongClick:(BTRButton *)button {
     
-    TGRaceEmoji *e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:[button.titleLabel.stringValue getEmojiFromString:YES][0]];
-    
-    if(!e_race_controller)
-    {
-        return;
-    }
-    
-    e_race_controller.controller = self.controller;
-    
-    
-    [_racePopover close];
-    
-    _racePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
-    [_racePopover setHoverView:button];
-    [_racePopover setDidCloseBlock:^(RBLPopover *popover){
-        [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
-    }];
-    
-    e_race_controller.popover = _racePopover;
-    
-    [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:YES];
-    
-    NSRect frame = button.bounds;
-    frame.origin.y += 4;
 
+   
     
-    if(!_racePopover.isShown) {
-        [_racePopover showRelativeToRect:frame ofView:button preferredEdge:CGRectMaxYEdge];
+    static TGRaceEmoji *e_race_controller;
+    static RBLPopover *race_popover;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:nil];
+        
+        race_popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
+        [race_popover setHoverView:button];
+        [race_popover setDidCloseBlock:^(RBLPopover *popover){
+            [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
+        }];
+        
+        [e_race_controller loadView];
+        
+        e_race_controller.popover = race_popover;
+        e_race_controller.controller = self.controller;
+        
+    });
+    
+    [race_popover close];
+    
+    if([e_race_controller makeWithEmoji:[button.titleLabel.stringValue getEmojiFromString:YES][0]]) {
+        
+        
+        
+        [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:YES];
+        
+        NSRect frame = button.bounds;
+        frame.origin.y += 4;
+        
+        
+        if(!race_popover.isShown) {
+            [race_popover showRelativeToRect:frame ofView:button preferredEdge:CGRectMaxYEdge];
+             
+        }
     }
+    
+    
     
 }
 

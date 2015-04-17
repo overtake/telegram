@@ -294,6 +294,9 @@ static void BTRControlCommonInit(BTRControl *self) {
 }
 
 - (void)addBlock:(void (^)(BTRControlEvents))block forControlEvents:(BTRControlEvents)events {
+    
+    assert([NSThread isMainThread]);
+    
 	NSParameterAssert(block);
 	BTRControlAction *action = [BTRControlAction new];
 	action.block = block;
@@ -303,6 +306,8 @@ static void BTRControlCommonInit(BTRControl *self) {
 }
 
 - (void)addTarget:(id)target action:(SEL)selector forControlEvents:(BTRControlEvents)events {
+    
+    assert([NSThread isMainThread]);
 	BTRControlAction *action = [BTRControlAction new];
 	action.target = target;
 	action.action = selector;
@@ -448,9 +453,9 @@ static void BTRControlCommonInit(BTRControl *self) {
         
         if(self.mouseInside && self.mouseDown) {
             
-            BTRControlEvents events = 1;
-            events = BTRControlEventLongLeftClick;
+            BTRControlEvents events = BTRControlEventLongLeftClick;
             [self sendActionsForControlEvents:events];
+            
             
             for (BTRControlAction *action in self.actions) {
                 if (action.events & events) {
