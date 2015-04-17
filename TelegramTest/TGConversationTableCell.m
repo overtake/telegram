@@ -76,7 +76,7 @@ static NSDictionary *attributes() {
 
 
 @interface TGConversationTableCell ()
-@property (nonatomic,weak) TGConversationTableItem *item;
+@property (nonatomic,strong) TGConversationTableItem *item;
 
 
 // views

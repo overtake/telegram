@@ -734,6 +734,7 @@
     
     [self checkAttachImages];
     
+    
     [self.messagesViewController sendMessage];
     
     [self.messagesViewController performForward:self.dialog];
@@ -790,8 +791,7 @@
     
     
     [self checkAttachImages];
-    
-    
+    [self updateWebpage:YES];
     
     [self checkMentionsOrTags];
     
@@ -1064,7 +1064,8 @@
         _webpageAttach = nil;
     }
     
-    [self updateBottomHeight:animated];
+    if(self.inputMessageString.length > 0)
+        [self updateBottomHeight:animated];
     
 }
 
@@ -1179,7 +1180,7 @@
         height+= 35;
     }
     
-    if(self.webpageAttach != nil) {
+    if(self.webpageAttach != nil && self.inputMessageString.length > 0) {
         height+= 35;
     }
     

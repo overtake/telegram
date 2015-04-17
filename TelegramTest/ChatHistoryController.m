@@ -927,6 +927,11 @@ static NSMutableArray *listeners;
 -(void)addItem:(MessageTableItem *)item conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback {
     
     
+    [LoopingUtils runOnMainQueueAsync:^{
+        if(callback != nil)
+            callback();
+    }];
+    
     dispatch_block_t block = ^ {
         [queue dispatchOnQueue:^{
             
@@ -952,11 +957,6 @@ static NSMutableArray *listeners;
             
             [item.messageSender.conversation save];
             
-            
-            [LoopingUtils runOnMainQueueAsync:^{
-                if(callback != nil)
-                    callback();
-            }];
             
             [item.messageSender send];
             

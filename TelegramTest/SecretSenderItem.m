@@ -65,6 +65,11 @@
     
 }
 
+-(NSData *)decryptedMessageLayer0 {
+    return nil;
+}
+
+
 -(NSData *)deleteRandomMessageData1 {
     return [Secret1__Environment serializeObject:[Secret1_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) random_bytes:self.random_bytes action:[Secret1_DecryptedMessageAction decryptedMessageActionDeleteMessagesWithRandom_ids:@[@(self.message.randomId)]]]];
 }

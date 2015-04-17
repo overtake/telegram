@@ -188,6 +188,8 @@
     }
     
     
+    
+    
     if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"] || [webpage.type isEqualToString:@"document"])
     {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];

@@ -42,6 +42,8 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
+    int i = 0;
+    
     [ASQueue dispatchOnStageQueue:^{
         
         [self update];
