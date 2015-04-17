@@ -127,6 +127,16 @@
     
     [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
     
+//    
+//    GeneralSettingsRowItem *smartNotifications = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        [SettingsArchiver addOrRemoveSetting:SmartNotifications];
+//        [[Telegram rightViewController].messagesViewController reloadData];
+//    } description:NSLocalizedString(@"Settings.SmartNotifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:SmartNotifications]);
+//    }];
+//    
+//    [self.tableView insert:smartNotifications atIndex:self.tableView.list.count tableRedraw:NO];
+//    
     
     
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {

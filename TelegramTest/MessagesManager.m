@@ -28,6 +28,9 @@
 @property (nonatomic,strong) NSMutableDictionary *messages_with_random_ids;
 
 @property (nonatomic,strong) NSMutableDictionary *supportMessages;
+
+@property (nonatomic,strong) NSMutableDictionary *lastNotificationTimes;
+
 @end
 
 @implementation MessagesManager
@@ -37,6 +40,7 @@
         self.messages = [[NSMutableDictionary alloc] init];
         self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
         self.supportMessages = [[NSMutableDictionary alloc] init];
+        self.lastNotificationTimes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -85,6 +89,8 @@
     [self notifyMessage:message update_real_date:NO notify:notify];
 }
 
+
+static const int seconds_to_notify = 120;
 
 -(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     [self.queue dispatchOnQueue:^{
@@ -201,6 +207,10 @@
                 msg = NSLocalizedString(@"Notification.SecretMessage", nil);
             }
             
+          
+            
+            
+            
             
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
@@ -213,6 +223,18 @@
                 if(![message.to_id isSecret])
                     notification.hasReplyButton = YES;
                 notification.contentImage = image;
+            }
+            
+            
+            if(conversation.type == DialogTypeChat) {
+                NSUInteger time = [_lastNotificationTimes[@(conversation.peer_id)] integerValue];
+                
+                
+                if([[NSDate date] timeIntervalSince1970] - seconds_to_notify <= time) {
+                    notification.soundName = @"";
+                }
+                _lastNotificationTimes[@(conversation.peer_id)] = @([[NSDate date] timeIntervalSince1970]);
+                
             }
             
             [notification setUserInfo:@{@"peer_id":@(message.peer_id),@"msg_id":@(message.n_id)}];

@@ -306,7 +306,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
         
         dispatch_async(dispatch_get_current_queue(), ^{
             
-                // HARD CHECK FOR NEW PUSH NOTIFICATION
+                // HARD CHECK FOR NEW ON SETTINGS
                 
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             
@@ -331,6 +331,12 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                 
             }
             
+            if(![defaults objectForKey:@"SmartNotifications"]) {
+                [defaults setObject:@"once" forKey:@"SmartNotifications"];
+                
+                [SettingsArchiver addSetting:SmartNotifications];
+                
+            }
             
         });
         
