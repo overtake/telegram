@@ -15,20 +15,27 @@
 @implementation MessageSenderItem
 
 
-
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation{
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage {
+    
     if(self = [super initWithConversation:conversation]) {
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
-        if([[Telegram rightViewController].messagesViewController noWebpage])
-        {
+        if(noWebpage)
             self.message.media = [TL_messageMediaEmpty create];
-        }
         
         [self.message save:YES];
+    
+    }
+
+    return self;
+}
+
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation {
+    if(self = [self initWithMessage:message forConversation:conversation noWebpage:YES]) {
         
     }
+    
     return self;
 }
 

@@ -32,7 +32,13 @@
     return self;
 }
 
-
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage {
+    if(self = [self initWithMessage:message forConversation:conversation]) {
+        
+    }
+    
+    return self;
+}
 
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];

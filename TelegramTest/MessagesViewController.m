@@ -2538,6 +2538,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(!_conversation.canSendMessage)
         return;
     
+    BOOL noWebpage = [self noWebpage];
+    
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     
@@ -2559,7 +2561,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if([message isEqualToString:@"*!testmessages!#"] && [UsersManager currentUserId] == 438078) {
             for (int i =0; i < 10; i++) {
-                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:_conversation];
+                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:_conversation noWebpage:noWebpage];
                 sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                 [self.historyController addItem:sender.tableItem conversation:_conversation callback:callback sentControllerCallback:nil];
             }
