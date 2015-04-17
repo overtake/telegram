@@ -15,6 +15,9 @@
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
+
+@class MessagesBottomView;
+
 @interface SearchSelectItem : NSObject
 @property (nonatomic,assign) BOOL isCurrent;
 @property (nonatomic,strong) MessageTableItem *item;
@@ -35,6 +38,8 @@ typedef enum {
 
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
 @property (nonatomic, strong,readonly) MessagesTableView *table;
+@property (nonatomic, strong) MessagesBottomView *bottomView;
+
 @property (nonatomic, strong) TL_conversation *conversation;
 
 @property (nonatomic) MessagesViewControllerState state;

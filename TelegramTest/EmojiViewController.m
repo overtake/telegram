@@ -8,60 +8,13 @@
 
 #import "EmojiViewController.h"
 #import "TGAllStickersTableView.h"
+#import "TGRaceEmoji.h"
+#import "EmojiButton.h"
+#import "NSString+Extended.h"
+#import "MessagesBottomView.h"
 #define EMOJI_IMAGE(img) image_test#img
 #define EMOJI_COUNT_PER_ROW 8
 
-@interface EmojiButton : BTRButton
-@property (nonatomic, strong) NSString *smile;
-@end
-
-@implementation EmojiButton
-
-- (id)initWithFrame:(NSRect)frameRect {
-    self = [super initWithFrame:frameRect];
-    if(self) {
-        
-        
-        [self setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
-        [self setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
-
-    }
-    return self;
-}
-
-- (CGRect)labelFrame {
-    return CGRectMake(0, 0, 34, 34);
-}
-
-static NSImage *hoverImage() {
-    static NSImage *image;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        image = [[NSImage alloc] initWithSize:NSMakeSize(34, 34)];
-        [image lockFocus];
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 34, 34) xRadius:6 yRadius:6];
-        [NSColorFromRGB(0xf4f4f4) set];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
-
-static NSImage *higlightedImage() {
-    static NSImage *image;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        image = [[NSImage alloc] initWithSize:NSMakeSize(34, 34)];
-        [image lockFocus];
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 34, 34) xRadius:6 yRadius:6];
-        [NSColorFromRGB(0xdedede) set];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
-
-@end
 
 
 @interface EmojiBottomButton : BTRButton
@@ -85,6 +38,7 @@ static NSImage *higlightedImage() {
 
 @interface EmojiCellView : TMView
 @property (nonatomic, strong) EmojiViewController *controller;
+@property (nonatomic,strong) RBLPopover *racePopover;
 @end
 
 @implementation EmojiCellView
@@ -99,6 +53,11 @@ static NSImage *higlightedImage() {
             EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(34 * i, 0, 34, 34)];
             [button setTitleFont:[NSFont fontWithName:@"Helvetica" size:17] forControlState:BTRControlStateNormal];
             [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
+            
+            if(NSAppKitVersionNumber > NSAppKitVersionNumber10_9 ) {
+                [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
+            }
+            
             [self addSubview:button];
         }
     }
@@ -109,10 +68,52 @@ static NSImage *higlightedImage() {
     [self.controller insertEmoji:button.titleLabel.stringValue];
 }
 
+-(void)emojiLongClick:(BTRButton *)button {
+    
+    TGRaceEmoji *e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:[button.titleLabel.stringValue getEmojiFromString:YES][0]];
+    
+    if(!e_race_controller)
+    {
+        return;
+    }
+    
+    e_race_controller.controller = self.controller;
+    
+    
+    [_racePopover close];
+    
+    _racePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
+    [_racePopover setHoverView:button];
+    [_racePopover setDidCloseBlock:^(RBLPopover *popover){
+        [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
+    }];
+    
+    e_race_controller.popover = _racePopover;
+    
+    [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:YES];
+    
+    NSRect frame = button.bounds;
+    frame.origin.y += 4;
+
+    
+    if(!_racePopover.isShown) {
+        [_racePopover showRelativeToRect:frame ofView:button preferredEdge:CGRectMaxYEdge];
+    }
+    
+}
+
+
 - (void)setEmoji:(NSString *)string atIndex:(int)index {
     EmojiButton *button = [self.subviews objectAtIndex:index];
     if(string) {
         [button setHidden:NO];
+        
+        NSString *modifier = [self.controller emojiModifier:string];
+        
+        if(modifier) {
+            string = [string emojiWithModifier:modifier emoji:string];
+        }
+        
         [button setTitle:string forControlState:BTRControlStateNormal];
     } else {
         [button setHidden:YES];
@@ -182,8 +183,15 @@ static NSImage *higlightedImage() {
                 
         [self.userEmoji addObjectsFromArray:popular];
         
+        NSString *emoji2;
         
-        NSString *emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 🚶 🏃 💃 👫 👪 👬 👭 💏 💑 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
+        if(NSAppKitVersionNumber > NSAppKitVersionNumber10_9 ) {
+            emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 🚶 🏃 💃 👫 👬 👭 💏 💑  👪 👨‍👩‍👧 👨‍👩‍👧‍👦 👨‍👩‍👦‍👦 👨‍👩‍👧‍👧 👩‍👩‍👦 👩‍👩‍👧 👩‍👩‍👧‍👦 👩‍👩‍👦‍👦 👩‍👩‍👧‍👧 👨‍👨‍👦 👨‍👨‍👧 👨‍👨‍👧‍👦 👨‍👨‍👦‍👦 👨‍👨‍👧‍👧 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
+        } else {
+            emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 🚶 🏃 💃 👫 👪 👬 👭 💏 💑 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
+        }
+        
+       
         
         NSString *emoji3 = @"🐶 🐺 🐱 🐭 🐹 🐰 🐸 🐯 🐨 🐻 🐷 🐽 🐮 🐗 🐵 🐒 🐴 🐑 🐘 🐼 🐧 🐦 🐤 🐥 🐣 🐔 🐍 🐢 🐛 🐝 🐜 🐞 🐌 🐙 🐚 🐠 🐟 🐬 🐳 🐋 🐄 🐏 🐀 🐃 🐅 🐇 🐉 🐎 🐐 🐓 🐕 🐖 🐁 🐂 🐲 🐡 🐊 🐫 🐪 🐆 🐈 🐩 🐾 💐 🌸 🌷 🍀 🌹 🌻 🌺 🍁 🍃 🍂 🌿 🌾 🍄 🌵 🌴 🌲 🌳 🌰 🌱 🌼 🌐 🌞 🌝 🌚 🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘 🌜🌛 🌙 🌍 🌎 🌏 🌋 🌌 🌠 ⭐️ ☀️ ⛅️ ☁️ ⚡️ ☔️ ❄️ ⛄️ 🌀 🌁 🌈 🌊";
         
@@ -205,6 +213,43 @@ static NSImage *higlightedImage() {
 +(void)loadStickersIfNeeded {
    [[self instance].stickersTableView load:NO];
 }
+
+-(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji {
+    
+    NSUserDefaults *s = [NSUserDefaults standardUserDefaults];
+    
+    
+    NSMutableDictionary *modifiers = [s objectForKey:@"emojiModifiers"];
+    
+    if(!modifiers) {
+        modifiers = [[NSMutableDictionary alloc] init];
+        
+    } else {
+        modifiers = [modifiers mutableCopy];
+    }
+    
+    if(modifier) {
+        modifiers[emoji] = modifier;
+    } else {
+        [modifiers removeObjectForKey:emoji];
+    }
+    
+    
+    
+    [s setObject:modifiers forKey:@"emojiModifiers"];
+    
+}
+
+-(NSString *)emojiModifier:(NSString *)emoji {
+    NSUserDefaults *s = [NSUserDefaults standardUserDefaults];
+    
+    
+    NSMutableDictionary *modifiers = [s objectForKey:@"emojiModifiers"];
+    
+    
+    return modifiers[emoji];
+}
+
 
 - (void)loadView {
     [super loadView];
@@ -393,3 +438,61 @@ static NSImage *higlightedImage() {
 }
 
 @end
+
+
+
+/*
+ 😀😁😂😃😄😅😆😇😈👿😉😊☺️😋😌😍😎😏😐😑😒😓😔😕😖😗😘😙😚😛😜😝😞😟😠😡😢😣😤😥😦😧😨😩😪😫😬😭😮😯😰😱😲😳😴😵😶😷😸😹😺😻😼😽😾😿🙀
+ 👶👶🏻👶🏼👶🏽👶🏾👶🏿
+ 👦👦🏻👦🏼👦🏽👦🏾👦🏿
+ 👧👧🏻👧🏼👧🏽👧🏾👧🏿
+ 👨👨🏻👨🏼👨🏽👨🏾👨🏿
+ 👩👩🏻👩🏼👩🏽👩🏾👩🏿
+ 
+ 👰👰🏻👰🏼👰🏽👰🏾👰🏿
+ 👱👱🏻👱🏼👱🏽👱🏾👱🏿
+ 👲👲🏻👲🏼👲🏽👲🏾👲🏿
+ 👳👳🏻👳🏼👳🏽👳🏾👳🏿
+ 👴👴🏻👴🏼👴🏽👴🏾👴🏿
+ 👵👵🏻👵🏼👵🏽👵🏾👵🏿
+ 👮👮🏻👮🏼👮🏽👮🏾👮🏿
+ 👷👷🏻👷🏼👷🏽👷🏾👷🏿
+ 👸👸🏻👸🏼👸🏽👸🏾👸🏿
+ 💂💂🏻💂🏼💂🏽💂🏾💂🏿
+ 👼👼🏻👼🏼👼🏽👼🏾👼🏿
+ 🎅🎅🏻🎅🏼🎅🏽🎅🏾🎅🏿
+ 👻👹👺💩💀👽👾
+ 🙇🙇🏻🙇🏼🙇🏽🙇🏾🙇🏿
+ 💁💁🏻💁🏼💁🏽💁🏾💁🏿
+ 🙅🙅🏻🙅🏼🙅🏽🙅🏾🙅🏿
+ 🙆🙆🏻🙆🏼🙆🏽🙆🏾🙆🏿
+ 🙋🙋🏻🙋🏼🙋🏽🙋🏾🙋🏿
+ 🙎🙎🏻🙎🏼🙎🏽🙎🏾🙎🏿
+ 🙍🙍🏻🙍🏼🙍🏽🙍🏾🙍🏿
+ 💆💆🏻💆🏼💆🏽💆🏾💆🏿
+ 💇💇🏻💇🏼💇🏽💇🏾💇🏿
+ 💑👩‍❤️‍👩👨‍❤️‍👨💏👩‍❤️‍💋‍👩👨‍❤️‍💋‍👨
+ 🙌🙌🏻🙌🏼🙌🏽🙌🏾🙌🏿
+ 👏👏🏻👏🏼👏🏽👏🏾👏🏿
+ 👂👂🏻👂🏼👂🏽👂🏾👂🏿
+ 👀
+ 👃👃🏻👃🏼👃🏽👃🏾👃🏿
+ 👄💋👅
+ 💅💅🏻💅🏼💅🏽💅🏾💅🏿
+ 👋👋🏻👋🏼👋🏽👋🏾👋🏿
+ 👍👍🏻👍🏼👍🏽👍🏾👍🏿
+ 👎👎🏻👎🏼👎🏽👎🏾👎🏿
+ ☝️☝️🏻☝️🏼☝️🏽☝️🏾☝️🏿
+ 👆👆🏻👆🏼👆🏽👆🏾👆🏿
+ 👇👇🏻👇🏼👇🏽👇🏾👇🏿
+ 👈👈🏻👈🏼👈🏽👈🏾👈🏿
+ 👉👉🏻👉🏼👉🏽👉🏾👉🏿
+ 👌👌🏻👌🏼👌🏽👌🏾👌🏿
+ ✌️✌️🏻✌️🏼✌️🏽✌️🏾✌️🏿
+ 👊👊🏻👊🏼👊🏽👊🏾👊🏿
+ ✊✊🏻✊🏼✊🏽✊🏾✊🏿
+ ✋✋🏻✋🏼✋🏽✋🏾✋🏿
+ 💪💪🏻💪🏼💪🏽💪🏾💪🏿
+ 👐👐🏻👐🏼👐🏽👐🏾👐🏿
+ 🙏🙏🏻🙏🏼🙏🏽🙏🏾🙏🏿
+ */

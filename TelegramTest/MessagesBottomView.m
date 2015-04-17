@@ -57,7 +57,6 @@
 @property (nonatomic, strong) TMTextField *encryptedStateTextField;
 
 @property (nonatomic,strong) NSMenu *attachMenu;
-@property (nonatomic, strong) RBLPopover *smilePopover;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
 
 @property (nonatomic,strong) NSMutableArray *attachments;

@@ -144,6 +144,8 @@
 
 
 - (void)setHoverView:(BTRControl *)hoverView {
+    
+    
     _hoverView = hoverView;
     
     [hoverView addTarget:self action:@selector(hoverViewExit:) forControlEvents:BTRControlEventMouseExited];
@@ -152,7 +154,7 @@
 - (void)hoverViewExit:(BTRControl *)button {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if(!_hoverView.hovered && self.isShown) {
-            if([self isMouseInPopover]) {
+            if([self isMouseInPopover] || _lockHoverClose) {
                 [self hoverViewExit:button];
             } else {
                 [self close];

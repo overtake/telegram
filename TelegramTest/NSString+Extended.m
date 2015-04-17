@@ -1015,11 +1015,12 @@
          // surrogate pair
          if (0xd800 <= hs && hs <= 0xdbff) {
              if (substring.length > 1) {
-                 const unichar ls = [substring characterAtIndex:1];
-                 const int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
-                 if (0x1d000 <= uc && uc <= 0x1f77f) {
-                     [temp setObject:substring forKey:@(uc)];
-                 }
+                unichar ls = [substring characterAtIndex:1];
+                int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
+                if (0x1d000 <= uc && uc <= 0x1f77f) {
+                    
+                    [temp setObject:substring forKey:@(uc)];
+                }
              }
          } else if (substring.length > 1) {
              const unichar ls = [substring characterAtIndex:1];
@@ -1066,21 +1067,8 @@
         
         [temp enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             
-            NSData *data = [obj dataUsingEncoding:NSNonLossyASCIIStringEncoding];
-            NSString *e = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            
-            NSArray *s = [e componentsSeparatedByString:@"\\"];
-            
-            
-            
-            if(s.count == 5) {
-                e = [NSString stringWithFormat:@"\\%@",[[s subarrayWithRange:NSMakeRange(1, 2)] componentsJoinedByString:@"\\"]];
-            }
-            
-            
-            data = [e dataUsingEncoding:NSUTF8StringEncoding];
-            
-            e = [[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding];
+           
+            NSString *e = [self realEmoji:obj];
             
             [t setObject:e forKey:key];
             
@@ -1094,6 +1082,76 @@
     
     return [temp allValues];
     
+}
+
+-(NSString *)realEmoji:(NSString *)raceEmoji {
+    
+    NSString *e = raceEmoji;
+    
+    if(raceEmoji.length == 4) {
+        NSData *data = [raceEmoji dataUsingEncoding:NSNonLossyASCIIStringEncoding];
+        NSString *e = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSArray *s = [e componentsSeparatedByString:@"\\"];
+        
+        
+        
+        if(s.count == 5) {
+            e = [NSString stringWithFormat:@"\\%@",[[s subarrayWithRange:NSMakeRange(1, 2)] componentsJoinedByString:@"\\"]];
+        }
+        
+        
+        data = [e dataUsingEncoding:NSUTF8StringEncoding];
+        
+        e = [[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding];
+
+        return e;
+        
+    }
+
+    return e;
+}
+
+-(NSString *)emojiModifier:(NSString *)emoji {
+    
+    if(emoji.length == 4) {
+        NSData *data = [emoji dataUsingEncoding:NSNonLossyASCIIStringEncoding];
+        NSString *e = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSArray *s = [e componentsSeparatedByString:@"\\"];
+        
+        
+        
+        if(s.count == 5) {
+            e = [NSString stringWithFormat:@"\\%@",[[s subarrayWithRange:NSMakeRange(3, 2)] componentsJoinedByString:@"\\"]];
+        }
+        
+        
+        data = [e dataUsingEncoding:NSUTF8StringEncoding];
+        
+        e = [[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding];
+        
+        return e;
+        
+    }
+    
+    return nil;
+}
+
+-(NSString *)emojiWithModifier:(NSString *)modifier emoji:(NSString *)emoji {
+    
+    
+    
+    NSData *data = [emoji dataUsingEncoding:NSNonLossyASCIIStringEncoding];
+    NSString *e = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    e = [NSString stringWithFormat:@"%@%@",e,[[NSString alloc] initWithData:[modifier dataUsingEncoding:NSNonLossyASCIIStringEncoding] encoding:NSUTF8StringEncoding]];
+    
+    data = [e dataUsingEncoding:NSUTF8StringEncoding];
+    
+    e = [[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding];
+    
+    return e;
 }
 
 static NSTextField *testTextField() {

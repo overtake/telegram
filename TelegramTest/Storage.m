@@ -97,7 +97,7 @@ static NSString *encryptionKey = @"";
     }];
 }
 
-static NSString *kEmoji = @"kEmoji";
+static NSString *kEmoji = @"kEmojiNew";
 
 
 + (NSMutableArray *)emoji {

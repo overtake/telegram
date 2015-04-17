@@ -35,6 +35,7 @@ typedef enum {
 	BTRControlEventRightClick			= 1 << 15,
 	
 	BTRControlEventValueChanged			= 1 << 16, // sliders, etc.
+    BTRControlEventLongLeftClick		= 1 << 17
 } BTRControlEvents;
 
 

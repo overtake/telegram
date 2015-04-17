@@ -528,6 +528,8 @@
 		C2ACCE591ADD2CD100ABEE78 /* TGConversationTableItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE581ADD2CD100ABEE78 /* TGConversationTableItem.m */; };
 		C2ACCE5C1ADD2D5600ABEE78 /* TGConversationTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE5B1ADD2D5600ABEE78 /* TGConversationTableCell.m */; };
 		C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */; };
+		C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */; };
+		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BC529C1A695A270004A8FE /* IOKit.framework */; };
@@ -1849,6 +1851,10 @@
 		C2ACCE5B1ADD2D5600ABEE78 /* TGConversationTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConversationTableCell.m; sourceTree = "<group>"; };
 		C2ACCE5D1ADD66A600ABEE78 /* TGConversationsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGConversationsTableView.h; sourceTree = "<group>"; };
 		C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConversationsTableView.m; sourceTree = "<group>"; };
+		C2ACCE691AE10ED200ABEE78 /* TGRaceEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRaceEmoji.h; sourceTree = "<group>"; };
+		C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRaceEmoji.m; sourceTree = "<group>"; };
+		C2ACCE6C1AE122A400ABEE78 /* EmojiButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiButton.h; sourceTree = "<group>"; };
+		C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiButton.m; sourceTree = "<group>"; };
 		C2B1730B19A3BF43003FBA23 /* Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		C2B325EC1A237A420012DE34 /* TLApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLApiObject.h; sourceTree = "<group>"; };
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
@@ -3579,6 +3585,10 @@
 				0ADA319B19469D16002BAEDB /* EmojiViewController.m */,
 				C26F7EA01A4C32DB001D1AE2 /* TGAllStickersTableView.h */,
 				C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */,
+				C2ACCE691AE10ED200ABEE78 /* TGRaceEmoji.h */,
+				C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */,
+				C2ACCE6C1AE122A400ABEE78 /* EmojiButton.h */,
+				C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */,
 			);
 			name = emoji;
 			sourceTree = "<group>";
@@ -5417,6 +5427,7 @@
 				C274C4051ACBFF33000DFDE4 /* TGWebpageContainer.m in Sources */,
 				C2753DD519E43EA500752BAF /* TGCTextMark.m in Sources */,
 				C256E91718D22622008FFA04 /* DownloadDocumentItem.m in Sources */,
+				C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */,
 				C297FBA31832997B00714B3C /* SSKeychain.m in Sources */,
 				C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */,
 				C2200B6918F2BCFC00F28803 /* BlockedTableController.m in Sources */,
@@ -5428,6 +5439,7 @@
 				C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */,
 				0A241AAE18ACD39700C32F45 /* MessageTableCellVideoView.m in Sources */,
 				0ACDB14118D09CC0009FE910 /* LoginButtonAndErrorView.m in Sources */,
+				C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */,
 				C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */,
 				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,

@@ -100,6 +100,8 @@ typedef void (^RBLPopoverDelegateBlock)(RBLPopover *popover);
 // Whether the popover is currently visible.
 @property (nonatomic, readonly, getter = isShown) BOOL shown;
 
+@property (nonatomic,assign) BOOL lockHoverClose;
+
 // Called before the popover is closed.
 @property (nonatomic, copy) RBLPopoverDelegateBlock willCloseBlock;
 
@@ -150,6 +152,8 @@ typedef void (^RBLPopoverDelegateBlock)(RBLPopover *popover);
 
 // Convenience method exposed for nib files.
 - (IBAction)performClose:(id)sender;
+
+
 
 @end
 

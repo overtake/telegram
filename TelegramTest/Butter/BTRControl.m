@@ -46,6 +46,8 @@ NSString * const BTRControlStateCursorKey = @"cursor";
 
 @property (nonatomic, readwrite) NSInteger clickCount;
 
+@property (nonatomic,assign) NSTimeInterval lastDownTime;
+
 @property (nonatomic) BOOL mouseInside;
 @property (nonatomic) BOOL mouseDown;
 @property (nonatomic, readonly) BOOL shouldHandleEvents;
@@ -441,6 +443,24 @@ static void BTRControlCommonInit(BTRControl *self) {
 	
 	BTRControlEvents events = 1;
 	events |= BTRControlEventMouseDownInside;
+    
+    dispatch_after_seconds(0.5, ^{
+        
+        if(self.mouseInside && self.mouseDown) {
+            
+            BTRControlEvents events = 1;
+            events = BTRControlEventLongLeftClick;
+            [self sendActionsForControlEvents:events];
+            
+            for (BTRControlAction *action in self.actions) {
+                if (action.events & events) {
+                    _lastDownTime = 1;
+                    break;
+                }
+            }
+        }
+        
+    });
 	
 	[self sendActionsForControlEvents:events];
 	
@@ -450,6 +470,11 @@ static void BTRControlCommonInit(BTRControl *self) {
 
 - (void)handleMouseUp:(NSEvent *)event {
 	self.mouseDown = NO;
+    
+    if(_lastDownTime == 1)
+        return;
+    
+    _lastDownTime = 0;
     
 	BTRControlEvents events = 1;
 	if (self.clickCount > 1) {
@@ -466,6 +491,8 @@ static void BTRControlCommonInit(BTRControl *self) {
 	} else {
 		events |= BTRControlEventMouseUpOutside;
 	}
+    
+    
 	
 	[self sendActionsForControlEvents:events];
 	

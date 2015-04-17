@@ -18,5 +18,7 @@
 - (NSString *)replaceSmilesToEmoji;
 
 -(NSString *)fixEmoji;
-
+-(NSString *)realEmoji:(NSString *)raceEmoji;
+-(NSString *)emojiModifier:(NSString *)emoji;
+-(NSString *)emojiWithModifier:(NSString *)modifier emoji:(NSString *)emoji;
 @end

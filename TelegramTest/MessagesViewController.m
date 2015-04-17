@@ -110,7 +110,6 @@
 //Bottom
 @property (nonatomic, strong) MessageTypingView *typingView;
 
-@property (nonatomic, strong) MessagesBottomView *bottomView;
 
 
 @property (nonatomic, strong) TMNameTextField *nameTextField;
@@ -2545,7 +2544,7 @@ static NSTextAttachment *headerMediaIcon() {
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
         message = [message replaceSmilesToEmoji];
     
-    NSArray *array = [message getEmojiFromString:NO];
+    NSArray *array = [message getEmojiFromString:YES];
     if(array.count > 0) {
         [[EmojiViewController instance] saveEmoji:array];
     }
