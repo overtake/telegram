@@ -85,6 +85,7 @@ static NSDictionary *elements;
     [self.controller insertEmoji:button.titleLabel.stringValue];
     [self.controller saveModifier:[button.titleLabel.stringValue emojiModifier:button.titleLabel.stringValue] forEmoji:_emoji];
     [self.popover close];
+    [self.controller close];
 }
 
 @end
