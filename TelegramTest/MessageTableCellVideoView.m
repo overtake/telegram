@@ -149,6 +149,8 @@ static NSImage *playImage() {
     
     [self.progressView setState:cellState];
     
+    [self.playImage setCenterByView:self.imageView];
+    
     BOOL needBlur = self.item.message.media.video.thumb.w != 250;
     
     if(self.imageView.isAlwaysBlur != needBlur)
@@ -192,7 +194,8 @@ static NSImage *playImage() {
     
      [self.imageView setFrameSize:item.blockSize];
     
-        
+    
+    
     [self updateVideoTimeView];
 }
 

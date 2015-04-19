@@ -53,10 +53,7 @@
             EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(34 * i, 0, 34, 34)];
             [button setTitleFont:[NSFont fontWithName:@"Helvetica" size:17] forControlState:BTRControlStateNormal];
             [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
-            
-
-            NSLog(@"%f",floor(NSAppKitVersionNumber));
-            
+                        
             if(floor(NSAppKitVersionNumber) >= 1347 ) {
                 [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
             }

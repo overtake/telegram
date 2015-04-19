@@ -120,17 +120,17 @@
     
     
     
-    
-    GeneralSettingsRowItem *logout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
-        
-        [self logOut];
-        
-        
-    } description:NSLocalizedString(@"PrivacyAndSecurity.Logout", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
-    }];
-    
-    [self.tableView insert:logout atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    GeneralSettingsRowItem *logout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+//        N
+//        [self logOut];
+//        
+//        
+//    } description:NSLocalizedString(@"PrivacyAndSecurity.Logout", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+//    }];
+//    
+//    [self.tableView insert:logout atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil)];

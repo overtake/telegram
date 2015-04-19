@@ -20,4 +20,6 @@
 - (void)setItem:(MessageTableItem *)item;
 - (void)resizeAndRedraw;
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
+
 @end

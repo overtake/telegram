@@ -77,6 +77,7 @@
     NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - 200];
     
     [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - 200, s.height )];
+    [self.textField setFrameOrigin:NSMakePoint(100, item.isFlipped ? NSHeight(self.frame) - s.height : 0 )];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

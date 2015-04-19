@@ -249,85 +249,61 @@
    
 }
 
--(BOOL)shouldAdjustSizeOfSubview:(NSView *)subview {
-    BOOL res = NO;
-    
-    if(subview == self.rightViewController.view) {
-        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH); // ![self isMinimisze] && ( [self isSingleLayout] || NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH );
-        
-    }
-
-    
-    return res;
-}
-
-- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
-    
-    if(subview == self.leftViewContainer)
-        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
-    else {
-        return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
-    }
-    
-}
-
-//- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
-//    
-//    
+//-(BOOL)shouldAdjustSizeOfSubview:(NSView *)subview {
 //    BOOL res = NO;
 //    
-//    if(subview == self.leftViewContainer) {
-//       // res = ![self isMinimisze] && ( (![self isSingleLayout] ) );
-//       
-//        res = ![self shouldAdjustSizeOfSubview:self.rightViewController.view];
-//    } else {
-//      //  res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
-//       //
-//        res = [self shouldAdjustSizeOfSubview:self.rightViewController.view];
+//    if(subview == self.rightViewController.view) {
+//        res = [self isMinimisze] || ([self isSingleLayout] ||  NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH); // ![self isMinimisze] && ( [self isSingleLayout] || NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH );
+//        
 //    }
-//    
+//
 //    
 //    return res;
-//    
-////    
-////    BOOL res = [self shouldAdjustSizeOfSubview:subview];
-////    
-////    if(subview == self.leftViewContainer) {
-////        
-////        if([self shouldAdjustSizeOfSubview:self.rightViewController.view]) {
-////            return YES;
-////        }
-////        
-////    } else {
-////        
-////        if([self shouldAdjustSizeOfSubview:self.leftViewContainer]) {
-////            return YES;
-////        }
-////        
-////    }
-////    
-////   
-////    
-////    return res;
 //}
-
-
-
--(BOOL)isResizeToBig {
-    return oldLeftSize.width < newLeftSize.width;
-}
-
--(BOOL)isResizeToLittle {
-    return oldLeftSize.width > newLeftSize.width;
-}
-
+//
+//- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
+//    
+//    if(subview == self.leftViewContainer)
+//        return ![self isMinimisze] && ( ([self isSingleLayout] && [self isConversationListShown]) || (![self isSingleLayout] && ((NSWidth(self.leftViewContainer.frame) <= MAX_LEFT_WIDTH ))) );
+//    else {
+//        return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+//    }
+//    
+//}
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldHideDividerAtIndex:(NSInteger)dividerIndex {
     return YES;
 }
 
+
+- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview {
+
+    if(subview == self.leftViewContainer) {
+        
+        if([self isMinimisze] || [self isSingleLayout]) {
+            return NO;
+        } else {
+            return NSWidth(self.leftViewContainer.frame) < MAX_LEFT_WIDTH;
+        }
+        
+        
+        
+    } else {
+        
+        if([self isMinimisze] || [self isSingleLayout]) {
+            return YES;
+        } else {
+            return NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH;
+        }
+        
+      //  return [self isMinimisze] || ((![self isSingleLayout] || ([self isSingleLayout] && ![self isConversationListShown])) && NSWidth(self.rightViewController.view.frame) > MIN_SINGLE_LAYOUT_WIDTH);
+    }
+
+}
+
+
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return self.splitView.frame.size.width;
+    return proposedMaximumPosition;
 }
 
 
@@ -346,6 +322,18 @@
     
     return roundf(proposedPosition);
 }
+
+
+
+-(BOOL)isResizeToBig {
+    return oldLeftSize.width < newLeftSize.width;
+}
+
+-(BOOL)isResizeToLittle {
+    return oldLeftSize.width > newLeftSize.width;
+}
+
+
 
 -(void)splitViewDidResizeSubviews:(NSNotification *)notification {
     LeftViewController *controller = [Telegram leftViewController];

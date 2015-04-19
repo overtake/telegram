@@ -700,8 +700,9 @@ typedef enum {
     
     currentY+=38;
     
+    
     self.faq = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.FAQ",nil) tapBlock:^{
-        open_link(@"https://telegram.org/faq");
+        open_link([NSString stringWithFormat:@"https://telegram.org/faq/%@",[[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]]);
     }];
     
     [self.faq setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];

@@ -288,12 +288,18 @@ static const int bottomOffset = 58;
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.currentTabController viewWillAppear:animated];
+    
     if(![[Telegram rightViewController] isModalViewActive]) {
        // self.leftNavigationBarView = nil;
     }
 }
 
-
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+     [self.currentTabController viewWillDisappear:animated];
+}
 
 -(void)setUnreadCount:(int)count {
     [self.tabController setUnreadCount:count];
@@ -322,7 +328,7 @@ static const int bottomOffset = 58;
 
 
 -(BOOL)canMinimisize {
-    return  !_conversationsViewController.isSearchActive;
+    return  !_conversationsViewController.isSearchActive && [self isChatOpened];
 }
 
 -(BOOL)isChatOpened {

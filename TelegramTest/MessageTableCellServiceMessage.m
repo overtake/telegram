@@ -27,6 +27,8 @@
         [self.textField setEditable:NO];
         [self.textField setSelectable:NO];
         [self.textField setBordered:NO];
+        [self.textField setDrawsBackground:NO];
+        [self.textField setBackgroundColor:[NSColor clearColor]];
         [self.textField setBezeled:NO];
         [self.textField setAutoresizesSubviews:YES];
         [self.textField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
@@ -51,7 +53,33 @@
     return self;
 }
 
-
+-(NSArray *)defaultMenuItems {
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    if(self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class])  {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+            
+            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+            
+        }]];
+    }
+    
+    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
+        
+        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        
+        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+        
+        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+        
+        
+    }]];
+    
+    return items;
+    
+}
 
 - (void) setItem:(MessageTableItemServiceMessage *)item {
     [super setItem:item];
