@@ -65,7 +65,7 @@
 #import "ExternalDocumentSecretSenderItem.h"
 #import "TGPasslock.h"
 #import "NSString+FindURLs.h"
-
+#import "ImageAttachSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1481,13 +1481,13 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-     [self.table beginUpdates];
+  //   [self.table beginUpdates];
     
     
     [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
     
     
-     [self.table endUpdates];
+//     [self.table endUpdates];
     
     
     
@@ -2817,9 +2817,80 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendImage:file_path file_data:data addCompletionHandler:nil];
 }
 
+- (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat)
+        return;
+    
+    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
+            
+            SenderItem *sender = [[ImageAttachSenderItem alloc] initWithConversation:_conversation attachObject:obj];
+            
+            
+            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+            [items addObject:sender.tableItem];
+ 
+        }];
+        
+       
+        [self.historyController addItems:items conversation:_conversation sentControllerCallback:completeHandler];
+        
+        
+    }];
+}
+
+- (void)addImageAttachment:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(_conversation.type == DialogTypeSecretChat)
+        return;
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        NSMutableArray *attachments = [transaction objectForKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+        
+        if(!attachments) {
+            attachments = [[NSMutableArray alloc] init]; 
+        }
+        
+        TGAttachObject *attach = [[TGAttachObject alloc] initWithOriginFile:file_path orData:data peer_id:_conversation.peer_id];
+        
+        [attachments addObject:attach];
+        
+        [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self.bottomView addAttachment:[[TGImageAttachment alloc] initWithItem:attach]];
+        }];
+        
+        
+        if(completeHandler) completeHandler();
+    }];
+    
+}
+
+
 -(void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!_conversation.canSendMessage)
         return;
+    
+#ifdef ACCEPT_FEATURE
+    
+    if(ACCEPT_FEATURE) {
+        
+        if(_conversation.type != DialogTypeSecretChat) {
+            [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
+            
+            return;
+        }
+        
+    }
+    
+#endif
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     

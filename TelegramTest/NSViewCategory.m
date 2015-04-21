@@ -110,5 +110,9 @@ static CALAyerAnimationInstance *instance() {
     }
 }
 
+-(void)dealloc {
+    assert([NSThread isMainThread]);
+}
+
 
 @end

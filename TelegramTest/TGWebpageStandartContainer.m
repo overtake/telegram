@@ -27,6 +27,11 @@
     [super setWebpage:webpage];
     
     
+    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
+    
+    [self.descriptionField setAttributedString:webpage.desc];
+    
+    
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
 }

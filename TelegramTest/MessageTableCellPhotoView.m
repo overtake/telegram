@@ -174,8 +174,11 @@ NSImage *fireImage() {
     
     if(!self.progressView.isHidden)
     {
-        [self.progressView setCurrentProgress:15 + MAX(( item.imageObject.downloadItem.progress - 15),0)];
-        [self.progressView setProgress:self.progressView.currentProgress animated:YES];
+        if(item.imageObject.downloadItem) {
+            [self.progressView setCurrentProgress:15 + MAX(( item.imageObject.downloadItem.progress - 15),0)];
+            [self.progressView setProgress:self.progressView.currentProgress animated:YES];
+        }
+        
     }
     
     [self.progressView setState:cellState];

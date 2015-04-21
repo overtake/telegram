@@ -63,7 +63,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
 
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:0 access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -125,20 +125,8 @@
                 strongSelf.message.n_id = msg.n_id;
                 strongSelf.message.date = msg.date;
                 
-            } else {
-              //  TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-              //  [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-              //  [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
-                
-              //  msg = stated.messages[0];
-                
             }
-            
-            
-            if(isFirstSend) {
-                [strongSelf.uploadOperation saveFileInfo:msg.media.photo];
-            }
-            
+
             
             TLPhotoSize *newSize = [msg.media.photo.sizes lastObject];
             
@@ -172,9 +160,15 @@
             strongSelf.state = MessageSendingStateSent;
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
-            strongSelf.state = MessageSendingStateError;
+            
             strongSelf.uploadOperation = nil;
-        }];
+            
+            if([strongSelf checkErrorAndReUploadFile:error path:strongSelf.filePath])
+                return;
+            
+            strongSelf.state = MessageSendingStateError;
+            
+        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
         
     }];
     

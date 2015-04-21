@@ -408,6 +408,10 @@
 }
 
 + (id)deserialize:(NSData*)data {
+    
+    if(!data)
+        return nil;
+    
     SerializedData *stream = [[SerializedData alloc] init];
     NSInputStream *inputStream = [[NSInputStream alloc] initWithData:data];
     [inputStream open];
@@ -425,6 +429,10 @@
 }
 
 + (NSData*)serialize:(TLObject*)obj isCacheSerialize:(bool)isCacheSerialize {
+    
+    if(!obj)
+        return nil;
+    
     SerializedData *stream = [[SerializedData alloc] init];
     stream.isCacheSerialize = isCacheSerialize;
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
@@ -439,6 +447,8 @@
 }
 
 + (void)TLSerialize:(TLObject*)objOrig stream:(SerializedData*)stream {
+    
+    
     TLObject* obj = objOrig;
     
     Class class = [obj class];

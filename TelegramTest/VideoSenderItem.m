@@ -123,18 +123,7 @@
                     strongSelf.message.n_id = msg.n_id;
                     strongSelf.message.date = msg.date;
                     
-                } else {
-//                    TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-//                    [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-//                    [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
-                      
-                }
-                
-                
-                if(isFirstSend) {
-                    [strongSelf.uploader saveFileInfo:msg.media.video];
-                }
-                
+                } 
                 
                 
                 strongSelf.message.media.video.dc_id = [msg media].video.dc_id;
@@ -160,8 +149,14 @@
                 strongSelf.state = MessageSendingStateSent;
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                strongSelf.uploader = nil;
+                
+                if([strongSelf checkErrorAndReUploadFile:error path:strongSelf.filePath])
+                    return;
+                
                 strongSelf.state = MessageSendingStateError;
-            }];
+            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
         };
 
         if(!isFirstSend) {

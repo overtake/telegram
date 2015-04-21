@@ -32,7 +32,7 @@ extern NSString *const STICKERS_COLLECTION;
 extern NSString *const SOCIAL_DESC_COLLECTION;
 extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
-
+extern NSString *const ATTACHMENTS;
 -(void)drop:(void (^)())completeHandler;
 
 
@@ -191,7 +191,7 @@ extern NSString *const FILE_NAMES;
 - (id)fileInfoByPathHash:(NSString *)pathHash;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
-
+- (void)deleteFileHash:(NSString *)pathHash;
 -(void)updateMessages:(NSArray *)messages;
 
 

@@ -53,7 +53,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         self.state = MessageSendingStateError;
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 }
 

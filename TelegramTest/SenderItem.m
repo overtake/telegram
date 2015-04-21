@@ -281,7 +281,21 @@ static NSMutableArray *waiting;
      }];
 }
 
+-(BOOL)checkErrorAndReUploadFile:(RpcError *)error path:(NSString *)path {
+    
+    [[Storage manager] deleteFileHash:[FileUtils fileMD5:path]];
+    
+    if([error.error_msg isEqualToString:[NSString stringWithFormat:@"FILE_PART_%d_MISSING",error.resultId]]) {
+        
+        self.state = MessageStateWaitSend;
+        
+        [self send];
+        
+        return YES;
+    }
 
+    return NO;
+}
 
 
 -(void)dealloc {

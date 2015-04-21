@@ -46,7 +46,7 @@
 - (id)init {
     if(self = [super init]) {
         self.identify = rand_long();
-        [self setState:UploadReady];
+        _uploadState = UploadNoneState;
     }
     return self;
 }
@@ -58,6 +58,32 @@
 - (BOOL)isFinished {
     return self.uploadState == UploadFinished || self.uploadState == UploadError || self.uploadState == UploadCancelled;
 }
+
+-(void)setUploadCancelled:(void (^)(UploadOperation *))uploadCancelled {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        _uploadCancelled = uploadCancelled;
+    }];
+}
+
+-(void)setUploadComplete:(void (^)(UploadOperation *, id))uploadComplete {
+    [ASQueue dispatchOnMainQueue:^{
+        _uploadComplete = uploadComplete;
+    }];
+}
+
+-(void)setUploadProgress:(void (^)(UploadOperation *, NSUInteger, NSUInteger))uploadProgress {
+    [ASQueue dispatchOnMainQueue:^{
+        _uploadProgress = uploadProgress;
+    }];
+}
+
+-(void)setUploadStarted:(void (^)(UploadOperation *, NSData *))uploadStarted {
+    [ASQueue dispatchOnMainQueue:^{
+        _uploadStarted = uploadStarted;
+    }];
+}
+
 
 - (BOOL)isExecuting {
     return self.uploadState == UploadExecuting;
@@ -91,10 +117,11 @@
         self.uploadState = UploadCancelled;
     }
     
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         if(self.uploadCancelled)
             self.uploadCancelled(self);
     }];
+    
 }
 
 - (void)push {
@@ -119,15 +146,15 @@
     self.uploadType = type;
     
     
+    self.uploadState = UploadReady;
+    
     if(!self.fileName)
         self.fileName = [self.filePath lastPathComponent];
     
     self.total_size = (int) (self.fileData ? self.fileData.length : fileSize(self.filePath));
     
     
-    if(self.fileData) {
-        self.fileMD5Hash = [FileUtils dataMD5:self.fileData];
-    } else {
+    if(self.filePath) {
         self.fileMD5Hash = [FileUtils fileMD5:self.filePath];
     }
     
@@ -158,7 +185,7 @@
         
         if(file) {
             self.uploadState = UploadFinished;
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(self.uploadComplete)
                     self.uploadComplete(self, file);
             }];
@@ -313,7 +340,7 @@
             [self.encryptedParts removeObjectForKey:@(partNumber)];
         }
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             if(self.uploadProgress)
                 self.uploadProgress(self,self.readedBytes,self.total_size);
         }];
@@ -342,7 +369,9 @@
             
             [self setState:UploadFinished];
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [self saveFileInfo:inputFile];
+            
+            [ASQueue dispatchOnMainQueue:^{
                 if(self.uploadComplete)
                     self.uploadComplete(self, inputFile);
                 [self.typingTimer invalidate];
@@ -360,8 +389,11 @@
 }
 
 - (void)saveFileInfo:(id)fileInfo {
-    if(!self.isEncrypted) {
-        [[Storage manager] setFileInfo:fileInfo forPathHash:self.fileMD5Hash];
+    if(!self.isEncrypted && _fileMD5Hash.length > 0) {
+        if(self.uploadType == UploadImageType ||
+           self.uploadType == UploadDocumentType ||
+           self.uploadType == UploadVideoType )
+            [[Storage manager] setFileInfo:fileInfo forPathHash:self.fileMD5Hash];
     }
 }
 

@@ -221,24 +221,12 @@
             strongSelf.message.n_id = msg.n_id;
             strongSelf.message.date = msg.date;
             
-        } else {
-         //   [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-         //   [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
-            
-            
         }
         
         
         TL_localMessage *message = strongSelf.message;
         
         if(isNewDocument) {
-            [strongSelf.uploader saveFileInfo:msg.media.document];
-            id thumb = [msg media].document.thumb;
-            if(![thumb isKindOfClass:[TL_photoSizeEmpty class]] && thumb) {
-                [strongSelf.uploaderThumb saveFileInfo:[TL_photoEmpty createWithN_id:0]];
-            }
-            
-            
             message.media.document.thumb = [msg media].document.thumb;
             message.media.document.thumb.bytes = nil;
         }
@@ -295,8 +283,15 @@
        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        
+        strongSelf.uploader = nil;
+        
+        if([strongSelf checkErrorAndReUploadFile:error path:strongSelf.filePath])
+            return;
+        
         strongSelf.state = MessageSendingStateError;
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 -(void)cancel {

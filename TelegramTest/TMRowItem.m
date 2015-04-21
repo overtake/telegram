@@ -25,7 +25,8 @@
                     [cellView.subviews enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
                         
                         if(obj.class != NSView.class) {
-                            self.rowDelegate = (id) obj;
+                            if([obj respondsToSelector:@selector(redrawRow)])
+                                [(TMRowView *)obj redrawRow];
                             *stop = YES;
                         }
                         
@@ -36,8 +37,7 @@
    // }
     
 //    DLog(@"redraw rows");
-    if([self.rowDelegate respondsToSelector:@selector(redrawRow)])
-        [self.rowDelegate redrawRow];
+    
 }
 
 -(id)initWithObject:(id)object {

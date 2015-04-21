@@ -58,7 +58,7 @@
         
         if([replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]] || [replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             
-            NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             
             [replyText appendString:str withColor:NSColorFromRGB(0x060606)];
             

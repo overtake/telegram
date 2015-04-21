@@ -266,7 +266,7 @@ static NSImage *playVideoImage() {
 
 -(BOOL)isset:(PhotoCollectionImageObject *)object {
     NSString *path = mediaFilePath([object.previewObject.media media]);
-    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:[object.previewObject.media media].video.size];
+    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:[(TL_localMessage *)object.previewObject.media media].video.size];
 }
 
 -(NSImage *)cachedImage:(NSString *)key {

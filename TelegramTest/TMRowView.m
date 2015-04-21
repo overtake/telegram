@@ -33,16 +33,14 @@
 
 - (void) removeFromSuperview {
     [super removeFromSuperview];
-    self.rowItem.rowDelegate = nil;
 }
 
 - (void) viewWillMoveToSuperview:(NSView *)newSuperview {
     [super viewWillMoveToSuperview:newSuperview];
-    self.rowItem.rowDelegate = self;
 }
 
 - (void) dealloc {
-    self.rowItem.rowDelegate = nil;
+
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -65,9 +63,7 @@
 
 - (void) setItem:(id)item selected:(BOOL)isSelected {
     
-    [self.rowItem setRowDelegate:nil];
     self.rowItem = item;
-    [self.rowItem setRowDelegate:self];
     
     if(self.isSelected != isSelected) {
         self.isSelected = isSelected;

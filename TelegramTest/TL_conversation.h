@@ -79,6 +79,7 @@ typedef enum {
 - (NSUInteger)cacheHash;
 - (NSString *)cacheKey;
 
+
 - (DialogType) type;
 
 @end

@@ -170,10 +170,6 @@
         NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
         if(data)
             replyMessage = [TLClassStore deserialize:data];
-        
-        
-        
-        
     }];
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
@@ -410,9 +406,7 @@ static NSMutableArray *wrong_files;
     
     if([imageTypes() containsObject:pathExtension] && !asDocument) {
         [[[Telegram rightViewController] messagesViewController]
-         sendImage:file file_data:nil addCompletionHandler:^{
-             next();
-         }];
+         sendImage:file file_data:nil addCompletionHandler:next];
         
         return;
         

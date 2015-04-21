@@ -42,8 +42,6 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
-    int i = 0;
-    
     [ASQueue dispatchOnStageQueue:^{
         
         [self update];
@@ -150,7 +148,7 @@
     _dateSize.height = ceil(_dateSize.height);
     
     
-    if(_conversation.unread_count) {
+    if(_conversation.unread_count > 0) {
         NSString *unreadTextCount;
         
         if(self.conversation.unread_count < 1000)

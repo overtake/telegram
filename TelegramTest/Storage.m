@@ -28,7 +28,7 @@ NSString *const STICKERS_COLLECTION = @"stickers_collection";
 NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
 NSString *const REPLAY_COLLECTION = @"replay_collection";
 NSString *const FILE_NAMES = @"file_names";
-
+NSString *const ATTACHMENTS = @"attachments";
 -(id)init {
     if(self = [super init]) {
         [self open:nil];
@@ -136,7 +136,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t138.sqlite"; // 61
+    NSString *dbName = @"t139.sqlite"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
@@ -411,7 +411,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQuery:@"select serialized from files where hash = ?", pathHash];
         
         if([result next]) {
-            file = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            file = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
         }
         [result close];
     }];
@@ -422,6 +422,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash {
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO]];
+    }];
+}
+
+- (void)deleteFileHash:(NSString *)pathHash {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db executeUpdate:@"delete from files WHERE hash = ?",pathHash];
     }];
 }
 

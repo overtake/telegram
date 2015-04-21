@@ -407,8 +407,10 @@
     }];
     
     [operation setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-         if(progressHandler)
-             progressHandler((float)current/(float)total * 100);
+        [ASQueue dispatchOnMainQueue:^{
+            if(progressHandler)
+                progressHandler((float)current/(float)total * 100);
+        }];
     }];
     
     [operation setUploadStarted:^(UploadOperation *operation, NSData *data) {
@@ -440,8 +442,10 @@
     }];
     
     [operation setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        if(progressHandler)
-            progressHandler((float)current/(float)total * 100);
+        [ASQueue dispatchOnMainQueue:^{
+            if(progressHandler)
+                progressHandler((float)current/(float)total * 100);
+        }];
     }];
     
     [operation setUploadStarted:^(UploadOperation *operation, NSData *data) {

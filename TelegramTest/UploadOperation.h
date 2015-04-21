@@ -18,17 +18,17 @@ typedef enum {
 } UploadType;
 
 typedef enum {
-    UploadReady = 0,
-    UploadExecuting = 1,
-    UploadFinished = 2,
-    UploadError = 3,
-    UploadCancelled = 4
+    UploadNoneState = 0,
+    UploadReady = 1,
+    UploadExecuting = 2,
+    UploadFinished = 3,
+    UploadError = 4,
+    UploadCancelled = 5
 } UploadState;
 
 
 @property (nonatomic, assign) int total_size;
 @property (nonatomic, assign) NSUInteger readedBytes;
-@property (nonatomic, copy) void (^uploadProgress)(UploadOperation *uploader, NSUInteger current, NSUInteger total);
 @property (atomic, assign) UploadState uploadState;
 
 @property (nonatomic,strong) NSData *aes_key;
@@ -39,14 +39,14 @@ typedef enum {
 @property (nonatomic, strong) NSData *fileData;
 @property (nonatomic, strong) NSString *filePath;
 
-@property (nonatomic, copy) void (^uploadStarted)(UploadOperation *uploader, NSData *fileData);
-@property (nonatomic, copy) void (^uploadComplete)(UploadOperation *uploader, id inputPhoto);
-@property (nonatomic, copy) void (^uploadCancelled)(UploadOperation *uploader);
-@property (nonatomic, copy) void (^uploadTypingNeed)(UploadOperation *uploader);
+@property (nonatomic, strong) void (^uploadProgress)(UploadOperation *uploader, NSUInteger current, NSUInteger total);
+@property (nonatomic, strong) void (^uploadStarted)(UploadOperation *uploader, NSData *fileData);
+@property (nonatomic, strong) void (^uploadComplete)(UploadOperation *uploader, id inputPhoto);
+@property (nonatomic, strong) void (^uploadCancelled)(UploadOperation *uploader);
+@property (nonatomic, strong) void (^uploadTypingNeed)(UploadOperation *uploader);
 
 - (void)cancel;
 - (void)ready:(UploadType)type;
 - (void)encryptedready:(UploadType)type key:(NSData *)key iv:(NSData *)iv;
-- (void)saveFileInfo:(id)fileInfo;
 
 @end

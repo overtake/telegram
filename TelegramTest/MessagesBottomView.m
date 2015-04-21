@@ -30,7 +30,10 @@
 #import "TGForwardContainer.h"
 #import "TGHashtagPopup.h"
 #import "TGWebpageAttach.h"
-@interface MessagesBottomView()
+#import "TGImageAttachmentsController.h"
+
+
+@interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
 @property (nonatomic, strong) TMView *normalView;
@@ -70,6 +73,8 @@
 
 @property (nonatomic,strong) TGWebpageAttach *webpageAttach;
 
+@property (nonatomic,strong,readonly) TGImageAttachmentsController *imageAttachmentsController;
+
 @end
 
 @implementation MessagesBottomView
@@ -108,21 +113,40 @@
     }
 }
 
+-(void)didChangeAttachmentsCount:(int)futureCount {
+    
+    if(futureCount == 0 && _imageAttachmentsController.isShown) {
+        [_imageAttachmentsController hide:YES deleteItems:NO];
+        [self updateBottomHeight:YES];
+    } else if(futureCount > 0 && !_imageAttachmentsController.isShown) {
+        [_imageAttachmentsController show:_dialog animated:YES];
+        [self updateBottomHeight:YES];
+    }
+    
+    [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+}
+
+-(void)addAttachment:(TGImageAttachment *)attachment {
+    
+    [_imageAttachmentsController addItems:@[attachment] animated:YES];
+    
+    
+    [self updateBottomHeight:YES];
+    
+}
+
+-(void)closeAttachments {
+    [_imageAttachmentsController hide:YES deleteItems:YES];
+    
+    [self updateBottomHeight:YES];
+}
+
 - (void)dealloc {
     [Notification removeObserver:self];
 }
 
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
-    
-    [_attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
-        
-        [obj removeFromSuperview];
-        
-    }];
-    
-    [_attachments removeAllObjects];
-    [_attachmentsIgnore removeAllObjects];
 
     [self stopRecord:nil];
     
@@ -152,6 +176,16 @@
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
+    
+    
+    
+    
+    [_imageAttachmentsController show:_dialog animated:NO];
+    
+    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
+
+    
+    
 
 }
 
@@ -388,6 +422,13 @@
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
     
     //self.normalView.backgroundColor = NSColorFromRGB(0x000000)
+    
+    _imageAttachmentsController = [[TGImageAttachmentsController alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 11, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20, NSWidth(self.inputMessageTextField.containerView.frame), 70)];
+        
+    _imageAttachmentsController.delegate = self;
+        
+    [self.normalView addSubview:_imageAttachmentsController];
+
     
     return self.normalView;
 }
@@ -719,23 +760,15 @@
 
 - (void)sendButtonAction {
     
-    [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.image) {
-            [self.messagesViewController sendImage:nil file_data:[obj.image TIFFRepresentation]];
-        }
-        
-        [self.inputMessageTextField replaceCharactersInRange:obj.range withString:@""];
-        
-    }];
+    [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] addCompletionHandler:nil];
     
-    [self.attachmentsIgnore removeAllObjects];
-    
-    
-    [self checkAttachImages];
-    
+    if(_imageAttachmentsController.isShown) {
+        [_imageAttachmentsController hide:YES deleteItems:YES];
+        [self updateBottomHeight:YES];
+    }
     
     [self.messagesViewController sendMessage];
+    
     
     [self.messagesViewController performForward:self.dialog];
     
@@ -763,7 +796,7 @@
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer) {
+    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown) {
         
         
         if(self.dialog)
@@ -780,7 +813,7 @@
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length || self.fwdContainer) {
+    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -789,8 +822,6 @@
     }
     
     
-    
-    [self checkAttachImages];
     [self updateWebpage:YES];
     
     [self checkMentionsOrTags];
@@ -1069,94 +1100,8 @@
     
 }
 
--(void)checkAttachImages {
-    
-    //
-    
-    if(self.dialog.type == DialogTypeSecretChat)
-        return;
-    
-    NSArray *links = [self.inputMessageTextField.stringValue locationsOfLinks];
-    
-    NSArray *acceptExtensions = @[@"jpg",@"png",@"tiff"];
-    
-    
-    BOOL needUpdate = self.attachments.count > 0;
-    
-    [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
-        
-        [obj removeFromSuperview];
-        
-    }];
-    
-    [self.attachments removeAllObjects];
-    
-    
-    __block int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 16;
-    
-    __block int k = 0;
-    
-    [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
-        NSRange range = [obj range];
-        
-        NSString *link = [self.inputMessageTextField.stringValue substringWithRange:range];
-        
-        __block BOOL checkIgnore = YES;
-        
-        
-        [self.attachmentsIgnore enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            NSString *l = obj[@"link"];
-            NSRange r = [obj[@"range"] rangeValue];
-            
-            if((range.location == r.location && range.length == r.length) && [link isEqualToString:l])
-            {
-                *stop = YES;
-                checkIgnore = NO;
-            }
-            
-        }];
-        
-        if([acceptExtensions indexOfObject:[link pathExtension]] != NSNotFound && checkIgnore) {
-            
-            
-            TGAttachImageElement *attach = [[TGAttachImageElement alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20, 70, 70)];
-            
-            startX +=80;
-            
-            [attach setDeleteCallback:^{
-                
-                [self.attachmentsIgnore addObject:@{@"link":link,@"range":[NSValue valueWithRange:range]}];
-                
-                [self checkAttachImages];
-                
-            }];
-            
-            [attach setLink:link range:range];
-            
-            
-            
-            [self.attachments addObject:attach];
-            
-            [self.normalView addSubview:attach];
-            
-            
-            k++;
-            
-        }
-        
-        if(k == 4)
-            *stop = YES;
-        
-    }];
-    
-    needUpdate = (self.attachments.count == 0 && needUpdate) || (self.attachments.count > 0 && !needUpdate);
-    
-    if(self.inputMessageString.length > 0 || needUpdate)
-        [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
-    
-}
+
+
 
 
 - (void) TMGrowingTextViewHeightChanged:(id)textView height:(int)height cleared:(BOOL)isCleared {
@@ -1167,7 +1112,7 @@
     height = height % 2 == 1 ? height + 1 : height;
 //    DLog(@"height %d", height);
     
-    if(self.attachments.count > 0) {
+    if(_imageAttachmentsController.isShown ) {
         height += 75;
     }
 
@@ -1184,6 +1129,7 @@
         height+= 35;
     }
     
+    
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
         
@@ -1197,7 +1143,7 @@
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            int offset = self.attachments.count > 0 ? 95 : 20;
+            int offset = _imageAttachmentsController.isShown ? 95 : 20;
             
             [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
@@ -1211,7 +1157,7 @@
              [self setFrameSize:layoutSize];
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
-            int offset = self.attachments.count > 0 ? 95 : 20;
+            int offset = _imageAttachmentsController.isShown ? 95 : 20;
             
             [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
@@ -1313,3 +1259,89 @@
 }
 
 @end
+
+
+/*
+ if(self.dialog.type == DialogTypeSecretChat)
+ return;
+ 
+ NSArray *links = [self.inputMessageTextField.stringValue locationsOfLinks];
+ 
+ NSArray *acceptExtensions = @[@"jpg",@"png",@"tiff"];
+ 
+ 
+ BOOL needUpdate = self.attachments.count > 0;
+ 
+ [self.attachments enumerateObjectsUsingBlock:^(TGAttachImageElement *obj, NSUInteger idx, BOOL *stop) {
+ 
+ [obj removeFromSuperview];
+ 
+ }];
+ 
+ [self.attachments removeAllObjects];
+ 
+ 
+ __block int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 16;
+ 
+ __block int k = 0;
+ 
+ [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ NSRange range = [obj range];
+ 
+ NSString *link = [self.inputMessageTextField.stringValue substringWithRange:range];
+ 
+ __block BOOL checkIgnore = YES;
+ 
+ 
+ [self.attachmentsIgnore enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ NSString *l = obj[@"link"];
+ NSRange r = [obj[@"range"] rangeValue];
+ 
+ if((range.location == r.location && range.length == r.length) && [link isEqualToString:l])
+ {
+ *stop = YES;
+ checkIgnore = NO;
+ }
+ 
+ }];
+ 
+ if([acceptExtensions indexOfObject:[link pathExtension]] != NSNotFound && checkIgnore) {
+ 
+ 
+ TGAttachImageElement *attach = [[TGAttachImageElement alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20, 70, 70)];
+ 
+ startX +=80;
+ 
+ [attach setDeleteCallback:^{
+ 
+ [self.attachmentsIgnore addObject:@{@"link":link,@"range":[NSValue valueWithRange:range]}];
+ 
+ // [self checkAttachImages];
+ 
+ }];
+ 
+ [attach setLink:link range:range];
+ 
+ 
+ 
+ [self.attachments addObject:attach];
+ 
+ [self.normalView addSubview:attach];
+ 
+ 
+ k++;
+ 
+ }
+ 
+ if(k == 4)
+ *stop = YES;
+ 
+ }];
+ 
+ needUpdate = (self.attachments.count == 0 && needUpdate) || (self.attachments.count > 0 && !needUpdate);
+ 
+ if(self.inputMessageString.length > 0 || needUpdate)
+
+*/

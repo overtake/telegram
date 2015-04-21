@@ -100,6 +100,12 @@ typedef enum {
 
 
 - (void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
+
+- (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler;
+
+- (void)addImageAttachment:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
+
+
 - (void)sendVideo:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
 ;
 - (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;

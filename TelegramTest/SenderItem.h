@@ -63,6 +63,7 @@ typedef enum {
 
 +(BOOL)allSendersSaved;
 
+-(BOOL)checkErrorAndReUploadFile:(RpcError *)error path:(NSString *)path;
 
 -(void)cancel;
 -(void)resend;

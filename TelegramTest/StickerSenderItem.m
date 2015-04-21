@@ -75,7 +75,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 @end

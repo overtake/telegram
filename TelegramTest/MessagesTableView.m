@@ -167,7 +167,7 @@
         [item makeSizeByWidth:self.containerSize.width];
     }
     
-    [self reloadData];
+  //  [self reloadData];
     
     
     self.isLocked = NO;
@@ -405,7 +405,7 @@
         [item makeSizeByWidth:self.containerSize.width];
     }
     
-    [self reloadData];
+    //[self reloadData];
 }
 
 

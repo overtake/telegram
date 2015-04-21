@@ -25,7 +25,6 @@
 @interface TMRowItem : NSObject<TMRowItemProtocol>
 
 @property (nonatomic, weak) id table;
-@property (nonatomic, strong) id<TMRowItemDelegate> rowDelegate;
 -(id)initWithObject:(id)object;
 - (void) redrawRow;
 - (NSUInteger)hash;

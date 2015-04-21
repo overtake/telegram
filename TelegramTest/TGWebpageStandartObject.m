@@ -11,7 +11,6 @@
 @implementation TGWebpageStandartObject
 
 @synthesize size = _size;
-@synthesize desc = _desc;
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super initWithWebPage:webpage]) {

@@ -550,6 +550,11 @@
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
 		C2C6D9711A12952D001EF8A2 /* TGPVImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */; };
 		C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C725D91860E05200094EC7 /* EncryptedParams.m */; };
+		C2C85B731AE52E8D00FBEABD /* TGImageAttachmentsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B721AE52E8D00FBEABD /* TGImageAttachmentsController.m */; };
+		C2C85B7D1AE532F500FBEABD /* TGImageLocalAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B7C1AE532F500FBEABD /* TGImageLocalAttachment.m */; };
+		C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */; };
+		C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B831AE57D0100FBEABD /* TGAttachObject.m */; };
+		C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -1897,6 +1902,16 @@
 		C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVImageView.m; sourceTree = "<group>"; };
 		C2C725D81860E05200094EC7 /* EncryptedParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedParams.h; sourceTree = "<group>"; };
 		C2C725D91860E05200094EC7 /* EncryptedParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedParams.m; sourceTree = "<group>"; };
+		C2C85B711AE52E8D00FBEABD /* TGImageAttachmentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageAttachmentsController.h; sourceTree = "<group>"; };
+		C2C85B721AE52E8D00FBEABD /* TGImageAttachmentsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageAttachmentsController.m; sourceTree = "<group>"; };
+		C2C85B7B1AE532F500FBEABD /* TGImageLocalAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageLocalAttachment.h; sourceTree = "<group>"; };
+		C2C85B7C1AE532F500FBEABD /* TGImageLocalAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageLocalAttachment.m; sourceTree = "<group>"; };
+		C2C85B7F1AE54C3F00FBEABD /* TGImageAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageAttachment.h; sourceTree = "<group>"; };
+		C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageAttachment.m; sourceTree = "<group>"; };
+		C2C85B821AE57D0100FBEABD /* TGAttachObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAttachObject.h; sourceTree = "<group>"; };
+		C2C85B831AE57D0100FBEABD /* TGAttachObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachObject.m; sourceTree = "<group>"; };
+		C2C85B851AE6597000FBEABD /* ImageAttachSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachSenderItem.h; sourceTree = "<group>"; };
+		C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachSenderItem.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -2950,6 +2965,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C2C85B7A1AE5315D00FBEABD /* image-attach */,
 				C274C3A21ABC6221000DFDE4 /* hashtags */,
 				C2967B3C1AA4CF5C003759B2 /* mentions */,
 				C2C1DC161A443C9900BBCC63 /* stickers */,
@@ -2970,8 +2986,6 @@
 				C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */,
 				C2753DD019E4282000752BAF /* SearchMessagesView.h */,
 				C2753DD119E4282000752BAF /* SearchMessagesView.m */,
-				C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */,
-				C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */,
 				C2967B441AA8684E003759B2 /* TGReplayMessage.h */,
 				C2967B451AA8684E003759B2 /* TGReplayMessage.m */,
 			);
@@ -3068,6 +3082,8 @@
 				C25F91C3197858BF006868F3 /* LocationSenderItem.m */,
 				C2C1DC2A1A44942E00BBCC63 /* StickerSenderItem.h */,
 				C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */,
+				C2C85B851AE6597000FBEABD /* ImageAttachSenderItem.h */,
+				C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -4203,6 +4219,23 @@
 				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
 			);
 			name = behavior;
+			sourceTree = "<group>";
+		};
+		C2C85B7A1AE5315D00FBEABD /* image-attach */ = {
+			isa = PBXGroup;
+			children = (
+				C2967B0E1A94C0BC003759B2 /* TGAttachImageElement.h */,
+				C2967B0F1A94C0BC003759B2 /* TGAttachImageElement.m */,
+				C2C85B711AE52E8D00FBEABD /* TGImageAttachmentsController.h */,
+				C2C85B721AE52E8D00FBEABD /* TGImageAttachmentsController.m */,
+				C2C85B7B1AE532F500FBEABD /* TGImageLocalAttachment.h */,
+				C2C85B7C1AE532F500FBEABD /* TGImageLocalAttachment.m */,
+				C2C85B7F1AE54C3F00FBEABD /* TGImageAttachment.h */,
+				C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */,
+				C2C85B821AE57D0100FBEABD /* TGAttachObject.h */,
+				C2C85B831AE57D0100FBEABD /* TGAttachObject.m */,
+			);
+			name = "image-attach";
 			sourceTree = "<group>";
 		};
 		C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */ = {
@@ -5451,6 +5484,7 @@
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,
 				CEDAEB751881AF85006189A2 /* YapDatabaseConnection.m in Sources */,
+				C2C85B731AE52E8D00FBEABD /* TGImageAttachmentsController.m in Sources */,
 				C268C18519F0519C007F836A /* POPAnimatableProperty.mm in Sources */,
 				0A5F0FFB18DC2FF900CCFA60 /* ChatParticipantItem.m in Sources */,
 				C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */,
@@ -5556,6 +5590,7 @@
 				C2A5BFF818E02C430021BE68 /* TGNativeAudioPlayer.m in Sources */,
 				C256E90218D1E185008FFA04 /* TMCircularProgress.m in Sources */,
 				0A241AB118ACD46700C32F45 /* MessageTableItemVideo.m in Sources */,
+				C2C85B7D1AE532F500FBEABD /* TGImageLocalAttachment.m in Sources */,
 				0A7C78CF194773BB001617DB /* TMMenuPopover.m in Sources */,
 				C23298DB18CF61AE000826E5 /* TMPreviewPhotoItem.m in Sources */,
 				CEADBEC218A37DB700FDB258 /* TL_peerSecret.m in Sources */,
@@ -5660,6 +5695,7 @@
 				C2AA4EFF18A8ED5500E20C68 /* TGDateUtils.mm in Sources */,
 				C2C3A8911A2C7D57008C4C4A /* TLApi.m in Sources */,
 				C2ACCE5C1ADD2D5600ABEE78 /* TGConversationTableCell.m in Sources */,
+				C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */,
 				0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */,
 				C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */,
 				C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */,
@@ -5715,6 +5751,7 @@
 				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,
 				CEDAEB721881AF85006189A2 /* YapDatabaseQuery.m in Sources */,
 				CEDAEB581881AF85006189A2 /* YapDatabaseExtensionConnection.m in Sources */,
+				C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
 				0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */,
 				0AB8501818757E31001A796C /* SearchItem.m in Sources */,
@@ -5811,6 +5848,7 @@
 				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
+				C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */,
 				0AA7E1CD18CD28570064EFC7 /* TelegramFirstController.m in Sources */,
 				C274C4201ACC09B0000DFDE4 /* XCDYouTubeVideoOperation.m in Sources */,
 				0A4A1A2218A153F800D756CD /* MessageTableItemDocument.m in Sources */,
