@@ -2865,10 +2865,10 @@ static NSTextAttachment *headerMediaIcon() {
         [ASQueue dispatchOnMainQueue:^{
             
             [self.bottomView addAttachment:[[TGImageAttachment alloc] initWithItem:attach]];
+            
+            if(completeHandler) completeHandler();
         }];
         
-        
-        if(completeHandler) completeHandler();
     }];
     
 }

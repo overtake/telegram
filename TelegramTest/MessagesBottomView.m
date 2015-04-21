@@ -760,14 +760,14 @@
 
 - (void)sendButtonAction {
     
+    [self.messagesViewController sendMessage];
+    
     [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] addCompletionHandler:nil];
     
     if(_imageAttachmentsController.isShown) {
         [_imageAttachmentsController hide:YES deleteItems:YES];
         [self updateBottomHeight:YES];
     }
-    
-    [self.messagesViewController sendMessage];
     
     
     [self.messagesViewController performForward:self.dialog];
