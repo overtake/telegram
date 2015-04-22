@@ -37,4 +37,6 @@ extern NSString *const AVACACHE;
 +(void)changeKey:(NSString *)key withKey:(NSString *)nkey;
 
 
++(void)clear;
+
 @end

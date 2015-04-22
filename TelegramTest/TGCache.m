@@ -349,4 +349,21 @@ NSString *const AVACACHE = @"AVACACHE";
     }];
 }
 
++(void)clear {
+    [[self cache].queue dispatchOnQueue:^{
+        
+        [[self cache] clear];
+        
+    }];
+}
+
+
+-(void)clear {
+    [_groups enumerateKeysAndObjectsUsingBlock:^(NSString *groupKey, NSMutableDictionary *obj, BOOL *stop) {
+        
+        [obj removeAllObjects];
+        
+    }];
+}
+
 @end
