@@ -76,7 +76,6 @@ static NSDictionary *attributes() {
 
 
 @interface TGConversationTableCell ()
-@property (nonatomic,strong) TGConversationTableItem *item;
 
 
 // views
@@ -213,9 +212,9 @@ static NSDictionary *attributes() {
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
-    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (_item.message.n_out ? 18 : 0), 23)];
+    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
-    [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - _item.dateSize.width - 10, _dateField.frame.origin.y)];
+    [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
     
     NSValue *point = [self stateImage][@"point"];
     
@@ -224,7 +223,7 @@ static NSDictionary *attributes() {
     }
     
     
-    if(self.style == ConversationTableCellShortStyle && _item.unreadText != nil)
+    if(self.style == ConversationTableCellShortStyle && self.item.unreadText != nil)
     {
         if(!_shortUnread) {
             _shortUnread = [[ShortUnread alloc] init];
@@ -232,7 +231,7 @@ static NSDictionary *attributes() {
             [self.layer addSublayer:_shortUnread.layer];
         }
         
-        [_shortUnread setUnreadCount:_item.unreadText];
+        [_shortUnread setUnreadCount:self.item.unreadText];
         
     } else {
         [_shortUnread.layer removeFromSuperlayer];
@@ -245,10 +244,10 @@ static NSDictionary *attributes() {
 
 -(void)checkMessageState {
     
-    if(_item.typing) {
+    if(self.item.typing) {
         [self startAnimation];
     } else {
-        [_messageField setAttributedStringValue:_item.messageText];
+        [_messageField setAttributedStringValue:self.item.messageText];
         [_timer invalidate];
         _timer = nil;
         _dots = @"";
@@ -268,7 +267,7 @@ static NSDictionary *attributes() {
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:[NSString stringWithFormat:@"%@%@",_item.typing,_dots] withColor:NSColorFromRGB(0x999999)];
+        [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:NSColorFromRGB(0x999999)];
         [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x999999)];
         [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
         [attr setSelected:self.isSelected];
@@ -283,15 +282,14 @@ static NSDictionary *attributes() {
 
 
 -(void)redrawRow {
-    self.item = (TGConversationTableItem *) [self rowItem];
+    [self setItem:[self item]];
+}
+
+-(TGConversationTableItem *)item {
+    return (TGConversationTableItem *)  [self rowItem];
 }
 
 -(void)setItem:(TGConversationTableItem *)item {
-    
-    
-    
-    _item = item;
- 
     
     [_photoImageView updateWithConversation:item.conversation];
     
@@ -359,7 +357,7 @@ static NSDictionary *attributes() {
 
 
 -(NSDictionary *)stateImage {
-    if(_item.message.n_out) {
+    if(self.item.message.n_out) {
         
         NSImage *stateImage;
         
@@ -425,7 +423,7 @@ static int unreadOffsetRight = 13;
     
     static int offsetY = 9;
     
-    int sizeWidth = MAX(_item.unreadTextSize.width + 12, unreadCountRadius * 2);
+    int sizeWidth = MAX(self.item.unreadTextSize.width + 12, unreadCountRadius * 2);
     
     int offset2 = self.bounds.size.width - unreadOffsetRight - unreadCountRadius;
     int offset1 = offset2 - (sizeWidth - unreadCountRadius * 2);
@@ -455,8 +453,8 @@ static int unreadOffsetRight = 13;
     [path fill];
     [path closePath];
     
-    int offsetX = (sizeWidth - _item.unreadTextSize.width)/2;
-    [_item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
+    int offsetX = (sizeWidth - self.item.unreadTextSize.width)/2;
+    [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
 }
 
 -(BOOL)isSelected {
@@ -466,7 +464,7 @@ static int unreadOffsetRight = 13;
 -(void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
-    [TGConversationsViewController showPopupMenuForDialog:_item.conversation withEvent:theEvent forView:self];
+    [TGConversationsViewController showPopupMenuForDialog:self.item.conversation withEvent:theEvent forView:self];
 
 }
 
@@ -475,7 +473,7 @@ static int unreadOffsetRight = 13;
 }
 
 -(TGConversationsTableView *)tableView {
-    return (TGConversationsTableView *) _item.table;
+    return (TGConversationsTableView *) self.item.table;
 }
 
 @end
