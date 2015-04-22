@@ -35,7 +35,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
         
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -106,6 +106,8 @@
         
         [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:mediaFilePath(self.message.media) error:nil];
         
+        
+        [[NSFileManager defaultManager] removeItemAtPath:_attach.generatedPath error:nil];
         
         
         PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.message.n_id media:self.message peer_id:self.message.peer_id];

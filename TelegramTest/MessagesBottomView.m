@@ -1149,7 +1149,7 @@
             
             [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
             
-            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? _replyContainer ? 80 : 40 : 0))];
+            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? (_replyContainer ? 80 : 40) : _replyContainer ? 40 : 0))];
             
         } else {
 
@@ -1164,7 +1164,7 @@
             
             [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
             
-            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? _fwdContainer ? 80 : 40 : 0))];
+            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? _replyContainer ? 80 : 40 : _replyContainer ? 40 : 0))];
         }
         
         

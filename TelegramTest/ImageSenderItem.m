@@ -126,6 +126,8 @@
                 strongSelf.message.date = msg.date;
                 
             }
+            
+            [[NSFileManager defaultManager] removeItemAtPath:exportPath(strongSelf.message.media.photo.n_id, @"jpg") error:nil];
 
             
             TLPhotoSize *newSize = [msg.media.photo.sizes lastObject];
