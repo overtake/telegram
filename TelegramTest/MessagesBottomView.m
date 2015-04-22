@@ -1095,8 +1095,7 @@
         _webpageAttach = nil;
     }
     
-    if(self.inputMessageString.length > 0)
-        [self updateBottomHeight:animated];
+    [self updateBottomHeight:animated];
     
 }
 
