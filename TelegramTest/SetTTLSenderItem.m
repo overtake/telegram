@@ -58,6 +58,10 @@
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedMessage *response) {
         
+        self.message.dstate = DeliveryStateNormal;
+        
+        [self.message save:YES];
+        
         self.state = MessageSendingStateSent;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

@@ -117,7 +117,7 @@
 - (void)save:(BOOL)updateConversation {
     [[Storage manager] insertMessage:self completeHandler:nil];
     [[MessagesManager sharedManager] TGsetMessage:self];
-    if(updateConversation && self.n_id != self.conversation.top_message) {
+    if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
     }
 }
