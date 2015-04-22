@@ -754,6 +754,7 @@ void exceptionHandler(NSException * exception)
         
         [[Storage manager] drop:^{
             
+            [TGCache clear];
             [TGModernTypingManager drop];
             [SharedManager drop];
             [[MTNetwork instance] drop];

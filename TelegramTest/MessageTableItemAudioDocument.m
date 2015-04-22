@@ -41,6 +41,9 @@
     return [self isset];
 }
 
+-(id)thumbObject {
+    return nil;
+}
 
 
 - (Class)downloadClass {
@@ -55,5 +58,8 @@
     return self.message.media.document.size;
 }
 
+-(NSString *)fileName {
+    return self.message.media.document.file_name;
+}
 
 @end

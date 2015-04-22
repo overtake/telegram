@@ -12,7 +12,7 @@
 #import "MessageTableItemDocument.h"
 #import "TGSearchRowView.h"
 #import "TGSharedMediaCap.h"
-
+#import "MessageTableItemAudioDocument.h"
 
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -89,7 +89,7 @@
         
         NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             
-            return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]];
+            return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]] || [evaluatedObject isKindOfClass:[MessageTableItemAudioDocument class]];
             
         }]];
         
