@@ -107,7 +107,7 @@ static NSCache *cacheItems;
 
 -(void)insertOther:(NSArray *)other {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
         [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
@@ -264,29 +264,13 @@ static NSCache *cacheItems;
     
     
     if(searchString.length > 0) {
-        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@)  OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed]];
+        
+        
+        if([searchString hasPrefix:@"@"])
+            searchString = [searchString substringFromIndex:1];
+        
+        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@)  OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.username BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed,searchString]];
     }
-    
-    
-    if(searchString.length >= 5) {
-        NSArray *usernames = [UsersManager findUsersByName:searchString];
-        
-        
-        NSMutableArray *ids = [[NSMutableArray alloc] init];
-        
-        [sorted enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-            [ids addObject:@(obj.user.n_id)];
-        }];
-        
-        NSArray *usersByName = [usernames filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
-        
-        [usersByName enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
-            
-            sorted = [sorted arrayByAddingObject:[[SelectUserItem alloc] initWithObject:obj]];
-            
-        }];
-    }
-    
     
     
     
@@ -321,7 +305,16 @@ static NSCache *cacheItems;
                         
             NSMutableArray *converted = [[NSMutableArray alloc] init];
             
-            [[response users] enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSMutableArray *ids = [[NSMutableArray alloc] init];
+            
+            [_items enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+                [ids addObject:@(obj.user.n_id)];
+            }];
+            
+            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+            
+            [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
                 
                 [obj rebuildNames];
                 

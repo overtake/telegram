@@ -238,7 +238,7 @@ static int offsetEditable = 30;
     }
     
     if(self.selectButton.isSelected) {
-        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateHover];
         [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateHighlighted];
     } else {

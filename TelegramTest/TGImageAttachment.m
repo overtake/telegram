@@ -213,10 +213,22 @@ static CAAnimation *thumbAnimation() {
 }
 
 -(void)loadImage {
-    [_close setHidden:YES];
-    [_progress setHidden:NO];
-    [_progress startAnimation:self];
+    
+    if(_item.thumb) {
+        [_imageView setImage:_item.thumb];
+    } else {
+        [_progress setHidden:NO];
+        [_close setHidden:YES];
+         [_progress startAnimation:self];
+    }
+    
+    if(_item.uploader) {
+        [self didStartUploading:_item.uploader];
+    }
+    
+   
     [_item prepare];
+    
 }
 
 @end
