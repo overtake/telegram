@@ -12,6 +12,8 @@
 #import "NSNumber+NumberFormatter.h"
 @interface TGConversationTableItem ()
 @property (nonatomic,strong) TL_localMessage *message;
+
+@property (nonatomic,assign) NSUInteger itemHash;
 @end
 
 @implementation TGConversationTableItem
@@ -34,6 +36,8 @@
         [self update];
         
         [self didChangeTyping:nil];
+        
+        _itemHash = rand_long();
 
     }
     
@@ -182,7 +186,7 @@
 }
 
 -(NSUInteger)hash {
-    return _conversation.peer_id;
+    return _itemHash;
 }
 
 @end
