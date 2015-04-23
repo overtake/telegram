@@ -555,6 +555,7 @@
 		C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */; };
 		C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B831AE57D0100FBEABD /* TGAttachObject.m */; };
 		C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */; };
+		C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -1912,6 +1913,8 @@
 		C2C85B831AE57D0100FBEABD /* TGAttachObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachObject.m; sourceTree = "<group>"; };
 		C2C85B851AE6597000FBEABD /* ImageAttachSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachSenderItem.h; sourceTree = "<group>"; };
 		C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachSenderItem.m; sourceTree = "<group>"; };
+		C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalSetCaptionView.h; sourceTree = "<group>"; };
+		C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalSetCaptionView.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -4234,6 +4237,8 @@
 				C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */,
 				C2C85B821AE57D0100FBEABD /* TGAttachObject.h */,
 				C2C85B831AE57D0100FBEABD /* TGAttachObject.m */,
+				C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */,
+				C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */,
 			);
 			name = "image-attach";
 			sourceTree = "<group>";
@@ -5524,6 +5529,7 @@
 				0AB8500F18756FAD001A796C /* SearchSeparatorTableCell.m in Sources */,
 				0A7C78C71947701A001617DB /* TMMenuController.m in Sources */,
 				CEDAEB711881AF85006189A2 /* YapCollectionKey.m in Sources */,
+				C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */,
 				CEDAEB731881AF85006189A2 /* YapSet.m in Sources */,
 				C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */,
 				C274C3F91ACBF745000DFDE4 /* TGWebpageYTContainer.m in Sources */,

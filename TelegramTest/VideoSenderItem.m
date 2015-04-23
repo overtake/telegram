@@ -53,7 +53,7 @@
         }
         
 
-        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] caption:@"Video" duration:duration mime_type:@"mp4" size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height]];
+        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] caption:@"" duration:duration mime_type:@"mp4" size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height]];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
@@ -169,7 +169,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input thumb:inputThumbFile duration:duration w:size.width h:size.height mime_type:@"mp4"];
+                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height caption:@""];
                     
                     block();
                 }];
@@ -177,7 +177,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height mime_type:@"mp4"];
+                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height caption:self.message.media.video.caption];
                 block();
             }
         }
@@ -193,11 +193,11 @@
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     

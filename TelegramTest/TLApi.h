@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.04.15.
+//  Auto created by Mikhail Filimonov on 22.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -826,5 +826,23 @@
 @property (nonatomic, strong) NSString* code;
 
 +(TLAPI_auth_recoverPassword*)createWithCode:(NSString*)code;
+@end
+
+@interface TLAPI_messages_exportChatInvite : TLApiObject
+@property int chat_id;
+
++(TLAPI_messages_exportChatInvite*)createWithChat_id:(int)chat_id;
+@end
+
+@interface TLAPI_messages_checkChatInvite : TLApiObject
+@property (nonatomic, strong) NSString* n_hash;
+
++(TLAPI_messages_checkChatInvite*)createWithN_hash:(NSString*)n_hash;
+@end
+
+@interface TLAPI_messages_importChatInvite : TLApiObject
+@property (nonatomic, strong) NSString* n_hash;
+
++(TLAPI_messages_importChatInvite*)createWithN_hash:(NSString*)n_hash;
 @end
 

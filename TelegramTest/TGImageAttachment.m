@@ -231,4 +231,8 @@ static CAAnimation *thumbAnimation() {
     
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    [TMViewController showAttachmentCaption:self.superview.subviews];
+}
+
 @end

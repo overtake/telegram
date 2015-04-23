@@ -33,6 +33,8 @@
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *setGroupPhotoButton;
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *addMembersButton;
 
+@property (nonatomic, strong, readonly) UserInfoShortButtonView *exportChatInvite;
+
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *notificationView;
 @property (nonatomic, strong,readonly) ITSwitch *notificationSwitcher;
 @property (nonatomic, strong,readonly) LineView *nameLiveView;

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 06.04.15.
+//  Auto created by Dmitry Kondratyev on 22.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -354,6 +354,15 @@
 @interface TLauth_PasswordRecovery : TLObject
 @end
 	
+@interface TLReceivedNotifyMessage : TLObject
+@end
+	
+@interface TLExportedChatInvite : TLObject
+@end
+	
+@interface TLChatInvite : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -509,6 +518,7 @@
 	
 @interface TLInputMedia()
 @property (nonatomic, strong) TLInputFile* file;
+@property (nonatomic, strong) NSString* caption;
 @property (nonatomic, strong) TLInputDocument* n_id;
 @property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* phone_number;
@@ -517,16 +527,20 @@
 @property int duration;
 @property int w;
 @property int h;
-@property (nonatomic, strong) NSString* mime_type;
 @property (nonatomic, strong) TLInputFile* thumb;
+@property (nonatomic, strong) NSString* mime_type;
 @property (nonatomic, strong) NSMutableArray* attributes;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* address;
+@property (nonatomic, strong) NSString* provider;
+@property (nonatomic, strong) NSString* venue_id;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia
 +(TL_inputMediaEmpty*)create;
 @end
 @interface TL_inputMediaUploadedPhoto : TLInputMedia
-+(TL_inputMediaUploadedPhoto*)createWithFile:(TLInputFile*)file;
++(TL_inputMediaUploadedPhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption;
 @end
 @interface TL_inputMediaPhoto : TLInputMedia
 +(TL_inputMediaPhoto*)createWithN_id:(TLInputPhoto*)n_id;
@@ -538,10 +552,10 @@
 +(TL_inputMediaContact*)createWithPhone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name;
 @end
 @interface TL_inputMediaUploadedVideo : TLInputMedia
-+(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type;
++(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedThumbVideo : TLInputMedia
-+(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type;
++(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
 @end
 @interface TL_inputMediaVideo : TLInputMedia
 +(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id;
@@ -560,6 +574,9 @@
 @end
 @interface TL_inputMediaDocument : TLInputMedia
 +(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id;
+@end
+@interface TL_inputMediaVenue : TLInputMedia
++(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
 @end
 	
 @interface TLInputChatPhoto()
@@ -823,10 +840,11 @@
 @property (nonatomic, strong) TLChatParticipants* participants;
 @property (nonatomic, strong) TLPhoto* chat_photo;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
+@property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @end
 
 @interface TL_chatFull : TLChatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings;
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 	
 @interface TLChatParticipant()
@@ -883,7 +901,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
 @end
 @interface TL_messageService : TLMessage
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -900,6 +918,10 @@
 @property (nonatomic, strong) TLDocument* document;
 @property (nonatomic, strong) TLAudio* audio;
 @property (nonatomic, strong) TLWebPage* webpage;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* address;
+@property (nonatomic, strong) NSString* provider;
+@property (nonatomic, strong) NSString* venue_id;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia
@@ -929,6 +951,9 @@
 @interface TL_messageMediaWebPage : TLMessageMedia
 +(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
+@interface TL_messageMediaVenue : TLMessageMedia
++(TL_messageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
 	
 @interface TLMessageAction()
 @property (nonatomic, strong) NSString* title;
@@ -936,6 +961,7 @@
 @property (nonatomic, strong) TLPhoto* photo;
 @property int user_id;
 @property (nonatomic, strong) NSString* address;
+@property int inviter_id;
 @end
 
 @interface TL_messageActionEmpty : TLMessageAction
@@ -964,6 +990,9 @@
 @end
 @interface TL_messageActionGeoChatCheckin : TLMessageAction
 +(TL_messageActionGeoChatCheckin*)create;
+@end
+@interface TL_messageActionChatJoinedByLink : TLMessageAction
++(TL_messageActionChatJoinedByLink*)createWithInviter_id:(int)inviter_id;
 @end
 	
 @interface TLDialog()
@@ -1448,9 +1477,6 @@
 @interface TL_updateMessageID : TLUpdate
 +(TL_updateMessageID*)createWithN_id:(int)n_id random_id:(long)random_id;
 @end
-@interface TL_updateReadMessages : TLUpdate
-+(TL_updateReadMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
-@end
 @interface TL_updateDeleteMessages : TLUpdate
 +(TL_updateDeleteMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
 @end
@@ -1529,6 +1555,9 @@
 @interface TL_updateWebPage : TLUpdate
 +(TL_updateWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
+@interface TL_updateReadMessagesContents : TLUpdate
++(TL_updateReadMessagesContents*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -1589,10 +1618,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
 @end
 @interface TL_updateShortChatMessage : TLUpdates
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
 @end
 @interface TL_updateShort : TLUpdates
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1663,11 +1692,13 @@
 @property int notify_cloud_delay_ms;
 @property int notify_default_delay_ms;
 @property int chat_big_size;
+@property int push_chat_period_ms;
+@property int push_chat_limit;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -1967,7 +1998,7 @@
 @end
 	
 @interface TLSendMessageAction()
-
+@property int progress;
 @end
 
 @interface TL_sendMessageTypingAction : TLSendMessageAction
@@ -1980,19 +2011,19 @@
 +(TL_sendMessageRecordVideoAction*)create;
 @end
 @interface TL_sendMessageUploadVideoAction : TLSendMessageAction
-+(TL_sendMessageUploadVideoAction*)create;
++(TL_sendMessageUploadVideoAction*)createWithProgress:(int)progress;
 @end
 @interface TL_sendMessageRecordAudioAction : TLSendMessageAction
 +(TL_sendMessageRecordAudioAction*)create;
 @end
 @interface TL_sendMessageUploadAudioAction : TLSendMessageAction
-+(TL_sendMessageUploadAudioAction*)create;
++(TL_sendMessageUploadAudioAction*)createWithProgress:(int)progress;
 @end
 @interface TL_sendMessageUploadPhotoAction : TLSendMessageAction
-+(TL_sendMessageUploadPhotoAction*)create;
++(TL_sendMessageUploadPhotoAction*)createWithProgress:(int)progress;
 @end
 @interface TL_sendMessageUploadDocumentAction : TLSendMessageAction
-+(TL_sendMessageUploadDocumentAction*)create;
++(TL_sendMessageUploadDocumentAction*)createWithProgress:(int)progress;
 @end
 @interface TL_sendMessageGeoLocationAction : TLSendMessageAction
 +(TL_sendMessageGeoLocationAction*)create;
@@ -2228,7 +2259,7 @@
 +(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
 @end
 @interface TL_webPage : TLWebPage
-+(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:()embed_width embed_height:()embed_height duration:()duration author:(NSString*)author;
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author;
 @end
 	
 @interface TLAuthorization()
@@ -2300,6 +2331,38 @@
 
 @interface TL_auth_passwordRecovery : TLauth_PasswordRecovery
 +(TL_auth_passwordRecovery*)createWithEmail_pattern:(NSString*)email_pattern;
+@end
+	
+@interface TLReceivedNotifyMessage()
+@property int n_id;
+@property int flags;
+@end
+
+@interface TL_receivedNotifyMessage : TLReceivedNotifyMessage
++(TL_receivedNotifyMessage*)createWithN_id:(int)n_id flags:(int)flags;
+@end
+	
+@interface TLExportedChatInvite()
+@property (nonatomic, strong) NSString* link;
+@end
+
+@interface TL_chatInviteEmpty : TLExportedChatInvite
++(TL_chatInviteEmpty*)create;
+@end
+@interface TL_chatInviteExported : TLExportedChatInvite
++(TL_chatInviteExported*)createWithLink:(NSString*)link;
+@end
+	
+@interface TLChatInvite()
+@property (nonatomic, strong) TLChat* chat;
+@property (nonatomic, strong) NSString* title;
+@end
+
+@interface TL_chatInviteAlready : TLChatInvite
++(TL_chatInviteAlready*)createWithChat:(TLChat*)chat;
+@end
+@interface TL_chatInvite : TLChatInvite
++(TL_chatInvite*)createWithTitle:(NSString*)title;
 @end
 	
 @interface TLProtoMessage()

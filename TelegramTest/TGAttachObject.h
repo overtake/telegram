@@ -44,4 +44,8 @@
 
 -(void)prepare;
 
+-(Class)senderClass;
+
+-(void)save;
+
 @end

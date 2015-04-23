@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.04.15.
+//  Auto created by Mikhail Filimonov on 22.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -277,16 +277,19 @@
 @end
 
 @implementation TL_inputMediaUploadedPhoto
-+(TL_inputMediaUploadedPhoto*)createWithFile:(TLInputFile*)file {
++(TL_inputMediaUploadedPhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption {
 	TL_inputMediaUploadedPhoto* obj = [[TL_inputMediaUploadedPhoto alloc] init];
 	obj.file = file;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.file stream:stream];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [TLClassStore TLDeserialize:stream];
+	self.caption = [stream readString];
 }
 @end
 
@@ -339,13 +342,13 @@
 @end
 
 @implementation TL_inputMediaUploadedVideo
-+(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type {
++(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption {
 	TL_inputMediaUploadedVideo* obj = [[TL_inputMediaUploadedVideo alloc] init];
 	obj.file = file;
 	obj.duration = duration;
 	obj.w = w;
 	obj.h = h;
-	obj.mime_type = mime_type;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -353,26 +356,26 @@
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
-	[stream writeString:self.mime_type];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [TLClassStore TLDeserialize:stream];
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
-	self.mime_type = [stream readString];
+	self.caption = [stream readString];
 }
 @end
 
 @implementation TL_inputMediaUploadedThumbVideo
-+(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type {
++(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption {
 	TL_inputMediaUploadedThumbVideo* obj = [[TL_inputMediaUploadedThumbVideo alloc] init];
 	obj.file = file;
 	obj.thumb = thumb;
 	obj.duration = duration;
 	obj.w = w;
 	obj.h = h;
-	obj.mime_type = mime_type;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -381,7 +384,7 @@
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
-	[stream writeString:self.mime_type];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [TLClassStore TLDeserialize:stream];
@@ -389,7 +392,7 @@
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
-	self.mime_type = [stream readString];
+	self.caption = [stream readString];
 }
 @end
 
@@ -533,6 +536,32 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [TLClassStore TLDeserialize:stream];
+}
+@end
+
+@implementation TL_inputMediaVenue
++(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id {
+	TL_inputMediaVenue* obj = [[TL_inputMediaVenue alloc] init];
+	obj.geo_point = geo_point;
+	obj.title = title;
+	obj.address = address;
+	obj.provider = provider;
+	obj.venue_id = venue_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[TLClassStore TLSerialize:self.geo_point stream:stream];
+	[stream writeString:self.title];
+	[stream writeString:self.address];
+	[stream writeString:self.provider];
+	[stream writeString:self.venue_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.geo_point = [TLClassStore TLDeserialize:stream];
+	self.title = [stream readString];
+	self.address = [stream readString];
+	self.provider = [stream readString];
+	self.venue_id = [stream readString];
 }
 @end
 
@@ -1508,12 +1537,13 @@
 @end
 
 @implementation TL_chatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings {
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
 	TL_chatFull* obj = [[TL_chatFull alloc] init];
 	obj.n_id = n_id;
 	obj.participants = participants;
 	obj.chat_photo = chat_photo;
 	obj.notify_settings = notify_settings;
+	obj.exported_invite = exported_invite;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -1521,12 +1551,14 @@
 	[TLClassStore TLSerialize:self.participants stream:stream];
 	[TLClassStore TLSerialize:self.chat_photo stream:stream];
 	[TLClassStore TLSerialize:self.notify_settings stream:stream];
+	[TLClassStore TLSerialize:self.exported_invite stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 	self.participants = [TLClassStore TLDeserialize:stream];
 	self.chat_photo = [TLClassStore TLDeserialize:stream];
 	self.notify_settings = [TLClassStore TLDeserialize:stream];
+	self.exported_invite = [TLClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1672,7 +1704,7 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -1881,6 +1913,32 @@
 }
 @end
 
+@implementation TL_messageMediaVenue
++(TL_messageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id {
+	TL_messageMediaVenue* obj = [[TL_messageMediaVenue alloc] init];
+	obj.geo = geo;
+	obj.title = title;
+	obj.address = address;
+	obj.provider = provider;
+	obj.venue_id = venue_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[TLClassStore TLSerialize:self.geo stream:stream];
+	[stream writeString:self.title];
+	[stream writeString:self.address];
+	[stream writeString:self.provider];
+	[stream writeString:self.venue_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.geo = [TLClassStore TLDeserialize:stream];
+	self.title = [stream readString];
+	self.address = [stream readString];
+	self.provider = [stream readString];
+	self.venue_id = [stream readString];
+}
+@end
+
 
 
 @implementation TLMessageAction
@@ -2034,6 +2092,20 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	
+}
+@end
+
+@implementation TL_messageActionChatJoinedByLink
++(TL_messageActionChatJoinedByLink*)createWithInviter_id:(int)inviter_id {
+	TL_messageActionChatJoinedByLink* obj = [[TL_messageActionChatJoinedByLink alloc] init];
+	obj.inviter_id = inviter_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.inviter_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.inviter_id = [stream readInt];
 }
 @end
 
@@ -3974,45 +4046,6 @@
 }
 @end
 
-@implementation TL_updateReadMessages
-+(TL_updateReadMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count {
-	TL_updateReadMessages* obj = [[TL_updateReadMessages alloc] init];
-	obj.messages = messages;
-	obj.pts = pts;
-	obj.pts_count = pts_count;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	//Serialize ShortVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.messages count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.messages objectAtIndex:i];
-			[stream writeInt:[obj intValue]];
-		}
-	}
-	[stream writeInt:self.pts];
-	[stream writeInt:self.pts_count];
-}
--(void)unserialize:(SerializedData*)stream {
-	//UNS ShortVector
-	[stream readInt];
-	{
-		if(!self.messages)
-			self.messages = [[NSMutableArray alloc] init];
-		int tl_count = [stream readInt];
-		for(int i = 0; i < tl_count; i++) {
-			int obj = [stream readInt];
-			[self.messages addObject:[[NSNumber alloc] initWithInt:obj]];
-		}
-	}
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-}
-@end
-
 @implementation TL_updateDeleteMessages
 +(TL_updateDeleteMessages*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count {
 	TL_updateDeleteMessages* obj = [[TL_updateDeleteMessages alloc] init];
@@ -4554,6 +4587,45 @@
 }
 @end
 
+@implementation TL_updateReadMessagesContents
++(TL_updateReadMessagesContents*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count {
+	TL_updateReadMessagesContents* obj = [[TL_updateReadMessagesContents alloc] init];
+	obj.messages = messages;
+	obj.pts = pts;
+	obj.pts_count = pts_count;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.messages count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			NSNumber* obj = [self.messages objectAtIndex:i];
+			[stream writeInt:[obj intValue]];
+		}
+	}
+	[stream writeInt:self.pts];
+	[stream writeInt:self.pts_count];
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS ShortVector
+	[stream readInt];
+	{
+		if(!self.messages)
+			self.messages = [[NSMutableArray alloc] init];
+		int tl_count = [stream readInt];
+		for(int i = 0; i < tl_count; i++) {
+			int obj = [stream readInt];
+			[self.messages addObject:[[NSNumber alloc] initWithInt:obj]];
+		}
+	}
+	self.pts = [stream readInt];
+	self.pts_count = [stream readInt];
+}
+@end
+
 
 
 @implementation TLupdates_State
@@ -4875,7 +4947,7 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id {
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -4916,7 +4988,7 @@
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:()fwd_from_id fwd_date:()fwd_date reply_to_msg_id:()reply_to_msg_id {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -5363,7 +5435,7 @@
 @end
 
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size disabled_features:(NSMutableArray*)disabled_features {
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
 	obj.date = date;
 	obj.expires = expires;
@@ -5380,6 +5452,8 @@
 	obj.notify_cloud_delay_ms = notify_cloud_delay_ms;
 	obj.notify_default_delay_ms = notify_default_delay_ms;
 	obj.chat_big_size = chat_big_size;
+	obj.push_chat_period_ms = push_chat_period_ms;
+	obj.push_chat_limit = push_chat_limit;
 	obj.disabled_features = disabled_features;
 	return obj;
 }
@@ -5408,6 +5482,8 @@
 	[stream writeInt:self.notify_cloud_delay_ms];
 	[stream writeInt:self.notify_default_delay_ms];
 	[stream writeInt:self.chat_big_size];
+	[stream writeInt:self.push_chat_period_ms];
+	[stream writeInt:self.push_chat_limit];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -5445,6 +5521,8 @@
 	self.notify_cloud_delay_ms = [stream readInt];
 	self.notify_default_delay_ms = [stream readInt];
 	self.chat_big_size = [stream readInt];
+	self.push_chat_period_ms = [stream readInt];
+	self.push_chat_limit = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -6704,16 +6782,16 @@
 @end
 
 @implementation TL_sendMessageUploadVideoAction
-+(TL_sendMessageUploadVideoAction*)create {
++(TL_sendMessageUploadVideoAction*)createWithProgress:(int)progress {
 	TL_sendMessageUploadVideoAction* obj = [[TL_sendMessageUploadVideoAction alloc] init];
-	
+	obj.progress = progress;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	
+	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	
+	self.progress = [stream readInt];
 }
 @end
 
@@ -6732,44 +6810,44 @@
 @end
 
 @implementation TL_sendMessageUploadAudioAction
-+(TL_sendMessageUploadAudioAction*)create {
++(TL_sendMessageUploadAudioAction*)createWithProgress:(int)progress {
 	TL_sendMessageUploadAudioAction* obj = [[TL_sendMessageUploadAudioAction alloc] init];
-	
+	obj.progress = progress;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	
+	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	
+	self.progress = [stream readInt];
 }
 @end
 
 @implementation TL_sendMessageUploadPhotoAction
-+(TL_sendMessageUploadPhotoAction*)create {
++(TL_sendMessageUploadPhotoAction*)createWithProgress:(int)progress {
 	TL_sendMessageUploadPhotoAction* obj = [[TL_sendMessageUploadPhotoAction alloc] init];
-	
+	obj.progress = progress;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	
+	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	
+	self.progress = [stream readInt];
 }
 @end
 
 @implementation TL_sendMessageUploadDocumentAction
-+(TL_sendMessageUploadDocumentAction*)create {
++(TL_sendMessageUploadDocumentAction*)createWithProgress:(int)progress {
 	TL_sendMessageUploadDocumentAction* obj = [[TL_sendMessageUploadDocumentAction alloc] init];
-	
+	obj.progress = progress;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	
+	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	
+	self.progress = [stream readInt];
 }
 @end
 
@@ -7686,7 +7764,7 @@
 @end
 
 @implementation TL_webPage
-+(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:()embed_width embed_height:()embed_height duration:()duration author:(NSString*)author {
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:()photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author {
 	TL_webPage* obj = [[TL_webPage alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -7948,6 +8026,94 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.email_pattern = [stream readString];
+}
+@end
+
+
+
+@implementation TLReceivedNotifyMessage
+@end
+
+@implementation TL_receivedNotifyMessage
++(TL_receivedNotifyMessage*)createWithN_id:(int)n_id flags:(int)flags {
+	TL_receivedNotifyMessage* obj = [[TL_receivedNotifyMessage alloc] init];
+	obj.n_id = n_id;
+	obj.flags = flags;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[stream writeInt:self.flags];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.flags = [stream readInt];
+}
+@end
+
+
+
+@implementation TLExportedChatInvite
+@end
+
+@implementation TL_chatInviteEmpty
++(TL_chatInviteEmpty*)create {
+	TL_chatInviteEmpty* obj = [[TL_chatInviteEmpty alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_chatInviteExported
++(TL_chatInviteExported*)createWithLink:(NSString*)link {
+	TL_chatInviteExported* obj = [[TL_chatInviteExported alloc] init];
+	obj.link = link;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.link];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.link = [stream readString];
+}
+@end
+
+
+
+@implementation TLChatInvite
+@end
+
+@implementation TL_chatInviteAlready
++(TL_chatInviteAlready*)createWithChat:(TLChat*)chat {
+	TL_chatInviteAlready* obj = [[TL_chatInviteAlready alloc] init];
+	obj.chat = chat;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[TLClassStore TLSerialize:self.chat stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.chat = [TLClassStore TLDeserialize:stream];
+}
+@end
+
+@implementation TL_chatInvite
++(TL_chatInvite*)createWithTitle:(NSString*)title {
+	TL_chatInvite* obj = [[TL_chatInvite alloc] init];
+	obj.title = title;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.title];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.title = [stream readString];
 }
 @end
 

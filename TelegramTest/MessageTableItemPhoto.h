@@ -16,5 +16,10 @@
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 
+@property (nonatomic,assign) NSSize imageSize;
+
+
+@property (nonatomic,strong) NSAttributedString *caption;
+@property (nonatomic,assign) NSSize captionSize;
 
 @end

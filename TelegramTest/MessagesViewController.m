@@ -2829,7 +2829,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[ImageAttachSenderItem alloc] initWithConversation:_conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:_conversation attachObject:obj];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

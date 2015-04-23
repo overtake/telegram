@@ -18,9 +18,16 @@
 
 @property (nonatomic, strong) TLFileLocation *videoPhotoLocation;
 
-@property (nonatomic) int videoSize;
 
 @property (nonatomic,strong) TGImageObject *imageObject;
+
+@property (nonatomic,assign) NSSize videoSize;
+
+
+@property (nonatomic,strong) NSAttributedString *caption;
+@property (nonatomic,assign) NSSize captionSize;
+
+
 -(void)rebuildTimeString;
 
 -(BOOL)canDownload;

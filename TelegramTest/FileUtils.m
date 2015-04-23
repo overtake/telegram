@@ -42,6 +42,7 @@
 
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
+NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
 -(id)init {
@@ -489,6 +490,27 @@ void open_card(NSString *link) {
         } timeout:4];
     }
     
+    
+}
+
+void join_group_by_hash(NSString * hash) {
+    
+    [TMViewController showModalProgress];
+    
+    [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
+        
+        
+        dispatch_after_seconds(0.2, ^{
+            
+            [TMViewController hideModalProgressWithSuccess];
+            
+        });
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        [TMViewController hideModalProgress];
+        
+    }];
     
 }
 

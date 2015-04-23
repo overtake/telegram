@@ -566,16 +566,6 @@ static ASQueue *queue;
         return [MessagesManager addAndUpdateMessage:message];
     }
     
-    if([update isKindOfClass:[TL_updateReadMessages class]]) {
-//        
-//        for(NSNumber *mgsId in [update messages]) {
-//            TL_localMessage *message = [[MessagesManager sharedManager] find:[mgsId intValue]];
-//            message.flags&= ~TGUNREADMESSAGE;
-//        }
-//        
-//        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
-        return;
-    }
     
     if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
         [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];

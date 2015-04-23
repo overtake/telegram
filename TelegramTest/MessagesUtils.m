@@ -104,7 +104,7 @@
 +(NSMutableAttributedString *)conversationLastText:(TL_localMessage *)message conversation:(TL_conversation *)conversation {
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
-    [messageText setSelectionColor:NSColorFromRGB(0xfffff1) forColor:DARK_BLACK];
+    [messageText setSelectionColor:NSColorFromRGB(0xfffffe) forColor:DARK_BLACK];
     [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
     
     

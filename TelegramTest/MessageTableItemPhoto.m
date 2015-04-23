@@ -8,7 +8,7 @@
 
 #import "MessageTableItemPhoto.h"
 #import "ImageUtils.h"
-
+#import "NSString+Extended.h"
 @implementation MessageTableItemPhoto
 
 - (id) initWithObject:(TL_localMessage *)object {
@@ -61,6 +61,17 @@
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
+            
+            if(photo.caption.length > 0) {
+                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+                
+                [c appendString:[[photo.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
+                
+                [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+                
+                _caption = c;
+            }
+            
         }
                 
        
@@ -93,12 +104,24 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    if(self.isForwadedMessage)
+        width-=50;
+    
+    
+    
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
     
-    NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
+    _imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
     
-    self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
+    
+    if(_caption) {
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width];
+    }
+    
+    int captionBlockHeight = _captionSize.height > 0 ? _captionSize.height + 10 : 0;
+    
+    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionBlockHeight, 60 + captionBlockHeight));
     
     
     return YES;

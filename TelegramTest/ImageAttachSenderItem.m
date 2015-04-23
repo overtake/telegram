@@ -35,7 +35,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
         
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"photo" geo:[TL_geoPointEmpty create] sizes:sizes]];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"привет как дела че делаешь почему молчишь" geo:[TL_geoPointEmpty create] sizes:sizes]];
         
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -59,7 +59,7 @@
     
     self.filePath = mediaFilePath(self.message.media);
     
-    TL_inputMediaUploadedPhoto *media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile];
+    TL_inputMediaUploadedPhoto *media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile caption:self.message.media.photo.caption];
     
     id request = nil;
     
@@ -147,11 +147,11 @@
     }];
     
     [_attach.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     [_attach.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     

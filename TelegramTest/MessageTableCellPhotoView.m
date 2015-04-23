@@ -13,8 +13,10 @@
 #import "ImageUtils.h"
 #import "SelfDestructionController.h"
 #import "TGPhotoViewer.h"
+#import "TGCTextView.h"
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
+@property (nonatomic,strong) TGCTextView *captionTextView;
 @end
 
 
@@ -88,6 +90,8 @@ NSImage *fireImage() {
         
         [self.containerView addSubview:self.imageView];
         
+        [self.containerView setIsFlipped:YES];
+        
         [self setProgressStyle:TMCircularProgressDarkStyle];
         
       //  [self.imageView setContentMode:BTRViewContentMode];
@@ -137,6 +141,22 @@ NSImage *fireImage() {
     [self.fireImageView removeFromSuperview];
     self.fireImageView = nil;
 }
+
+
+
+-(void)initCaptionTextView {
+    if(!_captionTextView) {
+        _captionTextView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionTextView];
+    }
+}
+
+
+- (void)deallocCaptionTextView {
+    [_captionTextView removeFromSuperview];
+    _captionTextView = nil;
+}
+
 
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
@@ -190,7 +210,7 @@ NSImage *fireImage() {
     
     [super setItem:item];
     
-    [self.imageView setFrameSize:item.blockSize];
+    [self.imageView setFrameSize:item.imageSize];
     
    
     self.imageView.object = item.imageObject;
@@ -216,6 +236,18 @@ NSImage *fireImage() {
         }];
         
     }];
+    
+    
+    if(item.caption) {
+        [self initCaptionTextView];
+        
+        [_captionTextView setFrame:NSMakeRect(0, NSMaxY(_imageView.frame), item.captionSize.width, item.captionSize.height)];
+        
+        [_captionTextView setAttributedString:item.caption];
+        
+    } else {
+        [self deallocCaptionTextView];
+    }
         
 }
 
@@ -233,7 +265,7 @@ NSImage *fireImage() {
     const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
     
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
     [path addClip];

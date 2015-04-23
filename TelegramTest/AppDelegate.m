@@ -88,6 +88,15 @@
             return;
         }
         
+        if([[url absoluteString] hasPrefix:TGJoinGroupPrefix]) {
+            join_group_by_hash([[url absoluteString] substringFromIndex:TGJoinGroupPrefix.length]);
+            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+            [self.mainWindow deminiaturize:self];
+            return;
+        }
+        
+        
+        
         
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         NSString *absoluteString = [url absoluteString];
@@ -104,7 +113,6 @@
         
         if(range.location > 12) {
             NSString *method = [absoluteString substringWithRange:NSMakeRange(11, range.location-11)];
-            DLog(@"method %@", method);
             
             if([method isEqualToString:@"msg"]) {
                 

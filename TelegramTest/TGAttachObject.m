@@ -8,6 +8,7 @@
 
 #import "TGAttachObject.h"
 #import "ASQueue.h"
+#import "ImageAttachSenderItem.h"
 @interface TGAttachObject ()
 @property (nonatomic,strong) NSString *generatedPath;
 @property (nonatomic,strong) NSString *file;
@@ -239,5 +240,8 @@ static ASQueue *queue;
     return object.unique_id == _unique_id;
 }
 
+-(Class)senderClass {
+    return [ImageAttachSenderItem class];
+}
 
 @end

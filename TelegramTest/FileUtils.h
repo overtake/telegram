@@ -27,6 +27,7 @@ extern NSString *const TGImagePType;
 extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
 extern NSString *const TLHashTagPrefix;
+extern NSString *const TGJoinGroupPrefix;
 +(NSString*)mimetypefromExtension:(NSString *)extension;
 +(NSString*)extensionForMimetype:(NSString *)mimetype;
 
@@ -71,6 +72,9 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
+
+void join_group_by_hash(NSString * hash);
+
 int64_t SystemIdleTime(void);
 NSData *passwordHash(NSString *password, NSData *salt);
 

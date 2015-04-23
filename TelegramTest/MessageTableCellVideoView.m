@@ -16,11 +16,12 @@
 #import "MessageCellDescriptionView.h"
 
 #import "TGPhotoViewer.h"
+#import "TGCTextView.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
-
+@property (nonatomic,strong) TGCTextView *captionTextView;
 @end
 
 @implementation MessageTableCellVideoView
@@ -87,6 +88,8 @@ static NSImage *playImage() {
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
+        [self.containerView setIsFlipped:YES];
+        
 
     }
     return self;
@@ -99,9 +102,9 @@ static NSImage *playImage() {
     const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
     [path addClip];
     
     
@@ -140,6 +143,20 @@ static NSImage *playImage() {
     
 //    
 
+}
+
+
+-(void)initCaptionTextView {
+    if(!_captionTextView) {
+        _captionTextView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionTextView];
+    }
+}
+
+
+- (void)deallocCaptionTextView {
+    [_captionTextView removeFromSuperview];
+    _captionTextView = nil;
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -192,11 +209,22 @@ static NSImage *playImage() {
     [self updateDownloadState];
    
     
-     [self.imageView setFrameSize:item.blockSize];
-    
-    
+    [self.imageView setFrameSize:item.videoSize];
     
     [self updateVideoTimeView];
+    
+    
+    if(item.caption) {
+        [self initCaptionTextView];
+        
+        [_captionTextView setFrame:NSMakeRect(0, NSMaxY(_imageView.frame), item.captionSize.width, item.captionSize.height)];
+        
+        [_captionTextView setAttributedString:item.caption];
+        
+    } else {
+        [self deallocCaptionTextView];
+    }
+
 }
 
 

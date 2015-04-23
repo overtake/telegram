@@ -9,6 +9,7 @@
 #import "MessageTableItemVideo.h"
 #import "ImageUtils.h"
 #import "NSStringCategory.h"
+#import "NSString+Extended.h"
 @implementation MessageTableItemVideo
 
 - (id) initWithObject:(TLMessage *)object {
@@ -19,6 +20,17 @@
         
         
         [self rebuildImageObject];
+        
+        
+        if(self.message.media.video.caption.length > 0) {
+            NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+            
+            [c appendString:[[self.message.media.video.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
+            
+            [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+            
+            _caption = c;
+        }
         
         
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.video.size];
@@ -37,8 +49,6 @@
     }
     
     self.videoPhotoLocation = photoSize.location;
-    self.videoSize = photoSize.size;
-    
     
     
     NSSize blockSize = NSMakeSize(photoSize.w , photoSize.h );
@@ -56,7 +66,19 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-     self.blockSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
+    
+    if(self.isForwadedMessage)
+        width-=50;
+    
+    _videoSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
+    
+    if(_caption) {
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_videoSize.width];
+    }
+    
+    int captionBlockHeight = _captionSize.height > 0 ? _captionSize.height + 10 : 0;
+    
+     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height + captionBlockHeight);
     
     return YES;
 }
