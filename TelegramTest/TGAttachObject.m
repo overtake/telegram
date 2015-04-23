@@ -204,6 +204,7 @@ static ASQueue *queue;
         _data = data;
         _unique_id = rand_long();
         _peer_id = peer_id;
+        _caption = @"";
     }
     
     return self;
@@ -213,6 +214,7 @@ static ASQueue *queue;
     [aCoder encodeObject:_file forKey:@"file"];
     [aCoder encodeInt64:_unique_id forKey:@"unique_id"];
     [aCoder encodeInt:_peer_id forKey:@"peer_id"];
+    [aCoder encodeObject:_caption forKey:@"caption"];
 }
 
 -(NSString *)thumbKey {
@@ -225,6 +227,7 @@ static ASQueue *queue;
         _unique_id = [aDecoder decodeInt64ForKey:@"unique_id"];
         _generatedPath = exportPath(_unique_id, @"jpg");
         _peer_id = [aDecoder decodeIntForKey:@"peer_id"];
+        _caption = [aDecoder decodeObjectForKey:@"caption"];
         _thumb = [TGCache cachedImage:[self thumbKey] group:@[THUMBCACHE]];
     }
     
@@ -242,6 +245,28 @@ static ASQueue *queue;
 
 -(Class)senderClass {
     return [ImageAttachSenderItem class];
+}
+
+-(void)save {
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        NSString *key = [NSString stringWithFormat:@"peer_id:%d",_peer_id];
+        
+        NSMutableArray *attachments = [transaction objectForKey:key inCollection:ATTACHMENTS];
+        
+        [transaction setObject:attachments forKey:key inCollection:ATTACHMENTS];
+        
+    }];
+    
+}
+
+
+-(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave {
+    _caption = caption;
+    if(needSave)
+        [self save];
 }
 
 @end

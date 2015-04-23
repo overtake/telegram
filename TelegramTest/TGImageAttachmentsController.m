@@ -105,14 +105,12 @@
             [[self animator] setAlphaValue:0];
             
         } completionHandler:^{
-            if(deleteItems)
-                [_containerView removeAllSubviews];
+            [_containerView removeAllSubviews];
             [self setHidden:YES];
             [self setAlphaValue:1];
         }];
     } else {
-        if(deleteItems)
-            [_containerView removeAllSubviews];
+        [_containerView removeAllSubviews];
         [self setHidden:YES];
     }
     
@@ -132,8 +130,18 @@
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    }
+    
+    [self.delegate didChangeAttachmentsCount:0];
+    
+    [TMViewController showAttachmentCaption:self.containerView.subviews onClose:^{
+        
+        [self show:_conversation animated:NO];
+        
+        _isShown = NO;
+        [self.delegate didChangeAttachmentsCount:(int)_containerView.subviews.count];
+        
+    }];
+}
 
 -(void)removeItem:(TGImageAttachment *)attachment animated:(BOOL)animated {
     
@@ -311,6 +319,8 @@
         
         [obj setFrameOrigin:NSMakePoint(NSMaxX(lastAttach.frame) + 10, 1)];
         
+        [obj setDeleteAccept:YES];
+        
         [_containerView addSubview:obj];
         
         [self updateContainer];
@@ -395,9 +405,10 @@
     [attachment.layer setFrameOrigin:to];
     
     [attachment.layer addAnimation:animation forKey:@"position"];
-    
-    
-    
 }
+
+
+
+
 
 @end

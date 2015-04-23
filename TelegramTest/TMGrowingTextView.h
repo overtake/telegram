@@ -37,6 +37,9 @@ typedef enum {
 @property (nonatomic, strong) TMScrollView *scrollView;
 @property (nonatomic, strong) TMView *containerView;
 @property (nonatomic,assign) int limit;
+
+@property (nonatomic,assign) int maxHeight;
+@property (nonatomic,assign) int minHeight;
 //@property (nonatomic) int maxLines;
 @property (nonatomic, strong) id<TMGrowingTextViewDelegate> growingDelegate;
 @property (nonatomic, strong) NSImage *backgroundImage;
@@ -46,6 +49,7 @@ typedef enum {
 - (BOOL)isEnterEvent:(NSEvent *)e;
 - (BOOL)isControlEnterEvent:(NSEvent *)e;
 - (BOOL)isCommandEnterEvent:(NSEvent *)e;
+
 
 @end
 

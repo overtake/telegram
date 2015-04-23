@@ -364,6 +364,9 @@ static TMTableView *tableStatic;
     
     if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
         
+        if([TMViewController isModalActive])
+            return;
+        
         NSUInteger pos = 0;
         id item = [self itemByHash:self.listSelectedElementHash];
         if(item) {

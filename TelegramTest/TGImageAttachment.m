@@ -208,6 +208,10 @@ static CAAnimation *thumbAnimation() {
     
 }
 
+-(void)setDeleteAccept:(BOOL)accept {
+    [_close setHidden:!accept];
+}
+
 -(void)cancelUploading {
     [self.controller removeItem:self animated:YES];
 }
@@ -219,8 +223,10 @@ static CAAnimation *thumbAnimation() {
     } else {
         [_progress setHidden:NO];
         [_close setHidden:YES];
-         [_progress startAnimation:self];
+        [_progress startAnimation:self];
     }
+    
+    [_loaderView setCurrentProgress:0];
     
     if(_item.uploader) {
         [self didStartUploading:_item.uploader];
@@ -231,8 +237,6 @@ static CAAnimation *thumbAnimation() {
     
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-    [TMViewController showAttachmentCaption:self.superview.subviews];
-}
+
 
 @end

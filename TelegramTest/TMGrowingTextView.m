@@ -79,6 +79,16 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    if(_limit > 0 && self.string.length > _limit) {
+        
+        [self setString:[self.string substringWithRange:NSMakeRange(0, _limit)]];
+        NSBeep();
+        
+        return;
+    }
+    
+    
+    
     [self detectAndAddLinks];
     
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
@@ -141,11 +151,11 @@
     
   //  NSLog(@"%@, height:%d",NSStringFromSize(newSize), height);
     
-    if(newSize.height < 33)
-        newSize.height = 33;
+    if(newSize.height < _minHeight)
+        newSize.height = _minHeight;
     
     
-    int maxHeight = 250;
+    int maxHeight = _maxHeight;
     
     if(newSize.height > maxHeight)
         newSize.height = maxHeight;
@@ -208,7 +218,8 @@
 
 - (void)initialize {
 
-    
+    self.maxHeight = 250;
+    self.minHeight = 33;
     self.disableAnimation = YES;
     self.frame = NSMakeRect(0, 0, self.frame.size.width - 90, 200);
     [self setAllowsUndo:YES];
@@ -336,32 +347,7 @@
     self.placeholderTextAttributedString = [[NSAttributedString alloc] initWithString:placeHodlder attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13]}];
 }
 
--(NSPoint)textContainerOrigin {
-    
-    if([self numberOfLines] < 10) {
-        [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-        NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
-        
-        int yOffset = [self.string getEmojiFromString:NO].count > 0 ? 0 : 1;
-        
-        return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
-    }
-    
-    return [super textContainerOrigin];
-    
-}
 
--(NSUInteger)numberOfLines {
-    NSString *s = [self string];
-    
-    NSUInteger numberOfLines, index, stringLength = [s length];
-    
-    for (index = 0, numberOfLines = 0; index < stringLength;
-         numberOfLines++) {
-        index = NSMaxRange([s lineRangeForRange:NSMakeRange(index, 0)]);
-    }
-    return numberOfLines;
-}
 
 
 
@@ -445,4 +431,14 @@
 - (NSString *)stringValue {
     return [NSString stringWithFormat:@"%@", self.string];
 }
+
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    if(self.scrollView.documentSize.height > self.containerView.frame.size.height) {
+        [super scrollWheel:theEvent];
+    } else {
+        [self.superview.superview.superview scrollWheel:theEvent];
+    }
+}
+
 @end

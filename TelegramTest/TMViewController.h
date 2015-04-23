@@ -74,13 +74,11 @@
 
 
 
-+(void)showAttachmentCaption:(NSArray *)attachments;
++(void)showAttachmentCaption:(NSArray *)attachments onClose:(dispatch_block_t)onClose;
 +(void)hideAttachmentCaption;
 
-
--(void)showModalProgress;
--(void)hideModalProgress;
-
++(BOOL)isModalActive;
++(TMView *)modalView;
 
 +(void)becomePasslock;
 

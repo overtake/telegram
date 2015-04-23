@@ -13,6 +13,7 @@
 #import "TGMentionPopup.h"
 #import "TGHashtagPopup.h"
 #import "NSString+FindURLs.h"
+#import "NSString+Extended.h"
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -266,7 +267,39 @@ typedef enum {
     [self checkWebpages];
 }
 
+
+
+-(NSPoint)textContainerOrigin {
+    
+    if([self numberOfLines] < 10) {
+        [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
+        NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
+        
+        int yOffset = [self.string getEmojiFromString:NO].count > 0 ? 0 : 1;
+        
+        return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
+    }
+    
+    return [super textContainerOrigin];
+    
+}
+
+-(NSUInteger)numberOfLines {
+    NSString *s = [self string];
+    
+    NSUInteger numberOfLines, index, stringLength = [s length];
+    
+    for (index = 0, numberOfLines = 0; index < stringLength;
+         numberOfLines++) {
+        index = NSMaxRange([s lineRangeForRange:NSMakeRange(index, 0)]);
+    }
+    return numberOfLines;
+}
+
 - (void)initialize {
+    
+    self.maxHeight = 250;
+    self.minHeight = 33;
     
     [SettingsArchiver addEventListener:self];
     

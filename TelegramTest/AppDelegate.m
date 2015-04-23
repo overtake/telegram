@@ -583,8 +583,17 @@ void exceptionHandler(NSException * exception)
         if(result.window != [TMMediaController controller].panel) {
             
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
-                if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
-                    if([result.window.contentView hitTest:[result locationInWindow]]) {
+                
+                if([result.window.contentView hitTest:[result locationInWindow]]) {
+                    if([TMViewController isModalActive]) {
+                        if(result.type == NSMouseEntered || result.type == NSMouseMoved) {
+                            result = nil;
+                        }
+                    }
+                    
+                    if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
+                        
+                        
                         result = nil;
                     }
                     
@@ -660,7 +669,10 @@ void exceptionHandler(NSException * exception)
     
     [TGPasslock appIncomeActive];
     
-    [[Telegram rightViewController] becomeFirstResponder];
+    if(![TMViewController isModalActive])
+        [[Telegram rightViewController] becomeFirstResponder];
+    else
+        [[TMViewController modalView] becomeFirstResponder];
 }
 
 - (void) receiveSleepNote: (NSNotification*) note

@@ -10,6 +10,8 @@
 #import "TGAttachObject.h"
 @interface TGModalSetCaptionView : TMView
 
+@property (nonatomic,strong) dispatch_block_t onClose;
+
 -(void)prepareWithAttachment:(TGAttachObject *)attachment;
 -(void)prepareAttachmentViews:(NSArray *)attachments;
 @end
