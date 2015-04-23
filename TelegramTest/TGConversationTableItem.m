@@ -42,7 +42,7 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         
         [self update];
         
@@ -53,55 +53,47 @@
 }
 
 -(void)didChangeTyping:(NSNotification *)notify {
+    NSArray *actions;
     
-    [ASQueue dispatchOnStageQueue:^{
+    if(!notify) {
+        actions = [[TGModernTypingManager typingForConversation:_conversation] currentActions];
+    } else {
+        actions = notify.userInfo[@"users"];
+    }
+    
+    if(actions.count > 0) {
         
-        NSArray *actions;
+        NSString *string;
         
-        if(!notify) {
-            actions = [[TGModernTypingManager typingForConversation:_conversation] currentActions];
-        } else {
-            actions = notify.userInfo[@"users"];
-        }
-        
-        if(actions.count > 0) {
+        if(actions.count == 1) {
             
-            NSString *string;
+            TGActionTyping *action = actions[0];
             
-            if(actions.count == 1) {
-                
-                TGActionTyping *action = actions[0];
-                
-                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
-                if(user)
-                    string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
-
-            } else {
-                
-                string = [NSString stringWithFormat:NSLocalizedString(@"Typing.PeopleTyping", nil), (int)actions.count];
-            }
-            
-            _typing = string;
+            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+            if(user)
+                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
             
         } else {
-            _typing = nil;
+            
+            string = [NSString stringWithFormat:NSLocalizedString(@"Typing.PeopleTyping", nil), (int)actions.count];
         }
         
+        _typing = string;
         
-        [self performReload];
-    }];
+    } else {
+        _typing = nil;
+    }
     
+    
+    [self performReload];
 }
 
 
 -(void)needUpdateItem:(NSNotification *)notification {
     
-    [ASQueue dispatchOnStageQueue:^{
-        [self update];
-        
-        [self performReload];
-    }];
-
+    [self update];
+    
+    [self performReload];
 }
 
 -(void)performReload {
