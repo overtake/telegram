@@ -495,22 +495,62 @@ void open_card(NSString *link) {
 
 void join_group_by_hash(NSString * hash) {
     
-    [TMViewController showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
+        [TMViewController showModalProgress];
         
-        
-        dispatch_after_seconds(0.2, ^{
+        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
             
-            [TMViewController hideModalProgressWithSuccess];
+            if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
+                
+                [[Telegram rightViewController] showByDialog:[[DialogsManager sharedManager] findByChatId:[[response chat] n_id]] sender:nil];
+                    
+                [TMViewController hideModalProgress];
+    
+            } else if([response isKindOfClass:[TL_chatInvite class]]) {
+                
+                [TMViewController hideModalProgress];
+                
+                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
+                    
+                    [TMViewController showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_messages_importChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TLUpdates *response) {
+                        
+                        if([response chats].count > 0) {
+                            TLChat *chat = [response chats][0];
+                            
+                            TL_conversation *conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
+                            
+                            [[Telegram rightViewController] showByDialog:conversation sender:nil];
+                            
+                            dispatch_after_seconds(0.2, ^{
+                                
+                                [TMViewController hideModalProgressWithSuccess];
+                            });
+                        } else {
+                            [TMViewController hideModalProgress];
+                        }
+                        
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [TMViewController hideModalProgress];
+                    }];
+                    
+                    
+                }, nil);
+            }
             
-        });
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [TMViewController hideModalProgress];
+            
+        }];
         
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        [TMViewController hideModalProgress];
-        
-    }];
+   
+    
+    
     
 }
 

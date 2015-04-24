@@ -12,7 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TMHyperlinkTextField *nameTextField;
-@property (nonatomic,strong) TGCTextView *messageField;
+
 @property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
 @property (nonatomic,strong) NSImageView *locationImageView;
@@ -44,7 +44,7 @@
         
        // [self addSubview:self.dateField];
         
-        self.messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 

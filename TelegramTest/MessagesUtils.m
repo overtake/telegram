@@ -311,6 +311,11 @@
         actionText = action.title;
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
+    } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
+        
+        
+        actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
+        
     }
     
     static float size = 11.5;

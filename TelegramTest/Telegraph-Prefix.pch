@@ -79,7 +79,9 @@
 
 #define NSColorFromRGBWithAlpha(rgbValue, alphaValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:(alphaValue)]
 
-#define  keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
+#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+
+#define keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
 #define MAX_FILE_SIZE 1500000000

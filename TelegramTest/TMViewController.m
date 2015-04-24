@@ -241,16 +241,20 @@ static TGModalSetCaptionView *setCaptionView;
         
         setCaptionView.layer.opacity = 0;
         
+        
+        
         [setCaptionView setCenterByView:[[Telegram delegate] window].contentView];
         
         [[[Telegram delegate] window].contentView addSubview:setCaptionView];
+    } else {
+        return;
     }
-    
-    [setCaptionView becomeFirstResponder];
     
     setCaptionView.onClose = onClose;
     
     [setCaptionView prepareAttachmentViews:attachments];
+    
+    [setCaptionView becomeFirstResponder];
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:setCaptionView.layer.opacity to:1];
     
@@ -260,16 +264,17 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(void)hideAttachmentCaption {
     
-    //  progressView.layer.opacity = 0.8;
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
     
     [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
+                
         [setCaptionView removeFromSuperview];
         setCaptionView = nil;
     }];
     
-    [setCaptionView.layer pop_addAnimation:anim forKey:@"fade"];
+    if(setCaptionView.layer.pop_animationKeys.count == 0)
+        [setCaptionView.layer pop_addAnimation:anim forKey:@"fade"];
     
     
 }

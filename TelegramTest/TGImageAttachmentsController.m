@@ -54,7 +54,15 @@
 }
 
 -(void)show:(TL_conversation *)conversation animated:(BOOL)animated {
-        
+    
+    
+    if(_conversation == conversation) {
+        _isShown = _containerView.subviews.count > 0;
+        [self setHidden:!_isShown];
+        return;
+    }
+    
+    
     _conversation = conversation;
     
     [_containerView removeAllSubviews];
@@ -105,8 +113,11 @@
             [[self animator] setAlphaValue:0];
             
         } completionHandler:^{
-            [_containerView removeAllSubviews];
-            [self setHidden:YES];
+            if(!_isShown) {
+                [_containerView removeAllSubviews];
+                [self setHidden:YES];
+                
+            }
             [self setAlphaValue:1];
         }];
     } else {
@@ -128,17 +139,30 @@
 
 }
 
-
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    if([TMViewController isModalActive])
+        return;
     
     [self.delegate didChangeAttachmentsCount:0];
     
-    [TMViewController showAttachmentCaption:self.containerView.subviews onClose:^{
+    _isShown = NO;
+    
+    NSArray *items = [self.containerView.subviews copy];
+    
+    
+    [TMViewController showAttachmentCaption:items onClose:^{
         
-        [self show:_conversation animated:NO];
+        [items enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
+            
+            [obj setDeleteAccept:YES];
+            [self addSubview:obj];
+        }];
         
-        _isShown = NO;
-        [self.delegate didChangeAttachmentsCount:(int)_containerView.subviews.count];
+        [self updateItemsOrigin];
+        
+        [self.delegate didChangeAttachmentsCount:(int)items.count];
+        
         
     }];
 }

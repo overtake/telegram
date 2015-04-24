@@ -116,6 +116,8 @@ static ASQueue *queue;
             
             [_uploader setUploadComplete:^(UploadOperation *uploader, id input) {
                 
+                _uploader = nil;
+                
                 dispatch_after_seconds(0.3, ^{
                     [weakSelf.delegate didEndUploading:uploader];
                 });

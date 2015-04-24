@@ -767,6 +767,7 @@
     if(_imageAttachmentsController.isShown) {
         [_imageAttachmentsController hide:YES deleteItems:YES];
         [self updateBottomHeight:YES];
+        [self TMGrowingTextViewTextDidChange:nil];
     }
     
     

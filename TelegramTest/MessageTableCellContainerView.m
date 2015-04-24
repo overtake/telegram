@@ -14,7 +14,7 @@
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
 #import "MessageReplyContainer.h"
-
+#import "POPCGUtils.h"
 
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
@@ -1019,6 +1019,51 @@ static int offsetEditable = 30;
 }
 
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    if(!_replyContainer)
+        return;
+    
+    if(!anim) {
+        _replyContainer.messageField.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
+    
+}
 
+
+
+-(void)_colorAnimationEvent {
+    
+    if(!_replyContainer.messageField)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_replyContainer.messageField.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _replyContainer.messageField.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_replyContainer.messageField setNeedsDisplay:YES];
+}
 
 @end

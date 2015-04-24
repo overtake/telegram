@@ -11,6 +11,7 @@
 
 @interface TGModalSetCaptionView ()
 -(void)changeResponder;
+@property (nonatomic,assign) NSUInteger currentResponderId;
 @end
 
 @interface TGAttachCaptionRowItem : TMRowItem<TMGrowingTextViewDelegate>
@@ -46,7 +47,10 @@
     
 }
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(TMGrowingTextView *)textView isCommandPressed:(BOOL)isCommandPressed {
-    return NO;
+    
+    [_controller changeResponder];
+    
+    return YES;
 }
 - (void) TMGrowingTextViewTextDidChange:(TMGrowingTextView *)textView {
     
@@ -54,7 +58,9 @@
     
 }
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
-    
+    if(isFirstResponder) {
+        _controller.currentResponderId = [self.table positionOfItem:self];
+    }
 }
 
 @end
@@ -68,11 +74,11 @@
         
         
         
-        _textView = [[TMGrowingTextView alloc] initWithFrame:NSMakeRect(80, 4, NSWidth(frameRect) - 86, NSHeight(frameRect) - 12)];
+        _textView = [[TMGrowingTextView alloc] initWithFrame:NSMakeRect(80, 4, NSWidth(frameRect) - 84, NSHeight(frameRect) - 12)];
         
         
         
-        _textView.containerView.frame = NSMakeRect(80, 4, NSWidth(frameRect) - 86, NSHeight(frameRect) - 8);
+        _textView.containerView.frame = NSMakeRect(80, 4, NSWidth(frameRect) - 84, NSHeight(frameRect) - 9);
         
         _textView.minHeight = _textView.maxHeight = NSHeight(_textView.containerView.frame);
         _textView.limit = 140;
@@ -98,7 +104,7 @@
     
     [self addSubview:_textView.containerView];
     
-    [item.attach setFrameOrigin:NSMakePoint(0, 4)];
+    [item.attach setFrameOrigin:NSMakePoint(2, 4)];
     
     [item.attach setDeleteAccept:NO];
     
@@ -129,6 +135,8 @@
 @property (nonatomic,strong) TL_conversation *conversation;
 
 @property (nonatomic,strong) TMTableView *tableView;
+
+
 
 @end
 
@@ -183,12 +191,15 @@
 
 -(void)prepareAttachmentViews:(NSArray *)attachments {
     
+    _currentResponderId = 0;
     
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:attachments.count];
     
     [attachments enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        [items addObject:[[TGAttachCaptionRowItem alloc] initWithObject:obj]];
+        TGAttachCaptionRowItem *item = [[TGAttachCaptionRowItem alloc] initWithObject:obj];
+        item.controller = self;
+        [items addObject:item];
         
     }];
     
@@ -239,7 +250,7 @@
     
     TGAttachCaptionRowView *view = (TGAttachCaptionRowView *)[self.tableView cacheViewForClass:[TGAttachCaptionRowView class] identifier:@"TGAttachCaptionRowView" withSize:NSMakeSize(NSWidth(_tableView.frame), 70)];
     
-    if(row == 0) {
+    if(row == _currentResponderId) {
         [view becomeFirstResponder];
     }
     
@@ -259,12 +270,19 @@
 }
 
 -(BOOL)becomeFirstResponder {
-    if(self.tableView.list.count > 0)
-        return [[self.tableView viewAtColumn:0 row:0 makeIfNecessary:NO] becomeFirstResponder];
+    if(self.tableView.list.count > _currentResponderId) {
+        return [[self.tableView viewAtColumn:0 row:_currentResponderId makeIfNecessary:NO] becomeFirstResponder];
+    }
+    
     return YES;
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
+    
+}
+
+
+-(void)mouseUp:(NSEvent *)theEvent {
     //[super mouseDown:theEvent];
     
     
@@ -273,9 +291,6 @@
         [item.attach.item save];
     }
     
-    
-    if(_onClose)
-        _onClose();
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         
@@ -287,7 +302,17 @@
     }];
     
     dispatch_after_seconds(0.2, ^{
+        NSLog(@"close event");
+
+        
+        if(_onClose) {
+            _onClose();
+            _onClose = nil;
+        }
+        
+        
         [TMViewController hideAttachmentCaption];
+        
     });
     
 }
@@ -313,6 +338,20 @@
 
 
 -(void)changeResponder {
+    
+    _currentResponderId++;
+    
+    if(_currentResponderId == _tableView.count) {
+        [self mouseUp:nil];
+    } else {
+    
+        [self becomeFirstResponder];
+    }
+    
+}
+
+
+-(void)scrollWheel:(NSEvent *)theEvent {
     
 }
 

@@ -166,6 +166,7 @@
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
+     [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
     if(!anim) {
         self.textView.backgroundColor = color;
@@ -197,12 +198,14 @@
 
 
 -(void)_colorAnimationEvent {
+    
     CALayer *currentLayer = (CALayer *)[self.textView.layer presentationLayer];
     
     id value = [currentLayer valueForKeyPath:@"backgroundColor"];
     
     self.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
     [self.textView setNeedsDisplay:YES];
+    
 }
 
 -(void)setSelected:(BOOL)selected animation:(BOOL)animation {

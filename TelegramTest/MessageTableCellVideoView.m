@@ -17,6 +17,7 @@
 
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
+#import "POPCGUtils.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
@@ -149,6 +150,7 @@ static NSImage *playImage() {
 -(void)initCaptionTextView {
     if(!_captionTextView) {
         _captionTextView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        [_captionTextView setEditable:YES];
         [self.containerView addSubview:_captionTextView];
     }
 }
@@ -253,6 +255,56 @@ static NSImage *playImage() {
     [super onStateChanged:item];
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    if(!_captionTextView) {
+        return;
+    }
+    
+    
+    if(!anim) {
+        _captionTextView.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_captionTextView pop_addAnimation:animation forKey:@"background"];
+    
+    
+}
 
+
+
+-(void)_colorAnimationEvent {
+    
+    if(!_captionTextView)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_captionTextView.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _captionTextView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_captionTextView setNeedsDisplay:YES];
+}
 
 @end
