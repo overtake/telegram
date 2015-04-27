@@ -140,6 +140,7 @@ NSImage *addCaptionImage() {
         
     } completionHandler:^{}];
     
+    [_loaderView setProgress:5 animated:YES];
     
     [uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
         

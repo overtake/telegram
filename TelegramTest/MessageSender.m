@@ -349,7 +349,7 @@ static NSMutableArray *wrong_files;
 + (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
    
     
-    BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension IN (%@)",imageTypes()]].count > 1;
+    BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -368,7 +368,6 @@ static NSMutableArray *wrong_files;
     
     
     NSString *file = files[0];
-    
     files = [files subarrayWithRange:NSMakeRange(1, files.count-1)];
     
     

@@ -112,7 +112,7 @@
     if(caption) {
         NSSize s = [caption sizeForTextFieldForWidth:size.width];
         
-        maxSize.height-=(s.height+10);
+        maxSize.height-=(s.height+20);
     }
     
      return convertSize(size, maxSize);
@@ -232,7 +232,7 @@ static const int bottomHeight = 60;
     
     
     if(caption) {
-        [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame),0) , c_s.width, c_s.height)];
+        [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame) ,0) , c_s.width, c_s.height)];
     }
   
     
