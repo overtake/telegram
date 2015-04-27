@@ -136,11 +136,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t139.sqlite"; // 61
+    NSString *dbName = @"t140.sqlite"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
     __block BOOL res = NO;
+    
+    [[Storage yap] flushMemoryWithLevel:0];
     
     
      [queue inDatabaseWithDealocing:^(FMDatabase *db) {
@@ -757,6 +759,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
     
     return ids;
+}
+
+-(void)readMessagesContent:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        NSString *mark = [messages componentsJoinedByString:@","];
+        NSString *sql = [NSString stringWithFormat:@"update messages set flags = flags & ~32 WHERE n_id IN (%@)",mark];
+        [db executeUpdateWithFormat:sql,nil];
+        
+    }];
 }
 
 

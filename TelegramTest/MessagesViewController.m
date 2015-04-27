@@ -256,6 +256,7 @@
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
+    [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -439,6 +440,25 @@
     if(index != NSNotFound)
         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     
+    
+}
+
+-(void)messageTableItemsReadContents:(NSNotification *)notification  {
+    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
+    
+    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        
+        NSUInteger index = [self indexOfObject:obj];
+        
+        if(index != NSNotFound) {            
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+    }];
     
 }
 
@@ -1018,6 +1038,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    #ifdef __MAC_10_10
+    
     if([NSUserActivity class] && (_conversation.type == DialogTypeChat || _conversation.type == DialogTypeUser)) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
      //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
@@ -1032,6 +1054,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.activity becomeCurrent];
     }
+    
+#endif
     
     if(_conversation) {
         [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:_conversation, @"sender":self}];
@@ -1049,7 +1073,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
-    if([NSUserActivity class]) {
+    
+    
+    
+    if(NSClassFromString(@"NSUserActivity")) {
         [self.activity invalidate];
     }
 }

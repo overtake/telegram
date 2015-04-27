@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.04.15.
+//  Auto created by Mikhail Filimonov on 27.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -294,16 +294,19 @@
 @end
 
 @implementation TL_inputMediaPhoto
-+(TL_inputMediaPhoto*)createWithN_id:(TLInputPhoto*)n_id {
++(TL_inputMediaPhoto*)createWithN_id:(TLInputPhoto*)n_id caption:(NSString*)caption {
 	TL_inputMediaPhoto* obj = [[TL_inputMediaPhoto alloc] init];
 	obj.n_id = n_id;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.caption = [stream readString];
 }
 @end
 
@@ -397,16 +400,19 @@
 @end
 
 @implementation TL_inputMediaVideo
-+(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id {
++(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption {
 	TL_inputMediaVideo* obj = [[TL_inputMediaVideo alloc] init];
 	obj.n_id = n_id;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.caption = [stream readString];
 }
 @end
 
@@ -1793,30 +1799,36 @@
 @end
 
 @implementation TL_messageMediaPhoto
-+(TL_messageMediaPhoto*)createWithPhoto:(TLPhoto*)photo {
++(TL_messageMediaPhoto*)createWithPhoto:(TLPhoto*)photo caption:(NSString*)caption {
 	TL_messageMediaPhoto* obj = [[TL_messageMediaPhoto alloc] init];
 	obj.photo = photo;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.photo stream:stream];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.photo = [TLClassStore TLDeserialize:stream];
+	self.caption = [stream readString];
 }
 @end
 
 @implementation TL_messageMediaVideo
-+(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video {
++(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video caption:(NSString*)caption {
 	TL_messageMediaVideo* obj = [[TL_messageMediaVideo alloc] init];
 	obj.video = video;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[TLClassStore TLSerialize:self.video stream:stream];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.video = [TLClassStore TLDeserialize:stream];
+	self.caption = [stream readString];
 }
 @end
 
@@ -2160,13 +2172,12 @@
 @end
 
 @implementation TL_photo
-+(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date caption:(NSString*)caption geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes {
++(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes {
 	TL_photo* obj = [[TL_photo alloc] init];
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
 	obj.user_id = user_id;
 	obj.date = date;
-	obj.caption = caption;
 	obj.geo = geo;
 	obj.sizes = sizes;
 	return obj;
@@ -2176,7 +2187,6 @@
 	[stream writeLong:self.access_hash];
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.date];
-	[stream writeString:self.caption];
 	[TLClassStore TLSerialize:self.geo stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -2194,7 +2204,6 @@
 	self.access_hash = [stream readLong];
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
-	self.caption = [stream readString];
 	self.geo = [TLClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
@@ -2301,15 +2310,13 @@
 @end
 
 @implementation TL_video
-+(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date caption:(NSString*)caption duration:(int)duration mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h {
++(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h {
 	TL_video* obj = [[TL_video alloc] init];
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
 	obj.user_id = user_id;
 	obj.date = date;
-	obj.caption = caption;
 	obj.duration = duration;
-	obj.mime_type = mime_type;
 	obj.size = size;
 	obj.thumb = thumb;
 	obj.dc_id = dc_id;
@@ -2322,9 +2329,7 @@
 	[stream writeLong:self.access_hash];
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.date];
-	[stream writeString:self.caption];
 	[stream writeInt:self.duration];
-	[stream writeString:self.mime_type];
 	[stream writeInt:self.size];
 	[TLClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.dc_id];
@@ -2336,9 +2341,7 @@
 	self.access_hash = [stream readLong];
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
-	self.caption = [stream readString];
 	self.duration = [stream readInt];
-	self.mime_type = [stream readString];
 	self.size = [stream readInt];
 	self.thumb = [TLClassStore TLDeserialize:stream];
 	self.dc_id = [stream readInt];

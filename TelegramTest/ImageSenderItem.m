@@ -63,7 +63,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
 
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:@"" geo:[TL_geoPointEmpty create] sizes:sizes]];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:@""];
         
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -91,14 +91,12 @@
         
     
         
-        __block BOOL isFirstSend = [input isKindOfClass:[TLInputFile class]];
+        TLInputMedia *media;
         
-        id media = nil;
-        if(isFirstSend) {
-            media = [TL_inputMediaUploadedPhoto createWithFile:input caption:self.message.media.photo.caption];
+        if([input isKindOfClass:[TL_inputPhoto class]]) {
+            media = [TL_inputMediaPhoto createWithN_id:input caption:self.message.media.caption];
         } else {
-            TLPhoto *photo = input;
-            media = [TL_inputMediaPhoto createWithN_id:[TL_inputPhoto createWithN_id:photo.n_id access_hash:photo.access_hash]];
+            media = [TL_inputMediaUploadedPhoto createWithFile:input caption:self.message.media.caption];
         }
         
         
@@ -113,6 +111,7 @@
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
             
+            
             if(response.updates.count < 2)
             {
                 [strongSelf cancel];
@@ -120,6 +119,9 @@
             }
             
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+            
+            [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:[FileUtils fileMD5:strongSelf.filePath]];
+            
             
             if(strongSelf.conversation.type != DialogTypeBroadcast)  {
                 strongSelf.message.n_id = msg.n_id;

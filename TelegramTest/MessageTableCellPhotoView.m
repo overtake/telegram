@@ -15,9 +15,10 @@
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
 #import "POPCGUtils.h"
+#import "MessageCellDescriptionView.h"
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
-@property (nonatomic,strong) TGCTextView *captionTextView;
+@property (nonatomic,strong) MessageCellDescriptionView *captionView;
 @end
 
 
@@ -146,17 +147,16 @@ NSImage *fireImage() {
 
 
 -(void)initCaptionTextView {
-    if(!_captionTextView) {
-        _captionTextView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        [_captionTextView setEditable:YES];
-        [self.containerView addSubview:_captionTextView];
+    if(!_captionView) {
+        _captionView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionView];
     }
 }
 
 
 - (void)deallocCaptionTextView {
-    [_captionTextView removeFromSuperview];
-    _captionTextView = nil;
+    [_captionView removeFromSuperview];
+    _captionView = nil;
 }
 
 
@@ -243,9 +243,9 @@ NSImage *fireImage() {
     if(item.caption) {
         [self initCaptionTextView];
         
-        [_captionTextView setFrame:NSMakeRect(0, NSMaxY(_imageView.frame), item.captionSize.width, item.captionSize.height)];
+        [_captionView setFrame:NSMakeRect(5, NSMaxY(_imageView.frame) - 30, MIN(NSWidth(_imageView.frame) - 10,item.captionSize.width), 25)];
         
-        [_captionTextView setAttributedString:item.caption];
+        [_captionView setString:item.caption];
         
     } else {
         [self deallocCaptionTextView];
@@ -310,55 +310,5 @@ NSImage *fireImage() {
     
 }
 
-
-
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
-    
-    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
-    
-    if(!_captionTextView)
-        return;
-    
-    if(!anim) {
-        _captionTextView.backgroundColor = color;
-        return;
-    }
-    
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
-    
-    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    animation.toValue = anim.toValue;
-    animation.fromValue = anim.fromValue;
-    animation.duration = anim.duration;
-    [_captionTextView pop_addAnimation:animation forKey:@"background"];
-    
-}
-
-
-
--(void)_colorAnimationEvent {
-    
-    if(!_captionTextView)
-        return;
-    
-    CALayer *currentLayer = (CALayer *)[_captionTextView.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    _captionTextView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [_captionTextView setNeedsDisplay:YES];
-}
 
 @end

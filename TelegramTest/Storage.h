@@ -216,4 +216,7 @@ extern NSString *const ATTACHMENTS;
 +(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link;
 +(TLWebPage *)findWebpage:(NSString *)link;
 
+-(void)readMessagesContent:(NSArray *)messages;
+
+
 @end

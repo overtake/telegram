@@ -10,6 +10,7 @@
 #import "GeneralSettingsRowItem.h"
 #import "GeneralSettingsRowView.h"
 #import "GeneralSettingsBlockHeaderView.h"
+#import "ASCommon.h"
 @interface GeneralSettingsViewController () <TMTableViewDelegate,SettingsListener>
 @property (nonatomic,strong) TMTableView *tableView;
 @end
@@ -210,6 +211,63 @@
     }];
     
     [self.tableView insert:advancedSettings atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+#ifdef TGDEBUG
+    
+    GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        
+         __block TLUser *user = [UsersManager findUserByName:@"vihor"];
+        
+        dispatch_block_t performBlock = ^ {
+          
+            [[Telegram rightViewController] showByDialog:user.dialog sender:self];
+            
+            NSArray *files = TGGetLogFilePaths();
+            
+            [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [[Telegram rightViewController].messagesViewController sendDocument:obj];
+            }];
+           
+        };
+        
+        if(user) {
+            performBlock();
+        } else {
+            
+            [self showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:@"vihor" limit:1] successHandler:^(RPCRequest *request, TL_contacts_contacts *response) {
+                
+                if(response.users.count == 1) {
+                    
+                    [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
+                    
+                    user = response.users[0];
+                    
+                    performBlock();
+                }
+                
+                [self hideModalProgress];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                [self hideModalProgress];
+            }];
+        }
+        
+       
+        
+        
+        
+    } description:@"Send logs" height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return nil;
+    }];
+    
+    [self.tableView insert:sendLogs atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+#endif
     
     [self.tableView reloadData];
     

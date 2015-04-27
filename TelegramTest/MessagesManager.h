@@ -26,6 +26,8 @@
 -(NSArray *)markAllInDialog:(TLDialog*)dialog;
 -(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
 
+-(void)readMessagesContent:(NSArray *)msg_ids;
+
 + (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
 +(void)addAndUpdateMessage:(TL_localMessage *)message;
 +(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;

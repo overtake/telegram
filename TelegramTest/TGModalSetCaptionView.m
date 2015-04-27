@@ -355,4 +355,10 @@
     
 }
 
+-(void)keyDown:(NSEvent *)theEvent {
+    if(theEvent.keyCode == 53) {
+        [self mouseUp:theEvent];
+    }
+}
+
 @end

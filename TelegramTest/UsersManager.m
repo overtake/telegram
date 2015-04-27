@@ -102,6 +102,18 @@
     return [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
 }
 
++(TLUser *)findUserByName:(NSString *)userName {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    NSArray *users = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username == %@",userName]];
+    
+    if(users.count == 1)
+        return users[0];
+    
+    return nil;
+}
+
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];

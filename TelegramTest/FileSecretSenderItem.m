@@ -80,7 +80,7 @@
         [sizes addObject:cachedSize];
         [sizes addObject:photoSize];
         
-        media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:self.uploader.identify access_hash:0 user_id:0 date:[[MTNetwork instance] getTime] caption:@"photo.jpg" geo:[TL_geoPointEmpty create] sizes:sizes]];
+        media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:self.uploader.identify access_hash:0 user_id:0 date:[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:@""];
         
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
@@ -109,7 +109,7 @@
         TL_photoCachedSize *photoSize = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:image.size.width h:image.size.height bytes:thumbData];
         
         
-        media = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:self.uploader.identify access_hash:0 user_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime] caption:@"Video" duration:duration mime_type:@"mp4" size:0 thumb:photoSize dc_id:0 w:size.width h:size.height]];
+        media = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:self.uploader.identify access_hash:0 user_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime] duration:duration size:0 thumb:photoSize dc_id:0 w:size.width h:size.height] caption:@""];
         
     } else if(self.uploadType == UploadDocumentType) {
         

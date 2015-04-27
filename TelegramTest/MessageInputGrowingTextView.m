@@ -174,13 +174,20 @@ typedef enum {
     
     switch (type) {
         case PasteBoardItemTypeImage:
-            alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisPicture", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPictureDescription", nil) block:^(id result) {
-                if([result intValue] == 1000) {
-                    
-                    [[[Telegram rightViewController] messagesViewController] sendImage:image.name file_data:[image TIFFRepresentation]];
-                    
-                }
-            }];
+            
+            if([[Telegram rightViewController] messagesViewController].conversation.type == DialogTypeSecretChat) {
+                alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisPicture", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPictureDescription", nil) block:^(id result) {
+                    if([result intValue] == 1000) {
+                        
+                        [[[Telegram rightViewController] messagesViewController] sendImage:image.name file_data:[image TIFFRepresentation]];
+                        
+                    }
+                }];
+            } else {
+                 [[[Telegram rightViewController] messagesViewController] sendImage:image.name file_data:[image TIFFRepresentation]];
+            }
+            
+           
             break;
             
         case PasteBoardItemTypeDocument:

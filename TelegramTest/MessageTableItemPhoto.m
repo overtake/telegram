@@ -62,12 +62,17 @@
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
             
-            if(photo.caption.length > 0) {
+            if(self.message.media.caption.length > 0) {
                 NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
                 
-                [c appendString:[[photo.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
+                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:[NSColor whiteColor]];
                 
                 [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+                
+                NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                [style setLineBreakMode:NSLineBreakByTruncatingTail];
+                
+                [c addAttribute:NSParagraphStyleAttributeName value:style range:c.range];
                 
                 _caption = c;
             }
@@ -116,12 +121,14 @@
     
     
     if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width];
+        _captionSize = [_caption sizeForTextFieldForWidth:_imageSize.width];
+        _captionSize.width = ceil(_captionSize.width + 5);
+        _captionSize.height = ceil(_captionSize.height + 5);
+        
     }
     
-    int captionBlockHeight = _captionSize.height > 0 ? _captionSize.height + 10 : 0;
     
-    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionBlockHeight, 60 + captionBlockHeight));
+    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height , 60 ));
     
     
     return YES;

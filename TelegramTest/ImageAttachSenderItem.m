@@ -24,6 +24,8 @@
         
         _attach = attach;
         
+       
+        NSString *path =  attach.generatedPath;
         
        TL_photoCachedSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:attach.imageSize.width h:attach.imageSize.height bytes:attach.previewData];
         
@@ -35,15 +37,15 @@
         [sizes addObject:size];
         [sizes addObject:size1];
         
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] caption:attach.caption geo:[TL_geoPointEmpty create] sizes:sizes]];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:attach.caption];
         
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
         
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
         
-        [[NSFileManager defaultManager] copyItemAtPath:attach.generatedPath toPath:mediaFilePath(self.message.media) error:nil];
-        
+       
+         [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message.media) error:nil];
         
         [self.message save:YES];
         
@@ -59,7 +61,13 @@
     
     self.filePath = mediaFilePath(self.message.media);
     
-    TL_inputMediaUploadedPhoto *media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile caption:self.message.media.photo.caption];
+    TLInputMedia *media;
+    
+    if([uploadedFile isKindOfClass:[TL_inputPhoto class]]) {
+        media = [TL_inputMediaPhoto createWithN_id:uploadedFile caption:self.message.media.caption];
+    } else {
+        media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile caption:self.message.media.caption];
+    }
     
     id request = nil;
     
@@ -72,6 +80,8 @@
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
         
+        
+        
         if(response.updates.count < 2)
         {
             [self cancel];
@@ -79,6 +89,9 @@
         }
         
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+        
+        
+        [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:[FileUtils fileMD5:self.filePath]];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             self.message.n_id = msg.n_id;

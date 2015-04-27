@@ -22,10 +22,10 @@
         [self rebuildImageObject];
         
         
-        if(self.message.media.video.caption.length > 0) {
+        if(self.message.media.caption.length > 0) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
-            [c appendString:[[self.message.media.video.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
+            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
             
             [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
             

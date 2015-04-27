@@ -13,6 +13,7 @@
 #import "SelfDestructionController.h"
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "MessageCellDescriptionView.h"
 @interface TGPVContainer ()
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
@@ -20,6 +21,8 @@
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
 
 @property (nonatomic,strong) AVPlayerView *videoPlayerView;
+
+@property (nonatomic,strong) MessageCellDescriptionView *photoCaptionView;
 
 @end
 
@@ -40,12 +43,16 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    [TGPhotoViewer nextItem];
+    
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame])
+        [TGPhotoViewer nextItem];
+    //else
+        //[super mouseDown:theEvent];
 }
 
 -(void)initialize {
     self.wantsLayer = YES;
-    self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    self.layer.backgroundColor = [NSColor clearColor].CGColor;
    
  //   self.layer.cornerRadius = 6;
 
@@ -54,7 +61,11 @@
     
  //   self.imageView.cornerRadius = 6;
     
+    _photoCaptionView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
+    
     [self addSubview:self.imageView];
+    
+    
     
 //    self.userNameTextField = [TMNameTextField defaultTextField];
 //    [self.userNameTextField setSelector:@selector(titleForMessage)];
@@ -79,7 +90,8 @@
 
 -(NSSize)maxSize {
     NSRect screenFrame = [NSScreen mainScreen].frame;
-    return NSMakeSize(NSWidth(screenFrame) - 100, NSHeight(screenFrame) - 140);;
+    
+    return NSMakeSize(NSWidth(screenFrame) - 100, NSHeight(screenFrame) - 120);;
 }
 
 - (NSSize)contentFullSize:(TGPhotoViewerItem *)item {
@@ -93,7 +105,17 @@
         
     }
     
-     return convertSize(size, [self maxSize]);
+    NSSize maxSize = [self maxSize];
+    
+    
+    NSAttributedString *caption = [self caption];
+    if(caption) {
+        NSSize s = [caption sizeForTextFieldForWidth:size.width];
+        
+        maxSize.height-=(s.height+10);
+    }
+    
+     return convertSize(size, maxSize);
 }
 
 -(void)copy:(id)sender {
@@ -118,11 +140,24 @@
 
 static const int bottomHeight = 60;
 
+-(NSAttributedString *)caption {
+    
+    if([[_currentViewerItem.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:[(TL_messageMediaPhoto *)[_currentViewerItem.previewObject.media media] caption] withColor:[NSColor whiteColor]];
+        
+        [attr setFont:TGSystemFont(13) forRange:attr.range];
+        
+        return attr;
+    }
+    return nil;
+}
+
+
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     
     _currentViewerItem = currentViewerItem;
-    
-  
     
     self.imageView.object = currentViewerItem.imageObject;
     
@@ -138,6 +173,9 @@ static const int bottomHeight = 60;
     }
     
     
+   
+    
+    
     NSSize size = [self contentFullSize:currentViewerItem];
     
     NSSize containerSize = size;
@@ -151,7 +189,7 @@ static const int bottomHeight = 60;
     
     
         
-    [self setFrameSize:NSMakeSize(containerSize.width, containerSize.height)];
+    [self setFrameSize:NSMakeSize(containerSize.width, [self maxSize].height)];
     
     
     
@@ -159,16 +197,44 @@ static const int bottomHeight = 60;
     float y = (self.superview.bounds.size.height - self.bounds.size.height + 75) / 2;
     
     [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
+    
+    
+    
         
   //  [self setCenterByView:self.superview];
     
-  
+   
+    
+    NSAttributedString *caption = [self caption];
+    
+    NSSize c_s = NSZeroSize;
+    
+    [_photoCaptionView setHidden:caption.length == 0];
+    
+    if(caption.length > 0) {
+        
+        c_s = [caption sizeForTextFieldForWidth:size.width - 20];
+        c_s.width = ceil(c_s.width + 6);
+        c_s.height = ceil(c_s.height + 5);
+        
+        
+        [_photoCaptionView setString:caption];
+        
+        [self addSubview:_photoCaptionView];
+        
+    } else {
+        [_photoCaptionView removeFromSuperview];
+    }
     
     [self.imageView setFrameSize:NSMakeSize(size.width , size.height )];
     
-    [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height ) / 2) )];
+    [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height + c_s.height + 10 ) / 2) )];
     
     
+    if(caption) {
+        [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame),0) , c_s.width, c_s.height)];
+    }
+  
     
     
     if([currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
@@ -200,7 +266,6 @@ static const int bottomHeight = 60;
     }
 
 }
-
 
 
 -(void)runAnimation:(TGPhotoViewerItem *)item {

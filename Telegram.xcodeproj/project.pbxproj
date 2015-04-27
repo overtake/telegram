@@ -556,6 +556,7 @@
 		C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B831AE57D0100FBEABD /* TGAttachObject.m */; };
 		C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */; };
 		C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */; };
+		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -1915,6 +1916,8 @@
 		C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachSenderItem.m; sourceTree = "<group>"; };
 		C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalSetCaptionView.h; sourceTree = "<group>"; };
 		C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalSetCaptionView.m; sourceTree = "<group>"; };
+		C2C85B991AEE4E1F00FBEABD /* ASCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCommon.h; sourceTree = "<group>"; };
+		C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCommon.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -4021,6 +4024,8 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2C85B991AEE4E1F00FBEABD /* ASCommon.h */,
+				C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */,
 				C274C40C1ACC0988000DFDE4 /* XCDYouTubeKit */,
 				C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */,
 				C268C14F19F05139007F836A /* pop */,
@@ -5548,6 +5553,7 @@
 				0A9EDC5B1897BA0E0037E1BC /* RBLScrollView.m in Sources */,
 				0A241A9418AAEF2900C32F45 /* TMTextField.m in Sources */,
 				CEAE5D1B181C296600C17645 /* DialogsManager.m in Sources */,
+				C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */,
 				CEDAEB761881AF85006189A2 /* YapDatabaseTransaction.m in Sources */,
 				0A9EDC521897BA0E0037E1BC /* NSTextView+RBLAntialiasingAdditions.m in Sources */,
 				CEDAEB631881AF85006189A2 /* YapDatabaseView.m in Sources */,

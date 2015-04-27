@@ -45,6 +45,7 @@
 #import "TGPasslock.h"
 #import "TGCTextView.h"
 #import "TGPasslockModalView.h"
+#import "ASCommon.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -152,11 +153,16 @@
     }
 }
 
-
+static void TGTelegramLoggingFunction(NSString *format, va_list args)
+{
+    TGLogv(format, args);
+}
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+    
+    MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
@@ -483,9 +489,11 @@ void exceptionHandler(NSException * exception)
             }
             
             
-            [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
-            
-            
+            if(![TMViewController isModalActive]) {
+                [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+            } else {
+                return incomingEvent;
+            }
             
             return [[NSEvent alloc] init];
             
@@ -878,14 +886,17 @@ void exceptionHandler(NSException * exception)
 
 
 - (BOOL)application:(NSApplication *)application
-continueUserActivity: (NSUserActivity *)userActivity
+continueUserActivity: (id)userActivity
  restorationHandler: (void (^)(NSArray *))restorationHandler {
     
     BOOL handled = NO;
     
+#ifdef __MAC_10_10
+    
+    
     // Extract the payload
-    NSString *type = [userActivity activityType];
-
+    NSString *type = [(NSUserActivity *)userActivity activityType];
+    
     
     
     NSDictionary *userInfo = [userActivity userInfo];
@@ -968,18 +979,21 @@ continueUserActivity: (NSUserActivity *)userActivity
         
         
         [TMViewController hideModalProgress];
-       
+        
     }
     
     restorationHandler(@[]);
     
     [TMViewController hideModalProgress];
+#endif
+    
+    
     
     return handled;
     
 }
 
-- (void)application:(NSApplication *)application didUpdateUserActivity:(NSUserActivity *)userActivity  {
+- (void)application:(NSApplication *)application didUpdateUserActivity:(id)userActivity  {
     
 }
 

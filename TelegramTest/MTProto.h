@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 22.04.15.
+//  Auto created by Dmitry Kondratyev on 27.04.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -543,7 +543,7 @@
 +(TL_inputMediaUploadedPhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption;
 @end
 @interface TL_inputMediaPhoto : TLInputMedia
-+(TL_inputMediaPhoto*)createWithN_id:(TLInputPhoto*)n_id;
++(TL_inputMediaPhoto*)createWithN_id:(TLInputPhoto*)n_id caption:(NSString*)caption;
 @end
 @interface TL_inputMediaGeoPoint : TLInputMedia
 +(TL_inputMediaGeoPoint*)createWithGeo_point:(TLInputGeoPoint*)geo_point;
@@ -558,7 +558,7 @@
 +(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
 @end
 @interface TL_inputMediaVideo : TLInputMedia
-+(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id;
++(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedAudio : TLInputMedia
 +(TL_inputMediaUploadedAudio*)createWithFile:(TLInputFile*)file duration:(int)duration mime_type:(NSString*)mime_type;
@@ -909,6 +909,7 @@
 	
 @interface TLMessageMedia()
 @property (nonatomic, strong) TLPhoto* photo;
+@property (nonatomic, strong) NSString* caption;
 @property (nonatomic, strong) TLVideo* video;
 @property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSString* phone_number;
@@ -928,10 +929,10 @@
 +(TL_messageMediaEmpty*)create;
 @end
 @interface TL_messageMediaPhoto : TLMessageMedia
-+(TL_messageMediaPhoto*)createWithPhoto:(TLPhoto*)photo;
++(TL_messageMediaPhoto*)createWithPhoto:(TLPhoto*)photo caption:(NSString*)caption;
 @end
 @interface TL_messageMediaVideo : TLMessageMedia
-+(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video;
++(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video caption:(NSString*)caption;
 @end
 @interface TL_messageMediaGeo : TLMessageMedia
 +(TL_messageMediaGeo*)createWithGeo:(TLGeoPoint*)geo;
@@ -1012,7 +1013,6 @@
 @property long access_hash;
 @property int user_id;
 @property int date;
-@property (nonatomic, strong) NSString* caption;
 @property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSMutableArray* sizes;
 @end
@@ -1021,7 +1021,7 @@
 +(TL_photoEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_photo : TLPhoto
-+(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date caption:(NSString*)caption geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes;
++(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes;
 @end
 	
 @interface TLPhotoSize()
@@ -1048,9 +1048,7 @@
 @property long access_hash;
 @property int user_id;
 @property int date;
-@property (nonatomic, strong) NSString* caption;
 @property int duration;
-@property (nonatomic, strong) NSString* mime_type;
 @property int size;
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
@@ -1062,7 +1060,7 @@
 +(TL_videoEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_video : TLVideo
-+(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date caption:(NSString*)caption duration:(int)duration mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
++(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
 @end
 	
 @interface TLGeoPoint()

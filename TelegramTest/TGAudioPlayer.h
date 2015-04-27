@@ -16,7 +16,7 @@
 @optional
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer;
-
+- (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer;
 @end
 
 @interface TGAudioPlayer : NSObject

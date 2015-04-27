@@ -409,6 +409,28 @@ static const int seconds_to_notify = 120;
     return [[Storage manager] markAllInConversation:conversation max_id:max_id];
 }
 
+-(void)readMessagesContent:(NSArray *)msg_ids {
+    
+    if(msg_ids.count == 0)
+        return;
+    
+    [self.queue dispatchOnQueue:^{
+        NSArray *copy = [[self.messages allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN (%@)",msg_ids]];
+        
+         for (TL_localMessage *msg in copy) {
+            msg.flags&=~TGREADEDCONTENT;
+        }
+        
+        [[Storage manager] readMessagesContent:msg_ids];
+        
+        [Notification perform:UPDATE_READ_CONTENTS data:@{KEY_MESSAGE_ID_LIST:msg_ids}];
+        
+    } synchronous:NO];
+    
+    
+    
+}
+
 
 -(void)setUnread_count:(int)unread_count {
      self->_unread_count = unread_count < 0 ? 0 : unread_count;

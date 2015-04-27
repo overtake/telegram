@@ -13,14 +13,13 @@
     TL_outDocument *document = [[TL_outDocument alloc] init];
     document.n_id = n_id;
     document.access_hash = access_hash;
-    document.attributes = attributes;
     document.date = date;
     document.mime_type = mime_type;
     document.size = size;
     document.thumb = thumb;
     document.dc_id = dc_id;
     document.file_path = file_path;
-    
+    document.attributes = attributes;
     return document;
 }
 

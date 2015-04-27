@@ -136,7 +136,6 @@
         [self.addMembersButton setFrameOrigin:NSMakePoint(self.setGroupPhotoButton.frame.origin.x, self.setGroupPhotoButton.frame.origin.y - 42)];
         
        
-       
         [self addSubview:self.addMembersButton];
         
         

@@ -577,6 +577,10 @@ static ASQueue *queue;
         return;
     }
     
+    if([update isKindOfClass:[TL_updateReadMessagesContents class]]) {
+        [[MessagesManager sharedManager] readMessagesContent:[[update messages] copy]];
+    }
+    
     if([update isKindOfClass:[TL_updateDeleteMessages class]]) {
         [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
         return;

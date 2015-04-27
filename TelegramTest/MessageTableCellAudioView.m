@@ -20,27 +20,7 @@
 
 #define OFFSET 75.0f
 
-@interface MessageTableCellAudioView()
-
-@property (nonatomic, strong) TMTextField *stateTextField;
-@property (nonatomic, strong) MessageTableItemAudio *item;
-
-@property (nonatomic, strong) BTRButton *playerButton;
-@property (nonatomic, strong) TMTextField *durationView;
-@property (nonatomic, assign) BOOL needPlayAfterDownload;
-@property (nonatomic, strong) TGTimer *progressTimer;
-@property (nonatomic, assign) float progress;
-
-@property (nonatomic, assign) NSTimeInterval currentTime;
-@property (nonatomic, assign) BOOL acceptTimeChanger;
-
-@end
-
-
-
 @implementation MessageTableCellAudioView
-
-
 
 
 
@@ -176,6 +156,21 @@
     }
     
     
+}
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    
+    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer() == nil) {
+        [NSColorFromRGB(0x4ba3e2) setFill];
+        
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 2, 6, 6) xRadius:3 yRadius:3];
+        
+        [path fill];
+    }
 }
 
 - (void)setCellState:(CellState)cellState {

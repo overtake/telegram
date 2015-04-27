@@ -53,7 +53,7 @@
         }
         
 
-        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] caption:@"" duration:duration mime_type:@"mp4" size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height]];
+        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:duration size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
@@ -161,7 +161,7 @@
 
         if(!isFirstSend) {
             TLVideo *video = input;
-            media = [TL_inputMediaVideo createWithN_id:[TL_inputVideo createWithN_id:video.n_id access_hash:video.access_hash]];
+            media = [TL_inputMediaVideo createWithN_id:[TL_inputVideo createWithN_id:video.n_id access_hash:video.access_hash] caption:@""];
             block();
         } else {
             
@@ -177,7 +177,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height caption:self.message.media.video.caption];
+                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height caption:self.message.media.caption];
                 block();
             }
         }
