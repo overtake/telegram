@@ -264,7 +264,9 @@
         
         if(message.media.document.isSticker) {
             
-            [StickersPanelView addLocalSticker:message.media.document];
+            [ASQueue dispatchOnMainQueue:^{
+                 [StickersPanelView addLocalSticker:message.media.document];
+            }];
             
         }
         

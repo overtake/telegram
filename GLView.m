@@ -52,13 +52,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     windowedPixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
     if (windowedPixelFormat == nil)
     {
-        NSLog(@"Unable to create windowed pixel format.");
+        MTLog(@"Unable to create windowed pixel format.");
         exit(0);
     }
     self = [super initWithFrame:frameRect pixelFormat:windowedPixelFormat];
     if (self == nil)
     {
-        NSLog(@"Unable to create a windowed OpenGL context.");
+        MTLog(@"Unable to create a windowed OpenGL context.");
         exit(0);
     }
     

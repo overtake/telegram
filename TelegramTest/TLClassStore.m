@@ -462,7 +462,7 @@
     Class class = [obj class];
     NSNumber *constructor = [[self instance].constuctors objectForKey:class];
     if(constructor == nil) {
-        NSLog(@" Error. Not found constructor for class %@", class);
+        MTLog(@" Error. Not found constructor for class %@", class);
       //  [NSException raise:@"Error" format:@"Not implemented class %@", NSStringFromClass(class)];
     } else {
         int constructorInt = [constructor intValue];
@@ -483,7 +483,7 @@
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        NSLog(@"Error, constructor %d not found, return nil", constructor);
+        MTLog(@"Error, constructor %d not found, return nil", constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);

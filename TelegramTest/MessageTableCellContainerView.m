@@ -841,8 +841,7 @@ static int offsetEditable = 30;
 - (void)setCellState:(CellState)cellState {
     self->_cellState = cellState;
     
-    if(self.progressView.superview)
-        [self.progressView setHidden:cellState == CellStateNormal];
+    [self.progressView setHidden:cellState == CellStateNormal];
     
 }
 

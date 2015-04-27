@@ -383,7 +383,7 @@ Class convertClass(NSString *c, int layer) {
     Secret17_DecryptedMessageLayer *layerMessage = (Secret17_DecryptedMessageLayer *)message;
     
     
-    NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
+    MTLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
     if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;
@@ -409,7 +409,7 @@ Class convertClass(NSString *c, int layer) {
     
     Secret20_DecryptedMessageLayer *layerMessage = (Secret20_DecryptedMessageLayer *)message;
     
-    NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
+    MTLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
     if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;
@@ -436,7 +436,7 @@ Class convertClass(NSString *c, int layer) {
     
     Secret23_DecryptedMessageLayer *layerMessage = (Secret23_DecryptedMessageLayer *)message;
     
-    NSLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
+    MTLog(@"local = %d, remote = %d",params.in_seq_no * 2 + [params in_x],[layerMessage.out_seq_no intValue]);
     
     if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;

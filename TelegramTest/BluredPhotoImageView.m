@@ -10,7 +10,6 @@
 
 @interface BluredPhotoImageView ()
 @property (nonatomic, strong) NSImage *originImage;
-
 @end
 
 @implementation BluredPhotoImageView
@@ -25,21 +24,14 @@
 
 
 
-static CAAnimation *ani() {
-    static CAAnimation *animation;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        animation = [CABasicAnimation animationWithKeyPath:@"contents"];
-        animation.duration = .2;
-    });
-    return animation;
-}
+
 
 - (void)setIsAlwaysBlur:(BOOL)isAlwaysBlur {
   //  if(self->_isAlwaysBlur == isAlwaysBlur && self.image == self.originImage)
     //    return;
     
     self->_isAlwaysBlur = isAlwaysBlur;
+    
     [self setImage:self.originImage];
 }
 
@@ -48,13 +40,10 @@ static CAAnimation *ani() {
     self.originImage = image;
     
     if(image == nil) {
-       // [self removeAnimationForKey:@"contents"];
+        [self removeAnimationForKey:@"contents"];
         [super setImage:image];
         return;
     }
-    
-    BOOL isBlur = NO;
-    
     
     if(self.isAlwaysBlur) {
         
@@ -62,7 +51,10 @@ static CAAnimation *ani() {
         
         __block NSImage *blured = [TGCache cachedImage:key];
         
+        
         if(!blured) {
+            
+            
             [ASQueue dispatchOnStageQueue:^{
                 
                 blured = [self blur:image];
@@ -83,17 +75,18 @@ static CAAnimation *ani() {
         return;
     }
     
-    BOOL needAnimation = self.image && (self.isAlwaysBlur != isBlur);
-    
-    if(needAnimation) {
-       // [self addAnimation:ani() forKey:@"contents"];
-    } else {
-       // [self removeAnimationForKey:@"contents"];
-    }
+//    BOOL needAnimation = self.image && (_isAlwaysBlur != _isBlurred);
+//    
+//    if(needAnimation) {
+//        [self addAnimation:ani() forKey:@"contents"];
+//    } else {
+//        [self removeAnimationForKey:@"contents"];
+//    }
     
    // test_start_group(@"image_time");
     
     [super setImage:image];
+    
     
    // test_step_group(@"image_time");
     

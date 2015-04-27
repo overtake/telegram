@@ -239,7 +239,7 @@
             
             objectReturn = [[MessageTableItemContact alloc] initWithObject:object];
             
-        } else if([message.media isKindOfClass:[TL_messageMediaGeo class]]) {
+        } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
             
             objectReturn = [[MessageTableItemGeo alloc] initWithObject:object];
             
@@ -415,7 +415,7 @@
 }
 
 -(void)dealloc {
-    NSLog(@"%@",NSStringFromClass(self.class));
+    MTLog(@"%@",NSStringFromClass(self.class));
 }
 
 

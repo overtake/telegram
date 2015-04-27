@@ -126,7 +126,7 @@ static NSMutableArray *listeners;
         
         if(filterItems.count >= max) {
             
-            NSLog(@"h_items_count:%lu",filterItems.count);
+            MTLog(@"h_items_count:%lu",filterItems.count);
             
             NSMutableDictionary *peers = [[NSMutableDictionary alloc] init];
             
@@ -167,7 +167,7 @@ static NSMutableArray *listeners;
                 
             }];
             
-            NSLog(@"h_items_count:%lu",filterItems.count);
+            MTLog(@"h_items_count:%lu",filterItems.count);
         }
         
     }

@@ -179,7 +179,7 @@
             }
         }
         
-        NSLog(@"need to load full chats%@", needToLoad);
+        MTLog(@"need to load full chats%@", needToLoad);
         [self loadFullChats:needToLoad];
     }];
 }

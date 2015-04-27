@@ -51,7 +51,7 @@ void test_log(NSString *log,NSString *group,dispatch_queue_t dispatch_queue) {
     
     __unused const char *queueName = (dispatch_queue_get_label(dispatch_queue));
         
-    NSLog(@"group[%@], %@",group,log);
+    MTLog(@"group[%@], %@",group,log);
 #endif
 }
 

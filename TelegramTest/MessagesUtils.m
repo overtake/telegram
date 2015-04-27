@@ -408,7 +408,7 @@
         return NSLocalizedString(@"ChatMedia.Contact", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
         return NSLocalizedString(@"ChatMedia.Video", nil);
-    } else if([message.media isKindOfClass:[TL_messageMediaGeo class]]) {
+    } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
         return NSLocalizedString(@"ChatMedia.Location", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
         return NSLocalizedString(@"ChatMedia.Audio", nil);

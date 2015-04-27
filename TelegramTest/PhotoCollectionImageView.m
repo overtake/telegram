@@ -42,26 +42,6 @@
     
 }
 
--(void)setImage:(NSImage *)newImage {
-
-    if(!self.image && newImage )
-        [self addAnimation:photoAnimation() forKey:@"contents"];
-    else
-        [self removeAnimationForKey:@"contents"];
-    
-    [super setImage:newImage];
-}
-
-static CAAnimation *photoAnimation() {
-    static CAAnimation *animation;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        animation = [CABasicAnimation animationWithKeyPath:@"contents"];
-        
-        animation.duration = 0.2;
-    });
-    return animation;
-}
 
 
 -(void)mouseUp:(NSEvent *)theEvent {

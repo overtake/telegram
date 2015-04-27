@@ -149,7 +149,7 @@
     
     newSize.height+= 8;
     
-  //  NSLog(@"%@, height:%d",NSStringFromSize(newSize), height);
+  //  MTLog(@"%@, height:%d",NSStringFromSize(newSize), height);
     
     if(newSize.height < _minHeight)
         newSize.height = _minHeight;

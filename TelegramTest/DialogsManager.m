@@ -66,6 +66,7 @@
             
             for (TL_conversation *dialog in updateDialogs.allValues) {
                 [dialog save];
+                [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
             }
             
@@ -282,6 +283,8 @@
         
         dialog.unread_count = 0;
         
+        dialog.lastMessage = nil;
+        
         [dialog save];
         
         [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
@@ -426,8 +429,6 @@
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
                 
-                dialog.lastMessage = message;
-                
                 int last_real_date = dialog.last_real_message_date;
                 
                 dialog.last_message_date = message.date;
@@ -450,6 +451,8 @@
                     dialog.unread_count++;
                     totalUnread++;
                 }
+                
+                dialog.lastMessage = message;
                 
             } else {
                 [self updateTop:message needUpdate:NO update_real_date:NO];

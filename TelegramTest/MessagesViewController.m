@@ -2961,7 +2961,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
 
-        NSLog(@"imageSize: %ld kb",imageData.length / 1024);
+        MTLog(@"imageSize: %ld kb",imageData.length / 1024);
         
         
        
@@ -3109,7 +3109,7 @@ static NSTextAttachment *headerMediaIcon() {
 //    
 //    NSDate *methodFinish = [NSDate date];
 //    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
-//    NSLog(@"executionTime = %f", executionTime);
+//    MTLog(@"executionTime = %f", executionTime);
     
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;
@@ -3262,7 +3262,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     double time = ABS([start timeIntervalSinceNow]);
     if(time > 0.010) {
-        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
+        MTLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
     }
     
     return cell;

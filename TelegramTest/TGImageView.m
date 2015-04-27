@@ -61,7 +61,10 @@
 
 -(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
+        if(object.class != NSClassFromString(@"TGPVImageObject"))
+            [self addAnimation:contentAnimation() forKey:@"contents"];
         [self setImage:newImage];
+        
     }
 }
 
@@ -130,6 +133,16 @@
     } else {
         [super mouseUp:theEvent];
     }
+}
+
+static CAAnimation *contentAnimation() {
+    static CAAnimation *animation;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        animation = [CABasicAnimation animationWithKeyPath:@"contents"];
+        animation.duration = .2;
+    });
+    return animation;
 }
 
 

@@ -685,14 +685,14 @@ void exceptionHandler(NSException * exception)
 
 - (void) receiveSleepNote: (NSNotification*) note
 {
-    NSLog(@"receiveSleepNote: %@", [note name]);
+    MTLog(@"receiveSleepNote: %@", [note name]);
     
 }
 
 - (void) receiveWakeNote: (NSNotification*) note
 {
     [[MTNetwork instance] update];
-    NSLog(@"receiveSleepNote: %@", [note name]);
+    MTLog(@"receiveSleepNote: %@", [note name]);
 }
 
 - (void) registerSleepNotification

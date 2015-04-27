@@ -304,7 +304,7 @@ static const int maxWidth = 120;
 -(NSSize)itemSize {
     float size = NSWidth(self.view.frame)/[self columns];
     
- //   NSLog(@"%f",size);
+ //   MTLog(@"%f",size);
     
     return NSMakeSize(size, size);
     

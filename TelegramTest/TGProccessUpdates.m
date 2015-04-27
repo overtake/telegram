@@ -560,8 +560,11 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
-       
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
+        
+        if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
+            [self failSequence];
+            return;
+        }
         
         return [MessagesManager addAndUpdateMessage:message];
     }

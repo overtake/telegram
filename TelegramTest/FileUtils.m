@@ -758,7 +758,7 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
     //Switch to a relative directory for working.
     NSString *currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[directoryURL path]];
-    //NSLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
+    //MTLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
     
     //Create
     NSTask *task = [[NSTask alloc] init] ;

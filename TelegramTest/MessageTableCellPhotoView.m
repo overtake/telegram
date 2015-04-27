@@ -231,11 +231,12 @@ NSImage *fireImage() {
     
     [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
         
-        [ASQueue dispatchOnMainQueue:^{
-            
+        [self.progressView setProgress:100 animated:YES];
+        
+        dispatch_after_seconds(0.2, ^{
             [self updateCellState];
-            
-        }];
+        });
+        
         
     }];
     

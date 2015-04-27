@@ -492,7 +492,7 @@
             return i;
     }
     
-  //  NSLog(@"idx:%d, location.y:%f",location.y < 3 ? (count-1) : 0,location.y);
+  //  MTLog(@"idx:%d, location.y:%f",location.y < 3 ? (count-1) : 0,location.y);
     
     return location.y >= NSHeight(self.frame) ? 0 : (count -1); // location.y < 3 ? (count-1) : 0 ;
 }
@@ -529,7 +529,7 @@
  
  if((position.y > location.y) && position.y < (location.y + height)) {
  
- NSLog(@"index:%d",i);
+ MTLog(@"index:%d",i);
  
  return i - (count -1);
  }
@@ -628,7 +628,7 @@
         
         
 //        for (int i = 0; i < self.attributedString.length; i++) {
-//            NSLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
+//            MTLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
 //        }
         
         BOOL valid = [[currentChar stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet]] isEqualToString:@""];

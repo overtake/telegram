@@ -120,7 +120,7 @@
     if(item.type != SearchItemMessage) {
         
         
-      //  NSLog(@"%@",NSStringFromSelector(self.statusTextField.selector));
+      //  MTLog(@"%@",NSStringFromSelector(self.statusTextField.selector));
         
         if(item.chat) {
             [self.avatarImageView setChat:item.chat];

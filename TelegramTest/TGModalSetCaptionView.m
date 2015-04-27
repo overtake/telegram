@@ -302,7 +302,6 @@
     }];
     
     dispatch_after_seconds(0.2, ^{
-        NSLog(@"close event");
 
         
         if(_onClose) {

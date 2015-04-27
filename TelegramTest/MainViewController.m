@@ -202,7 +202,7 @@
         
         //
         
-        // NSLog(@"%f:%f", [self.splitView minPossiblePositionOfDividerAtIndex:1],[self.splitView maxPossiblePositionOfDividerAtIndex:1]);
+        // MTLog(@"%f:%f", [self.splitView minPossiblePositionOfDividerAtIndex:1],[self.splitView maxPossiblePositionOfDividerAtIndex:1]);
         
         // [self.splitView setPosition:[self.splitView minPossiblePositionOfDividerAtIndex:1] ofDividerAtIndex:1];
         
