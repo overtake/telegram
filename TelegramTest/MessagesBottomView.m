@@ -135,6 +135,11 @@
     
 }
 
+
+-(NSUInteger)attachmentsCount {
+    return _imageAttachmentsController.attachments.count;
+}
+
 -(void)closeAttachments {
     [_imageAttachmentsController hide:YES deleteItems:YES];
     
@@ -437,15 +442,21 @@
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     NSMenuItem *attachPhotoOrVideoItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.PictureOrVideo", nil) withBlock:^(id sender) {
-        [FileUtils showPanelWithTypes:mediaTypes() completionHandler:^(NSString *result) {
-            NSString *extenstion = [[result pathExtension] lowercaseString];
+        [FileUtils showPanelWithTypes:mediaTypes() completionHandler:^(NSArray *paths) {
             
-            if([imageTypes() indexOfObject:extenstion] != NSNotFound) {
-                [self.messagesViewController sendImage:result file_data:nil];
-            } else {
-                [self.messagesViewController sendVideo:result];
-            }
+            BOOL isMultiple = [paths filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension IN (%@)",imageTypes()]].count > 1;
             
+            [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+                
+                NSString *extenstion = [[obj pathExtension] lowercaseString];
+                
+                if([imageTypes() indexOfObject:extenstion] != NSNotFound) {
+                    [self.messagesViewController sendImage:obj file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
+                } else {
+                    [self.messagesViewController sendVideo:obj];
+                }
+                
+            }];
         }];
     }];
     [attachPhotoOrVideoItem setImage:image_AttachPhotoVideo()];
@@ -491,8 +502,15 @@
      //   [theMenu addItem:attachLocationItem];
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {
-        [FileUtils showPanelWithTypes:nil completionHandler:^(NSString *result) {
-            [self.messagesViewController sendDocument:result];
+        [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
+            
+            [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+                [self.messagesViewController sendDocument:obj];
+            }];
+            
+            
+            
+            
         }];
     }];
     [attachFileItem setImage:image_AttachFile()];

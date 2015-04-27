@@ -99,7 +99,7 @@ typedef enum {
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
 
 
-- (void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendImage:(NSString *)file_path file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler;
 
 - (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler;
 

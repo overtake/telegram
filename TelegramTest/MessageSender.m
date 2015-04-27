@@ -349,6 +349,8 @@ static NSMutableArray *wrong_files;
 + (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
    
     
+    BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension IN (%@)",imageTypes()]].count > 1;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         wrong_files = [[NSMutableArray alloc] init];
@@ -406,7 +408,7 @@ static NSMutableArray *wrong_files;
     
     if([imageTypes() containsObject:pathExtension] && !asDocument) {
         [[[Telegram rightViewController] messagesViewController]
-         sendImage:file file_data:nil addCompletionHandler:next];
+         sendImage:file file_data:nil isMultiple:isMultiple addCompletionHandler:next];
         
         return;
         
@@ -414,18 +416,14 @@ static NSMutableArray *wrong_files;
     
     if([videoTypes() containsObject:pathExtension] && !asDocument) {
         [[[Telegram rightViewController] messagesViewController]
-         sendVideo:file addCompletionHandler:^{
-              next();
-         }];
+         sendVideo:file addCompletionHandler:next];
         
        
         return;
     }
     
     [[[Telegram rightViewController] messagesViewController]
-     sendDocument:file addCompletionHandler:^{
-         next();
-     }];
+     sendDocument:file addCompletionHandler:next];
     
 }
 

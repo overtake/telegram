@@ -109,7 +109,7 @@ BOOL checkFileSize(NSString *path, int size) {
     return fs > 0 && fs >= size;
 }
 
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler forWindow:(NSWindow *)window {
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray *paths))handler forWindow:(NSWindow *)window {
     
     [[TMMediaController controller] close];
     
@@ -128,17 +128,22 @@ BOOL checkFileSize(NSString *path, int size) {
     [openDlg beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             NSArray* urls = [openDlg URLs];
+            
+            NSMutableArray *paths = [[NSMutableArray alloc] init];
+            
             for(int i = 0; i < [urls count]; i++ ) {
                 NSString *path = [[urls objectAtIndex:i] path];
                 NSString *pathExtension = [[path pathExtension] lowercaseString];
                 
-                if(types) {
+                 if(types) {
                     if([types containsObject:pathExtension])
-                        handler(path);
+                        [paths addObject:path];
                 } else {
-                    handler(path);
+                    [paths addObject:path];
                 }
             }
+            
+            handler(paths);
         }
     }];
 }
@@ -163,7 +168,7 @@ BOOL checkFileSize(NSString *path, int size) {
 }
 
 
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler {
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * paths))handler {
     [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp mainWindow]];
 }
 
@@ -651,7 +656,16 @@ void open_link(NSString *link) {
         NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
         
         if(name.length > 0) {
-            open_user_by_name(name);
+            
+            NSString *joinPrefix = @"joinchat/";
+            
+            if([name hasPrefix:joinPrefix]) {
+                join_group_by_hash([name substringFromIndex:joinPrefix.length]);
+            } else {
+                open_user_by_name(name);
+            }
+            
+            
             
             return;
         }

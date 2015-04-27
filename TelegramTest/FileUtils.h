@@ -32,9 +32,9 @@ extern NSString *const TGJoinGroupPrefix;
 +(NSString*)extensionForMimetype:(NSString *)mimetype;
 
 unsigned long fileSize(NSString *path);
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler;
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler forWindow:(NSWindow *)window;
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler forWindow:(NSWindow *)window;
 + (void)showChooseFolderPanel:(void (^)(NSString * result))handler forWindow:(NSWindow *)window;
 NSString* path();
 +(NSString *)path;
