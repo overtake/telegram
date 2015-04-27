@@ -378,7 +378,8 @@
     [self TMNameTextFieldDidChanged:self.nameTextField];
     
     
-    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
+    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId] || !ACCEPT_FEATURE];
+    
     
     
     [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];

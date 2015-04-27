@@ -197,7 +197,7 @@ NSImage *fireImage() {
     if(!self.progressView.isHidden)
     {
         if(item.imageObject.downloadItem) {
-            [self.progressView setCurrentProgress:15 + MAX(( item.imageObject.downloadItem.progress - 15),0)];
+            [self.progressView setCurrentProgress:5 + MAX(( item.imageObject.downloadItem.progress - 5),0)];
             [self.progressView setProgress:self.progressView.currentProgress animated:YES];
         }
         
@@ -223,7 +223,7 @@ NSImage *fireImage() {
        
         [ASQueue dispatchOnMainQueue:^{
             
-            [self.progressView setProgress:item.progress animated:YES];
+            [self.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
             
         }];
         

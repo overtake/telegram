@@ -33,7 +33,6 @@
 @implementation MessageTableCellTextView
 
 
-
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -45,7 +44,8 @@
         [self.containerView setIsFlipped:YES];
         
         
-        
+        [self.progressView removeFromSuperview];
+
         
         _textView.wantsLayer = YES;
         
@@ -73,6 +73,21 @@
     [self.textView setEditable:!editable];
 }
 
+
+- (void)updateCellState {
+    
+    
+    MessageTableItem *item =(MessageTableItem *)self.item;
+    
+    if(item.downloadItem && (item.downloadItem.downloadState != DownloadStateWaitingStart && item.downloadItem.downloadState != DownloadStateCompleted)) {
+        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+    } else if(item.messageSender && item.messageSender.state != MessageSendingStateSent ) {
+        self.cellState = item.messageSender.state == MessageSendingStateCancelled ? CellStateCancelled : CellStateSending;
+    } else {
+        self.cellState = CellStateNormal;
+    }
+    
+}
 
 
 -(void)mouseDown:(NSEvent *)theEvent {

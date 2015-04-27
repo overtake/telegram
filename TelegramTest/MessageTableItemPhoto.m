@@ -99,7 +99,7 @@
 
 
 -(BOOL)isset {
-    return isPathExists(((TLPhotoSize *)[self.message.media.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
+    return [FileUtils checkNormalizedSize:locationFilePath(self.imageObject.location, @"jpg") checksize:self.imageObject.size] && self.downloadItem == nil && self.messageSender == nil;
 }
 
 -(void)doAfterDownload {

@@ -83,9 +83,13 @@
         [self addSubview:self.containerView];
         
         
-        _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
-        [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-        [self.progressView addTarget:self selector:@selector(checkOperation)];
+        if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
+            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+            [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+            [self.progressView addTarget:self selector:@selector(checkOperation)];
+        }
+        
+        
         
         
     }
@@ -837,7 +841,8 @@ static int offsetEditable = 30;
 - (void)setCellState:(CellState)cellState {
     self->_cellState = cellState;
     
-    [self.progressView setHidden:cellState == CellStateNormal];
+    if(self.progressView.superview)
+        [self.progressView setHidden:cellState == CellStateNormal];
     
 }
 

@@ -561,10 +561,10 @@ void join_group_by_hash(NSString * hash) {
 
 void open_user_by_name(NSString * userName) {
     
-    NSArray *users = [UsersManager findUsersByName:userName];
+    TLUser *user = [UsersManager findUserByName:userName];
     
-    if(users.count == 1) {
-        [[Telegram rightViewController] showUserInfoPage:users[0]];
+    if(user) {
+        [[Telegram rightViewController] showUserInfoPage:user];
     } else {
         [TMViewController showModalProgress];
         

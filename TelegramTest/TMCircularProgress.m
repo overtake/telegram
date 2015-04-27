@@ -286,6 +286,7 @@ float ease(float t, float b, float c, float d) {
             }];
             
             [prop setWriteBlock:^(TMCircularProgress *layer, const CGFloat values[]) {
+                
                 layer->rotateAngel = values[0];
                 [layer setNeedsDisplay:YES];
                 
@@ -344,7 +345,6 @@ float ease(float t, float b, float c, float d) {
     
     
 }
-
 
 
 -(void)setHidden:(BOOL)flag {

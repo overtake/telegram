@@ -2905,8 +2905,6 @@ static NSTextAttachment *headerMediaIcon() {
     if(!_conversation.canSendMessage)
         return;
     
-#ifdef ACCEPT_FEATURE
-    
     if(ACCEPT_FEATURE) {
         
         if(_conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
@@ -2916,8 +2914,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
     }
-    
-#endif
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
