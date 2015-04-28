@@ -236,6 +236,8 @@ static const int bottomHeight = 60;
     }
   
     
+    [self.imageView setHidden:[currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+    
     
     if([currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
         
@@ -243,17 +245,15 @@ static const int bottomHeight = 60;
         
         NSURL *url = video[@"url"];
         
-        CMTime time = [video[@"time"] CMTimeValue];
         
         if(!_videoPlayerView) {
-            _videoPlayerView = [[AVPlayerView alloc] initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
+            _videoPlayerView = [[AVPlayerView alloc] initWithFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
             
             [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
             [self addSubview:_videoPlayerView];
             
             AVPlayer *player = [AVPlayer playerWithURL:url];
             _videoPlayerView.player = player;
-            [player seekToTime:time];
             [player play];
         }
         

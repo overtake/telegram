@@ -62,4 +62,8 @@
     return self.message.media.document.file_name;
 }
 
+-(int)fileSize {
+    return [self size];
+}
+
 @end

@@ -218,43 +218,49 @@
     GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         
-         __block TLUser *user = [UsersManager findUserByName:@"vihor"];
+        confirm(appName(), @"You are sure to send logs to developer? Please, don't send press 'ok', if you not have problems with app", ^{
+            __block TLUser *user = [UsersManager findUserByName:@"vihor"];
+            
+            dispatch_block_t performBlock = ^ {
+                
+                [[Telegram rightViewController] showByDialog:user.dialog sender:self];
+                
+                NSArray *files = TGGetLogFilePaths();
+                
+                [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [[Telegram rightViewController].messagesViewController sendDocument:obj];
+                }];
+                
+            };
+            
+            if(user) {
+                performBlock();
+            } else {
+                
+                [self showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:@"vihor" limit:1] successHandler:^(RPCRequest *request, TL_contacts_contacts *response) {
+                    
+                    if(response.users.count == 1) {
+                        
+                        [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
+                        
+                        user = response.users[0];
+                        
+                        performBlock();
+                    }
+                    
+                    [self hideModalProgress];
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    [self hideModalProgress];
+                }];
+            }
+
+        }, ^{
+            
+        });
         
-        dispatch_block_t performBlock = ^ {
-          
-            [[Telegram rightViewController] showByDialog:user.dialog sender:self];
-            
-            NSArray *files = TGGetLogFilePaths();
-            
-            [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                [[Telegram rightViewController].messagesViewController sendDocument:obj];
-            }];
-           
-        };
-        
-        if(user) {
-            performBlock();
-        } else {
-            
-            [self showModalProgress];
-            
-            [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:@"vihor" limit:1] successHandler:^(RPCRequest *request, TL_contacts_contacts *response) {
-                
-                if(response.users.count == 1) {
-                    
-                    [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
-                    
-                    user = response.users[0];
-                    
-                    performBlock();
-                }
-                
-                [self hideModalProgress];
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                [self hideModalProgress];
-            }];
-        }
         
        
         

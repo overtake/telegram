@@ -7,7 +7,6 @@
 //
 
 #import "TMRowView.h"
-
 @interface GeneralSettingsDescriptionRowView : TMRowView
 
 @end

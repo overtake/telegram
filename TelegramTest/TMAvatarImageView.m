@@ -175,7 +175,6 @@ static const TGTwoColors colors[] = {
 -(void)didDownloadImage:(NSImage *)image object:(TMAvaImageObject *)object {
     
     if([_imageObject.location isEqualTo:object.location]) {
-        [self addAnimation:ani() forKey:@"contents"];
         self.image = image;
     }
     

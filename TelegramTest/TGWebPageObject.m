@@ -16,6 +16,23 @@
 #import "NSAttributedString+Hyperlink.h"
 @implementation TGWebpageObject
 
+NSImage *placeholder() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        NSRect rect = NSMakeRect(0, 0, 1, 1);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        
+        [GRAY_BORDER_COLOR setFill];
+        NSRectFill(rect);
+        [image unlockFocus];
+        
+    });
+    return image;
+}
+
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super init]) {
         
@@ -102,19 +119,8 @@
             
             TLPhotoSize *photoSize = [photo lastObject];
             
-            __block NSImage *thumb;
             
-            [photo enumerateObjectsUsingBlock:^(TLPhotoSize *obj, NSUInteger idx, BOOL *stop) {
-                
-                if([obj isKindOfClass:[TL_photoCachedSize class]]) {
-                    thumb = [[NSImage alloc] initWithData:obj.bytes];
-                    *stop = YES;
-                }
-                
-            }];
-            
-            
-            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:thumb sourceId:0 size:photoSize.size];
+            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
             
             
             NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 320);
@@ -128,6 +134,7 @@
     
     return self;
 }
+
 
 
 

@@ -141,25 +141,13 @@
         
         _exportChatInvite = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Group.CopyExportChatInvite", nil) tapBlock:^{
             
-            [TMViewController showModalProgress];
+            
             
             
             dispatch_block_t cblock = ^ {
                 
-                if([_fullChat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
-                    NSPasteboard* cb = [NSPasteboard generalPasteboard];
-                    
-                    [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
-                    [cb setString:_fullChat.exported_invite.link forType:NSStringPboardType];
-                    
-                    dispatch_after_seconds(0.2, ^{
-                        
-                        [TMViewController hideModalProgressWithSuccess];
-                        
-                    });
-                } else {
-                    [TMViewController hideModalProgress];
-                }
+                [[Telegram rightViewController] showChatExportLinkController:_fullChat];
+
             };
             
             
@@ -169,8 +157,11 @@
                 
             } else {
                 
+                [TMViewController showModalProgress];
                 
                 [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:_fullChat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                    
+                    [TMViewController hideModalProgressWithSuccess];
                     
                     _fullChat.exported_invite = response;
                     

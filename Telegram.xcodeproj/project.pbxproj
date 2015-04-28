@@ -557,6 +557,7 @@
 		C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */; };
 		C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */; };
 		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
+		C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -1918,6 +1919,8 @@
 		C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalSetCaptionView.m; sourceTree = "<group>"; };
 		C2C85B991AEE4E1F00FBEABD /* ASCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCommon.h; sourceTree = "<group>"; };
 		C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCommon.m; sourceTree = "<group>"; };
+		C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatExportLinkViewController.h; sourceTree = "<group>"; };
+		C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatExportLinkViewController.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -3219,6 +3222,8 @@
 				C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */,
 				C23536C419D453720044978E /* EncryptedKeyViewController.h */,
 				C23536C519D453720044978E /* EncryptedKeyViewController.m */,
+				C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */,
+				C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -5294,6 +5299,7 @@
 				C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */,
 				CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */,
 				C274C41D1ACC09B0000DFDE4 /* XCDYouTubeClient.m in Sources */,
+				C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */,
 				C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */,
 				CEDAEB521881AF85006189A2 /* YapDatabaseFilteredViewTransaction.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,

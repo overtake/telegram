@@ -36,6 +36,7 @@
 #import "TGPasswosdMainViewController.h"
 #import "TGPasswordSetViewController.h"
 #import "TGPasswordEmailViewController.h"
+#import "ChatExportLinkViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -65,6 +66,9 @@
 @property (nonatomic, strong) TGSessionsViewController *sessionsViewContoller;
 @property (nonatomic, strong) TGPasswosdMainViewController *passwordMainViewController;
 @property (nonatomic, strong) TGPasswordSetViewController *passwordSetViewController;
+
+
+@property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -120,4 +124,7 @@
 
 -(void)clearStack;
 -(void)didChangedLayout;
+
+-(void)showChatExportLinkController:(TLChatFull *)chat;
+
 @end

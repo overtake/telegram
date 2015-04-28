@@ -55,73 +55,73 @@
 
 
 
-NSImage *captedImage() {
-    
-    static NSImage *image;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        NSRect rect = NSMakeRect(0, 0, 25, 15);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        
-        [NSColorFromRGBWithAlpha(0x000000, 0.7) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
-        [path fill];
-        
-        NSString *str = @"...";
-        
-        [str drawAtPoint:NSMakePoint(6, 2) withAttributes:@{NSFontAttributeName:TGSystemFont(15),NSForegroundColorAttributeName:[NSColor whiteColor]}];
-        
-        [image unlockFocus];
-        
-    });
-    
-    return image;
-    
-}
-
-
-NSImage *addCaptionImage() {
-    static NSImage *image;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        NSRect rect = NSMakeRect(0, 0, 20, 20);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        
-        [NSColorFromRGBWithAlpha(0x000000, 0.8) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        
-        
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:roundf(rect.size.width/2) yRadius:roundf(rect.size.height/2)];
-        [path fill];
-        
-        
-        
-        [NSColorFromRGBWithAlpha(0xffffff, 1) set];
-        
-        
-        path = [NSBezierPath bezierPath];
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(9, 4, 2, 12) xRadius:2 yRadius:1];
-       // [path fill];
-        
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(4, 9, 12, 2) xRadius:2 yRadius:2];
-        [path fill];
-        
-        
-        [image unlockFocus];
-        
-    });
-    
-    return image;
-}
+//NSImage *captedImage() {
+//    
+//    static NSImage *image;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        
+//        NSRect rect = NSMakeRect(0, 0, 25, 15);
+//        image = [[NSImage alloc] initWithSize:rect.size];
+//        [image lockFocus];
+//        
+//        [NSColorFromRGBWithAlpha(0x000000, 0.7) set];
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+//        [path fill];
+//        
+//        NSString *str = @"...";
+//        
+//        [str drawAtPoint:NSMakePoint(6, 2) withAttributes:@{NSFontAttributeName:TGSystemFont(15),NSForegroundColorAttributeName:[NSColor whiteColor]}];
+//        
+//        [image unlockFocus];
+//        
+//    });
+//    
+//    return image;
+//    
+//}
+//
+//
+//NSImage *addCaptionImage() {
+//    static NSImage *image;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        
+//        NSRect rect = NSMakeRect(0, 0, 20, 20);
+//        image = [[NSImage alloc] initWithSize:rect.size];
+//        [image lockFocus];
+//        
+//        [NSColorFromRGBWithAlpha(0x000000, 0.8) set];
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:roundf(rect.size.width/2) yRadius:roundf(rect.size.height/2)];
+//        [path fill];
+//        
+//        
+//        
+//        [NSColorFromRGBWithAlpha(0xffffff, 1) set];
+//        
+//        
+//        path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(9, 4, 2, 12) xRadius:2 yRadius:1];
+//       // [path fill];
+//        
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(4, 9, 12, 2) xRadius:2 yRadius:2];
+//        [path fill];
+//        
+//        
+//        [image unlockFocus];
+//        
+//    });
+//    
+//    return image;
+//}
 
 -(void)didStartUploading:(UploadOperation *)uploader {
     
@@ -250,18 +250,18 @@ static CAAnimation *thumbAnimation() {
         
         [self.progressContainer setHidden:YES];
         
-        _captionButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
-        
-        [_captionButton setImage:captedImage() forControlState:BTRControlStateNormal];
-        [_captionButton setOpacityHover:YES];
-        
-        [_captionButton setUserInteractionEnabled:NO];
-        
-        [_captionButton setCenterByView:_imageView];
-        
-        [_captionButton setHidden:YES];
-        
-        [_imageView addSubview:_captionButton];
+//        _captionButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
+//        
+//    //    [_captionButton setImage:captedImage() forControlState:BTRControlStateNormal];
+//        [_captionButton setOpacityHover:YES];
+//        
+//        [_captionButton setUserInteractionEnabled:NO];
+//        
+//        [_captionButton setCenterByView:_imageView];
+//        
+//        [_captionButton setHidden:YES];
+//        
+//        [_imageView addSubview:_captionButton];
         
     }
     
@@ -311,7 +311,7 @@ static CAAnimation *thumbAnimation() {
     [_close setHidden:!accept];
     [_captionButton setHidden:!accept || _item.thumb == nil];
     
-    [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
+  //  [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
 }
 
 -(void)cancelUploading {
@@ -334,7 +334,7 @@ static CAAnimation *thumbAnimation() {
         [self didStartUploading:_item.uploader];
     }
     
-    [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
+ //   [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
    
     [_item prepare];
     
