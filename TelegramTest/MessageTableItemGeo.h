@@ -13,4 +13,8 @@
 
 @property (nonatomic, strong) NSURL *geoUrl;
 
+@property (nonatomic, assign) NSSize imageSize;
+
+@property (nonatomic,strong) NSAttributedString *venue;
+
 @end

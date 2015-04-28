@@ -218,7 +218,7 @@
     GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         
-        confirm(appName(), @"You are sure to send logs to developer? Please, don't send press 'ok', if you not have problems with app", ^{
+        confirm(appName(), @"Are You sure to send logs developer? Please, don't press 'ok', if you not have problems with application", ^{
             __block TLUser *user = [UsersManager findUserByName:@"vihor"];
             
             dispatch_block_t performBlock = ^ {
