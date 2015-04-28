@@ -102,7 +102,7 @@
     
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
-    return ([FileUtils checkNormalizedSize:photoSize.location.path checksize:photoSize.size] || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil;
+    return (fileSize(photoSize.location.path) >= photoSize.size || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil;
 }
 
 -(void)doAfterDownload {

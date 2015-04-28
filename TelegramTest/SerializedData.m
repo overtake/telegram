@@ -41,7 +41,7 @@
         memcpy(&intValue, buffer, 4);
         return intValue;
     } else {
-        ELog(@"Read dobule buffer length = 0");
+        ELog(@"Read int buffer length = 0");
         return 0;
     }
 }
