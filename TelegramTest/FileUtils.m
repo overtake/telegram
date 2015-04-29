@@ -540,6 +540,11 @@ void join_group_by_hash(NSString * hash) {
                         
                     } errorHandler:^(RPCRequest *request, RpcError *error) {
                         [TMViewController hideModalProgress];
+                        
+                        if(error.error_code == 400) {
+                            alert(appName(), NSLocalizedString(error.error_msg, nil));
+                        }
+                        
                     }];
                     
                     
@@ -550,6 +555,10 @@ void join_group_by_hash(NSString * hash) {
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
             [TMViewController hideModalProgress];
+            
+            if(error.error_code == 400) {
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
+            }
             
         }];
         
