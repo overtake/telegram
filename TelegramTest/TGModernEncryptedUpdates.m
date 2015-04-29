@@ -108,10 +108,7 @@
         IMP imp = [self methodForSelector:proccessMethod];
         void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
         func(self, proccessMethod,[DeserializeClass parseObject:decrypted],params,chat.dialog, update);
-        
-        
-        
-        
+         
     }
     
 }
@@ -205,6 +202,38 @@
                 [[DialogsManager sharedManager] updateLastMessageForDialog:conversation];
                 
             }];
+            
+            return YES;
+        }
+        
+        if([action isKindOfClass:convertClass(@"Secret%d_DecryptedMessageAction_decryptedMessageActionReadMessages", layer)]) {
+            
+            NSArray *items = [action valueForKey:@"random_ids"];
+            
+            NSMutableArray *storageMessages = [[NSMutableArray alloc] init];
+            
+            [items enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+                
+                
+                
+               TL_destructMessage *msg = (TL_destructMessage *) [[MessagesManager sharedManager] findWithRandomId:[obj longValue]];
+                if(msg) {
+                    [SelfDestructionController addMessage:msg force:YES];
+                } else {
+                    [storageMessages addObject:obj];
+                }
+                
+            }];
+            
+            [[Storage manager] messages:^(NSArray *result) {
+                
+                [[MessagesManager sharedManager] add:result];
+                
+                [result enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [SelfDestructionController addMessage:obj force:YES];
+                }];
+                
+            } forIds:storageMessages random:YES sync:YES];
             
             return YES;
         }

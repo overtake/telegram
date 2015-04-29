@@ -61,7 +61,7 @@ extern NSString *const ATTACHMENTS;
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
 
--(void)markMessagesAsRead:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;

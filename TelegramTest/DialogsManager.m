@@ -72,7 +72,7 @@
             
             manager.unread_count-=total;
             
-            [[Storage manager] markMessagesAsRead:copy completeHandler:nil];
+            [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
             
         }];
         

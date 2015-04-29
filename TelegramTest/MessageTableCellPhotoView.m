@@ -286,9 +286,13 @@ NSImage *fireImage() {
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-   // [super mouseDown:theEvent];
     
     _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
+        return;
+    
+    [super mouseDown:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {

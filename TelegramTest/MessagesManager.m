@@ -368,7 +368,7 @@ static const int seconds_to_notify = 120;
         } else {
             [self.messages setObject:message forKey:@(message.n_id)];
             
-            [self.messages_with_random_ids setObject:message forKey:@(((TL_destructMessage *)message).randomId)];
+            [self.messages_with_random_ids setObject:message forKey:@(message.randomId)];
         }
         
     }];
