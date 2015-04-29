@@ -19,7 +19,11 @@
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
 @property (nonatomic,strong) TGCaptionView *captionView;
+
+@property (nonatomic,assign) NSPoint startDragLocation;
+
 @end
+
 
 
 
@@ -281,7 +285,17 @@ NSImage *fireImage() {
     NSRectFill(rect);
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+   // [super mouseDown:theEvent];
+    
+    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+}
+
 -(void)mouseDragged:(NSEvent *)theEvent {
+    
+    
+    if(![_imageView mouse:_startDragLocation inRect:_imageView.frame]) 
+        return;
     
     
     NSPoint eventLocation = [self.imageView convertPoint: [theEvent locationInWindow] fromView: nil];

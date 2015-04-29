@@ -110,8 +110,7 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    if(!self.tapBlock)
-        [super mouseDown:theEvent];
+    [super mouseDown:theEvent];
 }
 
 
