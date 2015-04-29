@@ -260,9 +260,7 @@
             int startSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:startSelectPosition];
             
             int currentSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:currentSelectPosition];
-            
-            NSLog(@"%d:%d -- %@",startSelectLineIndex,currentSelectLineIndex, NSStringFromPoint(startSelectPosition));
-            
+                        
             int dif = abs(startSelectLineIndex - currentSelectLineIndex);
             
             if(mark.range.location != NSNotFound) {
@@ -300,8 +298,6 @@
                         startIndex = lessRange.location;
                         
                         NSUInteger maxPos = lineRange.length + lineRange.location;
-                        
-                        
                         
                         NSUInteger maxSelect = maxPos - startIndex;
                         
@@ -346,7 +342,6 @@
                 }
                 
                 
-                
                 if(startIndex > endIndex) {
                     startIndex = endIndex+startIndex;
                     endIndex = startIndex - endIndex;
@@ -361,9 +356,6 @@
                     
                     _selectRange.length += (endIndex - startIndex);
                 }
-                
-               
-                
                 
                 CGFloat ascent, descent, leading;
                 
