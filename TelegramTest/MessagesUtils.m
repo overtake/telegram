@@ -402,8 +402,13 @@
 }
 
 + (NSString *) mediaMessage:(TLMessage *)message {
+    
+    if(message.media.caption.length > 0) {
+        return message.media.caption;
+    }
+    
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        return NSLocalizedString(@"ChatMedia.Photo", nil);
+        return  NSLocalizedString(@"ChatMedia.Photo", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
         return NSLocalizedString(@"ChatMedia.Contact", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
