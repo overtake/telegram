@@ -127,8 +127,8 @@
     
     
     if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width - 4];
-        _captionSize.width = _imageSize.width - 4;
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
+        _captionSize.width = _imageSize.width ;
     }
     
     int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
