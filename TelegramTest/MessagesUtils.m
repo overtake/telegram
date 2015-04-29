@@ -203,6 +203,11 @@
                 msgText = action.title;
             } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
                 msgText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
+            } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
+                
+                
+                msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
+                
             }
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];

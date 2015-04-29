@@ -2905,15 +2905,12 @@ static NSTextAttachment *headerMediaIcon() {
     if(!_conversation.canSendMessage)
         return;
     
-    if(ACCEPT_FEATURE) {
+    if(_conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
+        [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
         
-        if(_conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
-            [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
-            
-            return;
-        }
-        
+        return;
     }
+
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     

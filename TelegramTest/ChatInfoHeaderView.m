@@ -369,7 +369,7 @@
     [self TMNameTextFieldDidChanged:self.nameTextField];
     
     
-    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId] || !ACCEPT_FEATURE];
+    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
     
     
     

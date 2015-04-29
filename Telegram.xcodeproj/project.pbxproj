@@ -559,6 +559,10 @@
 		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
 		C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */; };
 		C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */; };
+		C2C85BA81AF1899900FBEABD /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BA91AF1899A00FBEABD /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BAA1AF189AA00FBEABD /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2C85BAB1AF189AA00FBEABD /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -573,10 +577,6 @@
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
 		C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */; };
-		C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -761,8 +761,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */,
-				C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */,
+				C2C85BA81AF1899900FBEABD /* Sparkle.framework in Copy Files (6 items) */,
+				C2C85BA91AF1899A00FBEABD /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2243,6 +2243,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2C85BAA1AF189AA00FBEABD /* Sparkle.framework in Frameworks */,
+				C2C85BAB1AF189AA00FBEABD /* HockeySDK.framework in Frameworks */,
 				C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
@@ -2278,8 +2280,6 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */,
-				C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
