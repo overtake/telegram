@@ -62,7 +62,6 @@
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
-            
             if(self.message.media.caption.length > 0) {
                 NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
                 
@@ -72,17 +71,11 @@
                 
                 [c detectAndAddLinks];
                 
-             //   NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-             //   [style setLineBreakMode:NSLineBreakByTruncatingTail];
-                
-             //   [c addAttribute:NSParagraphStyleAttributeName value:style range:c.range];
-                
                 _caption = c;
             }
             
         }
                 
-       
         self.imageObject.imageSize = imageSize;
         
         self.previewSize = imageSize;
@@ -118,13 +111,9 @@
     if(self.isForwadedMessage)
         width-=50;
     
-    
-    
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
-    
     _imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
-    
     
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
@@ -134,7 +123,6 @@
     int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
     
     self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight, 60 + captionHeight ));
-    
     
     return YES;
 }

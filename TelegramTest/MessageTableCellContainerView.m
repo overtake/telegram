@@ -922,10 +922,15 @@ static int offsetEditable = 30;
         [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
-                [weakSelf.item doAfterDownload];
-                [weakSelf updateCellState];
-                [weakSelf doAfterDownload];
-                weakSelf.item.downloadItem = nil;
+                
+                [weakSelf downloadProgressHandler:item];
+                
+                dispatch_after_seconds(0.2, ^{
+                    [weakSelf.item doAfterDownload];
+                    [weakSelf updateCellState];
+                    [weakSelf doAfterDownload];
+                    weakSelf.item.downloadItem = nil;
+                });  
             }];
             
         }];
