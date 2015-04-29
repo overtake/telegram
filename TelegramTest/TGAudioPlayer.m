@@ -105,6 +105,7 @@ void setGlobalAudioPlayer(TGAudioPlayer *newPlayer) {
         {
           
             _audioSessionIsActive = true;
+            [self _notifyStart];
         }
     }];
 }
@@ -139,6 +140,13 @@ void setGlobalAudioPlayer(TGAudioPlayer *newPlayer) {
     id<TGAudioPlayerDelegate> delegate = _delegate;
     if ([delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:)])
         [delegate audioPlayerDidFinishPlaying:self];
+}
+
+- (void)_notifyStart
+{
+    id<TGAudioPlayerDelegate> delegate = _delegate;
+    if ([delegate respondsToSelector:@selector(audioPlayerDidStartPlaying:)])
+        [delegate audioPlayerDidStartPlaying:self];
 }
 
 @end

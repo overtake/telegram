@@ -12,7 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TMHyperlinkTextField *nameTextField;
-@property (nonatomic,strong) TGCTextView *messageField;
+
 @property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
 @property (nonatomic,strong) NSImageView *locationImageView;
@@ -44,7 +44,7 @@
         
        // [self addSubview:self.dateField];
         
-        self.messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 
@@ -138,10 +138,13 @@
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
-    
+    [_messageField setEditable:_deleteHandler == nil];
     
     if(_deleteHandler != nil)
     {
+        
+        
+        
         _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
         
         _deleteImageView.image = image_CancelReply();
@@ -180,16 +183,23 @@
     [self.messageField setBackgroundColor:backgroundColor];
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
         
         // go to message
         
-        if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-            [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
+        if(_messageField.selectRange.location == NSNotFound) {
+            if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
+                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
+        }
+        
         
     }
+    
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
     
 }
 

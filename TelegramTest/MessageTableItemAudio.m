@@ -55,8 +55,33 @@
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
     [LoopingUtils runOnMainQueueAsync:^{
-         [self.cellView stopPlayer];
+        
+        [self.cellView stopPlayer];
     }];
+}
+
+- (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
+    
+    if(!self.message.n_out && !self.message.readedContent) {
+        [ASQueue dispatchOnMainQueue:^{
+            
+            self.message.flags&= ~TGREADEDCONTENT;
+            
+            [self.cellView setNeedsDisplay:YES];
+            
+        }];
+        
+        NSMutableArray *msgs = [@[@(self.message.n_id)] mutableCopy];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_readMessageContents createWithN_id:msgs] successHandler:^(RPCRequest *request, id response) {
+            
+            [[MessagesManager sharedManager] readMessagesContent:msgs];
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+        }];
+    }
+    
 }
 
 - (int)size {

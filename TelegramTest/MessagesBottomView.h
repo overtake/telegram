@@ -46,4 +46,6 @@ typedef enum {
 
 -(void)addAttachment:(TGImageAttachment *)attachment;
 
+-(NSUInteger)attachmentsCount;
+
 @end

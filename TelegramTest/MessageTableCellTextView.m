@@ -33,7 +33,6 @@
 @implementation MessageTableCellTextView
 
 
-
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -45,7 +44,8 @@
         [self.containerView setIsFlipped:YES];
         
         
-        
+        [self.progressView removeFromSuperview];
+
         
         _textView.wantsLayer = YES;
         
@@ -73,6 +73,21 @@
     [self.textView setEditable:!editable];
 }
 
+
+- (void)updateCellState {
+    
+    
+    MessageTableItem *item =(MessageTableItem *)self.item;
+    
+    if(item.downloadItem && (item.downloadItem.downloadState != DownloadStateWaitingStart && item.downloadItem.downloadState != DownloadStateCompleted)) {
+        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+    } else if(item.messageSender && item.messageSender.state != MessageSendingStateSent ) {
+        self.cellState = item.messageSender.state == MessageSendingStateCancelled ? CellStateCancelled : CellStateSending;
+    } else {
+        self.cellState = CellStateNormal;
+    }
+    
+}
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -147,7 +162,14 @@
     return menu;
 }
 
+-(void)clearSelection {
+    [super clearSelection];
+    [_textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
 
 
 -(void)_mouseDragged:(NSEvent *)theEvent {
@@ -166,6 +188,7 @@
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
+     [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
     if(!anim) {
         self.textView.backgroundColor = color;
@@ -197,12 +220,14 @@
 
 
 -(void)_colorAnimationEvent {
+    
     CALayer *currentLayer = (CALayer *)[self.textView.layer presentationLayer];
     
     id value = [currentLayer valueForKeyPath:@"backgroundColor"];
     
     self.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
     [self.textView setNeedsDisplay:YES];
+    
 }
 
 -(void)setSelected:(BOOL)selected animation:(BOOL)animation {

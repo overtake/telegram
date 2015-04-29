@@ -12,6 +12,9 @@
 
 @interface MessageTableCellGeoView()
 @property (nonatomic, strong) NSImageView *geoImageView;
+@property (nonatomic,strong) BTRButton *pinButton;
+@property (nonatomic,strong) TMTextField *venueField;
+
 @end
 
 @implementation MessageTableCellGeoView
@@ -55,15 +58,25 @@
         [self.geoImageView setCallback:block];
         [self.containerView addSubview:self.geoImageView];
         
-        BTRButton *button = [[BTRButton alloc] initWithFrame:CGRectZero];
-        [button setFrameSize:image_MessageMapPin().size];
-        [button setCenterByView:self.geoImageView];
-        [button setBackgroundImage:image_MessageMapPin() forControlState:BTRControlStateNormal];
+        _pinButton = [[BTRButton alloc] initWithFrame:CGRectZero];
+        [_pinButton setFrameSize:image_MessageMapPin().size];
+        [_pinButton setCenterByView:self.geoImageView];
+        [_pinButton setBackgroundImage:image_MessageMapPin() forControlState:BTRControlStateNormal];
         //[button setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
-        [button addBlock:^(BTRControlEvents events) {
+        [_pinButton addBlock:^(BTRControlEvents events) {
             block();
         } forControlEvents:BTRControlEventClick];
-        [self.containerView addSubview:button];
+        [self.containerView addSubview:_pinButton];
+        
+        
+        _venueField = [TMTextField defaultTextField];
+    
+        
+        [self.containerView addSubview:_venueField];
+    
+        [_venueField setFrameOrigin:NSMakePoint(70, 3)];
+        
+        [[_venueField cell] setTruncatesLastVisibleLine:YES];
     }
     return self;
 }
@@ -71,7 +84,17 @@
 - (void) setItem:(MessageTableItemGeo *)item {
     [super setItem:item];
     
-    [self.geoImageView setImageWithURL:item.geoUrl];
+    [_geoImageView setFrameSize:item.imageSize];
+    
+    [_pinButton setCenterByView:_geoImageView];
+    
+    [_geoImageView setImageWithURL:item.geoUrl];
+    
+    [_venueField setHidden:![item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
+    
+    [_venueField setAttributedStringValue:item.venue];
+    
+    [_venueField setFrameSize:item.blockSize];
 }
 
 

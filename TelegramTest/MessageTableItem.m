@@ -158,13 +158,13 @@
     
     if(![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
         if(self.isHeaderMessage) {
-            viewSize.height += 38;
+            viewSize.height += 32;
             
             if(self.isForwadedMessage)
                 viewSize.height += 24;
             
-            if(viewSize.height < 50)
-                viewSize.height = 50;
+            if(viewSize.height < 44)
+                viewSize.height = 44;
         } else {
             viewSize.height += 10;
             
@@ -239,7 +239,7 @@
             
             objectReturn = [[MessageTableItemContact alloc] initWithObject:object];
             
-        } else if([message.media isKindOfClass:[TL_messageMediaGeo class]]) {
+        } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
             
             objectReturn = [[MessageTableItemGeo alloc] initWithObject:object];
             
@@ -415,7 +415,7 @@
 }
 
 -(void)dealloc {
-    NSLog(@"%@",NSStringFromClass(self.class));
+    MTLog(@"%@",NSStringFromClass(self.class));
 }
 
 

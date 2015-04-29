@@ -13,7 +13,7 @@
 - (id) init {
     self = [super init];
     if(self) {
-        self.viewSize = NSMakeSize(0, 17);
+        self.viewSize = NSMakeSize(0, 22);
     }
     return self;
 }

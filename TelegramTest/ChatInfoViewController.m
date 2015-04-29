@@ -109,7 +109,7 @@
 
     
     
-    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 390)];
+    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 410)];
     
 
     _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
@@ -259,7 +259,7 @@
 //        
 //        if(obj.user_id == [UsersManager currentUserId]) {
 //            
-//            NSLog(@"inviter:%@, inviteDate:%@",[[[UsersManager sharedManager] find:obj.inviter_id] fullName],[NSDate dateWithTimeIntervalSince1970:obj.date]);
+//            MTLog(@"inviter:%@, inviteDate:%@",[[[UsersManager sharedManager] find:obj.inviter_id] fullName],[NSDate dateWithTimeIntervalSince1970:obj.date]);
 //            
 //        }
 //        

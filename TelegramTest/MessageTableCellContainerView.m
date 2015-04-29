@@ -14,7 +14,7 @@
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
 #import "MessageReplyContainer.h"
-
+#import "POPCGUtils.h"
 
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
@@ -83,9 +83,13 @@
         [self addSubview:self.containerView];
         
         
-        _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
-        [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-        [self.progressView addTarget:self selector:@selector(checkOperation)];
+        if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
+            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+            [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+            [self.progressView addTarget:self selector:@selector(checkOperation)];
+        }
+        
+        
         
         
     }
@@ -675,7 +679,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage || item.isForwadedMessage ? 10 : 10, self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 10 : roundf((item.viewSize.height - item.blockSize.height)/2), self.containerView.bounds.size.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])
@@ -686,7 +690,7 @@ static BOOL dragAction = NO;
         
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 15, item.blockWidth - 60 , item.replyObject.containerHeight)];
+        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 10, item.blockWidth - 60 , item.replyObject.containerHeight)];
         
         
     } else {
@@ -730,7 +734,7 @@ static int offsetEditable = 30;
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     //    static int offserUnreadMark = 12;
     
-    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 26 : 2));
+    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 12 : 4));
     
     if(editable)
         position.x -= offsetEditable;
@@ -918,10 +922,15 @@ static int offsetEditable = 30;
         [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
-                [weakSelf.item doAfterDownload];
-                [weakSelf updateCellState];
-                [weakSelf doAfterDownload];
-                weakSelf.item.downloadItem = nil;
+                
+                [weakSelf downloadProgressHandler:item];
+                
+                dispatch_after_seconds(0.2, ^{
+                    [weakSelf.item doAfterDownload];
+                    [weakSelf updateCellState];
+                    [weakSelf doAfterDownload];
+                    weakSelf.item.downloadItem = nil;
+                });  
             }];
             
         }];
@@ -1018,7 +1027,59 @@ static int offsetEditable = 30;
         [self.stateLayer setState:state];
 }
 
+-(void)clearSelection {
+    [_replyContainer.messageField setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_replyContainer.messageField mouseInText:theEvent];
+}
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    if(!_replyContainer)
+        return;
+    
+    if(!anim) {
+        _replyContainer.messageField.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
+    
+}
 
 
+
+-(void)_colorAnimationEvent {
+    
+    if(!_replyContainer.messageField)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_replyContainer.messageField.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _replyContainer.messageField.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_replyContainer.messageField setNeedsDisplay:YES];
+}
 
 @end

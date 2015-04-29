@@ -165,10 +165,6 @@
 }
 
 
-
-
-
-
 -(TL_localMessage *)message {
     return _conversation.lastMessage;
 }

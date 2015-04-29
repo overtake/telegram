@@ -45,6 +45,7 @@
 #import "TGPasslock.h"
 #import "TGCTextView.h"
 #import "TGPasslockModalView.h"
+#import "ASCommon.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -88,6 +89,15 @@
             return;
         }
         
+        if([[url absoluteString] hasPrefix:TGJoinGroupPrefix]) {
+            join_group_by_hash([[url absoluteString] substringFromIndex:TGJoinGroupPrefix.length]);
+            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+            [self.mainWindow deminiaturize:self];
+            return;
+        }
+        
+        
+        
         
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         NSString *absoluteString = [url absoluteString];
@@ -104,7 +114,6 @@
         
         if(range.location > 12) {
             NSString *method = [absoluteString substringWithRange:NSMakeRange(11, range.location-11)];
-            DLog(@"method %@", method);
             
             if([method isEqualToString:@"msg"]) {
                 
@@ -144,11 +153,16 @@
     }
 }
 
-
+static void TGTelegramLoggingFunction(NSString *format, va_list args)
+{
+    TGLogv(format, args);
+}
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+    
+    MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
@@ -475,9 +489,11 @@ void exceptionHandler(NSException * exception)
             }
             
             
-            [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
-            
-            
+            if(![TMViewController isModalActive]) {
+                [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+            } else {
+                return incomingEvent;
+            }
             
             return [[NSEvent alloc] init];
             
@@ -575,8 +591,17 @@ void exceptionHandler(NSException * exception)
         if(result.window != [TMMediaController controller].panel) {
             
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
-                if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
-                    if([result.window.contentView hitTest:[result locationInWindow]]) {
+                
+                if([result.window.contentView hitTest:[result locationInWindow]]) {
+                    if([TMViewController isModalActive]) {
+                        if(result.type == NSMouseEntered || result.type == NSMouseMoved) {
+                            result = nil;
+                        }
+                    }
+                    
+                    if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
+                        
+                        
                         result = nil;
                     }
                     
@@ -652,19 +677,22 @@ void exceptionHandler(NSException * exception)
     
     [TGPasslock appIncomeActive];
     
-    [[Telegram rightViewController] becomeFirstResponder];
+    if(![TMViewController isModalActive])
+        [[Telegram rightViewController] becomeFirstResponder];
+    else
+        [[TMViewController modalView] becomeFirstResponder];
 }
 
 - (void) receiveSleepNote: (NSNotification*) note
 {
-    NSLog(@"receiveSleepNote: %@", [note name]);
+    MTLog(@"receiveSleepNote: %@", [note name]);
     
 }
 
 - (void) receiveWakeNote: (NSNotification*) note
 {
     [[MTNetwork instance] update];
-    NSLog(@"receiveSleepNote: %@", [note name]);
+    MTLog(@"receiveSleepNote: %@", [note name]);
 }
 
 - (void) registerSleepNotification
@@ -858,14 +886,17 @@ void exceptionHandler(NSException * exception)
 
 
 - (BOOL)application:(NSApplication *)application
-continueUserActivity: (NSUserActivity *)userActivity
+continueUserActivity: (id)userActivity
  restorationHandler: (void (^)(NSArray *))restorationHandler {
     
     BOOL handled = NO;
     
+#ifdef __MAC_10_10
+    
+    
     // Extract the payload
-    NSString *type = [userActivity activityType];
-
+    NSString *type = [(NSUserActivity *)userActivity activityType];
+    
     
     
     NSDictionary *userInfo = [userActivity userInfo];
@@ -948,18 +979,21 @@ continueUserActivity: (NSUserActivity *)userActivity
         
         
         [TMViewController hideModalProgress];
-       
+        
     }
     
     restorationHandler(@[]);
     
     [TMViewController hideModalProgress];
+#endif
+    
+    
     
     return handled;
     
 }
 
-- (void)application:(NSApplication *)application didUpdateUserActivity:(NSUserActivity *)userActivity  {
+- (void)application:(NSApplication *)application didUpdateUserActivity:(id)userActivity  {
     
 }
 

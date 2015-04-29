@@ -5,10 +5,11 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-#define TGDEBUG // UNDEF IN RELEASE
+//#define TGDEBUG // UNDEF IN RELEASE
 //#define TGStable // DEF IN stable version
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+#import <MtProtoKit/MTLogging.h>
 #import "ImageUtils.h"
 #import "POP.h"
 #import "SelectTextManager.h"
@@ -52,6 +53,8 @@
 #import "SettingsArchiver.h"
 #import "Application.h"
 #import "PrivacyArchiver.h"
+
+
 #define TGOUTMESSAGE 0x2
 #define TGUNREADMESSAGE 0x1
 #define TGOUTUNREADMESSAGE 0x3
@@ -60,7 +63,7 @@
 #define TGFWDMESSAGE 0x4
 #define TGREPLYMESSAGE 0x8
 #define TGMENTIONMESSAGE 16
-
+#define TGREADEDCONTENT 32
 
 #define TGSESSIONCURRENT 0x1
 #define TGSESSIONOFFICIAL 0x2
@@ -79,7 +82,11 @@
 
 #define NSColorFromRGBWithAlpha(rgbValue, alphaValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:(alphaValue)]
 
-#define  keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
+#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+#define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+#define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+
+#define keepcoder_cache_folder @"/Users/mikhailfilimonov/Library/Caches/ru.keepcoder.Telegram/cache/"
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
 #define MAX_FILE_SIZE 1500000000
@@ -96,7 +103,7 @@
 #ifdef TGDEBUG
 #define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
 #else 
-#define ACCEPT_FEATURE
+#define ACCEPT_FEATURE YES
 #endif
 
 
@@ -133,6 +140,8 @@
 #define DARK_GREEN NSColorFromRGB(0x458b42)
 
 #define DARK_BLACK NSColorFromRGB(0x222222)
+#define TEXT_COLOR NSColorFromRGB(0x060606)
+#define GRAY_TEXT_COLOR NSColorFromRGB(0x808080)
 
 #define DIALOG_BORDER_COLOR NSColorFromRGB(0xeaeaea)
 //#define DIALOG_BORDER_COLOR [NSColor redColor]

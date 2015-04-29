@@ -560,22 +560,15 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
-       
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:@[message]];
+        
+        if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
+            [self failSequence];
+            return;
+        }
         
         return [MessagesManager addAndUpdateMessage:message];
     }
     
-    if([update isKindOfClass:[TL_updateReadMessages class]]) {
-//        
-//        for(NSNumber *mgsId in [update messages]) {
-//            TL_localMessage *message = [[MessagesManager sharedManager] find:[mgsId intValue]];
-//            message.flags&= ~TGUNREADMESSAGE;
-//        }
-//        
-//        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
-        return;
-    }
     
     if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
         [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
@@ -585,6 +578,10 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
         [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
         return;
+    }
+    
+    if([update isKindOfClass:[TL_updateReadMessagesContents class]]) {
+        [[MessagesManager sharedManager] readMessagesContent:[[update messages] copy]];
     }
     
     if([update isKindOfClass:[TL_updateDeleteMessages class]]) {

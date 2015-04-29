@@ -40,6 +40,7 @@ typedef enum {
 
 -(BOOL)n_out;
 -(BOOL)unread;
+-(BOOL)readedContent;
 
 - (TL_conversation *)conversation;
 -(int)filterType;

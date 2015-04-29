@@ -278,7 +278,7 @@ static void *kType;
 }
 
 - (NSString *)cacheKey {
-    return [NSString stringWithFormat:@"%d_%d_%d", self.type, self.peer.chat_id, self.peer.user_id];
+    return [NSString stringWithFormat:@"peer_id:%d", self.peer_id];
 }
 
 - (TLChat *) chat {

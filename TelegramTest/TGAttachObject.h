@@ -21,6 +21,9 @@
 
 @interface TGAttachObject : NSObject<NSCoding>
 
+
+@property (nonatomic,strong,readonly) NSString *caption;
+
 @property (nonatomic,strong) UploadOperation *uploader;
 
 @property (nonatomic,assign,readonly) NSUInteger unique_id;
@@ -43,5 +46,11 @@
 -(id)initWithOriginFile:(NSString *)file orData:(NSData *)data peer_id:(int)peer_id;
 
 -(void)prepare;
+
+-(Class)senderClass;
+
+-(void)save;
+
+-(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave;
 
 @end

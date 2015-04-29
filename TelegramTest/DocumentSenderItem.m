@@ -142,11 +142,11 @@
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction create] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
     }];
     
     
@@ -264,7 +264,9 @@
         
         if(message.media.document.isSticker) {
             
-            [StickersPanelView addLocalSticker:message.media.document];
+            [ASQueue dispatchOnMainQueue:^{
+                 [StickersPanelView addLocalSticker:message.media.document];
+            }];
             
         }
         

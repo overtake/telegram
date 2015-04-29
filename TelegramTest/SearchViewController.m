@@ -671,14 +671,12 @@ static int insertCount = 3;
     self.searchParams = searchParams;
     
     
-    dispatch_after_seconds(duration, ^{
-        
         if(self.searchParams != searchParams) {
             return;
         }
         
         
-        [ASQueue dispatchOnStageQueue:^{
+       // [ASQueue dispatchOnStageQueue:^{
             NSMutableString *transform = [searchString mutableCopy];
             CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transform;
             CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
@@ -895,12 +893,8 @@ static int insertCount = 3;
             }
             
             
-        }];
-        
-      
-        
-       
-    });
+      //  }];
+    
     
 }
 

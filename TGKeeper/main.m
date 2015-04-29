@@ -14,7 +14,7 @@ int main(int argc, const char * argv[])
     @autoreleasepool {
         
         // insert code here...
-        NSLog(@"Hello, World!");
+        MTLog(@"Hello, World!");
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class]) {
             NSUserNotification *notification = [[NSUserNotification alloc] init];

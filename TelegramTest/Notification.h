@@ -79,6 +79,9 @@ extern NSString *const UPDATE_WEB_PAGE_ITEMS;
 extern NSString *const UPDATE_NEW_AUTH;
 extern NSString *const UPDATE_WEB_PAGES;
 
+extern NSString *const UPDATE_READ_CONTENTS;
+
+
 extern NSString *const KEY_PREVIEW_OBJECT;
 
 extern NSString *const KEY_USER;

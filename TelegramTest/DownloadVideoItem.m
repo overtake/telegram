@@ -62,7 +62,14 @@
         dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
         dispatch_release(sema);
         
-        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
+        TLFileLocation *location = msg.media.video.thumb.location;
+        
+        if(!location)
+        {
+            location = [TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0];
+        }
+        
+        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
         [[Storage manager] updateMessages:@[msg]];
         

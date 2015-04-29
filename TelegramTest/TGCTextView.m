@@ -260,8 +260,7 @@
             int startSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:startSelectPosition];
             
             int currentSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:currentSelectPosition];
-            
-            
+                        
             int dif = abs(startSelectLineIndex - currentSelectLineIndex);
             
             if(mark.range.location != NSNotFound) {
@@ -299,8 +298,6 @@
                         startIndex = lessRange.location;
                         
                         NSUInteger maxPos = lineRange.length + lineRange.location;
-                        
-                        
                         
                         NSUInteger maxSelect = maxPos - startIndex;
                         
@@ -345,7 +342,6 @@
                 }
                 
                 
-                
                 if(startIndex > endIndex) {
                     startIndex = endIndex+startIndex;
                     endIndex = startIndex - endIndex;
@@ -360,9 +356,6 @@
                     
                     _selectRange.length += (endIndex - startIndex);
                 }
-                
-               
-                
                 
                 CGFloat ascent, descent, leading;
                 
@@ -492,7 +485,7 @@
             return i;
     }
     
-  //  NSLog(@"idx:%d, location.y:%f",location.y < 3 ? (count-1) : 0,location.y);
+  //  MTLog(@"idx:%d, location.y:%f",location.y < 3 ? (count-1) : 0,location.y);
     
     return location.y >= NSHeight(self.frame) ? 0 : (count -1); // location.y < 3 ? (count-1) : 0 ;
 }
@@ -529,7 +522,7 @@
  
  if((position.y > location.y) && position.y < (location.y + height)) {
  
- NSLog(@"index:%d",i);
+ MTLog(@"index:%d",i);
  
  return i - (count -1);
  }
@@ -628,7 +621,7 @@
         
         
 //        for (int i = 0; i < self.attributedString.length; i++) {
-//            NSLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
+//            MTLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
 //        }
         
         BOOL valid = [[currentChar stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet]] isEqualToString:@""];

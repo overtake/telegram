@@ -31,6 +31,8 @@
         
         
         self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
+        
+        self.message.flags|=TGREADEDCONTENT;
     }
     return self;
 }

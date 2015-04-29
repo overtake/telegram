@@ -918,4 +918,19 @@
     [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
 }
 
+-(void)showChatExportLinkController:(TLChatFull *)chat {
+    if(self.navigationViewController.currentController == _chatExportLinkViewController)
+        return;
+    
+    if(!_chatExportLinkViewController) {
+        _chatExportLinkViewController = [[ChatExportLinkViewController alloc] initWithFrame:self.view.bounds];
+    }
+
+    
+    [_chatExportLinkViewController setChat:chat];
+    
+    [self.navigationViewController pushViewController:_chatExportLinkViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    
+}
+
 @end

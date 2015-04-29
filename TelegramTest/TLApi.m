@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.04.15..
+//  Auto created by Mikhail Filimonov on 27.04.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -670,7 +670,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:682347368];
+	SerializedData* stream = [TLClassStore streamWithConstuctor:94983360];
 	[stream writeInt:self.max_id];
 	return [stream getOutput];
 }
@@ -1909,6 +1909,45 @@
 - (NSData*)getData {
 	SerializedData* stream = [TLClassStore streamWithConstuctor:1319464594];
 	[stream writeString:self.code];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_exportChatInvite
++(TLAPI_messages_exportChatInvite*)createWithChat_id:(int)chat_id {
+    TLAPI_messages_exportChatInvite* obj = [[TLAPI_messages_exportChatInvite alloc] init];
+    obj.chat_id = chat_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:2106086025];
+	[stream writeInt:self.chat_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_checkChatInvite
++(TLAPI_messages_checkChatInvite*)createWithN_hash:(NSString*)n_hash {
+    TLAPI_messages_checkChatInvite* obj = [[TLAPI_messages_checkChatInvite alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1051570619];
+	[stream writeString:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_importChatInvite
++(TLAPI_messages_importChatInvite*)createWithN_hash:(NSString*)n_hash {
+    TLAPI_messages_importChatInvite* obj = [[TLAPI_messages_importChatInvite alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [TLClassStore streamWithConstuctor:1817183516];
+	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
 @end

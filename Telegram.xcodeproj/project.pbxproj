@@ -555,6 +555,14 @@
 		C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */; };
 		C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B831AE57D0100FBEABD /* TGAttachObject.m */; };
 		C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */; };
+		C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */; };
+		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
+		C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */; };
+		C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */; };
+		C2C85BA81AF1899900FBEABD /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BA91AF1899A00FBEABD /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BAA1AF189AA00FBEABD /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2C85BAB1AF189AA00FBEABD /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -569,10 +577,6 @@
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
 		C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */; };
-		C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -757,8 +761,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
-				C2DE4FEC1AD7E760001EC26C /* Sparkle.framework in Copy Files (6 items) */,
-				C2DE4FED1AD7E760001EC26C /* HockeySDK.framework in Copy Files (6 items) */,
+				C2C85BA81AF1899900FBEABD /* Sparkle.framework in Copy Files (6 items) */,
+				C2C85BA91AF1899A00FBEABD /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1912,6 +1916,14 @@
 		C2C85B831AE57D0100FBEABD /* TGAttachObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachObject.m; sourceTree = "<group>"; };
 		C2C85B851AE6597000FBEABD /* ImageAttachSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachSenderItem.h; sourceTree = "<group>"; };
 		C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachSenderItem.m; sourceTree = "<group>"; };
+		C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalSetCaptionView.h; sourceTree = "<group>"; };
+		C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalSetCaptionView.m; sourceTree = "<group>"; };
+		C2C85B991AEE4E1F00FBEABD /* ASCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCommon.h; sourceTree = "<group>"; };
+		C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCommon.m; sourceTree = "<group>"; };
+		C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatExportLinkViewController.h; sourceTree = "<group>"; };
+		C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatExportLinkViewController.m; sourceTree = "<group>"; };
+		C2C85BA51AF10B6500FBEABD /* TGCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCaptionView.h; sourceTree = "<group>"; };
+		C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCaptionView.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -2231,6 +2243,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2C85BAA1AF189AA00FBEABD /* Sparkle.framework in Frameworks */,
+				C2C85BAB1AF189AA00FBEABD /* HockeySDK.framework in Frameworks */,
 				C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
@@ -2266,8 +2280,6 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2DE4FEE1AD7E764001EC26C /* Sparkle.framework in Frameworks */,
-				C2DE4FEF1AD7E764001EC26C /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3052,6 +3064,8 @@
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
 				C2233DB11A0818910056594F /* MessageCellDescriptionView.m */,
+				C2C85BA51AF10B6500FBEABD /* TGCaptionView.h */,
+				C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -3213,6 +3227,8 @@
 				C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */,
 				C23536C419D453720044978E /* EncryptedKeyViewController.h */,
 				C23536C519D453720044978E /* EncryptedKeyViewController.m */,
+				C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */,
+				C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -4018,6 +4034,8 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2C85B991AEE4E1F00FBEABD /* ASCommon.h */,
+				C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */,
 				C274C40C1ACC0988000DFDE4 /* XCDYouTubeKit */,
 				C2C8AAFE1A3F3BC900C857D6 /* libwebp-0.4.2-mac-10.8 */,
 				C268C14F19F05139007F836A /* pop */,
@@ -4234,6 +4252,8 @@
 				C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */,
 				C2C85B821AE57D0100FBEABD /* TGAttachObject.h */,
 				C2C85B831AE57D0100FBEABD /* TGAttachObject.m */,
+				C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */,
+				C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */,
 			);
 			name = "image-attach";
 			sourceTree = "<group>";
@@ -5284,6 +5304,7 @@
 				C247C48018C0D0E800726C91 /* TGUpdateState.m in Sources */,
 				CEDAEB6E1881AF85006189A2 /* YapNull.m in Sources */,
 				C274C41D1ACC09B0000DFDE4 /* XCDYouTubeClient.m in Sources */,
+				C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */,
 				C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */,
 				CEDAEB521881AF85006189A2 /* YapDatabaseFilteredViewTransaction.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
@@ -5346,6 +5367,7 @@
 				C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */,
 				C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */,
 				C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */,
+				C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */,
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
 				C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */,
@@ -5524,6 +5546,7 @@
 				0AB8500F18756FAD001A796C /* SearchSeparatorTableCell.m in Sources */,
 				0A7C78C71947701A001617DB /* TMMenuController.m in Sources */,
 				CEDAEB711881AF85006189A2 /* YapCollectionKey.m in Sources */,
+				C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */,
 				CEDAEB731881AF85006189A2 /* YapSet.m in Sources */,
 				C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */,
 				C274C3F91ACBF745000DFDE4 /* TGWebpageYTContainer.m in Sources */,
@@ -5542,6 +5565,7 @@
 				0A9EDC5B1897BA0E0037E1BC /* RBLScrollView.m in Sources */,
 				0A241A9418AAEF2900C32F45 /* TMTextField.m in Sources */,
 				CEAE5D1B181C296600C17645 /* DialogsManager.m in Sources */,
+				C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */,
 				CEDAEB761881AF85006189A2 /* YapDatabaseTransaction.m in Sources */,
 				0A9EDC521897BA0E0037E1BC /* NSTextView+RBLAntialiasingAdditions.m in Sources */,
 				CEDAEB631881AF85006189A2 /* YapDatabaseView.m in Sources */,

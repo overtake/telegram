@@ -98,7 +98,7 @@
     
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
-    [self.youtubeImage setHidden:YES];
+    [_youtubeImage setHidden:!self.item.isset];
     
     [self.youtubeImage setCenterByView:self.imageView];
     

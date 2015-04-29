@@ -22,4 +22,7 @@
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
 
+-(void)clearSelection;
+-(BOOL)mouseInText:(NSEvent *)theEvent;
+
 @end

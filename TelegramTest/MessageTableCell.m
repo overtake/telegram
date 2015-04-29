@@ -148,13 +148,7 @@
 -(void)mouseDown:(NSEvent *)theEvent {
     if(theEvent.clickCount == 2 && self.messagesViewController.state == MessagesViewControllerStateNone) {
         
-        BOOL accept = YES;
-        
-        if([self isKindOfClass:[MessageTableCellTextView class]]) {
-            MessageTableCellTextView *view = (MessageTableCellTextView *) self;
-            
-            accept = ![view.textView mouseInText:theEvent];
-        }
+        BOOL accept = ![self mouseInText:theEvent];;
         
         if(accept)
             [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
@@ -165,7 +159,13 @@
 }
 
 
+-(void)clearSelection {
+    
+}
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return NO;
+}
 
 
 - (void)copy:(id)sender {

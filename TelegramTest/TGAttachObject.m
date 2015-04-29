@@ -8,6 +8,7 @@
 
 #import "TGAttachObject.h"
 #import "ASQueue.h"
+#import "ImageAttachSenderItem.h"
 @interface TGAttachObject ()
 @property (nonatomic,strong) NSString *generatedPath;
 @property (nonatomic,strong) NSString *file;
@@ -66,10 +67,11 @@ static ASQueue *queue;
             
             NSData *imageData = jpegNormalizedData(originImage);
             
-            
-            [imageData writeToFile:exportPath(_unique_id, @"jpg") atomically:YES];
-            
             _generatedPath = exportPath(_unique_id, @"jpg");
+            
+            [imageData writeToFile:_generatedPath atomically:YES];
+            
+            
             
             
             _thumb = cropCenterWithSize(originImage, NSMakeSize(70, 70));
@@ -114,6 +116,8 @@ static ASQueue *queue;
             weak();
             
             [_uploader setUploadComplete:^(UploadOperation *uploader, id input) {
+                
+                _uploader = nil;
                 
                 dispatch_after_seconds(0.3, ^{
                     [weakSelf.delegate didEndUploading:uploader];
@@ -203,6 +207,7 @@ static ASQueue *queue;
         _data = data;
         _unique_id = rand_long();
         _peer_id = peer_id;
+        _caption = @"";
     }
     
     return self;
@@ -212,6 +217,7 @@ static ASQueue *queue;
     [aCoder encodeObject:_file forKey:@"file"];
     [aCoder encodeInt64:_unique_id forKey:@"unique_id"];
     [aCoder encodeInt:_peer_id forKey:@"peer_id"];
+    [aCoder encodeObject:_caption forKey:@"caption"];
 }
 
 -(NSString *)thumbKey {
@@ -224,6 +230,7 @@ static ASQueue *queue;
         _unique_id = [aDecoder decodeInt64ForKey:@"unique_id"];
         _generatedPath = exportPath(_unique_id, @"jpg");
         _peer_id = [aDecoder decodeIntForKey:@"peer_id"];
+        _caption = [aDecoder decodeObjectForKey:@"caption"];
         _thumb = [TGCache cachedImage:[self thumbKey] group:@[THUMBCACHE]];
     }
     
@@ -239,5 +246,30 @@ static ASQueue *queue;
     return object.unique_id == _unique_id;
 }
 
+-(Class)senderClass {
+    return [ImageAttachSenderItem class];
+}
+
+-(void)save {
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        NSString *key = [NSString stringWithFormat:@"peer_id:%d",_peer_id];
+        
+        NSMutableArray *attachments = [transaction objectForKey:key inCollection:ATTACHMENTS];
+        
+        [transaction setObject:attachments forKey:key inCollection:ATTACHMENTS];
+        
+    }];
+    
+}
+
+
+-(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave {
+    _caption = caption;
+    if(needSave)
+        [self save];
+}
 
 @end

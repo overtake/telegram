@@ -10,6 +10,8 @@
 #import "TMView.h"
 #import "TMTextField.h"
 
+
+@class TGAttachObject;
 @class TMPopover;
 @class TMNavigationController;
 @interface TMViewController : NSObject
@@ -69,6 +71,14 @@
 
 +(void)showBlockPasslock:(passlockCallback)callback;
 -(void)showBlockPasslock:(passlockCallback)callback;
+
+
+
++(void)showAttachmentCaption:(NSArray *)attachments onClose:(dispatch_block_t)onClose;
++(void)hideAttachmentCaption;
+
++(BOOL)isModalActive;
++(TMView *)modalView;
 
 +(void)becomePasslock;
 

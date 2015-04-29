@@ -8,7 +8,8 @@
 
 #import "MessageTableItemPhoto.h"
 #import "ImageUtils.h"
-
+#import "NSString+Extended.h"
+#import "NSAttributedString+Hyperlink.h"
 @implementation MessageTableItemPhoto
 
 - (id) initWithObject:(TL_localMessage *)object {
@@ -61,9 +62,20 @@
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
+            if(self.message.media.caption.length > 0) {
+                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+                
+                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+                
+                [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+                
+                [c detectAndAddLinks];
+                
+                _caption = c;
+            }
+            
         }
                 
-       
         self.imageObject.imageSize = imageSize;
         
         self.previewSize = imageSize;
@@ -83,7 +95,10 @@
 
 
 -(BOOL)isset {
-    return isPathExists(((TLPhotoSize *)[self.message.media.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
+    
+    TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
+    
+    return (fileSize(photoSize.location.path) >= photoSize.size || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil;
 }
 
 -(void)doAfterDownload {
@@ -93,13 +108,21 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    if(self.isForwadedMessage)
+        width-=50;
+    
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
+    _imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
     
-    NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
+    if(_caption) {
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
+        _captionSize.width = _imageSize.width ;
+    }
     
-    self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
+    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
     
+    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight, 60 + captionHeight ));
     
     return YES;
 }

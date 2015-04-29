@@ -104,7 +104,7 @@
 +(NSMutableAttributedString *)conversationLastText:(TL_localMessage *)message conversation:(TL_conversation *)conversation {
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
-    [messageText setSelectionColor:NSColorFromRGB(0xfffff1) forColor:DARK_BLACK];
+    [messageText setSelectionColor:NSColorFromRGB(0xfffffe) forColor:DARK_BLACK];
     [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
     
     
@@ -203,6 +203,11 @@
                 msgText = action.title;
             } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
                 msgText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
+            } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
+                
+                
+                msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
+                
             }
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
@@ -311,6 +316,11 @@
         actionText = action.title;
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
+    } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
+        
+        
+        actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
+        
     }
     
     static float size = 11.5;
@@ -397,13 +407,18 @@
 }
 
 + (NSString *) mediaMessage:(TLMessage *)message {
+    
+    if(message.media.caption.length > 0) {
+        return message.media.caption;
+    }
+    
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        return NSLocalizedString(@"ChatMedia.Photo", nil);
+        return  NSLocalizedString(@"ChatMedia.Photo", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
         return NSLocalizedString(@"ChatMedia.Contact", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
         return NSLocalizedString(@"ChatMedia.Video", nil);
-    } else if([message.media isKindOfClass:[TL_messageMediaGeo class]]) {
+    } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
         return NSLocalizedString(@"ChatMedia.Location", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
         return NSLocalizedString(@"ChatMedia.Audio", nil);

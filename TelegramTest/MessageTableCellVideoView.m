@@ -16,11 +16,14 @@
 #import "MessageCellDescriptionView.h"
 
 #import "TGPhotoViewer.h"
+#import "TGCTextView.h"
+#import "POPCGUtils.h"
+#import "TGCaptionView.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
-
+@property (nonatomic,strong) TGCaptionView *captionView;
 @end
 
 @implementation MessageTableCellVideoView
@@ -87,6 +90,8 @@ static NSImage *playImage() {
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
+        [self.containerView setIsFlipped:YES];
+        
 
     }
     return self;
@@ -99,9 +104,9 @@ static NSImage *playImage() {
     const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
     [path addClip];
     
     
@@ -140,6 +145,28 @@ static NSImage *playImage() {
     
 //    
 
+}
+
+-(void)clearSelection {
+    [super clearSelection];
+    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
+
+-(void)initCaptionTextView {
+    if(!_captionView) {
+        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionView];
+    }
+}
+
+
+- (void)deallocCaptionTextView {
+    [_captionView removeFromSuperview];
+    _captionView = nil;
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -192,11 +219,23 @@ static NSImage *playImage() {
     [self updateDownloadState];
    
     
-     [self.imageView setFrameSize:item.blockSize];
-    
-    
+    [self.imageView setFrameSize:item.videoSize];
     
     [self updateVideoTimeView];
+    
+    
+    if(item.caption) {
+        [self initCaptionTextView];
+        
+        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.videoSize.width, item.captionSize.height)];
+        
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        
+    } else {
+        [self deallocCaptionTextView];
+    }
+
+
 }
 
 
@@ -225,6 +264,60 @@ static NSImage *playImage() {
     [super onStateChanged:item];
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    if(!_captionView.textView) {
+        return;
+    }
+    
+    
+    if(!anim) {
+        _captionView.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
+    
+    
+}
 
+
+
+-(void)_colorAnimationEvent {
+    
+    if(!_captionView.textView)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_captionView.textView setNeedsDisplay:YES];
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
+}
 
 @end

@@ -33,7 +33,7 @@
     NSString *message = [[object.message trim] fixEmoji];
     
     
-    [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
+    [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
     [self updateMessageFont];
     
@@ -198,7 +198,15 @@
 
 
 -(BOOL)isset {
-    return isPathExists(((TLPhotoSize *)[self.message.media.webpage.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
+    
+    if([self isWebPage]) {
+        
+        TLPhotoSize *s = (TLPhotoSize *)[self.message.media.webpage.photo.sizes lastObject];
+        
+        return [FileUtils checkNormalizedSize:s.location.path checksize:s.size]  && self.downloadItem == nil && self.messageSender == nil;
+    }
+    
+    return YES;
 }
 
 

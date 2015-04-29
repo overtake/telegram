@@ -51,9 +51,7 @@
 }
 
 -(void)loadlocal:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback  {
-    
-    int bp = 0;
-    
+        
     [[Storage manager] dialogsWithOffset:offset limit:limit completeHandler:^(NSArray *d, NSArray *m) {
         
         [ASQueue dispatchOnStageQueue:^{

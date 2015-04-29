@@ -42,6 +42,7 @@
 
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
+NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
 -(id)init {
@@ -108,7 +109,7 @@ BOOL checkFileSize(NSString *path, int size) {
     return fs > 0 && fs >= size;
 }
 
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler forWindow:(NSWindow *)window {
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray *paths))handler forWindow:(NSWindow *)window {
     
     [[TMMediaController controller] close];
     
@@ -127,17 +128,22 @@ BOOL checkFileSize(NSString *path, int size) {
     [openDlg beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             NSArray* urls = [openDlg URLs];
+            
+            NSMutableArray *paths = [[NSMutableArray alloc] init];
+            
             for(int i = 0; i < [urls count]; i++ ) {
                 NSString *path = [[urls objectAtIndex:i] path];
                 NSString *pathExtension = [[path pathExtension] lowercaseString];
                 
-                if(types) {
+                 if(types) {
                     if([types containsObject:pathExtension])
-                        handler(path);
+                        [paths addObject:path];
                 } else {
-                    handler(path);
+                    [paths addObject:path];
                 }
             }
+            
+            handler(paths);
         }
     }];
 }
@@ -162,7 +168,7 @@ BOOL checkFileSize(NSString *path, int size) {
 }
 
 
-+ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSString * result))handler {
++ (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * paths))handler {
     [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp mainWindow]];
 }
 
@@ -492,12 +498,82 @@ void open_card(NSString *link) {
     
 }
 
+void join_group_by_hash(NSString * hash) {
+    
+    
+        [TMViewController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
+            
+            if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
+                
+                [[Telegram rightViewController] showByDialog:[[DialogsManager sharedManager] findByChatId:[[response chat] n_id]] sender:nil];
+                    
+                [TMViewController hideModalProgress];
+    
+            } else if([response isKindOfClass:[TL_chatInvite class]]) {
+                
+                [TMViewController hideModalProgress];
+                
+                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
+                    
+                    [TMViewController showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_messages_importChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TLUpdates *response) {
+                        
+                        if([response chats].count > 0) {
+                            TLChat *chat = [response chats][0];
+                            
+                            TL_conversation *conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
+                            
+                            [[Telegram rightViewController] showByDialog:conversation sender:nil];
+                            
+                            dispatch_after_seconds(0.2, ^{
+                                
+                                [TMViewController hideModalProgressWithSuccess];
+                            });
+                        } else {
+                            [TMViewController hideModalProgress];
+                        }
+                        
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        [TMViewController hideModalProgress];
+                        
+                        if(error.error_code == 400) {
+                            alert(appName(), NSLocalizedString(error.error_msg, nil));
+                        }
+                        
+                    }];
+                    
+                    
+                }, nil);
+            }
+            
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [TMViewController hideModalProgress];
+            
+            if(error.error_code == 400) {
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
+            }
+            
+        }];
+        
+   
+    
+    
+    
+}
+
 void open_user_by_name(NSString * userName) {
     
-    NSArray *users = [UsersManager findUsersByName:userName];
+    TLUser *user = [UsersManager findUserByName:userName];
     
-    if(users.count == 1) {
-        [[Telegram rightViewController] showUserInfoPage:users[0]];
+    if(user) {
+        [[Telegram rightViewController] showUserInfoPage:user];
     } else {
         [TMViewController showModalProgress];
         
@@ -589,7 +665,16 @@ void open_link(NSString *link) {
         NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
         
         if(name.length > 0) {
-            open_user_by_name(name);
+            
+            NSString *joinPrefix = @"joinchat/";
+            
+            if([name hasPrefix:joinPrefix]) {
+                join_group_by_hash([name substringFromIndex:joinPrefix.length]);
+            } else {
+                open_user_by_name(name);
+            }
+            
+            
             
             return;
         }
@@ -682,7 +767,7 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
     //Switch to a relative directory for working.
     NSString *currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[directoryURL path]];
-    //NSLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
+    //MTLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
     
     //Create
     NSTask *task = [[NSTask alloc] init] ;

@@ -18,6 +18,12 @@
 @property (nonatomic, strong) TMLoaderView *loaderView;
 @property (nonatomic, strong) TMView *progressContainer;
 
+@property (nonatomic, strong) BTRButton *captionButton;
+
+@property (nonatomic, assign) BOOL acceptDelete;
+
+@property (nonatomic, strong) TMView *captionBackground;
+
 @end
 
 @implementation TGImageAttachment
@@ -49,7 +55,80 @@
     assert([NSThread isMainThread]);
 }
 
+
+
+//NSImage *captedImage() {
+//    
+//    static NSImage *image;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        
+//        NSRect rect = NSMakeRect(0, 0, 25, 15);
+//        image = [[NSImage alloc] initWithSize:rect.size];
+//        [image lockFocus];
+//        
+//        [NSColorFromRGBWithAlpha(0x000000, 0.7) set];
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+//        [path fill];
+//        
+//        NSString *str = @"...";
+//        
+//        [str drawAtPoint:NSMakePoint(6, 2) withAttributes:@{NSFontAttributeName:TGSystemFont(15),NSForegroundColorAttributeName:[NSColor whiteColor]}];
+//        
+//        [image unlockFocus];
+//        
+//    });
+//    
+//    return image;
+//    
+//}
+//
+//
+//NSImage *addCaptionImage() {
+//    static NSImage *image;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        
+//        NSRect rect = NSMakeRect(0, 0, 20, 20);
+//        image = [[NSImage alloc] initWithSize:rect.size];
+//        [image lockFocus];
+//        
+//        [NSColorFromRGBWithAlpha(0x000000, 0.8) set];
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:roundf(rect.size.width/2) yRadius:roundf(rect.size.height/2)];
+//        [path fill];
+//        
+//        
+//        
+//        [NSColorFromRGBWithAlpha(0xffffff, 1) set];
+//        
+//        
+//        path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(9, 4, 2, 12) xRadius:2 yRadius:1];
+//       // [path fill];
+//        
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(4, 9, 12, 2) xRadius:2 yRadius:2];
+//        [path fill];
+//        
+//        
+//        [image unlockFocus];
+//        
+//    });
+//    
+//    return image;
+//}
+
 -(void)didStartUploading:(UploadOperation *)uploader {
+    
+    
+    [_captionButton setHidden:YES];
     
     assert([NSThread isMainThread]);
     
@@ -63,6 +142,7 @@
         
     } completionHandler:^{}];
     
+    [_loaderView setProgress:5 animated:YES];
     
     [uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
         
@@ -74,6 +154,8 @@
 }
 
 -(void)didEndUploading:(UploadOperation *)uploader {
+    
+    [_captionButton setHidden:!_acceptDelete];
     
     assert([NSThread isMainThread]);
     
@@ -103,9 +185,9 @@ static CAAnimation *thumbAnimation() {
 
 -(void)didSuccessGeneratedThumb:(NSImage *)thumb {
     
-    assert([NSThread isMainThread]);
+    [self setDeleteAccept:_acceptDelete];
     
-    [_close setHidden:NO];
+    assert([NSThread isMainThread]);
     
     [_imageView addAnimation:thumbAnimation() forKey:@"contents"];
     
@@ -117,6 +199,7 @@ static CAAnimation *thumbAnimation() {
     
     [_progress setHidden:YES];
     [_progress stopAnimation:self];
+    
     
 }
 
@@ -167,6 +250,41 @@ static CAAnimation *thumbAnimation() {
         
         [self.progressContainer setHidden:YES];
         
+        
+        
+        _captionBackground = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_imageView.frame), 20)];
+        
+        
+        _captionBackground.wantsLayer = YES;
+        _captionBackground.layer.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8).CGColor;
+        //_captionBackground.layer.cornerRadius = 4;
+        
+        
+        [_imageView.currentLayer addSublayer:_captionBackground.layer];
+        
+        _imageView.cornerRadius = 4;
+        
+        _captionButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, NSWidth(_imageView.frame), 20)];
+        
+        [_captionButton setTitle:NSLocalizedString(@"AddCaption", nil) forControlState:BTRControlStateNormal];
+        [_captionButton setTitleColor:NSColorFromRGBWithAlpha(0xffffff, 1) forControlState:BTRControlStateNormal];
+        [_captionButton setTitleFont:TGSystemFont(11) forControlState:BTRControlStateNormal];
+        
+        dispatch_block_t block = ^{
+            [self mouseUp:[NSApp currentEvent]];
+        };
+        
+        [_captionButton addBlock:^(BTRControlEvents events) {
+            
+            block();
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [_captionButton setAlphaValue:0.8];
+        
+        [_captionButton setOpacityHover:YES];
+        [self addSubview:_captionButton];
+        
     }
     
     return self;
@@ -208,6 +326,20 @@ static CAAnimation *thumbAnimation() {
     
 }
 
+-(void)setDeleteAccept:(BOOL)accept {
+    
+    _acceptDelete = accept;
+    
+    [_close setHidden:!accept];
+    [_captionButton setHidden:!accept || _item.thumb == nil];
+    [_captionBackground setHidden:!accept || _item.thumb == nil];
+    
+    [_captionButton setTitle:_item.caption.length > 0 ? _item.caption : NSLocalizedString(@"AddAttachmentCaption", nil) forControlState:BTRControlStateNormal];
+    
+    [_captionButton setOpacityHover:_item.caption.length == 0];
+    
+}
+
 -(void)cancelUploading {
     [self.controller removeItem:self animated:YES];
 }
@@ -219,16 +351,24 @@ static CAAnimation *thumbAnimation() {
     } else {
         [_progress setHidden:NO];
         [_close setHidden:YES];
-         [_progress startAnimation:self];
+        [_progress startAnimation:self];
     }
+    
+    [_loaderView setCurrentProgress:0];
     
     if(_item.uploader) {
         [self didStartUploading:_item.uploader];
     }
     
+    [_captionButton setTitle:_item.caption.length > 0 ? _item.caption : NSLocalizedString(@"AddAttachmentCaption", nil) forControlState:BTRControlStateNormal];
+    
+    [_captionButton setOpacityHover:_item.caption.length == 0];
+
    
     [_item prepare];
     
 }
+
+
 
 @end

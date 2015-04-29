@@ -99,9 +99,9 @@ static void BTRButtonCommonInit(BTRButton *self) {
     
     if(self.opacityHover) {
         if(self.state & BTRControlStateHover) {
-            [self setAlphaValue:0.8];
+            [self setAlphaValue:1.0];
         } else {
-            [self setAlphaValue:1];
+            [self setAlphaValue:0.8];
         }
     }
 }

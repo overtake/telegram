@@ -18,6 +18,8 @@
 
 -(id)initWithItem:(TGAttachObject *)attach;
 
+-(void)setDeleteAccept:(BOOL)accept;
+
 -(void)loadImage;
 
 @end

@@ -193,6 +193,10 @@
     return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
 }
 
+-(BOOL)readedContent {
+    return (self.flags & TGREADEDCONTENT) == 0;
+}
+
 -(void)setFlags:(int)flags {
     
     int of = self.flags;

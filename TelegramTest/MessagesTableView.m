@@ -200,10 +200,8 @@
     [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
         
         MessageTableCellContainerView *container = [rowView subviews][0];
-        
-        if([container isKindOfClass:[MessageTableCellTextView class]]) {
-            [((MessageTableCellTextView *)container).textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
-        }
+        if([container isKindOfClass:[MessageTableCellContainerView class]])
+            [container clearSelection];
         
     }];
 }
@@ -314,7 +312,7 @@
             
             NSRect rect = [self rectOfRow:i];
             
-            id view;
+            MessageTableCellTextView * view;
             
             @try {
                 
@@ -326,9 +324,9 @@
             
             TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
             
-            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - item.containerOffset, _startSelectPosition.y - rect.origin.y - 10);
+            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - item.containerOffset, _startSelectPosition.y - rect.origin.y - NSMinY(view.containerView.frame));
             
-            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - item.containerOffset, startTablePoint.y - rect.origin.y - 10);
+            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - item.containerOffset, startTablePoint.y - rect.origin.y - NSMinY(view.containerView.frame));
             
             
             if(i > startRow && i < endRow) {

@@ -136,8 +136,59 @@
         [self.addMembersButton setFrameOrigin:NSMakePoint(self.setGroupPhotoButton.frame.origin.x, self.setGroupPhotoButton.frame.origin.y - 42)];
         
        
-       
         [self addSubview:self.addMembersButton];
+        
+        
+        _exportChatInvite = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Group.CopyExportChatInvite", nil) tapBlock:^{
+            
+            
+            
+            
+            dispatch_block_t cblock = ^ {
+                
+                [[Telegram rightViewController] showChatExportLinkController:_fullChat];
+
+            };
+            
+            
+            if([_fullChat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
+                
+                cblock();
+                
+            } else {
+                
+                [TMViewController showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:_fullChat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                    
+                    [TMViewController hideModalProgressWithSuccess];
+                    
+                    _fullChat.exported_invite = response;
+                    
+                    [[FullChatManager sharedManager] add:@[_fullChat]];
+                    
+                    cblock();
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    [TMViewController hideModalProgress];
+                } timeout:10];
+                
+            }
+            
+            
+            
+            
+        }];
+        
+        [_exportChatInvite setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
+        [_exportChatInvite setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 42)];
+        
+        
+        
+        [self addSubview:_exportChatInvite];
+        
+        
         
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
@@ -147,8 +198,8 @@
             [[Telegram rightViewController].collectionViewController showAllMedia];
         }];
         
-        [self.sharedMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
-        [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.addMembersButton.frame.origin.x, self.addMembersButton.frame.origin.y - 72)];
+        [self.sharedMediaButton setFrameSize:NSMakeSize(self.exportChatInvite.bounds.size.width, 42)];
+        [self.sharedMediaButton setFrameOrigin:NSMakePoint(self.exportChatInvite.frame.origin.x, self.exportChatInvite.frame.origin.y - 72)];
         
         [self addSubview:self.sharedMediaButton];
         
@@ -312,11 +363,26 @@
     
     [self.nameTextField setChat:chat];
     
-    BOOL isMute = chat.dialog.isMute;
     
     [self buildNotificationsTitle];
     
     [self TMNameTextFieldDidChanged:self.nameTextField];
+    
+    
+    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
+    
+    
+    
+    [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
+
+  
+    [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
+    
+
+    [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.filesMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+    
+
+    
 }
 
 -(void)buildNotificationsTitle  {

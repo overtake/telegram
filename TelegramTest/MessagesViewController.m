@@ -256,6 +256,7 @@
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
+    [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -439,6 +440,25 @@
     if(index != NSNotFound)
         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     
+    
+}
+
+-(void)messageTableItemsReadContents:(NSNotification *)notification  {
+    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
+    
+    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        
+        NSUInteger index = [self indexOfObject:obj];
+        
+        if(index != NSNotFound) {            
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+    }];
     
 }
 
@@ -1018,6 +1038,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    #ifdef __MAC_10_10
+    
     if([NSUserActivity class] && (_conversation.type == DialogTypeChat || _conversation.type == DialogTypeUser)) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
      //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
@@ -1032,6 +1054,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.activity becomeCurrent];
     }
+    
+#endif
     
     if(_conversation) {
         [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:_conversation, @"sender":self}];
@@ -1049,7 +1073,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
-    if([NSUserActivity class]) {
+    
+    
+    
+    if(NSClassFromString(@"NSUserActivity")) {
         [self.activity invalidate];
     }
 }
@@ -2814,7 +2841,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)sendImage:(NSString *)file_path file_data:(NSData *)data {
-    [self sendImage:file_path file_data:data addCompletionHandler:nil];
+    [self sendImage:file_path file_data:data isMultiple:YES addCompletionHandler:nil];
 }
 
 - (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler {
@@ -2829,7 +2856,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[ImageAttachSenderItem alloc] initWithConversation:_conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:_conversation attachObject:obj];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2874,23 +2901,16 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
--(void)sendImage:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
+-(void)sendImage:(NSString *)file_path file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!_conversation.canSendMessage)
         return;
     
-#ifdef ACCEPT_FEATURE
-    
-    if(ACCEPT_FEATURE) {
+    if(_conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
+        [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
         
-        if(_conversation.type != DialogTypeSecretChat) {
-            [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
-            
-            return;
-        }
-        
+        return;
     }
-    
-#endif
+
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2938,7 +2958,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
 
-        NSLog(@"imageSize: %ld kb",imageData.length / 1024);
+        MTLog(@"imageSize: %ld kb",imageData.length / 1024);
         
         
        
@@ -3086,7 +3106,7 @@ static NSTextAttachment *headerMediaIcon() {
 //    
 //    NSDate *methodFinish = [NSDate date];
 //    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
-//    NSLog(@"executionTime = %f", executionTime);
+//    MTLog(@"executionTime = %f", executionTime);
     
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;
@@ -3239,7 +3259,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     double time = ABS([start timeIntervalSinceNow]);
     if(time > 0.010) {
-        NSLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
+        MTLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
     }
     
     return cell;

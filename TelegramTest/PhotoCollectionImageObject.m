@@ -66,6 +66,22 @@ static const int width = 180;
     [self.downloadItem start];
 }
 
+-(NSImage *)placeholder {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        NSRect rect = NSMakeRect(0, 0, 120, 120);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        
+        [GRAY_BORDER_COLOR setFill];
+        NSRectFill(rect);
+        [image unlockFocus];
+        
+    });
+    return image;
+}
 
 
 -(void)_didDownloadImage:(DownloadItem *)item {

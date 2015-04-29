@@ -75,7 +75,7 @@
         
         [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:12]} range:attrs.range];
         
-        [self.secureField setPlaceholderAttributedString:attrs];
+        [[self.secureField cell] setPlaceholderAttributedString:attrs];
         
         [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
         
@@ -188,7 +188,7 @@
                         @(TGPassLockViewConfirmType):@[NSLocalizedString(@"Passcode.EnterYourPasscode", nil)]};
     
     
-    [self.secureField setPlaceholderString:d[@(_type)][_state]];
+    [[self.secureField cell] setPlaceholderString:d[@(_type)][_state]];
     
     
 }

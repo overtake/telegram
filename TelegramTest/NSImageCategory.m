@@ -57,7 +57,7 @@
     
     if (WebPDecodeBGRAInto(imgData.bytes, imgData.length, targetMemory, targetBytesPerRow * targetContextSize.height, targetBytesPerRow) == NULL)
     {
-        NSLog(@"error decoding webp");
+        MTLog(@"error decoding webp");
     }
     
     for (int y = 0; y < targetContextSize.height; y++)
@@ -100,7 +100,7 @@
     NSError *dataError = nil;;
     NSData *imgData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:&dataError];
     if(dataError != nil) {
-        NSLog(@"imageFromWebP: error: %@", dataError.localizedDescription);
+        MTLog(@"imageFromWebP: error: %@", dataError.localizedDescription);
         return nil;
     }
     

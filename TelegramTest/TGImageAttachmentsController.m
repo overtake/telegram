@@ -54,7 +54,15 @@
 }
 
 -(void)show:(TL_conversation *)conversation animated:(BOOL)animated {
-        
+    
+    
+    if(_conversation == conversation) {
+        _isShown = _containerView.subviews.count > 0;
+        [self setHidden:!_isShown];
+        return;
+    }
+    
+    
     _conversation = conversation;
     
     [_containerView removeAllSubviews];
@@ -105,14 +113,15 @@
             [[self animator] setAlphaValue:0];
             
         } completionHandler:^{
-            if(deleteItems)
+            if(!_isShown) {
                 [_containerView removeAllSubviews];
-            [self setHidden:YES];
+                [self setHidden:YES];
+                
+            }
             [self setAlphaValue:1];
         }];
     } else {
-        if(deleteItems)
-            [_containerView removeAllSubviews];
+        [_containerView removeAllSubviews];
         [self setHidden:YES];
     }
     
@@ -130,10 +139,33 @@
 
 }
 
-
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    }
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    if([TMViewController isModalActive])
+        return;
+    
+    [self.delegate didChangeAttachmentsCount:0];
+    
+    _isShown = NO;
+    
+    NSArray *items = [self.containerView.subviews copy];
+    
+    
+    [TMViewController showAttachmentCaption:items onClose:^{
+        
+        [items enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
+            
+            [obj setDeleteAccept:YES];
+            [self addSubview:obj];
+        }];
+        
+        [self updateItemsOrigin];
+        
+        [self.delegate didChangeAttachmentsCount:(int)items.count];
+        
+        
+    }];
+}
 
 -(void)removeItem:(TGImageAttachment *)attachment animated:(BOOL)animated {
     
@@ -311,6 +343,8 @@
         
         [obj setFrameOrigin:NSMakePoint(NSMaxX(lastAttach.frame) + 10, 1)];
         
+        [obj setDeleteAccept:YES];
+        
         [_containerView addSubview:obj];
         
         [self updateContainer];
@@ -395,9 +429,10 @@
     [attachment.layer setFrameOrigin:to];
     
     [attachment.layer addAnimation:animation forKey:@"position"];
-    
-    
-    
 }
+
+
+
+
 
 @end

@@ -1,9 +1,9 @@
 //
-//  DialogTableView.m
-//  Telegram P-Edition
+//  TGConversationsTableView.m
+//  Telegram
 //
-//  Created by Dmitry Kondratyev on 2/12/14.
-//  Copyright (c) 2014 keepcoder. All rights reserved.
+//  Created by keepcoder on 14.04.15.
+//  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
 #import "TGConversationsTableView.h"

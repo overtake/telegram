@@ -12,6 +12,7 @@
 #import "HackUtils.h"
 #import "TGPasslockModalView.h"
 #import "TGPasslock.h"
+#import "TGModalSetCaptionView.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -179,6 +180,7 @@
 
 static TMProgressModalView *progressView;
 static TGPasslockModalView *passlockView;
+static TGModalSetCaptionView *setCaptionView;
 
 +(void)showModalProgress {
     
@@ -202,6 +204,23 @@ static TGPasslockModalView *passlockView;
     
 }
 
++(void)hideModalProgress {
+    
+    //  progressView.layer.opacity = 0.8;
+    
+    [(MainWindow *)[[Telegram delegate] window] setAcceptEvents:YES];
+    
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
+    
+    [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
+        [progressView removeFromSuperview];
+        progressView = nil;
+    }];
+    
+    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
+    
+}
+
 +(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to {
     POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -214,21 +233,74 @@ static TGPasslockModalView *passlockView;
 }
 
 
-+(void)hideModalProgress {
++(void)showAttachmentCaption:(NSArray *)attachments onClose:(dispatch_block_t)onClose {
     
-  //  progressView.layer.opacity = 0.8;
+    if(!setCaptionView) {
+        
+        setCaptionView = [[TGModalSetCaptionView alloc] initWithFrame:[[[Telegram delegate] window].contentView bounds]];
+        
+        setCaptionView.layer.opacity = 0;
+        
+        
+        
+        [setCaptionView setCenterByView:[[Telegram delegate] window].contentView];
+        
+        [[[Telegram delegate] window].contentView addSubview:setCaptionView];
+    } else {
+        return;
+    }
     
-    [(MainWindow *)[[Telegram delegate] window] setAcceptEvents:YES];
+    setCaptionView.onClose = onClose;
+    
+    [setCaptionView prepareAttachmentViews:attachments];
+    
+    [setCaptionView becomeFirstResponder];
+    
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:setCaptionView.layer.opacity to:1];
+    
+    [setCaptionView.layer pop_addAnimation:anim forKey:@"fade"];
+    
+}
+
++(void)hideAttachmentCaption {
+    
     
     POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0];
     
     [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
-        [progressView removeFromSuperview];
-        progressView = nil;
+                
+        [setCaptionView removeFromSuperview];
+        setCaptionView = nil;
     }];
     
-    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
+    if(setCaptionView.layer.pop_animationKeys.count == 0)
+        [setCaptionView.layer pop_addAnimation:anim forKey:@"fade"];
+    
+    
+}
 
++(BOOL)isModalActive {
+    __block BOOL res = NO;
+    
+    NSView *view = [[Telegram delegate] window].contentView;
+    
+    [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj == progressView || obj == passlockView || obj == setCaptionView) {
+            res = YES;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return res;
+}
+
+
++(TMView *)modalView {
+    NSView *view = [[Telegram delegate] window].contentView;
+    
+    return [view.subviews lastObject];
 }
 
 -(void)hideModalProgressWithSuccess {

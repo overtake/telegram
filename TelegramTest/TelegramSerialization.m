@@ -420,7 +420,7 @@
             [[MTNetwork instance] setDatacenter:rpc_error.resultId];
             [[MTNetwork instance] initConnectionWithId:rpc_error.resultId];
         } else {
-            NSLog(@"%@",rpc_error.error_msg);
+            MTLog(@"%@",rpc_error.error_msg);
         }
         
         

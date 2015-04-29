@@ -13,9 +13,17 @@
 #import "ImageUtils.h"
 #import "SelfDestructionController.h"
 #import "TGPhotoViewer.h"
+#import "TGCTextView.h"
+#import "POPCGUtils.h"
+#import "TGCaptionView.h"
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
+@property (nonatomic,strong) TGCaptionView *captionView;
+
+@property (nonatomic,assign) NSPoint startDragLocation;
+
 @end
+
 
 
 
@@ -49,6 +57,7 @@ NSImage *fireImage() {
     if (self) {
         weak();
         
+        self.containerView.isFlipped = YES;
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
@@ -138,6 +147,22 @@ NSImage *fireImage() {
     self.fireImageView = nil;
 }
 
+
+
+-(void)initCaptionTextView {
+    if(!_captionView) {
+        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionView];
+    }
+}
+
+
+- (void)deallocCaptionTextView {
+    [_captionView removeFromSuperview];
+    _captionView = nil;
+}
+
+
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
@@ -152,9 +177,6 @@ NSImage *fireImage() {
     
     BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
-    
-    
-    
     
     [self deallocFireImage];
     
@@ -175,7 +197,7 @@ NSImage *fireImage() {
     if(!self.progressView.isHidden)
     {
         if(item.imageObject.downloadItem) {
-            [self.progressView setCurrentProgress:15 + MAX(( item.imageObject.downloadItem.progress - 15),0)];
+            [self.progressView setCurrentProgress:5 + MAX(( item.imageObject.downloadItem.progress - 5),0)];
             [self.progressView setProgress:self.progressView.currentProgress animated:YES];
         }
         
@@ -190,9 +212,9 @@ NSImage *fireImage() {
     
     [super setItem:item];
     
-    [self.imageView setFrameSize:item.blockSize];
+    [self.imageView setFrameSize:item.imageSize];
     
-   
+    
     self.imageView.object = item.imageObject;
 
     [self updateCellState];
@@ -201,7 +223,7 @@ NSImage *fireImage() {
        
         [ASQueue dispatchOnMainQueue:^{
             
-            [self.progressView setProgress:item.progress animated:YES];
+            [self.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
             
         }];
         
@@ -209,17 +231,37 @@ NSImage *fireImage() {
     
     [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
         
-        [ASQueue dispatchOnMainQueue:^{
-            
+        [self.progressView setProgress:100 animated:YES];
+        
+        dispatch_after_seconds(0.2, ^{
             [self updateCellState];
-            
-        }];
+        });
+        
         
     }];
+    
+    
+    if(item.caption) {
+        [self initCaptionTextView];
+        
+        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
+        
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        
+    } else {
+        [self deallocCaptionTextView];
+    }
         
 }
 
+-(void)clearSelection {
+    [super clearSelection];
+    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
 
 -(void)setEditable:(BOOL)editable animation:(BOOL)animation
 {
@@ -233,7 +275,7 @@ NSImage *fireImage() {
     const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
     
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
     [path addClip];
@@ -243,7 +285,21 @@ NSImage *fireImage() {
     NSRectFill(rect);
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
+        return;
+    
+    [super mouseDown:theEvent];
+}
+
 -(void)mouseDragged:(NSEvent *)theEvent {
+    
+    
+    if(![_imageView mouse:_startDragLocation inRect:_imageView.frame]) 
+        return;
     
     
     NSPoint eventLocation = [self.imageView convertPoint: [theEvent locationInWindow] fromView: nil];
@@ -274,6 +330,59 @@ NSImage *fireImage() {
         [self dragImage:dragImage at:dragPosition offset:NSZeroSize event:theEvent pasteboard:pasteBrd source:self slideBack:NO];
     }
     
+}
+
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    if(!_captionView.textView) {
+        return;
+    }
+    
+    
+    if(!anim) {
+        _captionView.textView.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
+    
+    
+}
+
+
+
+-(void)_colorAnimationEvent {
+    
+    if(!_captionView.textView)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_captionView.textView setNeedsDisplay:YES];
 }
 
 @end

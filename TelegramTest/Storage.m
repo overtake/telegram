@@ -136,11 +136,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t139.sqlite"; // 61
+    NSString *dbName = @"t140.sqlite"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     
     __block BOOL res = NO;
+    
+    [[Storage yap] flushMemoryWithLevel:0];
     
     
      [queue inDatabaseWithDealocing:^(FMDatabase *db) {
@@ -595,7 +597,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where %@ in (%@) order by date DESC",random ? @"randomId" : @"n_id",strIds];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where %@ in (%@) order by date DESC",random ? @"random_id" : @"n_id",strIds];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
@@ -711,18 +713,25 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [self insertMessages:@[message] completeHandler:completeHandler];
 }
 
--(void)markMessagesAsRead:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler {
+-(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds {
+    
     [queue inDatabase:^(FMDatabase *db) {
         //[db beginTransaction];
-        NSString *mark = [messages componentsJoinedByString:@","];
-        NSString *sql = [NSString stringWithFormat:@"update messages set flags = flags & ~1 WHERE n_id IN (%@)",mark];
-        [db executeUpdateWithFormat:sql,nil];
         
-
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(YES);
-        });
+        NSString *mark,*sql;
+        
+        if(messages.count > 0) {
+            mark = [messages componentsJoinedByString:@","];
+            sql = [NSString stringWithFormat:@"update messages set flags = flags & ~1 WHERE n_id IN (%@)",mark];
+            [db executeUpdateWithFormat:sql,nil];
+        }
+        
+        if(randomIds.count > 0) {
+            mark = [randomIds componentsJoinedByString:@","];
+            sql = [NSString stringWithFormat:@"update messages set flags = flags & ~1 WHERE random_id IN (%@)",mark];
+            [db executeUpdateWithFormat:sql,nil];
+        }
+    
     }];
 }
 
@@ -757,6 +766,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
     
     return ids;
+}
+
+-(void)readMessagesContent:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        NSString *mark = [messages componentsJoinedByString:@","];
+        NSString *sql = [NSString stringWithFormat:@"update messages set flags = flags & ~32 WHERE n_id IN (%@)",mark];
+        [db executeUpdateWithFormat:sql,nil];
+        
+    }];
 }
 
 
