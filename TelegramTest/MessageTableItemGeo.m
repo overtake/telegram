@@ -27,10 +27,10 @@
             
             [attrs appendString:[NSString stringWithFormat:@"%@\n",self.message.media.title] withColor:[NSColor blackColor]];
             
-            [attrs setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:attrs.range];
+            [attrs setFont:TGSystemMediumFont(13) forRange:attrs.range];
             
             
-            NSRange range = [attrs appendString:self.message.media.address withColor:[NSColor blackColor]];
+            NSRange range = [attrs appendString:self.message.media.address withColor:GRAY_TEXT_COLOR];
             
             [attrs setFont:TGSystemFont(13) forRange:range];
             

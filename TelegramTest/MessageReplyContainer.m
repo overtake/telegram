@@ -189,7 +189,7 @@
         
         // go to message
         
-        if(![_messageField mouseInText:theEvent] && theEvent.clickCount == 1) {
+        if(_messageField.selectRange.location == NSNotFound) {
             if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
                 [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
         }
