@@ -162,7 +162,7 @@
     [super drawRect:dirtyRect];
     
     
-    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer() == nil) {
+    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item) {
         [NSColorFromRGB(0x4ba3e2) setFill];
         
         NSBezierPath *path = [NSBezierPath bezierPath];
