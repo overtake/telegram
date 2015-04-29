@@ -18,11 +18,12 @@
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
 #import "POPCGUtils.h"
+#import "TGCaptionView.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
-@property (nonatomic,strong) TGCTextView *captionTextView;
+@property (nonatomic,strong) TGCaptionView *captionView;
 @end
 
 @implementation MessageTableCellVideoView
@@ -146,19 +147,26 @@ static NSImage *playImage() {
 
 }
 
+-(void)clearSelection {
+    [super clearSelection];
+    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
 
 -(void)initCaptionTextView {
-    if(!_captionTextView) {
-        _captionTextView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        [_captionTextView setEditable:YES];
-        [self.containerView addSubview:_captionTextView];
+    if(!_captionView) {
+        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
+        [self.containerView addSubview:_captionView];
     }
 }
 
 
 - (void)deallocCaptionTextView {
-    [_captionTextView removeFromSuperview];
-    _captionTextView = nil;
+    [_captionView removeFromSuperview];
+    _captionView = nil;
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -219,13 +227,14 @@ static NSImage *playImage() {
     if(item.caption) {
         [self initCaptionTextView];
         
-        [_captionTextView setFrame:NSMakeRect(0, NSMaxY(_imageView.frame), item.captionSize.width, item.captionSize.height)];
+        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.videoSize.width, item.captionSize.height)];
         
-        [_captionTextView setAttributedString:item.caption];
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
         
     } else {
         [self deallocCaptionTextView];
     }
+
 
 }
 
@@ -259,13 +268,13 @@ static NSImage *playImage() {
     
     [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
-    if(!_captionTextView) {
+    if(!_captionView.textView) {
         return;
     }
     
     
     if(!anim) {
-        _captionTextView.backgroundColor = color;
+        _captionView.backgroundColor = color;
         return;
     }
     
@@ -287,7 +296,7 @@ static NSImage *playImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
-    [_captionTextView pop_addAnimation:animation forKey:@"background"];
+    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
     
     
 }
@@ -296,15 +305,19 @@ static NSImage *playImage() {
 
 -(void)_colorAnimationEvent {
     
-    if(!_captionTextView)
+    if(!_captionView.textView)
         return;
     
-    CALayer *currentLayer = (CALayer *)[_captionTextView.layer presentationLayer];
+    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
     
     id value = [currentLayer valueForKeyPath:@"backgroundColor"];
     
-    _captionTextView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [_captionTextView setNeedsDisplay:YES];
+    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_captionView.textView setNeedsDisplay:YES];
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
 }
 
 @end

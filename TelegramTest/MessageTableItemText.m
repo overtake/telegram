@@ -33,7 +33,7 @@
     NSString *message = [[object.message trim] fixEmoji];
     
     
-    [self.textAttributed appendString:message withColor:NSColorFromRGB(0x060606)];
+    [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
     [self updateMessageFont];
     

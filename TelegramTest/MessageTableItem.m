@@ -158,13 +158,13 @@
     
     if(![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
         if(self.isHeaderMessage) {
-            viewSize.height += 38;
+            viewSize.height += 32;
             
             if(self.isForwadedMessage)
                 viewSize.height += 24;
             
-            if(viewSize.height < 50)
-                viewSize.height = 50;
+            if(viewSize.height < 44)
+                viewSize.height = 44;
         } else {
             viewSize.height += 10;
             

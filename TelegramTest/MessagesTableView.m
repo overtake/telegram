@@ -200,10 +200,8 @@
     [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
         
         MessageTableCellContainerView *container = [rowView subviews][0];
-        
-        if([container isKindOfClass:[MessageTableCellTextView class]]) {
-            [((MessageTableCellTextView *)container).textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
-        }
+        if([container isKindOfClass:[MessageTableCellContainerView class]])
+            [container clearSelection];
         
     }];
 }

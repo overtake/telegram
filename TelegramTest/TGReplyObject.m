@@ -60,7 +60,7 @@
             
             NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             
-            [replyText appendString:str withColor:NSColorFromRGB(0x060606)];
+            [replyText appendString:str withColor:TEXT_COLOR];
             
         } else {
             [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:NSColorFromRGB(0x808080)];

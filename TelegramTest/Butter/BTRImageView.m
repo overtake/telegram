@@ -194,6 +194,10 @@ static void BTRImageViewCommonInit(BTRImageView *self) {
     [self.imageLayer removeAnimationForKey:key];
 }
 
+-(CALayer *)currentLayer {
+    return _imageLayer;
+}
+
 #pragma mark Content mode
 
 - (void)setContentMode:(BTRViewContentMode)contentMode {

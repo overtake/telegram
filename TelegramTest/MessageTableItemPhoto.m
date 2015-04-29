@@ -9,6 +9,7 @@
 #import "MessageTableItemPhoto.h"
 #import "ImageUtils.h"
 #import "NSString+Extended.h"
+#import "NSAttributedString+Hyperlink.h"
 @implementation MessageTableItemPhoto
 
 - (id) initWithObject:(TL_localMessage *)object {
@@ -65,14 +66,16 @@
             if(self.message.media.caption.length > 0) {
                 NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
                 
-                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:[NSColor whiteColor]];
+                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
                 
                 [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
                 
-                NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-                [style setLineBreakMode:NSLineBreakByTruncatingTail];
+                [c detectAndAddLinks];
                 
-                [c addAttribute:NSParagraphStyleAttributeName value:style range:c.range];
+             //   NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+             //   [style setLineBreakMode:NSLineBreakByTruncatingTail];
+                
+             //   [c addAttribute:NSParagraphStyleAttributeName value:style range:c.range];
                 
                 _caption = c;
             }
@@ -124,14 +127,13 @@
     
     
     if(_caption) {
-        _captionSize = [_caption sizeForTextFieldForWidth:_imageSize.width];
-        _captionSize.width = ceil(_captionSize.width + 5);
-        _captionSize.height = ceil(_captionSize.height + 5);
-        
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width - 4];
+        _captionSize.width = _imageSize.width - 4;
     }
     
+    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
     
-    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height , 60 ));
+    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight, 60 + captionHeight ));
     
     
     return YES;

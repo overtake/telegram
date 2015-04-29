@@ -138,10 +138,13 @@
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
-    
+    [_messageField setEditable:_deleteHandler == nil];
     
     if(_deleteHandler != nil)
     {
+        
+        
+        
         _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
         
         _deleteImageView.image = image_CancelReply();
@@ -180,16 +183,23 @@
     [self.messageField setBackgroundColor:backgroundColor];
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
         
         // go to message
         
-        if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-            [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
+        if(![_messageField mouseInText:theEvent] && theEvent.clickCount == 1) {
+            if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
+                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
+        }
+        
         
     }
+    
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
     
 }
 

@@ -10,6 +10,7 @@
 #import "ImageUtils.h"
 #import "NSStringCategory.h"
 #import "NSString+Extended.h"
+#import "NSAttributedString+Hyperlink.h"
 @implementation MessageTableItemVideo
 
 - (id) initWithObject:(TLMessage *)object {
@@ -21,13 +22,16 @@
         
         [self rebuildImageObject];
         
+        self.message.media.caption = @"qowehf kwqjef kj=)0 qwkefjqwkejf @jdasf";
         
         if(self.message.media.caption.length > 0) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
-            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:NSColorFromRGB(0x060606)];
+            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
             
-            [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+            [c setFont:TGSystemFont(13) forRange:c.range];
+            
+            [c detectAndAddLinks];
             
             _caption = c;
         }
@@ -73,12 +77,13 @@
     _videoSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
     
     if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_videoSize.width];
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_videoSize.width - 4];
+        _captionSize.width = _videoSize.width - 4;
     }
     
-    int captionBlockHeight = _captionSize.height > 0 ? _captionSize.height + 10 : 0;
+    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
     
-     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height + captionBlockHeight);
+     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height + captionHeight);
     
     return YES;
 }
@@ -98,12 +103,14 @@
     
     [attr appendString:sizeInfo withColor:NSColorFromRGB(0xffffff)];
     
+    [attr setFont:TGSystemFont(13) forRange:attr.range];
+    
     self.videoTimeAttributedString = attr;
     
     
     NSSize size = [self.videoTimeAttributedString size];
     size.width = ceil(size.width + 14);
-    size.height = ceil(size.height + 7);
+    size.height = ceil(size.height + 5);
     self.videoTimeSize = size;
 }
 

@@ -162,7 +162,14 @@
     return menu;
 }
 
+-(void)clearSelection {
+    [super clearSelection];
+    [_textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
 
 
 -(void)_mouseDragged:(NSEvent *)theEvent {

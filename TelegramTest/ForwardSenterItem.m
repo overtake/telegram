@@ -125,7 +125,7 @@
                 [[Storage manager] insertMedia:fake];
             }
             
-            [fake save:i == messages.count - 1];
+            [fake save:i == 0];
         }
         
         self.state = MessageSendingStateSent;

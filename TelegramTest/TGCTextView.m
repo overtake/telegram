@@ -125,13 +125,11 @@
 
 -(void)setSelectionRange:(NSRange)selectionRange {
     
-    
     startSelectPosition = NSMakePoint(-1, -1);
     currentSelectPosition = NSMakePoint(-1, -1);
     
   //  if(self.realMark && self.selectRange.location == selectionRange.location && self.selectRange.length == selectionRange.length)
        // return;
-    
     
     [self.marks removeObject:self.realMark];
     

@@ -15,10 +15,10 @@
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
 #import "POPCGUtils.h"
-#import "MessageCellDescriptionView.h"
+#import "TGCaptionView.h"
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
-@property (nonatomic,strong) MessageCellDescriptionView *captionView;
+@property (nonatomic,strong) TGCaptionView *captionView;
 @end
 
 
@@ -53,6 +53,7 @@ NSImage *fireImage() {
     if (self) {
         weak();
         
+        self.containerView.isFlipped = YES;
         
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
@@ -91,8 +92,6 @@ NSImage *fireImage() {
 
         
         [self.containerView addSubview:self.imageView];
-        
-        [self.containerView setIsFlipped:YES];
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
         
@@ -148,7 +147,7 @@ NSImage *fireImage() {
 
 -(void)initCaptionTextView {
     if(!_captionView) {
-        _captionView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
+        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
         [self.containerView addSubview:_captionView];
     }
 }
@@ -174,9 +173,6 @@ NSImage *fireImage() {
     
     BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
-    
-    
-    
     
     [self deallocFireImage];
     
@@ -214,7 +210,7 @@ NSImage *fireImage() {
     
     [self.imageView setFrameSize:item.imageSize];
     
-   
+    
     self.imageView.object = item.imageObject;
 
     [self updateCellState];
@@ -244,9 +240,9 @@ NSImage *fireImage() {
     if(item.caption) {
         [self initCaptionTextView];
         
-        [_captionView setFrame:NSMakeRect(5, NSMaxY(_imageView.frame) - 30, MIN(NSWidth(_imageView.frame) - 10,item.captionSize.width), 25)];
+        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
         
-        [_captionView setString:item.caption];
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
         
     } else {
         [self deallocCaptionTextView];
@@ -254,7 +250,14 @@ NSImage *fireImage() {
         
 }
 
+-(void)clearSelection {
+    [super clearSelection];
+    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
 
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
 
 -(void)setEditable:(BOOL)editable animation:(BOOL)animation
 {
@@ -311,5 +314,57 @@ NSImage *fireImage() {
     
 }
 
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    if(!_captionView.textView) {
+        return;
+    }
+    
+    
+    if(!anim) {
+        _captionView.textView.backgroundColor = color;
+        return;
+    }
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animation];
+    
+    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    animation.toValue = anim.toValue;
+    animation.fromValue = anim.fromValue;
+    animation.duration = anim.duration;
+    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
+    
+    
+}
+
+
+
+-(void)_colorAnimationEvent {
+    
+    if(!_captionView.textView)
+        return;
+    
+    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
+    
+    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
+    
+    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
+    [_captionView.textView setNeedsDisplay:YES];
+}
 
 @end

@@ -152,6 +152,14 @@
          contextName = "__33-[PhoneChangeController loadView]_block_invoke103:PhoneChangeController.m">
       </ContextState>
       <ContextState
+         contextName = "__24-[TGCTextView drawRect:]_block_invoke_2:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "startSelectPosition">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatInfoViewController setChat:]:ChatInfoViewController.m">
       </ContextState>
       <ContextState
@@ -396,6 +404,12 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
+      </ContextState>
+      <ContextState
+         contextName = "__53-[DialogsHistoryController loadlocal:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
@@ -661,6 +675,9 @@
                value = "self.centerViewBlock.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[EncryptedParams findAndCreate:]:EncryptedParams.m">
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
@@ -1071,6 +1088,9 @@
          contextName = "-[TGPhotoViewer indexOfObject:]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
+         contextName = "__join_group_by_hash_block_invoke_3:FileUtils.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TL_localMessage conversation]:TL_localMessage.m">
       </ContextState>
       <ContextState
@@ -1213,6 +1233,9 @@
          contextName = "-[TGWebpageStandartObject initWithWebPage:]:TGWebpageStandartObject.m">
       </ContextState>
       <ContextState
+         contextName = "__41-[GeneralSettingsViewController loadView]_block_invoke153:GeneralSettingsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">
          <PersistentStrings>
             <PersistentString
@@ -1230,6 +1253,9 @@
                value = "[[self rowItem].table selectLimit]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_outDocument unserialize:]:TL_outDocument.m">
       </ContextState>
       <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
@@ -1377,6 +1403,9 @@
                value = "self.isHidden">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemServiceMessage initWithObject:]:MessageTableItemServiceMessage.m">
       </ContextState>
       <ContextState
          contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
@@ -1928,6 +1957,9 @@
          contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke_3:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "__34-[TGDocumentsController loadNext:]_block_invoke:TGDocumentsMediaTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchViewController selectionDidChange:item:]:SearchViewController.m">
       </ContextState>
       <ContextState
@@ -2202,6 +2234,9 @@
          contextName = "__35-[DownloadQueue operationComplete:]_block_invoke_2:DownloadQueue.mm">
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) dialog]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
          <PersistentStrings>
             <PersistentString
@@ -2330,6 +2365,9 @@
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController remoteSearch:]:SearchViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[DownloadVideoItem setDownloadState:]:DownloadVideoItem.m">
       </ContextState>
       <ContextState
          contextName = "-[ExternalDocumentSecretSenderItem initWithConversation:document:]:ExternalDocumentSecretSenderItem.m">

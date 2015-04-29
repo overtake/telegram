@@ -558,6 +558,7 @@
 		C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */; };
 		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
 		C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */; };
+		C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -1921,6 +1922,8 @@
 		C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCommon.m; sourceTree = "<group>"; };
 		C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatExportLinkViewController.h; sourceTree = "<group>"; };
 		C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatExportLinkViewController.m; sourceTree = "<group>"; };
+		C2C85BA51AF10B6500FBEABD /* TGCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCaptionView.h; sourceTree = "<group>"; };
+		C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCaptionView.m; sourceTree = "<group>"; };
 		C2C8AB011A3F3BC900C857D6 /* decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
 		C2C8AB021A3F3BC900C857D6 /* demux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = demux.h; sourceTree = "<group>"; };
 		C2C8AB031A3F3BC900C857D6 /* encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
@@ -3061,6 +3064,8 @@
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
 				C2233DB11A0818910056594F /* MessageCellDescriptionView.m */,
+				C2C85BA51AF10B6500FBEABD /* TGCaptionView.h */,
+				C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -5362,6 +5367,7 @@
 				C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */,
 				C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */,
 				C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */,
+				C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */,
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
 				C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */,

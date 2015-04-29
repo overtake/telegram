@@ -50,6 +50,7 @@ typedef enum {
 - (void) startGifAnimation;
 - (void) stopGifAnimation;
 
+-(CALayer *)currentLayer;
 
 // The content mode for the image view. Directly modifies the layer's contentsGravity.
 //

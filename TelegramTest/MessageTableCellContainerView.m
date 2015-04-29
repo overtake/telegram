@@ -679,7 +679,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage || item.isForwadedMessage ? 10 : 10, self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), self.containerView.bounds.size.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])
@@ -734,7 +734,7 @@ static int offsetEditable = 30;
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     //    static int offserUnreadMark = 12;
     
-    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 26 : 2));
+    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 12 : 4));
     
     if(editable)
         position.x -= offsetEditable;
@@ -1022,6 +1022,13 @@ static int offsetEditable = 30;
         [self.stateLayer setState:state];
 }
 
+-(void)clearSelection {
+    [_replyContainer.messageField setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_replyContainer.messageField mouseInText:theEvent];
+}
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     

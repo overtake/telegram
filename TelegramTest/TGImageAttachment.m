@@ -20,7 +20,9 @@
 
 @property (nonatomic, strong) BTRButton *captionButton;
 
-@property (nonatomic,assign) BOOL acceptDelete;
+@property (nonatomic, assign) BOOL acceptDelete;
+
+@property (nonatomic, strong) TMView *captionBackground;
 
 @end
 
@@ -183,11 +185,9 @@ static CAAnimation *thumbAnimation() {
 
 -(void)didSuccessGeneratedThumb:(NSImage *)thumb {
     
-    [_captionButton setHidden:!_acceptDelete];
+    [self setDeleteAccept:_acceptDelete];
     
     assert([NSThread isMainThread]);
-    
-    [_close setHidden:!_acceptDelete];
     
     [_imageView addAnimation:thumbAnimation() forKey:@"contents"];
     
@@ -250,18 +250,40 @@ static CAAnimation *thumbAnimation() {
         
         [self.progressContainer setHidden:YES];
         
-//        _captionButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
-//        
-//    //    [_captionButton setImage:captedImage() forControlState:BTRControlStateNormal];
-//        [_captionButton setOpacityHover:YES];
-//        
-//        [_captionButton setUserInteractionEnabled:NO];
-//        
-//        [_captionButton setCenterByView:_imageView];
-//        
-//        [_captionButton setHidden:YES];
-//        
-//        [_imageView addSubview:_captionButton];
+        
+        
+        _captionBackground = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_imageView.frame), 20)];
+        
+        
+        _captionBackground.wantsLayer = YES;
+        _captionBackground.layer.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.8).CGColor;
+        //_captionBackground.layer.cornerRadius = 4;
+        
+        
+        [_imageView.currentLayer addSublayer:_captionBackground.layer];
+        
+        _imageView.cornerRadius = 4;
+        
+        _captionButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, NSWidth(_imageView.frame), 20)];
+        
+        [_captionButton setTitle:NSLocalizedString(@"AddCaption", nil) forControlState:BTRControlStateNormal];
+        [_captionButton setTitleColor:NSColorFromRGBWithAlpha(0xffffff, 1) forControlState:BTRControlStateNormal];
+        [_captionButton setTitleFont:TGSystemFont(11) forControlState:BTRControlStateNormal];
+        
+        dispatch_block_t block = ^{
+            [self mouseUp:[NSApp currentEvent]];
+        };
+        
+        [_captionButton addBlock:^(BTRControlEvents events) {
+            
+            block();
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [_captionButton setAlphaValue:0.8];
+        
+        [_captionButton setOpacityHover:YES];
+        [self addSubview:_captionButton];
         
     }
     
@@ -310,8 +332,12 @@ static CAAnimation *thumbAnimation() {
     
     [_close setHidden:!accept];
     [_captionButton setHidden:!accept || _item.thumb == nil];
+    [_captionBackground setHidden:!accept || _item.thumb == nil];
     
-  //  [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
+    [_captionButton setTitle:_item.caption.length > 0 ? _item.caption : NSLocalizedString(@"AddAttachmentCaption", nil) forControlState:BTRControlStateNormal];
+    
+    [_captionButton setOpacityHover:_item.caption.length == 0];
+    
 }
 
 -(void)cancelUploading {
@@ -334,7 +360,10 @@ static CAAnimation *thumbAnimation() {
         [self didStartUploading:_item.uploader];
     }
     
- //   [_captionButton setImage:_item.caption.length > 0 ? captedImage() : addCaptionImage() forControlState:BTRControlStateNormal];
+    [_captionButton setTitle:_item.caption.length > 0 ? _item.caption : NSLocalizedString(@"AddAttachmentCaption", nil) forControlState:BTRControlStateNormal];
+    
+    [_captionButton setOpacityHover:_item.caption.length == 0];
+
    
     [_item prepare];
     
