@@ -55,7 +55,9 @@
         __block NSString *thumbName;
         
         dispatch_block_t thumbBlock = ^ {
-            thumbImage = previewImageForDocument(self.filePath);
+            if(![[self.filePath pathExtension] isEqualToString:@"mp3"]) {
+                thumbImage = previewImageForDocument(self.filePath);
+            }
             thumbData = jpegNormalizedData(thumbImage);
             thumbName = @"thumb.jpg";
         };

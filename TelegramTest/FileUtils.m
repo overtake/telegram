@@ -15,7 +15,7 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <MtProtoKit/MTEncryption.h>
-
+#import "NSData+Extensions.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -352,6 +352,7 @@ void alert(NSString *text, NSString *info) {
     NSUInteger size = fileSize(path);
     
     NSData *fileData = [[NSData alloc] initWithData:[handle readDataOfLength:MIN(size, 4096)]];
+    
     NSString *md5 = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] md5];
     return [[NSString stringWithFormat:@"MD5_%@_%lu", md5, (unsigned long)size] md5];
 }

@@ -66,12 +66,12 @@
     
     
     
-    NSRange range = [description appendString:[NSString stringWithFormat:@"%@\n",item.authorization.app_name]];
+    NSRange range = [description appendString:[NSString stringWithFormat:@"%@ %@\n",item.authorization.app_name, item.authorization.app_version]];
     
     [description setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:range];
     
     
-    range = [description appendString:[NSString stringWithFormat:@"%@ (%@), %@ (ID: %d)\n",item.authorization.platform,item.authorization.system_version, (item.authorization.flags & TGSESSIONOFFICIAL) == TGSESSIONOFFICIAL ? NSLocalizedString(@"Authorization.Official", nil) : NSLocalizedString(@"Authorization.Unofficial", nil), item.authorization.api_id]];
+    range = [description appendString:[NSString stringWithFormat:@"%@, %@ %@\n",item.authorization.device_model,item.authorization.platform,item.authorization.system_version]];
     
     [description setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
     

@@ -71,7 +71,7 @@
             
             TLUser *user = [[UsersManager sharedManager] find:action.user_id];
             if(user)
-                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.first_name];
+                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.dialogFullName];
             
         } else {
             

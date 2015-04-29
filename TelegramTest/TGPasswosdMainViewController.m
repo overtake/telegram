@@ -397,6 +397,15 @@
             
             [self.tableView insert:recoveryEmail atIndex:self.tableView.list.count tableRedraw:NO];
             
+            
+            // description
+            
+            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.EnabledDescription", nil),[_passwordResult email_unconfirmed_pattern]]];
+            
+            description.height = 100;
+            description.isFlipped = YES;
+            
+            [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
         }
 
     } else {

@@ -42,6 +42,11 @@
         }
     } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
         text = action.title;
+    } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
+        
+        
+        text = [NSString stringWithFormat:@"%@ %@", [user fullName],NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
+        
     }
     return text;
 }

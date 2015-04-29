@@ -530,13 +530,13 @@ static int insertCount = 3;
     if(params.isRemoteLoaded) {
         [self showMessagesResults:params];
     } else {
-        [self.tableView.containerView setHidden:self.tableView.count == 0];
+     //   [self.tableView.containerView setHidden:self.tableView.count == 0];
     }
 
     
     
     
-    DLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
+    MTLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
 
 }
 
@@ -957,9 +957,15 @@ static int insertCount = 3;
     
     
     
-    self.searchParams.isLoading = YES;
+    //self.searchParams.isLoading = YES;
     
-        
+    params.isStorageLoaded = YES;
+    params.messages_count = 0;
+    [self remoteSearch:params];
+    
+    return;
+    
+    
     [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
         
         
