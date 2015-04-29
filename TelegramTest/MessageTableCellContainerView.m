@@ -679,7 +679,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 10 : roundf((item.viewSize.height - item.blockSize.height)/2), self.containerView.bounds.size.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])

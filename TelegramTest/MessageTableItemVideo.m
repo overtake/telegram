@@ -21,9 +21,7 @@
         
         
         [self rebuildImageObject];
-        
-        self.message.media.caption = @"qowehf kwqjef kj=)0 qwkefjqwkejf @jdasf";
-        
+                
         if(self.message.media.caption.length > 0) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
