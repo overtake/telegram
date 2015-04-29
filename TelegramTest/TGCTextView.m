@@ -261,6 +261,7 @@
             
             int currentSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:currentSelectPosition];
             
+            NSLog(@"%d:%d -- %@",startSelectLineIndex,currentSelectLineIndex, NSStringFromPoint(startSelectPosition));
             
             int dif = abs(startSelectLineIndex - currentSelectLineIndex);
             
