@@ -818,7 +818,7 @@
     if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown) {
         
         
-        if(self.dialog)
+        if(self.inputMessageTextField.stringValue trim].length > 0)
             [TGSendTypingManager addAction:[TL_sendMessageTypingAction create] forConversation:self.dialog];
        // [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
