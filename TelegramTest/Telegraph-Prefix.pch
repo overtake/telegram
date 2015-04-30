@@ -141,7 +141,7 @@
 
 #define DARK_BLACK NSColorFromRGB(0x222222)
 #define TEXT_COLOR NSColorFromRGB(0x060606)
-#define GRAY_TEXT_COLOR NSColorFromRGB(0x808080)
+#define GRAY_TEXT_COLOR NSColorFromRGB(0x999999)
 
 #define DIALOG_BORDER_COLOR NSColorFromRGB(0xeaeaea)
 //#define DIALOG_BORDER_COLOR [NSColor redColor]
