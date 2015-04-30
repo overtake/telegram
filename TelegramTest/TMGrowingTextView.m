@@ -203,7 +203,7 @@
     
     
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-    [self.growingDelegate TMGrowingTextViewTextDidChange:self];
+    [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
     
     
     

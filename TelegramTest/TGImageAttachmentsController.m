@@ -8,8 +8,26 @@
 
 #import "TGImageAttachmentsController.h"
 #import "TGAnimationBlockDelegate.h"
+
+
+@interface HelpScrollView : BTRScrollView
+
+@end
+
+
+@implementation HelpScrollView
+
+- (void) scrollWheel:(NSEvent *) event
+{
+    NSPoint scrollPoint = [[self contentView] bounds].origin;
+    scrollPoint.x += (-[event scrollingDeltaY] + [event scrollingDeltaX]);
+    [[self documentView] scrollPoint: scrollPoint];
+}
+
+@end
+
 @interface TGImageAttachmentsController ()
-@property (nonatomic,strong) BTRScrollView *scrollView;
+@property (nonatomic,strong) HelpScrollView *scrollView;
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
@@ -27,7 +45,7 @@
         
         self.backgroundColor = [NSColor redColor];
         
-        _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), NSHeight(self.bounds) )];
+        _scrollView = [[HelpScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), NSHeight(self.bounds) )];
         
         _containerView = [[TMView alloc] initWithFrame:self.scrollView.bounds];
         

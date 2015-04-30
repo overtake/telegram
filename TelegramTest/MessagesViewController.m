@@ -3060,6 +3060,8 @@ static NSTextAttachment *headerMediaIcon() {
                     [self updateWebpage];
                     
                 }
+            } else if([response isKindOfClass:[TL_messageMediaEmpty class]]) {
+                [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:link];
             }
             
             

@@ -123,7 +123,7 @@
         [self updateBottomHeight:YES];
     }
     
-    [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+    [self TMGrowingTextViewTextDidChange:nil];
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
@@ -818,7 +818,7 @@
     if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown) {
         
         
-        if([self.inputMessageTextField.stringValue trim].length > 0)
+        if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
             [TGSendTypingManager addAction:[TL_sendMessageTypingAction create] forConversation:self.dialog];
        // [self.messagesViewController sendTypingWithAction:[TL_sendMessageTypingAction create]];
         
