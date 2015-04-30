@@ -165,7 +165,7 @@
                     
                     _fullChat.exported_invite = response;
                     
-                    [[FullChatManager sharedManager] add:@[_fullChat]];
+                    [[Storage manager] insertFullChat:_fullChat completeHandler:nil];
                     
                     cblock();
                     

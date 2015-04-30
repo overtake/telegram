@@ -13,6 +13,10 @@
 @property (nonatomic, assign) BOOL locked;
 @property (nonatomic,strong) NSView *rightContainer;
 @property (nonatomic, assign) NSPoint rightContainerOffset;
+
+@property (nonatomic,strong,readonly) NSView *currentRightController;
+
+
 + (id) buttonWithText:(NSString *)string tapBlock:(dispatch_block_t)block;
 - (id)initWithFrame:(NSRect)frame withName:(NSString *)name andBlock:(dispatch_block_t)block;
 

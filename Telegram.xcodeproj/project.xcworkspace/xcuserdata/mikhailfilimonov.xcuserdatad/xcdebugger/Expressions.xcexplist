@@ -62,6 +62,14 @@
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGReplyObject initWithReplyMessage:]:TGReplyObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_replyThumb.imageSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGDocumentsMediaTableView reloadWithString:]:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
@@ -937,6 +945,14 @@
       </ContextState>
       <ContextState
          contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[UserInfoShortButtonView setLocked:]:UserInfoShortButtonView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_progress">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView updateDownloadState]:MessageTableCellContainerView.m">

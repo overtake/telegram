@@ -403,7 +403,7 @@
         [item makeSizeByWidth:self.containerSize.width];
     }
     
-    //[self reloadData];
+    [self reloadData];
 }
 
 

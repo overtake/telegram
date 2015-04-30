@@ -274,7 +274,7 @@
                 }
                 currentChat.chat_photo = newChatFull.chat_photo;
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
-                
+                currentChat.exported_invite = newChatFull.exported_invite;
                 
                 //            if(currentChat.notify_settings.mute_until != newChatFull.notify_settings.mute_until) {
                 //                currentChat.notify_settings = newChatFull.notify_settings;

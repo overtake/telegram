@@ -13,7 +13,6 @@
 @property (nonatomic, strong) NSProgressIndicator *progress;
 
 
-@property (nonatomic,strong) NSView *currentRightController;
 @property (nonatomic,strong) dispatch_block_t tapBlock;
 @end
 
@@ -49,7 +48,6 @@
         
         _rightContainer = [[TMView alloc] initWithFrame:NSZeroRect];
        
-        
         _rightContainer.layer.backgroundColor = NSColorFromRGB(0x000000).CGColor;
         
         [self addSubview:_rightContainer];
@@ -75,7 +73,7 @@
 -(void)setRightContainer:(NSView *)rightContainer {
     
     [rightContainer removeFromSuperview];
-    self.currentRightController = rightContainer;
+    _currentRightController = rightContainer;
     
     while (_rightContainer.subviews.count) {
         [_rightContainer.subviews[0] removeFromSuperview];

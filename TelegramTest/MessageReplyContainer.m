@@ -107,7 +107,6 @@
     int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 5;
     
     
-    
     if(_replyObject.replyThumb) {
         [self addSubview:self.thumbImageView];
         [self.thumbImageView setObject:_replyObject.replyThumb];

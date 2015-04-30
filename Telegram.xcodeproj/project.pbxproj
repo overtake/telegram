@@ -559,6 +559,10 @@
 		C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */; };
 		C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */; };
 		C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */; };
+		C2C85BB61AF24BE500FBEABD /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BB71AF24BE600FBEABD /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C85BB81AF24BEE00FBEABD /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2C85BB91AF24BEE00FBEABD /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB081A3F3BC900C857D6 /* libwebp.a */; };
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
@@ -757,6 +761,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
+				C2C85BB61AF24BE500FBEABD /* Sparkle.framework in Copy Files (6 items) */,
+				C2C85BB71AF24BE600FBEABD /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2272,6 +2278,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C2C85BB81AF24BEE00FBEABD /* Sparkle.framework in Frameworks */,
+				C2C85BB91AF24BEE00FBEABD /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

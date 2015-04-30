@@ -46,7 +46,6 @@
         
         self.kickButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Chat.Kick", nil)];
         [self.kickButton setAutoresizingMask:NSViewMinXMargin];
-        [self.kickButton setStringValue:NSLocalizedString(@"Chat.Kick", nil)];
         [self.kickButton setDisableColor:NSColorFromRGB(0x999999)];
         
         
@@ -127,8 +126,10 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 270, NSHeight(self.nameTextField.frame))];
-    [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 270, NSHeight(self.nameTextField.frame))];
+    
+    
+    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - (self.kickButton.isHidden ? 238 : 270), NSHeight(self.nameTextField.frame))];
+    [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - (self.kickButton.isHidden ? 238 : 270), NSHeight(self.nameTextField.frame))];
 }
 
 @end

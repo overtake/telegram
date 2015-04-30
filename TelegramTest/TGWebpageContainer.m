@@ -72,7 +72,7 @@
         
         
         [self.siteName setFrameOrigin:NSMakePoint(5, -6)];
-        [self.author setFrameOrigin:NSMakePoint(5, 8)];
+        [self.author setFrameOrigin:NSMakePoint(5, 9)];
         
         [super addSubview:_siteName];
     }

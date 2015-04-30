@@ -86,7 +86,7 @@
                 
                 _chat.exported_invite = response;
                 
-                [[FullChatManager sharedManager] add:@[_chat]];
+                [[Storage manager] insertFullChat:_chat completeHandler:nil];
                 
                 alert(nil, NSLocalizedString(@"ChatExportLink.Alert.Revoked", nil));
                 

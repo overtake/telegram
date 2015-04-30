@@ -186,7 +186,11 @@ static const NSMutableDictionary *cache;
 }
 
 - (void)updateRightControllerFrame {
-    [self.rightContainer setFrame:NSMakeRect(roundf(self.frame.size.width - self.container.frame.size.width) + self.rightContainerOffset.x, 12,NSWidth(self.container.frame), NSHeight(self.container.frame))];
+    if(!self.locked) {
+         [self.rightContainer setFrame:NSMakeRect(roundf(self.frame.size.width - self.container.frame.size.width) + self.rightContainerOffset.x, 12,NSWidth(self.container.frame), NSHeight(self.container.frame))];
+    } else {
+         self.rightContainer.frame = NSMakeRect(roundf(self.frame.size.width - self.currentRightController.frame.size.width) + self.rightContainerOffset.x - 2, roundf((self.frame.size.height-self.currentRightController.frame.size.height) /2) + self.rightContainerOffset.y - 2, self.currentRightController.frame.size.width + 2, self.currentRightController.frame.size.height + 2 );
+    }
 }
 
 
