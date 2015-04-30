@@ -585,7 +585,7 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     
-    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"Helvetica" size:18], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:18], NSParagraphStyleAttributeName: paragraphStyle}];
     size = [userNameAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.nameTextView textStorage] setAttributedString:userNameAttributedString];

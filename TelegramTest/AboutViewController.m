@@ -37,7 +37,7 @@
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy"];
-    [telegram setTextColor:NSColorFromRGB(0x999999)];
+    [telegram setTextColor:GRAY_TEXT_COLOR];
     [telegram setStringValue:[NSString stringWithFormat:@"Copyright © 2013 - %@ TELEGRAM MESSENGER",[formatter stringFromDate:[NSDate date]]]];
     
     [telegram sizeToFit];

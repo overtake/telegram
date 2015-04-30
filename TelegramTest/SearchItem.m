@@ -68,9 +68,9 @@
         
         
         
-        [self.status appendString:[NSString stringWithFormat:@"@%@",user.username] withColor:NSColorFromRGB(0x999999)];
+        [self.status appendString:[NSString stringWithFormat:@"@%@",user.username] withColor:GRAY_TEXT_COLOR];
         
-        [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x999999)];
+        [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:GRAY_TEXT_COLOR];
         
         [NSMutableAttributedString selectText:[NSString stringWithFormat:@"@%@",searchString] fromAttributedString:(NSMutableAttributedString *)self.status selectionColor:BLUE_UI_COLOR];
         

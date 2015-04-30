@@ -348,7 +348,7 @@ typedef enum {
     
     
     NSMutableAttributedString *attr = (NSMutableAttributedString *) [UsersManager currentUser].userNameTitle;
-    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.userName ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999) range:attr.range];
+    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.userName ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.userNameTextField.attributedStringValue = attr;
     
     [self.userNameTextField sizeToFit];
@@ -356,7 +356,7 @@ typedef enum {
     
     attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]}];
     
-    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999) range:attr.range];
+    [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.phoneNumberTextField.attributedStringValue = attr;
     
     [self.phoneNumberTextField sizeToFit];

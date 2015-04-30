@@ -52,7 +52,7 @@
         
         self.textLayer = [TMTextLayer layer];
         [self.textLayer disableActions];
-        [self.textLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.textLayer setTextFont:TGSystemFont(14)];
         [self.textLayer setTextColor:[NSColor blackColor]];
         [self.textLayer setString:item.title];
         [self.textLayer sizeToFit];
@@ -64,8 +64,8 @@
         if(item.subtitle) {
             self.subTextLayer = [TMTextLayer layer];
             [self.subTextLayer disableActions];
-            [self.subTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-            [self.subTextLayer setTextColor:[NSColor grayColor]];
+            [self.subTextLayer setTextFont:TGSystemFont(12)];
+            [self.subTextLayer setTextColor:GRAY_TEXT_COLOR];
             [self.subTextLayer setString:item.subtitle];
             [self.subTextLayer sizeToFit];
             [self.subTextLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
@@ -144,7 +144,7 @@
     } else {
         [self.gradientLayer setColors:@[]];
         [self.textLayer setTextColor:NSColorFromRGB(0x000000)];
-        [self.subTextLayer setTextColor:NSColorFromRGB(0x808080)];
+        [self.subTextLayer setTextColor:GRAY_TEXT_COLOR];
         
         [self.imageView setFrameSize:self.item.image.size];
         [self.imageView setFrameOrigin:CGPointMake(roundf((46 - self.item.image.size.width) / 2.f), roundf((self.bounds.size.height - self.item.image.size.height) / 2.f))];

@@ -575,11 +575,11 @@ static CAAnimation *ani2() {
                                          startAngle: 0
                                            endAngle: 360 clockwise:NO];
             [path setLineWidth:2];
-            [NSColorFromRGB(0x999999) set];
+            [GRAY_TEXT_COLOR set];
             [path stroke];
             
             
-            color = NSColorFromRGB(0x999999);
+            color = GRAY_TEXT_COLOR;
         }
         
         NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};

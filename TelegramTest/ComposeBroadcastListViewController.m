@@ -31,7 +31,7 @@
         
         NSMutableAttributedString *date = [[NSMutableAttributedString alloc] init];
         [date setSelectionColor:NSColorFromRGB(0xcbe1f0) forColor:NSColorFromRGB(0xaeaeae)];
-        [date setSelectionColor:NSColorFromRGB(0x999999) forColor:NSColorFromRGB(0x333333)];
+        [date setSelectionColor:GRAY_TEXT_COLOR forColor:NSColorFromRGB(0x333333)];
         [date setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
         
         int time = self.broadcast.date;

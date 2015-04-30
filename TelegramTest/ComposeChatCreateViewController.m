@@ -105,7 +105,7 @@
         
        
         
-        [self.nameField setFont:[NSFont fontWithName:@"Helvetica" size:15]];
+        [self.nameField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         
         [self.nameField setAlignment:NSCenterTextAlignment];
         

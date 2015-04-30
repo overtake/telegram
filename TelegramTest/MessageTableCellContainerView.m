@@ -64,7 +64,7 @@
         [self.dateLayer disableActions];
         [self.dateLayer setContentsScale:self.layer.contentsScale];
         [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 0)];
-        [self.dateLayer setTextColor:NSColorFromRGB(0x999999)];
+        [self.dateLayer setTextColor:GRAY_TEXT_COLOR];
         [self.dateLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         [self.dateLayer setBackgroundColor:[NSColor clearColor].CGColor];
         [self.rightView.layer addSublayer:self.dateLayer];

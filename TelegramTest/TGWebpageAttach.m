@@ -131,7 +131,7 @@
         if(!desc)
             desc = _webpage.author;
         
-        [_stateField setTextColor:NSColorFromRGB(0x808080)];
+        [_stateField setTextColor:GRAY_TEXT_COLOR];
     }
     
     [_stateField setStringValue:desc];

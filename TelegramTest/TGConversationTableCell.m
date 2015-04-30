@@ -267,8 +267,8 @@ static NSDictionary *attributes() {
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:NSColorFromRGB(0x999999)];
-        [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x999999)];
+        [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:GRAY_TEXT_COLOR];
+        [attr setSelectionColor:[NSColor whiteColor] forColor:GRAY_TEXT_COLOR];
         [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
         [attr setSelected:self.isSelected];
         

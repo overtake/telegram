@@ -27,7 +27,7 @@
         [self.textView setFrameOrigin:NSMakePoint(8, 2)];
         [self.textView setDrawsBackground:NO];
         
-        [self.textView setFont:[NSFont fontWithName:@"Helvetica" size:15]];
+        [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textView];
     }

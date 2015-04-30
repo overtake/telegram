@@ -50,7 +50,7 @@
         [self.numberTextField setBordered:NO];
         [self.numberTextField setBackgroundColor:[NSColor clearColor]];
         [self.numberTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
-        [self.numberTextField setTextColor:NSColorFromRGB(0x999999)];
+        [self.numberTextField setTextColor:GRAY_TEXT_COLOR];
         [[self.numberTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.numberTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.numberTextField];

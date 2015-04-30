@@ -86,7 +86,7 @@ static NSDictionary *colors;
         [[_descriptionField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_descriptionField cell] setTruncatesLastVisibleLine:YES];
         
-        [_descriptionField setTextColor:NSColorFromRGB(0x999999)];
+        [_descriptionField setTextColor:GRAY_TEXT_COLOR];
         
         [_descriptionField setFrame:NSMakeRect(s_dox + 50, 11, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
         

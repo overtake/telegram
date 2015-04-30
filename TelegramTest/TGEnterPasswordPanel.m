@@ -119,7 +119,7 @@
     
     [codeDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
     
-    [codeDescription setTextColor:NSColorFromRGB(0x808080)];
+    [codeDescription setTextColor:GRAY_TEXT_COLOR];
     
     [codeDescription setFrameSize:NSMakeSize(NSWidth(_emailCodeField.frame), 200)];
     
@@ -247,7 +247,7 @@
     
     [passwordDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
     
-    [passwordDescription setTextColor:NSColorFromRGB(0x808080)];
+    [passwordDescription setTextColor:GRAY_TEXT_COLOR];
     
     [passwordDescription setFrameSize:NSMakeSize(NSWidth(separator.frame), 200)];
     
@@ -371,7 +371,7 @@
     
     [resetDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
     
-    [resetDescription setTextColor:NSColorFromRGB(0x808080)];
+    [resetDescription setTextColor:GRAY_TEXT_COLOR];
     
     [resetDescription setFrameSize:NSMakeSize(NSWidth(separator.frame), 200)];
     

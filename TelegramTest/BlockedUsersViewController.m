@@ -50,7 +50,7 @@
     
     [self.noBlockedUsersView setAlignment:NSCenterTextAlignment];
     
-    [self.noBlockedUsersView setTextColor:NSColorFromRGB(0x999999)];
+    [self.noBlockedUsersView setTextColor:GRAY_TEXT_COLOR];
     
     [self.noBlockedUsersView setFrameSize:NSMakeSize(NSWidth(self.view.frame), 40)];
     

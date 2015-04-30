@@ -45,7 +45,7 @@
         
          NSMutableAttributedString *d = [[NSMutableAttributedString alloc] init];
         
-        [d appendString:[NSString stringWithFormat:NSLocalizedString(messages.count == 1 ? @"Forward.Message" : @"Forward.Messages", nil), messages.count] withColor:NSColorFromRGB(0x808080)];
+        [d appendString:[NSString stringWithFormat:NSLocalizedString(messages.count == 1 ? @"Forward.Message" : @"Forward.Messages", nil), messages.count] withColor:GRAY_TEXT_COLOR];
         
         [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:d.range];
         

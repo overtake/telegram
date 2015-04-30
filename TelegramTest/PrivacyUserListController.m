@@ -51,7 +51,7 @@
     
     [self.noUsers setAlignment:NSCenterTextAlignment];
     
-    [self.noUsers setTextColor:NSColorFromRGB(0x999999)];
+    [self.noUsers setTextColor:GRAY_TEXT_COLOR];
     
     [self.noUsers setFrameSize:NSMakeSize(NSWidth(self.view.frame), 40)];
     

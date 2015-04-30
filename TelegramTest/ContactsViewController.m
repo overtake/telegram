@@ -71,7 +71,7 @@
 
 -(void)checkSelected:(BOOL)isSelected {
     self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
-    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0x999999)];
+    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {

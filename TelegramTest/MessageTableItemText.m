@@ -87,10 +87,10 @@
         NSRange range3 = [self.forwardAttributedString appendString:[NSString stringWithFormat:@", %@", [[MessageTableItem dateFormatter] stringFromDate:fwd_date]] withColor:NSColorFromRGB(0x6da2cb)];
 
         NSRange rangeFinal = NSMakeRange(range1.location, range1.length + range2.length + range3.length);
-        [self.forwardAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:11.5] forRange:rangeFinal];
+        [self.forwardAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:11.5] forRange:rangeFinal];
         
         //User
-        [self.forwardAttributedString setFont:[NSFont fontWithName:@"Helvetica-Bold" size:11.5] forRange:range2];
+        [self.forwardAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:11.5] forRange:range2];
     }
     
     [self updateWebPage];

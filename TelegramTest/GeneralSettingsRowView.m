@@ -31,7 +31,7 @@
         
         self.nextDesc = [TMTextField defaultTextField];
         [self.nextDesc setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
-        self.nextDesc.textColor = NSColorFromRGB(0x999999);
+        self.nextDesc.textColor = GRAY_TEXT_COLOR;
         
         
         
@@ -40,7 +40,7 @@
         
         self.descriptionField.textColor = DARK_BLACK;
         
-        [self.subdescField setTitleColor:NSColorFromRGB(0x999999) forControlState:BTRControlStateNormal];
+        [self.subdescField setTitleColor:GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
         
         
         self.lockedIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];

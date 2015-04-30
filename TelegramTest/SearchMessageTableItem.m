@@ -53,13 +53,13 @@
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
     _dateText = [[NSMutableAttributedString alloc] init];
-    [_dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
-    [_dateText setSelectionColor:NSColorFromRGB(0x999999) forColor:NSColorFromRGB(0x333333)];
+    [_dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
+    [_dateText setSelectionColor:GRAY_TEXT_COLOR forColor:NSColorFromRGB(0x333333)];
     [_dateText setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
     
     if(self.messageText.length > 0) {
         NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
-        [_dateText appendString:dateStr withColor:NSColorFromRGB(0x999999)];
+        [_dateText appendString:dateStr withColor:GRAY_TEXT_COLOR];
     } else {
         [_dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }

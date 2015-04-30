@@ -38,7 +38,7 @@
     
     NSString *textFormat = NSLocalizedString(@"PhoneChangeAlertController.Description", nil);
     
-    [attr appendString:[NSString stringWithFormat:textFormat,@"",@"",@"",@""] withColor:NSColorFromRGB(0x999999)];
+    [attr appendString:[NSString stringWithFormat:textFormat,@"",@"",@"",@""] withColor:GRAY_TEXT_COLOR];
     
     [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
     

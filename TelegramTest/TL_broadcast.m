@@ -128,7 +128,7 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     
     [dialogTitleAttributedString appendString:title withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"Helvetica" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     
     [self setDIALOGTITLE:dialogTitleAttributedString];
     

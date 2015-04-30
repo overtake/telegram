@@ -40,7 +40,7 @@
 //        [self.callTextField setEditable:NO];
 //        [self.callTextField setDrawsBackground:NO];
 //        [self.callTextField setTextColor:NSColorFromRGB(0xaeaeae)];
-//        [self.callTextField setFont:[NSFont fontWithName:@"Helvetica" size:13]];
+//        [self.callTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
 //        [self addSubview:self.callTextField];
 //        
 //        [self.callTextField setHardXOffset:44];

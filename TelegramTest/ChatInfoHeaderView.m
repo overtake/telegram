@@ -92,7 +92,7 @@
         [self.nameTextField setEditable:NO];
         [self.nameTextField setSelectable:YES];
         [[self.nameTextField cell] setFocusRingType:NSFocusRingTypeNone];
-        [self.nameTextField setFont:[NSFont fontWithName:@"Helvetica" size:15]];
+        [self.nameTextField setFont:TGSystemFont(15)];
         [self.nameTextField setTarget:self];
         [self.nameTextField setAction:@selector(enter)];
         [self addSubview:self.nameTextField];

@@ -34,7 +34,7 @@
     
     self.smsCodeView.textView.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
     
-    NSAttributedString *smsCodePlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"PhoneChangeController.SmsPlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:NSColorFromRGB(0x999999)}];
+    NSAttributedString *smsCodePlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"PhoneChangeController.SmsPlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
     
     
     [self.smsCodeView.textView.cell setPlaceholderAttributedString:smsCodePlaceholder];
@@ -63,7 +63,7 @@
     
     [self.callTextField setStringValue:NSLocalizedString(@"PhoneChangeConfirmController.SentCodeDescription", nil)];
     
-    [self.callTextField setTextColor:NSColorFromRGB(0x999999)];
+    [self.callTextField setTextColor:GRAY_TEXT_COLOR];
     
     [self.callTextField sizeToFit];
     

@@ -46,7 +46,7 @@
         
         self.kickButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Chat.Kick", nil)];
         [self.kickButton setAutoresizingMask:NSViewMinXMargin];
-        [self.kickButton setDisableColor:NSColorFromRGB(0x999999)];
+        [self.kickButton setDisableColor:GRAY_TEXT_COLOR];
         
         
         [self.kickButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.kickButton.frame), roundf((50 - NSHeight(self.kickButton.frame))/2))];

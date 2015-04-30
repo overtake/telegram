@@ -51,7 +51,7 @@
         
         for(int i = 0; i < EMOJI_COUNT_PER_ROW; i++) {
             EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(34 * i, 0, 34, 34)];
-            [button setTitleFont:[NSFont fontWithName:@"Helvetica" size:17] forControlState:BTRControlStateNormal];
+            [button setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:17] forControlState:BTRControlStateNormal];
             [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
                         
             if(floor(NSAppKitVersionNumber) >= 1347 ) {

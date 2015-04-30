@@ -110,7 +110,7 @@
     
     NSMutableAttributedString *messageText = [[NSMutableAttributedString alloc] init];
     [messageText setSelectionColor:NSColorFromRGB(0xfffffe) forColor:DARK_BLACK];
-    [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
+    [messageText setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
     
     
     
@@ -119,14 +119,14 @@
         
         if(params.state == EncryptedDiscarted) {
             
-            [messageText appendString:NSLocalizedString(@"MessageAction.Secret.CancelledSecretChat",nil) withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:NSLocalizedString(@"MessageAction.Secret.CancelledSecretChat",nil) withColor:GRAY_TEXT_COLOR];
             
             
             [messageText endEditing];
             return messageText;
         } else if(params.state == EncryptedWaitOnline) {
             
-            [messageText appendString:[NSString stringWithFormat:NSLocalizedString(@"MessageAction.Secret.WaitingToGetOnline",nil), conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:[NSString stringWithFormat:NSLocalizedString(@"MessageAction.Secret.WaitingToGetOnline",nil), conversation.encryptedChat.peerUser.first_name] withColor:GRAY_TEXT_COLOR];
             
             [messageText endEditing];
             return messageText;
@@ -134,7 +134,7 @@
             
             NSString *actionFormat = [UsersManager currentUserId] == conversation.encryptedChat.admin_id ? NSLocalizedString(@"MessageAction.Secret.UserJoined",nil) : NSLocalizedString(@"MessageAction.Secret.CreatedSecretChat",nil);
             
-            [messageText appendString:[NSString stringWithFormat:actionFormat,conversation.encryptedChat.peerUser.first_name] withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:[NSString stringWithFormat:actionFormat,conversation.encryptedChat.peerUser.first_name] withColor:GRAY_TEXT_COLOR];
             
             
             [messageText endEditing];
@@ -238,11 +238,11 @@
         msgText = [msgText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
         
         if(msgText) {
-            [messageText appendString:msgText withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
         }
         
         if(userSecond) {
-            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.fullName] withColor:NSColorFromRGB(0x808080)];
+            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.fullName] withColor:GRAY_TEXT_COLOR];
         }
         
     } else {

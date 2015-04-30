@@ -310,7 +310,7 @@
         }];
     }];
     
-    [self.doneButton setDisableColor:NSColorFromRGB(0x999999)];
+    [self.doneButton setDisableColor:GRAY_TEXT_COLOR];
     
     TMView *rightView = [[TMView alloc] init];
     

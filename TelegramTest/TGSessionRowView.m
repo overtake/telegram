@@ -75,7 +75,7 @@
     
     [description setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
     
-    range = [description appendString:[NSString stringWithFormat:@"%@ (%@)",item.authorization.country, item.authorization.ip] withColor:NSColorFromRGB(0x999999)];
+    range = [description appendString:[NSString stringWithFormat:@"%@ (%@)",item.authorization.country, item.authorization.ip] withColor:GRAY_TEXT_COLOR];
     
     [description setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
 

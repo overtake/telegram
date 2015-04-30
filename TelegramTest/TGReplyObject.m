@@ -63,7 +63,7 @@
             [replyText appendString:str withColor:TEXT_COLOR];
             
         } else {
-            [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:NSColorFromRGB(0x808080)];
+            [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:GRAY_TEXT_COLOR];
         }
         
         

@@ -39,7 +39,7 @@
         
         self.dateField = [TMTextField defaultTextField];
         
-        [self.dateField setTextColor:NSColorFromRGB(0x999999)];
+        [self.dateField setTextColor:GRAY_TEXT_COLOR];
         [self.dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         
        // [self addSubview:self.dateField];

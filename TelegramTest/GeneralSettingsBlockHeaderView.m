@@ -19,7 +19,7 @@
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:object withColor:NSColorFromRGB(0x999999)];
+        [attr appendString:object withColor:GRAY_TEXT_COLOR];
         [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
         
         _header = attr;

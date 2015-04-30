@@ -78,7 +78,7 @@
         self.editTextButton = [[TMTextButton alloc] init];
         //        [self.editTextButton setDisable:YES];
         self.editTextButton.stringValue = NSLocalizedString(@"Profile.edit", nil);
-        [self.editTextButton setFont:[NSFont fontWithName:@"Helvetica" size:14]];
+        [self.editTextButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
         [self.editTextButton setWantsLayer:IS_RETINA];
         [self.editTextButton setTextColor:BLUE_UI_COLOR];
         [self.editTextButton sizeToFit];

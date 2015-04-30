@@ -55,7 +55,7 @@
         [self.capTextField setStringValue:text];
         
         [self.capTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        [self.capTextField setTextColor:NSColorFromRGB(0x808080)];
+        [self.capTextField setTextColor:GRAY_TEXT_COLOR];
         
         [self.capTextField sizeToFit];
         

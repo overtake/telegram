@@ -175,8 +175,8 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
     
-    [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username] withColor:NSColorFromRGB(0x999999)];
-    [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
+    [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username] withColor:GRAY_TEXT_COLOR];
+    [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
     
     [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];
     [self setUserNameTitle:userNameTitle];
@@ -409,7 +409,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0xaeaeae)];
-        [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x999999)];
+        [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
         
         NSString *string = self.lastSeen;
         NSRange range;
@@ -433,9 +433,9 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         NSString *string = self.lastSeen;
         NSRange range;
         if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
-            range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:NSColorFromRGB(0x999999)];
+            range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:GRAY_TEXT_COLOR];
         } else {
-            range = [str appendString:string withColor:NSColorFromRGB(0x999999)];
+            range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
         [str setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:range];
