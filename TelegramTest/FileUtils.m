@@ -351,7 +351,14 @@ void alert(NSString *text, NSString *info) {
     
     NSUInteger size = fileSize(path);
     
+    NSUInteger seek = size - MIN(4096,size);
+    
     NSData *fileData = [[NSData alloc] initWithData:[handle readDataOfLength:MIN(size, 4096)]];
+    
+    [handle seekToFileOffset:seek];
+    
+    fileData = [fileData dataWithData:[handle readDataToEndOfFile]];
+    
     
     NSString *md5 = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] md5];
     return [[NSString stringWithFormat:@"MD5_%@_%lu", md5, (unsigned long)size] md5];
