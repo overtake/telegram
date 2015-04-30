@@ -231,7 +231,7 @@ static const int seconds_to_notify = 120;
                 
                 
                 if([[NSDate date] timeIntervalSince1970] - seconds_to_notify <= time) {
-                    notification.soundName = @"";
+                    notification.soundName = nil;
                 }
                 _lastNotificationTimes[@(conversation.peer_id)] = @([[NSDate date] timeIntervalSince1970]);
                 
