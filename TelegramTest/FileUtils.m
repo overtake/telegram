@@ -646,6 +646,11 @@ void open_link(NSString *link) {
         return;
     }
     
+    if([link hasPrefix:TGJoinGroupPrefix]) {
+        join_group_by_hash([link substringFromIndex:TGJoinGroupPrefix.length]);
+        return;
+    }
+    
     if([link hasPrefix:TLHashTagPrefix]) {
         
         [[Telegram leftViewController] showTabControllerAtIndex:1];
