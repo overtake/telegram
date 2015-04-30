@@ -46,7 +46,7 @@
         
         [item addObserver:self
                   forKeyPath:@"image"
-                     options:NSKeyValueObservingOptionNew
+                     options:0
                      context:NULL];
         
         
@@ -100,6 +100,10 @@
 
     
     
+}
+
+-(void)dealloc {
+    [_item removeObserver:self forKeyPath:@"image"];
 }
 
 - (void)click {

@@ -153,7 +153,7 @@
             [TMViewController hidePasslock];
             
             
-        } forControlEvents:BTRControlEventClick];
+        } forControlEvents:BTRControlEventMouseDownInside];
         
         [self addSubview:self.closeButton];
         

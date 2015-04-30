@@ -44,10 +44,7 @@
     return size;
 }
 
-- (void)drawInContext:(CGContextRef)context {
 
-    [super drawInContext:context];
-}
 
 - (void)sizeToFit {
     NSSize size = [self size];
