@@ -151,7 +151,7 @@
         self.cellState = CellStateNeedDownload;
         
     } else {
-        self.item.state = AudioStateWaitPlaying;
+        self.item.state = globalAudioPlayer().delegate == self.item ? (globalAudioPlayer().isPaused ? AudioStatePaused : AudioStatePlaying) : AudioStateWaitPlaying;
         self.cellState = CellStateNormal;
     }
     

@@ -60,6 +60,10 @@
     }];
 }
 
+-(void)setState:(AudioState)state {
+    _state = state;
+}
+
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
     
     if(!self.message.n_out && !self.message.readedContent) {
