@@ -389,6 +389,8 @@
     BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
 //    DLog(@"log %lu", (unsigned long)flags);
     //numpad enter fix
+    if (self.hasMarkedText)
+        return NO;
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;
     return (flags == 0 || flags == 65536) && isEnter;
