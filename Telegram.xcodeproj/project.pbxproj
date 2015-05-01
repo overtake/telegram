@@ -576,13 +576,13 @@
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
-		C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
 		C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2F19D58E490079046E /* Accelerate.framework */; };
 		C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E3319D58E580079046E /* libstdc++.dylib */; };
 		C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FA1947E134001617DB /* OpenGL.framework */; };
+		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
@@ -716,9 +716,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C2DE4FC31AD6ABDD001EC26C /* PBXContainerItemProxy */ = {
+		C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2DE4FBE1AD6ABDD001EC26C /* sqlcipher.xcodeproj */;
+			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
@@ -1954,13 +1954,13 @@
 		C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageAttach.m; sourceTree = "<group>"; };
 		C2DE4FB31AD43ED0001EC26C /* TGArticleImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGArticleImageObject.h; sourceTree = "<group>"; };
 		C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGArticleImageObject.m; sourceTree = "<group>"; };
-		C2DE4FBE1AD6ABDD001EC26C /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = ../SQLCipherApp/sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = System/Library/Frameworks/PreferencePanes.framework; sourceTree = SDKROOT; };
 		C2E40E2D19D58E430079046E /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		C2E40E2F19D58E490079046E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C2E40E3119D58E500079046E /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		C2E40E3319D58E580079046E /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
 		C2ED357B18D9FECB00D0027C /* CAProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProgressLayer.h; sourceTree = "<group>"; };
 		C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAProgressLayer.m; sourceTree = "<group>"; };
 		C2F3995D190E7692006B36F7 /* ReadHistroryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadHistroryTask.h; sourceTree = "<group>"; };
@@ -2243,9 +2243,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
 				C2C85BBC1AF2AC5500FBEABD /* Sparkle.framework in Frameworks */,
 				C2C85BBD1AF2AC5500FBEABD /* HockeySDK.framework in Frameworks */,
-				C2DE4FC51AD6ABF0001EC26C /* libsqlcipher.a in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
 				C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */,
@@ -4316,10 +4316,10 @@
 			name = h;
 			sourceTree = "<group>";
 		};
-		C2DE4FBF1AD6ABDD001EC26C /* Products */ = {
+		C2E560FE1AF3726300B4CAF0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */,
+				C2E561031AF3726300B4CAF0 /* libsqlcipher.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4437,7 +4437,7 @@
 		CEB09E4F17DAFC240055F150 = {
 			isa = PBXGroup;
 			children = (
-				C2DE4FBE1AD6ABDD001EC26C /* sqlcipher.xcodeproj */,
+				C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */,
 				CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
 				CEAE5D57181ECDE900C17645 /* sql */,
@@ -5149,8 +5149,8 @@
 					ProjectRef = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
 				},
 				{
-					ProductGroup = C2DE4FBF1AD6ABDD001EC26C /* Products */;
-					ProjectRef = C2DE4FBE1AD6ABDD001EC26C /* sqlcipher.xcodeproj */;
+					ProductGroup = C2E560FE1AF3726300B4CAF0 /* Products */;
+					ProjectRef = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -5162,11 +5162,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C2DE4FC41AD6ABDD001EC26C /* libsqlcipher.a */ = {
+		C2E561031AF3726300B4CAF0 /* libsqlcipher.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libsqlcipher.a;
-			remoteRef = C2DE4FC31AD6ABDD001EC26C /* PBXContainerItemProxy */;
+			remoteRef = C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		CE8C04FE18BCF6D200C663A7 /* MtProtoKit iOS.framework */ = {

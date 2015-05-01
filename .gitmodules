@@ -1,3 +1,6 @@
 [submodule "MtProtoKit"]
 	path = MtProtoKit
 	url = https://github.com/iakovlev-peter/MtProtoKit.git
+[submodule "sqlcipher"]
+	path = sqlcipher
+	url = https://github.com/sqlcipher/sqlcipher.git
