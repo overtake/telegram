@@ -11,13 +11,13 @@
 @implementation RpcErrorParser
 
 
-+(RpcError *)parseRpcError:(TL_rpc_error *)error {
++(RpcError *)parseRpcError:(MTRpcError *)error {
     
-    NSString *searchedString = [error error_message];
+    NSString *searchedString = [error errorDescription];
     
     
     RpcError *rpcError = [[RpcError alloc] init];
-    rpcError.error_code = [error error_code];
+    rpcError.error_code = [error errorCode];
     
     NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"^([A-Z_0-9]+)(: (.+))?" options:0 error:nil];
     NSArray* matches = [regex matchesInString:searchedString options:0 range:NSMakeRange(0, [searchedString length])];

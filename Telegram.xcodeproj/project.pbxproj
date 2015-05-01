@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A073FCC18BF638400BAA928 /* MTProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; };
 		0A073FCF18BF65F500BAA928 /* TMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A073FCE18BF65F500BAA928 /* TMNavigationBar.m */; };
 		0A073FD218BF953300BAA928 /* TMTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A073FD118BF953300BAA928 /* TMTextView.m */; };
 		0A073FDA18C0D01100BAA928 /* NotSelectedDialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A073FD918C0D01100BAA928 /* NotSelectedDialogsViewController.m */; };
@@ -334,7 +333,6 @@
 		C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */; };
 		C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87931A0015BD00EC962E /* TGSecretAction.m */; };
 		C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */; };
-		C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
 		C2531F5A1964548100F7D7A2 /* MessagesTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */; };
@@ -568,6 +566,13 @@
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
 		C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
+		C2CBF3BB1AF38427006BF90A /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3BA1AF38427006BF90A /* icon.icns */; };
+		C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3BE1AF38427006BF90A /* ShareViewController.m */; };
+		C2CBF3C11AF38427006BF90A /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3C01AF38427006BF90A /* ShareViewController.xib */; };
+		C2CBF3C51AF38427006BF90A /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */; };
+		C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */; };
+		C2CBF5CC1AF3A145006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
@@ -716,40 +721,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C2CBF3C21AF38427006BF90A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
+		C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0CB05F71ADC4483005E298F;
+			remoteInfo = MtProtoKit;
+		};
 		C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
-		};
-		CE8C04FD18BCF6D200C663A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D05A831418AFB3F9007F1076;
-			remoteInfo = "MtProtoKit iOS";
-		};
-		CE8C04FF18BCF6D200C663A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D05A832718AFB3F9007F1076;
-			remoteInfo = "MtProtoKit iOS Tests";
-		};
-		CE8C050118BCF6D200C663A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D05A834718AFB40C007F1076;
-			remoteInfo = "MtProtoKit OSX";
-		};
-		CE8C050318BCF6D200C663A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D05A835C18AFB40C007F1076;
-			remoteInfo = "MtProtoKit OSX Tests";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -760,7 +751,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C251F20919C8823A0084269A /* MTProtoKit.framework in Copy Files (6 items) */,
 				C2C85BBA1AF2AC4D00FBEABD /* Sparkle.framework in Copy Files (6 items) */,
 				C2C85BBB1AF2AC4F00FBEABD /* HockeySDK.framework in Copy Files (6 items) */,
 			);
@@ -784,6 +774,17 @@
 			dstSubfolderSpec = 7;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C2CBF3C41AF38427006BF90A /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C2CBF3C51AF38427006BF90A /* TGShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1937,6 +1938,17 @@
 		C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLDocument+Extension.m"; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
+		C2CBF3B61AF38426006BF90A /* TGShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TGShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2CBF3B91AF38427006BF90A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C2CBF3BA1AF38427006BF90A /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		C2CBF3BC1AF38427006BF90A /* TGShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TGShare.entitlements; sourceTree = "<group>"; };
+		C2CBF3BD1AF38427006BF90A /* ShareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareViewController.h; sourceTree = "<group>"; };
+		C2CBF3BE1AF38427006BF90A /* ShareViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShareViewController.m; sourceTree = "<group>"; };
+		C2CBF3C01AF38427006BF90A /* ShareViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareViewController.xib; sourceTree = "<group>"; };
+		C2CBF3CF1AF38801006BF90A /* TGShareLogicController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGShareLogicController.h; sourceTree = "<group>"; };
+		C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGShareLogicController.m; sourceTree = "<group>"; };
+		C2CBF3D31AF38F6F006BF90A /* TGTLSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTLSerialization.h; sourceTree = "<group>"; };
+		C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGTLSerialization.mm; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
 		C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEnterPasswordPanel.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
@@ -2239,10 +2251,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2CBF3B31AF38426006BF90A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEB09E5517DAFC250055F150 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CBF5CC1AF3A145006BF90A /* MtProtoKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
 				C2C85BBC1AF2AC5500FBEABD /* Sparkle.framework in Frameworks */,
 				C2C85BBD1AF2AC5500FBEABD /* HockeySDK.framework in Frameworks */,
@@ -2265,7 +2285,6 @@
 				C2A5C01818E1AB980021BE68 /* AudioToolbox.framework in Frameworks */,
 				C2A5BFFA18E02D8F0021BE68 /* AudioUnit.framework in Frameworks */,
 				C23298D718CF5FC7000826E5 /* QuickLook.framework in Frameworks */,
-				0A073FCC18BF638400BAA928 /* MTProtoKit.framework in Frameworks */,
 				CEAE5D6A181ED1BF00C17645 /* libsqlite3.dylib in Frameworks */,
 				C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */,
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
@@ -4298,6 +4317,29 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		C2CBF3B71AF38427006BF90A /* TGShare */ = {
+			isa = PBXGroup;
+			children = (
+				C2CBF3BD1AF38427006BF90A /* ShareViewController.h */,
+				C2CBF3BE1AF38427006BF90A /* ShareViewController.m */,
+				C2CBF3C01AF38427006BF90A /* ShareViewController.xib */,
+				C2CBF3B81AF38427006BF90A /* Supporting Files */,
+				C2CBF3CF1AF38801006BF90A /* TGShareLogicController.h */,
+				C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */,
+			);
+			path = TGShare;
+			sourceTree = "<group>";
+		};
+		C2CBF3B81AF38427006BF90A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C2CBF3B91AF38427006BF90A /* Info.plist */,
+				C2CBF3BA1AF38427006BF90A /* icon.icns */,
+				C2CBF3BC1AF38427006BF90A /* TGShare.entitlements */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		C2CD77C21A2C9D0C000B4BA9 /* password */ = {
 			isa = PBXGroup;
 			children = (
@@ -4368,10 +4410,7 @@
 		CE8C04F718BCF6D200C663A7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE8C04FE18BCF6D200C663A7 /* MtProtoKit iOS.framework */,
-				CE8C050018BCF6D200C663A7 /* MtProtoKit iOS Tests.xctest */,
-				CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */,
-				CE8C050418BCF6D200C663A7 /* MtProtoKit OSX Tests.xctest */,
+				C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4441,6 +4480,7 @@
 				CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
 				CEAE5D57181ECDE900C17645 /* sql */,
+				C2CBF3B71AF38427006BF90A /* TGShare */,
 				CEB09E6117DAFC250055F150 /* Telegram */,
 				CEDAEAEA1881AF84006189A2 /* YapDatabase */,
 				CEB0A14817DB03A90055F150 /* RunLoop */,
@@ -4455,6 +4495,7 @@
 			children = (
 				CEB09E5817DAFC250055F150 /* Telegram.app */,
 				C235369819CB1A100044978E /* TGKeeper */,
+				C2CBF3B61AF38426006BF90A /* TGShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4585,6 +4626,8 @@
 		CEB0A25217DB09C60055F150 /* protocol */ = {
 			isa = PBXGroup;
 			children = (
+				C2CBF3D31AF38F6F006BF90A /* TGTLSerialization.h */,
+				C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */,
 				C2689F6D18B3B96300272CD4 /* TGUpdateMessageService.h */,
 				C2689F6E18B3B96300272CD4 /* TGUpdateMessageService.m */,
 				CEAE5D16181BF9D300C17645 /* RPCRequest.h */,
@@ -5072,6 +5115,23 @@
 			productReference = C235369819CB1A100044978E /* TGKeeper */;
 			productType = "com.apple.product-type.tool";
 		};
+		C2CBF3B51AF38426006BF90A /* TGShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C2CBF3CE1AF38427006BF90A /* Build configuration list for PBXNativeTarget "TGShare" */;
+			buildPhases = (
+				C2CBF3B21AF38426006BF90A /* Sources */,
+				C2CBF3B31AF38426006BF90A /* Frameworks */,
+				C2CBF3B41AF38426006BF90A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TGShare;
+			productName = TGShare;
+			productReference = C2CBF3B61AF38426006BF90A /* TGShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CEB09E5717DAFC250055F150 /* Telegram */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Telegram" */;
@@ -5081,10 +5141,12 @@
 				CEB09E5617DAFC250055F150 /* Resources */,
 				0AB6A4FB1827DD4B0015920A /* Copy Files (6 items) */,
 				C23536A919CB1A5A0044978E /* CopyFiles */,
+				C2CBF3C41AF38427006BF90A /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C2CBF3C31AF38427006BF90A /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -5100,6 +5162,10 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = keepcoder;
 				TargetAttributes = {
+					C2CBF3B51AF38426006BF90A = {
+						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = 6N38VWS5BX;
+					};
 					CEB09E5717DAFC250055F150 = {
 						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
@@ -5157,11 +5223,19 @@
 			targets = (
 				CEB09E5717DAFC250055F150 /* Telegram */,
 				C235369719CB1A100044978E /* TGKeeper */,
+				C2CBF3B51AF38426006BF90A /* TGShare */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MtProtoKit.framework;
+			remoteRef = C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C2E561031AF3726300B4CAF0 /* libsqlcipher.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -5169,37 +5243,18 @@
 			remoteRef = C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		CE8C04FE18BCF6D200C663A7 /* MtProtoKit iOS.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework.static;
-			path = "MtProtoKit iOS.framework";
-			remoteRef = CE8C04FD18BCF6D200C663A7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CE8C050018BCF6D200C663A7 /* MtProtoKit iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "MtProtoKit iOS Tests.xctest";
-			remoteRef = CE8C04FF18BCF6D200C663A7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CE8C050218BCF6D200C663A7 /* MTProtoKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MTProtoKit.framework;
-			remoteRef = CE8C050118BCF6D200C663A7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CE8C050418BCF6D200C663A7 /* MtProtoKit OSX Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "MtProtoKit OSX Tests.xctest";
-			remoteRef = CE8C050318BCF6D200C663A7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C2CBF3B41AF38426006BF90A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2CBF3C11AF38427006BF90A /* ShareViewController.xib in Resources */,
+				C2CBF3BB1AF38427006BF90A /* icon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEB09E5617DAFC250055F150 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5234,6 +5289,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C235369D19CB1A100044978E /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C2CBF3B21AF38426006BF90A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */,
+				C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5497,6 +5561,7 @@
 				C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */,
 				C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */,
 				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
+				C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
 				C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */,
@@ -5890,6 +5955,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C2CBF3C31AF38427006BF90A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C2CBF3C21AF38427006BF90A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -5973,6 +6046,67 @@
 			};
 			name = Release;
 		};
+		C2CBF3C61AF38427006BF90A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = TGShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C2CBF3C71AF38427006BF90A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = TGShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		CEB09E7617DAFC250055F150 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6039,7 +6173,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6048,6 +6182,7 @@
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
 					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
+					"$(PROJECT_DIR)/MtProtoKit",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
@@ -6055,9 +6190,10 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
+					./MtProtoKit/,
 				);
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -6081,7 +6217,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6090,6 +6226,7 @@
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
 					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
+					"$(PROJECT_DIR)/MtProtoKit",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
@@ -6097,9 +6234,10 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
+					./MtProtoKit/,
 				);
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -6129,6 +6267,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		C2CBF3CE1AF38427006BF90A /* Build configuration list for PBXNativeTarget "TGShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C2CBF3C61AF38427006BF90A /* Debug */,
+				C2CBF3C71AF38427006BF90A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Telegram" */ = {
 			isa = XCConfigurationList;

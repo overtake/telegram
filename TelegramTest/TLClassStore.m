@@ -517,8 +517,8 @@
     NSOutputStream *outputStream = [[NSOutputStream alloc] initToMemory];
     [outputStream open];
     [stream setOuput:outputStream];
-    [stream writeInt:0xda9b0d0d]; //invokeWithLayer
-    [stream writeInt:28];
+    // [stream writeInt:0xda9b0d0d]; //invokeWithLayer
+    // [stream wr7iteInt:28];
 
     [stream writeInt:constructor];
     

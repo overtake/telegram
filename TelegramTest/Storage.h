@@ -16,7 +16,7 @@
 #import "ITaskRequest.h"
 #import "TGUpdateState.h"
 #import "TGSecretInAction.h"
-
+#import "TLClassStore.h"
 #import "TGSecretAction.h"
 
 @interface Storage : NSObject

@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 #import "RpcError.h"
 @interface RpcErrorParser : NSObject
-+(RpcError *)parseRpcError:(TL_rpc_error *)error;
++(RpcError *)parseRpcError:(MTRpcError *)error;
 @end

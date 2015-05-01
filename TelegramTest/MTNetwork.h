@@ -8,6 +8,11 @@
 #import "TelegramSerialization.h"
 #import "TGUpdateMessageService.h"
 #import <MtProtoKit/MTQueue.h>
+
+@interface MTRequest (LegacyTL)
+-(void)setBody:(TLApiObject *)body;
+@end;
+
 @interface MTNetwork : NSObject<MTContextChangeListener>
 
 + (MTNetwork *)instance;

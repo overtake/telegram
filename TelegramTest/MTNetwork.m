@@ -16,6 +16,25 @@
 #import "NSData+Extensions.h"
 #import "NSMutableData+Extension.h"
 
+#import "TGTLSerialization.h"
+
+@implementation MTRequest (LegacyTL)
+
+- (void)setBody:(TLApiObject *)body
+{
+    [self setPayload:[TGTLSerialization serializeMessage:body] metadata:body responseParser:^id(NSData *data)
+     {
+         return [TGTLSerialization parseResponse:data request:body];
+     }];
+}
+
+- (id)body
+{
+    return self.metadata;
+}
+
+@end
+
 @interface GlobalDispatchAction : NSObject
 @property (nonatomic,assign) int time;
 @property (nonatomic,copy) dispatch_block_t callback;
@@ -92,7 +111,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             _pollConnections = [[NSMutableArray alloc] init];
             
             
-            TelegramSerialization *serialization = [[TelegramSerialization alloc] init];
+            TGTLSerialization *serialization = [[TGTLSerialization alloc] init];
             
             MTApiEnvironment *apiEnvironment = [[[MTApiEnvironment class] alloc] init];
             apiEnvironment.apiId = API_ID;
@@ -293,10 +312,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
         void (^execute)() = ^{
             [_datacenterWatchdog execute:nil];
             [self update];
+            
         };
-        
-        
-        execute();
         
         _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
             execute();
