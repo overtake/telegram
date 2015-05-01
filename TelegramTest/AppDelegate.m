@@ -236,10 +236,13 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
             
             TL_localMessage *msg = [[MessagesManager sharedManager] find:[[userInfo objectForKey:@"msg_id"] intValue]];
             
-            if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
+            if(dialog.type == DialogTypeChat) {
+                if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
+                
+                
+                [[Telegram rightViewController].messagesViewController sendMessage:userResponse];
+            }
             
-            
-            [[Telegram rightViewController].messagesViewController sendMessage:userResponse];
         });
         
         return;
