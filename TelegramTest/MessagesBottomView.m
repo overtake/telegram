@@ -123,7 +123,7 @@
         [self updateBottomHeight:YES];
     }
     
-    [self TMGrowingTextViewTextDidChange:nil];
+    [self  TMGrowingTextViewTextDidChange:nil];
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
