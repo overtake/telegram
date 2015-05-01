@@ -2430,7 +2430,7 @@ static NSTextAttachment *headerMediaIcon() {
                 item.isHeaderMessage = NO;
             }
             
-            if(!item.isHeaderMessage && prevItem.message.fwd_from_id && item.message.fwd_from_id && ABS(prevItem.message.fwd_date - item.message.fwd_date) < HEADER_MESSAGES_GROUPING_TIME) {
+            if(!item.isHeaderMessage && prevItem.isForwadedMessage && ABS(prevItem.message.fwd_date - item.message.fwd_date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderForwardedMessage = NO;
             }
         }
