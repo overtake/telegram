@@ -113,6 +113,9 @@
 }
 
 - (BOOL)makeSizeByWidth:(int)width {
+    
+    width = MAX(100,width);
+    
     [super makeSizeByWidth:width];
     
     [_webpage makeSize:width];

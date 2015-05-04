@@ -2260,44 +2260,42 @@ static NSTextAttachment *headerMediaIcon() {
         
     //
         
-        if(self.table.scrollView.documentOffset.y > rect.origin.y)
-            rect.origin.y -= roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
-        else
-            rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
-//        
-//        if(rect.origin.y < 0)
-//            rect.origin.y = 0;
-        
-        [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
-            if(highlight) {
-                
-                if(index != NSNotFound) {
-                    MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+        if(centered) {
+            if(self.table.scrollView.documentOffset.y > rect.origin.y)
+                rect.origin.y -= roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+            else
+                rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
+            //
+            //        if(rect.origin.y < 0)
+            //            rect.origin.y = 0;
+            
+            [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
+                if(highlight) {
                     
-                    if(cell && [cell isKindOfClass:[MessageTableCellContainerView class]]) {
+                    if(index != NSNotFound) {
+                        MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
                         
-                        for(int i = 0; i < self.messages.count; i++) {
-                            MessageTableCellContainerView *cell2 = (MessageTableCellContainerView *)[self cellForRow:i];
-                            if(cell2 && [cell2 isKindOfClass:[MessageTableCellContainerView class]]) {
-                                [cell2 stopSearchSelection];
+                        if(cell && [cell isKindOfClass:[MessageTableCellContainerView class]]) {
+                            
+                            for(int i = 0; i < self.messages.count; i++) {
+                                MessageTableCellContainerView *cell2 = (MessageTableCellContainerView *)[self cellForRow:i];
+                                if(cell2 && [cell2 isKindOfClass:[MessageTableCellContainerView class]]) {
+                                    [cell2 stopSearchSelection];
+                                }
                             }
+                            
+                            
+                            [cell searchSelection];
                         }
-                        
-                        
-                        [cell searchSelection];
                     }
+                    
+                    [self updateScrollBtn];
                 }
-                
-                [self updateScrollBtn];
-            }
-        }];
-        
-        
+            }];
 
-        
-      //  [self scrollToRect:rect isCenter:centered animated:animated];
-        
-        
+        } else {
+            [self scrollToRect:rect isCenter:centered animated:animated];
+        }
         
     }
 }

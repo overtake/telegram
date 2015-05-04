@@ -385,4 +385,11 @@ NSImage *fireImage() {
     [_captionView.textView setNeedsDisplay:YES];
 }
 
+-(void)dealloc {
+    MessageTableItemPhoto *item = (MessageTableItemPhoto *) self.item;
+    
+    [item.imageObject.supportDownloadListener setCompleteHandler:nil];
+    [item.imageObject.supportDownloadListener setProgressHandler:nil];
+}
+
 @end

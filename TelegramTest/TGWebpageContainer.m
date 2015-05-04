@@ -82,6 +82,8 @@
 
 
 -(void)setFrame:(NSRect)frame {
+    
+    
     [super setFrame:frame];
     
     [_containerView setFrame:NSMakeRect(7, self.webpage.author ? 30 : 14,NSWidth(frame) - 7,self.webpage.size.height )];
