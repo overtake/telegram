@@ -518,6 +518,9 @@ static int MAX_WORKER_POLL = 5;
             blockedRequest.error = [RpcErrorParser parseRpcError:error];
         
         dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+            
+            [self.updateService mtProto:_mtProto receivedParsedMessage:result];
+            
             [blockedRequest completeHandler];
             blockedRequest = nil;
         });

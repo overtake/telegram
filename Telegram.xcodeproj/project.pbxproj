@@ -573,6 +573,10 @@
 		C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */; };
 		C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */; };
 		C2CBF5CC1AF3A145006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
+		C2CBF5D61AF7C5D2006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
+		C2CBF5E11AF7CB20006BF90A /* TGS_TLClassStore.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E01AF7CB20006BF90A /* TGS_TLClassStore.m */; };
+		C2CBF5E51AF7CB42006BF90A /* TGS_MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */; };
+		C2CBF5E81AF7CBD9006BF90A /* TGS_RPCRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
@@ -1949,6 +1953,12 @@
 		C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGShareLogicController.m; sourceTree = "<group>"; };
 		C2CBF3D31AF38F6F006BF90A /* TGTLSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTLSerialization.h; sourceTree = "<group>"; };
 		C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGTLSerialization.mm; sourceTree = "<group>"; };
+		C2CBF5DF1AF7CB20006BF90A /* TGS_TLClassStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGS_TLClassStore.h; sourceTree = "<group>"; };
+		C2CBF5E01AF7CB20006BF90A /* TGS_TLClassStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGS_TLClassStore.m; sourceTree = "<group>"; };
+		C2CBF5E31AF7CB42006BF90A /* TGS_MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGS_MTNetwork.h; sourceTree = "<group>"; };
+		C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGS_MTNetwork.m; sourceTree = "<group>"; };
+		C2CBF5E61AF7CBD9006BF90A /* TGS_RPCRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGS_RPCRequest.h; sourceTree = "<group>"; };
+		C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGS_RPCRequest.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
 		C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEnterPasswordPanel.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
@@ -2255,6 +2265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CBF5D61AF7C5D2006BF90A /* MtProtoKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4320,6 +4331,7 @@
 		C2CBF3B71AF38427006BF90A /* TGShare */ = {
 			isa = PBXGroup;
 			children = (
+				C2CBF5E21AF7CB26006BF90A /* protocol */,
 				C2CBF3BD1AF38427006BF90A /* ShareViewController.h */,
 				C2CBF3BE1AF38427006BF90A /* ShareViewController.m */,
 				C2CBF3C01AF38427006BF90A /* ShareViewController.xib */,
@@ -4338,6 +4350,19 @@
 				C2CBF3BC1AF38427006BF90A /* TGShare.entitlements */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C2CBF5E21AF7CB26006BF90A /* protocol */ = {
+			isa = PBXGroup;
+			children = (
+				C2CBF5DF1AF7CB20006BF90A /* TGS_TLClassStore.h */,
+				C2CBF5E01AF7CB20006BF90A /* TGS_TLClassStore.m */,
+				C2CBF5E31AF7CB42006BF90A /* TGS_MTNetwork.h */,
+				C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */,
+				C2CBF5E61AF7CBD9006BF90A /* TGS_RPCRequest.h */,
+				C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */,
+			);
+			name = protocol;
 			sourceTree = "<group>";
 		};
 		C2CD77C21A2C9D0C000B4BA9 /* password */ = {
@@ -5296,7 +5321,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CBF5E11AF7CB20006BF90A /* TGS_TLClassStore.m in Sources */,
 				C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */,
+				C2CBF5E81AF7CBD9006BF90A /* TGS_RPCRequest.m in Sources */,
+				C2CBF5E51AF7CB42006BF90A /* TGS_MTNetwork.m in Sources */,
 				C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

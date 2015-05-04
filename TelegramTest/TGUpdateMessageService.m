@@ -8,6 +8,11 @@
 
 #import "TGProccessUpdates.h"
 #import "NSData+Extensions.h"
+#import "TGTLSerialization.h"
+
+#import "MTNetwork.h"
+
+
 @interface TGUpdateMessageService ()
 {
     MTQueue *_queue;
@@ -131,20 +136,27 @@
 
 - (void)mtProto:(MTProto *)__unused mtProto receivedMessage:(MTIncomingMessage *)incomingMessage
 {
-    if ([incomingMessage.body isKindOfClass:[TLUpdates class]])
-        [self addMessageToQueueAndScheduleProcessing:incomingMessage];
     
-
-    if([incomingMessage.body isKindOfClass:[TL_rpc_result class]]) {
-        
-        
-        if([[incomingMessage.body result] isKindOfClass:[TL_messages_sentMessage class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_gzip_packed class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_messages_affectedHistory class]] ||
-           [[incomingMessage.body result] isKindOfClass:[TL_updates class]])
-                [self addMessageToQueueAndScheduleProcessing:incomingMessage];
-    }
+    
+    if ([incomingMessage.body isKindOfClass:[TLUpdates class]])
+        [self addMessageToQueueAndScheduleProcessing:[incomingMessage body]];
 }
+
+
+- (void)mtProto:(MTProto *)__unused mtProto receivedParsedMessage:(id)incomingMessage {
+    if ([incomingMessage isKindOfClass:[TLUpdates class]]) {
+        [self addMessageToQueueAndScheduleProcessing:incomingMessage];
+        return;
+    }
+    
+    
+    
+    if([incomingMessage isKindOfClass:[TL_messages_sentMessage class]] ||
+           [incomingMessage isKindOfClass:[TL_gzip_packed class]] ||
+           [incomingMessage isKindOfClass:[TL_messages_affectedHistory class]])
+            [self addMessageToQueueAndScheduleProcessing:incomingMessage];
+}
+
 
 - (void)addMessageToQueueAndScheduleProcessing:(MTIncomingMessage *)message
 {
@@ -179,21 +191,9 @@
     
 }
 
-- (void)processMessage:(MTIncomingMessage *)incomingMessage
+- (void)processMessage:(id)incomingMessage
 {
-    if([incomingMessage.body isKindOfClass:[TL_rpc_result class]]) {
-        TL_rpc_result *rpc = incomingMessage.body;
-        if([[rpc result] isKindOfClass:[TL_gzip_packed class]]) {
-            rpc.result = [TLClassStore deserialize:[[rpc.result packed_data] gzipInflate]];
-        }
-        
-        if([[rpc result] isKindOfClass:[TL_messages_sentMessage class]] ||
-           [[rpc result] isKindOfClass:[TL_messages_affectedHistory class]] ||
-           [[rpc result] isKindOfClass:[TL_updates class]])
-            [_updateProccessor addUpdate:[rpc result]];
-    } else {
-        [_updateProccessor addUpdate:[incomingMessage body]];
-    }
+    [_updateProccessor addUpdate:incomingMessage];
 }
 
 

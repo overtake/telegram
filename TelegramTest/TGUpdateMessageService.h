@@ -13,4 +13,6 @@
 -(void)update;
 
 -(TGProccessUpdates *)proccessor;
+
+- (void)mtProto:(MTProto *)__unused mtProto receivedParsedMessage:(id)incomingMessage;
 @end
