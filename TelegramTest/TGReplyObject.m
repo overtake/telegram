@@ -15,6 +15,7 @@
         
         _replyMessage = replyMessage;
         
+        
         NSColor *nameColor = LINK_COLOR;
         
         static NSColor * colors[6];

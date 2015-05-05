@@ -44,6 +44,8 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     
+    [super makeSizeByWidth:width];
+    
      TLPhotoSize *thumb = self.message.media.document.thumb;
     
     NSSize size;

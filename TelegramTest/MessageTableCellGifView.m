@@ -185,7 +185,7 @@ static NSImage *playImage() {
     const int borderOffset = self.imageView.borderWidth;
     const int borderSize = borderOffset*2;
     
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, self.containerView.frame.origin.y-borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.containerView.frame)+borderSize);
+    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset + 1, self.containerView.frame.origin.y+1, NSWidth(self.imageView.frame)+borderOffset, NSHeight(self.containerView.frame));
     
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.roundSize yRadius:self.imageView.roundSize];
     [path addClip];
@@ -238,6 +238,7 @@ static NSImage *playImage() {
     
     [self.animatedPlayer stop];
     self.animatedPlayer = nil;
+    
     
     
     

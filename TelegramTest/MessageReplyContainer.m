@@ -29,7 +29,6 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         [self.nameTextField setBordered:NO];
         [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];

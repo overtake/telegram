@@ -684,6 +684,7 @@ static BOOL dragAction = NO;
     
     if([item isReplyMessage])
     {
+        
         [self initReplyContainer];
         
         [_replyContainer setItem:item];
