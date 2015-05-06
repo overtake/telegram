@@ -202,22 +202,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
     
-#ifdef TGDEBUG
-    
-     NSString *path = [NSString stringWithFormat:@"/Users/%@/Library/Application support/telegram",NSUserName()];
-    
-    BOOL isDir;
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
-        [[NSFileManager defaultManager] moveItemAtPath:path toPath:[applicationSupportPath stringByAppendingPathComponent:applicationName] error:nil];
-    }
-    
-#endif
-    
-  
-    
-    
-    
+
     BOOL isset = NO;
     
     if([[NSFileManager defaultManager] fileExistsAtPath:odirectory isDirectory:&isset]) {
