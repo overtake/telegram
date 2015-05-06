@@ -1371,7 +1371,7 @@ static void MyCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType t
 		err = CFSocketSetAddress(theSocket4, (__bridge CFDataRef)address4);
 		if (err != kCFSocketSuccess) goto Failed;
 		
-		//DLog(@"theSocket4: %hu", [self localPortFromCFSocket4:theSocket4]);
+		//MTLog(@"theSocket4: %hu", [self localPortFromCFSocket4:theSocket4]);
 	}
 	
 	if(port == 0 && theSocket4 && theSocket6)
@@ -1393,7 +1393,7 @@ static void MyCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType t
 		err = CFSocketSetAddress(theSocket6, (__bridge CFDataRef)address6);
 		if (err != kCFSocketSuccess) goto Failed;
 		
-		//DLog(@"theSocket6: %hu", [self localPortFromCFSocket6:theSocket6]);
+		//MTLog(@"theSocket6: %hu", [self localPortFromCFSocket6:theSocket6]);
 	}
 
 	theFlags |= kDidStartDelegate;
@@ -1870,7 +1870,7 @@ Failed:
 	{
 		NSError *err = [self getStreamError];
 		
-		DLog(@"AsyncSocket %p couldn't create streams from accepted socket: %@", self, err);
+		MTLog(@"AsyncSocket %p couldn't create streams from accepted socket: %@", self, err);
 		
 		if (errPtr) *errPtr = err;
 		return NO;
@@ -2083,7 +2083,7 @@ Failed:
 	CFDataRef peeraddr = CFSocketCopyPeerAddress(theSocket);
 	if(peeraddr == NULL)
 	{
-		DLog(@"AsyncSocket couldn't determine IP version of socket");
+		MTLog(@"AsyncSocket couldn't determine IP version of socket");
 		
 		CFRelease(theSocket);
 		
@@ -4171,7 +4171,7 @@ Failed:
 			[self doAcceptFromSocket:sock withNewNativeSocket:*((CFSocketNativeHandle *)pData)];
 			break;
 		default:
-			DLog(@"AsyncSocket %p received unexpected CFSocketCallBackType %i", self, (int)type);
+			MTLog(@"AsyncSocket %p received unexpected CFSocketCallBackType %i", self, (int)type);
 			break;
 	}
 }
@@ -4204,7 +4204,7 @@ Failed:
 			[self closeWithError: [self errorFromCFStreamError:err]];
 			break;
 		default:
-			DLog(@"AsyncSocket %p received unexpected CFReadStream callback, CFStreamEventType %i", self, (int)type);
+			MTLog(@"AsyncSocket %p received unexpected CFReadStream callback, CFStreamEventType %i", self, (int)type);
 	}
 }
 
@@ -4236,7 +4236,7 @@ Failed:
 			[self closeWithError: [self errorFromCFStreamError:err]];
 			break;
 		default:
-			DLog(@"AsyncSocket %p received unexpected CFWriteStream callback, CFStreamEventType %i", self, (int)type);
+			MTLog(@"AsyncSocket %p received unexpected CFWriteStream callback, CFStreamEventType %i", self, (int)type);
 	}
 }
 

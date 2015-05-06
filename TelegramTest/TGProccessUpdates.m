@@ -677,7 +677,7 @@ static ASQueue *queue;
         BOOL isContact = [contactLink.my_link isKindOfClass:[TL_contactLinkContact class]];
         
         
-        DLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
+        MTLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
         
         
         TLUser *user = [[[UsersManager sharedManager] find:contactLink.user_id] copy];

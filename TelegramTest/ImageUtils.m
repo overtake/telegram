@@ -305,7 +305,7 @@ CGImageRef CGImageCreateBlurredImage(CGImageRef inImage, NSUInteger blurRadius)
     size_t height = CGImageGetHeight(inImage);
     size_t bytesPerRow = CGImageGetBytesPerRow(inImage);
     
-    //    DLog(@"width %zu", width);
+    //    MTLog(@"width %zu", width);
     
     CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inImage);
     CFDataRef dataRef = CGDataProviderCopyData(CGImageGetDataProvider(inImage));
@@ -571,7 +571,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if (converted.width > max) {
         scale = max/converted.width;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -580,7 +580,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(converted.height > max) {
         scale = max/converted.height;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -589,7 +589,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(converted.width < min) {
         scale = min / converted.width;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -598,7 +598,7 @@ NSSize strongsizeWithMinMax(NSSize from, float min, float max) {
     if(converted.height < min) {
         scale = min / converted.height;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -625,7 +625,7 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     if (converted.width > max.width) {
         scale = max.width/converted.width;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -634,7 +634,7 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     if(converted.height > max.height) {
         scale = max.height/converted.height;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -643,7 +643,7 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     if(converted.width < min.width) {
         scale = min.width / converted.width;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -652,7 +652,7 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     if(converted.height < min.height) {
         scale = min.height / converted.height;
         if(!scale) {
-            DLog(@"");
+            MTLog(@"");
         }
         converted.width = ceil(converted.width * scale);
         converted.height = ceil(converted.height * scale);
@@ -677,7 +677,7 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     [sourceImage setScalesWhenResized:YES];
     
     if (![sourceImage isValid]) {
-        DLog(@"Invalid Image");
+        MTLog(@"Invalid Image");
     } else {
 
         NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];

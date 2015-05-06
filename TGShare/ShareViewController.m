@@ -7,7 +7,8 @@
 //
 
 #import "ShareViewController.h"
-#import "Storage.h"
+#import "TGS_RPCRequest.h"
+#import "TGS_MTNetwork.h"
 @interface ShareViewController ()
 
 @end
@@ -24,6 +25,16 @@
     // Insert code here to customize the view
     NSExtensionItem *item = self.extensionContext.inputItems.firstObject;
     NSLog(@"Attachments = %@", item.attachments);
+    
+    [[TGS_MTNetwork instance] startNetwork];
+    
+    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:0 max_id:0 limit:100] successHandler:^(TGS_RPCRequest *request, id response) {
+        
+        int i = 0;
+        
+    } errorHandler:^(TGS_RPCRequest *request, RpcError *error) {
+        
+    }];
 
 }
 

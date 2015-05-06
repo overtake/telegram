@@ -118,7 +118,7 @@ DYNAMIC_PROPERTY(AttachmentsSelected);
 
 - (NSRange)appendString:(NSString *)string withColor:(NSColor*)color {
     if(string == nil) {
-        DLog(@"string is nil");
+        MTLog(@"string is nil");
         return NSMakeRange(0, 0);
     }
     

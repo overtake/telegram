@@ -11,12 +11,12 @@
 @implementation TLObject
 
 - (void)serialize:(SerializedData *)stream {
-    DLog(@"");
+    MTLog(@"");
     [NSException raise:@"Error" format:@"Not implemented"];
 }
 
 - (void)unserialize:(SerializedData *)stream {
-    DLog(@"");
+    MTLog(@"");
     [NSException raise:@"Error" format:@"Not implemented"];
 }
 @end

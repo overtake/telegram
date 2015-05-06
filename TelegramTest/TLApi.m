@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TLApi.h"
+#import "ClassStore.h"
 
 @implementation TLAPI_auth_checkPhone
 +(TLAPI_auth_checkPhone*)createWithPhone_number:(NSString*)phone_number {
@@ -16,7 +17,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1877286395];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1877286395];
 	[stream writeString:self.phone_number];
 	return [stream getOutput];
 }
@@ -33,7 +34,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1988976461];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1988976461];
 	[stream writeString:self.phone_number];
 	[stream writeInt:self.sms_type];
 	[stream writeInt:self.api_id];
@@ -51,7 +52,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:63247716];
+	SerializedData* stream = [ClassStore streamWithConstuctor:63247716];
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	return [stream getOutput];
@@ -69,7 +70,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:453408308];
+	SerializedData* stream = [ClassStore streamWithConstuctor:453408308];
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
@@ -88,7 +89,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1126886015];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1126886015];
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
@@ -103,7 +104,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1461180992];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1461180992];
 	
 	return [stream getOutput];
 }
@@ -116,7 +117,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1616179942];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1616179942];
 	
 	return [stream getOutput];
 }
@@ -130,7 +131,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1998331287];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1998331287];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -153,7 +154,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-440401971];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-440401971];
 	[stream writeInt:self.dc_id];
 	return [stream getOutput];
 }
@@ -167,7 +168,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-470837741];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-470837741];
 	[stream writeInt:self.n_id];
 	[stream writeByteArray:self.bytes];
 	return [stream getOutput];
@@ -184,7 +185,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-841733627];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-841733627];
 	[stream writeLong:self.perm_auth_key_id];
 	[stream writeLong:self.nonce];
 	[stream writeInt:self.expires_at];
@@ -206,7 +207,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1147957548];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1147957548];
 	[stream writeInt:self.token_type];
 	[stream writeString:self.token];
 	[stream writeString:self.device_model];
@@ -226,7 +227,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1707432768];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1707432768];
 	[stream writeInt:self.token_type];
 	[stream writeString:self.token];
 	return [stream getOutput];
@@ -241,9 +242,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-2067899501];
-	[TLClassStore TLSerialize:self.peer stream:stream];
-	[TLClassStore TLSerialize:self.settings stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-2067899501];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.settings stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -255,8 +256,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:313765169];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:313765169];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -268,7 +269,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-612493497];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-612493497];
 	
 	return [stream getOutput];
 }
@@ -282,7 +283,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-259486360];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-259486360];
 	[stream writeString:self.first_name];
 	[stream writeString:self.last_name];
 	return [stream getOutput];
@@ -296,7 +297,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1713919532];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1713919532];
 	[stream writeBool:self.offline];
 	return [stream getOutput];
 }
@@ -309,7 +310,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1068696894];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1068696894];
 	
 	return [stream getOutput];
 }
@@ -322,7 +323,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:227648840];
+	SerializedData* stream = [ClassStore streamWithConstuctor:227648840];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -330,7 +331,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.n_id objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -344,8 +345,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-902781519];
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-902781519];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -357,7 +358,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-995929106];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-995929106];
 	
 	return [stream getOutput];
 }
@@ -370,7 +371,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:583445000];
+	SerializedData* stream = [ClassStore streamWithConstuctor:583445000];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
@@ -384,7 +385,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-634342611];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-634342611];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -392,7 +393,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputContact* obj = [self.contacts objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeBool:self.replace];
@@ -407,7 +408,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-847825880];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-847825880];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
@@ -420,8 +421,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1902823612];
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1902823612];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -433,7 +434,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1504393374];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1504393374];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -441,7 +442,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.n_id objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -455,8 +456,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:858475004];
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:858475004];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -468,8 +469,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-448724803];
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-448724803];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -482,7 +483,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-176409329];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-176409329];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -496,7 +497,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-2065352905];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-2065352905];
 	
 	return [stream getOutput];
 }
@@ -509,7 +510,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1340184318];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1340184318];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -531,7 +532,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1109588596];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1109588596];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -555,7 +556,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-321970698];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-321970698];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.limit];
@@ -573,8 +574,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1834885329];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1834885329];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.limit];
@@ -596,10 +597,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:132772523];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:132772523];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeString:self.q];
-	[TLClassStore TLSerialize:self.filter stream:stream];
+	[ClassStore TLSerialize:self.filter stream:stream];
 	[stream writeInt:self.min_date];
 	[stream writeInt:self.max_date];
 	[stream writeInt:self.offset];
@@ -618,8 +619,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1336990448];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1336990448];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.offset];
 	return [stream getOutput];
@@ -634,8 +635,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-185009311];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-185009311];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.offset];
 	return [stream getOutput];
 }
@@ -648,7 +649,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1510897371];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1510897371];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -670,7 +671,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:94983360];
+	SerializedData* stream = [ClassStore streamWithConstuctor:94983360];
 	[stream writeInt:self.max_id];
 	return [stream getOutput];
 }
@@ -684,9 +685,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1551737264];
-	[TLClassStore TLSerialize:self.peer stream:stream];
-	[TLClassStore TLSerialize:self.action stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1551737264];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.action stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -702,9 +703,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1696755930];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1696755930];
 	[stream writeInt:self.flags];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
@@ -723,11 +724,11 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:762913713];
+	SerializedData* stream = [ClassStore streamWithConstuctor:762913713];
 	[stream writeInt:self.flags];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
 }
@@ -742,8 +743,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1440838285];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1440838285];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -775,7 +776,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1013621127];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1013621127];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -797,7 +798,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:998448230];
+	SerializedData* stream = [ClassStore streamWithConstuctor:998448230];
 	[stream writeInt:self.chat_id];
 	return [stream getOutput];
 }
@@ -811,7 +812,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-599447467];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-599447467];
 	[stream writeInt:self.chat_id];
 	[stream writeString:self.title];
 	return [stream getOutput];
@@ -826,9 +827,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-900957736];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-900957736];
 	[stream writeInt:self.chat_id];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -842,9 +843,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-106911223];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-106911223];
 	[stream writeInt:self.chat_id];
-	[TLClassStore TLSerialize:self.user_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeInt:self.fwd_limit];
 	return [stream getOutput];
 }
@@ -858,9 +859,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-530505962];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-530505962];
 	[stream writeInt:self.chat_id];
-	[TLClassStore TLSerialize:self.user_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -873,7 +874,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:164303470];
+	SerializedData* stream = [ClassStore streamWithConstuctor:164303470];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -881,7 +882,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeString:self.title];
@@ -896,7 +897,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-304838614];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-304838614];
 	
 	return [stream getOutput];
 }
@@ -911,7 +912,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:168039573];
+	SerializedData* stream = [ClassStore streamWithConstuctor:168039573];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.date];
 	[stream writeInt:self.qts];
@@ -927,9 +928,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-285902432];
-	[TLClassStore TLSerialize:self.n_id stream:stream];
-	[TLClassStore TLSerialize:self.crop stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-285902432];
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.crop stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -944,11 +945,11 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-720397176];
-	[TLClassStore TLSerialize:self.file stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-720397176];
+	[ClassStore TLSerialize:self.file stream:stream];
 	[stream writeString:self.caption];
-	[TLClassStore TLSerialize:self.geo_point stream:stream];
-	[TLClassStore TLSerialize:self.crop stream:stream];
+	[ClassStore TLSerialize:self.geo_point stream:stream];
+	[ClassStore TLSerialize:self.crop stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -960,7 +961,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-2016444625];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-2016444625];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -968,7 +969,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputPhoto* obj = [self.n_id objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -984,7 +985,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1291540959];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1291540959];
 	[stream writeLong:self.file_id];
 	[stream writeInt:self.file_part];
 	[stream writeByteArray:self.bytes];
@@ -1001,8 +1002,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-475607115];
-	[TLClassStore TLSerialize:self.location stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-475607115];
+	[ClassStore TLSerialize:self.location stream:stream];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -1016,7 +1017,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-990308245];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-990308245];
 	
 	return [stream getOutput];
 }
@@ -1029,7 +1030,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:531836966];
+	SerializedData* stream = [ClassStore streamWithConstuctor:531836966];
 	
 	return [stream getOutput];
 }
@@ -1045,7 +1046,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-938300290];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-938300290];
 	[stream writeString:self.device_model];
 	[stream writeString:self.system_version];
 	[stream writeString:self.app_version];
@@ -1061,7 +1062,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1862465352];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1862465352];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1069,7 +1070,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputAppEvent* obj = [self.events objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -1083,7 +1084,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1532407418];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1532407418];
 	[stream writeString:self.lang_code];
 	return [stream getOutput];
 }
@@ -1099,8 +1100,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1209117380];
-	[TLClassStore TLSerialize:self.user_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1209117380];
+	[ClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.limit];
@@ -1117,8 +1118,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:865483769];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:865483769];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
@@ -1135,7 +1136,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1082919718];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1082919718];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1143,7 +1144,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.contacts objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize ShortVector
@@ -1157,7 +1158,7 @@
 		}
 	}
 	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1171,8 +1172,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:2132356495];
-	[TLClassStore TLSerialize:self.geo_point stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2132356495];
+	[ClassStore TLSerialize:self.geo_point stream:stream];
 	[stream writeInt:self.radius];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -1187,7 +1188,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-515735953];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-515735953];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -1201,8 +1202,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1437853947];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1437853947];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1214,8 +1215,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1730338159];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1730338159];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1229,8 +1230,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1284383347];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1284383347];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeString:self.title];
 	[stream writeString:self.address];
 	return [stream getOutput];
@@ -1245,9 +1246,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:903355029];
-	[TLClassStore TLSerialize:self.peer stream:stream];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:903355029];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1266,10 +1267,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-808598451];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-808598451];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeString:self.q];
-	[TLClassStore TLSerialize:self.filter stream:stream];
+	[ClassStore TLSerialize:self.filter stream:stream];
 	[stream writeInt:self.min_date];
 	[stream writeInt:self.max_date];
 	[stream writeInt:self.offset];
@@ -1289,8 +1290,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1254131096];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1254131096];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.limit];
@@ -1306,8 +1307,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:146319145];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:146319145];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeBool:self.typing];
 	return [stream getOutput];
 }
@@ -1322,8 +1323,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:102432836];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:102432836];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
@@ -1339,9 +1340,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1192173825];
-	[TLClassStore TLSerialize:self.peer stream:stream];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1192173825];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
 	return [stream getOutput];
 }
@@ -1357,9 +1358,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:235482646];
+	SerializedData* stream = [ClassStore streamWithConstuctor:235482646];
 	[stream writeString:self.title];
-	[TLClassStore TLSerialize:self.geo_point stream:stream];
+	[ClassStore TLSerialize:self.geo_point stream:stream];
 	[stream writeString:self.address];
 	[stream writeString:self.venue];
 	return [stream getOutput];
@@ -1374,7 +1375,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:651135312];
+	SerializedData* stream = [ClassStore streamWithConstuctor:651135312];
 	[stream writeInt:self.version];
 	[stream writeInt:self.random_length];
 	return [stream getOutput];
@@ -1390,8 +1391,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-162681021];
-	[TLClassStore TLSerialize:self.user_id stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-162681021];
+	[ClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeInt:self.random_id];
 	[stream writeByteArray:self.g_a];
 	return [stream getOutput];
@@ -1407,8 +1408,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1035731989];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1035731989];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeByteArray:self.g_b];
 	[stream writeLong:self.key_fingerprint];
 	return [stream getOutput];
@@ -1422,7 +1423,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-304536635];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-304536635];
 	[stream writeInt:self.chat_id];
 	return [stream getOutput];
 }
@@ -1436,8 +1437,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:2031374829];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2031374829];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeBool:self.typing];
 	return [stream getOutput];
 }
@@ -1451,8 +1452,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:2135648522];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2135648522];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_date];
 	return [stream getOutput];
 }
@@ -1467,8 +1468,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1451792525];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1451792525];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeLong:self.random_id];
 	[stream writeByteArray:self.data];
 	return [stream getOutput];
@@ -1485,11 +1486,11 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1701831834];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1701831834];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeLong:self.random_id];
 	[stream writeByteArray:self.data];
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1503,8 +1504,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:852769188];
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:852769188];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeLong:self.random_id];
 	[stream writeByteArray:self.data];
 	return [stream getOutput];
@@ -1518,7 +1519,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1436924774];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1436924774];
 	[stream writeInt:self.max_qts];
 	return [stream getOutput];
 }
@@ -1534,7 +1535,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-562337987];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-562337987];
 	[stream writeLong:self.file_id];
 	[stream writeInt:self.file_part];
 	[stream writeInt:self.file_total_parts];
@@ -1550,7 +1551,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1663104819];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1663104819];
 	
 	return [stream getOutput];
 }
@@ -1564,7 +1565,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:229241832];
+	SerializedData* stream = [ClassStore streamWithConstuctor:229241832];
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	return [stream getOutput];
@@ -1578,7 +1579,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:916930423];
+	SerializedData* stream = [ClassStore streamWithConstuctor:916930423];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1600,7 +1601,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:655677548];
+	SerializedData* stream = [ClassStore streamWithConstuctor:655677548];
 	[stream writeString:self.username];
 	return [stream getOutput];
 }
@@ -1613,7 +1614,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1040964988];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1040964988];
 	[stream writeString:self.username];
 	return [stream getOutput];
 }
@@ -1627,7 +1628,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:301470424];
+	SerializedData* stream = [ClassStore streamWithConstuctor:301470424];
 	[stream writeString:self.q];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -1641,8 +1642,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-623130288];
-	[TLClassStore TLSerialize:self.n_key stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-623130288];
+	[ClassStore TLSerialize:self.n_key stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1655,8 +1656,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-906486552];
-	[TLClassStore TLSerialize:self.n_key stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-906486552];
+	[ClassStore TLSerialize:self.n_key stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1664,7 +1665,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputPrivacyRule* obj = [self.rules objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -1678,7 +1679,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1099779595];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1099779595];
 	[stream writeString:self.reason];
 	return [stream getOutput];
 }
@@ -1691,7 +1692,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:150761757];
+	SerializedData* stream = [ClassStore streamWithConstuctor:150761757];
 	
 	return [stream getOutput];
 }
@@ -1704,8 +1705,8 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:608323678];
-	[TLClassStore TLSerialize:self.ttl stream:stream];
+	SerializedData* stream = [ClassStore streamWithConstuctor:608323678];
+	[ClassStore TLSerialize:self.ttl stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1717,7 +1718,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:200282908];
+	SerializedData* stream = [ClassStore streamWithConstuctor:200282908];
 	[stream writeString:self.username];
 	return [stream getOutput];
 }
@@ -1730,7 +1731,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1543001868];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1543001868];
 	[stream writeString:self.phone_number];
 	return [stream getOutput];
 }
@@ -1745,7 +1746,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1891839707];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1891839707];
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
@@ -1761,7 +1762,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1373446075];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1373446075];
 	[stream writeString:self.emoticon];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
@@ -1775,7 +1776,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1438922648];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1438922648];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
@@ -1788,7 +1789,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:954152242];
+	SerializedData* stream = [ClassStore streamWithConstuctor:954152242];
 	[stream writeInt:self.period];
 	return [stream getOutput];
 }
@@ -1801,7 +1802,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:623001124];
+	SerializedData* stream = [ClassStore streamWithConstuctor:623001124];
 	[stream writeString:self.message];
 	return [stream getOutput];
 }
@@ -1814,7 +1815,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-484392616];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-484392616];
 	
 	return [stream getOutput];
 }
@@ -1827,7 +1828,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-545786948];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-545786948];
 	[stream writeLong:self.n_hash];
 	return [stream getOutput];
 }
@@ -1840,7 +1841,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1418342645];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1418342645];
 	
 	return [stream getOutput];
 }
@@ -1853,7 +1854,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-1131605573];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1131605573];
 	[stream writeByteArray:self.current_password_hash];
 	return [stream getOutput];
 }
@@ -1867,9 +1868,9 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-92517498];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-92517498];
 	[stream writeByteArray:self.current_password_hash];
-	[TLClassStore TLSerialize:self.n_settings stream:stream];
+	[ClassStore TLSerialize:self.n_settings stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1881,7 +1882,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:174260510];
+	SerializedData* stream = [ClassStore streamWithConstuctor:174260510];
 	[stream writeByteArray:self.password_hash];
 	return [stream getOutput];
 }
@@ -1894,7 +1895,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:-661144474];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-661144474];
 	
 	return [stream getOutput];
 }
@@ -1907,7 +1908,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1319464594];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1319464594];
 	[stream writeString:self.code];
 	return [stream getOutput];
 }
@@ -1920,7 +1921,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:2106086025];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2106086025];
 	[stream writeInt:self.chat_id];
 	return [stream getOutput];
 }
@@ -1933,7 +1934,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1051570619];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1051570619];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
@@ -1946,7 +1947,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [TLClassStore streamWithConstuctor:1817183516];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1817183516];
 	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }

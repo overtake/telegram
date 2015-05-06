@@ -260,7 +260,7 @@
 //        NSAttributedString *nsAttributedString = [[NSAttributedString alloc] initWithString:self.text attributes:attributes];
 //        [nsAttributedString size]
         
-//        DLog(@"bounds %@", NSStringFromRect(self.bounds));
+//        MTLog(@"bounds %@", NSStringFromRect(self.bounds));
           NSRect rect = NSMakeRect(roundf((self.bounds.size.width - size.width) / 2) + self.textOffset.width, roundf((self.bounds.size.height - size.height) / 2)+ self.textOffset.height, size.width, size.height);
         
 //        [[NSColor redColor] set] ;

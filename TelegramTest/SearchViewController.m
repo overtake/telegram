@@ -227,7 +227,7 @@ typedef enum {
         TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
         [self.tableView cancelSelection];
 
-        if(![dialog isKindOfClass:NSNull.class]) {
+        if(![dialog isKindOfClass:NSNull.class] && dialog) {
             NSUInteger hash = [SearchItem hash:[[SearchItem alloc] initWithDialogItem:dialog searchString:self.searchParams.searchString]];
             [self.tableView setSelectedByHash:hash];
         }
@@ -644,7 +644,7 @@ static int insertCount = 3;
     [self.tableView insert:insertMessagesArray startIndex:self.tableView.count tableRedraw:YES];
     
     
-    DLog(@"count %lu", self.tableView.count);
+    MTLog(@"count %lu", self.tableView.count);
     
 }
 

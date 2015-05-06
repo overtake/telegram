@@ -109,7 +109,7 @@
         return FMDBReturnAutoreleased([dict copy]);
     }
     else {
-        DLog(@"Warning: There seem to be no columns in this set.");
+        MTLog(@"Warning: There seem to be no columns in this set.");
     }
     
     return nil;
@@ -137,7 +137,7 @@
         return dict;
     }
     else {
-        DLog(@"Warning: There seem to be no columns in this set.");
+        MTLog(@"Warning: There seem to be no columns in this set.");
     }
     
     return nil;
@@ -164,15 +164,15 @@
             if (SQLITE_LOCKED == rc) {
                 rc = sqlite3_reset([_statement statement]);
                 if (rc != SQLITE_LOCKED) {
-                    DLog(@"Unexpected result from sqlite3_reset (%d) rs", rc);
+                    MTLog(@"Unexpected result from sqlite3_reset (%d) rs", rc);
                 }
             }
             usleep(20);
             
             if ([_parentDB busyRetryTimeout] && (numberOfRetries++ > [_parentDB busyRetryTimeout])) {
                 
-                DLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [_parentDB databasePath]);
-                DLog(@"Database busy");
+                MTLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [_parentDB databasePath]);
+                MTLog(@"Database busy");
                 break;
             }
         }
@@ -180,17 +180,17 @@
             // all is well, let's return.
         }
         else if (SQLITE_ERROR == rc) {
-            DLog(@"Error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
+            MTLog(@"Error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
             break;
         } 
         else if (SQLITE_MISUSE == rc) {
             // uh oh.
-            DLog(@"Error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
+            MTLog(@"Error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
             break;
         }
         else {
             // wtf?
-            DLog(@"Unknown error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
+            MTLog(@"Unknown error calling sqlite3_step (%d: %s) rs", rc, sqlite3_errmsg([_parentDB sqliteHandle]));
             break;
         }
         
@@ -217,7 +217,7 @@
         return [n intValue];
     }
     
-    DLog(@"Warning: I could not find the column named '%@'.", columnName);
+    MTLog(@"Warning: I could not find the column named '%@'.", columnName);
     
     return -1;
 }

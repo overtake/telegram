@@ -221,7 +221,7 @@
         }
     }
  
-//    DLog(@"hashStr %@", hashStr);
+//    MTLog(@"hashStr %@", hashStr);
 
     return [hashStr hash];
 }

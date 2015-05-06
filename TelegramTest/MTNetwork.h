@@ -5,7 +5,6 @@
 #import <MTProtoKit/MTDatacenterAddress.h>
 #import <MtProtoKit/MTRequestMessageService.h>
 #import <MTProtoKit/MTKeychain.h>
-#import "TelegramSerialization.h"
 #import "TGUpdateMessageService.h"
 #import <MtProtoKit/MTQueue.h>
 

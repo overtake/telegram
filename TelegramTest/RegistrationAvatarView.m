@@ -88,7 +88,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent {
     
-    DLog(@"isLeft %d isRight %d", theEvent.isLeftMouseButtonClick, theEvent.isRightMouseButtonClick);
+    MTLog(@"isLeft %d isRight %d", theEvent.isLeftMouseButtonClick, theEvent.isRightMouseButtonClick);
     
     if(theEvent.isLeftMouseButtonClick) {
         [self photoTake];

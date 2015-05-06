@@ -31,13 +31,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>19092</string>
+	<string>19237</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2013 keepcoder. All rights reserved.</string>
+	<string>Copyright © 2015 TELEGRAM MESSENGER LLP. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>NewMainMenu</string>
 	<key>NSPrincipalClass</key>

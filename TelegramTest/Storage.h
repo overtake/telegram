@@ -18,13 +18,11 @@
 #import "TGSecretInAction.h"
 #import "TLClassStore.h"
 #import "TGSecretAction.h"
+#import "TL_localMessage.h"
 
-@interface Storage : NSObject
-{
- //   FMDatabase *db;
-    FMDatabaseQueue *queue;
-    FMDatabaseQueue *authQueue;
-}
+#import "TGDatabase.h"
+
+@interface Storage : TGDatabase
 
 extern NSString *const ENCRYPTED_IMAGE_COLLECTION;
 extern NSString *const ENCRYPTED_PARAMS_COLLECTION;
@@ -35,16 +33,10 @@ extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
 -(void)drop:(void (^)())completeHandler;
 
-
-+(void)dbSetKey:(NSString *)key;
-+(void)dbRekey:(NSString *)rekey;
-
 +(Storage *)manager;
 +(YapDatabaseConnection *)yap;
 
-+(NSString *)path;
 
-// START MESSAGE AND DIALOGS PROCEDURES!!!
 
 
 - (void)searchMessagesBySearchString:(NSString *)searchString offset:(int)offset completeHandler:(void (^)(NSInteger count, NSArray *messages))completeHandler;

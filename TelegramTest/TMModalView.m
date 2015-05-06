@@ -86,7 +86,7 @@
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {
-//    DLog(@"lol");
+//    MTLog(@"lol");
 //    [[NSCursor arrowCursor] set];
 }
 

@@ -13,11 +13,6 @@
 
 @interface RPCRequest : NSObject
 
-typedef enum StelMessageStatus : NSUInteger {
-    kQueue,
-    kWrited,
-    kConfirmed
-} StelMessageStatus;
 
 @property (nonatomic, strong) RpcError *error;
 @property (nonatomic, strong) id response;

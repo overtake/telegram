@@ -58,7 +58,7 @@
             [self _compleRemoteLoad:array];
         }
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        DLog(@"RpcError %@", error.error_msg);
+        MTLog(@"RpcError %@", error.error_msg);
     }];
 }
 

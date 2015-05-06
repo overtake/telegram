@@ -83,7 +83,7 @@
     
     
     
-    //    DLog(@"");
+    //    MTLog(@"");
     self.startDragPoint = theEvent.locationInWindow;
     self.startContainerPosition = self.containerView.layer.position;
     
@@ -126,7 +126,7 @@
 }
 
 - (void)hideButton {
-    //    DLog(@"");
+    //    MTLog(@"");
     
     CGPoint fromPoint = self.containerView.layer.position;
     CGPoint toPoint = NSMakePoint(0, 0);

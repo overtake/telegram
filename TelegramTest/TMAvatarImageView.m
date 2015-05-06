@@ -221,13 +221,13 @@ static const TGTwoColors colors[] = {
             }
             
             if(rebuild) {
-                DLog(@"rebuild chat photo true");
+                MTLog(@"rebuild chat photo true");
                 self->_chat = nil;
                 self.isNeedPlaceholder = NO;
                 [self setChat:chat animated:YES];
                 self.isNeedPlaceholder = YES;
             } else {
-                DLog(@"rebuild chat photo false");
+                MTLog(@"rebuild chat photo false");
             }
         }
     }

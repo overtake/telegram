@@ -1110,13 +1110,13 @@ static NSMutableDictionary *flagRules = nil;
     NSArray *callingCodes = [[_callingCodeOffsets allKeys] sortedArrayUsingSelector:@selector(compare:)];
     for (NSString *callingCode in callingCodes) {
         CallingCodeInfo *info = [self callingCodeInfo:callingCode];
-        DLog(@"%@", info);
+        MTLog(@"%@", info);
     }
 
-    DLog(@"flagRules: %@", flagRules);
-    DLog(@"extra1 calling codes: %@", extra1CallingCodes);
-    DLog(@"extra2 calling codes: %@", extra2CallingCodes);
-    DLog(@"extra3 calling codes: %@", extra3CallingCodes);
+    MTLog(@"flagRules: %@", flagRules);
+    MTLog(@"extra1 calling codes: %@", extra1CallingCodes);
+    MTLog(@"extra2 calling codes: %@", extra2CallingCodes);
+    MTLog(@"extra3 calling codes: %@", extra3CallingCodes);
 }
 #endif
 

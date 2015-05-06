@@ -300,7 +300,7 @@ static const int navigationOffset = 48;
     }
     
     
-    DLog(@"navigation controller isAnimate = %@", isAnimate ? @"YES" : @"NO");
+    MTLog(@"navigation controller isAnimate = %@", isAnimate ? @"YES" : @"NO");
     assert([NSThread isMainThread]);
     
     

@@ -46,7 +46,7 @@
         AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
             
             if (result != AVAssetImageGeneratorSucceeded) {
-                DLog(@"couldn't generate thumbnail, error:%@", error);
+                MTLog(@"couldn't generate thumbnail, error:%@", error);
             }
             
             thumbImg = [[NSImage alloc] initWithCGImage:im size:size];

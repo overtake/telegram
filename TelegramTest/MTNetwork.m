@@ -194,10 +194,27 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 -(void)moveAndEncryptKeychain {
     
+    
+
+    
+    
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-    
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
+    
+#ifdef TGDEBUG
+    
+     NSString *path = [NSString stringWithFormat:@"/Users/%@/Library/Application support/telegram",NSUserName()];
+    
+    BOOL isDir;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+        [[NSFileManager defaultManager] moveItemAtPath:path toPath:[applicationSupportPath stringByAppendingPathComponent:applicationName] error:nil];
+    }
+    
+#endif
+    
+  
     
     
     
@@ -230,10 +247,27 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(TGKeychain *)nKeychain {
-    if(isTestServer())
-        return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
-    //else
+    
+    
+#ifndef TGDEBUG
+    
+    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
+        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
+    else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+#else 
+    
+    if(isTestServer())  {
+        return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
+    } else {
+        return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+    }
+    
+#endif
+    
+    
+    
+     
 }
 
 
@@ -292,9 +326,16 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+    int o = (int) [defaults integerForKey:kDefaultDatacenter];
     
-    _masterDatacenter = (int)[defaults integerForKey:kDefaultDatacenter];
-    _masterDatacenter = _masterDatacenter == 0 ? 1 : _masterDatacenter;
+    
+    if(o > 0) {
+        [Storage setMasterdatacenter:o];
+        [defaults removeObjectForKey:kDefaultDatacenter];
+    }
+    
+    _masterDatacenter = [Storage masterdatacenter];
     
     
     _datacenterCount = 5;
@@ -428,8 +469,8 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)setDatacenter:(int)dc_id {
     _masterDatacenter = dc_id;
-    [[NSUserDefaults standardUserDefaults] setObject:@(dc_id) forKey:kDefaultDatacenter];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [Storage setMasterdatacenter:dc_id];
 }
 
 -(MTKeychain *)keyChain {
@@ -581,14 +622,14 @@ static int MAX_WORKER_POLL = 5;
 }
 
 - (void)contextDatacenterAddressSetUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId addressSet:(MTDatacenterAddressSet *)addressSet {
-    DLog(@"");
+    MTLog(@"");
     
 }
 - (void)contextDatacenterAuthInfoUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authInfo:(MTDatacenterAuthInfo *)authInfo {
     
 }
 - (void)contextDatacenterAuthTokenUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authToken:(id)authToken {
-    DLog(@"");
+    MTLog(@"");
 }
 
 - (void)contextIsPasswordRequiredUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId

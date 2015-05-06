@@ -36,7 +36,7 @@
         }
    // }
     
-//    DLog(@"redraw rows");
+//    MTLog(@"redraw rows");
     
 }
 

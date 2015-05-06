@@ -5,7 +5,7 @@
 
 
 #import "TGTimer.h"
-
+#import "ASQueue.h"
 #import <MTProtoKit/MTContext.h>
 #import <MTProtoKit/MTProto.h>
 #import <MTProtoKit/MTRequestMessageService.h>
@@ -35,7 +35,7 @@ static int workerCount = 0;
     if (self != nil)
     {
         workerCount++;
-        DLog(@"[TGNetworkWorker#%x/%d start (%d)]", (int)self, (int)datacenterId, workerCount);
+        MTLog(@"[TGNetworkWorker#%x/%d start (%d)]", (int)self, (int)datacenterId, workerCount);
 
         _context = context;
         _datacenterId = datacenterId;
@@ -56,7 +56,7 @@ static int workerCount = 0;
 - (void)dealloc
 {
     workerCount--;
-    DLog(@"[TGNetworkWorker#%x stop (%d)]", (int)self, workerCount);
+    MTLog(@"[TGNetworkWorker#%x stop (%d)]", (int)self, workerCount);
     
     if (_timeoutTimer != nil)
     {

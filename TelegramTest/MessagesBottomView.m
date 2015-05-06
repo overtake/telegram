@@ -477,16 +477,16 @@
     
     NSMenuItem *attachLocationItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Location", nil) withBlock:^(id sender) {
         
-//        MapPanel *panel = [MapPanel sharedPanel];
-//        [self.window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
-//            
-//        }];
+        MapPanel *panel = [MapPanel sharedPanel];
+        [self.window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
+            
+        }];
         
         
         
         //        [FileUtils showPanelWithTypes:[NSArray arrayWithObjects:@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi", nil] completionHandler:^(NSString *result) {
         //
-        //            DLog(@"result %@", result);
+        //            MTLog(@"result %@", result);
         //
         //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.conversation];
         //        }];
@@ -498,8 +498,24 @@
     [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     
-  //  if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
-     //   [theMenu addItem:attachLocationItem];
+#ifndef TGDEBUG
+    
+    if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
+        [theMenu addItem:attachLocationItem];
+    //йцуаор =))frfr
+    // oqwhefjkwqehf kj
+    //qwefwf
+    //qwefqkwjef lqwjkef lwqkef/
+    
+    
+#else
+    
+    if(ACCEPT_FEATURE) {
+        [theMenu addItem:attachLocationItem];
+    }
+    
+    
+#endif
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {
         [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
@@ -1126,9 +1142,9 @@
     height += 24;
 
     
-//    DLog(@"height %d", height);
+//    MTLog(@"height %d", height);
     height = height % 2 == 1 ? height + 1 : height;
-//    DLog(@"height %d", height);
+//    MTLog(@"height %d", height);
     
     if(_imageAttachmentsController.isShown ) {
         height += 75;

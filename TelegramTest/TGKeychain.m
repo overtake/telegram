@@ -18,6 +18,10 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 #import <MTProtoKit/MTEncryption.h>
+#import <MTProtoKit/MTLogging.h>
+#import "TGDatabase.h"
+#import "SSKeychain.h"
+#import <AppKit/AppKit.h>
 
 static TG_SYNCHRONIZED_DEFINE(_keychains) = PTHREAD_MUTEX_INITIALIZER;
 static NSMutableDictionary *keychains()
@@ -42,6 +46,9 @@ static NSMutableDictionary *keychains()
     dispatch_semaphore_t _semaphore;
     TG_SYNCHRONIZED_DEFINE(_dictByGroup);
     NSMutableDictionary *_dictByGroup;
+    
+    NSMutableDictionary *_readKeychainData;
+    NSMutableDictionary *_saveKeychainData;
 }
 
 @end
@@ -93,90 +100,8 @@ static NSMutableDictionary *keychains()
         _passcodeHash = [[NSData alloc] initWithEmptyBytes:64];
         _name = name;
         _encrypted = encrypted;
-        
-        if (name != nil)
-        {
-            if (_encrypted)
-            {
-                NSMutableDictionary *keychainReadQuery = [[NSMutableDictionary alloc] initWithDictionary:@{
-                                                                                                           (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                                                                                                           (__bridge id)kSecAttrService: @"org.mtproto.MTKeychain",
-                                                                                                           (__bridge id)kSecAttrAccount: [[NSString alloc] initWithFormat:@"MTKeychain:%@", name],
-#if TARGET_OS_IPHONE
-                                                                                                           (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly,
-#endif
-                                                                                                           (__bridge id)kSecReturnData: (id)kCFBooleanTrue,
-                                                                                                           (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
-                                                                                                           }];
-                
-                bool upgradeEncryption = false;
-                
-                CFDataRef keyData = NULL;
-                if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainReadQuery, (CFTypeRef *)&keyData) == noErr && keyData != NULL)
-                {
-                    NSData *data = (__bridge_transfer NSData *)keyData;
-                    if (data.length == 64)
-                    {
-                        _aesKey = [data subdataWithRange:NSMakeRange(0, 32)];
-                        _aesIv = [data subdataWithRange:NSMakeRange(32, 32)];
-                    }
-                }
-                else
-                {
-                    keychainReadQuery[(__bridge id)kSecAttrAccessible] = (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
-                    if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainReadQuery, (CFTypeRef *)&keyData) == noErr && keyData != NULL)
-                    {
-                        NSData *data = (__bridge_transfer NSData *)keyData;
-                        if (data.length == 64)
-                        {
-                            upgradeEncryption = true;
-                            
-                            _aesKey = [data subdataWithRange:NSMakeRange(0, 32)];
-                            _aesIv = [data subdataWithRange:NSMakeRange(32, 32)];
-                        }
-                    }
-                }
-                
-                bool storeKey = upgradeEncryption || _aesKey == nil || _aesIv == nil;
-                
-                if (_aesKey == nil || _aesIv == nil)
-                {
-                    uint8_t buf[32];
-                    
-                    SecRandomCopyBytes(kSecRandomDefault, 32, buf);
-                    _aesKey = [[NSData alloc] initWithBytes:buf length:32];
-                    
-                    SecRandomCopyBytes(kSecRandomDefault, 32, buf);
-                    _aesIv = [[NSData alloc] initWithBytes:buf length:32];
-                }
-                
-                NSMutableData *newKeyData = [[NSMutableData alloc] init];
-                [newKeyData appendData:_aesKey];
-                [newKeyData appendData:_aesIv];
-                
-                if (storeKey)
-                {
-                    SecItemDelete((__bridge CFDictionaryRef)@{
-                                                              (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                                                              (__bridge id)kSecAttrService: @"org.mtproto.MTKeychain",
-                                                              (__bridge id)kSecAttrAccount: [[NSString alloc] initWithFormat:@"MTKeychain:%@", name],
-#if TARGET_OS_IPHONE
-                                                              (__bridge id)kSecAttrAccessible: upgradeEncryption ? (__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly : (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly
-#endif
-                                                              });
-                    
-                    SecItemAdd((__bridge CFDictionaryRef)@{
-                                                           (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
-                                                           (__bridge id)kSecAttrService: @"org.mtproto.MTKeychain",
-                                                           (__bridge id)kSecAttrAccount: [[NSString alloc] initWithFormat:@"MTKeychain:%@", name],
-#if TARGET_OS_IPHONE
-                                                           (__bridge id)kSecAttrAccessible: (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly,
-#endif
-                                                           (__bridge id)kSecValueData: newKeyData
-                                                           }, NULL);
-                }
-            }
-        }
+        _saveKeychainData = [[NSMutableDictionary alloc] init];
+        _readKeychainData = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -252,10 +177,10 @@ static NSMutableDictionary *keychains()
         
         NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
         
-       [Storage dbSetKey:pass];
+       [TGDatabase dbSetKey:pass];
         
         if(save) {
-            [Storage dbRekey:pass];
+            [TGDatabase dbRekey:pass];
         }
     }
     
@@ -279,13 +204,44 @@ static NSMutableDictionary *keychains()
 - (void)_loadKeychainIfNeeded:(NSString *)group
 {
     
+    if(_encrypted) {
+        if(_readKeychainData.count == 0) {
+            _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Telegram" account:@"authkeys"]];
+        }
+    }
+    
+    
+    
     if (_dictByGroup[group] == nil)
     {
         if (_name != nil)
         {
-            NSMutableData *data = [[[NSData alloc] initWithContentsOfFile:[self filePathForName:_name group:group]] mutableCopy];
+            NSMutableData *data;
             
+            NSString *path = [self filePathForName:_name group:group];
             
+            if(_encrypted) {
+                
+                NSData *fileData = [[NSData alloc] initWithContentsOfFile:path];
+                
+                if(fileData.length > 0) {
+                    
+                    _saveKeychainData[group] = fileData;
+                    
+                    [self saveKeychain];
+                    
+                    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+                    
+                    data = [fileData mutableCopy];
+                } else {
+                    data = [_readKeychainData[group] mutableCopy];
+                }
+                
+            } else {
+                data = [[[NSData alloc] initWithContentsOfFile:path] mutableCopy];
+            }
+            
+           
             
             if (data != nil && data.length >= 8)
             {
@@ -328,8 +284,7 @@ static NSMutableDictionary *keychains()
                 {
                     NSMutableData *decryptedData = [[NSMutableData alloc] init];
                     [decryptedData appendData:[data subdataWithRange:NSMakeRange(4, paddedLength)]];
-                    if (_encrypted)
-                        MTAesDecryptInplace(decryptedData, _aesKey, _aesIv);
+
                     [decryptedData setLength:length];
                     
                     bool hashVerified = true;
@@ -342,7 +297,7 @@ static NSMutableDictionary *keychains()
                         int32_t decryptedHash = MTMurMurHash32(decryptedData.bytes, (int)decryptedData.length);
                         if (hash != decryptedHash)
                         {
-                            DLog(@"[MTKeychain invalid decrypted hash]");
+                            MTLog(@"[MTKeychain invalid decrypted hash]");
                             hashVerified = false;
                         }
                     }
@@ -355,16 +310,16 @@ static NSMutableDictionary *keychains()
                             if ([object respondsToSelector:@selector(objectForKey:)] && [object respondsToSelector:@selector(setObject:forKey:)])
                                 _dictByGroup[group] = object;
                             else
-                                DLog(@"[MTKeychain invalid root object %@]", object);
+                                MTLog(@"[MTKeychain invalid root object %@]", object);
                         }
                         @catch (NSException *e)
                         {
-                            DLog(@"[MTKeychain error parsing keychain: %@]", e);
+                            MTLog(@"[MTKeychain error parsing keychain: %@]", e);
                         }
                     }
                 }
                 else
-                    DLog(@"[MTKeychain error loading keychain: expected data length %d, got %d]", 4 + (int)paddedLength, (int)data.length);
+                    MTLog(@"[MTKeychain error loading keychain: expected data length %d, got %d]", 4 + (int)paddedLength, (int)data.length);
             }
         }
         
@@ -384,15 +339,11 @@ static NSMutableDictionary *keychains()
             int32_t hash = MTMurMurHash32(encryptedData.bytes, (int)encryptedData.length);
             
             
-            
-            
             [encryptedData addPadding:16];
             
             if(!_notEncryptedKeychain) {
                 MTAesEncryptInplace(encryptedData, [_passcodeHash subdataWithRange:NSMakeRange(0, 32)], [_passcodeHash subdataWithRange:NSMakeRange(32, 32)]);
             }
-            
-            
             
             
             uint32_t length = (uint32_t)data.length;
@@ -402,12 +353,28 @@ static NSMutableDictionary *keychains()
             
             
             NSString *filePath = [self filePathForName:_name group:group];
-            if (![encryptedData writeToFile:filePath atomically:true])
-                DLog(@"[MTKeychain error writing keychain to file]");
+            
+            
+            
+            if(_encrypted) {
+                _saveKeychainData[group] = encryptedData;
+                
+                [self saveKeychain];
+                
+            } else {
+                if (![encryptedData writeToFile:filePath atomically:true])
+                    MTLog(@"[MTKeychain error writing keychain to file]");
+            }
+            
+            
         }
         else
-            DLog(@"[MTKeychain error serializing keychain]");
+            MTLog(@"[MTKeychain error serializing keychain]");
     }
+}
+
+-(void)saveKeychain {
+    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:@"Telegram" account:@"authkeys"];
 }
 
 - (void)setObject:(id)object forKey:(id<NSCopying>)aKey group:(NSString *)group

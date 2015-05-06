@@ -122,7 +122,7 @@
 
 - (void)requestNetworkConfigFromDatacenter:(NSInteger)datacenterId
 {
-    DLog(@"[TGDatacenterWatchdogActor#%p requesting network config from %d]", self, (int)datacenterId);
+    MTLog(@"[TGDatacenterWatchdogActor#%p requesting network config from %d]", self, (int)datacenterId);
     
     MTContext *context = [[MTNetwork instance] context];
     
@@ -215,14 +215,14 @@
             
             if (currentAddressSet == nil || ![addressSet isEqual:currentAddressSet])
             {
-                DLog(@"[TGDatacenterWatchdogActor#%p updating datacenter %d address set to %@]", self, [nDatacenterId intValue], addressSet);
+                MTLog(@"[TGDatacenterWatchdogActor#%p updating datacenter %d address set to %@]", self, [nDatacenterId intValue], addressSet);
                 [context updateAddressSetForDatacenterWithId:[nDatacenterId integerValue] addressSet:addressSet];
             }
         }];
         
         [ASQueue dispatchOnStageQueue:^{
             
-            DLog(@"[TGDatacenterWatchdogActor#%p processed %d datacenter addresses from datacenter %d]", self, (int)config.dc_options.count, (int)datacenterId);
+            MTLog(@"[TGDatacenterWatchdogActor#%p processed %d datacenter addresses from datacenter %d]", self, (int)config.dc_options.count, (int)datacenterId);
             
             
             

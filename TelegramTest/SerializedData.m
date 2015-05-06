@@ -8,6 +8,8 @@
 
 #import "SerializedData.h"
 
+#import <MTProtoKit/MTLogging.h>
+
 @implementation SerializedData
 
 @synthesize input;
@@ -29,7 +31,7 @@
         
         [self.ouput write:buffer maxLength:4];
     } @catch(NSException *exception) {
-        ELog(@"Write int exception");
+        MTLog(@"Write int exception");
     }
 }
 
@@ -41,7 +43,7 @@
         memcpy(&intValue, buffer, 4);
         return intValue;
     } else {
-        ELog(@"Read int buffer length = 0");
+        MTLog(@"Read int buffer length = 0");
         return 0;
     }
 }
@@ -53,7 +55,7 @@
         memcpy(buffer, &num, 8);
         [self.ouput write:buffer maxLength:8];
     } @catch(NSException *exception) {
-        ELog(@"Write int exception");
+        MTLog(@"Write int exception");
     }
 }
 
@@ -65,7 +67,7 @@
         memcpy(&longValue, buffer, 8);
         return longValue;
     } else {
-        ELog(@"Read dobule buffer length = 0");
+        MTLog(@"Read dobule buffer length = 0");
         return 0;
     }
 }
@@ -76,7 +78,7 @@
         memcpy(buffer, &value, 8);
         [self.ouput write:buffer maxLength:8];
     } @catch(NSException *exception) {
-        ELog(@"Write int exception");
+        MTLog(@"Write int exception");
     }
 }
 
@@ -88,7 +90,7 @@
         memcpy(&doubleValue, buffer, 8);
         return doubleValue;
     } else {
-        ELog(@"Read dobule buffer length = 0");
+        MTLog(@"Read dobule buffer length = 0");
         return 0;
     }
 }
@@ -108,7 +110,7 @@
     } else if (consructor == 0xbc799737) {
         return NO;
     }
-    ELog("Not bool");
+    MTLog(@"Not bool");
     return NO;
 }
 
@@ -116,7 +118,7 @@
     @try {
         [self.ouput write:[data bytes] maxLength:[data length]];
     } @catch(NSException *exception) {
-        ELog(@"Write data exception");
+        MTLog(@"Write data exception");
     }
 }
 
@@ -128,10 +130,10 @@
             
             return [[NSData alloc] initWithBytesNoCopy:buf length:count freeWhenDone:true];
         } else {
-            ELog(@"Read data length = 0");
+            MTLog(@"Read data length = 0");
         }
     } @catch(NSException *exception) {
-        ELog(@"Read data exception");
+        MTLog(@"Read data exception");
     }
 }
 
@@ -140,7 +142,7 @@
     int length = 0;
     
     if([self.input read:&buf maxLength:1] < 1) {
-        ELog(@"readByteArray read error #1");
+        MTLog(@"readByteArray read error #1");
         return 0;
     }
     
@@ -154,7 +156,7 @@
         if(len > 0) {
             memcpy(&length, buff, 3);
         } else {
-            ELog(@"Read length buffer length = %ld", (long)len);
+            MTLog(@"Read length buffer length = %ld", (long)len);
             return 0;
         }
         sl = 4;
@@ -171,7 +173,7 @@
     while((length + i) % 4 != 0) {
         uint8_t length;
         if([self.input read:&length maxLength:1] < 1) {
-            ELog(@"readByteArray read error #4");
+            MTLog(@"readByteArray read error #4");
         }
         i++;
     }

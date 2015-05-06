@@ -223,6 +223,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates uptodate:qts:date:updateConnectionState:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchItem initWithMessageItem:searchString:]:SearchItem.m">
          <PersistentStrings>
             <PersistentString
@@ -420,6 +423,14 @@
          contextName = "__53-[DialogsHistoryController loadlocal:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "-[MTNetwork moveAndEncryptKeychain]:MTNetwork.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
       </ContextState>
       <ContextState
@@ -567,6 +578,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[MTNetwork sendRequest:forDatacenter:]_block_invoke:MTNetwork.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -626,6 +640,9 @@
                value = "self.historyController.prevState">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[MessagesViewController checkWebpage:]_block_invoke:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
@@ -920,6 +937,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_conversation updateNotifySettings:]:TL_conversation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MTDiscoverDatacenterAddressAction getConfigSuccess:]:MTDiscoverDatacenterAddressAction.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController searchByString:]:SearchViewController.m">
@@ -2185,6 +2205,9 @@
          contextName = "+[MessageTableItem messageItemFromObject:]:MessageTableItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGUpdateMessageService mtProto:receivedMessage:]:TGUpdateMessageService.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ConnectionStatusViewControllerView show:]:ConnectionStatusViewControllerView.m">
       </ContextState>
       <ContextState
@@ -2348,6 +2371,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__29-[RPCRequest completeHandler]_block_invoke:RPCRequest.m">
+      </ContextState>
+      <ContextState
          contextName = "__35-[ChatHistoryController setFilter:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -2407,6 +2433,9 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadVideoItem setDownloadState:]:DownloadVideoItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateMessageService processMessage:]:TGUpdateMessageService.m">
       </ContextState>
       <ContextState
          contextName = "-[ExternalDocumentSecretSenderItem initWithConversation:document:]:ExternalDocumentSecretSenderItem.m">

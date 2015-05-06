@@ -246,7 +246,7 @@ static TMTableView *tableStatic;
         if([self insert:object atIndex:startIndex + count tableRedraw:NO]) {
             count++;
         } else {
-          //  DLog(@"ne");
+          //  MTLog(@"ne");
         }
     }
     
@@ -546,7 +546,7 @@ static TMTableView *tableStatic;
 
 
 - (void)insertNewline:(id)sender {
-    DLog(@"lol");
+    MTLog(@"lol");
     // Enter key. Do special stuff here...
 }
 

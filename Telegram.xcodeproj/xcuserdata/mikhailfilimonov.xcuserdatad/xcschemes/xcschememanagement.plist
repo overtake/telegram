@@ -14,6 +14,11 @@
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
+		<key>TGShare copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>11</integer>
+		</dict>
 		<key>TGShare.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -38,6 +43,11 @@
 			<true/>
 		</dict>
 		<key>C2CBF3B51AF38426006BF90A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CBF61C1AFA55D6006BF90A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

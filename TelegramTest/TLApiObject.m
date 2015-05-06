@@ -10,7 +10,7 @@
 
 @implementation TLApiObject
 - (NSData*)getData {
-    DLog(@"");
+    MTLog(@"");
     [NSException raise:@"Error" format:@"Not implemented"];
     return nil;
 }

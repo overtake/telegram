@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MTProto.h"
-#import "TLClassStore.h"
+#import "ClassStore.h"
 
 @implementation TL_boolFalse
 +(TL_boolFalse *)create {
@@ -284,11 +284,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
 @end
@@ -301,11 +301,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.n_id = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
 @end
@@ -317,10 +317,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.geo_point stream:stream];
+	[ClassStore TLSerialize:self.geo_point stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.geo_point = [TLClassStore TLDeserialize:stream];
+	self.geo_point = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -355,14 +355,14 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
@@ -382,16 +382,16 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
-	[TLClassStore TLSerialize:self.thumb stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
-	self.thumb = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
+	self.thumb = [ClassStore TLDeserialize:stream];
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
@@ -407,11 +407,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.n_id = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
 @end
@@ -425,12 +425,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 	[stream writeInt:self.duration];
 	[stream writeString:self.mime_type];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 	self.duration = [stream readInt];
 	self.mime_type = [stream readString];
 }
@@ -443,10 +443,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.n_id = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -459,7 +459,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 	[stream writeString:self.mime_type];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -468,12 +468,12 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 	self.mime_type = [stream readString];
 	//UNS FullVector
 	[stream readInt];
@@ -482,7 +482,7 @@
 			self.attributes = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			TLDocumentAttribute* obj = [ClassStore TLDeserialize:stream];
 			[self.attributes addObject:obj];
 		}
 	}
@@ -499,8 +499,8 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
-	[TLClassStore TLSerialize:self.thumb stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeString:self.mime_type];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -509,13 +509,13 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
-	self.thumb = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
+	self.thumb = [ClassStore TLDeserialize:stream];
 	self.mime_type = [stream readString];
 	//UNS FullVector
 	[stream readInt];
@@ -524,7 +524,7 @@
 			self.attributes = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			TLDocumentAttribute* obj = [ClassStore TLDeserialize:stream];
 			[self.attributes addObject:obj];
 		}
 	}
@@ -538,10 +538,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.n_id stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [TLClassStore TLDeserialize:stream];
+	self.n_id = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -556,14 +556,14 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.geo_point stream:stream];
+	[ClassStore TLSerialize:self.geo_point stream:stream];
 	[stream writeString:self.title];
 	[stream writeString:self.address];
 	[stream writeString:self.provider];
 	[stream writeString:self.venue_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.geo_point = [TLClassStore TLDeserialize:stream];
+	self.geo_point = [ClassStore TLDeserialize:stream];
 	self.title = [stream readString];
 	self.address = [stream readString];
 	self.provider = [stream readString];
@@ -598,12 +598,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.file stream:stream];
-	[TLClassStore TLSerialize:self.crop stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.crop stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file = [TLClassStore TLDeserialize:stream];
-	self.crop = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
+	self.crop = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -615,12 +615,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_id stream:stream];
-	[TLClassStore TLSerialize:self.crop stream:stream];
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.crop stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [TLClassStore TLDeserialize:stream];
-	self.crop = [TLClassStore TLDeserialize:stream];
+	self.n_id = [ClassStore TLDeserialize:stream];
+	self.crop = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1155,8 +1155,8 @@
 	[stream writeString:self.last_name];
 	[stream writeString:self.username];
 	[stream writeString:self.phone];
-	[TLClassStore TLSerialize:self.photo stream:stream];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
@@ -1164,8 +1164,8 @@
 	self.last_name = [stream readString];
 	self.username = [stream readString];
 	self.phone = [stream readString];
-	self.photo = [TLClassStore TLDeserialize:stream];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1189,8 +1189,8 @@
 	[stream writeString:self.username];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.phone];
-	[TLClassStore TLSerialize:self.photo stream:stream];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
@@ -1199,8 +1199,8 @@
 	self.username = [stream readString];
 	self.access_hash = [stream readLong];
 	self.phone = [stream readString];
-	self.photo = [TLClassStore TLDeserialize:stream];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1224,8 +1224,8 @@
 	[stream writeString:self.username];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.phone];
-	[TLClassStore TLSerialize:self.photo stream:stream];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
@@ -1234,8 +1234,8 @@
 	self.username = [stream readString];
 	self.access_hash = [stream readLong];
 	self.phone = [stream readString];
-	self.photo = [TLClassStore TLDeserialize:stream];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1257,8 +1257,8 @@
 	[stream writeString:self.last_name];
 	[stream writeString:self.username];
 	[stream writeLong:self.access_hash];
-	[TLClassStore TLSerialize:self.photo stream:stream];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
@@ -1266,8 +1266,8 @@
 	self.last_name = [stream readString];
 	self.username = [stream readString];
 	self.access_hash = [stream readLong];
-	self.photo = [TLClassStore TLDeserialize:stream];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1323,13 +1323,13 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeLong:self.photo_id];
-	[TLClassStore TLSerialize:self.photo_small stream:stream];
-	[TLClassStore TLSerialize:self.photo_big stream:stream];
+	[ClassStore TLSerialize:self.photo_small stream:stream];
+	[ClassStore TLSerialize:self.photo_big stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.photo_id = [stream readLong];
-	self.photo_small = [TLClassStore TLDeserialize:stream];
-	self.photo_big = [TLClassStore TLDeserialize:stream];
+	self.photo_small = [ClassStore TLDeserialize:stream];
+	self.photo_big = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1456,7 +1456,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.n_id];
 	[stream writeString:self.title];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeInt:self.participants_count];
 	[stream writeInt:self.date];
 	[stream writeBool:self.left];
@@ -1465,7 +1465,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 	self.title = [stream readString];
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 	self.participants_count = [stream readInt];
 	self.date = [stream readInt];
 	self.left = [stream readBool];
@@ -1515,8 +1515,8 @@
 	[stream writeString:self.title];
 	[stream writeString:self.address];
 	[stream writeString:self.venue];
-	[TLClassStore TLSerialize:self.geo stream:stream];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.geo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeInt:self.participants_count];
 	[stream writeInt:self.date];
 	[stream writeBool:self.checked_in];
@@ -1528,8 +1528,8 @@
 	self.title = [stream readString];
 	self.address = [stream readString];
 	self.venue = [stream readString];
-	self.geo = [TLClassStore TLDeserialize:stream];
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.geo = [ClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 	self.participants_count = [stream readInt];
 	self.date = [stream readInt];
 	self.checked_in = [stream readBool];
@@ -1554,17 +1554,17 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.n_id];
-	[TLClassStore TLSerialize:self.participants stream:stream];
-	[TLClassStore TLSerialize:self.chat_photo stream:stream];
-	[TLClassStore TLSerialize:self.notify_settings stream:stream];
-	[TLClassStore TLSerialize:self.exported_invite stream:stream];
+	[ClassStore TLSerialize:self.participants stream:stream];
+	[ClassStore TLSerialize:self.chat_photo stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.exported_invite stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
-	self.participants = [TLClassStore TLDeserialize:stream];
-	self.chat_photo = [TLClassStore TLDeserialize:stream];
-	self.notify_settings = [TLClassStore TLDeserialize:stream];
-	self.exported_invite = [TLClassStore TLDeserialize:stream];
+	self.participants = [ClassStore TLDeserialize:stream];
+	self.chat_photo = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
+	self.exported_invite = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1631,7 +1631,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChatParticipant* obj = [self.participants objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.version];
@@ -1646,7 +1646,7 @@
 			self.participants = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChatParticipant* obj = [TLClassStore TLDeserialize:stream];
+			TLChatParticipant* obj = [ClassStore TLDeserialize:stream];
 			[self.participants addObject:obj];
 		}
 	}
@@ -1681,12 +1681,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.photo_small stream:stream];
-	[TLClassStore TLSerialize:self.photo_big stream:stream];
+	[ClassStore TLSerialize:self.photo_small stream:stream];
+	[ClassStore TLSerialize:self.photo_big stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.photo_small = [TLClassStore TLDeserialize:stream];
-	self.photo_big = [TLClassStore TLDeserialize:stream];
+	self.photo_small = [ClassStore TLDeserialize:stream];
+	self.photo_big = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1728,25 +1728,25 @@
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
-	[TLClassStore TLSerialize:self.to_id stream:stream];
+	[ClassStore TLSerialize:self.to_id stream:stream];
 	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
 	if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
 	if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
-	self.to_id = [TLClassStore TLDeserialize:stream];
+	self.to_id = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
 	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
 	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 	self.date = [stream readInt];
 	self.message = [stream readString];
-	self.media = [TLClassStore TLDeserialize:stream];
+	self.media = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1765,17 +1765,17 @@
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
-	[TLClassStore TLSerialize:self.to_id stream:stream];
+	[ClassStore TLSerialize:self.to_id stream:stream];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.action stream:stream];
+	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
-	self.to_id = [TLClassStore TLDeserialize:stream];
+	self.to_id = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
-	self.action = [TLClassStore TLDeserialize:stream];
+	self.action = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1806,11 +1806,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
 @end
@@ -1823,11 +1823,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.video stream:stream];
+	[ClassStore TLSerialize:self.video stream:stream];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.video = [TLClassStore TLDeserialize:stream];
+	self.video = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
 @end
@@ -1839,10 +1839,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.geo stream:stream];
+	[ClassStore TLSerialize:self.geo stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.geo = [TLClassStore TLDeserialize:stream];
+	self.geo = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1890,10 +1890,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.document stream:stream];
+	[ClassStore TLSerialize:self.document stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.document = [TLClassStore TLDeserialize:stream];
+	self.document = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1904,10 +1904,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.audio stream:stream];
+	[ClassStore TLSerialize:self.audio stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.audio = [TLClassStore TLDeserialize:stream];
+	self.audio = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1918,10 +1918,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.webpage stream:stream];
+	[ClassStore TLSerialize:self.webpage stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.webpage = [TLClassStore TLDeserialize:stream];
+	self.webpage = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1936,14 +1936,14 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.geo stream:stream];
+	[ClassStore TLSerialize:self.geo stream:stream];
 	[stream writeString:self.title];
 	[stream writeString:self.address];
 	[stream writeString:self.provider];
 	[stream writeString:self.venue_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.geo = [TLClassStore TLDeserialize:stream];
+	self.geo = [ClassStore TLDeserialize:stream];
 	self.title = [stream readString];
 	self.address = [stream readString];
 	self.provider = [stream readString];
@@ -2027,10 +2027,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2137,18 +2137,18 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.top_message];
 	[stream writeInt:self.read_inbox_max_id];
 	[stream writeInt:self.unread_count];
-	[TLClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 	self.top_message = [stream readInt];
 	self.read_inbox_max_id = [stream readInt];
 	self.unread_count = [stream readInt];
-	self.notify_settings = [TLClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2187,7 +2187,7 @@
 	[stream writeLong:self.access_hash];
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.geo stream:stream];
+	[ClassStore TLSerialize:self.geo stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2195,7 +2195,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPhotoSize* obj = [self.sizes objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -2204,7 +2204,7 @@
 	self.access_hash = [stream readLong];
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
-	self.geo = [TLClassStore TLDeserialize:stream];
+	self.geo = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -2212,7 +2212,7 @@
 			self.sizes = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPhotoSize* obj = [TLClassStore TLDeserialize:stream];
+			TLPhotoSize* obj = [ClassStore TLDeserialize:stream];
 			[self.sizes addObject:obj];
 		}
 	}
@@ -2250,14 +2250,14 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.type];
-	[TLClassStore TLSerialize:self.location stream:stream];
+	[ClassStore TLSerialize:self.location stream:stream];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
 	[stream writeInt:self.size];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.type = [stream readString];
-	self.location = [TLClassStore TLDeserialize:stream];
+	self.location = [ClassStore TLDeserialize:stream];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
 	self.size = [stream readInt];
@@ -2276,14 +2276,14 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.type];
-	[TLClassStore TLSerialize:self.location stream:stream];
+	[ClassStore TLSerialize:self.location stream:stream];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
 	[stream writeByteArray:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.type = [stream readString];
-	self.location = [TLClassStore TLDeserialize:stream];
+	self.location = [ClassStore TLDeserialize:stream];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
 	self.bytes = [stream readByteArray];
@@ -2331,7 +2331,7 @@
 	[stream writeInt:self.date];
 	[stream writeInt:self.duration];
 	[stream writeInt:self.size];
-	[TLClassStore TLSerialize:self.thumb stream:stream];
+	[ClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.dc_id];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
@@ -2343,7 +2343,7 @@
 	self.date = [stream readInt];
 	self.duration = [stream readInt];
 	self.size = [stream readInt];
-	self.thumb = [TLClassStore TLDeserialize:stream];
+	self.thumb = [ClassStore TLDeserialize:stream];
 	self.dc_id = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
@@ -2470,11 +2470,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.expires];
-	[TLClassStore TLSerialize:self.user stream:stream];
+	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.expires = [stream readInt];
-	self.user = [TLClassStore TLDeserialize:stream];
+	self.user = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2512,10 +2512,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2568,10 +2568,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2735,7 +2735,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPhotoSize* obj = [self.sizes objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.color];
@@ -2750,7 +2750,7 @@
 			self.sizes = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPhotoSize* obj = [TLClassStore TLDeserialize:stream];
+			TLPhotoSize* obj = [ClassStore TLDeserialize:stream];
 			[self.sizes addObject:obj];
 		}
 	}
@@ -2799,19 +2799,19 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.user stream:stream];
-	[TLClassStore TLSerialize:self.link stream:stream];
-	[TLClassStore TLSerialize:self.profile_photo stream:stream];
-	[TLClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.user stream:stream];
+	[ClassStore TLSerialize:self.link stream:stream];
+	[ClassStore TLSerialize:self.profile_photo stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
 	[stream writeBool:self.blocked];
 	[stream writeString:self.real_first_name];
 	[stream writeString:self.real_last_name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user = [TLClassStore TLDeserialize:stream];
-	self.link = [TLClassStore TLDeserialize:stream];
-	self.profile_photo = [TLClassStore TLDeserialize:stream];
-	self.notify_settings = [TLClassStore TLDeserialize:stream];
+	self.user = [ClassStore TLDeserialize:stream];
+	self.link = [ClassStore TLDeserialize:stream];
+	self.profile_photo = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.blocked = [stream readBool];
 	self.real_first_name = [stream readString];
 	self.real_last_name = [stream readString];
@@ -2920,11 +2920,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -2964,14 +2964,14 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.my_link stream:stream];
-	[TLClassStore TLSerialize:self.foreign_link stream:stream];
-	[TLClassStore TLSerialize:self.user stream:stream];
+	[ClassStore TLSerialize:self.my_link stream:stream];
+	[ClassStore TLSerialize:self.foreign_link stream:stream];
+	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.my_link = [TLClassStore TLDeserialize:stream];
-	self.foreign_link = [TLClassStore TLDeserialize:stream];
-	self.user = [TLClassStore TLDeserialize:stream];
+	self.my_link = [ClassStore TLDeserialize:stream];
+	self.foreign_link = [ClassStore TLDeserialize:stream];
+	self.user = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -3009,7 +3009,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLContact* obj = [self.contacts objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3019,7 +3019,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3031,7 +3031,7 @@
 			self.contacts = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLContact* obj = [TLClassStore TLDeserialize:stream];
+			TLContact* obj = [ClassStore TLDeserialize:stream];
 			[self.contacts addObject:obj];
 		}
 	}
@@ -3042,7 +3042,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3070,7 +3070,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLImportedContact* obj = [self.imported objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize ShortVector
@@ -3090,7 +3090,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3102,7 +3102,7 @@
 			self.imported = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLImportedContact* obj = [TLClassStore TLDeserialize:stream];
+			TLImportedContact* obj = [ClassStore TLDeserialize:stream];
 			[self.imported addObject:obj];
 		}
 	}
@@ -3124,7 +3124,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3151,7 +3151,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLContactBlocked* obj = [self.blocked objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3161,7 +3161,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3173,7 +3173,7 @@
 			self.blocked = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLContactBlocked* obj = [TLClassStore TLDeserialize:stream];
+			TLContactBlocked* obj = [ClassStore TLDeserialize:stream];
 			[self.blocked addObject:obj];
 		}
 	}
@@ -3184,7 +3184,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3208,7 +3208,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLContactBlocked* obj = [self.blocked objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3218,7 +3218,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3231,7 +3231,7 @@
 			self.blocked = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLContactBlocked* obj = [TLClassStore TLDeserialize:stream];
+			TLContactBlocked* obj = [ClassStore TLDeserialize:stream];
 			[self.blocked addObject:obj];
 		}
 	}
@@ -3242,7 +3242,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3269,7 +3269,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLContactSuggested* obj = [self.results objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3279,7 +3279,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3291,7 +3291,7 @@
 			self.results = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLContactSuggested* obj = [TLClassStore TLDeserialize:stream];
+			TLContactSuggested* obj = [ClassStore TLDeserialize:stream];
 			[self.results addObject:obj];
 		}
 	}
@@ -3302,7 +3302,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3331,7 +3331,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDialog* obj = [self.dialogs objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3341,7 +3341,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3351,7 +3351,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3361,7 +3361,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3373,7 +3373,7 @@
 			self.dialogs = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDialog* obj = [TLClassStore TLDeserialize:stream];
+			TLDialog* obj = [ClassStore TLDeserialize:stream];
 			[self.dialogs addObject:obj];
 		}
 	}
@@ -3384,7 +3384,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -3395,7 +3395,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3406,7 +3406,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3432,7 +3432,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDialog* obj = [self.dialogs objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3442,7 +3442,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3452,7 +3452,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3462,7 +3462,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3475,7 +3475,7 @@
 			self.dialogs = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDialog* obj = [TLClassStore TLDeserialize:stream];
+			TLDialog* obj = [ClassStore TLDeserialize:stream];
 			[self.dialogs addObject:obj];
 		}
 	}
@@ -3486,7 +3486,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -3497,7 +3497,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3508,7 +3508,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3536,7 +3536,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3546,7 +3546,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3556,7 +3556,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3568,7 +3568,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -3579,7 +3579,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3590,7 +3590,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3615,7 +3615,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3625,7 +3625,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3635,7 +3635,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3648,7 +3648,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -3659,7 +3659,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3670,7 +3670,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -3714,14 +3714,14 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 	self.date = [stream readInt];
-	self.media = [TLClassStore TLDeserialize:stream];
+	self.media = [ClassStore TLDeserialize:stream];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
@@ -3742,7 +3742,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 	//Serialize FullVector
@@ -3752,7 +3752,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLcontacts_Link* obj = [self.links objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.seq];
@@ -3760,7 +3760,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 	self.date = [stream readInt];
-	self.media = [TLClassStore TLDeserialize:stream];
+	self.media = [ClassStore TLDeserialize:stream];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 	//UNS FullVector
@@ -3770,7 +3770,7 @@
 			self.links = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLcontacts_Link* obj = [TLClassStore TLDeserialize:stream];
+			TLcontacts_Link* obj = [ClassStore TLDeserialize:stream];
 			[self.links addObject:obj];
 		}
 	}
@@ -3797,7 +3797,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -3809,7 +3809,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3830,7 +3830,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.full_chat stream:stream];
+	[ClassStore TLSerialize:self.full_chat stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -3838,7 +3838,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -3848,12 +3848,12 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.full_chat = [TLClassStore TLDeserialize:stream];
+	self.full_chat = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -3861,7 +3861,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -3872,7 +3872,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -4021,12 +4021,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.message stream:stream];
+	[ClassStore TLSerialize:self.message stream:stream];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.message = [TLClassStore TLDeserialize:stream];
+	self.message = [ClassStore TLDeserialize:stream];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
@@ -4097,11 +4097,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
-	[TLClassStore TLSerialize:self.action stream:stream];
+	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
-	self.action = [TLClassStore TLDeserialize:stream];
+	self.action = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4116,12 +4116,12 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.chat_id];
 	[stream writeInt:self.user_id];
-	[TLClassStore TLSerialize:self.action stream:stream];
+	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 	self.user_id = [stream readInt];
-	self.action = [TLClassStore TLDeserialize:stream];
+	self.action = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4132,10 +4132,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.participants stream:stream];
+	[ClassStore TLSerialize:self.participants stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.participants = [TLClassStore TLDeserialize:stream];
+	self.participants = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4148,11 +4148,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
-	[TLClassStore TLSerialize:self.status stream:stream];
+	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
-	self.status = [TLClassStore TLDeserialize:stream];
+	self.status = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4191,13 +4191,13 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeBool:self.previous];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 	self.previous = [stream readBool];
 }
 @end
@@ -4229,13 +4229,13 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
-	[TLClassStore TLSerialize:self.my_link stream:stream];
-	[TLClassStore TLSerialize:self.foreign_link stream:stream];
+	[ClassStore TLSerialize:self.my_link stream:stream];
+	[ClassStore TLSerialize:self.foreign_link stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
-	self.my_link = [TLClassStore TLDeserialize:stream];
-	self.foreign_link = [TLClassStore TLDeserialize:stream];
+	self.my_link = [ClassStore TLDeserialize:stream];
+	self.foreign_link = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4269,10 +4269,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.message stream:stream];
+	[ClassStore TLSerialize:self.message stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.message = [TLClassStore TLDeserialize:stream];
+	self.message = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4284,11 +4284,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.message stream:stream];
+	[ClassStore TLSerialize:self.message stream:stream];
 	[stream writeInt:self.qts];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.message = [TLClassStore TLDeserialize:stream];
+	self.message = [ClassStore TLDeserialize:stream];
 	self.qts = [stream readInt];
 }
 @end
@@ -4315,11 +4315,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.chat stream:stream];
+	[ClassStore TLSerialize:self.chat stream:stream];
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat = [TLClassStore TLDeserialize:stream];
+	self.chat = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 }
 @end
@@ -4401,7 +4401,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDcOption* obj = [self.dc_options objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -4413,7 +4413,7 @@
 			self.dc_options = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDcOption* obj = [TLClassStore TLDeserialize:stream];
+			TLDcOption* obj = [ClassStore TLDeserialize:stream];
 			[self.dc_options addObject:obj];
 		}
 	}
@@ -4445,12 +4445,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
-	[TLClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
-	self.notify_settings = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4466,13 +4466,13 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.type];
 	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeBool:self.popup];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.type = [stream readString];
 	self.message = [stream readString];
-	self.media = [TLClassStore TLDeserialize:stream];
+	self.media = [ClassStore TLDeserialize:stream];
 	self.popup = [stream readBool];
 }
 @end
@@ -4485,7 +4485,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.n_key stream:stream];
+	[ClassStore TLSerialize:self.n_key stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -4493,12 +4493,12 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPrivacyRule* obj = [self.rules objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_key = [TLClassStore TLDeserialize:stream];
+	self.n_key = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -4506,7 +4506,7 @@
 			self.rules = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPrivacyRule* obj = [TLClassStore TLDeserialize:stream];
+			TLPrivacyRule* obj = [ClassStore TLDeserialize:stream];
 			[self.rules addObject:obj];
 		}
 	}
@@ -4540,13 +4540,13 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 	self.max_id = [stream readInt];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
@@ -4563,13 +4563,13 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 	self.max_id = [stream readInt];
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
@@ -4583,10 +4583,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.webpage stream:stream];
+	[ClassStore TLSerialize:self.webpage stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.webpage = [TLClassStore TLDeserialize:stream];
+	self.webpage = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4701,7 +4701,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.n_messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4711,7 +4711,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLEncryptedMessage* obj = [self.n_encrypted_messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4721,7 +4721,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUpdate* obj = [self.other_updates objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4731,7 +4731,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4741,10 +4741,10 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
-	[TLClassStore TLSerialize:self.state stream:stream];
+	[ClassStore TLSerialize:self.state stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	//UNS FullVector
@@ -4754,7 +4754,7 @@
 			self.n_messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.n_messages addObject:obj];
 		}
 	}
@@ -4765,7 +4765,7 @@
 			self.n_encrypted_messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLEncryptedMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLEncryptedMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.n_encrypted_messages addObject:obj];
 		}
 	}
@@ -4776,7 +4776,7 @@
 			self.other_updates = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUpdate* obj = [TLClassStore TLDeserialize:stream];
+			TLUpdate* obj = [ClassStore TLDeserialize:stream];
 			[self.other_updates addObject:obj];
 		}
 	}
@@ -4787,7 +4787,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -4798,11 +4798,11 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
-	self.state = [TLClassStore TLDeserialize:stream];
+	self.state = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -4825,7 +4825,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLMessage* obj = [self.n_messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4835,7 +4835,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLEncryptedMessage* obj = [self.n_encrypted_messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4845,7 +4845,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUpdate* obj = [self.other_updates objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4855,7 +4855,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -4865,10 +4865,10 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
-	[TLClassStore TLSerialize:self.intermediate_state stream:stream];
+	[ClassStore TLSerialize:self.intermediate_state stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	//UNS FullVector
@@ -4878,7 +4878,7 @@
 			self.n_messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.n_messages addObject:obj];
 		}
 	}
@@ -4889,7 +4889,7 @@
 			self.n_encrypted_messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLEncryptedMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLEncryptedMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.n_encrypted_messages addObject:obj];
 		}
 	}
@@ -4900,7 +4900,7 @@
 			self.other_updates = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUpdate* obj = [TLClassStore TLDeserialize:stream];
+			TLUpdate* obj = [ClassStore TLDeserialize:stream];
 			[self.other_updates addObject:obj];
 		}
 	}
@@ -4911,7 +4911,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -4922,11 +4922,11 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
-	self.intermediate_state = [TLClassStore TLDeserialize:stream];
+	self.intermediate_state = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -5042,11 +5042,11 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.update stream:stream];
+	[ClassStore TLSerialize:self.update stream:stream];
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.update = [TLClassStore TLDeserialize:stream];
+	self.update = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 }
 @end
@@ -5070,7 +5070,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUpdate* obj = [self.updates objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5080,7 +5080,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5090,7 +5090,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.date];
@@ -5105,7 +5105,7 @@
 			self.updates = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUpdate* obj = [TLClassStore TLDeserialize:stream];
+			TLUpdate* obj = [ClassStore TLDeserialize:stream];
 			[self.updates addObject:obj];
 		}
 	}
@@ -5116,7 +5116,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5127,7 +5127,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -5155,7 +5155,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUpdate* obj = [self.updates objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5165,7 +5165,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5175,7 +5175,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.date];
@@ -5189,7 +5189,7 @@
 			self.updates = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUpdate* obj = [TLClassStore TLDeserialize:stream];
+			TLUpdate* obj = [ClassStore TLDeserialize:stream];
 			[self.updates addObject:obj];
 		}
 	}
@@ -5200,7 +5200,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5211,7 +5211,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -5240,7 +5240,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPhoto* obj = [self.photos objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5250,7 +5250,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -5262,7 +5262,7 @@
 			self.photos = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPhoto* obj = [TLClassStore TLDeserialize:stream];
+			TLPhoto* obj = [ClassStore TLDeserialize:stream];
 			[self.photos addObject:obj];
 		}
 	}
@@ -5273,7 +5273,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5297,7 +5297,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPhoto* obj = [self.photos objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5307,7 +5307,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -5320,7 +5320,7 @@
 			self.photos = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPhoto* obj = [TLClassStore TLDeserialize:stream];
+			TLPhoto* obj = [ClassStore TLDeserialize:stream];
 			[self.photos addObject:obj];
 		}
 	}
@@ -5331,7 +5331,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5351,7 +5351,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.photo stream:stream];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -5359,12 +5359,12 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.photo = [TLClassStore TLDeserialize:stream];
+	self.photo = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -5372,7 +5372,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5393,12 +5393,12 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.type stream:stream];
+	[ClassStore TLSerialize:self.type stream:stream];
 	[stream writeInt:self.mtime];
 	[stream writeByteArray:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.type = [TLClassStore TLDeserialize:stream];
+	self.type = [ClassStore TLDeserialize:stream];
 	self.mtime = [stream readInt];
 	self.bytes = [stream readByteArray];
 }
@@ -5472,7 +5472,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDcOption* obj = [self.dc_options objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.chat_size_max];
@@ -5494,7 +5494,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDisabledFeature* obj = [self.disabled_features objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -5510,7 +5510,7 @@
 			self.dc_options = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDcOption* obj = [TLClassStore TLDeserialize:stream];
+			TLDcOption* obj = [ClassStore TLDeserialize:stream];
 			[self.dc_options addObject:obj];
 		}
 	}
@@ -5533,7 +5533,7 @@
 			self.disabled_features = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDisabledFeature* obj = [TLClassStore TLDeserialize:stream];
+			TLDisabledFeature* obj = [ClassStore TLDeserialize:stream];
 			[self.disabled_features addObject:obj];
 		}
 	}
@@ -5687,7 +5687,7 @@
 	[stream writeInt:self.from_id];
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
+	[ClassStore TLSerialize:self.media stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
@@ -5695,7 +5695,7 @@
 	self.from_id = [stream readInt];
 	self.date = [stream readInt];
 	self.message = [stream readString];
-	self.media = [TLClassStore TLDeserialize:stream];
+	self.media = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -5714,14 +5714,14 @@
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.from_id];
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.action stream:stream];
+	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 	self.n_id = [stream readInt];
 	self.from_id = [stream readInt];
 	self.date = [stream readInt];
-	self.action = [TLClassStore TLDeserialize:stream];
+	self.action = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -5740,7 +5740,7 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.message stream:stream];
+	[ClassStore TLSerialize:self.message stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -5748,7 +5748,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5758,13 +5758,13 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeInt:self.seq];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.message = [TLClassStore TLDeserialize:stream];
+	self.message = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -5772,7 +5772,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -5783,7 +5783,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5813,7 +5813,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChatLocated* obj = [self.results objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5823,7 +5823,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLGeoChatMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5833,7 +5833,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5843,7 +5843,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -5855,7 +5855,7 @@
 			self.results = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChatLocated* obj = [TLClassStore TLDeserialize:stream];
+			TLChatLocated* obj = [ClassStore TLDeserialize:stream];
 			[self.results addObject:obj];
 		}
 	}
@@ -5866,7 +5866,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLGeoChatMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLGeoChatMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -5877,7 +5877,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -5888,7 +5888,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5916,7 +5916,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLGeoChatMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5926,7 +5926,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -5936,7 +5936,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -5948,7 +5948,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLGeoChatMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLGeoChatMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -5959,7 +5959,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -5970,7 +5970,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -5995,7 +5995,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLGeoChatMessage* obj = [self.messages objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -6005,7 +6005,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLChat* obj = [self.chats objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -6015,7 +6015,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -6028,7 +6028,7 @@
 			self.messages = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLGeoChatMessage* obj = [TLClassStore TLDeserialize:stream];
+			TLGeoChatMessage* obj = [ClassStore TLDeserialize:stream];
 			[self.messages addObject:obj];
 		}
 	}
@@ -6039,7 +6039,7 @@
 			self.chats = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLChat* obj = [TLClassStore TLDeserialize:stream];
+			TLChat* obj = [ClassStore TLDeserialize:stream];
 			[self.chats addObject:obj];
 		}
 	}
@@ -6050,7 +6050,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -6343,14 +6343,14 @@
 	[stream writeInt:self.chat_id];
 	[stream writeInt:self.date];
 	[stream writeByteArray:self.bytes];
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.random_id = [stream readLong];
 	self.chat_id = [stream readInt];
 	self.date = [stream readInt];
 	self.bytes = [stream readByteArray];
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -6447,11 +6447,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.date];
-	[TLClassStore TLSerialize:self.file stream:stream];
+	[ClassStore TLSerialize:self.file stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.date = [stream readInt];
-	self.file = [TLClassStore TLDeserialize:stream];
+	self.file = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -6619,7 +6619,7 @@
 	[stream writeInt:self.date];
 	[stream writeString:self.mime_type];
 	[stream writeInt:self.size];
-	[TLClassStore TLSerialize:self.thumb stream:stream];
+	[ClassStore TLSerialize:self.thumb stream:stream];
 	[stream writeInt:self.dc_id];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -6628,7 +6628,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -6638,7 +6638,7 @@
 	self.date = [stream readInt];
 	self.mime_type = [stream readString];
 	self.size = [stream readInt];
-	self.thumb = [TLClassStore TLDeserialize:stream];
+	self.thumb = [ClassStore TLDeserialize:stream];
 	self.dc_id = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
@@ -6647,7 +6647,7 @@
 			self.attributes = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDocumentAttribute* obj = [TLClassStore TLDeserialize:stream];
+			TLDocumentAttribute* obj = [ClassStore TLDeserialize:stream];
 			[self.attributes addObject:obj];
 		}
 	}
@@ -6668,11 +6668,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.phone_number];
-	[TLClassStore TLSerialize:self.user stream:stream];
+	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.phone_number = [stream readString];
-	self.user = [TLClassStore TLDeserialize:stream];
+	self.user = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -6688,10 +6688,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.peer = [TLClassStore TLDeserialize:stream];
+	self.peer = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -6921,7 +6921,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLContactFound* obj = [self.results objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -6931,7 +6931,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -6943,7 +6943,7 @@
 			self.results = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLContactFound* obj = [TLClassStore TLDeserialize:stream];
+			TLContactFound* obj = [ClassStore TLDeserialize:stream];
 			[self.results addObject:obj];
 		}
 	}
@@ -6954,7 +6954,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -7046,7 +7046,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7058,7 +7058,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLInputUser* obj = [TLClassStore TLDeserialize:stream];
+			TLInputUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -7107,7 +7107,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLInputUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7119,7 +7119,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLInputUser* obj = [TLClassStore TLDeserialize:stream];
+			TLInputUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -7273,7 +7273,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLPrivacyRule* obj = [self.rules objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -7283,7 +7283,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLUser* obj = [self.users objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7295,7 +7295,7 @@
 			self.rules = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLPrivacyRule* obj = [TLClassStore TLDeserialize:stream];
+			TLPrivacyRule* obj = [ClassStore TLDeserialize:stream];
 			[self.rules addObject:obj];
 		}
 	}
@@ -7306,7 +7306,7 @@
 			self.users = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLUser* obj = [TLClassStore TLDeserialize:stream];
+			TLUser* obj = [ClassStore TLDeserialize:stream];
 			[self.users addObject:obj];
 		}
 	}
@@ -7487,7 +7487,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDocument* obj = [self.stickers objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7500,7 +7500,7 @@
 			self.stickers = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDocument* obj = [TLClassStore TLDeserialize:stream];
+			TLDocument* obj = [ClassStore TLDeserialize:stream];
 			[self.stickers addObject:obj];
 		}
 	}
@@ -7584,7 +7584,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLStickerPack* obj = [self.packs objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize FullVector
@@ -7594,7 +7594,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLDocument* obj = [self.documents objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7607,7 +7607,7 @@
 			self.packs = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLStickerPack* obj = [TLClassStore TLDeserialize:stream];
+			TLStickerPack* obj = [ClassStore TLDeserialize:stream];
 			[self.packs addObject:obj];
 		}
 	}
@@ -7618,7 +7618,7 @@
 			self.documents = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLDocument* obj = [TLClassStore TLDeserialize:stream];
+			TLDocument* obj = [ClassStore TLDeserialize:stream];
 			[self.documents addObject:obj];
 		}
 	}
@@ -7795,7 +7795,7 @@
 	if(self.flags & (1 << 1)) [stream writeString:self.site_name];
 	if(self.flags & (1 << 2)) [stream writeString:self.title];
 	if(self.flags & (1 << 3)) [stream writeString:self.n_description];
-	if(self.flags & (1 << 4)) [TLClassStore TLSerialize:self.photo stream:stream];
+	if(self.flags & (1 << 4)) [ClassStore TLSerialize:self.photo stream:stream];
 	if(self.flags & (1 << 5)) [stream writeString:self.embed_url];
 	if(self.flags & (1 << 5)) [stream writeString:self.embed_type];
 	if(self.flags & (1 << 6)) [stream writeInt:self.embed_width];
@@ -7812,7 +7812,7 @@
 	if(self.flags & (1 << 1)) self.site_name = [stream readString];
 	if(self.flags & (1 << 2)) self.title = [stream readString];
 	if(self.flags & (1 << 3)) self.n_description = [stream readString];
-	if(self.flags & (1 << 4)) self.photo = [TLClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 4)) self.photo = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 5)) self.embed_url = [stream readString];
 	if(self.flags & (1 << 5)) self.embed_type = [stream readString];
 	if(self.flags & (1 << 6)) self.embed_width = [stream readInt];
@@ -7896,7 +7896,7 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLAuthorization* obj = [self.authorizations objectAtIndex:i];
-			[TLClassStore TLSerialize:obj stream:stream];
+			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 }
@@ -7908,7 +7908,7 @@
 			self.authorizations = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLAuthorization* obj = [TLClassStore TLDeserialize:stream];
+			TLAuthorization* obj = [ClassStore TLDeserialize:stream];
 			[self.authorizations addObject:obj];
 		}
 	}
@@ -8099,10 +8099,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.chat stream:stream];
+	[ClassStore TLSerialize:self.chat stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat = [TLClassStore TLDeserialize:stream];
+	self.chat = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -8138,13 +8138,13 @@
 	[stream writeLong:self.msg_id];
 	[stream writeInt:self.seqno];
 	[stream writeInt:self.bytes];
-	[TLClassStore TLSerialize:self.body stream:stream];
+	[ClassStore TLSerialize:self.body stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.msg_id = [stream readLong];
 	self.seqno = [stream readInt];
 	self.bytes = [stream readInt];
-	self.body = [TLClassStore TLDeserialize:stream];
+	self.body = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -8625,11 +8625,11 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeLong:self.req_msg_id];
-	[TLClassStore TLSerialize:self.result stream:stream];
+	[ClassStore TLSerialize:self.result stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.req_msg_id = [stream readLong];
-	self.result = [TLClassStore TLDeserialize:stream];
+	self.result = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -8924,10 +8924,10 @@
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[TLClassStore TLSerialize:self.orig_message stream:stream];
+	[ClassStore TLSerialize:self.orig_message stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.orig_message = [TLClassStore TLDeserialize:stream];
+	self.orig_message = [ClassStore TLDeserialize:stream];
 }
 @end
 

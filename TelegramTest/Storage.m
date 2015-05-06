@@ -15,7 +15,7 @@
 #import "LoopingUtils.h"
 #import "PreviewObject.h"
 #import "HistoryFilter.h"
-#import "FMDatabaseAdditions.h"
+
 #import "TGHashContact.h"
 #import "NSString+FindURLs.h"
 #import "NSData+Extensions.h"
@@ -31,19 +31,22 @@ NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
 -(id)init {
     if(self = [super init]) {
-        [self open:nil];
     }
     return self;
 }
 
 
 +(Storage *)manager {
+    
     static Storage *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[[self class] alloc] init];
+        
+        [TGDatabase setManager:instance];
     });
-    return instance;
+    
+    return (Storage *) [TGDatabase manager];
 
 }
 
@@ -59,17 +62,6 @@ NSString *const ATTACHMENTS = @"attachments";
     return connection;
 }
 
-+(NSString *)path {
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-    NSString *applicationName = appName();
-    NSString *path = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"database"];
-    
-    if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]) {
-    
-    }
-    return path;
-}
 
 
 static NSString *encryptionKey = @"";
@@ -133,200 +125,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 
--(void)open:(void (^)())completeHandler {
-    
-    
-    NSString *dbName = @"t140.sqlite"; // 61
-    
-    self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
-    
-    __block BOOL res = NO;
-    
-    [[Storage yap] flushMemoryWithLevel:0];
-    
-    
-     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
-        
-        res = [db setKey:encryptionKey];
-        
-    }];
-    
-    
-    NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
-    
-    if(![oldName isEqualToString:dbName]) {
-        [SettingsArchiver setSupportUserId:0];
-        [SettingsArchiver removeSetting:BlockedContactsSynchronized];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    
-    [queue inDatabase:^(FMDatabase *db) {
-        
-        [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
-        
-        
-        [db executeUpdate:@"CREATE INDEX if not exists peer_id_index ON messages(peer_id)"];
-        [db executeUpdate:@"CREATE INDEX if not exists date_id_index ON messages(date)"];
-        [db executeUpdate:@"CREATE INDEX if not exists filter_mask_index ON messages(filter_mask)"];
-        [db executeUpdate:@"CREATE INDEX if not exists n_id_index ON messages(n_id)"];
-        
-        [db executeUpdate:@"CREATE INDEX if not exists message_text_index ON messages(message_text COLLATE NOCASE)"];
-        
-        
-        [db executeUpdate:@"create table if not exists dialogs (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
-        
-        [db executeUpdate:@"create table if not exists chats (n_id INTEGER PRIMARY KEY, serialized blob)"];
-        
-        
-        
-        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer, pts_count integer)"];
-        
-        
-        
-        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer)"];
-        
-        [db executeUpdate:@"create table if not exists contacts (user_id INTEGER PRIMARY KEY,mutual integer)"];
-        
-        
-        [db executeUpdate:@"CREATE INDEX if not exists user_id_index ON contacts(user_id)"];
-        
-        [db executeUpdate:@"create table if not exists sessions (session blob)"];
-        
-        [db executeUpdate:@"create table if not exists chats_full_new (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)"];
-        
-        [db executeUpdate:@"create table if not exists imported_contacts (hash blob primary key, hashObject string, user_id integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists dc_options (dc_id integer primary key, ip_address string, port integer)"];
-        
-        [db executeUpdate:@"create table if not exists encrypted_chats (chat_id integer primary key,serialized blob)"];
-        
-        [db executeUpdate:@"create table if not exists sharedmedia (message_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer)"];
-        
-        
-        [db executeUpdate:@"CREATE INDEX if not exists mid_id_index ON sharedmedia(message_id)"];
-        
-        
-        [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
-        
-        
-        
-        [db executeUpdate:@"create table if not exists user_photos (id blob primary key, user_id integer, serialized blob,date integer)"];
-        
-        
-        
-        [db executeUpdate:@"create table if not exists blocked_users (user_id integer primary key, date integer)"];
-        
-        [db executeUpdate:@"create table if not exists tasks (task_id integer primary key, params blob, extender blob)"];
-        
-        [db executeUpdate:@"create table if not exists files (hash string PRIMARY KEY, serialized blob)"];
-        
-        
-        [db executeUpdate:@"create table if not exists broadcasts (n_id integer PRIMARY KEY, serialized blob, title string, date integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists out_secret_actions (action_id integer primary key, message_data blob, chat_id integer, senderClass string, out_seq_no integer, layer integer)"];
-        
-        [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
-        
-        
-        [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
-            
-            if (sqlite3_value_type(aargv[0]) == SQLITE_TEXT) {
-                
-                @autoreleasepool {
-                    
-                    const char *c = (const char *)sqlite3_value_text(aargv[0]);
-                    
-                    NSString *s = [NSString stringWithUTF8String:c];
-                    
-                    
-                    const char *cSearch = (const char *)sqlite3_value_text(aargv[1]);
-                    
-                    NSString *search = [NSString stringWithUTF8String:cSearch];
-                    
-                    BOOL result = [s rangeOfString:search options:NSCaseInsensitiveSearch].location != NSNotFound;
-                    
-                    
-                    sqlite3_result_int(context, result);
-                }
-            } else {
-                sqlite3_result_null(context);
-            }
-        }];
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler();
-        });
-        
-        
-    }];
-    
-    
-   
-}
-
-//
-//-(void) createAndCheckDatabase
-//{
-//    BOOL success;
-//    
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    
-//    NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],@"encrypted.sqlite"];
-//    
-//    success = [fileManager fileExistsAtPath:dbPath];
-//    
-//    if (success) return;
-//
-//    NSString *databasePathFromApp = dbPath;
-//    
-//    [fileManager copyItemAtPath:databasePathFromApp toPath:dbPath error:nil]; // Make a copy of the file in the Documents folder
-//    
-//    // Set the new encrypted database path to be in the Documents Folder
-//    NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
-//    
-//    // SQL Query. NOTE THAT DATABASE IS THE FULL PATH NOT ONLY THE NAME
-//    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
-//    
-//    sqlite3 *unencrypted_DB;
-//    if (sqlite3_open([dbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
-//        
-//        // Attach empty encrypted database to unencrypted database
-//        sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
-//        
-//        // export database
-//        sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
-//        
-//        // Detach encrypted database
-//        sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
-//        
-//        sqlite3_close(unencrypted_DB);
-//    }
-//    else {
-//        sqlite3_close(unencrypted_DB);
-//        NSAssert1(NO, @"Failed to open database with message '%s'.", sqlite3_errmsg(unencrypted_DB));
-//    }
-//    
-//}
-//
-
--(void)drop:(void (^)())completeHandler {
-    [self->queue inDatabase:^(FMDatabase *db) {
-        [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
-        [[NSFileManager defaultManager] removeItemAtPath:[Storage path] error:nil];
-        encryptionKey = @"";
-        [self open:completeHandler];
-    }];
-    
-   
-}
 
 -(TGUpdateState *)updateState {
     
@@ -1897,7 +1695,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)updateMessageId:(long)random_id msg_id:(int)n_id {
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db intForQuery:@"update media set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
+        [db executeUpdate:@"update media set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
         
         [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(random_id),@(DeliveryStateNormal)];
         

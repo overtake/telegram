@@ -27,7 +27,7 @@ static dispatch_queue_t image_queue() {
 }
 
 + (void) clearCache {
-//    DLog(@"clear path %@", path());
+//    MTLog(@"clear path %@", path());
    /// CFAbsoluteTime time = getF
     
     [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];

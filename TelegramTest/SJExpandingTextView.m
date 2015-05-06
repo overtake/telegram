@@ -17,7 +17,7 @@
     
     if ((_actionKey && key == _actionKey) || (!_actionKey && key == 36)) {
         if (actionSender && action) {
-            DLog(@"Enter");
+            MTLog(@"Enter");
             NSString *stringSelector = NSStringFromSelector(action);
             
             //Could be action:(id)sender for example
@@ -29,7 +29,7 @@
 #pragma clang diagnostic pop
                 }
                 @catch (NSException *exception) {
-                    DLog(@"SJExpandingTextView: Unable to performSelector: withObject:self . Selector '%@'. Object: '%@'",NSStringFromSelector(action), [actionSender description]);
+                    MTLog(@"SJExpandingTextView: Unable to performSelector: withObject:self . Selector '%@'. Object: '%@'",NSStringFromSelector(action), [actionSender description]);
                 }
             } else {
                 //If not, performSelector: as normal
@@ -40,7 +40,7 @@
 #pragma clang diagnostic pop
                 }
                 @catch (NSException *exception) {
-                    DLog(@"SJExpandingTextView: Unable to performSelector: . Selector '%@'. Object: '%@'",NSStringFromSelector(action), [actionSender description]);
+                    MTLog(@"SJExpandingTextView: Unable to performSelector: . Selector '%@'. Object: '%@'",NSStringFromSelector(action), [actionSender description]);
                 }
             }
         }

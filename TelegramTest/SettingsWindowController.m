@@ -443,7 +443,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
                 alert(NSLocalizedString(@"Settings.CantUpdateFolder", nil), NSLocalizedString(@"Settings.ChooseAnotherFolder", nil));
             }
             
-            DLog(@"%@",result);
+            MTLog(@"%@",result);
             
         } forWindow:self.window];
     }

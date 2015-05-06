@@ -387,7 +387,7 @@
 - (BOOL)isEnterEvent:(NSEvent *)e {
     NSUInteger flags = (e.modifierFlags & NSDeviceIndependentModifierFlagsMask);
     BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
-//    DLog(@"log %lu", (unsigned long)flags);
+//    MTLog(@"log %lu", (unsigned long)flags);
     //numpad enter fix
     if (self.hasMarkedText)
         return NO;

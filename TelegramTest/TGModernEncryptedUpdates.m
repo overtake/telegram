@@ -281,7 +281,7 @@
             
             if (!MTCheckIsSafeGAOrB(g_b, params.p))
             {
-                DLog(@"Surprisingly, we generated an unsafe g_a");
+                MTLog(@"Surprisingly, we generated an unsafe g_a");
                 
             } else {
                 
@@ -626,7 +626,7 @@ Class convertClass(NSString *c, int layer) {
     TL_fileLocation *location = [TL_fileLocation createWithDc_id:[file dc_id] volume_id:[file n_id] local_id:-1 secret:[file access_hash]];
     
     if(![media respondsToSelector:@selector(key)] || ![media respondsToSelector:@selector(iv)]) {
-        DLog(@"drop encrypted media class ====== %@ ======",NSStringFromClass([media class]));
+        MTLog(@"drop encrypted media class ====== %@ ======",NSStringFromClass([media class]));
         return [TL_messageMediaEmpty create];
     }
     

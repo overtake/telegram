@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TLApi.h"
 #import "TLApiObject.h"
+#import "MTProto.h"
 
 @interface TLAPI_auth_checkPhone : TLApiObject
 @property (nonatomic, strong) NSString* phone_number;

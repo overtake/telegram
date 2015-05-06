@@ -115,7 +115,9 @@ CFTypeRef SSKeychainAccessibilityType = NULL;
 #if __has_feature(objc_arc)
 	[query setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
 	[query setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
+    [query setObject:@"6N38VWS5BX.ru.keepcoder.Telegram" forKey:kSecAttrAccessGroup];
 	status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+
 #else
 	[query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
 	[query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];

@@ -82,7 +82,7 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
 //    _opusFile = op_open_file([_filePath UTF8String], &openError);
 //    if (_opusFile == NULL || openError != OPUS_OK)
 //    {
-//        DLog(@"[TGOpusAudioPlayer#%p op_open_file failed: %d]", self, openError);
+//        MTLog(@"[TGOpusAudioPlayer#%p op_open_file failed: %d]", self, openError);
 //        [self cleanupAndReportError];
 //        
 //        return;
@@ -137,7 +137,7 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
             _fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil][NSFileSize] integerValue];
             if (_fileSize == 0)
             {
-                DLog(@"[TGOpusAudioPlayer#%p invalid file]", self);
+                MTLog(@"[TGOpusAudioPlayer#%p invalid file]", self);
                 [self cleanupAndReportError];
             }
         }];
@@ -189,11 +189,11 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
             OSStatus status = noErr;
             status = AudioOutputUnitStop(audioUnit);
             if (status != noErr)
-                DLog(@"[TGOpusAudioPlayer#%lx AudioOutputUnitStop failed: %d]", objectId, (int)status);
+                MTLog(@"[TGOpusAudioPlayer#%lx AudioOutputUnitStop failed: %d]", objectId, (int)status);
             
             status = AudioComponentInstanceDispose(audioUnit);
             if (status != noErr)
-                DLog(@"[TGOpusAudioRecorder#%lx AudioComponentInstanceDispose failed: %d]", objectId, (int)status);
+                MTLog(@"[TGOpusAudioRecorder#%lx AudioComponentInstanceDispose failed: %d]", objectId, (int)status);
         }
         
         if (opusFile != NULL)
@@ -310,7 +310,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             _opusFile = op_open_file([_filePath UTF8String], &openError);
             if (_opusFile == NULL || openError != OPUS_OK)
             {
-                DLog(@"[TGOpusAudioPlayer#%p op_open_file failed: %d]", self, openError);
+                MTLog(@"[TGOpusAudioPlayer#%p op_open_file failed: %d]", self, openError);
                 [self cleanupAndReportError];
                 
                 return;
@@ -334,7 +334,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             status = AudioUnitSetProperty(_audioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, kOutputBus, &one, sizeof(one));
             if (status != noErr)
             {
-                DLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioOutputUnitProperty_EnableIO failed: %d]", self, (int)status);
+                MTLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioOutputUnitProperty_EnableIO failed: %d]", self, (int)status);
                 [self cleanupAndReportError];
                 
                 return;
@@ -352,7 +352,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             status = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &outputAudioFormat, sizeof(outputAudioFormat));
             if (status != noErr)
             {
-                DLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioUnitProperty_StreamFormat failed: %d]", self, (int)status);
+                MTLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioUnitProperty_StreamFormat failed: %d]", self, (int)status);
                 [self cleanupAndReportError];
                 
                 return;
@@ -363,7 +363,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             callbackStruct.inputProcRefCon = (void *)(NSInteger)_playerId;
             if (AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Global, kOutputBus, &callbackStruct, sizeof(callbackStruct)) != noErr)
             {
-                DLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioUnitProperty_SetRenderCallback failed]", self);
+                MTLog(@"[TGOpusAudioPlayer#%@ AudioUnitSetProperty kAudioUnitProperty_SetRenderCallback failed]", self);
                 [self cleanupAndReportError];
                 
                 return;
@@ -372,7 +372,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             status = AudioUnitInitialize(_audioUnit);
             if (status != noErr)
             {
-                DLog(@"[TGOpusAudioRecorder#%@ AudioUnitInitialize failed: %d]", self, (int)status);
+                MTLog(@"[TGOpusAudioRecorder#%@ AudioUnitInitialize failed: %d]", self, (int)status);
                 [self cleanup];
                 
                 return;
@@ -398,7 +398,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             status = AudioOutputUnitStart(_audioUnit);
             if (status != noErr)
             {
-                DLog(@"[TGOpusAudioRecorder#%@ AudioOutputUnitStart failed: %d]", self, (int)status);
+                MTLog(@"[TGOpusAudioRecorder#%@ AudioOutputUnitStart failed: %d]", self, (int)status);
                 [self cleanupAndReportError];
             }
         }
@@ -410,7 +410,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             {
                 int result = op_pcm_seek(_opusFile, (ogg_int64_t)(position * TGOpusAudioPlayerSampleRate));
                 if (result != OPUS_OK)
-                    DLog(@"[TGOpusAudioPlayer#%p op_pcm_seek failed: %d]", self, result);
+                    MTLog(@"[TGOpusAudioPlayer#%p op_pcm_seek failed: %d]", self, result);
                 
                 ogg_int64_t pcmPosition = op_pcm_tell(_opusFile);
                 _currentPcmOffset = pcmPosition;
@@ -478,7 +478,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
                     else
                     {
                         if (readSamples < 0)
-                            DLog(@"[TGOpusAudioPlayer#%p op_read failed: %d]", self, readSamples);
+                            MTLog(@"[TGOpusAudioPlayer#%p op_read failed: %d]", self, readSamples);
                         
                         endOfFileReached = true;
                         

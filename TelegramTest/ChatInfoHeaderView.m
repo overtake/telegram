@@ -348,7 +348,7 @@
     
     self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     if(!self.fullChat) {
-        DLog(@"full chat is not loading");
+        MTLog(@"full chat is not loading");
         return;
     }
     

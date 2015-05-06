@@ -133,7 +133,7 @@
 
 - (void)mouseExited:(NSEvent *)theEvent {
     [self setNeedsDisplay:YES];
-//    DLog(@"exit");
+//    MTLog(@"exit");
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -202,7 +202,7 @@
         isActiveInAttachedSheed = NSPointInRect(attachedMouseLocation, [self.window.attachedSheet.contentView bounds]);
     }
     
-//    DLog(@"isAC %d", isActiveInAttachedSheed);
+//    MTLog(@"isAC %d", isActiveInAttachedSheed);
     
 //	if (self.window.isKeyWindow && NSPointInRect(mouseLocation, self.bounds) && !isActiveInAttachedSheed) {//cursoroff
 //        self.backgroundColor = NSColorFromRGB(0xfafafa);

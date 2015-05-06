@@ -19,7 +19,7 @@
 
 - (void)postNotificationNameOnMainThread:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo {
 
-  //  DLog(@"notification perform %@", notificationName);
+  //  MTLog(@"notification perform %@", notificationName);
     
     [LoopingUtils runOnMainQueueAsync:^{
         [self postNotificationName:notificationName  object:notificationSender userInfo:userInfo];

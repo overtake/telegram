@@ -250,7 +250,7 @@
     
     self.semaphore = dispatch_semaphore_create(0);
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    DLog(@"end");
+    MTLog(@"end");
     dispatch_semaphore_signal(self.semaphore);
 }
 
@@ -348,11 +348,11 @@
         BOOL isLastPart = self.readedBytes == self.total_size;
         
         if(!isLastPart) {
-            DLog(@"upload progress[%d]: %lu/%d", partNumber, self.readedBytes / 1024, self.total_size / 1024);
+            MTLog(@"upload progress[%d]: %lu/%d", partNumber, self.readedBytes / 1024, self.total_size / 1024);
             [self startUploadPart:partNumber + CONCURENT];
             
         } else {
-            DLog(@"upload complete: %lu/%d",self.readedBytes / 1024, self.total_size / 1024);
+            MTLog(@"upload complete: %lu/%d",self.readedBytes / 1024, self.total_size / 1024);
             
             id inputFile;
             if(self.aes_iv && self.aes_key) {

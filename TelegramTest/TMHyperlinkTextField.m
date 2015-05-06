@@ -122,7 +122,7 @@
 		return;
 	}
     
-//    DLog(@"log cursor");
+//    MTLog(@"log cursor");
 	
 	/* Moved out of the while and for loops as there's no need to recalculate
      it every time through */
@@ -149,7 +149,7 @@
                     cursorRect.origin.x +=self.hardXOffset;
 //                    cursorRect.size.height += 0;
                     [self addCursorRect:cursorRect cursor:pointingCursor];
-//                    DLog(@"clicable");
+//                    MTLog(@"clicable");
                 }
 			}
 		}
@@ -249,7 +249,7 @@
 
 - (void)mouseUp:(NSEvent *)mouseEvent {
 	NSURL* urlAtMouse = [self urlAtMouse:mouseEvent];
-    DLog(@" %@", urlAtMouse);
+    MTLog(@" %@", urlAtMouse);
 	if ( (urlAtMouse != nil)  &&  [urlAtMouse isEqualTo:self.clickedURL] ) {
         if(self.url_delegate) {
             [self.url_delegate textField:self handleURLClick:[urlAtMouse absoluteString]];

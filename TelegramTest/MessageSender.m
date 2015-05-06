@@ -79,12 +79,12 @@
          switch ([exportSession status])
          {
              case AVAssetExportSessionStatusFailed:
-                 DLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
+                 MTLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
                  endProcessing = true;
                  break;
              case AVAssetExportSessionStatusCancelled:
                  endProcessing = true;
-                 DLog(@"Export canceled");
+                 MTLog(@"Export canceled");
                  break;
              case AVAssetExportSessionStatusCompleted:
              {
@@ -135,7 +135,7 @@
     AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
         
         if (result != AVAssetImageGeneratorSucceeded) {
-            DLog(@"couldn't generate thumbnail, error:%@", error);
+            MTLog(@"couldn't generate thumbnail, error:%@", error);
         }
         
         thumbImg = [[NSImage alloc] initWithCGImage:im size:thumbSize];

@@ -31,12 +31,12 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    //    DLog(@"");
+    //    MTLog(@"");
     [super mouseDown:theEvent];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
-    //    DLog(@"");
+    //    MTLog(@"");
     if(theEvent.clickCount != 1) {
         [super mouseUp:theEvent];
     } else {

@@ -15,6 +15,9 @@
 #import <MTProtoKit/MTDatacenterSaltInfo.h>
 #import <MtProtoKit/MTExportedAuthorizationData.h>
 
+#import "MTProto.h"
+#import "TLApi.h"
+#import "ClassStore.h"
 
 @interface TGTLSerialization ()
 
@@ -38,7 +41,7 @@
         return nil;
     if([message respondsToSelector:@selector(getData)])
         return  [message getData];
-    return [TLClassStore serialize:message];
+    return [ClassStore serialize:message];
 }
 
 - (id)parseMessage:(NSData *)data
@@ -46,9 +49,9 @@
     NSInputStream *is = [[NSInputStream alloc] initWithData:data];
     [is open];
     
-    id obj = [TLClassStore constructObject:is];
+    id obj = [ClassStore constructObject:is];
     if([obj isKindOfClass:[TL_gzip_packed class]]) {
-        obj = [TLClassStore deserialize:[[obj packed_data] gzipInflate]];
+        obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
     }
     
     return obj;
@@ -60,9 +63,9 @@
     NSInputStream *is = [[NSInputStream alloc] initWithData:data];
     [is open];
     
-    id obj = [TLClassStore constructObject:is];
+    id obj = [ClassStore constructObject:is];
     if([obj isKindOfClass:[TL_gzip_packed class]]) {
-        obj = [TLClassStore deserialize:[[obj packed_data] gzipInflate]];
+        obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
     }
     
     return obj;

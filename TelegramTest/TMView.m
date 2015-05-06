@@ -54,7 +54,7 @@
     
 //    [HackUtils printMethods:self.superview];
     
-//    DLog(@"window %@", self.superview);
+//    MTLog(@"window %@", self.superview);
 
 }
 

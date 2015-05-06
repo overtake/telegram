@@ -76,7 +76,7 @@
 }
 
 -(void)loadremote:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback  {
-    DLog(@"load remote!!! offset %d", offset);
+    MTLog(@"load remote!!! offset %d", offset);
     
     [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:offset max_id:0 limit:limit]successHandler:^(RPCRequest *request, id response) {
         

@@ -149,7 +149,7 @@ static CVReturn BTRScrollingCallback(CVDisplayLinkRef displayLink, const CVTimeS
 }
 
 - (void)beginScrolling {
-//    DLog(@"start");
+//    MTLog(@"start");
 	if (CVDisplayLinkIsRunning(self.displayLink)) {
 		return;
 	}

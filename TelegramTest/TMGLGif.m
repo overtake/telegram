@@ -18,7 +18,7 @@
     self = [super init];
     
     if(img == NULL) {
-        DLog(@"Unable to load image named: %@", img);
+        MTLog(@"Unable to load image named: %@", img);
         return NULL;
     }
     
@@ -56,7 +56,7 @@
                          [rep bitmapData]);
         }
         else {
-            DLog(@"-textureFromView: Unsupported bitmap data format: isPlanar:%d, samplesPerPixel:%ld, bitsPerPixel:%ld, bytesPerRow:%ld, bytesPerPlane:%ld",
+            MTLog(@"-textureFromView: Unsupported bitmap data format: isPlanar:%d, samplesPerPixel:%ld, bitsPerPixel:%ld, bytesPerRow:%ld, bytesPerPlane:%ld",
                   [rep isPlanar],
                   (long)[rep samplesPerPixel],
                   (long)
