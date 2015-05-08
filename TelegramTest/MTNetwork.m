@@ -15,7 +15,7 @@
 #import "TGKeychain.h"
 #import "NSData+Extensions.h"
 #import "NSMutableData+Extension.h"
-
+#import "SSKeychain.h"
 #import "TGTLSerialization.h"
 
 @implementation MTRequest (LegacyTL)
@@ -441,6 +441,7 @@ static int MAX_WORKER_POLL = 5;
     
     [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
     
+    [SSKeychain deletePasswordForService:@"Telegram" account:@"authkeys"];
     
     [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
     

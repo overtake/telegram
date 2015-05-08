@@ -88,7 +88,7 @@ static const TGTwoColors colors[] = {
     NSImage *image;
     
     if(!item.result) {
-        image = [self generateTextAvatar:[self colorMask:_object] size:self.imageSize text:[self text:_object] font:TGSystemLightFont(14) offsetY:0];
+        image = [self generateTextAvatar:[self colorMask:_object] size:self.imageSize text:[self text:_object] font:TGSystemLightFont(14) offsetY:2];
     } else {
         __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
         

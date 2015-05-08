@@ -183,6 +183,10 @@
         
         id file = [manager performSelector:@selector(fileInfoByPathHash:) withObject:self.fileMD5Hash];
         
+        if(!file && _uploaderRequestFileHash) {
+            file = _uploaderRequestFileHash(self);
+        }
+        
         if(file) {
             self.uploadState = UploadFinished;
             [ASQueue dispatchOnMainQueue:^{
@@ -365,6 +369,10 @@
                     inputFile = [TL_inputFileBig createWithN_id:self.identify parts:self.total_parts name:@""];
                 else
                     inputFile = [TL_inputFile createWithN_id:self.identify parts:self.total_parts name:self.fileName md5_checksum:@""];
+            }
+            
+            if(_uploaderNeedSaveFileHash) {
+                _uploaderNeedSaveFileHash(self,inputFile);
             }
             
             [self setState:UploadFinished];

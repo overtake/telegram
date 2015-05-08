@@ -139,6 +139,9 @@
 
 -(void)update {
     if(_ts_count == _sent_count) {
+        
+        [self.progressView setProgress:100 animated:YES];
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             _completionHandler();
         });
@@ -183,6 +186,24 @@
     [_progressView setProgress:current_progress animated:YES];
 }
 
+-(void)performMediaRequest:(id)media rowItem:(TGS_ConversationRowItem *)rowItem path:(NSString *)path {
+   
+    _cs_count++;
+    
+    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long()] successHandler:^(id request, TLUpdates *response) {
+        
+        _sent_count++;
+        
+        [self update];
+        
+    } errorHandler:^(id request, RpcError *error) {
+        [self error];
+    }];
+    
+    [_operationsAndRequests addObject:request];
+}
+
+
 -(void)sendAsMedia:(NSString *)path rowItem:(TGS_ConversationRowItem *)rowItem {
     
     [ASQueue dispatchOnStageQueue:^{
@@ -192,8 +213,7 @@
         
         [operation setUploadComplete:^(UploadOperation *operation, id file) {
             
-            
-            _cs_count++;
+            [self updateProgress:100];
             
             id media;
             
@@ -202,18 +222,18 @@
             else
                 media = [TL_inputMediaUploadedDocument createWithFile:file mime_type:mimetypefromExtension([path pathExtension]) attributes:[@[[TL_documentAttributeFilename createWithFile_name:[path lastPathComponent]]] mutableCopy]];
             
-            id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long()] successHandler:^(id request, id response) {
-                
-                _sent_count++;
-                
-                [self update];
-                
-            } errorHandler:^(id request, RpcError *error) {
-                [self error];
-            }];
+            [self performMediaRequest:media rowItem:rowItem path:path];
             
-            [_operationsAndRequests addObject:request];
+        }];
+        
+        [operation setUploaderRequestFileHash:^id(UploadOperation *o) {
             
+            return _uploadedFileHash[fileMD5(o.filePath)];
+            
+        }];
+        
+        [operation setUploaderNeedSaveFileHash:^(UploadOperation *o, id file) {
+            _uploadedFileHash[fileMD5(o.filePath)] = file;
         }];
         
         [operation setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {

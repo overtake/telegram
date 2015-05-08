@@ -47,6 +47,10 @@ typedef enum {
 @property (nonatomic, strong) void (^uploadCancelled)(UploadOperation *uploader);
 @property (nonatomic, strong) void (^uploadTypingNeed)(UploadOperation *uploader);
 
+
+@property (nonatomic, strong) id (^uploaderRequestFileHash)(UploadOperation *uploader);
+@property (nonatomic, strong) void (^uploaderNeedSaveFileHash)(UploadOperation *uploader, id file);
+
 - (void)cancel;
 - (void)ready:(UploadType)type;
 - (void)encryptedready:(UploadType)type key:(NSData *)key iv:(NSData *)iv;

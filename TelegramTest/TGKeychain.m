@@ -211,9 +211,7 @@ static NSMutableDictionary *keychains()
 {
     
     if(_encrypted) {
-        if(_readKeychainData.count == 0) {
-            _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Telegram" account:@"authkeys"]];
-        }
+        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Telegram" account:@"authkeys"]];
     }
     
     
