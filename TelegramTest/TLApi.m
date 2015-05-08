@@ -2,13 +2,12 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.04.15..
+//  Auto created by Mikhail Filimonov on 08.05.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "TLApi.h"
-#import "ClassStore.h"
 
 @implementation TLAPI_auth_checkPhone
 +(TLAPI_auth_checkPhone*)createWithPhone_number:(NSString*)phone_number {
@@ -1949,6 +1948,45 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1817183516];
 	[stream writeString:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getStickerSet
++(TLAPI_messages_getStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset {
+    TLAPI_messages_getStickerSet* obj = [[TLAPI_messages_getStickerSet alloc] init];
+    obj.stickerset = stickerset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:639215886];
+	[ClassStore TLSerialize:self.stickerset stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_installStickerSet
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset {
+    TLAPI_messages_installStickerSet* obj = [[TLAPI_messages_installStickerSet alloc] init];
+    obj.stickerset = stickerset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-272893207];
+	[ClassStore TLSerialize:self.stickerset stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_uninstallStickerSet
++(TLAPI_messages_uninstallStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset {
+    TLAPI_messages_uninstallStickerSet* obj = [[TLAPI_messages_uninstallStickerSet alloc] init];
+    obj.stickerset = stickerset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-110209570];
+	[ClassStore TLSerialize:self.stickerset stream:stream];
 	return [stream getOutput];
 }
 @end

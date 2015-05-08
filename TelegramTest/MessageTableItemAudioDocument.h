@@ -10,4 +10,6 @@
 
 @interface MessageTableItemAudioDocument : MessageTableItemAudio
 
+@property (nonatomic,strong) NSString *fileSize;
+
 @end

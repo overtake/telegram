@@ -2,14 +2,13 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.04.15.
+//  Auto created by Mikhail Filimonov on 08.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "TLApi.h"
 #import "TLApiObject.h"
-#import "MTProto.h"
 
 @interface TLAPI_auth_checkPhone : TLApiObject
 @property (nonatomic, strong) NSString* phone_number;
@@ -845,5 +844,23 @@
 @property (nonatomic, strong) NSString* n_hash;
 
 +(TLAPI_messages_importChatInvite*)createWithN_hash:(NSString*)n_hash;
+@end
+
+@interface TLAPI_messages_getStickerSet : TLApiObject
+@property (nonatomic, strong) TLInputStickerSet* stickerset;
+
++(TLAPI_messages_getStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
+@end
+
+@interface TLAPI_messages_installStickerSet : TLApiObject
+@property (nonatomic, strong) TLInputStickerSet* stickerset;
+
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
+@end
+
+@interface TLAPI_messages_uninstallStickerSet : TLApiObject
+@property (nonatomic, strong) TLInputStickerSet* stickerset;
+
++(TLAPI_messages_uninstallStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
 @end
 

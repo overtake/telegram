@@ -28,7 +28,7 @@ extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
 extern NSString *const TLHashTagPrefix;
 extern NSString *const TGJoinGroupPrefix;
-
+extern NSString *const TGStickerPackPrefix;
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
@@ -69,6 +69,7 @@ NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
 
 void join_group_by_hash(NSString * hash);
+void add_sticker_pack_by_name(NSString *name);
 
 int64_t SystemIdleTime(void);
 NSData *passwordHash(NSString *password, NSData *salt);

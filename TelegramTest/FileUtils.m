@@ -45,6 +45,7 @@
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
 NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
+NSString *const TGStickerPackPrefix = @"tg://addstickers?set=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
 
@@ -441,10 +442,19 @@ void join_group_by_hash(NSString * hash) {
             }
             
         }];
+    
+}
+
+
+void add_sticker_pack_by_name(NSString *name) {
+    
+    [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetShortName createWithShort_name:name]] successHandler:^(id request, id response) {
         
-   
-    
-    
+        int bp = 0;
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    }];
     
 }
 
@@ -516,6 +526,7 @@ void open_link(NSString *link) {
         return;
     }
     
+    
     if([link hasPrefix:TLHashTagPrefix]) {
         
         [[Telegram leftViewController] showTabControllerAtIndex:1];
@@ -545,9 +556,12 @@ void open_link(NSString *link) {
         if(name.length > 0) {
             
             NSString *joinPrefix = @"joinchat/";
+            NSString *stickerPrefix = @"addstickers/";
             
             if([name hasPrefix:joinPrefix]) {
                 join_group_by_hash([name substringFromIndex:joinPrefix.length]);
+            } else if([name hasPrefix:stickerPrefix]) {
+                add_sticker_pack_by_name([name substringFromIndex:stickerPrefix.length]);
             } else {
                 open_user_by_name(name);
             }

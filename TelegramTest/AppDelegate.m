@@ -96,6 +96,12 @@
             return;
         }
         
+        if([[url absoluteString] hasPrefix:TGStickerPackPrefix]) {
+            add_sticker_pack_by_name([[url absoluteString] substringFromIndex:TGStickerPackPrefix.length]);
+            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+            [self.mainWindow deminiaturize:self];
+            return;
+        }
         
         
         

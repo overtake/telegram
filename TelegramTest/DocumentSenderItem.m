@@ -68,7 +68,7 @@
             int heigth = 0;
             if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 100 & heigth > 100)
             {
-                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@""]];
+                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
                 
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],randomId];

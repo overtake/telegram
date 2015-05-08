@@ -8,6 +8,8 @@
 
 #import "MessageTableItemAudioDocument.h"
 #import "DownloadDocumentItem.h"
+#import "NSStringCategory.h"
+#import "NSString+Extended.h"
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -15,16 +17,9 @@
     if(self) {
         self.blockSize = NSMakeSize(200, 60);
         self.duration = self.message.media.document.file_name;
-        /*
-         NSURL *afUrl = [NSURL fileURLWithPath:soundPath];
-         AudioFileID fileID;
-         OSStatus result = AudioFileOpenURL((CFURLRef)afUrl, kAudioFileReadPermission, 0, &fileID);
-         UInt64 outDataSize = 0;
-         UInt32 thePropSize = sizeof(UInt64);
-         result = AudioFileGetProperty(fileID, kAudioFilePropertyEstimatedDuration, &thePropSize, &outDataSize);
-         AudioFileClose(fileID);
-         */
-
+        
+       _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+       
         if([self isset])
             self.state = AudioStateWaitPlaying;
         else
@@ -62,8 +57,5 @@
     return self.message.media.document.file_name;
 }
 
--(int)fileSize {
-    return [self size];
-}
 
 @end

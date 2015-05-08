@@ -7,7 +7,7 @@
 //
 
 #import "DownloadDocumentItem.h"
-
-@interface DownloadStickerItem : DownloadItem
+#import "TGDownloadItem.h"
+@interface DownloadStickerItem : TGDownloadItem
 
 @end

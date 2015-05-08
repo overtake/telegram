@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 27.04.15.
+//  Auto created by Dmitry Kondratyev on 08.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -361,6 +361,15 @@
 @end
 	
 @interface TLChatInvite : TLObject
+@end
+	
+@interface TLInputStickerSet : TLObject
+@end
+	
+@interface TLStickerSet : TLObject
+@end
+	
+@interface TLmessages_StickerSet : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -2139,6 +2148,7 @@
 @property int w;
 @property int h;
 @property (nonatomic, strong) NSString* alt;
+@property (nonatomic, strong) TLInputStickerSet* stickerset;
 @property int duration;
 @property (nonatomic, strong) NSString* file_name;
 @end
@@ -2150,7 +2160,7 @@
 +(TL_documentAttributeAnimated*)create;
 @end
 @interface TL_documentAttributeSticker : TLDocumentAttribute
-+(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt;
++(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt stickerset:(TLInputStickerSet*)stickerset;
 @end
 @interface TL_documentAttributeVideo : TLDocumentAttribute
 +(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h;
@@ -2186,6 +2196,7 @@
 @interface TLmessages_AllStickers()
 @property (nonatomic, strong) NSString* n_hash;
 @property (nonatomic, strong) NSMutableArray* packs;
+@property (nonatomic, strong) NSMutableArray* sets;
 @property (nonatomic, strong) NSMutableArray* documents;
 @end
 
@@ -2193,7 +2204,7 @@
 +(TL_messages_allStickersNotModified*)create;
 @end
 @interface TL_messages_allStickers : TLmessages_AllStickers
-+(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents;
++(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash packs:(NSMutableArray*)packs sets:(NSMutableArray*)sets documents:(NSMutableArray*)documents;
 @end
 	
 @interface TLDisabledFeature()
@@ -2361,6 +2372,43 @@
 @end
 @interface TL_chatInvite : TLChatInvite
 +(TL_chatInvite*)createWithTitle:(NSString*)title;
+@end
+	
+@interface TLInputStickerSet()
+@property long n_id;
+@property long access_hash;
+@property (nonatomic, strong) NSString* short_name;
+@end
+
+@interface TL_inputStickerSetEmpty : TLInputStickerSet
++(TL_inputStickerSetEmpty*)create;
+@end
+@interface TL_inputStickerSetID : TLInputStickerSet
++(TL_inputStickerSetID*)createWithN_id:(long)n_id access_hash:(long)access_hash;
+@end
+@interface TL_inputStickerSetShortName : TLInputStickerSet
++(TL_inputStickerSetShortName*)createWithShort_name:(NSString*)short_name;
+@end
+	
+@interface TLStickerSet()
+@property long n_id;
+@property long access_hash;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* short_name;
+@end
+
+@interface TL_stickerSet : TLStickerSet
++(TL_stickerSet*)createWithN_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name;
+@end
+	
+@interface TLmessages_StickerSet()
+@property (nonatomic, strong) TLStickerSet* set;
+@property (nonatomic, strong) NSMutableArray* packs;
+@property (nonatomic, strong) NSMutableArray* documents;
+@end
+
+@interface TL_messages_stickerSet : TLmessages_StickerSet
++(TL_messages_stickerSet*)createWithSet:(TLStickerSet*)set packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents;
 @end
 	
 @interface TLProtoMessage()

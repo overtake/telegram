@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.04.15.
+//  Auto created by Mikhail Filimonov on 08.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7391,16 +7391,19 @@
 @end
 
 @implementation TL_documentAttributeSticker
-+(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt {
++(TL_documentAttributeSticker*)createWithAlt:(NSString*)alt stickerset:(TLInputStickerSet*)stickerset {
 	TL_documentAttributeSticker* obj = [[TL_documentAttributeSticker alloc] init];
 	obj.alt = alt;
+	obj.stickerset = stickerset;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.alt];
+	[ClassStore TLSerialize:self.stickerset stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.alt = [stream readString];
+	self.stickerset = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -7568,10 +7571,11 @@
 @end
 
 @implementation TL_messages_allStickers
-+(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents {
++(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash packs:(NSMutableArray*)packs sets:(NSMutableArray*)sets documents:(NSMutableArray*)documents {
 	TL_messages_allStickers* obj = [[TL_messages_allStickers alloc] init];
 	obj.n_hash = n_hash;
 	obj.packs = packs;
+	obj.sets = sets;
 	obj.documents = documents;
 	return obj;
 }
@@ -7584,6 +7588,16 @@
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
 			TLStickerPack* obj = [self.packs objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.sets count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLStickerSet* obj = [self.sets objectAtIndex:i];
 			[ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -7609,6 +7623,17 @@
 		for(int i = 0; i < count; i++) {
 			TLStickerPack* obj = [ClassStore TLDeserialize:stream];
 			[self.packs addObject:obj];
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.sets)
+			self.sets = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLStickerSet* obj = [ClassStore TLDeserialize:stream];
+			[self.sets addObject:obj];
 		}
 	}
 	//UNS FullVector
@@ -8117,6 +8142,147 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.title = [stream readString];
+}
+@end
+
+
+
+@implementation TLInputStickerSet
+@end
+
+@implementation TL_inputStickerSetEmpty
++(TL_inputStickerSetEmpty*)create {
+	TL_inputStickerSetEmpty* obj = [[TL_inputStickerSetEmpty alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_inputStickerSetID
++(TL_inputStickerSetID*)createWithN_id:(long)n_id access_hash:(long)access_hash {
+	TL_inputStickerSetID* obj = [[TL_inputStickerSetID alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeLong:self.access_hash];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readLong];
+	self.access_hash = [stream readLong];
+}
+@end
+
+@implementation TL_inputStickerSetShortName
++(TL_inputStickerSetShortName*)createWithShort_name:(NSString*)short_name {
+	TL_inputStickerSetShortName* obj = [[TL_inputStickerSetShortName alloc] init];
+	obj.short_name = short_name;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.short_name];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.short_name = [stream readString];
+}
+@end
+
+
+
+@implementation TLStickerSet
+@end
+
+@implementation TL_stickerSet
++(TL_stickerSet*)createWithN_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name {
+	TL_stickerSet* obj = [[TL_stickerSet alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.title = title;
+	obj.short_name = short_name;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeLong:self.access_hash];
+	[stream writeString:self.title];
+	[stream writeString:self.short_name];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readLong];
+	self.access_hash = [stream readLong];
+	self.title = [stream readString];
+	self.short_name = [stream readString];
+}
+@end
+
+
+
+@implementation TLmessages_StickerSet
+@end
+
+@implementation TL_messages_stickerSet
++(TL_messages_stickerSet*)createWithSet:(TLStickerSet*)set packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents {
+	TL_messages_stickerSet* obj = [[TL_messages_stickerSet alloc] init];
+	obj.set = set;
+	obj.packs = packs;
+	obj.documents = documents;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.set stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.packs count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLStickerPack* obj = [self.packs objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.documents count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLDocument* obj = [self.documents objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.set = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.packs)
+			self.packs = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLStickerPack* obj = [ClassStore TLDeserialize:stream];
+			[self.packs addObject:obj];
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.documents)
+			self.documents = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocument* obj = [ClassStore TLDeserialize:stream];
+			[self.documents addObject:obj];
+		}
+	}
 }
 @end
 
