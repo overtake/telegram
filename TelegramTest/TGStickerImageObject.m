@@ -86,7 +86,6 @@
     }
    
     
-    
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];

@@ -543,6 +543,10 @@
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
 		C2C6D9711A12952D001EF8A2 /* TGPVImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9701A12952D001EF8A2 /* TGPVImageView.m */; };
 		C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C725D91860E05200094EC7 /* EncryptedParams.m */; };
+		C2C802861AFD271B00791868 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2C802871AFD271B00791868 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2C802881AFD272500791868 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C802891AFD272500791868 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C85B731AE52E8D00FBEABD /* TGImageAttachmentsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B721AE52E8D00FBEABD /* TGImageAttachmentsController.m */; };
 		C2C85B7D1AE532F500FBEABD /* TGImageLocalAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B7C1AE532F500FBEABD /* TGImageLocalAttachment.m */; };
 		C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C85B801AE54C3F00FBEABD /* TGImageAttachment.m */; };
@@ -596,11 +600,6 @@
 		C2CBF61A1AF93A6C006BF90A /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C2CBF61B1AF93A6C006BF90A /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
 		C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF6491AFA5A23006BF90A /* MapKit.framework */; };
-		C2CBF6561AFAAA28006BF90A /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C2CBF6571AFAAAEB006BF90A /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2CBF6581AFAAAEB006BF90A /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2CBF6591AFAAAEF006BF90A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2CBF65A1AFAAAEF006BF90A /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2CBF65B1AFAB075006BF90A /* NSMutableData+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = CECBC1681800D5E000AD98E6 /* NSMutableData+Extension.m */; };
 		C2CBF65C1AFB6834006BF90A /* TMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7F478185DBA0800F90558 /* TMView.m */; };
 		C2CBF65D1AFB6881006BF90A /* TMTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7F474185DA87A00F90558 /* TMTableView.mm */; };
@@ -810,13 +809,6 @@
 			remoteGlobalIDString = D0CB05F71ADC4483005E298F;
 			remoteInfo = MtProtoKit;
 		};
-		C2CBF6541AFAAA1F006BF90A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
-			remoteInfo = TGShare;
-		};
 		C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
@@ -833,8 +825,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2CBF6571AFAAAEB006BF90A /* Sparkle.framework in Copy Files (6 items) */,
-				C2CBF6581AFAAAEB006BF90A /* HockeySDK.framework in Copy Files (6 items) */,
+				C2C802881AFD272500791868 /* Sparkle.framework in Copy Files (6 items) */,
+				C2C802891AFD272500791868 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -854,7 +846,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C2CBF6561AFAAA28006BF90A /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2366,8 +2357,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2CBF6591AFAAAEF006BF90A /* Sparkle.framework in Frameworks */,
-				C2CBF65A1AFAAAEF006BF90A /* HockeySDK.framework in Frameworks */,
+				C2C802861AFD271B00791868 /* Sparkle.framework in Frameworks */,
+				C2C802871AFD271B00791868 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5136,7 +5127,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C2CBF6551AFAAA1F006BF90A /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -6032,14 +6022,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C2CBF6551AFAAA1F006BF90A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C2CBF6541AFAAA1F006BF90A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {

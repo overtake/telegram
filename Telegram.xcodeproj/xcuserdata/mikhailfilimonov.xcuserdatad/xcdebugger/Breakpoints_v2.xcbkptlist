@@ -115,13 +115,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "452794295.237725"
+            filePath = "TGShare/ShareViewController.m"
+            timestampString = "452796765.131713"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2173"
-            endingLineNumber = "2173"
-            landmarkName = "-loadhistory:toEnd:prev:isFirst:"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
+            landmarkName = "-sendItems"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -48,11 +48,16 @@ static const int width = 180;
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
         
-        weakSelf.isLoaded = YES;
-        
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
+        [ASQueue dispatchOnStageQueue:^{
+            
+            weakSelf.isLoaded = YES;
+            
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+            
+        }];
+       
     }];
     
     
