@@ -14,7 +14,20 @@
 @property (nonatomic, strong, readonly) NSString *collection;
 @property (nonatomic, strong, readonly) NSString *key;
 
+- (BOOL)isEqualToCollectionKey:(YapCollectionKey *)collectionKey;
+
+// These methods are overriden and optimized:
 - (BOOL)isEqual:(id)anObject;
 - (NSUInteger)hash;
+
+// For optimizing usage in YapCache
++ (CFDictionaryKeyCallBacks)keyCallbacks;
+
+// Super optimized (c function call faster than obj-c method invocation):
+BOOL YapCollectionKeyEqual(const __unsafe_unretained YapCollectionKey *ck1,
+                           const __unsafe_unretained YapCollectionKey *ck2);
+
+// Lazy programmer (less typing than alloc/init)
+YapCollectionKey* YapCollectionKeyCreate(NSString *collection, NSString *key);
 
 @end

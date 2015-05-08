@@ -36,10 +36,10 @@
 #define YDB_LOG_LEVEL_INFO    (YDB_LOG_LEVEL_WARN  | YDB_LOG_FLAG_INFO)    // 0...00111
 #define YDB_LOG_LEVEL_VERBOSE (YDB_LOG_LEVEL_INFO  | YDB_LOG_FLAG_VERBOSE) // 0...01111
 
-#define YDB_LOG_ERROR   (ydbLogLevel & YDB_LOG_LEVEL_ERROR)
-#define YDB_LOG_WARN    (ydbLogLevel & YDB_LOG_LEVEL_WARN)
-#define YDB_LOG_INFO    (ydbLogLevel & YDB_LOG_LEVEL_INFO)
-#define YDB_LOG_VERBOSE (ydbLogLevel & YDB_LOG_LEVEL_VERBOSE)
+#define YDB_LOG_ERROR   (ydbLogLevel & YDB_LOG_FLAG_ERROR)
+#define YDB_LOG_WARN    (ydbLogLevel & YDB_LOG_FLAG_WARN)
+#define YDB_LOG_INFO    (ydbLogLevel & YDB_LOG_FLAG_INFO)
+#define YDB_LOG_VERBOSE (ydbLogLevel & YDB_LOG_FLAG_VERBOSE)
 
 /**
  * Define trace, which is in addition to log levels.
@@ -67,7 +67,7 @@
 #define YapDatabaseLoggingTechnique_Disabled   0 // disabled
 
 #ifndef YapDatabaseLoggingTechnique
-#define YapDatabaseLoggingTechnique YapDatabaseLoggingTechnique_Lumberjack
+#define YapDatabaseLoggingTechnique YapDatabaseLoggingTechnique_Disabled
 #endif
 
 /**
@@ -121,7 +121,7 @@ NSString *YDBExtractFileNameWithoutExtension(const char *filePath);
 // Logging uses plain old NSLog. (slower)
 
 #define YDBLogMaybe(flg, frmt, ...) \
-    do{ if(ydbLogLevel & flg) DLog((@"%@: " frmt), THIS_FILE, ##__VA_ARGS__); } while(0)
+    do{ if(ydbLogLevel & flg) NSLog((@"%@: " frmt), THIS_FILE, ##__VA_ARGS__); } while(0)
 
 #define YDBLogError(frmt, ...)    YDBLogMaybe(YDB_LOG_FLAG_ERROR,   frmt, ##__VA_ARGS__)
 #define YDBLogWarn(frmt, ...)     YDBLogMaybe(YDB_LOG_FLAG_WARN,    frmt, ##__VA_ARGS__)

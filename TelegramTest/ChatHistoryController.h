@@ -47,7 +47,10 @@ typedef enum {
 @property (nonatomic,assign) NSUInteger selectLimit; // default = 70;
 
 
-@property (nonatomic,strong) HistoryFilter *filter;
+
+
+-(HistoryFilter *)filter;
+-(void)setFilter:(HistoryFilter *)filter;
 
 -(id)initWithController:(id<MessagesDelegate>)controller;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;

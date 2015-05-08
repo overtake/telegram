@@ -1,13 +1,14 @@
 #import <Foundation/Foundation.h>
 
 #import "YapDatabase.h"
-#import "YapDatabaseDefaults.h"
 #import "YapDatabaseConnection.h"
+#import "YapDatabaseConnectionDefaults.h"
 #import "YapDatabaseTransaction.h"
 #import "YapDatabaseExtension.h"
 
 #import "YapCache.h"
 #import "YapMemoryTable.h"
+#import "YapCollectionKey.h"
 
 #import "sqlite3.h"
 
@@ -22,38 +23,34 @@ NS_INLINE void sqlite_finalize_null(sqlite3_stmt **stmtPtr)
 	}
 }
 
+#ifndef SQLITE_BIND_START
+#define SQLITE_BIND_START 1
+#endif
+
+#ifndef SQLITE_COLUMN_START
+#define SQLITE_COLUMN_START 0
+#endif
+
+/**
+ * Keys for changeset dictionary.
+**/
+
 extern NSString *const YapDatabaseRegisteredExtensionsKey;
-extern NSString *const YapDatabaseRegisteredTablesKey;
+extern NSString *const YapDatabaseRegisteredMemoryTablesKey;
 extern NSString *const YapDatabaseExtensionsOrderKey;
+extern NSString *const YapDatabaseExtensionDependenciesKey;
+extern NSString *const YapDatabaseRemovedRowidsKey;
 extern NSString *const YapDatabaseNotificationKey;
 
+/**
+ * Key(s) for yap2 extension configuration table.
+ *
+ * This is the only key that is reserved, and should not be set by extension subclasses.
+**/
+static NSString *const ext_key_class = @"class";
+
+
 @interface YapDatabase () {
-@private
-	
-	NSMutableArray *changesets;
-	uint64_t snapshot;
-	
-	dispatch_queue_t internalQueue;
-	dispatch_queue_t checkpointQueue;
-	
-	YapDatabaseDefaults *defaults;
-	
-	NSDictionary *registeredExtensions;
-	NSDictionary *registeredTables;
-	
-	NSDictionary *extensionDependencies;
-	NSArray *extensionsOrder;
-	
-	YapDatabaseConnection *registrationConnection;
-	
-	NSUInteger maxConnectionPoolCount;
-	NSTimeInterval connectionPoolLifetime;
-	dispatch_source_t connectionPoolTimer;
-	NSMutableArray *connectionPoolValues;
-	NSMutableArray *connectionPoolDates;
-	
-	sqlite3 *db; // Used for setup & checkpoints
-	
 @public
 	
 	void *IsOnSnapshotQueueKey;       // Only to be used by YapDatabaseConnection
@@ -64,28 +61,35 @@ extern NSString *const YapDatabaseNotificationKey;
 	
 	NSMutableArray *connectionStates; // Only to be used by YapDatabaseConnection
 	
-	NSArray *previouslyRegisteredExtensionNames; // Only to be used by YapDatabaseConnection
+	NSArray *previouslyRegisteredExtensionNames; // Writeable only within snapshot queue
 	
-	YapDatabaseSerializer objectSerializer;       // Read-only by transactions
-	YapDatabaseDeserializer objectDeserializer;   // Read-only by transactions
+	YapDatabaseSerializer objectSerializer;         // Read-only by transactions
+	YapDatabaseDeserializer objectDeserializer;     // Read-only by transactions
 	
-	YapDatabaseSerializer metadataSerializer;     // Read-only by transactions
-	YapDatabaseDeserializer metadataDeserializer; // Read-only by transactions
+	YapDatabaseSerializer metadataSerializer;       // Read-only by transactions
+	YapDatabaseDeserializer metadataDeserializer;   // Read-only by transactions
 	
-	YapDatabaseSanitizer objectSanitizer;         // Read-only by transactions
-	YapDatabaseSanitizer metadataSanitizer;       // Read-only by transactions
+	YapDatabasePreSanitizer objectPreSanitizer;     // Read-only by transactions
+	YapDatabasePostSanitizer objectPostSanitizer;   // Read-only by transactions
+	
+	YapDatabasePreSanitizer metadataPreSanitizer;   // Read-only by transactions
+	YapDatabasePostSanitizer metadataPostSanitizer; // Read-only by transactions
 }
 
 /**
  * General utility methods.
 **/
-- (BOOL)tableExists:(NSString *)tableName using:(sqlite3 *)aDb;
-- (NSArray *)columnNamesForTable:(NSString *)tableName using:(sqlite3 *)aDb;
++ (int)pragma:(NSString *)pragmaSetting using:(sqlite3 *)aDb;
++ (NSString *)pragmaValueForAutoVacuum:(int)auto_vacuum;
++ (NSString *)pragmaValueForSynchronous:(int)synchronous;
++ (BOOL)tableExists:(NSString *)tableName using:(sqlite3 *)aDb;
++ (NSArray *)columnNamesForTable:(NSString *)tableName using:(sqlite3 *)aDb;
++ (NSDictionary *)columnNamesAndAffinityForTable:(NSString *)tableName using:(sqlite3 *)aDb;
 
 /**
  * New connections inherit their default values from this structure.
 **/
-- (YapDatabaseDefaults *)defaults;
+- (YapDatabaseConnectionDefaults *)connectionDefaults;
 
 /**
  * Called from YapDatabaseConnection's dealloc method to remove connection's state from connectionStates array.
@@ -102,8 +106,9 @@ extern NSString *const YapDatabaseNotificationKey;
  * These methods are only accessible from within the snapshotQueue.
  * Used by [YapDatabaseConnection prepare].
 **/
-- (NSDictionary *)registeredTables;
+- (NSDictionary *)registeredMemoryTables;
 - (NSArray *)extensionsOrder;
+- (NSDictionary *)extensionDependencies;
 
 /**
  * This method is only accessible from within the snapshotQueue.
@@ -149,46 +154,34 @@ extern NSString *const YapDatabaseNotificationKey;
 **/
 - (void)asyncCheckpoint:(uint64_t)maxCheckpointableSnapshot;
 
+#ifdef SQLITE_HAS_CODEC
+/**
+ * Configures database encryption via SQLCipher.
+ **/
+- (BOOL)configureEncryptionForDatabase:(sqlite3 *)sqlite;
+#endif
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface YapDatabaseConnection () {
-@private
-	uint64_t snapshot;
-	
-	id sharedKeySetForInternalChangeset;
-	id sharedKeySetForExternalChangeset;
-	
-	YapDatabaseReadTransaction *longLivedReadTransaction;
-	BOOL throwExceptionsForImplicitlyEndingLongLivedReadTransaction;
-	NSMutableArray *pendingChangesets;
-	NSMutableArray *processedChangesets;
-	
-	NSDictionary *registeredExtensions;
-	BOOL registeredExtensionsChanged;
-	
-	NSDictionary *registeredTables;
-	BOOL registeredTablesChanged;
-	
-	NSMutableDictionary *extensions;
-	BOOL extensionsReady;
-	id sharedKeySetForExtensions;
-	
+@interface YapDatabaseConnection () {	
 @public
 	__strong YapDatabase *database;
 	
 	sqlite3 *db;
 	
-	dispatch_queue_t connectionQueue;     // Only for YapDatabaseExtensionConnection subclasses
-	void *IsOnConnectionQueueKey;         // Only for YapDatabaseExtensionConnection subclasses
+	dispatch_queue_t connectionQueue;     // For YapDatabaseExtensionConnection subclasses
+	void *IsOnConnectionQueueKey;         // For YapDatabaseExtensionConnection subclasses
 	
 	NSArray *extensionsOrder;             // Read-only by YapDatabaseTransaction
+	NSDictionary *extensionDependencies;  // Read-only for YapDatabaseExtensionTransaction subclasses
 	
 	BOOL hasDiskChanges;
 	
+	YapCache *keyCache;
 	YapCache *objectCache;
 	YapCache *metadataCache;
 	
@@ -204,6 +197,7 @@ extern NSString *const YapDatabaseNotificationKey;
 	NSMutableDictionary *metadataChanges;
 	NSMutableSet *removedKeys;
 	NSMutableSet *removedCollections;
+	NSMutableSet *removedRowids;
 	BOOL allKeysRemoved;
 }
 
@@ -215,6 +209,7 @@ extern NSString *const YapDatabaseNotificationKey;
 
 - (sqlite3_stmt *)yapGetDataForKeyStatement;   // Against "yap" database, for internal use
 - (sqlite3_stmt *)yapSetDataForKeyStatement;   // Against "yap" database, for internal use
+- (sqlite3_stmt *)yapRemoveForKeyStatement;    // Against "yap" database, for internal use
 - (sqlite3_stmt *)yapRemoveExtensionStatement; // Against "yap" database, for internal use
 
 - (sqlite3_stmt *)getCollectionCountStatement;
@@ -223,15 +218,15 @@ extern NSString *const YapDatabaseNotificationKey;
 - (sqlite3_stmt *)getCountForRowidStatement;
 - (sqlite3_stmt *)getRowidForKeyStatement;
 - (sqlite3_stmt *)getKeyForRowidStatement;
-- (sqlite3_stmt *)getKeyDataForRowidStatement;
-- (sqlite3_stmt *)getKeyMetadataForRowidStatement;
 - (sqlite3_stmt *)getDataForRowidStatement;
+- (sqlite3_stmt *)getMetadataForRowidStatement;
 - (sqlite3_stmt *)getAllForRowidStatement;
 - (sqlite3_stmt *)getDataForKeyStatement;
 - (sqlite3_stmt *)getMetadataForKeyStatement;
 - (sqlite3_stmt *)getAllForKeyStatement;
 - (sqlite3_stmt *)insertForRowidStatement;
 - (sqlite3_stmt *)updateAllForRowidStatement;
+- (sqlite3_stmt *)updateObjectForRowidStatement;
 - (sqlite3_stmt *)updateMetadataForRowidStatement;
 - (sqlite3_stmt *)removeForRowidStatement;
 - (sqlite3_stmt *)removeCollectionStatement;
@@ -252,12 +247,12 @@ extern NSString *const YapDatabaseNotificationKey;
 - (NSDictionary *)extensions;
 
 - (BOOL)registerExtension:(YapDatabaseExtension *)extension withName:(NSString *)extensionName;
-- (void)unregisterExtension:(NSString *)extensionName;
+- (void)unregisterExtensionWithName:(NSString *)extensionName;
 
-- (NSDictionary *)registeredTables;
+- (NSDictionary *)registeredMemoryTables;
 
-- (BOOL)registerTable:(YapMemoryTable *)table withName:(NSString *)name;
-- (void)unregisterTableWithName:(NSString *)name;
+- (BOOL)registerMemoryTable:(YapMemoryTable *)table withName:(NSString *)name;
+- (void)unregisterMemoryTableWithName:(NSString *)name;
 
 - (YapDatabaseReadTransaction *)newReadTransaction;
 - (YapDatabaseReadWriteTransaction *)newReadWriteTransaction;
@@ -266,8 +261,6 @@ extern NSString *const YapDatabaseNotificationKey;
 
 - (void)postRollbackCleanup;
 
-- (NSArray *)internalChangesetKeys;
-- (NSArray *)externalChangesetKeys;
 - (void)getInternalChangeset:(NSMutableDictionary **)internalPtr externalChangeset:(NSMutableDictionary **)externalPtr;
 - (void)processChangeset:(NSDictionary *)changeset;
 
@@ -283,20 +276,20 @@ extern NSString *const YapDatabaseNotificationKey;
 
 @interface YapDatabaseReadTransaction () {
 @private
-	
-	NSMutableDictionary *extensions;
 	NSMutableArray *orderedExtensions;
 	BOOL extensionsReady;
-
+	
+	YapMemoryTableTransaction *yapMemoryTableTransaction;
+	
 @protected
+	NSMutableDictionary *extensions;
+	
 	BOOL isMutated; // Used for "mutation during enumeration" protection
 	
 @public
 	__unsafe_unretained YapDatabaseConnection *connection;
 	
 	BOOL isReadWriteTransaction;
-	BOOL rollback;
-	id customObjectForNotification;
 }
 
 - (id)initWithConnection:(YapDatabaseConnection *)connection isReadWriteTransaction:(BOOL)flag;
@@ -310,53 +303,40 @@ extern NSString *const YapDatabaseNotificationKey;
 - (NSArray *)orderedExtensions;
 
 - (YapMemoryTableTransaction *)memoryTableTransaction:(NSString *)tableName;
+- (YapMemoryTableTransaction *)yapMemoryTableTransaction;
 
-- (void)addRegisteredExtensionTransaction:(YapDatabaseExtensionTransaction *)extTransaction;
-- (void)removeRegisteredExtensionTransaction:(NSString *)extName;
-
-
-- (BOOL)getBoolValue:(BOOL *)valuePtr forKey:(NSString *)key extension:(NSString *)extensionName;
-- (void)setBoolValue:(BOOL)value forKey:(NSString *)key extension:(NSString *)extensionName;
-
+- (BOOL)getBoolValue:(BOOL *)valuePtr forKey:(NSString *)key extension:(NSString *)extension;
 - (BOOL)getIntValue:(int *)valuePtr forKey:(NSString *)key extension:(NSString *)extensionName;
-- (void)setIntValue:(int)value forKey:(NSString *)key extension:(NSString *)extensionName;
-
 - (BOOL)getDoubleValue:(double *)valuePtr forKey:(NSString *)key extension:(NSString *)extensionName;
-- (void)setDoubleValue:(double)value forKey:(NSString *)key extension:(NSString *)extensionName;
-
 - (NSString *)stringValueForKey:(NSString *)key extension:(NSString *)extensionName;
-- (void)setStringValue:(NSString *)value forKey:(NSString *)key extension:(NSString *)extensionName;
-
 - (NSData *)dataValueForKey:(NSString *)key extension:(NSString *)extensionName;
-- (void)setDataValue:(NSData *)value forKey:(NSString *)key extension:(NSString *)extensionName;
-
-- (void)removeAllValuesForExtension:(NSString *)extensionName;
 
 - (NSException *)mutationDuringEnumerationException;
 
 - (BOOL)getRowid:(int64_t *)rowidPtr forKey:(NSString *)key inCollection:(NSString *)collection;
 
-- (BOOL)getKey:(NSString **)keyPtr collection:(NSString **)collectionPtr forRowid:(int64_t)rowid;
+- (YapCollectionKey *)collectionKeyForRowid:(int64_t)rowid;
 
-- (BOOL)getKey:(NSString **)keyPtr
-    collection:(NSString **)collectionPtr
-        object:(id *)objectPtr
-      forRowid:(int64_t)rowid;
+- (BOOL)getCollectionKey:(YapCollectionKey **)collectionKeyPtr object:(id *)objectPtr forRowid:(int64_t)rowid;
+- (BOOL)getCollectionKey:(YapCollectionKey **)collectionKeyPtr metadata:(id *)metadataPtr forRowid:(int64_t)rowid;
 
-- (BOOL)getKey:(NSString **)keyPtr
-    collection:(NSString **)collectionPtr
-      metadata:(id *)metadataPtr
-      forRowid:(int64_t)rowid;
+- (BOOL)getCollectionKey:(YapCollectionKey **)collectionKeyPtr
+				  object:(id *)objectPtr
+				metadata:(id *)metadataPtr
+				forRowid:(int64_t)rowid;
 
-- (BOOL)getKey:(NSString **)keyPtr
-    collection:(NSString **)collectionPtr
-        object:(id *)objectPtr
-      metadata:(id *)metadataPtr
-      forRowid:(int64_t)rowid;
-
-- (BOOL)hasRowForRowid:(int64_t)rowid;
+- (BOOL)hasRowid:(int64_t)rowid;
 
 - (id)objectForKey:(NSString *)key inCollection:(NSString *)collection withRowid:(int64_t)rowid;
+- (id)objectForCollectionKey:(YapCollectionKey *)cacheKey withRowid:(int64_t)rowid;
+
+- (id)metadataForKey:(NSString *)key inCollection:(NSString *)collection withRowid:(int64_t)rowid;
+- (id)metadataForCollectionKey:(YapCollectionKey *)cacheKey withRowid:(int64_t)rowid;
+
+- (BOOL)getObject:(id *)objectPtr
+		 metadata:(id *)metadataPtr
+ forCollectionKey:(YapCollectionKey *)collectionKey
+		withRowid:(int64_t)rowid;
 
 - (void)_enumerateKeysInCollection:(NSString *)collection
                         usingBlock:(void (^)(int64_t rowid, NSString *key, BOOL *stop))block;
@@ -420,5 +400,43 @@ extern NSString *const YapDatabaseNotificationKey;
 - (void)_enumerateRowsInAllCollectionsUsingBlock:
                 (void (^)(int64_t rowid, NSString *collection, NSString *key, id object, id metadata, BOOL *stop))block
      withFilter:(BOOL (^)(int64_t rowid, NSString *collection, NSString *key))filter;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@interface YapDatabaseReadWriteTransaction () {
+@public
+	BOOL rollback;
+	id customObjectForNotification;
+}
+
+- (void)replaceObject:(id)object
+               forKey:(NSString *)key
+         inCollection:(NSString *)collection
+            withRowid:(int64_t)rowid
+     serializedObject:(NSData *)preSerializedObject;
+
+- (void)replaceMetadata:(id)metadata
+                 forKey:(NSString *)key
+           inCollection:(NSString *)collection
+              withRowid:(int64_t)rowid
+     serializedMetadata:(NSData *)preSerializedMetadata;
+
+- (void)removeObjectForKey:(NSString *)key inCollection:(NSString *)collection withRowid:(int64_t)rowid;
+
+- (void)addRegisteredExtensionTransaction:(YapDatabaseExtensionTransaction *)extTrnsactn withName:(NSString *)extName;
+- (void)removeRegisteredExtensionTransactionWithName:(NSString *)extName;
+
+- (void)setBoolValue:(BOOL)value         forKey:(NSString *)key extension:(NSString *)extensionName;
+- (void)setIntValue:(int)value           forKey:(NSString *)key extension:(NSString *)extensionName;
+- (void)setDoubleValue:(double)value     forKey:(NSString *)key extension:(NSString *)extensionName;
+- (void)setStringValue:(NSString *)value forKey:(NSString *)key extension:(NSString *)extensionName;
+- (void)setDataValue:(NSData *)value     forKey:(NSString *)key extension:(NSString *)extensionName;
+
+- (void)removeValueForKey:(NSString *)key extension:(NSString *)extensionName;
+- (void)removeAllValuesForExtension:(NSString *)extensionName;
 
 @end

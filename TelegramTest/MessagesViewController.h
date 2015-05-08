@@ -40,7 +40,8 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
-@property (nonatomic, strong) TL_conversation *conversation;
+-(void)setConversation:(TL_conversation *)conversation;
+-(TL_conversation *)conversation;
 
 @property (nonatomic) MessagesViewControllerState state;
 

@@ -62,7 +62,7 @@ static NSMutableDictionary * messageKeys;
     });
 }
 
--(void)remoteRequest:(BOOL)next callback:(void (^)(id response))callback {
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
     
     self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[self.controller.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterVideo create] min_date:0 max_date:0 offset:0 max_id:self.controller.max_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         

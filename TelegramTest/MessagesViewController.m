@@ -162,6 +162,8 @@
 @property (nonatomic,strong) RPCRequest *webPageRequest;
 @property (nonatomic,strong) NSString *noWebpageString;
 
+@property (nonatomic, strong) TL_conversation *conv;
+
 @end
 
 @implementation MessagesViewController
@@ -218,9 +220,7 @@
         [self.historyController drop:YES];
         
         self.isMarkIsset = NO;
-        
-        [self.historyController drop:NO];
-        
+                
         self.historyController = nil;
         
         self.historyController = [[ChatHistoryController alloc] initWithController:self];
@@ -728,13 +728,13 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)changeDialogSelectionNotification:(NSNotification *)notify {
     if([[notify.userInfo objectForKey:KEY_DIALOG] class] == [NSNull class])
-        _conversation = nil;
+        self.conversation = nil;
 }
 
 - (void)updateChat:(NSNotification *)notify {
     TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
     
-    if(_conversation.type == DialogTypeChat && _conversation.peer.chat_id == chat.n_id) {
+    if(self.conversation.type == DialogTypeChat && self.conversation.peer.chat_id == chat.n_id) {
         [self.bottomView setStateBottom:MessagesBottomViewNormalState];
     }
 }
@@ -793,15 +793,15 @@ static NSTextAttachment *headerMediaIcon() {
     [[[Telegram sharedInstance] firstController] closeAllPopovers];
     
     
-    if(_conversation.type == DialogTypeChat) {
-        if(_conversation.chat.type == TLChatTypeNormal && !_conversation.chat.left)
-            [[Telegram rightViewController] showChatInfoPage:_conversation.chat];
-    } else if(_conversation.type == DialogTypeSecretChat) {
-        TLUser *user = _conversation.encryptedChat.peerUser;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:_conversation sender:self];
+    if(self.conversation.type == DialogTypeChat) {
+        if(self.conversation.chat.type == TLChatTypeNormal && !self.conversation.chat.left)
+            [[Telegram rightViewController] showChatInfoPage:self.conversation.chat];
+    } else if(self.conversation.type == DialogTypeSecretChat) {
+        TLUser *user = self.conversation.encryptedChat.peerUser;
+        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
     } else {
-        TLUser *user = _conversation.user;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:_conversation sender:self];
+        TLUser *user = self.conversation.user;
+        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
     }
 }
 
@@ -1040,12 +1040,12 @@ static NSTextAttachment *headerMediaIcon() {
     
     #ifdef __MAC_10_10
     
-    if([NSUserActivity class] && (_conversation.type == DialogTypeChat || _conversation.type == DialogTypeUser)) {
+    if([NSUserActivity class] && (self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeUser)) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
      //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
         activity.userInfo = @{@"peer":@{
-                                      @"id":@(abs(_conversation.peer_id)),
-                                      @"type":_conversation.type == DialogTypeChat ? @"group" : @"user"},
+                                      @"id":@(abs(self.conversation.peer_id)),
+                                      @"type":self.conversation.type == DialogTypeChat ? @"group" : @"user"},
                               @"user_id":@([UsersManager currentUserId])};
         
         activity.title = @"org.telegram.conversation";
@@ -1057,8 +1057,8 @@ static NSTextAttachment *headerMediaIcon() {
     
 #endif
     
-    if(_conversation) {
-        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:_conversation, @"sender":self}];
+    if(self.conversation) {
+        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
     }
     
     [self.table.scrollView setHasVerticalScroller:YES];
@@ -1338,7 +1338,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void) drop {
-    _conversation = nil;
+    self.conversation = nil;
     // [self.historyController setDialog:nil];
     [ChatHistoryController drop];
     [self.historyController drop:YES];
@@ -1350,7 +1350,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)dialogDeleteNotification:(NSNotification *)notify {
     TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
-    if(_conversation.peer.peer_id == dialog.peer.peer_id) {
+    if(self.conversation.peer.peer_id == dialog.peer.peer_id) {
         [self.messages removeAllObjects];
         [self.table reloadData];
     }
@@ -1360,20 +1360,20 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    NSMutableDictionary *list = [_typingReservation objectForKey:@(_conversation.peer_id)];
+    NSMutableDictionary *list = [_typingReservation objectForKey:@(self.conversation.peer_id)];
     
     
     if(!list)
     {
         list = [[NSMutableDictionary alloc] init];
-        [_typingReservation setObject:list forKey:@(_conversation.peer_id)];
+        [_typingReservation setObject:list forKey:@(self.conversation.peer_id)];
     }
     
     if(list[NSStringFromClass(action.class)] == nil) {
         
         [list setObject:action forKey:NSStringFromClass(action.class)];
         
-        if(_conversation.type == DialogTypeBroadcast)
+        if(self.conversation.type == DialogTypeBroadcast)
             return;
         
         
@@ -1381,10 +1381,10 @@ static NSTextAttachment *headerMediaIcon() {
         
         id request;
         
-        if(_conversation.type == DialogTypeSecretChat)
-            request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[_conversation.encryptedChat inputPeer] typing:YES];
+        if(self.conversation.type == DialogTypeSecretChat)
+            request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[self.conversation.encryptedChat inputPeer] typing:YES];
          else
-            request = [TLAPI_messages_setTyping createWithPeer:[_conversation inputPeer] action:action];
+            request = [TLAPI_messages_setTyping createWithPeer:[self.conversation inputPeer] action:action];
     
         
         self.typingRequest = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
@@ -1401,7 +1401,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)windowBecomeNotification:(NSNotification *)notify {
     [self becomeFirstResponder];
     [self tryRead];
-    [self.normalNavigationCenterView setDialog:_conversation];
+    [self.normalNavigationCenterView setDialog:self.conversation];
     
     
     
@@ -1688,16 +1688,16 @@ static NSTextAttachment *headerMediaIcon() {
         [self unSelectAll];
     };
     
-    if(_conversation.type == DialogTypeSecretChat) {
+    if(self.conversation.type == DialogTypeSecretChat) {
         
-        if(!_conversation.canSendMessage)
+        if(!self.conversation.canSendMessage)
         {
             completeBlock();
             return;
         }
         
         
-        DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:_conversation random_ids:random];
+        DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:self.conversation random_ids:random];
         
         [sender send];
         
@@ -1848,14 +1848,14 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)saveInputText {
     if(!self.bottomView.inputMessageString) [self.bottomView setInputMessageString:@"" disableAnimations:YES];
     
-    if(!_conversation || !_conversation.cacheKey)
+    if(!self.conversation || !self.conversation.cacheKey)
         return;
     
-    [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:_conversation.cacheKey];
+    [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:self.conversation.cacheKey];
     [Storage saveInputTextForPeers:self.cacheTextForPeer];
     
     
-    if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)
+    if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString:NO];
@@ -1898,7 +1898,7 @@ static NSTextAttachment *headerMediaIcon() {
                 TLMessage *msg = response.messages[0];
                 
                 if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                    [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
+                    [self setCurrentConversation:self.conversation withJump:messageId historyFilter:nil force:YES];
                 }
                 
                 
@@ -1909,7 +1909,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             
         } else {
-            [self setCurrentConversation:_conversation withJump:messageId historyFilter:nil force:YES];
+            [self setCurrentConversation:self.conversation withJump:messageId historyFilter:nil force:YES];
         }
     
         
@@ -1925,13 +1925,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     [EmojiViewController loadStickersIfNeeded];
     
-    if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [_conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
+    if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         
         [_replyMsgsStack removeAllObjects];
         
         self.jumpMessageId = messageId;
-        _conversation = dialog;
+        self.conversation = dialog;
         
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
@@ -2020,16 +2020,16 @@ static NSTextAttachment *headerMediaIcon() {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
-        if(_conversation.last_marked_message != _conversation.top_message) {
-            _conversation.last_marked_message = _conversation.top_message;
-            _conversation.last_marked_date = [[MTNetwork instance] getTime];
-            [_conversation save];
+        if(self.conversation.last_marked_message != self.conversation.top_message) {
+            self.conversation.last_marked_message = self.conversation.top_message;
+            self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+            [self.conversation save];
         }
         
         
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
             _delayedBlockHandle = nil;
-            if(_conversation.unread_count > 0 || _conversation.peer.user_id == [UsersManager currentUserId]) {
+            if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {
                 [self readHistory:0];
             }
         });
@@ -2039,24 +2039,24 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!_conversation || _conversation.unread_count == 0)
+    if(!self.conversation || self.conversation.unread_count == 0)
         return;
     
     MessagesManager *manager = [MessagesManager sharedManager];
     
-    manager.unread_count-=_conversation.unread_count;
+    manager.unread_count-=self.conversation.unread_count;
     
-    NSArray *readed = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:_conversation];
+    NSArray *readed = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation];
     
     if(readed.count > 0) {
         [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:readed}];
     }
     
-    _conversation.unread_count = 0;
+    self.conversation.unread_count = 0;
     
-    [_conversation save];
+    [self.conversation save];
         
-    ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"peer":_conversation.peer}];
+    ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"peer":self.conversation.peer}];
     
     [TMTaskRequest addTask:task];
     
@@ -2127,8 +2127,29 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+-(void)setConversation:(TL_conversation *)conversation {
+    [ASQueue dispatchOnStageQueue:^{
+        
+        _conv = conversation;
+        
+    }];
+}
+
+-(TL_conversation *)conversation {
+    
+    __block TL_conversation *conversation;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        conversation = _conv;
+        
+    } synchronous:YES];
+    
+    return conversation;
+}
+
 - (void)loadhistory:(int)message_id toEnd:(BOOL)toEnd prev:(BOOL)prev isFirst:(BOOL)isFirst {
-    if(!_conversation || self.historyController.isProccessing || _locked)
+    if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
     prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0);
@@ -2146,6 +2167,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range) {
         
+        if(prevResult.count > 0) {
+            MessageTableItem *item = prevResult[0];
+            if(self.conversation.peer_id != item.message.peer_id)
+                return;
+        }
+        
+        
         // assert(prevResult.count > 0);
         
         if(message_id != 0 && prev && self.historyController.prevState == ChatHistoryStateRemote) {
@@ -2157,7 +2185,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             [_historyController request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
                 
-               
+                
                 
                 self.isMarkIsset = YES;
                 
@@ -2519,7 +2547,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         MessageSenderItem *sender = [[MessageSenderItem alloc] initWithMessage:[NSString stringWithFormat:@"%d",arc4random()] forConversation:[[DialogsManager sharedManager] findByChatId:[obj intValue]]];
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:_conversation callback:nil sentControllerCallback:nil];
+        [self.historyController addItem:sender.tableItem conversation:self.conversation callback:nil sentControllerCallback:nil];
         
         dispatch_after_seconds(5, ^{
             [self groupFlood:peerIds];
@@ -2535,7 +2563,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
-    if(!_conversation.canSendMessage)  {
+    if(!self.conversation.canSendMessage)  {
         NSBeep();
         return;
     }
@@ -2560,7 +2588,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
     
-    if(!_conversation.canSendMessage)
+    if(!self.conversation.canSendMessage)
         return;
     
     BOOL noWebpage = [self noWebpage];
@@ -2582,13 +2610,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        Class cs = _conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
+        Class cs = self.conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
         if([message isEqualToString:@"*!testmessages!#"] && [UsersManager currentUserId] == 438078) {
             for (int i =0; i < 10; i++) {
-                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:_conversation noWebpage:noWebpage];
+                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:self.conversation noWebpage:noWebpage];
                 sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-                [self.historyController addItem:sender.tableItem conversation:_conversation callback:callback sentControllerCallback:nil];
+                [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
             }
             
             return;
@@ -2599,9 +2627,9 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:_conversation];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:self.conversation];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [self.historyController addItem:sender.tableItem conversation:_conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
             
         }
         
@@ -2612,7 +2640,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:_conversation];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:self.conversation];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -2622,7 +2650,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
             }
             
-            [self.historyController addItems:preparedItems conversation:_conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItems:preparedItems conversation:self.conversation callback:callback sentControllerCallback:nil];
         }
         
         [self performForward:self.conversation];
@@ -2631,16 +2659,16 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates {
-    if(!_conversation.canSendMessage)
+    if(!self.conversation.canSendMessage)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
-        Class cs = _conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
+        Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
-        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:_conversation];
+        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:self.conversation];
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem];
         
@@ -2653,7 +2681,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)sendVideo:(NSString *)file_path  addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage) return;
+    if(!self.conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2665,10 +2693,10 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         }
         
-        if(_conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:_conversation];
+        if(self.conversation.type == DialogTypeSecretChat) {
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:self.conversation];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:_conversation];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
@@ -2681,7 +2709,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage) return;
+    if(!self.conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2693,10 +2721,10 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         SenderItem *sender;
-        if(_conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:_conversation];
+        if(self.conversation.type == DialogTypeSecretChat) {
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:self.conversation];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:_conversation];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2706,9 +2734,9 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage) return;
+    if(!self.conversation.canSendMessage) return;
     
-    if(_conversation.type == DialogTypeSecretChat && _conversation.encryptedChat.encryptedParams.layer < 23)
+    if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -2740,9 +2768,9 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.conversation.type != DialogTypeSecretChat) {
-            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:_conversation];
+            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:self.conversation];
         } else {
-            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:_conversation document:sticker];
+            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:self.conversation document:sticker];
         }
         
        
@@ -2756,7 +2784,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendAudio:(NSString *)file_path {
     
-    if(!_conversation.canSendMessage) return;
+    if(!self.conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2768,10 +2796,10 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         SenderItem *sender;
-        if(_conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:_conversation];
+        if(self.conversation.type == DialogTypeSecretChat) {
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:self.conversation];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:_conversation];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2781,7 +2809,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
     
-    if(!_conversation.canSendMessage)
+    if(!self.conversation.canSendMessage)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
@@ -2796,7 +2824,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)shareContact:(TLUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
     
-    if(!_conversation.canSendMessage) return;
+    if(!self.conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2814,24 +2842,24 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)sendSecretTTL:(int)ttl callback:(dispatch_block_t)callback {
-    if(!_conversation.canSendMessage) {
+    if(!self.conversation.canSendMessage) {
         if(callback) callback();
         return;
     }
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
-    NSUInteger lastTTL = [EncryptedParams findAndCreate:_conversation.peer.peer_id].ttl;
+    NSUInteger lastTTL = [EncryptedParams findAndCreate:self.conversation.peer.peer_id].ttl;
     
     if(lastTTL == -1 || lastTTL != ttl ) {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:_conversation ttl:ttl];
+            SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:self.conversation ttl:ttl];
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             
-            [self.historyController addItem:sender.tableItem conversation:_conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
         }];
         
     } else if(callback) callback();
@@ -2843,7 +2871,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage || _conversation.type == DialogTypeSecretChat)
+    if(!self.conversation.canSendMessage || self.conversation.type == DialogTypeSecretChat)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
@@ -2854,7 +2882,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:_conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:self.conversation attachObject:obj];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2863,29 +2891,29 @@ static NSTextAttachment *headerMediaIcon() {
         }];
         
        
-        [self.historyController addItems:items conversation:_conversation sentControllerCallback:completeHandler];
+        [self.historyController addItems:items conversation:self.conversation sentControllerCallback:completeHandler];
         
         
     }];
 }
 
 - (void)addImageAttachment:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(_conversation.type == DialogTypeSecretChat)
+    if(self.conversation.type == DialogTypeSecretChat)
         return;
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSMutableArray *attachments = [transaction objectForKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+        NSMutableArray *attachments = [transaction objectForKey:self.conversation.cacheKey inCollection:ATTACHMENTS];
         
         if(!attachments) {
             attachments = [[NSMutableArray alloc] init]; 
         }
         
-        TGAttachObject *attach = [[TGAttachObject alloc] initWithOriginFile:file_path orData:data peer_id:_conversation.peer_id];
+        TGAttachObject *attach = [[TGAttachObject alloc] initWithOriginFile:file_path orData:data peer_id:self.conversation.peer_id];
         
         [attachments addObject:attach];
         
-        [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+        [transaction setObject:attachments forKey:self.conversation.cacheKey inCollection:ATTACHMENTS];
         
         [ASQueue dispatchOnMainQueue:^{
             
@@ -2900,10 +2928,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)sendImage:(NSString *)file_path file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!_conversation.canSendMessage)
+    if(!self.conversation.canSendMessage)
         return;
     
-    if(_conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
+    if(self.conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
         [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
         
         return;
@@ -2962,10 +2990,10 @@ static NSTextAttachment *headerMediaIcon() {
        
         SenderItem *sender;
         
-        if(_conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:_conversation];
+        if(self.conversation.type == DialogTypeSecretChat) {
+            sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:self.conversation];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:_conversation];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:self.conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3294,7 +3322,7 @@ static NSTextAttachment *headerMediaIcon() {
             [[DialogsManager sharedManager] clearHistory:dialog completeHandler:^{
                 if(strongSelf.conversation == dialog) {
                     [strongSelf.historyController removeAllItems];
-                    strongSelf->_conversation = nil;
+                    strongSelf.conversation = nil;
                     [strongSelf setCurrentConversation:dialog];
                 }
             }];

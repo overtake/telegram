@@ -461,9 +461,7 @@ static ASQueue *queue;
         [self loadSupportSyncMessages:supportMessages syncCompletionHandler:completionHandler];
     
     } else if(completionHandler != nil) {
-        
         completionHandler();
-       
     }
 
 

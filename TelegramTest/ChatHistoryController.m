@@ -28,7 +28,7 @@
 
 @property (atomic)  dispatch_semaphore_t semaphore;
 @property (atomic,assign) int requestCounter;
-
+@property (nonatomic,strong) HistoryFilter *h_filter;
 
 @end
 
@@ -79,22 +79,19 @@ static NSMutableArray *listeners;
             
             [listeners addObject:self];
             
-        } synchronous:YES];
-        
+       
+            // self.controller.conversation = conversation;
+            _controller = controller;
+            
+            
+            self.semaphore = dispatch_semaphore_create(1);
+            
+            _selectLimit = 50;
+            [self setFilter:[[historyFilter alloc] initWithController:self]];
+            _need_save_to_db = YES;
         
 
-        
-       // self.controller.conversation = conversation;
-        _controller = controller;
-        
-        
-        self.semaphore = dispatch_semaphore_create(1);
-        
-        _selectLimit = 50;
-        self.filter = [[historyFilter alloc] initWithController:self];
-        _need_save_to_db = YES;
-        
-        
+         } synchronous:YES];
         
         [Notification addObserver:self selector:@selector(notificationReceiveMessages:) name:MESSAGE_LIST_RECEIVE];
         
@@ -442,6 +439,7 @@ static NSMutableArray *listeners;
 }
 
 
+
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
    
    [[ASQueue mainQueue] dispatchOnQueue:^{
@@ -532,20 +530,33 @@ static NSMutableArray *listeners;
     }
 }
 
-
--(void)setFilter:(HistoryFilter *)filter {
-    self->_filter = filter;
-    messageKeys = [filter messageKeys];
-    messageItems = [filter messageItems];
-    self.requestCounter = 0;
-    
-    _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
-    _max_id =  0;
-    
-    _maxDate = [[MTNetwork instance] getTime];
-    _minDate = self.controller.conversation.last_marked_date;
+-(HistoryFilter *)filter {
+    __block HistoryFilter *f;
     
     [queue dispatchOnQueue:^{
+        f = _h_filter;
+    } synchronous:YES];
+    
+    return f;
+    
+}
+
+-(void)setFilter:(HistoryFilter *)filter {
+    
+    [queue dispatchOnQueue:^{
+    
+        _h_filter = filter;
+        messageKeys = [filter messageKeys];
+        messageItems = [filter messageItems];
+        _requestCounter = 0;
+        
+        _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
+        _max_id =  0;
+        
+        _maxDate = [[MTNetwork instance] getTime];
+        _minDate = self.controller.conversation.last_marked_date;
+        
+        
         NSArray *items = [self selectAllItems];
         
         if(items.count > 0) {
@@ -556,10 +567,12 @@ static NSMutableArray *listeners;
             }
         }
         
+        
+        
+        _nextState = ChatHistoryStateCache;
+        _prevState = ChatHistoryStateCache;
+         
     } synchronous:YES];
-    
-    _nextState = ChatHistoryStateCache;
-    _prevState = ChatHistoryStateCache;
 
 }
 
@@ -661,7 +674,7 @@ static NSMutableArray *listeners;
             if([self checkState:ChatHistoryStateLocal next:next]) {
                 
                 
-                [_filter storageRequest:next callback:^(NSArray *result) {
+                [self.filter storageRequest:next callback:^(NSArray *result) {
                     
                     [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
                         
@@ -695,7 +708,7 @@ static NSMutableArray *listeners;
                 
             } else if([self checkState:ChatHistoryStateRemote next:next]) {
                 
-                [_filter remoteRequest:next callback:^(id response) {
+                [self.filter remoteRequest:next peer_id:self.conversation.peer_id callback:^(id response) {
                     
                     [TL_localMessage convertReceivedMessages:[response messages]];
                     
@@ -703,13 +716,10 @@ static NSMutableArray *listeners;
                         
                         [queue dispatchOnQueue:^{
                             
-                            if(!self.controller.conversation)
-                                return;
-                            
                             
                             NSArray *messages = [[response messages] copy];
                             
-                            if(_filter.class != HistoryFilter.class || !_need_save_to_db) {
+                            if(self.filter.class != HistoryFilter.class || !_need_save_to_db) {
                                 [[response messages] removeAllObjects];
                             }
                             
@@ -1086,12 +1096,19 @@ static NSMutableArray *listeners;
         } synchronous:YES];
     }
     
-    self.filter.controller = nil;
-    _filter = nil;
-    _controller = nil;
+    [queue dispatchOnQueue:^{
+        _h_filter.controller = nil;
+        [_h_filter.request cancelRequest];
+        _h_filter = nil;
+        _controller = nil;
+        [listeners removeObject:self];
+        
+    } synchronous:YES];
+    
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [Notification removeObserver:self];
-    [listeners removeObject:self];
+   
     
 }
 
@@ -1100,7 +1117,7 @@ static NSMutableArray *listeners;
 }
 
 -(void)dealloc {
-    
+        
     [queue dispatchOnQueue:^{
         [self drop:NO];
     } synchronous:YES];

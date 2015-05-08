@@ -13,7 +13,8 @@
 -(void)_didDownloadImage:(DownloadItem *)item {
     __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
     
-    NSImage *image = renderedImage(imageOrigin, self.imageSize);
+    
+     NSImage *image = cropCenterWithSize(imageOrigin, self.imageSize);
     
     [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
         

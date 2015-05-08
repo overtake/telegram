@@ -19,6 +19,8 @@
 #import "TGHashContact.h"
 #import "NSString+FindURLs.h"
 #import "NSData+Extensions.h"
+#import "YapDatabase.h"
+#import "YapDatabaseManager.h"
 @implementation Storage
 
 
@@ -47,16 +49,34 @@ NSString *const ATTACHMENTS = @"attachments";
 
 }
 
+static YapDatabaseConnection *y_connection;
+static YapDatabase *y_db;
+static NSString *yap_path;
 +(YapDatabaseConnection *)yap {
-    static YapDatabase *db;
+    
     static dispatch_once_t yapToken;
-    static YapDatabaseConnection *connection;
+    
     dispatch_once(&yapToken, ^{
-        db = [[YapDatabase alloc] initWithPath:[NSString stringWithFormat:@"%@/yap_store.db",[self path]]];
-        connection = [db newConnection];
+        [self reyap];
     });
     
-    return connection;
+    return y_connection;
+}
+
++(void)reyap {
+    
+    
+    
+    yap_path = [NSString stringWithFormat:@"%@/yap_store.db",[self path]];
+    
+    
+    YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
+    
+    options.corruptAction = YapDatabaseCorruptAction_Delete;
+    
+    y_db = [[YapDatabase alloc] initWithPath:yap_path serializer:NULL deserializer:NULL preSanitizer:NULL postSanitizer:NULL options:options];
+    y_connection = [y_db newConnection];
+   
 }
 
 +(NSString *)path {
@@ -142,7 +162,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     __block BOOL res = NO;
     
-    [[Storage yap] flushMemoryWithLevel:0];
+    [[Storage yap] flushMemoryWithFlags:YapDatabaseConnectionFlushMemoryFlags_All];
+
     
     
      [queue inDatabaseWithDealocing:^(FMDatabase *db) {
@@ -321,6 +342,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [self->queue inDatabase:^(FMDatabase *db) {
         [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
         [[NSFileManager defaultManager] removeItemAtPath:[Storage path] error:nil];
+        
+        [YapDatabaseManager deregisterDatabaseForPath:yap_path];
+        
+        [Storage reyap];
+        
         encryptionKey = @"";
         [self open:completeHandler];
     }];
@@ -1078,7 +1104,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 -(void)insertDialogs:(NSArray *)dialogs completeHandler:(void (^)(BOOL))completeHandler {
-    
+        
     [queue inDatabase:^(FMDatabase *db) {
         [db beginTransaction];
         for (TL_conversation *dialog in dialogs) {
@@ -1110,9 +1136,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)deleteDialog:(TL_conversation *)dialog completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         [db beginTransaction];
-        [db executeUpdate:@"delete from dialogs where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
-        [db executeUpdate:@"delete from messages where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
-        [db executeUpdate:@"delete from sharedmedia where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
+        [db executeUpdate:@"delete from dialogs where peer_id = ?",@(dialog.peer_id)];
+        [db executeUpdate:@"delete from messages where peer_id = ?",@(dialog.peer_id)];
+        [db executeUpdate:@"delete from sharedmedia where peer_id = ?",@(dialog.peer_id)];
         if([dialog.peer isChat]) {
             [db executeUpdate:@"delete from encrypted_chats where chat_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
             [db executeUpdate:@"delete from chats where n_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];

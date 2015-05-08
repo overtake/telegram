@@ -50,7 +50,7 @@
             
             _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:[super imageObject].size];
             
-            _imageObject.imageSize = strongsize(NSMakeSize(size.w, size.h), 60);
+            _imageObject.imageSize = NSMakeSize(60, 60);
         }
         
     }

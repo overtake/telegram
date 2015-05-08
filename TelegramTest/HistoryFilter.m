@@ -14,7 +14,13 @@
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "MessageTableItem.h"
+
+
+
 @interface HistoryFilter ()
+{
+    BOOL _de_alloc;
+}
 
 @end
 
@@ -115,20 +121,25 @@ static NSMutableDictionary * messageKeys;
     
 }
 
--(void)remoteRequest:(BOOL)next callback:(void (^)(id response))callback {
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
     
-    int source_id = next ? _controller.server_max_id : _controller.server_min_id;
+   int source_id = next ? _controller.server_max_id : _controller.server_min_id;
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_controller.conversation inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    if(!_controller)
+        return;
+    
+  //  NSLog(@"start %@ : %@",self,[NSThread currentThread]);
+    
+    
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
-
-        if(callback && self != nil) {
+        if(callback) {
             callback(response);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        if(callback) {
+        if(callback && _controller) {
             callback(nil);
         }
         
@@ -138,6 +149,12 @@ static NSMutableDictionary * messageKeys;
 
 
 -(void)dealloc {
+    
+    _de_alloc = YES;
+    
+ //   NSLog(@"dealloc %@ : %@",self,[NSThread currentThread]);
+    
+    
     [self.request cancelRequest];
     self.request = nil;
 }

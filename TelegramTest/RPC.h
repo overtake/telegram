@@ -23,8 +23,8 @@
 typedef void (^RPCSuccessHandler)(id request, id response);
 typedef void (^RPCErrorHandler)(id request, RpcError *error);
 
-@property (nonatomic, copy) RPCSuccessHandler successHandler;
-@property (nonatomic, copy) RPCErrorHandler errorHandler;
+@property (nonatomic, strong) RPCSuccessHandler successHandler;
+@property (nonatomic, strong) RPCErrorHandler errorHandler;
 
 - (void)completeHandler;
 - (void)cancelRequest;

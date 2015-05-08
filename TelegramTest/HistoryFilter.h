@@ -46,6 +46,6 @@ typedef enum {
 
 
 -(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback;
--(void)remoteRequest:(BOOL)next callback:(void (^)(id response))callback;
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
 
 @end

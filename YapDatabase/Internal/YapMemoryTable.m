@@ -123,7 +123,7 @@
 			
 			if ([snapshots count] > 0)
 			{
-				snapshot = [[snapshots objectAtIndex:0] unsignedLongLongValue];
+				snapshot = [[snapshots objectAtIndex:0] longLongValue];
 				
 				if (snapshot < minSnapshot)
 				{
@@ -148,7 +148,7 @@
 				__unsafe_unretained YapMemoryTableValue *prvValue = nil;
 				__unsafe_unretained YapMemoryTableValue *value = [dict objectForKey:key];
 				
-				while (value && value->snapshot >= minSnapshot)
+				while (value && value->snapshot >= (uint64_t)minSnapshot)
 				{
 					if (hasObject == NO)
 						hasObject = (value->object != nil);
@@ -217,7 +217,7 @@
 		{
 			__unsafe_unretained YapMemoryTableValue *value = [dict objectForKey:key];
 			
-			if (value && value->snapshot == snapshot)
+			if (value && value->snapshot == (uint64_t)snapshot)
 			{
 				if (value->olderValue == nil)
 				{
@@ -250,7 +250,7 @@
 	
 	__block id result = nil;
 	
-	dispatch_block_t block = ^{
+	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		__unsafe_unretained YapMemoryTableValue *value = [table->dict objectForKey:key];
 		
@@ -266,7 +266,7 @@
 				value = value->olderValue;
 			}
 		}
-	};
+	}};
 	
 	if (dispatch_get_specific(table->IsOnQueueKey))
 		block();
@@ -282,7 +282,7 @@
 		
 		[table->dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 			
-			__unsafe_unretained YapMemoryTableValue *value = [table->dict objectForKey:key];
+			__unsafe_unretained YapMemoryTableValue *value = (YapMemoryTableValue *)obj;
 			while (value)
 			{
 				if (value->snapshot <= snapshot)
@@ -313,7 +313,7 @@
 		
 		[table->dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 			
-			__unsafe_unretained YapMemoryTableValue *value = [table->dict objectForKey:key];
+			__unsafe_unretained YapMemoryTableValue *value = (YapMemoryTableValue *)obj;
 			while (value)
 			{
 				if (value->snapshot <= snapshot)
@@ -351,7 +351,7 @@
 	if (changedKeys == nil)
 		changedKeys = [[NSMutableSet alloc] init];
 	
-	dispatch_block_t block = ^{
+	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		__unsafe_unretained YapMemoryTableValue *value = [table->dict objectForKey:key];
 		
@@ -374,7 +374,7 @@
 			
 			[changedKeys addObject:key];
 		}
-	};
+	}};
 	
 	if (dispatch_get_specific(table->IsOnQueueKey))
 		block();
@@ -395,7 +395,7 @@
 	if (changedKeys == nil)
 		changedKeys = [[NSMutableSet alloc] init];
 	
-	dispatch_block_t block = ^{
+	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		__unsafe_unretained YapMemoryTableValue *value = [table->dict objectForKey:key];
 		
@@ -436,7 +436,7 @@
 				[changedKeys addObject:key];
 			}
 		}
-	};
+	}};
 	
 	if (dispatch_get_specific(table->IsOnQueueKey))
 		block();
