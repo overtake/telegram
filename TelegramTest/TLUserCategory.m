@@ -408,7 +408,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     NSMutableAttributedString *str;
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
-        [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0xaeaeae)];
+        [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
         
         NSString *string = self.lastSeen;
@@ -416,7 +416,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
             range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
         } else {
-            range = [str appendString:string withColor:NSColorFromRGB(0xaeaeae)];
+            range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
         [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5f] forRange:range];
