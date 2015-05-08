@@ -196,13 +196,14 @@
     
     [self.moreButton setSelected:YES];
     
-    if(!self.menuPopover) {
+   // if(!self.menuPopover) {
         
-       
-        
-        self.menuPopover = [[TMMenuPopover alloc] initWithMenu:[self performSelector:selector]];
-        [self.menuPopover setHoverView:self.moreButton];
-    }
+    [self.menuPopover close];
+    
+    
+    self.menuPopover = [[TMMenuPopover alloc] initWithMenu:[self performSelector:selector]];
+    [self.menuPopover setHoverView:self.moreButton];
+    //}
     
     if(!self.menuPopover.isShown) {
         NSRect rect = self.moreButton.bounds;
