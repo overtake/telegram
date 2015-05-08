@@ -27,6 +27,8 @@
 -(int)getTime;
 -(void)cancelRequest:(TGS_RPCRequest *)request;
 
+-(int)getUserId;
+
 -(void)startNetwork;
 
 -(MTContext *)context;

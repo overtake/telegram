@@ -48,7 +48,7 @@
 }
 
 - (void) dealloc {
-    [Notification removeObserver:self];
+    [NSClassFromString(@"Notification") removeObserver:self];
 }
 
 - (NSUInteger)hash {

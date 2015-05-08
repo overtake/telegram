@@ -8,29 +8,27 @@
 
 #import "UploadOperation.h"
 #import "CMath.h"
-#import "ImageUtils.h"
-#import "Crypto.h"
 #import "NSData+Extensions.h"
 #import "QueueManager.h"
-#import "FileUtils.h"
 #import "NSMutableData+Extension.h"
 #import "TGTimer.h"
+#import "Crypto.h"
 #define CONCURENT 3
 
 @interface UploadOperation () {
     int fingerprint;
     NSData *originKeyIv;
+    dispatch_semaphore_t _semaphore;
 }
 @property (nonatomic,strong) TGTimer *typingTimer;
-@property (nonatomic, assign) UploadType uploadType;
+
 @property (nonatomic, strong) NSInputStream *buffer;
 @property (nonatomic, assign) int part_size;
 @property (nonatomic, assign) int total_parts;
 @property (nonatomic) BOOL isEncrypted;
 
-@property (nonatomic, assign) dispatch_semaphore_t semaphore;
 
-@property (nonatomic, strong) RPCRequest *request;
+@property (nonatomic, strong) id request;
 
 
 @property (nonatomic, strong) NSMutableDictionary *encryptedParts;
@@ -143,7 +141,7 @@
 }
 
 - (void)ready:(UploadType)type {
-    self.uploadType = type;
+    _uploadType = type;
     
     
     self.uploadState = UploadReady;
@@ -155,7 +153,7 @@
     
     
     if(self.filePath) {
-        self.fileMD5Hash = [FileUtils fileMD5:self.filePath];
+        self.fileMD5Hash = fileMD5(self.filePath);
     }
     
     
@@ -181,7 +179,9 @@
     
     if(!self.isEncrypted) {
         
-        id file = [[Storage manager] fileInfoByPathHash:self.fileMD5Hash];
+        id manager = [NSClassFromString(@"Storage") performSelector:@selector(manager)];
+        
+        id file = [manager performSelector:@selector(fileInfoByPathHash:) withObject:self.fileMD5Hash];
         
         if(file) {
             self.uploadState = UploadFinished;
@@ -248,10 +248,10 @@
         }
     }];
     
-    self.semaphore = dispatch_semaphore_create(0);
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    _semaphore = dispatch_semaphore_create(0);
+    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
     MTLog(@"end");
-    dispatch_semaphore_signal(self.semaphore);
+    dispatch_semaphore_signal(_semaphore);
 }
 
 - (NSData *)readDataFromPosition:(NSUInteger)position length:(NSUInteger)length {
@@ -284,13 +284,13 @@
     }
     
     [self.encryptedParts removeAllObjects];
-    for(RPCRequest *request in self.blocksRequests) {
+    for(id request in self.blocksRequests) {
         [request cancelRequest];
     }
     [self.blocksRequests removeAllObjects];
     
-    if(self.semaphore)
-        dispatch_semaphore_signal(self.semaphore);
+    if(_semaphore)
+        dispatch_semaphore_signal(_semaphore);
 }
 
 - (void)startUploadPart:(int)partNumber {
@@ -326,7 +326,7 @@
     
     id partRequest = isBigFile ? [TLAPI_upload_saveBigFilePart createWithFile_id:self.identify file_part:partNumber file_total_parts:self.total_parts bytes:data] : [TLAPI_upload_saveFilePart createWithFile_id:self.identify file_part:partNumber bytes:data];
     
-   id request = [RPCRequest sendPollRequest:partRequest successHandler:^(RPCRequest *request, id response) {
+   id request = [[self rpcClass] sendPollRequest:partRequest successHandler:^(id request, id response) {
         [self.blocksRequests removeObject:request];
         
         if(self.uploadState == UploadCancelled) {
@@ -380,7 +380,7 @@
             
             [self removeAllObjects];
         }
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
+    } errorHandler:^(id request, RpcError *error) {
         [self.blocksRequests removeObject:request];
         [self startUploadPart:partNumber];
     } queue:dispatch_get_current_queue()];
@@ -392,13 +392,23 @@
     if(!self.isEncrypted && _fileMD5Hash.length > 0) {
         if(self.uploadType == UploadImageType ||
            self.uploadType == UploadDocumentType ||
-           self.uploadType == UploadVideoType )
-            [[Storage manager] setFileInfo:fileInfo forPathHash:self.fileMD5Hash];
+           self.uploadType == UploadVideoType ) {
+            
+            id manager = [NSClassFromString(@"Storage") performSelector:@selector(manager)];
+            
+            [manager performSelector:@selector(setFileInfo:forPathHash:) withObject:self.fileMD5Hash withObject:self.fileMD5Hash];
+            
+        }
+        
     }
 }
 
 - (BOOL)checkChunkSize:(int)chunkSize {
     return chunkSize % 1024 == 0 && chunkSize < 524288 && 1048576 % chunkSize == 0;
+}
+
+-(Class)rpcClass {
+    return NSClassFromString(@"RPCRequest") ? : NSClassFromString(@"TGS_RPCRequest");
 }
 
 @end

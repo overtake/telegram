@@ -8,10 +8,9 @@
 //
 
 #import "DownloadQueue.h"
-#import "DownloadOperation.h"
+#import "TGDownloadOperation.h"
 #import "CMath.h"
-#import "FileUtils.h"
-#import "Telegram.h"
+#import "ASQueue.h"
 
 #include <set>
 #include <map>
@@ -180,7 +179,7 @@
    
     
     [DownloadQueue dispatchOnStageQueue:^{
-        DownloadOperation *operation = [[DownloadOperation alloc] initWithItem:item];
+        DownloadOperation *operation = [item nOperation];
         [manager.fileQueue addObject:operation];
         
         DownloadItem * item = [self find:operation.item.n_id];

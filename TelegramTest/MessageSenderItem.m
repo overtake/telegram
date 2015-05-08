@@ -65,9 +65,6 @@
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentMessage * response) {
         
         
-        
-        
-        
         if(self.conversation.type != DialogTypeBroadcast)  {
             
             self.message.n_id = response.n_id;

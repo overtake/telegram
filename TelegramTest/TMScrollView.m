@@ -9,6 +9,7 @@
 #import "TMScrollView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "HackUtils.h"
+#import "TMTableView.h"
 
 @interface TMScrollView()
 @property (nonatomic) float lastScrollTop;

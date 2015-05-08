@@ -7,7 +7,7 @@
 //
 
 #import "TGCache.h"
-
+#import "ASQueue.h"
 
 @interface TGCacheRecord : NSObject
 

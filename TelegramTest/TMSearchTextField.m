@@ -5,11 +5,12 @@
 //  Created by Dmitry Kondratyev on 12/22/13.
 //  Copyright (c) 2013 keepcoder. All rights reserved.
 //
-
-#import "TMElements.h"
+#import "TMSearchTextField.h"
 #import "NSString+Extended.h"
-
-@interface _TMSearchTextField : TMTextField
+#import "NSTextFieldCategory.h"
+#import "TMButton.h"
+#import "TMAnimations.h"
+@interface _TMSearchTextField : NSTextField
 @property (nonatomic, strong) id<TMSearchTextFieldDelegate> searchDelegate;
 @property (nonatomic) BOOL isInitialize;
 @end

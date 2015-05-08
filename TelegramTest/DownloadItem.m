@@ -8,11 +8,7 @@
 
 #import "DownloadItem.h"
 #import "DownloadQueue.h"
-
-#import "DownloadQueue.h"
-
-
-
+#import "DownloadOperation.h"
 
 @interface DownloadItem ()
 @property (nonatomic,strong) NSMutableArray *events;
@@ -174,5 +170,9 @@ static int futureUniqueKey = 0;
     
 }
 
+
+-(DownloadOperation *)nOperation {
+    return [[DownloadOperation alloc] initWithItem:self];
+}
 
 @end

@@ -37,11 +37,11 @@
 - (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation {
     
     if(self = [super init]) {
-        self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
+        self.mimeType = mimetypefromExtension([path pathExtension]);
         self.filePath = path;
         self.conversation = conversation;
         
-        self.mimeType = [FileUtils mimetypefromExtension:[path pathExtension]];
+        self.mimeType = mimetypefromExtension([path pathExtension]);
         
         long randomId = rand_long();
         

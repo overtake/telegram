@@ -7,7 +7,6 @@
 //
 
 #import "TGImageView.h"
-#import "ImageCache.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGCache.h"
 @interface TGImageView ()
@@ -36,7 +35,7 @@
 }
 
 
--(void)setObject:(TGImageObject *)object {
+-(void)setObject:(ImageObject *)object {
     
     if(_object.delegate == self)
         object.delegate = nil;
@@ -59,7 +58,7 @@
 }
 
 
--(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)object {
+-(void)didDownloadImage:(NSImage *)newImage object:(ImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
         if(object.class != NSClassFromString(@"TGPVImageObject"))
             [self addAnimation:contentAnimation() forKey:@"contents"];

@@ -15,57 +15,24 @@
 #import "TGCache.h"
 @implementation TGImageObject
 
--(id)initWithLocation:(TLFileLocation *)location {
-    if(self = [self initWithLocation:location placeHolder:nil sourceId:0 size:0]) {
-        
-    }
-    return self;
-}
-
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder {
-    if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:0 size:0]) {
-        
-    }
-    return self;
-}
-
-
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId {
-    if(self = [self initWithLocation:location placeHolder:placeHolder sourceId:sourceId size:0]) {
-        
-    }
-    return self;
-}
-
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size {
-    if(self = [super init]) {
-        _location = location;
-        if([placeHolder isKindOfClass:[NSImage class]])
-            _placeholder = placeHolder;
-        _sourceId = sourceId;
-        _size = size;
-    }
-    return self;
-}
-
-
+@synthesize supportDownloadListener = _supportDownloadListener;
 
 -(void)initDownloadItem {
     
     
-    if(_downloadItem )
+    if(self.downloadItem )
         return;//[_downloadItem cancel];
     
 
-    _downloadItem = [[DownloadPhotoItem alloc] initWithObject:_location size:_size];
+    self.downloadItem = [[DownloadPhotoItem alloc] initWithObject:self.location size:self.size];
     
-    _downloadListener = [[DownloadEventListener alloc] initWithItem:_downloadItem];
+    self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
 
-    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:_downloadItem];
+    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
     
     
-    [_downloadItem addEvent:_supportDownloadListener];
-    [_downloadItem addEvent:_downloadListener];
+    [self.downloadItem addEvent:self.supportDownloadListener];
+    [self.downloadItem addEvent:self.downloadListener];
     
     
     weak();
@@ -86,7 +53,7 @@
     }];
     
     
-    [_downloadItem start];
+    [self.downloadItem start];
 }
 
 -(void)_didDownloadImage:(DownloadItem *)item {
@@ -110,15 +77,6 @@
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
-}
-
--(void)dealloc {
-    [self.downloadItem removeEvent:self.downloadListener];
-    _downloadItem = nil;
-}
-
--(NSString *)cacheKey {
-    return self.location.cacheKey;
 }
 
 

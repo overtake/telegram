@@ -8,6 +8,7 @@
 
 #import "ImageUtils.h"
 #import <Accelerate/Accelerate.h>
+#import <QuickLook/QuickLook.h>
 
 #define CACHE_IMAGE(Name) NSImage* image_##Name () { \
 static NSImage *image;\
@@ -800,6 +801,21 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
     [CATransaction commit];
     
     return image;
+}
+
+
+NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
+    NSImage *source = image;
+    NSImage *target = [[NSImage alloc]initWithSize:backSize];
+    
+    [target lockFocus];
+    [source drawInRect:NSMakeRect(0,0,backSize.width,backSize.height)
+              fromRect:NSMakeRect(difference.x,difference.y,backSize.width,backSize.height)
+             operation:NSCompositeCopy
+              fraction:1.0];
+    [target unlockFocus];
+    
+    return target;
 }
 
 @end

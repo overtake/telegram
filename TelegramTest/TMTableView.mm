@@ -364,7 +364,7 @@ static TMTableView *tableStatic;
     
     if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
         
-        if([TMViewController isModalActive])
+        if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
             return;
         
         NSUInteger pos = 0;
@@ -546,7 +546,6 @@ static TMTableView *tableStatic;
 
 
 - (void)insertNewline:(id)sender {
-    MTLog(@"lol");
     // Enter key. Do special stuff here...
 }
 

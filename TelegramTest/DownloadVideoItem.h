@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DownloadItem.h"
-@interface DownloadVideoItem : DownloadItem
+#import "TGDownloadItem.h"
+@interface DownloadVideoItem : TGDownloadItem
 
 @end

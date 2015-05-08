@@ -169,7 +169,6 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
     
-    
 #ifdef TGDEBUG
     
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
@@ -316,7 +315,7 @@ void exceptionHandler(NSException * exception)
     
     [SharedManager sharedManager];
     
-    
+    [Storage manager];
     
     
     [self initializeUpdater];

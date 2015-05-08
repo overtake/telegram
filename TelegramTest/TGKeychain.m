@@ -19,7 +19,6 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <MTProtoKit/MTEncryption.h>
 #import <MTProtoKit/MTLogging.h>
-#import "TGDatabase.h"
 #import "SSKeychain.h"
 #import <AppKit/AppKit.h>
 
@@ -177,11 +176,18 @@ static NSMutableDictionary *keychains()
         
         NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
         
-       [TGDatabase dbSetKey:pass];
+        Class sc = NSClassFromString(@"Storage");
         
-        if(save) {
-            [TGDatabase dbRekey:pass];
+        if(sc) {
+            
+            [sc performSelector:@selector(dbSetKey:) withObject:pass];
+            
+            if(save) {
+                [sc performSelector:@selector(dbRekey:) withObject:pass];
+            }
         }
+        
+      
     }
     
     

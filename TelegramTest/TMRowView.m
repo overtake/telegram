@@ -7,7 +7,6 @@
 //
 
 #import "TMRowView.h"
-#import "TMElements.h"
 
 @interface TMRowView()
 @end

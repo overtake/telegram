@@ -7,7 +7,7 @@
 //
 
 #import "NSAttributedStringCategory.h"
-
+#import <AppKit/AppKit.h>
 @implementation NSAttributedString (Category)
 
 static NSTextField *testTextField() {

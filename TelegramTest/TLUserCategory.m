@@ -482,13 +482,10 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     switch (self.type) {
         case TLUserTypeContact:
             return [TL_inputUserContact createWithUser_id:self.n_id];
-            break;
         case TLUserTypeDeleted:
             return [TL_inputUserEmpty create];
-            break;
         case TLUserTypeEmpty:
             return [TL_inputUserEmpty create];
-            break;
         case TLUserTypeForeign:
             return [TL_inputUserForeign createWithUser_id:self.n_id access_hash:self.access_hash];
         case TLUserTypeRequest:
@@ -497,7 +494,6 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             return [TL_inputUserSelf create];
         default:
             return [TL_inputUserEmpty create];
-            break;
     }
 }
 

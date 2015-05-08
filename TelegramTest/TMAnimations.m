@@ -8,6 +8,7 @@
 
 #import "TMAnimations.h"
 #import "TGAnimationBlockDelegate.h"
+#include "NSViewCategory.h"
 @implementation TMAnimations
 
 + (CAAnimation *)fadeWithDuration:(float)duration fromValue:(float)fromValue toValue:(float)toValue {

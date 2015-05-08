@@ -195,9 +195,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(void)moveAndEncryptKeychain {
     
     
-
-    
-    
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
@@ -241,6 +238,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
     else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
 #else 
+    
+    if([[UsersManager currentUser].username isEqualToString:@"vihor"] && !isTestServer()) {
+        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
+    }
     
     if(isTestServer())  {
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
@@ -310,17 +311,23 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [_context addChangeListener:self];
     
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _masterDatacenter = [[keychain objectForKey:@"dc_id" group:@"persistent"] intValue];
+    
+    if(_masterDatacenter == 0) {
         
-    int o = (int) [defaults integerForKey:kDefaultDatacenter];
-    
-    
-    if(o > 0) {
-        [Storage setMasterdatacenter:o];
-        [defaults removeObjectForKey:kDefaultDatacenter];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        int o = (int) [defaults integerForKey:kDefaultDatacenter];
+        
+        
+        if(o > 0) {
+            [_keychain setObject:@(o) forKey:@"dc_id" group:@"persistent"];
+            
+        }  else {
+            o = 2;
+        }
+        _masterDatacenter = o;
     }
-    
-    _masterDatacenter = [Storage masterdatacenter];
     
     
     _datacenterCount = 5;
@@ -455,7 +462,16 @@ static int MAX_WORKER_POLL = 5;
 -(void)setDatacenter:(int)dc_id {
     _masterDatacenter = dc_id;
     
-    [Storage setMasterdatacenter:dc_id];
+    [_keychain setObject:@(dc_id) forKey:@"dc_id" group:@"persistent"];
+}
+
+-(void)setUserId:(int)userId {
+    if([self getUserId] != userId)
+        [_keychain setObject:@(userId) forKey:@"user_id" group:@"persistent"];
+}
+
+-(int)getUserId {
+    return [[_keychain objectForKey:@"user_id" group:@"persistent"] intValue];
 }
 
 -(MTKeychain *)keyChain {

@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import "DownloadItem.h"
-@interface DownloadAudioItem : DownloadItem
+#import "TGDownloadItem.h"
+@interface DownloadAudioItem : TGDownloadItem
 
 @end

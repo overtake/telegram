@@ -130,7 +130,7 @@
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-        self.mimeType = [FileUtils mimetypefromExtension:[self.filePath pathExtension]];
+        self.mimeType = mimetypefromExtension([self.filePath pathExtension]);
         
         
         

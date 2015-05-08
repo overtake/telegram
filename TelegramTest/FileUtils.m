@@ -16,6 +16,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <MtProtoKit/MTEncryption.h>
 #import "NSData+Extensions.h"
+
+
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -45,58 +47,9 @@ NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
 NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
--(id)init {
-    if(self = [super init]) {
-        NSMutableDictionary *types = [[NSMutableDictionary alloc] init];
-        
-        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"mime-types.txt"]];
-        
-        NSString *mimefile = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-        
-        NSArray* mimes = [mimefile componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
-        
-        NSMutableDictionary *ex = [[NSMutableDictionary alloc] init];
-        
-        for (NSString *line in mimes) {
-            NSArray* single = [line componentsSeparatedByCharactersInSet:
-                               [NSCharacterSet characterSetWithCharactersInString:@":"]];
-            
-            [types setObject:[single objectAtIndex:1] forKey:[single objectAtIndex:0]];
-            [ex setObject:[single objectAtIndex:0] forKey:[single objectAtIndex:1]];
-        }
-        
-        
-        self.extensions = ex;
-        
-        self.mimeTypes = types;
-    }
-    return self;
-}
-
-BOOL fileExists(TLFileLocation *location) {
-    return [[NSFileManager defaultManager] fileExistsAtPath:locationFilePath(location, @"jpg")];
-}
-
-BOOL isPathExists(NSString *path) {
-    return [[NSFileManager defaultManager] fileExistsAtPath:path];
-}
 
 
-+(FileUtils *)sharedManager {
-    static id instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        instance = [[[self class] alloc] init];
-    });
-    return instance;
-}
 
-unsigned long fileSize(NSString *path) {
-    NSFileManager *man = [NSFileManager defaultManager];
-    NSDictionary *attrs = [man attributesOfItemAtPath:path error: NULL];
-    return [attrs fileSize];
-}
 
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize {
     int pathsize = (int)fileSize(path);
@@ -104,10 +57,6 @@ unsigned long fileSize(NSString *path) {
     return pathsize != 0 && dif <= 16; //for encrypted files
 }
 
-BOOL checkFileSize(NSString *path, int size) {
-    long fs = fileSize(path);
-    return fs > 0 && fs >= size;
-}
 
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray *paths))handler forWindow:(NSWindow *)window {
     
@@ -172,13 +121,7 @@ BOOL checkFileSize(NSString *path, int size) {
     [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp mainWindow]];
 }
 
-NSString* locationFilePath(TLFileLocation *location, NSString *extension) {
-    return [NSString stringWithFormat:@"%@/%@.%@",path(),location.cacheKey,extension];
-}
 
-NSString* locationFilePathWithPrefix(TLFileLocation *location, NSString *prefix, NSString *extension) {
-    return [NSString stringWithFormat:@"%@/%@_%@.%@",path(),location.cacheKey,prefix,extension];
-}
 
 NSString* mediaFilePath(TLMessageMedia *media) {
     if([media isKindOfClass:[TL_messageMediaAudio class]]) {
@@ -214,7 +157,7 @@ NSString* documentPath(TLDocument *document) {
     
     NSArray *item = [fileName componentsSeparatedByCharactersInSet:
                      [NSCharacterSet characterSetWithCharactersInString:@"."]];
-    NSString *extenstion = [FileUtils extensionformime:document.mime_type];
+    NSString *extenstion = extensionForMimetype(document.mime_type);
     
     if(item.count >= 2) {
         return [NSString stringWithFormat:@"%@/%@",[SettingsArchiver documentsFolder],document.file_name];
@@ -240,45 +183,13 @@ NSString* dp() {
     return downloadPath;
 }
 
-NSString* path() {
-    static NSString* path;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        path = @"";
-        if ([paths count]) {
-            NSString *bundleName =
-            [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-            
-            path = [[paths objectAtIndex:0] stringByAppendingString:@"/"];
-            path = [path stringByAppendingString:bundleName];
-            
-            [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                      withIntermediateDirectories:YES
-                                                       attributes:nil
-                                                            error:nil];
-            
-            path = [path stringByAppendingString:@"/cache"];
-            
-            [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                      withIntermediateDirectories:YES
-                                                       attributes:nil
-                                                            error:nil];
-        }
-    });
-    return path;
-}
+
 
 +(NSString *)path {
     return path();
 }
 
-+(NSString *)extensionformime:(NSString *)mimetype {
-    NSString *ex = [[[self sharedManager] mimeTypes] objectForKey:mimetype];
-    if(!ex)
-        ex = [[[self sharedManager] extensions] objectForKey:@"*"];
-    return ex;
-}
+
 
 
 +(NSString *)documentName:(TLDocument *)document {
@@ -302,9 +213,7 @@ NSString* path() {
     return path;
 }
 
-BOOL check_file_size(NSString *path) {
-    return fileSize(path) < MAX_FILE_SIZE;
-}
+
 
 
 void alert_bad_files(NSArray *bad_files) {
@@ -344,37 +253,10 @@ void alert(NSString *text, NSString *info) {
     
 }
 
-+ (NSString *)fileMD5:(NSString *)path {
-    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-    if( handle == nil)
-        return [@"ERROR GETTING FILE MD5" md5]; // file didnt exist
-    
-    NSUInteger size = fileSize(path);
-    
-    NSUInteger seek = size - MIN(4096,size);
-    
-    NSData *fileData = [[NSData alloc] initWithData:[handle readDataOfLength:MIN(size, 4096)]];
-    
-    [handle seekToFileOffset:seek];
-    
-    fileData = [fileData dataWithData:[handle readDataToEndOfFile]];
-    
-    
-    NSString *md5 = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] md5];
-    return [[NSString stringWithFormat:@"MD5_%@_%lu", md5, (unsigned long)size] md5];
-}
 
 
-+(NSString *)mimetypefromExtension:(NSString *)extension {
-    NSString *mimeType = [[[self sharedManager] mimeTypes] objectForKey:extension];
-    if(!mimeType)
-        mimeType = [[[self sharedManager] mimeTypes] objectForKey:@"*"];
-    return mimeType;
-}
 
-+(NSString*)extensionForMimetype:(NSString *)mimetype {
-    return [[self sharedManager] extensions][mimetype];
-}
+
 
 /*
  ~/Library/Sounds
@@ -449,17 +331,7 @@ NSArray *urlSchemes() {
     return [[[NSString alloc] initWithContentsOfFile:scheme encoding:NSUTF8StringEncoding error:nil] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
-NSArray *mediaTypes() {
-    return @[@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi"];
-}
 
-NSArray *videoTypes() {
-    return @[@"mp4",@"mov",@"avi"];
-}
-
-NSArray *imageTypes() {
-    return @[@"png", @"tiff", @"jpeg", @"jpg"];
-}
 
 
 
@@ -621,14 +493,7 @@ void open_user_by_name(NSString * userName) {
 }
 
 
-BOOL NSStringIsValidEmail(NSString *checkString) {
-    BOOL stricterFilter = NO; // Discussion http://blog.logichigh.com/2010/09/02/validating-an-e-mail-address/
-    NSString *stricterFilterString = @"[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}";
-    NSString *laxString = @".+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*";
-    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
-    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
-    return [emailTest evaluateWithObject:checkString];
-}
+
 
 void open_link(NSString *link) {
     
@@ -800,28 +665,9 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
     return ([task terminationStatus] == 0);
 }
 
-BOOL NSSizeNotZero(NSSize size) {
-    return size.width > 0 || size.height > 0;
-}
-
-BOOL NSContainsSize(NSSize size1, NSSize size2) {
-    return size1.width == size2.width && size1.height == size2.height;
-}
 
 
-NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
-    NSImage *source = image;
-    NSImage *target = [[NSImage alloc]initWithSize:backSize];
-    
-    [target lockFocus];
-    [source drawInRect:NSMakeRect(0,0,backSize.width,backSize.height)
-              fromRect:NSMakeRect(difference.x,difference.y,backSize.width,backSize.height)
-             operation:NSCompositeCopy
-              fraction:1.0];
-    [target unlockFocus];
-    
-    return target;
-}
+
 
 NSString *exportPath(long randomId, NSString *extension) {
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];

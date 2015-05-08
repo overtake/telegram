@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "DownloadItem.h"
+#import "TGDownloadItem.h"
 
-@interface DownloadDocumentItem : DownloadItem
+@interface DownloadDocumentItem : TGDownloadItem
 
 @end

@@ -19,7 +19,6 @@
 #import <MTProtoKit/MTLogging.h>
 #import "TLApi.h"
 #import "CMath.h"
-#import "TGDatabase.h"
 
 @implementation MTRequest (LegacyTL)
 
@@ -116,13 +115,12 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             MTApiEnvironment *apiEnvironment = [[[MTApiEnvironment class] alloc] init];
             apiEnvironment.apiId = 2834;
-            
+            apiEnvironment.disableUpdates = YES;
             
             _context = [[MTContext alloc] initWithSerialization:serialization apiEnvironment:apiEnvironment];
             
             
             _keychain = [self nKeychain];
-            
             
             
             
@@ -231,7 +229,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(TGKeychain *)nKeychain {
-    return [TGKeychain unencryptedKeychainWithName:@"ru.keepcoder.telegram"];
+    return [TGKeychain keychainWithName:@"ru.keepcoder.telegram"];
 }
 
 
@@ -289,7 +287,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [_context addChangeListener:self];
     
     
-    _masterDatacenter = [TGDatabase masterdatacenter];
+    _masterDatacenter = [[keychain objectForKey:@"dc_id" group:@"persistent"] intValue];
+    
+    _masterDatacenter = _masterDatacenter > 0 ? _masterDatacenter :1;
     
     _datacenterCount = 5;
     
@@ -309,7 +309,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self initConnectionWithId:_masterDatacenter];
+        [_queue dispatchOnQueue:^{
+            [self initConnectionWithId:_masterDatacenter];
+        }];
+        
     });
 }
 
@@ -371,6 +374,9 @@ static int MAX_WORKER_POLL = 5;
     return [_context globalTime];
 }
 
+-(int)getUserId {
+    return [[_keychain objectForKey:@"user_id" group:@"persistent"] intValue];
+}
 
 -(MTKeychain *)keyChain {
     return _context.keychain;

@@ -27,6 +27,8 @@ typedef enum {
 } UploadState;
 
 
+@property (nonatomic, assign,readonly) UploadType uploadType;
+
 @property (nonatomic, assign) int total_size;
 @property (nonatomic, assign) NSUInteger readedBytes;
 @property (atomic, assign) UploadState uploadState;
@@ -48,5 +50,7 @@ typedef enum {
 - (void)cancel;
 - (void)ready:(UploadType)type;
 - (void)encryptedready:(UploadType)type key:(NSData *)key iv:(NSData *)iv;
+
+-(Class)rpcClass;
 
 @end

@@ -10,6 +10,7 @@
 #import "DownloadItem.h"
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
+#import "ImageObject.h"
 @class TGImageView;
 
 
@@ -25,33 +26,6 @@
 -(void)didUpdatedProgress:(float)progress;
 @end
 
-@interface TGImageObject : NSObject
-@property (nonatomic,strong,readonly) TLFileLocation *location;
-@property (nonatomic,assign,readonly) int size;
-@property (nonatomic,strong,readonly) NSImage *placeholder;
-@property (nonatomic,assign,readonly) int sourceId;
-
-@property (nonatomic,assign) NSSize imageSize;
-@property (nonatomic,assign) NSSize realSize;
-
-@property (nonatomic,strong) DownloadItem *downloadItem;
-@property (nonatomic,strong) DownloadEventListener *downloadListener;
-@property (nonatomic,strong,readonly) DownloadEventListener *supportDownloadListener;
-
-@property (nonatomic,weak) id <TGImageObjectDelegate> delegate;
-
-
-
-@property (nonatomic,assign) BOOL isLoaded;
-
--(id)initWithLocation:(TLFileLocation *)location;
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder;
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId;
--(id)initWithLocation:(TLFileLocation *)location placeHolder:(NSImage *)placeHolder sourceId:(int)sourceId size:(int)size;
-
-
--(void)initDownloadItem;
-
--(NSString *)cacheKey;
+@interface TGImageObject : ImageObject
 
 @end

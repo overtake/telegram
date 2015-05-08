@@ -91,7 +91,7 @@
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         
-        [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:[FileUtils fileMD5:self.filePath]];
+        [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:fileMD5(self.filePath)];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             self.message.n_id = msg.n_id;
@@ -168,7 +168,7 @@
     }];
     
     
-    id uploadedFile = [[Storage manager] fileInfoByPathHash:[FileUtils fileMD5:_attach.generatedPath]];
+    id uploadedFile = [[Storage manager] fileInfoByPathHash:fileMD5(_attach.generatedPath)];
     
     if(!uploadedFile) {
         

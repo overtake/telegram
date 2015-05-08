@@ -10,6 +10,8 @@
 #import "DownloadItem.h"
 
 
+@class DownloadOperation;
+
 @class DownloadItem;
 
 typedef enum {
@@ -109,4 +111,7 @@ typedef enum {
 -(int)partSize;
 
 -(id)initWithObject:(id)object size:(int)size;
+
+-(DownloadOperation *)nOperation;
+
 @end

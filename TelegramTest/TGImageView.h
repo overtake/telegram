@@ -8,13 +8,13 @@
 
 #import "BTRImageView.h"
 
-#import "TGImageObject.h"
+#import "ImageObject.h"
 
 @interface TGImageView : BTRImageView<NSImageDelegate,TGImageObjectDelegate>
 
 
 
-@property (nonatomic,strong) TGImageObject *object;
+@property (nonatomic,strong) ImageObject *object;
 
 
 @property (nonatomic, strong) NSColor *borderColor;

@@ -104,7 +104,7 @@ static ASQueue *queue;
     
     if(!_uploader) {
         
-         id uploadedFile = [[Storage manager] fileInfoByPathHash:[FileUtils fileMD5:_generatedPath]];
+         id uploadedFile = [[Storage manager] fileInfoByPathHash:fileMD5(_generatedPath)];
         
         if(!uploadedFile) {
             _uploader = [[UploadOperation alloc] init];

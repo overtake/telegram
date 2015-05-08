@@ -1,6 +1,7 @@
 #import "NSAttributedString+Hyperlink.h"
 #import "NSString+FindURLs.h"
 
+
 @implementation NSMutableAttributedString (Hyperlink)
 +(id)hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL
 {

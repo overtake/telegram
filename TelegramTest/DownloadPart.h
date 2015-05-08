@@ -14,7 +14,7 @@
 @property (nonatomic,assign,readonly) int dcId;
 @property (nonatomic,weak,readonly) DownloadItem *item;
 @property (nonatomic,strong) NSData *resultData;
-@property (nonatomic,strong) RPCRequest *request;
+@property (nonatomic,strong) id request;
 
 - (id)initWithId:(int)partId offset:(int)offset dcId:(int)dcId downloadItem:(DownloadItem *)downloadItem;
 

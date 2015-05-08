@@ -208,5 +208,6 @@ NSData *jpegNormalizedData(NSImage *image);
 NSData *pngNormalizedData(NSImage *image);
 NSImage *decompressedImage(NSImage *image);
 NSImage *renderedImage(NSImage * oldImage, NSSize size);
+NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 
 @end

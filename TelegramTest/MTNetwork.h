@@ -29,6 +29,9 @@
 -(void)setDatacenter:(int)dc_id;
 -(void)cancelRequest:(RPCRequest *)request;
 
+-(void)setUserId:(int)userId;
+-(int)getUserId;
+
 - (TGUpdateMessageService *)updateService;
 
 -(void)startNetwork;

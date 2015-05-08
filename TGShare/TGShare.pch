@@ -1,0 +1,28 @@
+//
+//  TGShare.pch
+//  Telegram
+//
+//  Created by keepcoder on 07.05.15.
+//  Copyright (c) 2015 keepcoder. All rights reserved.
+//
+
+
+#ifdef __OBJC__
+#import <Cocoa/Cocoa.h>
+
+#import <QuartzCore/QuartzCore.h>
+
+#import "NSAttributedStringCategory.h"
+#import "CMath.h"
+#import "ImageUtils.h"
+#import "TMImageUtils.h"
+#import "TMView.h"
+#import "ASQueue.h"
+#import "TLApi.h"
+#import "MTProto.h"
+#import "ClassStore.h"
+#import "TGS_RPCRequest.h"
+#import <MTProtoKit/MTLogging.h>
+#import "TGHeader.h"
+
+#endif

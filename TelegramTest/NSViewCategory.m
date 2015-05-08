@@ -7,7 +7,7 @@
 //
 
 #import "NSViewCategory.h"
-
+#import "TMAnimations.h"
 @interface CALAyerAnimationInstance : NSObject
 @end
 

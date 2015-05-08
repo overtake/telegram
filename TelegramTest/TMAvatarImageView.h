@@ -7,8 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CAAvatarLayer.h"
 #import "TMAvaImageObject.h"
+#import "BTRImageView.h"
 @interface TMAvatarImageView : BTRImageView
 
 typedef enum {
