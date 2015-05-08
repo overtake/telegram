@@ -253,6 +253,10 @@ static NSImage *playVideoImage() {
     return [TGCache cachedImage:key group:@[PCCACHE]];
 }
 
+-(NSImage *)cachedThumb:(NSString *)key {
+    return self.object.placeholder;
+}
+
 -(void)dealloc {
     
 }

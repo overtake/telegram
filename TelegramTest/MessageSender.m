@@ -60,7 +60,7 @@
     
     exportSession.outputURL = [NSURL fileURLWithPath:compressedPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
-    
+   // exportSession
     
     
     __block TGTimer *progressTimer = [[TGTimer alloc] initWithTimeout:0.1 repeat:YES completion:^{

@@ -28,7 +28,7 @@ static const int width = 180;
 -(void)initDownloadItem {
     
     
-    if(self.downloadItem )
+    if(self.downloadItem || !self.location)
         return;//[_downloadItem cancel];
     
     

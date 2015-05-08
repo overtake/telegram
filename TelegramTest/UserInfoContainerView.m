@@ -575,9 +575,9 @@
     
     [self.userNameView setString:[NSString stringWithFormat:@"@%@",user.username]];
     
-    [self.sharedMediaButton setConversation:self.user.dialog];
+    [self.sharedMediaButton setConversation:self.controller.conversation];
     
-    [self.filesMediaButton setConversation:self.user.dialog];
+    [self.filesMediaButton setConversation:self.controller.conversation];
     
     
     NSSize size;

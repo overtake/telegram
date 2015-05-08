@@ -37,6 +37,9 @@ static NSMutableDictionary *cached;
         _layer = 1;
         _keys = [[NSMutableDictionary alloc] init];
         
+        
+       
+        
         [self setKey:encrypt_key forFingerprint:key_fingerprint];
         
     }
@@ -61,7 +64,7 @@ static NSMutableDictionary *cached;
     [data setObject:@(self.prev_layer) forKey:@"prevLayer"];
     [data setObject:@(self.ttl) forKey:@"ttl"];
     [data setObject:@(self.g) forKey:@"g"];
-    
+    [data setObject:@(self.original_key_fingerprint) forKey:@"original_key_fingerprint"];
     if(self.a)
         [data setObject:self.a forKey:@"a"];
     if(self.p)
@@ -126,6 +129,8 @@ static NSMutableDictionary *cached;
         _ttl = [[object objectForKey:@"ttl"] intValue];
         _keys = [object objectForKey:@"keys"];
         _g_a_or_b = [object objectForKey:@"g_a_or_b"];
+        _original_key_fingerprint = [[object objectForKey:@"original_key_fingerprint"] longValue];
+        
     }
     return self;
 }
@@ -142,9 +147,17 @@ static NSMutableDictionary *cached;
     return _keys[@(_key_fingerprint)];
 }
 
+-(NSData *)firstKey {
+    return _keys[@(_original_key_fingerprint == 0 ? _key_fingerprint : _original_key_fingerprint)];
+}
+
 -(void)setKey:(NSData *)key forFingerprint:(long)fingerprint {
-    if(fingerprint != 0)
+    if(fingerprint != 0) {
+        if(_original_key_fingerprint == 0)
+            _original_key_fingerprint = fingerprint;
         [_keys setObject:key forKey:@(fingerprint)];
+    }
+    
 }
 
 +(NSMutableDictionary *)cache {

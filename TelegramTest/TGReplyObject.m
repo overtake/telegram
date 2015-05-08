@@ -8,6 +8,7 @@
 
 #import "TGReplyObject.h"
 #import "MessagesUtils.h"
+#import "NSString+Extended.h"
 @implementation TGReplyObject
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage {
@@ -18,29 +19,29 @@
         
         NSColor *nameColor = LINK_COLOR;
         
-        static NSColor * colors[6];
-        static NSMutableDictionary *cacheColorIds;
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            colors[0] = NSColorFromRGB(0xce5247);
-            colors[1] = NSColorFromRGB(0xcda322);
-            colors[2] = NSColorFromRGB(0x5eaf33);
-            colors[3] = NSColorFromRGB(0x468ec4);
-            colors[4] = NSColorFromRGB(0xac6bc8);
-            colors[5] = NSColorFromRGB(0xe28941);
-            
-            cacheColorIds = [[NSMutableDictionary alloc] init];
-        });
-        
-        
-        if(replyMessage.from_id != [UsersManager currentUserId]) {
-            
-            int colorMask = [TMAvatarImageView colorMask:replyMessage.fromUser];
-            
-            nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
-            
-        }
+//        static NSColor * colors[6];
+//        static NSMutableDictionary *cacheColorIds;
+//        
+//        static dispatch_once_t onceToken;
+//        dispatch_once(&onceToken, ^{
+//            colors[0] = NSColorFromRGB(0xce5247);
+//            colors[1] = NSColorFromRGB(0xcda322);
+//            colors[2] = NSColorFromRGB(0x5eaf33);
+//            colors[3] = NSColorFromRGB(0x468ec4);
+//            colors[4] = NSColorFromRGB(0xac6bc8);
+//            colors[5] = NSColorFromRGB(0xe28941);
+//            
+//            cacheColorIds = [[NSMutableDictionary alloc] init];
+//        });
+//        
+//        
+//        if(replyMessage.from_id != [UsersManager currentUserId]) {
+//            
+//            int colorMask = [TMAvatarImageView colorMask:replyMessage.fromUser];
+//            
+//            nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
+//            
+//        }
         
         NSString *name = replyMessage.fromUser.fullName;
         
@@ -61,7 +62,7 @@
             
             NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             
-            [replyText appendString:str withColor:TEXT_COLOR];
+            [replyText appendString:[str fixEmoji] withColor:TEXT_COLOR];
             
         } else {
             [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:GRAY_TEXT_COLOR];

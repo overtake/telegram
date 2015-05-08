@@ -668,7 +668,7 @@ static const int maxWidth = 120;
             TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
             
             
-            imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random()];
+            imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:photoSize.location placeHolder:nil sourceId:arc4random() size:photoSize.size];
             imageObject.previewObject = previewObject;
             
         }
@@ -676,7 +676,7 @@ static const int maxWidth = 120;
         
         TLVideo *video = media.video;
         
-        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:video.thumb.location placeHolder:nil sourceId:arc4random()];
+        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? nil : video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
         imageObject.previewObject = previewObject;
         
         previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:previewObject.media];

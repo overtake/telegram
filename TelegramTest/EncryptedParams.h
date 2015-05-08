@@ -22,6 +22,8 @@ typedef enum  {
 #define MIN_ENCRYPTED_LAYER 1
 #define MAX_ENCRYPTED_LAYER 23
 
+
+@property (atomic,assign) long original_key_fingerprint;
 @property (atomic,assign) long access_hash;
 @property (atomic,strong) NSData *p;
 @property (atomic,strong) NSData *a;
@@ -56,6 +58,7 @@ typedef void (^stateHandler)(EncryptedState state);
 
 -(NSData *)ekey:(long)fingerprint;
 -(NSData *)lastKey;
+-(NSData *)firstKey;
 -(void)setKey:(NSData *)key forFingerprint:(long)fingerprint;
 
 

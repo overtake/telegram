@@ -119,14 +119,20 @@ static const NSMutableDictionary *cache;
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
-    if(cache[[self primaryKey]][@(conversation.peer.peer_id)] == nil) {
-        
-        [self setLocked:YES];
-        [self loadCount:[conversation inputPeer] peer_id:conversation.peer.peer_id];
-
+    if(conversation.type != DialogTypeSecretChat) {
+        if(cache[[self primaryKey]][@(conversation.peer.peer_id)] == nil) {
+            
+            [self setLocked:YES];
+            [self loadCount:[conversation inputPeer] peer_id:conversation.peer.peer_id];
+            
+        } else {
+            self.count = [cache[[self primaryKey]][@(conversation.peer.peer_id)] intValue];
+        }
     } else {
-        self.count = [cache[[self primaryKey]][@(conversation.peer.peer_id)] intValue];
+        self.count = 0;
     }
+
+    
     
 }
 
@@ -163,6 +169,9 @@ static const NSMutableDictionary *cache;
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     NSString *str =  self.count > 0 ? [NSString stringWithFormat:@"%d",self.count] : NSLocalizedString(@"SharedMedia.None", nil);
+    
+    if(self.conversation.type == DialogTypeSecretChat)
+        str = @"";
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
