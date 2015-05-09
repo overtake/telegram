@@ -275,8 +275,9 @@
 
 -(void)sendAsMessage:(NSString *)message rowItem:(TGS_ConversationRowItem *)rowItem {
     
-    
-    [self updateProgress:30];
+    [ASQueue dispatchOnMainQueue:^{
+        [self updateProgress:30];
+    }];
     
     id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMessage createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 message:message random_id:rand_long()] successHandler:^(TGS_RPCRequest *request, id response) {
         

@@ -57,7 +57,11 @@ static NSString *yap_path;
     static dispatch_once_t yapToken;
     
     dispatch_once(&yapToken, ^{
-        [self reyap];
+        
+        yap_path = [NSString stringWithFormat:@"%@/yap_store-%@",[self path], [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"]];
+        
+        y_db = [[YapDatabase alloc] initWithPath:yap_path];
+        y_connection = [y_db newConnection];
     });
     
     return y_connection;
@@ -66,8 +70,6 @@ static NSString *yap_path;
 +(void)reyap {
     
     
-    
-    yap_path = [NSString stringWithFormat:@"%@/yap_store-%@",[self path], [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"]];
     
     
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
