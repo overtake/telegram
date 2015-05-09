@@ -2128,23 +2128,14 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
-    [ASQueue dispatchOnStageQueue:^{
-        
-        _conv = conversation;
-        
-    }];
+    _conv = conversation;
 }
 
 -(TL_conversation *)conversation {
     
     __block TL_conversation *conversation;
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        conversation = _conv;
-        
-    } synchronous:YES];
-    
+    conversation = _conv;
+
     return conversation;
 }
 
