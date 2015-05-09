@@ -638,7 +638,12 @@ static const int controlsHeight = 75;
 
 
 -(void)hide {
-    [self orderOut:self];
+    
+    if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
+        [self orderOut:self];
+    }
+    
+    
 }
 
 

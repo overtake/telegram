@@ -531,14 +531,7 @@ static NSMutableArray *listeners;
 }
 
 -(HistoryFilter *)filter {
-    __block HistoryFilter *f;
-    
-    [queue dispatchOnQueue:^{
-        f = _h_filter;
-    } synchronous:YES];
-    
-    return f;
-    
+    return _h_filter;
 }
 
 -(void)setFilter:(HistoryFilter *)filter {

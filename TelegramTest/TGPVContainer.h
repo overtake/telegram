@@ -21,4 +21,6 @@
 
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated;
 
+-(BOOL)ifVideoFullScreenPlayingNeedToogle;
+
 @end

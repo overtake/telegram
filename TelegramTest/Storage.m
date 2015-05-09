@@ -67,7 +67,7 @@ static NSString *yap_path;
     
     
     
-    yap_path = [NSString stringWithFormat:@"%@/yap_store.db",[self path]];
+    yap_path = [NSString stringWithFormat:@"%@/yap_store-%@",[self path], [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"]];
     
     
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
@@ -156,7 +156,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t142.sqlite"; // 61
+    NSString *dbName = @"t143.sqlite"; // 61
     
     self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
     

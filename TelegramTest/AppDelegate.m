@@ -162,7 +162,7 @@
 static void TGTelegramLoggingFunction(NSString *format, va_list args)
 {
 #ifdef TGDEBUG
-    TGLogv(format, args);
+ //   TGLogv(format, args);
 #endif
 }
 
@@ -409,6 +409,8 @@ void exceptionHandler(NSException * exception)
         }
         
         if([TGPhotoViewer isVisibility]) {
+            
+            NSLog(@"%@",result.window.firstResponder);
             
             if(incomingEvent.keyCode == 53) {
                 [[TGPhotoViewer viewer] hide];

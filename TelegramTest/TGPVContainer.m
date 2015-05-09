@@ -14,13 +14,26 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "MessageCellDescriptionView.h"
+
+
+
+@interface TGVideoPlayer : AVPlayerView
+@end
+
+
+@implementation TGVideoPlayer
+
+
+@end
+
+
 @interface TGPVContainer ()
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
 @property (nonatomic,strong) TMTextField *dateTextField;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
 
-@property (nonatomic,strong) AVPlayerView *videoPlayerView;
+@property (nonatomic,strong) TGVideoPlayer *videoPlayerView;
 
 @property (nonatomic,strong) MessageCellDescriptionView *photoCaptionView;
 
@@ -251,8 +264,11 @@ static const int bottomHeight = 60;
         
         
         if(!_videoPlayerView) {
-            _videoPlayerView = [[AVPlayerView alloc] initWithFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
             
+            
+            
+            _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
+            _videoPlayerView.showsFullScreenToggleButton = YES;
             [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
             [self addSubview:_videoPlayerView];
             
@@ -263,13 +279,28 @@ static const int bottomHeight = 60;
         
         
     } else {
+        
         [_videoPlayerView.player pause];
+        
+        
         _videoPlayerView.player = nil;
         [_videoPlayerView removeFromSuperview];
         _videoPlayerView = nil;
     }
 
 }
+
+-(BOOL)ifVideoFullScreenPlayingNeedToogle {
+    
+    
+    if(NSWidth(_videoPlayerView.frame) == NSWidth([NSScreen mainScreen].frame)) {
+        return YES;
+    }
+    
+    return NO;
+
+}
+
 
 
 -(void)runAnimation:(TGPhotoViewerItem *)item {
@@ -356,5 +387,6 @@ static const int bottomHeight = 60;
     
     //    [self.attachMenu popUpForView:self.attachButton];
 }
+
 
 @end
