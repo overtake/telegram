@@ -723,7 +723,6 @@
 		C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39969190FD1FC006B36F7 /* SGraphListNode.m */; };
 		C2F3996F190FD1FC006B36F7 /* SGraphNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3996B190FD1FC006B36F7 /* SGraphNode.m */; };
 		C2F39970190FD1FC006B36F7 /* SGraphObjectNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3996D190FD1FC006B36F7 /* SGraphObjectNode.m */; };
-		C2F429C01AFE75CD00C2CE4E /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
 		C2FA78D3191CDBF6001A9D1B /* ProfileSharedMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D2191CDBF6001A9D1B /* ProfileSharedMediaView.m */; };
 		C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */; };
@@ -817,13 +816,6 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
 		};
-		C2F429BB1AFE75C400C2CE4E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
-			remoteInfo = TGShare;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -854,7 +846,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C2F429C01AFE75CD00C2CE4E /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5136,7 +5127,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C2F429BC1AFE75C400C2CE4E /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -6032,14 +6022,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C2F429BC1AFE75C400C2CE4E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C2F429BB1AFE75C400C2CE4E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {

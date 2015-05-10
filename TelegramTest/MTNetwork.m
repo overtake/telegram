@@ -233,9 +233,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
 #ifndef TGDEBUG
     
-    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
-        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-    else
+   // if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
+    //    return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
+   // else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
 #else 
     
