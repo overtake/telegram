@@ -275,23 +275,24 @@ DYNAMIC_PROPERTY(DDialog);
 
 -(NSUserNotification *)userNotification {
     
-    if(!_notification) {
-        NSArray *notifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
-        
-        
-        [notifications enumerateObjectsUsingBlock:^(NSUserNotification *obj, NSUInteger idx, BOOL *stop) {
-            
-            int msg_id = [obj.userInfo[@"msg_id"] intValue];
-            
-            if(msg_id  == self.n_id) {
-                _notification = obj;
-                *stop = YES;
-            }
-            
-        }];
-    }
+//    if(!_notification) {
+//        NSArray *notifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+//        
+//        
+//        
+//        [notifications enumerateObjectsUsingBlock:^(NSUserNotification *obj, NSUInteger idx, BOOL *stop) {
+//            
+//            int msg_id = [obj.userInfo[@"msg_id"] intValue];
+//            
+//            if(msg_id  == self.n_id) {
+//                _notification = obj;
+//                *stop = YES;
+//            }
+//            
+//        }];
+//    }
     
-    return _notification;
+    return nil;
     
 }
 

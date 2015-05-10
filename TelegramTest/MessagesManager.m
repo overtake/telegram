@@ -406,6 +406,7 @@ static const int seconds_to_notify = 120;
     } synchronous:YES];
     
     
+    
     return [[Storage manager] markAllInConversation:conversation max_id:max_id];
 }
 
