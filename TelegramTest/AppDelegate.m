@@ -162,7 +162,7 @@
 static void TGTelegramLoggingFunction(NSString *format, va_list args)
 {
 #ifdef TGDEBUG
- //   TGLogv(format, args);
+    TGLogv(format, args);
 #endif
 }
 
@@ -302,7 +302,8 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 void exceptionHandler(NSException * exception)
 {
-    // ...
+    NSArray *stack = [exception callStackReturnAddresses];
+    NSLog(@"Stack trace: %@", stack);
 }
 
 
@@ -322,7 +323,7 @@ void exceptionHandler(NSException * exception)
     [SharedManager sharedManager];
     
     [Storage manager];
-    
+        
     
     [self initializeUpdater];
     [self initializeKeyDownHandler];
@@ -410,7 +411,6 @@ void exceptionHandler(NSException * exception)
         
         if([TGPhotoViewer isVisibility]) {
             
-            NSLog(@"%@",result.window.firstResponder);
             
             if(incomingEvent.keyCode == 53) {
                 [[TGPhotoViewer viewer] hide];

@@ -188,6 +188,19 @@
     
     [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
+    
+    GeneralSettingsRowItem *stickers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [[Telegram rightViewController] showStickerSettingsController];
+        
+     //   [[Telegram mainViewController].settingsWindowController showWindowWithAction:SettingsWindowActionChatSettings];
+        
+    } description:NSLocalizedString(@"Settings.Stickers", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return nil;
+    }];
+    
+    [self.tableView insert:stickers atIndex:self.tableView.list.count tableRedraw:NO];
+    
 
     
 //    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {

@@ -37,6 +37,7 @@
 #import "TGPasswordSetViewController.h"
 #import "TGPasswordEmailViewController.h"
 #import "ChatExportLinkViewController.h"
+#import "TGStickersSettingsViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -69,6 +70,7 @@
 
 
 @property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
+@property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -126,5 +128,6 @@
 -(void)didChangedLayout;
 
 -(void)showChatExportLinkController:(TLChatFull *)chat;
+-(void)showStickerSettingsController;
 
 @end

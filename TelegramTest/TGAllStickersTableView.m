@@ -15,6 +15,7 @@
 @interface TGAllStickersTableView ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMView *noEmojiView;
 @property (nonatomic,strong) NSMutableArray *stickers;
+@property (nonatomic,strong) NSMutableArray *sets;
 @property (nonatomic,assign) BOOL isCustomStickerPack;
 @end
 
@@ -253,6 +254,8 @@ static NSImage *higlightedImage() {
         
         __block NSArray *stickers;
         
+        __block NSArray *sets;
+        
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
             NSDictionary *info  = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
@@ -261,8 +264,11 @@ static NSImage *higlightedImage() {
             
             stickers = info[@"serialized"];
             
+            sets = info[@"sets"];
+            
             NSMutableArray *row = [[NSMutableArray alloc] init];
                         
+            NSMutableArray *rowSet = [[NSMutableArray alloc] init];
             
             [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
@@ -279,6 +285,24 @@ static NSImage *higlightedImage() {
                 }
                
             }];
+            
+            [sets enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                @try {
+                    TL_stickerSet *set = [TLClassStore deserialize:obj];
+                    
+                    if(set)
+                    {
+                        [rowSet addObject:set];
+                    }
+                }
+                @catch (NSException *exception) {
+                    hash = @"";
+                }
+                
+            }];
+            
+            _sets = rowSet;
             
             
             NSArray *localStickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
@@ -341,6 +365,10 @@ static NSImage *higlightedImage() {
 
 -(NSArray *)allStickers {
     return _stickers;
+}
+
+-(NSArray *)sets {
+    return _sets;
 }
 
 -(void)removeSticker:(TL_outDocument *)document {

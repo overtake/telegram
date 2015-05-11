@@ -308,7 +308,14 @@ bool isRemoteStickersLoaded() {
             [serialized addObject:[TLClassStore serialize:obj]];
             
         }];
-        [transaction setObject:@{@"hash":response.n_hash,@"serialized":serialized} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+        
+        NSMutableArray *serializedSets = [[NSMutableArray alloc] init];
+        
+        [response.sets enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [serializedSets addObject:[TLClassStore serialize:obj]];
+        }];
+        
+        [transaction setObject:@{@"hash":response.n_hash,@"serialized":serialized,@"sets":serializedSets} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
         
     }];
     

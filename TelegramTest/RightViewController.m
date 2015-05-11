@@ -933,4 +933,16 @@
     
 }
 
+
+-(void)showStickerSettingsController {
+    if(self.navigationViewController.currentController == _stickersSettingsViewController)
+        return;
+    
+    if(!_stickersSettingsViewController) {
+        _stickersSettingsViewController = [[TGStickersSettingsViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    [self.navigationViewController pushViewController:_stickersSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
 @end

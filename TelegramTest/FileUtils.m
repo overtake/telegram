@@ -448,6 +448,7 @@ void join_group_by_hash(NSString * hash) {
 
 void add_sticker_pack_by_name(NSString *name) {
     
+    
     [TMViewController showModalProgress];
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetShortName createWithShort_name:name]] successHandler:^(id request, id response) {

@@ -225,6 +225,10 @@
     return [[self instance].stickersTableView allStickers];
 }
 
++(NSArray *)allSets {
+    return [[self instance].stickersTableView sets];
+}
+
 +(void)loadStickersIfNeeded {
    [[self instance].stickersTableView load:NO];
 }

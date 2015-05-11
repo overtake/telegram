@@ -16,5 +16,6 @@
 -(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack;
 
 -(NSArray *)allStickers;
+-(NSArray *)sets;
 
 @end
