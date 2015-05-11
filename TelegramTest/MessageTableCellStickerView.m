@@ -18,7 +18,6 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        weak();
         
         
         self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
@@ -47,9 +46,28 @@
     
     if(![StickersPanelView hasSticker:self.item.message.media.document])
     {
+        
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddCustomSticker", nil) withBlock:^(id sender) {
             [StickersPanelView addLocalSticker:[TL_outDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash date:self.item.message.media.document.date mime_type:self.item.message.media.document.mime_type size:self.item.message.media.document.size thumb:self.item.message.media.document.thumb dc_id:self.item.message.media.document.dc_id file_path:@"" attributes:self.item.message.media.document.attributes]];
         }]];
+        
+        
+    } else {
+        
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
+        
+        if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddStickers", nil) withBlock:^(id sender) {
+                
+                
+                add_sticker_pack_by_name(attr.stickerset);
+                
+                
+            }]];
+        }
+        
+        
+        
     }
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {

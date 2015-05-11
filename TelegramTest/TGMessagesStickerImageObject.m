@@ -76,7 +76,7 @@
 }
 
 -(NSString *)cacheKey {
-    return self.location.cacheKey;
+    return [NSString stringWithFormat:@"%@:%@",self.location.cacheKey,NSStringFromSize(self.imageSize)];
 }
 
 @end

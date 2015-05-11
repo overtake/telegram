@@ -69,7 +69,8 @@ NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSString * userName);
 
 void join_group_by_hash(NSString * hash);
-void add_sticker_pack_by_name(NSString *name);
+
+void add_sticker_pack_by_name(TLInputStickerSet *set);
 
 int64_t SystemIdleTime(void);
 NSData *passwordHash(NSString *password, NSData *salt);

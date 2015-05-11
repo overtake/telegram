@@ -97,7 +97,7 @@
         }
         
         if([[url absoluteString] hasPrefix:TGStickerPackPrefix]) {
-            add_sticker_pack_by_name([[url absoluteString] substringFromIndex:TGStickerPackPrefix.length]);
+            add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[[url absoluteString] substringFromIndex:TGStickerPackPrefix.length]]);
             [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
             [self.mainWindow deminiaturize:self];
             return;

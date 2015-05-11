@@ -446,12 +446,12 @@ void join_group_by_hash(NSString * hash) {
 }
 
 
-void add_sticker_pack_by_name(NSString *name) {
+void add_sticker_pack_by_name(TLInputStickerSet *set) {
     
     
     [TMViewController showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetShortName createWithShort_name:name]] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:set] successHandler:^(id request, id response) {
         
         [TMViewController hideModalProgress];
       
@@ -576,7 +576,7 @@ void open_link(NSString *link) {
             if([name hasPrefix:joinPrefix]) {
                 join_group_by_hash([name substringFromIndex:joinPrefix.length]);
             } else if([name hasPrefix:stickerPrefix]) {
-                add_sticker_pack_by_name([name substringFromIndex:stickerPrefix.length]);
+                add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[name substringFromIndex:stickerPrefix.length]]);
             } else {
                 open_user_by_name(name);
             }
