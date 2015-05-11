@@ -244,8 +244,6 @@
     [_tableView removeAllItems:YES];
     
  
-    
-    
     [packs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:obj];
@@ -255,12 +253,12 @@
     }];
     
     
-      GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Stickers.StickersSetDescription", nil)];
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Stickers.StickersSetDescription", nil)];
     
-     description.isFlipped = YES;
-     description.height = 150;
+    description.isFlipped = YES;
+    description.height = 150;
     
-     [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
+    [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
     
     [_tableView reloadData];
     
