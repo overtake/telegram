@@ -13,4 +13,8 @@
 -(void)removeSticker:(TL_outDocument *)document;
 -(void)load:(BOOL)force;
 
+-(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack;
+
+-(NSArray *)allStickers;
+
 @end

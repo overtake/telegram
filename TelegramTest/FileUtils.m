@@ -16,7 +16,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <MtProtoKit/MTEncryption.h>
 #import "NSData+Extensions.h"
-
+#import "TGStickerPackModalView.h"
 
 @implementation OpenWithObject
 
@@ -448,11 +448,25 @@ void join_group_by_hash(NSString * hash) {
 
 void add_sticker_pack_by_name(NSString *name) {
     
+    [TMViewController showModalProgress];
+    
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetShortName createWithShort_name:name]] successHandler:^(id request, id response) {
         
-        int bp = 0;
+        [TMViewController hideModalProgress];
+      
+        dispatch_after_seconds(0.2, ^{
+            TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
+            
+            [stickerModalView show:[Telegram delegate].mainWindow animated:YES];
+            
+            [stickerModalView setStickerPack:response];
+        });
+        
+        
         
     } errorHandler:^(id request, RpcError *error) {
+        
+        [TMViewController hideModalProgress];
         
     }];
     

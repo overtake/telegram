@@ -13,4 +13,9 @@
 -(void)show:(NSWindow *)window animated:(BOOL)animated;
 -(void)close:(BOOL)animated;
 
+
+@property (assign) BOOL acceptEvents;
+
+-(void)setContainerFrameSize:(NSSize)size;
+-(NSSize)containerSize;
 @end

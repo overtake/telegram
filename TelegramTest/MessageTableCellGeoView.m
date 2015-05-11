@@ -90,6 +90,8 @@
     
     [_geoImageView setImageWithURL:item.geoUrl];
     
+    [_pinButton setHidden:[item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
+    
     [_venueField setHidden:![item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
     
     [_venueField setAttributedStringValue:item.venue];

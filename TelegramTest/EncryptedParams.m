@@ -188,8 +188,10 @@ static NSMutableDictionary *cached;
                 params = [[EncryptedParams alloc] initWithYap:[transaction objectForKey:[NSString stringWithFormat:@"%d",chat_id] inCollection:ENCRYPTED_PARAMS_COLLECTION]];
             }];
             
-            [[self cache] setObject:params forKey:@(chat_id)];
-
+            if(params) {
+                [[self cache] setObject:params forKey:@(chat_id)];
+            }
+            
         }
         
     } synchronous:YES];

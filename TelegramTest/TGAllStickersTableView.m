@@ -11,6 +11,14 @@
 #import "TGMessagesStickerImageObject.h"
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
+
+@interface TGAllStickersTableView ()<TMTableViewDelegate>
+@property (nonatomic,strong) TMView *noEmojiView;
+@property (nonatomic,strong) NSMutableArray *stickers;
+@property (nonatomic,assign) BOOL isCustomStickerPack;
+@end
+
+
 @interface TGSticker : NSObject<NSCoding>
 @property (nonatomic,strong) TL_document *document;
 @property (nonatomic,strong) NSString *emoji;
@@ -157,19 +165,20 @@ static NSImage *higlightedImage() {
         
         BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
         
-        [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
-        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
         
-        
-        
-        
+        if(!_tableView.isCustomStickerPack) {
+            [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
        
+        }
+        
         TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
         
         
         [imageView setTapBlock:^ {
             
-            [[Telegram rightViewController].messagesViewController sendSticker:item.stickers[idx] addCompletionHandler:nil];
+            if(!_tableView.isCustomStickerPack)
+                [[Telegram rightViewController].messagesViewController sendSticker:item.stickers[idx] addCompletionHandler:nil];
             
         }];
         
@@ -180,6 +189,8 @@ static NSImage *higlightedImage() {
         [imageView setCenterByView:button];
         
         [button addSubview:imageView];
+            
+        
         
         if([obj isKindOfClass:[TL_outDocument class]]) {
             BTRButton *removeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(width - image_RemoveSticker().size.width - 3, NSHeight(self.bounds) - image_RemoveSticker().size.height - 3, image_RemoveSticker().size.width, image_RemoveSticker().size.height)];
@@ -215,10 +226,7 @@ static NSImage *higlightedImage() {
 
 
 
-@interface TGAllStickersTableView ()<TMTableViewDelegate>
-@property (nonatomic,strong) TMView *noEmojiView;
-@property (nonatomic,strong) NSMutableArray *stickers;
-@end
+
 
 @implementation TGAllStickersTableView
 
@@ -231,9 +239,16 @@ static NSImage *higlightedImage() {
     return self;
 }
 
+-(NSScrollView *)containerView {
+    return [super containerView];
+}
+
 -(void)load:(BOOL)force {
     
     if(_stickers.count == 0 || force) {
+        
+        _isCustomStickerPack = NO;
+        
         __block NSString *hash = @"";
         
         __block NSArray *stickers;
@@ -320,11 +335,12 @@ static NSImage *higlightedImage() {
     } else {
         [self reloadData];
     }
-        
     
-    
-    
-    
+}
+
+
+-(NSArray *)allStickers {
+    return _stickers;
 }
 
 -(void)removeSticker:(TL_outDocument *)document {
@@ -436,6 +452,19 @@ static NSImage *higlightedImage() {
 
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
     return YES;
+}
+
+-(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack {
+    
+    
+    [_stickers removeAllObjects];
+    
+    [_stickers addObjectsFromArray:[stickerPack documents]];
+    
+    _isCustomStickerPack = YES;
+    
+    [self reloadData];
+    
 }
 
 @end

@@ -23,6 +23,8 @@
 +(void)reloadStickers;
 +(void)loadStickersIfNeeded;
 
++(NSArray *)allStickers;
+
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji;
 
 -(NSString *)emojiModifier:(NSString *)emoji;

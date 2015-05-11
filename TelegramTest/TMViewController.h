@@ -72,7 +72,7 @@
 +(void)showBlockPasslock:(passlockCallback)callback;
 -(void)showBlockPasslock:(passlockCallback)callback;
 
-
++(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to;
 
 +(void)showAttachmentCaption:(NSArray *)attachments onClose:(dispatch_block_t)onClose;
 +(void)hideAttachmentCaption;

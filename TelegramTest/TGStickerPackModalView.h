@@ -10,4 +10,6 @@
 
 @interface TGStickerPackModalView : TGModalView
 
+-(void)setStickerPack:(TL_stickerPack *)stickerPack;
+
 @end
