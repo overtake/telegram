@@ -15,7 +15,7 @@
 #import "TGPasslock.h"
 #import "SecretChatAccepter.h"
 #import "TMTaskRequest.h"
-
+#import "EmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
 @interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
@@ -108,7 +108,7 @@
     
     [SecretChatAccepter instance];
     
-    
+    [EmojiViewController loadStickersIfNeeded];
     
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
