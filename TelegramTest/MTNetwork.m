@@ -328,9 +328,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
         }
         _masterDatacenter = o;
     }
-    
-    _masterDatacenter = 2;
-    
+        
     _datacenterCount = 5;
     
     
