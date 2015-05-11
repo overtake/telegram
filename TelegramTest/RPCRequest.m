@@ -139,8 +139,10 @@
                     
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
+                } else if([self.error.error_msg hasPrefix:@"USER_MIGRATE"]) {
+                    [[Telegram delegate] logoutWithForce:YES];
                 } else {
-                    MTLog(@"%@",self.error.error_msg);
+                     MTLog(@"%@",self.error.error_msg);
                 }
                 
                 self.errorHandler(self, self.error);

@@ -329,6 +329,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
         _masterDatacenter = o;
     }
     
+    _masterDatacenter = 2;
     
     _datacenterCount = 5;
     
@@ -362,8 +363,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(void)startNetwork {
-    
-    
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
