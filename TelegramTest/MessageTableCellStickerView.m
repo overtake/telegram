@@ -9,6 +9,7 @@
 #import "MessageTableCellStickerView.h"
 #import "TGImageView.h"
 #import "StickersPanelView.h"
+#import "EmojiViewController.h"
 @interface MessageTableCellStickerView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @end
@@ -57,13 +58,18 @@
         TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
         
         if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddStickers", nil) withBlock:^(id sender) {
-                
-                
-                add_sticker_pack_by_name(attr.stickerset);
-                
-                
-            }]];
+            
+           NSArray *check = [[EmojiViewController allSets] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
+            
+            if(check.count == 0) {
+                [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddStickers", nil) withBlock:^(id sender) {
+                    
+                    add_sticker_pack_by_name(attr.stickerset);
+                    
+                }]];
+            }
+            
+            
         }
         
         
