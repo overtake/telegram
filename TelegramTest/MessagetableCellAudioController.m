@@ -112,7 +112,7 @@ NSImage *voicePlay() {
     
     if((self.item.state == AudioStatePlaying || self.item.state == AudioStatePaused) && globalAudioPlayer()) {
         float progress = MAX( MIN(self.currentTime / duration * [self progressWidth], [self progressWidth]), 0);
-                
+        
         [self setDurationTextFieldString:[NSString stringWithFormat:@"%@ / %@", [NSString durationTransformedValue:floor(self.currentTime)], self.item.duration]];
         
         NSRect progressRect = NSMakeRect(rect.origin.x, rect.origin.y, progress, rect.size.height);

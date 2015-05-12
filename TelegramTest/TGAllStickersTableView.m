@@ -339,6 +339,7 @@ static NSImage *higlightedImage() {
                 if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
                     
                     _stickers = response.documents;
+                    _sets = response.sets;
                     
                     [self reloadData];
                     
