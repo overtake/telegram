@@ -9,7 +9,6 @@
 #import "TGWebpageAttach.h"
 
 @interface TGWebpageAttach ()
-@property (nonatomic,strong) TLWebPage *webpage;
 @property (nonatomic,assign) int peer_id;
 
 @property (nonatomic,strong) TMTextField *titleField;
@@ -120,6 +119,13 @@
 -(void)updateLayout {
     [_titleField setStringValue:[_webpage isKindOfClass:[TL_webPagePending class]] ? NSLocalizedString(@"Webpage.GettingLinkInfo", nil) : (_webpage.site_name ? _webpage.site_name : @"Link Preview")];
     
+    if([_webpage isKindOfClass:[TL_webPageEmpty class]]) {
+        
+        [[Telegram rightViewController].messagesViewController updateWebpage];
+        
+        return;
+    }
+    
     NSString *desc = _link;
     
     [_stateField setTextColor:DARK_BLACK];
@@ -144,6 +150,8 @@
     
     [_stateField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_stateField.frame), NSHeight(_stateField.frame))];
     [_titleField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_titleField.frame), NSHeight(_titleField.frame))];
+    
+    
 }
 
 -(void)dealloc {

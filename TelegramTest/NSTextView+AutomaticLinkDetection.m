@@ -15,14 +15,21 @@
 {
     NSArray *linkLocations = [[self string] locationsOfLinks];
     NSArray *links = [[self string] arrayOfLinks:linkLocations];
-       
+    
+    NSRange selectRange = self.selectedRange;
+    
     int i=0;
     for( NSString *link in links )
     {
        NSAttributedString *linkString = [NSMutableAttributedString hyperlinkFromString:link withURL:[NSURL URLWithString:link]];
+        
        [[self textStorage] replaceCharactersInRange:[[linkLocations objectAtIndex:i] range] withAttributedString:linkString];
+        
+        
        i++;
     }
+    
+    self.selectedRange = selectRange;
    
 }
 

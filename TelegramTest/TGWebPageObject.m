@@ -105,6 +105,8 @@ NSImage *placeholder() {
             _desc = desc;
             
             [desc detectExternalLinks];
+        } else {
+            _desc = [[NSAttributedString alloc] init];
         }
         
        

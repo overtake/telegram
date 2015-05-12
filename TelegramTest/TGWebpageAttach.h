@@ -10,6 +10,8 @@
 
 @interface TGWebpageAttach : TMView
 
+@property (nonatomic,strong,readonly) TLWebPage *webpage;
+
 @property (nonatomic,strong,readonly) NSString *link;
 
 -(id)initWithFrame:(NSRect)frameRect webpage:(TLWebPage *)webpage link:(NSString *)link;

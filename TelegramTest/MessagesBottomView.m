@@ -1100,8 +1100,18 @@
 #endif
     
     
-    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage)
+    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage) {
+     
+        if(_webpageAttach && [_webpageAttach.webpage isKindOfClass:[TL_webPageEmpty class]]) {
+            [_webpageAttach removeFromSuperview];
+            _webpageAttach = nil;
+            
+            [self updateBottomHeight:YES];
+        }
+        
         return;
+    }
+    
     
     
     
