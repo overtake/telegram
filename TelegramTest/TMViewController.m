@@ -13,6 +13,7 @@
 #import "TGPasslockModalView.h"
 #import "TGPasslock.h"
 #import "TGModalSetCaptionView.h"
+#import "TGModalView.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -286,7 +287,7 @@ static TGModalSetCaptionView *setCaptionView;
     
     [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj == progressView || obj == passlockView || obj == setCaptionView) {
+        if(obj == progressView || obj == passlockView || obj == setCaptionView || [obj isKindOfClass:[TGModalView class]]) {
             res = YES;
             *stop = YES;
         }

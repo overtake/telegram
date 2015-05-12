@@ -131,6 +131,18 @@
     
 }
 
+-(void)mouseMoved:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+
+-(void)mouseExited:(NSEvent *)theEvent {
+    
+}
 
 -(void)addSubview:(NSView *)aView {
     [_containerView addSubview:aView];

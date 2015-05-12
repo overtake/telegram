@@ -46,6 +46,7 @@
 #import "TGCTextView.h"
 #import "TGPasslockModalView.h"
 #import "ASCommon.h"
+#import "TGModalView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
