@@ -201,7 +201,8 @@ int maxBroadcastUsers() {
 
 - (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversation sender:(id)sender {
     TLUser  *user = [[UsersManager sharedManager] find:userID];
-    [self showUserInfoWithUser:user conversation:conversation sender:sender];
+    
+    [self showUserInfoWithUser:user conversation:user.dialog sender:sender];
 }
 
 - (void)showNotSelectedDialog {

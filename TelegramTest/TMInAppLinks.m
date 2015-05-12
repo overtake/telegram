@@ -21,6 +21,7 @@
         NSString *action = [params objectAtIndex:0];
         if([action isEqualToString:@"USER_PROFILE"]) {
             int user_id = [[params objectAtIndex:1] intValue];
+            
             [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:nil sender:self];
             
         }
