@@ -184,7 +184,10 @@ static const int controlsHeight = 75;
     TGPVControlHighlightType highlight;
     
     if(![self.controls hitTest:point]) {
-        if([self.photoContainer hitTest:point]) {
+        
+        
+        
+        if([self.photoContainer hitTest:point] && [self.photoContainer isInImageContainer:theEvent]) {
             highlight = TGPVControlHighLightNext;
         } else if(point.x > NSMinX(self.photoContainer.frame)) {
             highlight = TGPVControlHighLightPrev;

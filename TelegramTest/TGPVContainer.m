@@ -55,12 +55,16 @@
     return self;
 }
 
+-(BOOL)isInImageContainer:(NSEvent *)theEvent {
+    return [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame];
+}
+
 -(void)mouseDown:(NSEvent *)theEvent {
     
     if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame])
         [TGPhotoViewer nextItem];
-    //else
-        //[super mouseDown:theEvent];
+    else
+        [[TGPhotoViewer viewer] hide];
 }
 
 -(void)initialize {
