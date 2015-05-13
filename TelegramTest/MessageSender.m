@@ -407,22 +407,23 @@ static NSMutableArray *wrong_files;
     
     if([imageTypes() containsObject:pathExtension] && !asDocument) {
         [[[Telegram rightViewController] messagesViewController]
-         sendImage:file file_data:nil isMultiple:isMultiple addCompletionHandler:next];
-        
+         sendImage:file forConversation:dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
+        next();
         return;
         
     }
     
     if([videoTypes() containsObject:pathExtension] && !asDocument) {
         [[[Telegram rightViewController] messagesViewController]
-         sendVideo:file addCompletionHandler:next];
-        
+         sendVideo:file forConversation:dialog];
+         next();
        
         return;
     }
     
     [[[Telegram rightViewController] messagesViewController]
-     sendDocument:file addCompletionHandler:next];
+     sendDocument:file forConversation:dialog];
+    next();
     
 }
 
@@ -442,7 +443,7 @@ static NSMutableArray *wrong_files;
         NSData *tiff = [pboard dataForType:NSTIFFPboardType];
         
         [[[Telegram rightViewController] messagesViewController]
-         sendImage:nil file_data:tiff];
+         sendImage:nil forConversation:dialog file_data:tiff];
     }
     
     return YES;

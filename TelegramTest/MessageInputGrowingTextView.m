@@ -179,12 +179,12 @@ typedef enum {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisPicture", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPictureDescription", nil) block:^(id result) {
                     if([result intValue] == 1000) {
                         
-                        [[[Telegram rightViewController] messagesViewController] sendImage:image.name file_data:[image TIFFRepresentation]];
+                        [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
                         
                     }
                 }];
             } else {
-                 [[[Telegram rightViewController] messagesViewController] sendImage:image.name file_data:[image TIFFRepresentation]];
+                 [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
             }
             
            
@@ -194,7 +194,7 @@ typedef enum {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path];
+                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
                     
                 }
             }];
@@ -204,7 +204,7 @@ typedef enum {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendVideo:path];
+                    [[[Telegram rightViewController] messagesViewController] sendVideo:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
                     
                 }
             }];
@@ -214,7 +214,7 @@ typedef enum {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisGif", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisGifDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path];
+                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
                     
                 }
             }];

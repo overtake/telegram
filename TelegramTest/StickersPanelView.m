@@ -116,7 +116,7 @@ static NSImage *higlightedImage() {
             
             [imgView setTapBlock:^{
                 
-                [[Telegram rightViewController].messagesViewController sendSticker:obj addCompletionHandler:nil];
+                [[Telegram rightViewController].messagesViewController sendSticker:obj forConversation:[Telegram conversation] addCompletionHandler:nil];
                 
                 [[Telegram rightViewController].messagesViewController setStringValueToTextField:@""];
             }];

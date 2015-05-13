@@ -138,7 +138,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         [self removeFile];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
-            [[Telegram rightViewController].messagesViewController sendAudio:opusPath];
+            [[Telegram rightViewController].messagesViewController sendAudio:opusPath forConversation:[Telegram rightViewController].messagesViewController.conversation];
         }];
     }];
 }

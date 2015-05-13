@@ -32,6 +32,10 @@
     return [self delegate].telegram;
 }
 
++(TL_conversation *)conversation {
+    return [Telegram rightViewController].messagesViewController.conversation;
+}
+
 + (AppDelegate *)delegate {
     return ((AppDelegate *)[NSApplication sharedApplication].delegate);
 }

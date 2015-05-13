@@ -1006,21 +1006,24 @@ static int offsetEditable = 30;
 - (void)checkActionState:(BOOL)redraw {
     
     MessageTableCellState state;
-    
-    if(self.item.message.n_out && self.item.message.unread) {
-        if(self.item.messageSender) {
-            if(self.item.messageSender.state == MessageSendingStateError) {
-                state = MessageTableCellSendingError;
-            } else if(self.item.message.dstate == DeliveryStatePending)  {
-                state = MessageTableCellSending;
-            }
+    if(self.item.messageSender) {
+        
+        if(self.item.messageSender.state == MessageSendingStateError) {
+            state = MessageTableCellSendingError;
+        } else if(self.item.message.dstate == DeliveryStatePending)  {
+            state = MessageTableCellSending;
         } else {
             state = MessageTableCellUnread;
         }
-        
     } else {
-        state = MessageTableCellRead;
+        if(self.item.message.n_out) {
+            if(!self.item.message.unread)
+                state = MessageTableCellRead;
+            else
+                state = MessageTableCellUnread;
+        }
     }
+    
     
     [self.stateLayer setHidden:!self.item.message.n_out];
     

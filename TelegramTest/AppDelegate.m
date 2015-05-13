@@ -246,7 +246,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
                 if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
                 
                 
-                [[Telegram rightViewController].messagesViewController sendMessage:userResponse];
+                [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];
             }
             
         });

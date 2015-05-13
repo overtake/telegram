@@ -209,7 +209,7 @@
     }
     
     
-    [[Telegram rightViewController].messagesViewController sendLocation:coordinates];
+    [[Telegram rightViewController].messagesViewController sendLocation:coordinates forConversation:[Telegram rightViewController].messagesViewController.conversation];
     
     [self close];
     

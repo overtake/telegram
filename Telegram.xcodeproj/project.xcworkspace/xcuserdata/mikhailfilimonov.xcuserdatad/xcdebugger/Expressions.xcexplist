@@ -1271,6 +1271,14 @@
          contextName = "+[StickersPanelView hasSticker:]:StickersPanelView.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellContainerView checkActionState:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.unread">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState

@@ -18,7 +18,7 @@
 
 + (Telegram *)sharedInstance;
 
-
++(TL_conversation *)conversation;
 
 Telegram * TelegramInstance();
 

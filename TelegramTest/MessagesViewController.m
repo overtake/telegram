@@ -839,102 +839,102 @@ static NSTextAttachment *headerMediaIcon() {
     
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.Off",nil) withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:0 callback:ttlCallback];
+        [controller sendSecretTTL:0 forConversation:controller.conversation callback:ttlCallback];
     }]];
     
     if(controller.conversation.encryptedChat.encryptedParams.layer != 1)
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSecond",nil),1] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:1 callback:ttlCallback];
+            [controller sendSecretTTL:1 forConversation:controller.conversation callback:ttlCallback];
         }]];
     
     [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),2] withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:2 callback:ttlCallback];
+        [controller sendSecretTTL:2 forConversation:controller.conversation callback:ttlCallback];
     }]];
     
     if(controller.conversation.encryptedChat.encryptedParams.layer != 1)
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),3] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:3 callback:ttlCallback];
+            [controller sendSecretTTL:3 forConversation:controller.conversation callback:ttlCallback];
         }]];
     
     if(controller.conversation.encryptedChat.encryptedParams.layer != 1)
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),4] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:4 callback:ttlCallback];
+            [controller sendSecretTTL:4 forConversation:controller.conversation callback:ttlCallback];
         }]];
 
     [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),5] withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:5 callback:ttlCallback];
+        [controller sendSecretTTL:5 forConversation:controller.conversation callback:ttlCallback];
     }]];
     
     if(controller.conversation.encryptedChat.encryptedParams.layer != 1) {
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),6] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:6 callback:ttlCallback];
+            [controller sendSecretTTL:6 forConversation:controller.conversation callback:ttlCallback];
         }]];
         
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),7] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:7 callback:ttlCallback];
+            [controller sendSecretTTL:7 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),8] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:8 callback:ttlCallback];
+            [controller sendSecretTTL:8 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),9] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:9 callback:ttlCallback];
+            [controller sendSecretTTL:9 forConversation:controller.conversation callback:ttlCallback];
         }]];
         
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),10] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:10 callback:ttlCallback];
+            [controller sendSecretTTL:10 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),11] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:11 callback:ttlCallback];
+            [controller sendSecretTTL:11 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),12] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:12 callback:ttlCallback];
+            [controller sendSecretTTL:12 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),13] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:13 callback:ttlCallback];
+            [controller sendSecretTTL:13 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),14] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:14 callback:ttlCallback];
+            [controller sendSecretTTL:14 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),15] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:15 callback:ttlCallback];
+            [controller sendSecretTTL:15 forConversation:controller.conversation callback:ttlCallback];
         }]];
         [submenu addItem:[NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Secret.SelfDestruct.RandomSeconds",nil),30] withBlock:^(id sender) {
             if(click) click();
-            [controller sendSecretTTL:30 callback:ttlCallback];
+            [controller sendSecretTTL:30 forConversation:controller.conversation callback:ttlCallback];
         }]];
 
     }
     
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.1m",nil) withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:60 callback:ttlCallback];
+        [controller sendSecretTTL:60 forConversation:controller.conversation callback:ttlCallback];
     }]];
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.1h",nil) withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:60*60 callback:ttlCallback];
+        [controller sendSecretTTL:60*60 forConversation:controller.conversation callback:ttlCallback];
     }]];
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.1d",nil) withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:60*60*24 callback:ttlCallback];
+        [controller sendSecretTTL:60*60*24 forConversation:controller.conversation callback:ttlCallback];
     }]];
     [submenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Secret.SelfDestruct.1w",nil) withBlock:^(id sender) {
         if(click) click();
-        [controller sendSecretTTL:60*60*24*7 callback:ttlCallback];
+        [controller sendSecretTTL:60*60*24*7 forConversation:controller.conversation callback:ttlCallback];
     }]];
     
     
@@ -2532,25 +2532,6 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
--(void)groupFlood:(NSArray *)peerIds {
-    
-    [peerIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
-        MessageSenderItem *sender = [[MessageSenderItem alloc] initWithMessage:[NSString stringWithFormat:@"%d",arc4random()] forConversation:[[DialogsManager sharedManager] findByChatId:[obj intValue]]];
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:self.conversation callback:nil sentControllerCallback:nil];
-        
-        dispatch_after_seconds(5, ^{
-            [self groupFlood:peerIds];
-        });
-        
-    }];
-    
-}
-
-
-
-
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
@@ -2563,7 +2544,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         
-        [self sendMessage:message callback:^{
+        [self sendMessage:message forConversation:self.conversation callback:^{
             [self.bottomView setInputMessageString:@"" disableAnimations:NO];
             [_typingReservation removeAllObjects];
         }];
@@ -2571,15 +2552,15 @@ static NSTextAttachment *headerMediaIcon() {
     }
 }
 
--(void)sendMessage:(NSString *)message {
-    [self sendMessage:message callback:nil];
+-(void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation {
+    [self sendMessage:message forConversation:conversation callback:nil];
 }
 
 
 
-- (void)sendMessage:(NSString *)message callback:(dispatch_block_t)callback {
+- (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
     
-    if(!self.conversation.canSendMessage)
+    if(!conversation.canSendMessage)
         return;
     
     BOOL noWebpage = [self noWebpage];
@@ -2601,26 +2582,16 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        Class cs = self.conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
-        if([message isEqualToString:@"*!testmessages!#"] && [UsersManager currentUserId] == 438078) {
-            for (int i =0; i < 10; i++) {
-                MessageSenderItem *sender = [[cs alloc] initWithMessage:[NSString stringWithFormat:@"%d",i] forConversation:self.conversation noWebpage:noWebpage];
-                sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-                [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
-            }
-            
-            return;
-        }
-        
+        Class cs = conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
         static const NSInteger messagePartLimit = 4096;
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:self.conversation];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
             
         }
         
@@ -2631,7 +2602,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:self.conversation];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -2641,7 +2612,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
             }
             
-            [self.historyController addItems:preparedItems conversation:self.conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItems:preparedItems conversation:conversation callback:callback sentControllerCallback:nil];
         }
         
         [self performForward:self.conversation];
@@ -2649,8 +2620,8 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
-- (void)sendLocation:(CLLocationCoordinate2D)coordinates {
-    if(!self.conversation.canSendMessage)
+- (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation {
+    if(!conversation.canSendMessage)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
@@ -2659,7 +2630,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
-        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:self.conversation];
+        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation];
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem];
         
@@ -2667,12 +2638,12 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)sendVideo:(NSString *)file_path {
-    [self sendVideo:file_path addCompletionHandler:nil];
+- (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation {
+    [self sendVideo:file_path forConversation:conversation addCompletionHandler:nil];
 }
 
--(void)sendVideo:(NSString *)file_path  addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!self.conversation.canSendMessage) return;
+-(void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2685,22 +2656,22 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         if(self.conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:self.conversation];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:conversation];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
     }];
 }
 
-- (void)sendDocument:(NSString *)file_path {
-    [self sendDocument:file_path addCompletionHandler:nil];
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation {
+    [self sendDocument:file_path forConversation:conversation addCompletionHandler:nil];
 }
 
 
-- (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!self.conversation.canSendMessage) return;
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2713,9 +2684,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         SenderItem *sender;
         if(self.conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:self.conversation];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:conversation];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2724,8 +2695,8 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
--(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!self.conversation.canSendMessage) return;
+-(void)sendSticker:(TLDocument *)sticker forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!conversation.canSendMessage) return;
     
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
@@ -2759,9 +2730,9 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.conversation.type != DialogTypeSecretChat) {
-            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:self.conversation];
+            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation];
         } else {
-            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:self.conversation document:sticker];
+            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:conversation document:sticker];
         }
         
        
@@ -2773,9 +2744,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)sendAudio:(NSString *)file_path {
+- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation {
     
-    if(!self.conversation.canSendMessage) return;
+    if(!conversation.canSendMessage) return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2788,9 +2759,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         SenderItem *sender;
         if(self.conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:self.conversation];
+            sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:conversation];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:self.conversation];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2800,7 +2771,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
     
-    if(!self.conversation.canSendMessage)
+    if(!conversation.canSendMessage)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
@@ -2813,7 +2784,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
-- (void)shareContact:(TLUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
+- (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
     
     if(!self.conversation.canSendMessage) return;
     
@@ -2828,41 +2799,42 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
-- (void)sendSecretTTL:(int)ttl {
-    [self sendSecretTTL:ttl callback:nil];
+- (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation {
+    [self sendSecretTTL:ttl forConversation:conversation callback:nil];
 }
 
-- (void)sendSecretTTL:(int)ttl callback:(dispatch_block_t)callback {
-    if(!self.conversation.canSendMessage) {
+- (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
+    
+    if(!conversation.canSendMessage) {
         if(callback) callback();
         return;
     }
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
-    NSUInteger lastTTL = [EncryptedParams findAndCreate:self.conversation.peer.peer_id].ttl;
+    NSUInteger lastTTL = [EncryptedParams findAndCreate:conversation.peer.peer_id].ttl;
     
     if(lastTTL == -1 || lastTTL != ttl ) {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:self.conversation ttl:ttl];
+            SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:conversation ttl:ttl];
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             
-            [self.historyController addItem:sender.tableItem conversation:self.conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
         }];
         
     } else if(callback) callback();
 }
 
 
-- (void)sendImage:(NSString *)file_path file_data:(NSData *)data {
-    [self sendImage:file_path file_data:data isMultiple:YES addCompletionHandler:nil];
+- (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data {
+    [self sendImage:file_path forConversation:conversation file_data:data isMultiple:YES addCompletionHandler:nil];
 }
 
-- (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!self.conversation.canSendMessage || self.conversation.type == DialogTypeSecretChat)
+- (void)sendAttachments:(NSArray *)attachments forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!conversation.canSendMessage || conversation.type == DialogTypeSecretChat)
         return;
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
@@ -2873,7 +2845,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:self.conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2882,29 +2854,29 @@ static NSTextAttachment *headerMediaIcon() {
         }];
         
        
-        [self.historyController addItems:items conversation:self.conversation sentControllerCallback:completeHandler];
+        [self.historyController addItems:items conversation:conversation sentControllerCallback:completeHandler];
         
         
     }];
 }
 
-- (void)addImageAttachment:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
+- (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
     if(self.conversation.type == DialogTypeSecretChat)
         return;
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSMutableArray *attachments = [transaction objectForKey:self.conversation.cacheKey inCollection:ATTACHMENTS];
+        NSMutableArray *attachments = [transaction objectForKey:conversation.cacheKey inCollection:ATTACHMENTS];
         
         if(!attachments) {
             attachments = [[NSMutableArray alloc] init]; 
         }
         
-        TGAttachObject *attach = [[TGAttachObject alloc] initWithOriginFile:file_path orData:data peer_id:self.conversation.peer_id];
+        TGAttachObject *attach = [[TGAttachObject alloc] initWithOriginFile:file_path orData:data peer_id:conversation.peer_id];
         
         [attachments addObject:attach];
         
-        [transaction setObject:attachments forKey:self.conversation.cacheKey inCollection:ATTACHMENTS];
+        [transaction setObject:attachments forKey:conversation.cacheKey inCollection:ATTACHMENTS];
         
         [ASQueue dispatchOnMainQueue:^{
             
@@ -2918,12 +2890,12 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
--(void)sendImage:(NSString *)file_path file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(!self.conversation.canSendMessage)
+-(void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler {
+    if(!conversation.canSendMessage)
         return;
     
     if(self.conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
-        [self addImageAttachment:file_path file_data:data addCompletionHandler:completeHandler];
+        [self addImageAttachment:file_path  forConversation:conversation file_data:data addCompletionHandler:completeHandler];
         
         return;
     }
@@ -2960,7 +2932,7 @@ static NSTextAttachment *headerMediaIcon() {
             
            
             [ASQueue dispatchOnMainQueue:^{
-                [self sendDocument:path addCompletionHandler:completeHandler];
+                [self sendDocument:path forConversation:conversation addCompletionHandler:completeHandler];
             }];
             
             
@@ -2982,9 +2954,9 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.conversation.type == DialogTypeSecretChat) {
-            sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:self.conversation];
+            sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:conversation];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:self.conversation];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

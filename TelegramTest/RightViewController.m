@@ -359,7 +359,7 @@
                 
                 [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
                 
-                [self.messagesViewController shareContact:modalObject conversation:dialog callback:^{
+                [self.messagesViewController shareContact:modalObject forConversation:dialog callback:^{
                     
                 }];
                 

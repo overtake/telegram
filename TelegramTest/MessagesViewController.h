@@ -92,36 +92,37 @@ typedef enum {
 - (void)resendItem:(MessageTableItem *)item;
 
 
-- (void)sendImage:(NSString *)file_path file_data:(NSData *)data;
-- (void)sendVideo:(NSString *)file_path;
-- (void)sendDocument:(NSString *)file_path;
+
 
 -(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
 
 
-- (void)sendImage:(NSString *)file_path file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler;
 
-- (void)sendAttachments:(NSArray *)attachments addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data;
+- (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation;
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation;
+- (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler;
 
-- (void)addImageAttachment:(NSString *)file_path file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendAttachments:(NSArray *)attachments forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
+
+- (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
 
 
-- (void)sendVideo:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 ;
-- (void)sendDocument:(NSString *)file_path addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 ;
 
--(void)sendSticker:(TLDocument *)sticker addCompletionHandler:(dispatch_block_t)completeHandler;
+-(void)sendSticker:(TLDocument *)sticker forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 
-- (void)sendAudio:(NSString *)file_path;
-- (void)sendMessage:(NSString *)message ;
-- (void)sendLocation:(CLLocationCoordinate2D)coordinates;
-- (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-- (void)shareContact:(TLUser *)contact conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-- (void)sendSecretTTL:(int)ttl;
-
-- (void)sendSecretTTL:(int)ttl callback:(dispatch_block_t)callback;
+- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation;
+- (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
+- (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation;
+- (void)forwardMessages:(NSArray *)messages forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation;
+- (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 

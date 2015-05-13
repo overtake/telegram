@@ -246,7 +246,7 @@ static NSMutableDictionary *cache;
     
     
     if(self.action == MessagesTopInfoActionShareContact) {
-        [self.controller shareContact:[UsersManager currentUser] conversation:self.conversation callback:nil];
+        [self.controller shareContact:[UsersManager currentUser] forConversation:self.conversation callback:nil];
         cache[@(self.action)][@(self.conversation.peer.peer_id)] = @(self.conversation.peer.peer_id);
         [self hide:YES];
     }

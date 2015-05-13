@@ -451,9 +451,9 @@
                 NSString *extenstion = [[obj pathExtension] lowercaseString];
                 
                 if([imageTypes() indexOfObject:extenstion] != NSNotFound) {
-                    [self.messagesViewController sendImage:obj file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
+                    [self.messagesViewController sendImage:obj forConversation:self.dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
                 } else {
-                    [self.messagesViewController sendVideo:obj];
+                    [self.messagesViewController sendVideo:obj forConversation:self.dialog];
                 }
                 
             }];
@@ -521,7 +521,7 @@
         [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
             
             [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-                [self.messagesViewController sendDocument:obj];
+                [self.messagesViewController sendDocument:obj forConversation:self.dialog];
             }];
             
             
@@ -796,7 +796,7 @@
     
     [self.messagesViewController sendMessage];
     
-    [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] addCompletionHandler:nil];
+    [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] forConversation:self.dialog addCompletionHandler:nil];
     
     if(_imageAttachmentsController.isShown) {
         [_imageAttachmentsController hide:YES deleteItems:YES];
@@ -1266,7 +1266,7 @@
 - (void) pictureTakerValidated:(IKPictureTaker*) pictureTaker code:(int) returnCode contextInfo:(void*) ctxInf {
     if(returnCode == NSOKButton){
         NSImage *outputImage = [pictureTaker outputImage];
-        [self.messagesViewController sendImage:nil file_data:[outputImage TIFFRepresentation]];
+        [self.messagesViewController sendImage:nil forConversation:self.dialog file_data:[outputImage TIFFRepresentation]];
 
     }
 }

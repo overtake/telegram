@@ -144,16 +144,13 @@
     
     [_titleField setCenterByView:self];
     
-    [_titleField setFrameOrigin:NSMakePoint(100, NSMinY(_titleField.frame))];
+    
    
     [_imageView setFrameSize:item.imageObject.imageSize];
     _imageView.object = item.imageObject;
     
-    [_imageView setCenterByView:self];
     
-    [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, NSMinY(_imageView.frame))];
-    
-    [_removeButton setHidden:[item.inputSet isKindOfClass:[TL_inputStickerSetEmpty class]]];
+     [_removeButton setHidden:[item.inputSet isKindOfClass:[TL_inputStickerSetEmpty class]]];
     
     
 }
@@ -161,7 +158,10 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_removeButton setFrameOrigin:NSMakePoint(newSize.width - 100 - NSWidth(_removeButton.frame), NSMinY(_removeButton.frame))];
+    [_removeButton setFrameOrigin:NSMakePoint(newSize.width - 100 - NSWidth(_removeButton.frame), 17)];
+    [_titleField setFrameOrigin:NSMakePoint(100, 8)];
+    
+     [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, 5)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {

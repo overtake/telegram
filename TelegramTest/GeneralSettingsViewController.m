@@ -107,45 +107,18 @@
     [self.tableView insert:autoAudioDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
 
     
-    //audio end
+    GeneralSettingsBlockHeaderItem *notificationsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.MessageNotificationsHeader", nil)];
     
-    GeneralSettingsRowItem *emojiReplaces = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
-    } description:NSLocalizedString(@"Settings.EmojiReplaces", nil) height:80 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
-    }];
+    notificationsHeader.height = 61;
     
-    [self.tableView insert:emojiReplaces atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    
-    GeneralSettingsRowItem *bigFong = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        [SettingsArchiver addOrRemoveSetting:BigFontSetting];
-        [[Telegram rightViewController].messagesViewController reloadData];
-    } description:NSLocalizedString(@"Settings.BigFont", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:BigFontSetting]);
-    }];
-    
-    [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
-    
-//    
-//    GeneralSettingsRowItem *smartNotifications = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-//        [SettingsArchiver addOrRemoveSetting:SmartNotifications];
-//        [[Telegram rightViewController].messagesViewController reloadData];
-//    } description:NSLocalizedString(@"Settings.SmartNotifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-//        return @([SettingsArchiver checkMaskedSetting:SmartNotifications]);
-//    }];
-//    
-//    [self.tableView insert:smartNotifications atIndex:self.tableView.list.count tableRedraw:NO];
-//    
-    
-    
+    [self.tableView insert:notificationsHeader atIndex:self.tableView.list.count tableRedraw:NO];
+
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
         [SettingsArchiver addOrRemoveSetting:PushNotifications];
         
         
-    } description:NSLocalizedString(@"Settings.MessageNotifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Settings.MessageNotificationsAlert", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
     
@@ -157,6 +130,10 @@
     } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return NSLocalizedString([SettingsArchiver soundNotification], nil);
     }];
+    
+    
+    
+    
     
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
@@ -187,6 +164,37 @@
     soundNotification.menu = menu;
     
     [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    GeneralSettingsBlockHeaderItem *chatSettingsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.ChatSettingsHeader", nil)];
+    
+    chatSettingsHeader.height = 61;
+    
+    [self.tableView insert:chatSettingsHeader atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    //audio end
+    
+    GeneralSettingsRowItem *emojiReplaces = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
+    } description:NSLocalizedString(@"Settings.EmojiReplaces", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
+    }];
+    
+    [self.tableView insert:emojiReplaces atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
+    GeneralSettingsRowItem *bigFong = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        [SettingsArchiver addOrRemoveSetting:BigFontSetting];
+        [[Telegram rightViewController].messagesViewController reloadData];
+    } description:NSLocalizedString(@"Settings.BigFont", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:BigFontSetting]);
+    }];
+    
+    [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
+    
+
+ 
     
     
     if(ACCEPT_FEATURE) {
@@ -245,7 +253,7 @@
                 NSArray *files = TGGetLogFilePaths();
                 
                 [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    [[Telegram rightViewController].messagesViewController sendDocument:obj];
+                    [[Telegram rightViewController].messagesViewController sendDocument:obj forConversation:user.dialog];
                 }];
                 
             };
