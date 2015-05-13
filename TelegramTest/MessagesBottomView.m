@@ -1123,6 +1123,8 @@
     if(!webpage && !self.webpageAttach)
         return;
     
+    
+    BOOL isset = _webpageAttach != nil;
    
     if([webpage isKindOfClass:[TL_webPage class]] || [webpage isKindOfClass:[TL_webPagePending class]]) {
         
@@ -1142,7 +1144,8 @@
         _webpageAttach = nil;
     }
     
-    [self updateBottomHeight:animated];
+    if(isset != (_webpageAttach != nil))
+        [self updateBottomHeight:animated];
     
 }
 
@@ -1186,6 +1189,8 @@
             
            // [[self.smileButton animator] setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame)- NSHeight(self.smileButton.frame) - 6)];
             
+            [self.normalView setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
+            
             [self.animator setFrameSize:layoutSize];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
@@ -1200,6 +1205,8 @@
             [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? (_replyContainer ? 80 : 40) : _replyContainer ? 40 : 0))];
             
         } else {
+            
+            [self.normalView setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
 
         // [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
              [self setFrameSize:layoutSize];

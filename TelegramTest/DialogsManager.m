@@ -70,7 +70,7 @@
                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
             }
             
-            
+            manager.unread_count-=total;
             
             [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
             
@@ -78,8 +78,6 @@
         
     } forIds:copy random:NO];
     
-    
-    manager.unread_count-= (int)copy.count;
     
 }
 
