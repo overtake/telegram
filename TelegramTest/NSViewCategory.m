@@ -21,6 +21,17 @@
     [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
 }
 
+- (void)setCenteredXByView:(NSView *)view {
+    float x = (view.bounds.size.width - self.bounds.size.width) / 2;
+    
+    [self setFrameOrigin:NSMakePoint(roundf(x),NSMinY(self.frame))];
+}
+- (void)setCenteredYByView:(NSView *)view {
+    float y = (view.bounds.size.height - self.bounds.size.height) / 2;
+    
+    [self setFrameOrigin:NSMakePoint(NSMinX(self.frame),roundf(y))];
+}
+
 - (CGPoint)center {
     return CGPointMake((self.frame.origin.x + roundf((self.frame.size.width / 2))),
                        (self.frame.origin.y + roundf((self.frame.size.height / 2))));

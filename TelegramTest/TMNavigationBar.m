@@ -192,6 +192,13 @@ static const float duration = 0.25;
     [self.centerViewBlock setFrameOrigin:NSMakePoint(32 + maxSize, 0)];
     [self.centerView setFrame:self.centerViewBlock.bounds];
     
+    
+    [self.centerView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj setCenteredXByView:self.centerView];
+        
+    }];
+    
     [self.connectionView setFrame:self.centerViewBlock.frame];
     
     if(self.connectionView.state == ConnectingStatusTypeNormal || self.connectionView.state == ConnectingStatusTypeConnected) {

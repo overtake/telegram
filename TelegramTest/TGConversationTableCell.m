@@ -181,7 +181,7 @@ static NSDictionary *attributes() {
             
          //
             
-            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle)
+            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0 && self.item.conversation.lastMessage.from_id != [UsersManager currentUserId])
                 [self drawUnreadCount];
             
             
@@ -223,7 +223,7 @@ static NSDictionary *attributes() {
     }
     
     
-    if(self.style == ConversationTableCellShortStyle && self.item.unreadText != nil)
+    if(self.style == ConversationTableCellShortStyle && self.item.unreadText != nil && self.item.conversation.unread_count > 0 && self.item.conversation.lastMessage.from_id != [UsersManager currentUserId])
     {
         if(!_shortUnread) {
             _shortUnread = [[ShortUnread alloc] init];

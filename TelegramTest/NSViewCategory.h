@@ -17,7 +17,8 @@ typedef enum {
 @interface NSView (Category)
 
 - (void)setCenterByView:(NSView *)view;
-
+- (void)setCenteredXByView:(NSView *)view;
+- (void)setCenteredYByView:(NSView *)view;
 - (CGPoint)center;
 
 - (void)prepareForAnimation;

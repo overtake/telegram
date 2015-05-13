@@ -45,9 +45,12 @@
             [[Telegram mainViewController] layout];
             [[Telegram rightViewController] didChangedLayout];
             [[Telegram mainViewController] checkLeftView];
+            
+            [Notification perform:LAYOUT_CHANGED data:nil];
+            
         });
         
-   //     [Notification perform:LAYOUT_CHANGED data:nil];
+        
         //
         
     }
