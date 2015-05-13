@@ -142,6 +142,8 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
         colorByNameOrPhone = NSColorFromRGB(0x333333);
     }
     
+    colorByNameOrPhone = NSColorFromRGB(0x333333);
+    
     //Dialogs
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     

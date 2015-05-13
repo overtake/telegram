@@ -17,6 +17,7 @@
 #import "TGCache.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGPasslock.h"
+#import "NSString+Extended.h"
 @interface NSUserNotification(Extensions)
 
 @property (nonatomic)  BOOL hasReplyButton;
@@ -214,7 +215,7 @@ static const int seconds_to_notify = 120;
             
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
-            notification.informativeText = msg;
+            notification.informativeText = [msg fixEmoji];
             notification.subtitle = subTitle ? subTitle : @"";
             if(![[SettingsArchiver soundNotification] isEqualToString:@"None"])
                 notification.soundName = [SettingsArchiver soundNotification];

@@ -980,7 +980,20 @@
                 
                 NSUInteger length = emojiRange.length;
                 
-                if(!checkInLinksRange(emojiRange)) {
+                NSString *c_prev = @"!";
+                NSString *c_next = @"!";
+                
+                
+                NSRange r_p = NSMakeRange(MAX(0,(int)emojiRange.location - 1), emojiRange.location == 0 ? 0 : 1);
+                NSRange r_n = NSMakeRange(MAX(0,emojiRange.length + emojiRange.location),MIN(1, text.length - (emojiRange.location + emojiRange.length)));
+                
+                MTLog(@"%@ : %@",NSStringFromRange(r_p), NSStringFromRange(r_n));
+                
+                c_prev = [text substringWithRange:r_p];
+                
+                c_next = [text substringWithRange:r_n];
+                
+                if([c_prev trim].length == 0 && [c_next trim].length == 0) { //!checkInLinksRange(emojiRange)
                     text = [text stringByReplacingCharactersInRange:emojiRange withString:obj];
                     length = [obj length];
                 }

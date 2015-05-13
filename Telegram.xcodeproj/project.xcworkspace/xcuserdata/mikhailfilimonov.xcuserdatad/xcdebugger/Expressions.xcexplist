@@ -965,6 +965,9 @@
          contextName = "-[MTDiscoverDatacenterAddressAction getConfigSuccess:]:MTDiscoverDatacenterAddressAction.m">
       </ContextState>
       <ContextState
+         contextName = "__31-[TGAllStickersTableView load:]_block_invoke212:TGAllStickersTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchViewController searchByString:]:SearchViewController.m">
       </ContextState>
       <ContextState
@@ -1265,6 +1268,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[StickersPanelView hasSticker:]:StickersPanelView.m">
+      </ContextState>
+      <ContextState
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
@@ -1403,6 +1409,9 @@
                value = "self.message.randomId">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__56-[TGStickersSettingsViewController reloadDataWithPacks:]_block_invoke:TGStickersSettingsViewController.m">
       </ContextState>
       <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke_2:NewContactsManager.m">
@@ -1558,6 +1567,14 @@
          contextName = "__40-[TGStickerPackModalView initWithFrame:]_block_invoke56:TGStickerPackModalView.m">
       </ContextState>
       <ContextState
+         contextName = "__42-[NSString(Extended) replaceSmilesToEmoji]_block_invoke3469:NSString+Extended.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "emojiRange">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__32-[MessagesManager TGsetMessage:]_block_invoke:MessagesManager.m">
       </ContextState>
       <ContextState
@@ -1633,6 +1650,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageObject initWithWebPage:]:TGWebpageObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[MessageTableCellStickerView contextMenu]_block_invoke73:MessageTableCellStickerView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
@@ -2260,6 +2280,9 @@
       </ContextState>
       <ContextState
          contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__25-[ReadHistroryTask loop:]_block_invoke:ReadHistroryTask.m">
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
