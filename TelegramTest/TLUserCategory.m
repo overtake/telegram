@@ -20,14 +20,31 @@
 */
 
 
+static NSArray *serviceNumbers;
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        serviceNumbers = @[@"42777",@"42470"];
+    });
+}
+
 DYNAMIC_PROPERTY(DType);
 
 - (TLUserType)type {
+    
+    if([serviceNumbers indexOfObject:self.phone] != NSNotFound) {
+        return TLUserTypeContact;
+    }
+    
     NSNumber *type = [self getDType];
     if(!type)
         type = [NSNumber numberWithInt:[self rebuildType]];
     return [type intValue];
 }
+
+
+
 
 - (void)setType:(TLUserType)type {
     [self setDType:[NSNumber numberWithInt:type]];
@@ -70,6 +87,13 @@ Online
 }
 
 - (NSString *)lastSeen {
+    
+    if(self.n_id == 777000) {
+        return NSLocalizedString(@"Service notifications", nil);
+    } else if([serviceNumbers indexOfObject:self.phone]) {
+        return NSLocalizedString(@"Account.Online", nil);
+    }
+    
     if([self isOnline])
         return NSLocalizedString(@"Account.Online", nil);
     

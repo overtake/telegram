@@ -346,10 +346,10 @@
 
 static NSMutableArray *wrong_files;
 
-+ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
++ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument {
    
     
-    BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
+   
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -373,8 +373,11 @@ static NSMutableArray *wrong_files;
     
     dispatch_block_t next = ^ {
       
-        if(files.count > 0)
-            [self sendFilesByPath:files dialog:dialog asDocument:asDocument];
+        if(files.count > 0) {
+            
+            [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
+        }
+            
         
     };
     
@@ -437,7 +440,8 @@ static NSMutableArray *wrong_files;
     
     if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
         NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
-        [self sendFilesByPath:files dialog:dialog asDocument:asDocument];
+        BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
+        [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
         
     } else if([[pboard types] containsObject:NSTIFFPboardType]) {
         NSData *tiff = [pboard dataForType:NSTIFFPboardType];

@@ -108,9 +108,9 @@
     
     [SecretChatAccepter instance];
     
-    [EmojiViewController loadStickersIfNeeded];
-    
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
+        
+        [EmojiViewController loadStickersIfNeeded];
         
         [[MTNetwork instance] startNetwork];
         

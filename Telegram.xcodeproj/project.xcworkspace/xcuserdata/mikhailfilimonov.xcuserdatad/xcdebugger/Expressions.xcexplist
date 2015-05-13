@@ -734,6 +734,14 @@
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesTopInfoView setConversation:]:MessagesTopInfoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "user.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__38-[YoutubeServiceDescription loadInfo:]_block_invoke:YoutubeServiceDescription.m">
          <PersistentStrings>
             <PersistentString

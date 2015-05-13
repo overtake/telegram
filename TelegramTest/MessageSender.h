@@ -20,7 +20,7 @@
 +(void)startEncryptedChat:(TLUser *)user callback:(dispatch_block_t)callback;
 +(RPCRequest *)setTTL:(int)ttl toConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 +(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
-+(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
++(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument;
 
 + (NSDictionary *)videoParams:(NSString *)path thumbSize:(NSSize)thumbSize;
 

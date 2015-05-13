@@ -175,6 +175,7 @@ static NSMutableDictionary *cache;
     }
     
     
+    
     if(cache[@(newAction)] && cache[@(newAction)][@(conversation.peer.peer_id)]) {
         [self hide:NO];
         return;

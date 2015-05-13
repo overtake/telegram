@@ -69,9 +69,6 @@ static NSString *yap_path;
 
 +(void)reyap {
     
-    
-    
-    
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
     
     options.corruptAction = YapDatabaseCorruptAction_Delete;
@@ -343,11 +340,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)drop:(void (^)())completeHandler {
     [self->queue inDatabase:^(FMDatabase *db) {
         [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
-        [[NSFileManager defaultManager] removeItemAtPath:[Storage path] error:nil];
         
-        [YapDatabaseManager deregisterDatabaseForPath:yap_path];
         
-        [Storage reyap];
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+            [transaction removeAllObjectsInAllCollections];
+        }];
         
         encryptionKey = @"";
         [self open:completeHandler];

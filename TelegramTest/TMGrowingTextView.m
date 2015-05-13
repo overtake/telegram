@@ -175,6 +175,8 @@
             
             [self.growingDelegate TMGrowingTextViewHeightChanged:self height:newSize.height cleared:isCleared];
             self.lastHeight = size.height;
+        } else {
+            [self.growingDelegate TMGrowingTextViewHeightChanged:self height:newSize.height cleared:NO];
         }
         
     };
