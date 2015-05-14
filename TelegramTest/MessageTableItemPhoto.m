@@ -122,7 +122,7 @@
     
     int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
     
-    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight, 60 + captionHeight ));
+    self.blockSize = NSMakeSize(_imageSize.width, _imageSize.height + captionHeight);
     
     return YES;
 }

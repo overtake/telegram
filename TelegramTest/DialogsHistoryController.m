@@ -57,9 +57,9 @@
         [ASQueue dispatchOnStageQueue:^{
             
             
-           [[DialogsManager sharedManager] add:d];
+            [[DialogsManager sharedManager] add:d];
             [[MessagesManager sharedManager] add:m];
-            
+                        
             if(d.count < limit) {
                 self.state = DialogsHistoryStateNeedRemote;
                 
@@ -102,7 +102,7 @@
         [[DialogsManager sharedManager] add:converted];
         [[Storage manager] insertDialogs:converted completeHandler:nil];
         
-       
+        [MessagesManager updateUnreadBadge];
         
         
         if(dialogs.dialogs.count < limit) {
