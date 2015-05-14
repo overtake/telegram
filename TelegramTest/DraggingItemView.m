@@ -46,7 +46,7 @@
         
         
         
-        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType, nil]];
+        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
     }
     return self;
 }
@@ -59,7 +59,7 @@
     sourceDragMask = [sender draggingSourceOperationMask];
     pboard = [sender draggingPasteboard];
     
-    if ( [[pboard types] containsObject:NSFilenamesPboardType] && ![pboard.name isEqualToString:TGImagePType]) {
+    if ( ![pboard.name isEqualToString:TGImagePType] ) {
         if (sourceDragMask) {
             self.dragEntered = YES;
             return NSDragOperationLink;

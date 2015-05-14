@@ -32,6 +32,7 @@
         NSPasteboard *pst = [sender draggingPasteboard];
         
         if(![pst.name isEqualToString:TGImagePType] && ( [[pst types] containsObject:NSFilenamesPboardType] || [[pst types] containsObject:NSTIFFPboardType])) {
+            
             if([[pst types] containsObject:NSFilenamesPboardType]) {
                 NSArray *files = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
                 
@@ -48,6 +49,7 @@
             [self addSubview:[DraggingControllerView view]];
             
         }
+        
     }
     
     
@@ -108,7 +110,7 @@
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
     
-    [self.view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType, nil]];
+    [self.view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
     
     [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
     

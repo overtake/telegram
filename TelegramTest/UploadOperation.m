@@ -404,7 +404,7 @@
             
             id manager = [NSClassFromString(@"Storage") performSelector:@selector(manager)];
             
-            [manager performSelector:@selector(setFileInfo:forPathHash:) withObject:self.fileMD5Hash withObject:self.fileMD5Hash];
+            [manager performSelector:@selector(setFileInfo:forPathHash:) withObject:fileInfo withObject:self.fileMD5Hash];
             
         }
         

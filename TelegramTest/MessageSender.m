@@ -446,8 +446,19 @@ static NSMutableArray *wrong_files;
     } else if([[pboard types] containsObject:NSTIFFPboardType]) {
         NSData *tiff = [pboard dataForType:NSTIFFPboardType];
         
-        [[[Telegram rightViewController] messagesViewController]
-         sendImage:nil forConversation:dialog file_data:tiff];
+        if(!asDocument) {
+            [[[Telegram rightViewController] messagesViewController]
+             sendImage:nil forConversation:dialog file_data:tiff];
+        } else {
+            
+            NSString *path = exportPath(rand_long(), @"jpg");
+            
+            [tiff writeToFile:path atomically:YES];
+            
+            [[Telegram rightViewController].messagesViewController sendDocument:path forConversation:[Telegram conversation]];
+        }
+        
+        
     }
     
     return YES;

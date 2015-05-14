@@ -218,6 +218,7 @@ static ASQueue *queue;
     [aCoder encodeInt64:_unique_id forKey:@"unique_id"];
     [aCoder encodeInt:_peer_id forKey:@"peer_id"];
     [aCoder encodeObject:_caption forKey:@"caption"];
+    [aCoder encodeObject:_data forKey:@"data"];
 }
 
 -(NSString *)thumbKey {
@@ -231,6 +232,7 @@ static ASQueue *queue;
         _generatedPath = exportPath(_unique_id, @"jpg");
         _peer_id = [aDecoder decodeIntForKey:@"peer_id"];
         _caption = [aDecoder decodeObjectForKey:@"caption"];
+        _data = [aDecoder decodeObjectForKey:@"data"];
         _thumb = [TGCache cachedImage:[self thumbKey] group:@[THUMBCACHE]];
     }
     

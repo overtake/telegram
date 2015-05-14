@@ -428,15 +428,6 @@
     [self.stickerPanel hide:NO];
 
     
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        TMView *view = [[TMView alloc] initWithFrame:NSZeroRect];
-        
-        
-        [self.view addSubview:view];
-    }];
-    
 }
 
 
@@ -2415,8 +2406,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-        [current makeSizeByWidth:self.table.containerSize.width];
-        [backItem makeSizeByWidth:self.table.containerSize.width];
+        [current makeSizeByWidth:MAX(self.table.containerSize.width,320)];
+        [backItem makeSizeByWidth:MAX(self.table.containerSize.width,320)];
         backItem = current;
         
     }];
