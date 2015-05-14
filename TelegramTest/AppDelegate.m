@@ -171,6 +171,8 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     
+   
+    
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];

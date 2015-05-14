@@ -247,19 +247,7 @@ static NSCache *cacheItems;
 }
 
 - (void)search:(NSString *)searchString {
-    searchString = [searchString trim];
-    
-    NSMutableString *transformed = [searchString mutableCopy];
-    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transformed;
-    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
-    
-    
-    
-    NSMutableString *reversed = [searchString mutableCopy];
-    bufferRef = (__bridge CFMutableStringRef)reversed;
-    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
-    
-    
+
     __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
     
@@ -269,7 +257,11 @@ static NSCache *cacheItems;
         if([searchString hasPrefix:@"@"])
             searchString = [searchString substringFromIndex:1];
         
-        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@) OR (self.user.first_name BEGINSWITH[c] %@)  OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.last_name BEGINSWITH[c] %@) OR (self.user.username BEGINSWITH[c] %@)",searchString,transformed,reversed,searchString,transformed,reversed,searchString]];
+        sorted = [sorted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectUserItem *evaluatedObject, NSDictionary *bindings) {
+            
+            return [[evaluatedObject.user fullName] searchInStringByWordsSeparated:searchString];
+            
+        }]];
     }
     
     

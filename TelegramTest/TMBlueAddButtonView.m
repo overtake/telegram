@@ -32,7 +32,7 @@
         self.containerView.layer.borderWidth = 1.0f;
         self.containerView.layer.cornerRadius = 12;
         
-        self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect((frame.size.width-10)/2, 2, 20, 20)];
+        self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect((frame.size.width-10)/2, 2, 20, 20)];
         [self.progress setHidden:YES];
         [self.progress setStyle:NSProgressIndicatorSpinningStyle];
         

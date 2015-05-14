@@ -43,7 +43,7 @@
         [self.subdescField setTitleColor:GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
         
         
-        self.lockedIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
+        self.lockedIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         
         [self.lockedIndicator setStyle:NSProgressIndicatorSpinningStyle];
         

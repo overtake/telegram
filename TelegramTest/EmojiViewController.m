@@ -79,7 +79,7 @@
         e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:nil];
         
         race_popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
-        [race_popover setHoverView:button];
+       
         [race_popover setDidCloseBlock:^(RBLPopover *popover){
             [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
         }];
@@ -90,7 +90,7 @@
         e_race_controller.controller = self.controller;
         
     });
-    
+    [race_popover setHoverView:button];
     [race_popover close];
     
     if([e_race_controller makeWithEmoji:[button.titleLabel.stringValue getEmojiFromString:YES][0]]) {
@@ -107,6 +107,8 @@
             [race_popover showRelativeToRect:frame ofView:button preferredEdge:CGRectMaxYEdge];
              
         }
+    } else {
+        [race_popover setHoverView:nil];
     }
     
     

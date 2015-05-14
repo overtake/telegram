@@ -29,7 +29,7 @@
         self.wantsLayer = YES;
         self.origin = frame;
         
-//        self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
+//        self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
 //        
 //        [self.progress setStyle:NSProgressIndicatorSpinningStyle];
 //        [self.progress setUsesThreadedAnimation:YES];

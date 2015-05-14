@@ -43,7 +43,7 @@
         
         self.successView = imageViewWithImage(image_UsernameCheck());
         
-        self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
+        self.progressView = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
         
         [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
         

@@ -40,7 +40,7 @@
     self.tableView.tm_delegate = self;
     
     
-    self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
+    self.progressIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
     
     [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
     

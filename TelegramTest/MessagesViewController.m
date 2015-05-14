@@ -427,6 +427,16 @@
     
     [self.stickerPanel hide:NO];
 
+    
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        TMView *view = [[TMView alloc] initWithFrame:NSZeroRect];
+        
+        
+        [self.view addSubview:view];
+    }];
+    
 }
 
 
@@ -710,18 +720,24 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)showNoMessages:(BOOL)show {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    [self.noMessagesView setHidden:!show];
-    [self.table.containerView setHidden:show];
-    [CATransaction commit];
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [self.noMessagesView setHidden:!show];
+        [self.table.containerView setHidden:show];
+        [CATransaction commit];
+    }];
 }
 
 -(void)updateLoading {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    [self.noMessagesView setLoading:self.historyController.isProccessing];
-    [CATransaction commit];
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [self.noMessagesView setLoading:self.historyController.isProccessing];
+        [CATransaction commit];
+    }];
 }
 
 

@@ -183,7 +183,7 @@
         
         [self.view addSubview:self.backgroundView];
         
-        self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
+        self.progressView = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
         
         [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
         

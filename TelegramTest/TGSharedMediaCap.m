@@ -33,7 +33,7 @@
 -(instancetype)initWithFrame:(NSRect)frameRect cap:(NSImage *)cap text:(NSString *)text {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
+        self.progressIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
         [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
         

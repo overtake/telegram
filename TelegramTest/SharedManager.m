@@ -190,4 +190,24 @@ static NSMutableArray *managers;
     return instance;
 }
 
+-(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector {
+    
+   return [self->list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+       
+       if([evaluatedObject respondsToSelector:NSSelectorFromString(selector)]) {
+           id value = [evaluatedObject valueForKey:selector];
+           
+           if([value isKindOfClass:NSString.class]) {
+               
+               return [value searchInStringByWordsSeparated:search];
+               
+           }
+       }
+       
+       return NO;
+       
+   }]];
+    
+}
+
 @end

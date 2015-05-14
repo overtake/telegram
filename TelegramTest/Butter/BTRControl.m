@@ -8,7 +8,7 @@
 
 #import "BTRControl.h"
 #import "BTRControlAction.h"
-
+#import "MTNetwork.h"
 NSString * const BTRControlStateTitleKey = @"title";
 NSString * const BTRControlStateTitleColorKey = @"titleColor";
 NSString * const BTRControlStateTitleShadowKey = @"titleShadow";
@@ -51,6 +51,8 @@ NSString * const BTRControlStateCursorKey = @"cursor";
 @property (nonatomic) BOOL mouseInside;
 @property (nonatomic) BOOL mouseDown;
 @property (nonatomic, readonly) BOOL shouldHandleEvents;
+
+@property (nonatomic,strong) id internalId;
 
 - (void)handleStateChange;
 @end
@@ -449,8 +451,9 @@ static void BTRControlCommonInit(BTRControl *self) {
 	BTRControlEvents events = 1;
 	events |= BTRControlEventMouseDownInside;
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
+    remove_global_dispatcher(_internalId);
+    
+    _internalId = dispatch_in_time([[MTNetwork instance] getTime] + 1, ^{
         if(self.mouseInside && self.mouseDown) {
             
             BTRControlEvents events = BTRControlEventLongLeftClick;
@@ -464,9 +467,8 @@ static void BTRControlCommonInit(BTRControl *self) {
                 }
             }
         }
-        
     });
-	
+    
 	[self sendActionsForControlEvents:events];
 	
 	self.highlighted = YES;

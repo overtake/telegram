@@ -1217,5 +1217,83 @@ static NSTextField *testTextField() {
     // get the raw text out of the parsee after parsing, and return it
     return strippedString;
 }
+
+-(BOOL)searchInStringByWordsSeparated:(NSString *)search {
+    
+    
+    NSMutableString *transform = [[[search lowercaseString] trim] mutableCopy];
+    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transform;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
+    
+    NSMutableString *transformReverse = [search mutableCopy];
+    bufferRef = (__bridge CFMutableStringRef)transformReverse;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
+    
+    
+    
+    NSArray *compare = @[search,transform,transformReverse];
+    
+    __block BOOL result = NO;
+    
+    [compare enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSRange range = [self rangeOfString:obj options:NSCaseInsensitiveSearch];
+        
+        if(range.location != NSNotFound) {
+            
+            if(range.location == 0 || [[self substringWithRange:NSMakeRange(range.location - 1, 1)] isEqualToString:@" "]) {
+                result = YES;
+                *stop = YES;
+            }
+            
+        }
+        
+    }];
+    
+    
+//    NSArray *parts = [self partsOfSearchString];
+//    
+//    [parts enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+//        
+//        NSString *lowerCaseObj = [obj lowercaseString];
+//        
+//        if([lowerCaseObj hasPrefix:search] || [lowerCaseObj hasPrefix:transform] || [lowerCaseObj hasPrefix:transformReverse]) {
+//            
+//            result = YES;
+//            *stop = YES;
+//            
+//        }
+//        
+//        
+//    }];
+    
+    return result;
+}
+
+-(NSArray *)partsOfSearchString {
+    NSArray *separated = [[self trim] componentsSeparatedByString:@" "];
+    
+    
+    NSMutableArray *parts = [[NSMutableArray alloc] init];
+    
+    [separated enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+        
+        NSUInteger nextIdx = MIN(idx + 1,separated.count - 1);
+        
+        __block NSString *c = obj;
+        
+        [separated enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(nextIdx, separated.count - (idx + 1))] options:0 usingBlock:^(NSString *part, NSUInteger idx, BOOL *stop) {
+            
+            c = [NSString stringWithFormat:@"%@ %@",c, part];
+            
+        }];
+        
+        [parts addObject:c];
+        
+    }];
+    
+    return parts;
+}
+
 @end
 

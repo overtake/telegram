@@ -44,3 +44,5 @@
 #import "TMNavigationController.h"
 #import "TMTextView.h"
 #import "TMAvatarImageView.h"
+#import "TGProgressIndicator.h"
+#import "NSString+Extended.h"

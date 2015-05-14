@@ -141,6 +141,9 @@
        
         
     } usersCallback:nil];
+    
+    
+    [MessagesManager updateUnreadBadge];
 }
 
 - (void)addScrollEvent {

@@ -41,7 +41,7 @@
         [self addSubview:_field];
         
         
-        self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(roundf(self.frame.size.width / 2 - 12.5), roundf(self.frame.size.height / 2 - 12.5), 25, 25)];
+        self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(roundf(self.frame.size.width / 2 - 12.5), roundf(self.frame.size.height / 2 - 12.5), 25, 25)];
         
         [self.progress setStyle:NSProgressIndicatorSpinningStyle];
         
@@ -144,6 +144,9 @@
 
 
 -(void)setConversation:(TL_conversation *)conversation {
+    
+    assert([NSThread isMainThread]);
+    
     _conversation = conversation;
     // && conversation.top_message == -1
     if(conversation.type == DialogTypeSecretChat) {
@@ -156,7 +159,7 @@
         [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
     }
     
-
+    self.progress.usesThreadedAnimation = NO;
 
     
     [self.field sizeToFit];
@@ -167,6 +170,9 @@
 
 
 -(void)setHidden:(BOOL)flag {
+    
+    assert([NSThread isMainThread]);
+    
     if(self.conversation)
         [self setConversation:self.conversation];
    
@@ -183,8 +189,14 @@ static NSTextAttachment *secretImage() {
 }
 
 -(void)setLoading:(BOOL)isLoading {
+    
+    assert([NSThread isMainThread]);
+    
     [self.progress setHidden:!isLoading || self.conversation.type == DialogTypeSecretChat];
     [self.field setHidden:isLoading];
+    
+    
+    
     if(isLoading) {
         [self.progress startAnimation:self];
     } else {

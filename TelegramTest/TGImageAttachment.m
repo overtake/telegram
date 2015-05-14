@@ -235,7 +235,7 @@ static CAAnimation *thumbAnimation() {
         [self addSubview:_close];
         
         
-        _progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 25, 25)];
+        _progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 25, 25)];
         
         [_progress setStyle:NSProgressIndicatorSpinningStyle];
         

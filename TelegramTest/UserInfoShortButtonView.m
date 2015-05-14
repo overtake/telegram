@@ -37,7 +37,7 @@
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textButton];
         
-        self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 17)];
+        self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 17)];
         [self.progress setStyle:NSProgressIndicatorSpinningStyle];
         [self.progress setHidden:YES];
         

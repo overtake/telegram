@@ -724,6 +724,8 @@
 		C2F429CD1B04C82600C2CE4E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2F429CE1B04C82900C2CE4E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2F429CF1B04C82900C2CE4E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */; };
+		C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
 		C2FA78D3191CDBF6001A9D1B /* ProfileSharedMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D2191CDBF6001A9D1B /* ProfileSharedMediaView.m */; };
 		C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */; };
@@ -2148,6 +2150,10 @@
 		C2F3996D190FD1FC006B36F7 /* SGraphObjectNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGraphObjectNode.m; sourceTree = "<group>"; };
 		C2F429C31B00C88B00C2CE4E /* TGStickersSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickersSettingsViewController.h; sourceTree = "<group>"; };
 		C2F429C41B00C88B00C2CE4E /* TGStickersSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickersSettingsViewController.m; sourceTree = "<group>"; };
+		C2F429D01B04D37C00C2CE4E /* TGUIMainThreadGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUIMainThreadGuard.h; sourceTree = "<group>"; };
+		C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUIMainThreadGuard.m; sourceTree = "<group>"; };
+		C2F429D61B04E33F00C2CE4E /* TGProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGProgressIndicator.h; sourceTree = "<group>"; };
+		C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGProgressIndicator.m; sourceTree = "<group>"; };
 		C2FA78CA191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewCollectionPhotoItem.h; sourceTree = "<group>"; };
 		C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewCollectionPhotoItem.m; sourceTree = "<group>"; };
 		C2FA78D1191CDBF6001A9D1B /* ProfileSharedMediaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileSharedMediaView.h; sourceTree = "<group>"; };
@@ -4152,6 +4158,10 @@
 				CEB0D72318E3770D00457D08 /* TMWindowTitleView.m */,
 				C268C13E19EFF70E007F836A /* GLView.h */,
 				C268C13F19EFF70E007F836A /* GLView.m */,
+				C2F429D01B04D37C00C2CE4E /* TGUIMainThreadGuard.h */,
+				C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */,
+				C2F429D61B04E33F00C2CE4E /* TGProgressIndicator.h */,
+				C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */,
 			);
 			name = external;
 			sourceTree = "<group>";
@@ -5605,6 +5615,7 @@
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
 				C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
+				C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
 				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
 				C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */,
@@ -5863,6 +5874,7 @@
 				C2C3A8911A2C7D57008C4C4A /* TLApi.m in Sources */,
 				C2ACCE5C1ADD2D5600ABEE78 /* TGConversationTableCell.m in Sources */,
 				C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */,
+				C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */,
 				0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */,
 				C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */,
 				C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */,

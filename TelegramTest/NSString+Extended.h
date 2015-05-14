@@ -21,4 +21,9 @@
 -(NSString *)realEmoji:(NSString *)raceEmoji;
 -(NSString *)emojiModifier:(NSString *)emoji;
 -(NSString *)emojiWithModifier:(NSString *)modifier emoji:(NSString *)emoji;
+
+
+-(BOOL)searchInStringByWordsSeparated:(NSString *)search;
+-(NSArray *)partsOfSearchString;
+
 @end

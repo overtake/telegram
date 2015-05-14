@@ -35,4 +35,6 @@
 +(void)proccessGlobalResponse:(id)response;
 
 
+-(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector;
+
 @end

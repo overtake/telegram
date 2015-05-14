@@ -48,7 +48,7 @@
     
     
     
-    self.progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
+    self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
     
     
     [self.progress setStyle:NSProgressIndicatorSpinningStyle];

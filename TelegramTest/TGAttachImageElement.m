@@ -26,7 +26,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
+        _progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
         
         [_progress setStyle:NSProgressIndicatorSpinningStyle];
         

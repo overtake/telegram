@@ -301,8 +301,14 @@ static TMTableView *tableStatic;
     [self.list removeObjectAtIndex:from];
     [self.list insertObject:item atIndex:to];
     
-    if(tableRedraw)
-        [self moveRowAtIndex:from toIndex:to];
+    if(tableRedraw){
+        [self beginUpdates];
+        [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:from] withAnimation:_defaultAnimation];
+        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:to] withAnimation:_defaultAnimation];
+        [self endUpdates];
+      //  [self moveRowAtIndex:from toIndex:to];
+    }
+    
 }
 
 - (NSObject *) itemAtPosition:(NSUInteger)positionOfItem {

@@ -977,6 +977,17 @@
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController searchByString:]:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "searchUsers">
+            </PersistentString>
+            <PersistentString
+               value = "searchChats">
+            </PersistentString>
+            <PersistentString
+               value = "searchString">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">

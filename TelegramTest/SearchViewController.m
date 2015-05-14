@@ -675,23 +675,15 @@ static int insertCount = 3;
             return;
         }
         
-        
-       // [ASQueue dispatchOnStageQueue:^{
-            NSMutableString *transform = [searchString mutableCopy];
-            CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transform;
-            CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
-            
-            NSMutableString *transformReverse = [searchString mutableCopy];
-            bufferRef = (__bridge CFMutableStringRef)transformReverse;
-            CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
+    
             
             NSMutableArray *dialogs = [NSMutableArray array];
             NSMutableArray *dialogsNeedCheck = [NSMutableArray array];
 
             
-            
+    
             //Chats
-            NSArray *searchChats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@) OR (self.title CONTAINS[c] %@))", searchString, transform, transformReverse]];
+            NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title"];
         
             for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
@@ -702,8 +694,8 @@ static int insertCount = 3;
             }
             
             //Users
-            NSArray *searchUsers = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@) OR (self.first_name BEGINSWITH[c] %@ OR self.last_name BEGINSWITH[c] %@) OR (self.phone BEGINSWITH[c] %@ ) ",searchString,searchString, searchString, transform, transform,transform, transformReverse, transformReverse,transformReverse]];
-            
+            NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName"];
+    
             searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
                 if(obj1.lastSeenTime > obj2.lastSeenTime) {
                     return NSOrderedAscending;

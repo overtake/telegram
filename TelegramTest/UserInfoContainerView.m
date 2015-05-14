@@ -79,7 +79,7 @@
         
        // self.layer.backgroundColor = [NSColor blueColor].CGColor;
         
-        self.profileProgressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(40, 40, 30, 30)];
+        self.profileProgressIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(40, 40, 30, 30)];
         
         //NameView
         self.nameNormalView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
