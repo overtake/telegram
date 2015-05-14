@@ -34,4 +34,8 @@
     
 }
 
+-(void)showPhoto {
+    open_link(self.webpage.webpage.url);
+}
+
 @end

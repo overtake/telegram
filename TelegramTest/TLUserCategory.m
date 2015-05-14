@@ -90,7 +90,7 @@ Online
     
     if(self.n_id == 777000) {
         return NSLocalizedString(@"Service notifications", nil);
-    } else if([serviceNumbers indexOfObject:self.phone]) {
+    } else if([serviceNumbers indexOfObject:self.phone] != NSNotFound) {
         return NSLocalizedString(@"Account.Online", nil);
     }
     

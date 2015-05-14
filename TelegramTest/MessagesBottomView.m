@@ -1189,9 +1189,8 @@
             
            // [[self.smileButton animator] setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame)- NSHeight(self.smileButton.frame) - 6)];
             
-            [[self.normalView animator] setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
-            
             [self.animator setFrameSize:layoutSize];
+            [[self.normalView animator] setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
             [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             int offset = _imageAttachmentsController.isShown ? 95 : 20;
@@ -1206,10 +1205,9 @@
             
         } else {
             
-            [self.normalView setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
-
-        // [self.smileButton setFrameOrigin:NSMakePoint(NSMinX(self.smileButton.frame), NSMinY(self.inputMessageTextField.containerView.frame) + NSHeight(self.inputMessageTextField.containerView.frame) - NSHeight(self.smileButton.frame) - 6)];
-             [self setFrameSize:layoutSize];
+            [self setFrameSize:layoutSize];
+             [self.normalView setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
+            
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             int offset = _imageAttachmentsController.isShown ? 95 : 20;

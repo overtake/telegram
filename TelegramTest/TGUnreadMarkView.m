@@ -35,7 +35,7 @@ static NSDictionary *attributes() {
 
 -(void)updateUnreadCount {
     
-    int count = [[MessagesManager sharedManager] unread_count];
+    int count = [MessagesManager unreadBadgeCount];
     
     NSString *text;
     if(count < 1000)
@@ -70,7 +70,7 @@ static NSDictionary *attributes() {
 
 -(void)drawRect:(NSRect)dirtyRect {
     
-    if([[MessagesManager sharedManager] unread_count] == 0)
+    if([MessagesManager unreadBadgeCount] == 0)
         return;
     
     

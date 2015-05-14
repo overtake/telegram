@@ -9,7 +9,6 @@
 #import "SharedManager.h"
 #import "TL_destructMessage.h"
 @interface MessagesManager : SharedManager
-@property (nonatomic,assign) int unread_count;
 
 
 
@@ -32,4 +31,9 @@
 +(void)addAndUpdateMessage:(TL_localMessage *)message;
 +(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date;
+
++(void)updateUnreadBadge;
+
++(int)unreadBadgeCount;
+
 @end

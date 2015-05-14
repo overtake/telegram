@@ -803,7 +803,7 @@ void exceptionHandler(NSException * exception)
             [MessageSender drop];
             [Notification perform:LOGOUT_EVENT data:nil];
             
-            [[MessagesManager sharedManager] setUnread_count:0];
+            [MessagesManager updateUnreadBadge];
             
             [self initializeLoginWindow];
         }];

@@ -37,7 +37,6 @@
 
 - (void)updateReadList:(NSNotification *)notify {
     NSArray *copy = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
-    MessagesManager *manager = [MessagesManager sharedManager];
    
     [[Storage manager] messages:^(NSArray *messages) {
         
@@ -70,9 +69,12 @@
                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
             }
             
-            manager.unread_count-=total;
+            
             
             [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
+            
+            
+            [MessagesManager unreadBadgeCount];
             
         }];
         
@@ -208,9 +210,7 @@
                     [self->list removeObject:dialog];
                     [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
                     
-                    MessagesManager *manager = [MessagesManager sharedManager];
-                    
-                    manager.unread_count-=dialog.unread_count;
+                    [MessagesManager unreadBadgeCount];
                     
                     
                     
@@ -277,15 +277,15 @@
         dialog.top_message = 0;
         
         
-        MessagesManager *manager = [MessagesManager sharedManager];
         
-        manager.unread_count-=dialog.unread_count;
         
         dialog.unread_count = 0;
         
         dialog.lastMessage = nil;
         
         [dialog save];
+        
+        [MessagesManager unreadBadgeCount];
         
         [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         [[Storage manager] deleteMessagesInDialog:dialog completeHandler:block];
@@ -334,7 +334,6 @@
 - (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
     
     [self.queue dispatchOnQueue:^{
-        MessagesManager *manager = [MessagesManager sharedManager];
         TL_conversation *dialog = message.conversation;
         if(dialog.top_message != 0 && dialog.top_message != -1 && ((dialog.top_message > message.n_id && dialog.top_message < TGMINFAKEID)))
             return;
@@ -342,7 +341,6 @@
         
         if(message.unread && !message.n_out) {
             dialog.unread_count++;
-            manager.unread_count++;
         }
         
         dialog.top_message = message.n_id;
@@ -373,6 +371,8 @@
         }
         
         [dialog save];
+        
+        [MessagesManager updateUnreadBadge];
         
         [self add:@[dialog]];
         
@@ -421,8 +421,6 @@
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
     
     [self.queue dispatchOnQueue:^{
-        int totalUnread = 0;
-        MessagesManager *manager = [MessagesManager sharedManager];
         for (TL_localMessage *message in messages) {
             TL_conversation *dialog = message.conversation;
             
@@ -449,7 +447,6 @@
                 
                 if(!message.n_out && message.unread) {
                     dialog.unread_count++;
-                    totalUnread++;
                 }
                 
                 dialog.lastMessage = message;
@@ -475,7 +472,6 @@
         }
         
         
-        manager.unread_count += totalUnread;
         
         BOOL checkSort = [self resortAndCheck];
         
@@ -488,6 +484,8 @@
                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
             }
         }
+        
+        [MessagesManager updateUnreadBadge];
         
        // if(!checkSort) {
         [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];

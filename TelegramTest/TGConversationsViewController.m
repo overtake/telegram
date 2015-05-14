@@ -94,9 +94,7 @@
         
     }];
     
-    [[Storage manager] unreadCount:^(int count) {
-        [[MessagesManager sharedManager] setUnread_count:count];
-    }];
+    [MessagesManager unreadBadgeCount];
     
     
     

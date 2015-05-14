@@ -901,9 +901,8 @@ static ASQueue *queue;
 
             [self saveUpdateState];
             
-            MessagesManager *manager = [MessagesManager sharedManager];
             
-            manager.unread_count = state.unread_count;
+            [MessagesManager updateUnreadBadge];
             
             _holdUpdates = NO;
             

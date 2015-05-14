@@ -2042,10 +2042,6 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.conversation.unread_count == 0)
         return;
     
-    MessagesManager *manager = [MessagesManager sharedManager];
-    
-    manager.unread_count-=self.conversation.unread_count;
-    
     NSArray *readed = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation];
     
     if(readed.count > 0) {
@@ -2055,6 +2051,8 @@ static NSTextAttachment *headerMediaIcon() {
     self.conversation.unread_count = 0;
     
     [self.conversation save];
+    
+    [MessagesManager updateUnreadBadge];
         
     ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"peer":self.conversation.peer}];
     
