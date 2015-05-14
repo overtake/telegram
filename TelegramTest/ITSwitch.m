@@ -47,6 +47,8 @@
 @property (readonly, strong) CALayer *knobLayer;
 @property (readonly, strong) CALayer *knobInsideLayer;
 
+@property (nonatomic,assign) float animationDuration;
+
 @end
 
 
@@ -82,6 +84,7 @@
 
 - (void)setUp {
     self.wantsLayer = YES;
+     _animationDuration = kAnimationDuration;
     [self setUpLayers];
 }
 
@@ -164,8 +167,10 @@
 // ----------------------------------------------------
 
 - (void)updateLayer {
+    
+    
     [CATransaction begin];
-    [CATransaction setAnimationDuration:kAnimationDuration];
+    [CATransaction setAnimationDuration:_animationDuration];
     {
         // ------------------------------- Animate Border
         // The green part also animates, which looks kinda weird
@@ -183,7 +188,7 @@
         
         // ------------------------------- Animate Frame
         [CATransaction begin];
-        [CATransaction setAnimationDuration:kAnimationDuration];
+        [CATransaction setAnimationDuration:_animationDuration];
         {
             if (!self.hasDragged) {
                 CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
@@ -297,6 +302,8 @@
     }
     
     [self updateLayer];
+    
+    _animationDuration = kAnimationDuration;
 }
 
 - (NSColor *)tintColor {
@@ -311,6 +318,8 @@
 }
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated {
+    _animationDuration = animated ? kAnimationDuration : 0;
+   
     [self setOn:on];
 }
 

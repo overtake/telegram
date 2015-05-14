@@ -115,7 +115,7 @@
             [self.subdescField setHidden:YES];
             [self.switchControl setHidden:item.locked];
             [self.nextImage setHidden:YES];
-            [self.switchControl setOn:[item.stateback(item) boolValue]];
+            [self.switchControl setOn:[item.stateback(item) boolValue] animated:NO];
             [self.selectedImageView setHidden:YES];
             [self.nextDesc setHidden:YES];
            
