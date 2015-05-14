@@ -1039,7 +1039,7 @@
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        NSData *serialized = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.dialog.peer_id] inCollection:REPLAY_COLLECTION];
+        NSData *serialized = [transaction objectForKey:self.dialog.cacheKey inCollection:REPLAY_COLLECTION];
         
         if(serialized) {
             replyMessage = [TLClassStore deserialize:serialized];
@@ -1048,9 +1048,6 @@
         
     }];
     
-    
-    
-   
     
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;

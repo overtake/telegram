@@ -1935,6 +1935,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         
+        
         [_replyMsgsStack removeAllObjects];
         
         self.jumpMessageId = messageId;
@@ -2406,8 +2407,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-        [current makeSizeByWidth:MAX(self.table.containerSize.width,320)];
-        [backItem makeSizeByWidth:MAX(self.table.containerSize.width,320)];
+        [current makeSizeByWidth:MAX(self.table.containerSize.width,100)];
+        [backItem makeSizeByWidth:MAX(self.table.containerSize.width,100)];
         backItem = current;
         
     }];
@@ -2548,9 +2549,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(message.length > 0) {
         
         
-        
+        [self.bottomView setInputMessageString:@"" disableAnimations:NO];
         [self sendMessage:message forConversation:self.conversation callback:^{
-            [self.bottomView setInputMessageString:@"" disableAnimations:NO];
             [_typingReservation removeAllObjects];
         }];
         
@@ -2975,7 +2975,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class])  {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
-            [transaction setObject:[TLClassStore serialize:message] forKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+            [transaction setObject:[TLClassStore serialize:message] forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
             
         }];
         
@@ -2986,7 +2986,7 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated {
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        [transaction removeObjectForKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
         
     }];
     
@@ -3001,7 +3001,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",self.conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        NSData *data = [transaction objectForKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
         if(data)
             replyMessage = [TLClassStore deserialize:data];
         

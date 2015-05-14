@@ -148,7 +148,7 @@
     [_stateField sizeToFit];
     [_titleField sizeToFit];
     
-    [_stateField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_stateField.frame), NSHeight(_stateField.frame))];
+    [_stateField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_stateField.frame), 20)];
     [_titleField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_titleField.frame), NSHeight(_titleField.frame))];
     
     

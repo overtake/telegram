@@ -1036,7 +1036,7 @@ static int offsetEditable = 30;
 }
 
 -(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_replyContainer.messageField mouseInText:theEvent];
+    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] && [_replyContainer.messageField mouseInText:theEvent];
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {

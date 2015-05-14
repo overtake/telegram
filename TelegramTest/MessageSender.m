@@ -167,9 +167,12 @@
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSData *data = [transaction objectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
+        NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
         if(data)
             replyMessage = [TLClassStore deserialize:data];
+        
+        [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
+
     }];
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
@@ -201,22 +204,13 @@
     if(replyMessage)
     {
         
-        if(conversation.peer_id != [Telegram rightViewController].messagesViewController.conversation.peer_id) {
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                
-                [transaction removeObjectForKey:[NSString stringWithFormat:@"%d",conversation.peer_id] inCollection:REPLAY_COLLECTION];
-                
-            }];
-        } else {
+        if(conversation.peer_id == [Telegram conversation].peer_id) {
             [ASQueue dispatchOnMainQueue:^{
                 
                 [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
             }];
         }
         
-        
-    } else {
-    
     }
     
     return  outMessage;

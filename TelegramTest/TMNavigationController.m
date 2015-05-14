@@ -309,6 +309,8 @@ static const int navigationOffset = 48;
     } else {
         [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - navigationOffset)];
     }
+    
+    
 //
     
     if (!isAnimate) {

@@ -22,7 +22,7 @@
         if([action isEqualToString:@"USER_PROFILE"]) {
             int user_id = [[params objectAtIndex:1] intValue];
             
-            [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:nil sender:self];
+            [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:[[[UsersManager sharedManager] find:user_id] dialog] sender:self];
             
         }
     }

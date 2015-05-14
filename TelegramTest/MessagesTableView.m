@@ -124,7 +124,7 @@
             for(NSInteger i = visibleRows.location; i < count; i++) {
                 MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
                 
-                if([item makeSizeByWidth:MAX(self.containerSize.width,320)]) {
+                if([item makeSizeByWidth:MAX(self.containerSize.width,100)]) {
                     id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
                   //  if([view isKindOfClass:[MessageTableCellTextView class]]) {
                     if(view)
@@ -164,7 +164,7 @@
 
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(self.containerSize.width,320)];
+        [item makeSizeByWidth:MAX(self.containerSize.width,100)];
     }
     
   //  [self reloadData];
@@ -400,7 +400,7 @@
 - (void)viewDidEndLiveResize {
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(self.containerSize.width,320)];
+        [item makeSizeByWidth:MAX(self.containerSize.width,100)];
     }
     
     [self reloadData];
