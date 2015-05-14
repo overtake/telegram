@@ -114,52 +114,54 @@
     
     [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
     
+    NSRect rect = NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame));
+    
     self.messagesViewController = [[MessagesViewController alloc] initWithFrame:self.view.bounds];
-    self.userInfoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
-    self.chatInfoViewController = [[ChatInfoViewController alloc] initWithFrame:self.view.bounds];
-    self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:self.view.bounds];
-    self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
-    self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+    self.userInfoViewController = [[UserInfoViewController alloc] initWithFrame:rect];
+    self.chatInfoViewController = [[ChatInfoViewController alloc] initWithFrame:rect];
+    self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:rect];
+    self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:rect];
+    self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:rect];
     
-    self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
-    self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
-    self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:self.view.bounds];
-    self.privacyViewController = [[PrivacyViewController alloc] initWithFrame:self.view.bounds];
-    
-    
-    self.encryptedKeyViewController = [[EncryptedKeyViewController alloc] initWithFrame:self.view.bounds];
+    self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:rect];
+    self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:rect];
+    self.composeBroadcastListViewController = [[ComposeBroadcastListViewController alloc] initWithFrame:rect];
+    self.privacyViewController = [[PrivacyViewController alloc] initWithFrame:rect];
     
     
-    self.blockedUsersViewController = [[BlockedUsersViewController alloc] initWithFrame:self.view.bounds];
-    
-    self.generalSettingsViewController = [[GeneralSettingsViewController alloc] initWithFrame:self.view.bounds];
-    self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:self.view.bounds];
-    
-    self.aboutViewController = [[AboutViewController alloc] initWithFrame:self.view.bounds];
-    self.userNameViewController = [[UserNameViewController alloc] initWithFrame:self.view.bounds];
-    
-    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:self.view.bounds];
-    
-    self.lastSeenViewController = [[PrivacySettingsViewController alloc] initWithFrame:self.view.bounds];
-    
-    self.privacyUserListController = [[PrivacyUserListController alloc] initWithFrame:self.view.bounds];
+    self.encryptedKeyViewController = [[EncryptedKeyViewController alloc] initWithFrame:rect];
     
     
-    self.phoneChangeAlertController = [[PhoneChangeAlertController alloc] initWithFrame:self.view.bounds];
-    self.phoneChangeController = [[PhoneChangeController alloc] initWithFrame:self.view.bounds];
+    self.blockedUsersViewController = [[BlockedUsersViewController alloc] initWithFrame:rect];
     
-    self.phoneChangeConfirmController = [[PhoneChangeConfirmController alloc] initWithFrame:self.view.bounds];
+    self.generalSettingsViewController = [[GeneralSettingsViewController alloc] initWithFrame:rect];
+    self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:rect];
     
-    self.opacityViewController = [[TGOpacityViewController alloc] initWithFrame:self.view.bounds];
+    self.aboutViewController = [[AboutViewController alloc] initWithFrame:rect];
+    self.userNameViewController = [[UserNameViewController alloc] initWithFrame:rect];
     
-    self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:self.view.bounds];
+    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:rect];
+    
+    self.lastSeenViewController = [[PrivacySettingsViewController alloc] initWithFrame:rect];
+    
+    self.privacyUserListController = [[PrivacyUserListController alloc] initWithFrame:rect];
     
     
-    self.sessionsViewContoller = [[TGSessionsViewController alloc] initWithFrame:self.view.bounds];
+    self.phoneChangeAlertController = [[PhoneChangeAlertController alloc] initWithFrame:rect];
+    self.phoneChangeController = [[PhoneChangeController alloc] initWithFrame:rect];
     
-    self.passwordMainViewController = [[TGPasswosdMainViewController alloc] initWithFrame:self.view.bounds];
+    self.phoneChangeConfirmController = [[PhoneChangeConfirmController alloc] initWithFrame:rect];
     
-    self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:self.view.bounds];
+    self.opacityViewController = [[TGOpacityViewController alloc] initWithFrame:rect];
+    
+    self.passcodeViewController = [[TGPasscodeSettingsViewController alloc] initWithFrame:rect];
+    
+    
+    self.sessionsViewContoller = [[TGSessionsViewController alloc] initWithFrame:rect];
+    
+    self.passwordMainViewController = [[TGPasswosdMainViewController alloc] initWithFrame:rect];
+    
+    self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:rect];
     
     
     [self.navigationViewController pushViewController:self.messagesViewController animated:NO];

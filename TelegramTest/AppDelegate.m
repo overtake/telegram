@@ -614,6 +614,7 @@ void exceptionHandler(NSException * exception)
                         }
                     }
                     
+                    
                     if(![(MainWindow *)[NSApp mainWindow] isAcceptEvents]) {
                         
                         

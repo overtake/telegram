@@ -252,7 +252,11 @@ typedef enum {
     
     self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(95, currentY, NSWidth(self.view.frame) - 115 , 22)];
     
+    [[self.nameTextField cell] setTruncatesLastVisibleLine:YES];
+    [[self.nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    
     [self.nameTextField setSelector:@selector(profileTitle)];
+    
     
     [self.nameTextField setUser:[UsersManager currentUser]];
     
@@ -267,7 +271,7 @@ typedef enum {
     
     [self.statusTextField setUser:[UsersManager currentUser]];
     
-    self.statusTextField.autoresizingMask = NSViewWidthSizable;
+    self.nameTextField.autoresizingMask = self.statusTextField.autoresizingMask = NSViewWidthSizable;
     
     
     [container addSubview:self.statusTextField];
@@ -351,16 +355,14 @@ typedef enum {
     [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.userName ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.userNameTextField.attributedStringValue = attr;
     
-    [self.userNameTextField sizeToFit];
-    [self.userNameTextField setFrameOrigin:NSMakePoint(NSWidth(self.userName.frame) - NSWidth(self.userNameTextField.frame) - NSWidth(self.userName.rightContainer.frame) - abs(self.userName.rightContainerOffset.x) - 5, 11)];
     
     attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]}];
     
     [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.phoneNumberTextField.attributedStringValue = attr;
     
-    [self.phoneNumberTextField sizeToFit];
-    [self.phoneNumberTextField setFrameOrigin:NSMakePoint(NSWidth(self.userName.frame) - NSWidth(self.phoneNumberTextField.frame) - NSWidth(self.userName.rightContainer.frame) - abs(self.userName.rightContainerOffset.x) - 5, 11)];
+    [self.userName setFrameSize:self.userName.frame.size];
+    [self.phoneNumber setFrameSize:self.phoneNumber.frame.size];
 
 }
 
@@ -418,6 +420,9 @@ typedef enum {
 -(void)setState:(AccountSettingsState)state animated:(BOOL)animated {
     self->_state = state;
     
+    
+    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.view.frame) - 115, NSHeight(self.nameTextField.frame))];
+    [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.view.frame) - 115, NSHeight(self.statusTextField.frame))];
     
     
     float duration = 0.2;
@@ -603,20 +608,19 @@ typedef enum {
     }];
     
     
-    self.userNameTextField = [TMNameTextField defaultTextField];
+    self.userNameTextField = [TMTextField defaultTextField];
     
-     self.userNameTextField.autoresizingMask = NSViewMinXMargin;
+    
     
     [self.userName addSubview:self.userNameTextField];
    
-    
-    [self.userName setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
-    
     [self.userName.textButton setFrameSize:NSMakeSize(NSWidth(self.userName.frame), NSHeight(self.userName.textButton.frame))];
     [self.userName.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.userName.textButton.frame))];
     
     
     [container addSubview:self.userName];
+    
+    [self.userName setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
     
     
     currentY+=38;
@@ -627,20 +631,28 @@ typedef enum {
         [[Telegram rightViewController] showPhoneChangeAlerController];
     }];
     
-    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+    
     
     [self.phoneNumber.textButton setFrameSize:NSMakeSize(NSWidth(self.phoneNumber.frame), NSHeight(self.phoneNumber.textButton.frame))];
     [self.phoneNumber.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.phoneNumber.textButton.frame))];
     
-    self.phoneNumberTextField = [TMNameTextField defaultTextField];
+    self.phoneNumberTextField = [TMTextField defaultTextField];
+    [[self.phoneNumberTextField cell] setTruncatesLastVisibleLine:YES];
     
-    self.phoneNumberTextField.autoresizingMask = NSViewMinXMargin;
+  //  self.phoneNumberTextField.autoresizingMask = NSViewMinXMargin;
     
     
     [self.phoneNumber addSubview:self.phoneNumberTextField];
     
+    [self.phoneNumber setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+    
     
     [container addSubview:self.phoneNumber];
+    
+    
+    [self.userNameTextField setFrameOrigin:NSMakePoint(0, 11)];
+    [self.phoneNumberTextField setFrameOrigin:NSMakePoint(0, 11)];
+    
 //
     
 

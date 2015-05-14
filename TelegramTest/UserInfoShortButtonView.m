@@ -175,7 +175,25 @@
     
     [self setRightContainer:self.currentRightController];
     
-    [self.textButton setFrameSize:NSMakeSize(newSize.width - NSWidth(self.rightContainer.frame) - 15, NSHeight(self.textButton.frame))];
+    
+    [self.textButton sizeToFit];
+    
+    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), NSHeight(self.textButton.frame))];
+    
+    
+    [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj class] == [TMTextField class]) {
+
+            [obj sizeToFit];
+            
+            [obj setFrameSize:NSMakeSize(MIN(NSWidth([obj frame]),NSWidth(self.frame) - NSMaxX(_textButton.frame) - NSWidth(_rightContainer.frame) - 30), NSHeight([obj frame]))];
+            
+            [obj setFrameOrigin:NSMakePoint(NSMinX(_rightContainer.frame) - 10 - NSWidth([obj frame]), NSMinY([obj frame]))];
+        }
+        
+    }];
+    
 }
 
 

@@ -62,7 +62,7 @@
                 
             } timeout:10];
             
-        } forControlEvents:BTRControlEventClick];
+        } forControlEvents:BTRControlEventMouseDownInside];
         
         
         [_addButton addSubview:view];
@@ -88,6 +88,7 @@
     
     return self;
 }
+
 
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
     
