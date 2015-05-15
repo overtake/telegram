@@ -298,10 +298,39 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 
-+(TMView *)modalView {
++(NSArray *)modalsView {
+    
     NSView *view = [[Telegram delegate] window].contentView;
     
-    return [view.subviews lastObject];
+    NSMutableArray *modals = [[NSMutableArray alloc] init];
+    
+    
+    [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj isKindOfClass:[TGModalView class]]) {
+            [modals addObject:obj];
+        }
+        
+    }];
+    
+    return modals;
+}
+
++(TMView *)modalView {
+    __block TMView *res;
+    
+    NSView *view = [[Telegram delegate] window].contentView;
+    
+    [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj == progressView || obj == passlockView || obj == setCaptionView || [obj isKindOfClass:[TGModalView class]]) {
+            res = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return res;
 }
 
 -(void)hideModalProgressWithSuccess {

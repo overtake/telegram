@@ -499,16 +499,33 @@ void exceptionHandler(NSException * exception)
                 return incomingEvent;
             }
             
-            if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
-                return incomingEvent;
-            }
+            
             
             
             if(![TMViewController isModalActive]) {
-                [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                
+                if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
+                    return incomingEvent;
+                } else {
+                     [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                }
+            
             } else {
+                
+                NSArray *modals = [TMViewController modalsView];
+                
+                if(modals.count > 0) {
+                    [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL *stop) {
+                        [obj close:modals.count == 1];
+                    }];
+                    
+                    return [[NSEvent alloc] init];
+                }
+                
                 return incomingEvent;
             }
+            
+            
             
             return [[NSEvent alloc] init];
             

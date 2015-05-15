@@ -78,6 +78,8 @@
 +(void)hideAttachmentCaption;
 
 +(BOOL)isModalActive;
++(NSArray *)modalsView;
+
 +(TMView *)modalView;
 
 +(void)becomePasslock;

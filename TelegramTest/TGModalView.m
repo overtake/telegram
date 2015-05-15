@@ -81,6 +81,8 @@
     [self setFrameSize:window.frame.size];
     
     [window.contentView addSubview:self];
+    
+    [window makeFirstResponder:self];
 
     if(!animated) {
         
