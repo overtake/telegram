@@ -280,8 +280,8 @@
 
     self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
     for(int i = 1; i <= 7; i++) {
-        BTRButton *button = [self createButtonForIndex:i];
-        [button setFrameOrigin:NSMakePoint(i * 18 + 20 * (i - 1), 12)];
+        BTRButton *button = [self createButtonForIndex:i];//20
+        [button setFrameOrigin:NSMakePoint(i * 18 + 30 * (i - 1), 12)];
         [self.bottomView addSubview:button];
     }
     
