@@ -50,7 +50,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        [self setContainerFrameSize:NSMakeSize(300, 380)];
+        [self setContainerFrameSize:NSMakeSize(384, 380)];
         
         _tableView = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, 50, self.containerSize.width, self.containerSize.height - 130 )];
         
