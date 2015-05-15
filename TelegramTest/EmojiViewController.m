@@ -13,7 +13,7 @@
 #import "NSString+Extended.h"
 #import "MessagesBottomView.h"
 #define EMOJI_IMAGE(img) image_test#img
-#define EMOJI_COUNT_PER_ROW 8
+#define EMOJI_COUNT_PER_ROW 11
 
 
 
@@ -174,7 +174,7 @@
     static EmojiViewController *controller;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 280, 240)];
+        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 240)];
     });
     return controller;
 }

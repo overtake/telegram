@@ -266,23 +266,27 @@
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item {
     
-    [self showModalProgress];
-    
-    [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+    confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Stickers.RemoveStickerAlert", nil),[item.pack[@"set"] title]], ^{
         
-        _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+        [self showModalProgress];
         
-        [_tableView removeItem:item];
+        [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+            
+            _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+            
+            [_tableView removeItem:item];
+            
+            _tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+            
+            [EmojiViewController reloadStickers];
+            
+            [self hideModalProgress];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [self hideModalProgress];
+        } timeout:10];
         
-        _tableView.defaultAnimation = NSTableViewAnimationEffectNone;
-        
-        [EmojiViewController reloadStickers];
-        
-        [self hideModalProgress];
-        
-    } errorHandler:^(id request, RpcError *error) {
-        [self hideModalProgress];
-    } timeout:10];
+    }, nil);
     
 }
 

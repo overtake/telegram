@@ -81,15 +81,21 @@ static NSImage * greenBackgroundImage(NSSize size) {
         
         [_addButton addBlock:^(BTRControlEvents events) {
             
+            [weakSelf close:NO];
+            
+            [TMViewController showModalProgress];
+            
             
             [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:weakSelf.pack.set.n_id access_hash:weakSelf.pack.set.access_hash]] successHandler:^(id request, id response) {
                 
-                [weakSelf close:YES];
+                dispatch_after_seconds(0.2, ^{
+                    [TMViewController hideModalProgressWithSuccess];
+                });
                 
                 [EmojiViewController reloadStickers];
                 
             } errorHandler:^(id request, RpcError *error) {
-                
+                [TMViewController hideModalProgress]; 
             } timeout:10];
             
         } forControlEvents:BTRControlEventMouseDownInside];
@@ -233,10 +239,10 @@ static NSImage * greenBackgroundImage(NSSize size) {
     }];
     
     
-    NSUInteger dif = stickerPack.documents.count/4;
+    NSUInteger dif = ceil((float)stickerPack.documents.count/5.0);
     
     if(dif < 4) {
-        [self setContainerFrameSize:NSMakeSize(self.containerSize.width, 80 + dif*80)];
+        [self setContainerFrameSize:NSMakeSize(self.containerSize.width, (packIsset ? 0 : 50) + 80 + dif*80)];
     }
     
     NSImage *placeholder = [[NSImage alloc] initWithData:headerSticker.thumb.bytes];

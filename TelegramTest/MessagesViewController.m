@@ -2568,7 +2568,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-    BOOL noWebpage = [self noWebpage];
+    BOOL noWebpage = [self noWebpage:message];
     
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
@@ -2594,7 +2594,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
             
@@ -2607,7 +2607,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -3020,8 +3020,8 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
--(BOOL)noWebpage {
-    return [_noWebpageString isEqualToString:[self.inputText webpageLink]];
+-(BOOL)noWebpage:(NSString *)message {
+    return [_noWebpageString isEqualToString:[message webpageLink]];
 }
 
 -(void)checkWebpage:(NSString *)link {

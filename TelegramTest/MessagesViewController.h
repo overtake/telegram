@@ -152,5 +152,5 @@ typedef enum {
 -(void)updateWebpage;
 
 -(void)markAsNoWebpage;
--(BOOL)noWebpage;
+-(BOOL)noWebpage:(NSString *)message;
 @end

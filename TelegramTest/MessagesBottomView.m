@@ -1099,7 +1099,7 @@
 #endif
     
     
-    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !self.messagesViewController.noWebpage) {
+    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && ![self.messagesViewController noWebpage:self.inputMessageString]) {
      
         if(_webpageAttach && [_webpageAttach.webpage isKindOfClass:[TL_webPageEmpty class]]) {
             [_webpageAttach removeFromSuperview];
@@ -1115,7 +1115,7 @@
     
     
         
-    TLWebPage *webpage = !self.messagesViewController.noWebpage ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
+    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
     
     if(!webpage && !self.webpageAttach)
         return;

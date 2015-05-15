@@ -160,7 +160,7 @@ static NSImage *higlightedImage() {
     
     __block int xOffset = 0;
     
-    int width = round(NSWidth(self.bounds)/4);
+    int width = round(NSWidth(self.bounds)/5);
     
     [item.stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -433,7 +433,7 @@ static NSImage *higlightedImage() {
             
             [row addObject:obj];
             
-            if(row.count == 4) {
+            if(row.count == 5) {
                 [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy]]];
                 [row removeAllObjects];
             }
