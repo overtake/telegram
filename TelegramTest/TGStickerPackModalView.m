@@ -11,12 +11,12 @@
 #import "EmojiViewController.h"
 #import "TGMessagesStickerImageObject.h"
 #import "TGImageView.h"
-@interface TGStickerPackModalView ()
+@interface TGStickerPackModalView ()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TGAllStickersTableView *tableView;
 
 @property (nonatomic,strong) TL_messages_stickerSet *pack;
 @property (nonatomic,strong) BTRButton *addButton;
-@property (nonatomic,strong) TMTextField *nameField;
+@property (nonatomic,strong) TMHyperlinkTextField *nameField;
 @property (nonatomic,strong) TGImageView *packHeaderImageView;
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic,strong) TMView *headerView;
@@ -113,12 +113,20 @@ static NSImage * greenBackgroundImage(NSSize size) {
         
         
         
-        _nameField = [TMTextField defaultTextField];
+        _nameField = [[TMHyperlinkTextField alloc] init];
+        [_nameField setDrawsBackground:NO];
+        [_nameField setBordered:NO];
+        [_nameField setSelectable:NO];
+        
+        _nameField.hardYOffset = 10;
+
         
         [_nameField setFrame:NSMakeRect(0, 15, self.containerSize.width, 27)];
         [_nameField setAlignment:NSCenterTextAlignment];
         [_nameField setTextColor:TEXT_COLOR];
         [_nameField setFont:TGSystemFont(13)];
+        
+        _nameField.url_delegate = self;
         
         [_headerView addSubview:_nameField];
         
@@ -151,6 +159,25 @@ static NSImage * greenBackgroundImage(NSSize size) {
 }
 
 
+-(void)textField:(id)textField handleURLClick:(NSString *)url {
+    
+    
+    [self close:NO];
+    
+    [TMViewController showModalProgress];
+    
+    NSPasteboard* cb = [NSPasteboard generalPasteboard];
+    
+    [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+    [cb setString:[NSString stringWithFormat:@"https://telegram.me/addstickers/%@",_pack.set.short_name] forType:NSStringPboardType];
+    
+    dispatch_after_seconds(0.2, ^{
+        [TMViewController hideModalProgressWithSuccess];
+    });
+    
+   
+}
+
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
     
     _pack = stickerPack;
@@ -169,7 +196,14 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     [title setFont:TGSystemFont(13) forRange:range];
     
+    [title appendString:@"\n"];
     
+    range = [title appendString:NSLocalizedString(@"Context.CopyLink", nil) withColor:LINK_COLOR];
+    
+    
+    [title setFont:TGSystemMediumFont(13) forRange:range];
+    
+    [title setLink:@"copy" forRange:range];
     
     
     [_nameField setAttributedStringValue:title];
