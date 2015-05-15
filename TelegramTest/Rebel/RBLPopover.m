@@ -10,7 +10,7 @@
 
 #import "NSColor+RBLCGColorAdditions.h"
 #import "NSView+RBLAnimationAdditions.h"
-
+#import "BTRControlAction.h"
 //***************************************************************************
 
 // We'll use this as RBLPopover's backing window. Since it's borderless, we
@@ -144,6 +144,20 @@
 
 
 - (void)setHoverView:(BTRControl *)hoverView {
+    
+    if([_hoverView respondsToSelector:@selector(actions)]) {
+        NSMutableArray *actions = [_hoverView valueForKey:@"actions"];
+        
+        NSMutableArray *tr = [[NSMutableArray alloc] init];
+        
+        [actions enumerateObjectsUsingBlock:^(BTRControlAction *obj, NSUInteger idx, BOOL *stop) {
+            if(obj.events & BTRControlEventMouseExited) {
+                [tr addObject:obj];
+            }
+        }];
+        
+        [actions removeObjectsInArray:tr];
+    }
     
     
     _hoverView = hoverView;

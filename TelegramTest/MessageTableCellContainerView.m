@@ -875,7 +875,7 @@ static int offsetEditable = 30;
 
 
 -(BOOL)canEdit {
-    return self.item.messageSender == nil || self.item.messageSender.state == MessageSendingStateSent;
+    return (self.item.messageSender == nil || self.item.messageSender.state == MessageSendingStateSent) && self.item.message.n_id < TGMINFAKEID;
 }
 
 - (void)setProgressStyle:(TMCircularProgressStyle)style {

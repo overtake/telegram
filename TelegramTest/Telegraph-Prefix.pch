@@ -8,9 +8,10 @@
 #define TGDEBUG // UNDEF IN RELEASE
 //#define TGStable // DEF IN stable version
 
+
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import <MtProtoKit/MTLogging.h>
-#import "TGUIMainThreadGuard.h"
+
 #import "ImageUtils.h"
 #import "POP.h"
 #import "SelectTextManager.h"

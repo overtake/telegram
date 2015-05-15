@@ -16,6 +16,9 @@
 
 @property (nonatomic,strong) NSTrackingArea *trackingArea;
 @property (nonatomic,assign) DraggingViewType type;
+
+@property (nonatomic,strong) TMView *backgroundView;
+
 @end
 
 @implementation DraggingControllerView
@@ -24,6 +27,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _backgroundView = [[TMView alloc] initWithFrame:self.bounds];
+        
+        _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        
+        
+        _backgroundView.wantsLayer = YES;
+        _backgroundView.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        _backgroundView.layer.opacity = 0.9;
+        
+        [self addSubview:_backgroundView];
+        
         _mediaView = [[DraggingItemView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
         
         _mediaView.type = DraggingTypeMedia;

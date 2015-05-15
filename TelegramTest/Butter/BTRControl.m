@@ -9,6 +9,7 @@
 #import "BTRControl.h"
 #import "BTRControlAction.h"
 #import "MTNetwork.h"
+#import "SpacemanBlocks.h"
 NSString * const BTRControlStateTitleKey = @"title";
 NSString * const BTRControlStateTitleColorKey = @"titleColor";
 NSString * const BTRControlStateTitleShadowKey = @"titleShadow";
@@ -52,7 +53,7 @@ NSString * const BTRControlStateCursorKey = @"cursor";
 @property (nonatomic) BOOL mouseDown;
 @property (nonatomic, readonly) BOOL shouldHandleEvents;
 
-@property (nonatomic,strong) id internalId;
+@property (nonatomic,strong) SMDelayedBlockHandle internalId;
 
 - (void)handleStateChange;
 @end
@@ -451,9 +452,10 @@ static void BTRControlCommonInit(BTRControl *self) {
 	BTRControlEvents events = 1;
 	events |= BTRControlEventMouseDownInside;
     
-    remove_global_dispatcher(_internalId);
+    cancel_delayed_block(_internalId);
     
-    _internalId = dispatch_in_time([[MTNetwork instance] getTime] + 1, ^{
+    _internalId = perform_block_after_delay(0.4,  ^{
+        
         if(self.mouseInside && self.mouseDown) {
             
             BTRControlEvents events = BTRControlEventLongLeftClick;
@@ -477,6 +479,8 @@ static void BTRControlCommonInit(BTRControl *self) {
 
 - (void)handleMouseUp:(NSEvent *)event {
 	self.mouseDown = NO;
+    
+    cancel_delayed_block(_internalId);
     
     if(_lastDownTime == 1)
         return;
@@ -509,16 +513,26 @@ static void BTRControlCommonInit(BTRControl *self) {
 - (void)sendActionsForControlEvents:(BTRControlEvents)events {
 	if (!self.shouldHandleEvents)
 		return;
+    
+    @try {
+        
+        [self.actions enumerateObjectsUsingBlock:^(BTRControlAction *action, NSUInteger idx, BOOL *stop) {
+            if (action.events & events) {
+                if (action.block != nil) {
+                    action.block(events);
+                } else if (action.action != nil) { // the target can be nil
+                    [NSApp sendAction:action.action to:action.target from:self];
+                }
+            }
+        }];
+        
+    }
+    @catch (NSException *exception) {
+        int bp = 0;
+    }
+    
 	
-	for (BTRControlAction *action in self.actions) {
-		if (action.events & events) {
-			if (action.block != nil) {
-				action.block(events);
-			} else if (action.action != nil) { // the target can be nil
-				[NSApp sendAction:action.action to:action.target from:self];
-			}
-		}
-	}
+	
 }
 
 @end

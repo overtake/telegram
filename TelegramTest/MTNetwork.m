@@ -17,7 +17,7 @@
 #import "NSMutableData+Extension.h"
 #import "SSKeychain.h"
 #import "TGTLSerialization.h"
-
+#import "TGPasslock.h"
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -157,6 +157,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
                             
                             if(![self isAuth]) {
                                 [[Telegram delegate] logoutWithForce:YES];
+                            } else {
+                                [TGPasslock appIncomeActive];
                             }
                         } 
                         
@@ -179,6 +181,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 if(![self isAuth]) {
                     [[Telegram delegate] logoutWithForce:YES];
+                } else {
+                    [TGPasslock appIncomeActive];
                 }
                 
             }

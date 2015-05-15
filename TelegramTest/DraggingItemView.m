@@ -114,7 +114,7 @@
 //    shadow.shadowOffset = NSMakeSize(0, 1);
 //    shadow.shadowBlurRadius = 4.0f;
     
-    self.layer.opacity = self.dragEntered ? 1.0f : 0.97f;
+    self.layer.opacity = self.dragEntered ? 1.0f : 0.6f;
     
    // self.shadow = self.dragEntered ? nil : shadow;
     

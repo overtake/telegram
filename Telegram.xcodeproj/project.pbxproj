@@ -394,6 +394,10 @@
 		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */; };
 		C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976B31A10E2110047E2C3 /* TGPVContainer.m */; };
+		C26AE6C01B05F6C700EB0352 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26AE6C11B05F6C800EB0352 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26AE6C21B05F6C900EB0352 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C26AE6C31B05F6C900EB0352 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */; };
 		C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA71A56BEFE001D1AE2 /* SecretLayer20.m */; };
 		C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EAE1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m */; };
@@ -720,10 +724,6 @@
 		C2F3996F190FD1FC006B36F7 /* SGraphNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3996B190FD1FC006B36F7 /* SGraphNode.m */; };
 		C2F39970190FD1FC006B36F7 /* SGraphObjectNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3996D190FD1FC006B36F7 /* SGraphObjectNode.m */; };
 		C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429C41B00C88B00C2CE4E /* TGStickersSettingsViewController.m */; };
-		C2F429CC1B04C82600C2CE4E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2F429CD1B04C82600C2CE4E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C2F429CE1B04C82900C2CE4E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2F429CF1B04C82900C2CE4E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */; };
 		C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
@@ -828,8 +828,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2F429CE1B04C82900C2CE4E /* Sparkle.framework in Copy Files (6 items) */,
-				C2F429CF1B04C82900C2CE4E /* HockeySDK.framework in Copy Files (6 items) */,
+				C26AE6C01B05F6C700EB0352 /* Sparkle.framework in Copy Files (6 items) */,
+				C26AE6C11B05F6C800EB0352 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2365,9 +2365,9 @@
 				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
-				C2F429CC1B04C82600C2CE4E /* Sparkle.framework in Frameworks */,
-				C2F429CD1B04C82600C2CE4E /* HockeySDK.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C26AE6C21B05F6C900EB0352 /* Sparkle.framework in Frameworks */,
+				C26AE6C31B05F6C900EB0352 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

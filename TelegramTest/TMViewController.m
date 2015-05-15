@@ -332,6 +332,9 @@ static TGModalSetCaptionView *setCaptionView;
     
     assert([NSThread isMainThread]);
     
+    if(passlockView.window)
+        return;
+    
     if(!passlockView) {
         passlockView = [[TGPasslockModalView alloc] initWithFrame:[[[Telegram delegate] mainWindow].contentView bounds]];
         

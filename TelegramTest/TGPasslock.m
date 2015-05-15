@@ -86,12 +86,13 @@
     
     [self invalidateTimer];
     
-    if([self autoLockTime] == 0 || ![TGPasslock isEnabled])
+    if([self autoLockTime] == 0 || ![TGPasslock isEnabled] || _lockTimer)
         return;
     
     _saveTime = [[MTNetwork instance] getTime];
     
-    _lockTimer = [[TGTimer alloc] initWithTimeout:65 repeat:YES completion:^{
+    _lockTimer = [[TGTimer alloc] initWithTimeout:5 repeat:YES completion:^{
+        
         
         
         [self checkLocker];
@@ -106,16 +107,19 @@
 
 -(void)checkLocker {
     
+    MTLog(@"!!!!!check locker!!!!!");
+    
     if(_saveTime != 0  && [TGPasslock isEnabled]) {
         int differenceTime = [[MTNetwork instance] getTime] - _saveTime;
         
-        if(differenceTime > [self autoLockTime]) {
+        if(differenceTime > [self autoLockTime] || [self autoLockTime] < SystemIdleTime()) {
             [ASQueue dispatchOnMainQueue:^{
                 [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
                     
                     BOOL res = [[MTNetwork instance] checkPasscode:[md5Hash dataUsingEncoding:NSUTF8StringEncoding]];
                     
                     if(res) {
+                         _saveTime = [[MTNetwork instance] getTime];
                         [TMViewController hidePasslock];
                     }
                     
@@ -134,8 +138,6 @@
     
     _saveTime = [[MTNetwork instance] getTime];
     
-    [_lockTimer invalidate];
-    _lockTimer = nil;
 }
 
 +(void)updateTimer {
