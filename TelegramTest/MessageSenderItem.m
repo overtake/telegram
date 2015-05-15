@@ -10,6 +10,7 @@
 #import "TLPeer+Extensions.h"
 #import "MessageTableItem.h"
 @interface MessageSenderItem ()
+@property (nonatomic,assign) BOOL noWebpage;
 @end
 
 @implementation MessageSenderItem
@@ -22,7 +23,7 @@
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
         if(noWebpage)
-            self.message.media = [TL_messageMediaEmpty create];
+            self.message.media = [TL_messageMediaWebPage createWithWebpage:[TL_webPageEmpty createWithN_id:0]];
         
         [self.message save:YES];
     
@@ -52,7 +53,7 @@
         
         int flags = self.message.reply_to_msg_id != 0 ? 1 : 0;
         
-        flags|=([Telegram rightViewController].messagesViewController.noWebpage ? 2 : 0);
+        flags|=[self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
         
         request = [TLAPI_messages_sendMessage createWithFlags:flags peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId]];
     } else {

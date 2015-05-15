@@ -1390,6 +1390,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesBottomView TMGrowingTextViewHeightChanged:height:cleared:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "isCleared">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellGifView playAnimation]:MessageTableCellGifView.m">
          <PersistentStrings>
             <PersistentString
@@ -1823,6 +1831,9 @@
       </ContextState>
       <ContextState
          contextName = "__37-[MessagesViewController sendMessage]_block_invoke_2:MessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[BTRControl sendActionsForControlEvents:]_block_invoke:BTRControl.m">
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView calcSelectedRange]:TGCTextView.m">

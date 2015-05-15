@@ -109,6 +109,10 @@
     
     MTLog(@"!!!!!check locker!!!!!");
     
+    if([NSApp isActive]) {
+        _saveTime = [[MTNetwork instance] getTime];
+    }
+    
     if(_saveTime != 0  && [TGPasslock isEnabled]) {
         int differenceTime = [[MTNetwork instance] getTime] - _saveTime;
         

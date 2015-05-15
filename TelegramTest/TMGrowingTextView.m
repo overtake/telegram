@@ -181,8 +181,12 @@
         
     };
     
+    [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
+    [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
+    
     if(isCleared) {
       //  CAAnimation *anim = [TMAnimations resizeLayer:self.containerView.layer to:layoutSize];
+        
         
        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
            
@@ -201,11 +205,11 @@
     } else {
         [self.containerView setFrameSize:layoutSize];
         future();
+        
     }
     
     
-    [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-    [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
+   
     
     
     

@@ -332,7 +332,7 @@ static NSImage *higlightedImage() {
         
         _stickers = [stickers mutableCopy];
         
-        if(!isRemoteStickersLoaded()) {
+        if(!isRemoteStickersLoaded() || force) {
             [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
                 
                 
