@@ -2447,7 +2447,7 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if(prevItem.message && item.message && ![item isReplyMessage] && ![item.message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+    if(prevItem.message && item.message && ![item isReplyMessage] && (!item.message.media.webpage || [item.message.media.webpage isKindOfClass:[TL_webPageEmpty class]])) {
         if(!prevItem.message.action && !item.message.action) {
             if(prevItem.message.from_id == item.message.from_id && ABS(prevItem.message.date - item.message.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderMessage = NO;

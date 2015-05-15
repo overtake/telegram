@@ -601,7 +601,7 @@ Class convertClass(NSString *c, int layer) {
     if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaExternalDocument", layer)]) {
         
         
-        TLPhotoSize *pthumb = [TL_photoSizeEmpty createWithType:@"jpeg"];
+        TLPhotoSize *pthumb = [TL_photoSizeEmpty createWithType:@"x"];
         
         
         if( [[media valueForKey:@"thumb"] isKindOfClass:convertClass(@"Secret%d_PhotoSize_photoCachedSize", layer)]) {
@@ -653,7 +653,7 @@ Class convertClass(NSString *c, int layer) {
         
          if( ((NSData *)[media valueForKey:@"thumb"]).length > 0) {
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]];
-        }
+         }
             
         return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:[@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy]]];
        

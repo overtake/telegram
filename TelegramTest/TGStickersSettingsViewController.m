@@ -12,7 +12,7 @@
 #import "TGImageView.h"
 #import "EmojiViewController.h"
 #import "TGMessagesStickerImageObject.h"
-
+#import "TGStickerPackModalView.h"
 
 
 
@@ -308,7 +308,17 @@
     return view;
 }
 
-- (void)selectionDidChange:(NSInteger)row item:(TMRowItem *) item {
+- (void)selectionDidChange:(NSInteger)row item:(TGStickerPackRowItem *) item {
+    
+    if([item isKindOfClass:[TGStickerPackRowItem class]]) {
+        TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
+        
+        
+        
+        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
+        
+        [modalView show:self.view.window animated:YES];
+    }
     
 }
 
