@@ -130,7 +130,9 @@
 }
 
 -(void)keyUp:(NSEvent *)theEvent {
-    
+    if(theEvent.keyCode == 53) {
+        [self close:YES];
+    }
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
