@@ -315,8 +315,13 @@
     
     [RPCRequest sendRequest:[TLAPI_contacts_importContacts createWithContacts:(NSMutableArray *)[NSArray arrayWithObject:contact] replace:NO] successHandler:^(RPCRequest *request, TL_contacts_importedContacts *response) {
         
-        if(!response.imported.count)
-            return callback(NO, nil, nil);
+        if(!response.imported.count) {
+            [ASQueue dispatchOnMainQueue:^{
+                callback(NO, nil, nil);
+            }];
+            return;
+        }
+        
         
         [SharedManager proccessGlobalResponse:response];
         
