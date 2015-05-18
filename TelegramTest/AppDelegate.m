@@ -247,9 +247,9 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
             if(dialog.type == DialogTypeChat) {
                 if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
                 
-                
-                [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];
             }
+            
+             [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];
             
         });
         

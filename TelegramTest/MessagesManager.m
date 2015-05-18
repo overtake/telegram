@@ -435,6 +435,9 @@ static const int seconds_to_notify = 120;
     
 }
 
+-(void)setUnread_count:(int)unread_count {
+    _unread_count = unread_count > 0 ? unread_count : 0;
+}
 
 +(void)updateUnreadBadge {
     
@@ -442,7 +445,7 @@ static const int seconds_to_notify = 120;
         
         [[self sharedManager] setUnread_count:count];
         
-        NSString *str = count > 0 ? [NSString stringWithFormat:@"%d",count] : nil;
+        NSString *str = [[self sharedManager] unread_count] > 0 ? [NSString stringWithFormat:@"%d",count] : nil;
         [[[NSApplication sharedApplication] dockTile] setBadgeLabel:str];
         [Notification perform:UNREAD_COUNT_CHANGED data:@{@"count":@(count)}];
     }];
