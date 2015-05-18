@@ -3355,6 +3355,12 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
+    if(dialog.type == DialogTypeChat && dialog.chat.left) {
+        if(startDeleting != nil)
+            startDeleting();
+        block();
+        return;
+    }
     
     NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
