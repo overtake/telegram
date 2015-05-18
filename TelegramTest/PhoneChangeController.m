@@ -75,14 +75,12 @@
 
 -(void)loadView {
     
-    
     ControllerView *view = [[ControllerView alloc] initWithFrame:self.frameInit];
     
     self.view = view;
     
     self.view.isFlipped = YES;
     
-
     [self setCenterBarViewText:NSLocalizedString(@"PhoneChangeController.Header", nil)];
     
     TMTextButton *doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"PhoneChangeController.Next", nil)];
@@ -104,8 +102,8 @@
             [self hideModalProgress];
             
             if(error.error_code == 400) {
-                
-               alert(NSLocalizedString(@"PhoneChangeControlller.AlertHeader", nil), NSLocalizedString(error.error_msg, nil));
+
+                alert(NSLocalizedString(@"PhoneChangeControlller.AlertHeader", nil),![error.error_msg isEqualToString:@"PHONE_NUMBER_OCCUPIED"] ?  NSLocalizedString(error.error_msg, nil) : [NSString stringWithFormat:NSLocalizedString(@"PhoneChange.PhoneOccupied", nil),view.changerView.phoneNumber]);
             }
             
         } timeout:10];

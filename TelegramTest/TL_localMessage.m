@@ -83,6 +83,10 @@
     return [[UsersManager sharedManager] find:self.from_id];
 }
 
+-(TLUser *)fromFwdUser {
+    return [[UsersManager sharedManager] find:self.fwd_from_id];
+}
+
 -(void)setDstate:(DeliveryState)dstate {
     BOOL needUpdate = dstate != self.dstate;
     self->_dstate = dstate;

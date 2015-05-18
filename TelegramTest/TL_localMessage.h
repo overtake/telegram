@@ -46,5 +46,5 @@ typedef enum {
 -(int)filterType;
 
 -(TLUser *)fromUser;
-
+-(TLUser *)fromFwdUser;
 @end

@@ -43,7 +43,8 @@
 //            
 //        }
         
-        NSString *name = replyMessage.fromUser.fullName;
+        
+        NSString *name = replyMessage.fwd_from_id != 0 ? replyMessage.fromFwdUser.fullName : replyMessage.fromUser.fullName;
         
         NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
         
@@ -51,7 +52,7 @@
         
         [replyHeader setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:replyHeader.range];
         
-        [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:replyMessage.from_id] range:replyHeader.range];
+        [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:replyMessage.fwd_from_id != 0 ? replyMessage.fwd_from_id : replyMessage.from_id] range:replyHeader.range];
         
         _replyHeader = replyHeader;
         
