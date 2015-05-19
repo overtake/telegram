@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "GRCustomizableWindow.h"
 #import "TGWindowArchiver.h"
 @interface TelegramWindow : NSWindow<NSWindowDelegate>
 @property (nonatomic, strong) TMViewController *rootViewController;

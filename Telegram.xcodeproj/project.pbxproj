@@ -332,7 +332,6 @@
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
 		C2531F5A1964548100F7D7A2 /* MessagesTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */; };
 		C2531F5D196572BA00F7D7A2 /* TMSharedMediaButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */; };
-		C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F6D1965AA6900F7D7A2 /* GRCustomizableWindow.m */; };
 		C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F711965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m */; };
 		C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F741966C15800F7D7A2 /* ViewAcceptMoveWindow.m */; };
 		C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */ = {isa = PBXBuildFile; fileRef = C2544E891A8128A8006E44DF /* TGSharedMediaCap.m */; };
@@ -1527,8 +1526,6 @@
 		C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesTopInfoView.m; sourceTree = "<group>"; };
 		C2531F5B196572BA00F7D7A2 /* TMSharedMediaButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMSharedMediaButton.h; sourceTree = "<group>"; };
 		C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMSharedMediaButton.m; sourceTree = "<group>"; };
-		C2531F6C1965AA6900F7D7A2 /* GRCustomizableWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRCustomizableWindow.h; sourceTree = "<group>"; };
-		C2531F6D1965AA6900F7D7A2 /* GRCustomizableWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRCustomizableWindow.m; sourceTree = "<group>"; };
 		C2531F701965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionStatusViewControllerView.h; sourceTree = "<group>"; };
 		C2531F711965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionStatusViewControllerView.m; sourceTree = "<group>"; };
 		C2531F731966C15800F7D7A2 /* ViewAcceptMoveWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewAcceptMoveWindow.h; sourceTree = "<group>"; };
@@ -4149,8 +4146,6 @@
 				C247015819839A4B007AB338 /* TGTimerTarget.m */,
 				C247015019839A20007AB338 /* TGAnimationBlockDelegate.h */,
 				C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */,
-				C2531F6C1965AA6900F7D7A2 /* GRCustomizableWindow.h */,
-				C2531F6D1965AA6900F7D7A2 /* GRCustomizableWindow.m */,
 				C276C7D1195C6C1B0037C4D7 /* ITProgressIndicator.h */,
 				C276C7D2195C6C1B0037C4D7 /* ITProgressIndicator.m */,
 				C2AA4ED118A8ED3A00E20C68 /* utils */,
@@ -5530,7 +5525,6 @@
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
 				C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */,
 				C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */,
-				C2531F6E1965AA6900F7D7A2 /* GRCustomizableWindow.m in Sources */,
 				C2C85BA71AF10B6500FBEABD /* TGCaptionView.m in Sources */,
 				C2201A06192E488D00C0E441 /* AddContactView.m in Sources */,
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
