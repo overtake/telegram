@@ -71,16 +71,16 @@ NSImage *placeholder() {
             
             _title = title;
         }
-        
-        if(!_author) {
-            
-            NSMutableAttributedString *copy = [_title mutableCopy];
-            
-            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:copy.range];
-            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
-            _author = copy;
-            
-        }
+//        
+//        if(!_author) {
+//            
+//            NSMutableAttributedString *copy = [_title mutableCopy];
+//            
+//            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:copy.range];
+//            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
+//            _author = copy;
+//            
+//        }
         
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
@@ -91,7 +91,10 @@ NSImage *placeholder() {
         
         _siteName = siteName;
         
+        
         if(webpage.n_description) {
+            
+            
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
             [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
@@ -102,6 +105,20 @@ NSImage *placeholder() {
             style.alignment = NSLeftTextAlignment;
             
             [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
+            
+            
+            NSString *t = webpage.title;
+            
+            if(t.length > 0 && _author == nil)  {
+                NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
+                
+                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
+                [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
+                
+                [desc insertAttributedString:title atIndex:0];
+            }
+            
+            
             _desc = desc;
             
             [desc detectExternalLinks];

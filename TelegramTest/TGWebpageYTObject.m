@@ -32,7 +32,7 @@
         size.height = ceil(size.height + 7);
         _videoTimeSize = size;
         
-        _author = [super title];
+     //   _author = [super title];
 
     }
     

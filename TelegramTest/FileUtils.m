@@ -575,15 +575,18 @@ void open_link(NSString *link) {
             
             if([name hasPrefix:joinPrefix]) {
                 join_group_by_hash([name substringFromIndex:joinPrefix.length]);
+                return;
             } else if([name hasPrefix:stickerPrefix]) {
                 add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[name substringFromIndex:stickerPrefix.length]]);
-            } else {
+                return;
+            } else if([name rangeOfString:@"/"].location == NSNotFound) {
                 open_user_by_name(name);
+                return;
             }
             
             
             
-            return;
+            
         }
     }
     

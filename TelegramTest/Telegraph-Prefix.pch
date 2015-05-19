@@ -9,6 +9,10 @@
 //#define TGStable // DEF IN stable version
 
 
+#ifdef TGDEBUG
+#import "TGUIMainThreadGuard.h"
+#endif
+
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import <MtProtoKit/MTLogging.h>
 
