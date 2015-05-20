@@ -12,7 +12,7 @@
 @interface TGPasslockModalView ()
 @property (nonatomic,strong) TMAvatarImageView *avatar;
 @property (nonatomic,strong) NSSecureTextField *secureField;
-
+@property (nonatomic,strong) BTRButton *enterButton;
 @property (nonatomic,strong) TMNameTextField *descriptionField;
 @property (nonatomic,strong) BTRButton *closeButton;
 
@@ -20,7 +20,7 @@
 
 @property (nonatomic,strong) NSMutableArray *md5Hashs;
 
-@property (nonatomic,strong) BTRButton *enterButton;
+
 @end
 
 @implementation TGPasslockModalView

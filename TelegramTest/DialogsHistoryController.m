@@ -56,8 +56,17 @@
         
         [ASQueue dispatchOnStageQueue:^{
             
+            NSMutableArray *converted = [[NSMutableArray alloc] init];
             
-            [[DialogsManager sharedManager] add:d];
+            [d enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+                
+                if(![[DialogsManager sharedManager] find:obj.peer_id])
+                {
+                    [converted addObject:obj];
+                }
+            }];
+            
+            [[DialogsManager sharedManager] add:converted];
             [[MessagesManager sharedManager] add:m];
                         
             if(d.count < limit) {
@@ -68,7 +77,7 @@
             self.isLoading = NO;
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 if(callback)
-                    callback(d);
+                    callback(converted);
             }];
         }];
        

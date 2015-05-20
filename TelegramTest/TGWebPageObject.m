@@ -107,7 +107,7 @@ NSImage *placeholder() {
             [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
             
             
-            NSString *t = webpage.title;
+            NSString *t = webpage.title.length > 0 ? webpage.title : webpage.author;
             
             if(t.length > 0 && _author == nil)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
@@ -200,7 +200,7 @@ NSImage *placeholder() {
     
 
     
-    if([webpage.site_name isEqualToString:@"YouTube"])
+    if([webpage.site_name isEqualToString:@"YouTube"] && [webpage.type isEqualToString:@"video"])
     {
         return [[TGWebpageYTObject alloc] initWithWebPage:webpage];
     }

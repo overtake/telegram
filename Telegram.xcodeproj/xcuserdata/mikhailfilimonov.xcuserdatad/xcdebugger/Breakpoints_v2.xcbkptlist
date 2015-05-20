@@ -116,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/Butter/BTRControl.m"
-            timestampString = "453385189.313881"
+            timestampString = "453742315.448444"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
+            startingLineNumber = "530"
+            endingLineNumber = "530"
             landmarkName = "-sendActionsForControlEvents:"
             landmarkType = "5">
          </BreakpointContent>

@@ -19,7 +19,7 @@
 #import <MTProtoKit/MTLogging.h>
 #import "TLApi.h"
 #import "CMath.h"
-
+#import "TGSAppManager.h"
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -132,38 +132,39 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 dispatch_block_t block = ^ {
                     
-//                    [TMViewController showBlockPasslock:^BOOL(BOOL result, NSString *md5Hash) {
-//                        
-//                        __block BOOL acceptHash;
-//                        
-//                        [_queue dispatchOnQueue:^{
-//                            
-//                            acceptHash = [_keychain updatePasscodeHash:[md5Hash dataUsingEncoding:NSUTF8StringEncoding] save:NO];
-//                            
-//                        } synchronous:YES];
-//                        
-//                        if(acceptHash) {
-//                            
-//                            [_queue dispatchOnQueue:^{
-//                                
-//                                [self startWithKeychain:_keychain];
-//                                [self initConnectionWithId:_masterDatacenter];
-//                                
-//                                
-//                            }];
-//                            
-//                            [Telegram initializeDatabase];
-//                            
-//                            if(![self isAuth]) {
-//                                [[Telegram delegate] logoutWithForce:YES];
-//                            }
-//                        }
-//                        
-//                        
-//                        return acceptHash;
-//                        
-//                        
-//                    }];
+                    [TGSAppManager showPasslock:^BOOL(BOOL result, NSString *md5Hash) {
+                        
+                        __block BOOL acceptHash;
+                        
+                        [_queue dispatchOnQueue:^{
+                            
+                            acceptHash = [_keychain updatePasscodeHash:[md5Hash dataUsingEncoding:NSUTF8StringEncoding] save:NO];
+                            
+                        } synchronous:YES];
+                        
+                        if(acceptHash) {
+                            
+                            [_queue dispatchOnQueue:^{
+                                
+                                [self startWithKeychain:_keychain];
+                                [self initConnectionWithId:_masterDatacenter];
+                                
+                                
+                            }];
+                            
+                            [TGSAppManager initializeContacts];
+                            
+                            if(![self isAuth]) {
+                                [TGSAppManager hidePasslock];
+                                [TGSAppManager showNoAuthView];
+                            }
+                        }
+                        
+                        
+                        return acceptHash;
+                        
+                        
+                    }];
                     
                 };
                 
@@ -177,7 +178,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 [self startWithKeychain:_keychain];
                 
                 if(![self isAuth]) {
-                   // [[Telegram delegate] logoutWithForce:YES];
+                    [TGSAppManager showNoAuthView];
                 }
                 
             }

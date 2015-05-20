@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Telegram
+
+  Created by keepcoder on 20.05.15.
+  Copyright (c) 2015 keepcoder. All rights reserved.
+*/
+"Search" = "Search";
+"Passcode.EnterPlaceholder" = "Enter passcode";
+"NoAuthDescription" = "Sorry. You need login from main application to use share menu.";

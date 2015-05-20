@@ -11,7 +11,6 @@
 @implementation TGWebpageArticle
 
 @synthesize size = _size;
-@synthesize desc = _desc;
 @synthesize imageSize = _imageSize;
 @synthesize author = _author;
 @synthesize imageObject = _imageObject;
@@ -22,27 +21,7 @@
     if(self = [super initWithWebPage:webpage]) {
         
         
-        
-        NSString *t = webpage.title.length > 0 ? webpage.title : webpage.author;
-        
-        if(t.length > 0) {
-            
-            
-            NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
-            
-            [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
-            [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
-            
-            
-            NSMutableAttributedString *attr = [[super desc] mutableCopy];
-            
-                        
-            [attr insertAttributedString:title atIndex:0];
-            
-            _desc = attr;
-        } else {
-            _desc = [super desc];
-        }
+       
         
         if([webpage.photo isKindOfClass:[TL_photo class]]) {
             

@@ -207,6 +207,9 @@
             
             previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
             
+        } else if([self.webpage.webpage.type isEqualToString:@"video"]) {
+            open_link(self.webpage.webpage.display_url);
+            return;
         }
         
         [[TGPhotoViewer viewer] show:previewObject];

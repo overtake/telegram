@@ -226,6 +226,14 @@
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
+		C20BA5DC1B0BB992001ECE22 /* TGSNoAuthModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */; };
+		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
+		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
+		C20BA5E51B0CACF1001ECE22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C20BA5E71B0CACF1001ECE22 /* Localizable.strings */; };
+		C20BA5EC1B0CDE61001ECE22 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C20BA5ED1B0CDE61001ECE22 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C20BA5EE1B0CDE64001ECE22 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20BA5EF1B0CDE64001ECE22 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C20D188B193CBC230095A906 /* AudioSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D188A193CBC230095A906 /* AudioSenderItem.m */; };
 		C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */; };
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
@@ -700,10 +708,7 @@
 		C2D4B9281AFCEA1D0035B4E4 /* YapDatabaseExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C01AFCEA1D0035B4E4 /* YapDatabaseExtension.m */; };
 		C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */; };
 		C2D4B92A1AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */; };
-		C2D5CE7D1B0A756E009F6419 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D5CE7E1B0A756E009F6419 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D5CE7F1B0A7571009F6419 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D5CE801B0A7571009F6419 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -827,8 +832,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D5CE7D1B0A756E009F6419 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D5CE7E1B0A756E009F6419 /* HockeySDK.framework in Copy Files (6 items) */,
+				C20BA5EE1B0CDE64001ECE22 /* Sparkle.framework in Copy Files (6 items) */,
+				C20BA5EF1B0CDE64001ECE22 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1302,6 +1307,17 @@
 		C20B228718E971D0007BCCD6 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
 		C20B228B18E98A2C007BCCD6 /* SettingsArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsArchiver.h; sourceTree = "<group>"; };
 		C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsArchiver.m; sourceTree = "<group>"; };
+		C20BA5DA1B0BB992001ECE22 /* TGSNoAuthModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSNoAuthModalView.h; sourceTree = "<group>"; };
+		C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSNoAuthModalView.m; sourceTree = "<group>"; };
+		C20BA5DD1B0BBE85001ECE22 /* TGSAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSAppManager.h; sourceTree = "<group>"; };
+		C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSAppManager.m; sourceTree = "<group>"; };
+		C20BA5E01B0BCC04001ECE22 /* TGSEnterPasscodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSEnterPasscodeView.h; sourceTree = "<group>"; };
+		C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSEnterPasscodeView.m; sourceTree = "<group>"; };
+		C20BA5E61B0CACF1001ECE22 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C20BA5E81B0CACF6001ECE22 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C20BA5E91B0CACF6001ECE22 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C20BA5EA1B0CACF8001ECE22 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C20BA5EB1B0CACF9001ECE22 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C20D1889193CBC230095A906 /* AudioSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSenderItem.h; sourceTree = "<group>"; };
 		C20D188A193CBC230095A906 /* AudioSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioSenderItem.m; sourceTree = "<group>"; };
 		C20D1891193E09C00095A906 /* TMBlueAddButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMBlueAddButtonView.h; sourceTree = "<group>"; };
@@ -2363,8 +2379,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D5CE7F1B0A7571009F6419 /* Sparkle.framework in Frameworks */,
-				C2D5CE801B0A7571009F6419 /* HockeySDK.framework in Frameworks */,
+				C20BA5EC1B0CDE61001ECE22 /* Sparkle.framework in Frameworks */,
+				C20BA5ED1B0CDE61001ECE22 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4416,6 +4432,7 @@
 				C2CBF3BA1AF38427006BF90A /* icon.icns */,
 				C2CBF3BC1AF38427006BF90A /* TGShare.entitlements */,
 				C2CBF67C1AFB6B6D006BF90A /* TGShare.pch */,
+				C20BA5E71B0CACF1001ECE22 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4441,6 +4458,10 @@
 				C2CBF68C1AFB7421006BF90A /* TGS_ConversationRowView.m */,
 				C2CBF6C71AFBA398006BF90A /* TGSModalSenderView.h */,
 				C2CBF6C81AFBA398006BF90A /* TGSModalSenderView.m */,
+				C20BA5DA1B0BB992001ECE22 /* TGSNoAuthModalView.h */,
+				C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */,
+				C20BA5E01B0BCC04001ECE22 /* TGSEnterPasscodeView.h */,
+				C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */,
 			);
 			name = ui;
 			sourceTree = "<group>";
@@ -4463,6 +4484,8 @@
 				C2CBF6C21AFB8D1C006BF90A /* TGSImageObject.m */,
 				C2CBF6C41AFB8FCF006BF90A /* TGSDownloadPhotoItem.h */,
 				C2CBF6C51AFB8FCF006BF90A /* TGSDownloadPhotoItem.m */,
+				C20BA5DD1B0BBE85001ECE22 /* TGSAppManager.h */,
+				C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */,
 			);
 			name = logic;
 			sourceTree = "<group>";
@@ -5179,7 +5202,7 @@
 								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Mac = {
 								enabled = 0;
@@ -5255,6 +5278,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C20BA5E51B0CACF1001ECE22 /* Localizable.strings in Resources */,
 				C2CBF6D21AFBD2B5006BF90A /* mime-types.txt in Resources */,
 				C2CBF6DE1AFBE812006BF90A /* Images.xcassets in Resources */,
 				C2CBF3C11AF38427006BF90A /* ShareViewController.xib in Resources */,
@@ -5309,6 +5333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */,
 				C2CBF6DC1AFBE691006BF90A /* TMButton.m in Sources */,
 				C2CBF6DB1AFBE662006BF90A /* NSTextFieldCategory.m in Sources */,
 				C2CBF6D91AFBE352006BF90A /* _TMSearchTextField.m in Sources */,
@@ -5323,6 +5348,7 @@
 				C2CBF6A41AFB8247006BF90A /* TGImageView.m in Sources */,
 				C2CBF69F1AFB817C006BF90A /* TMImageUtils.m in Sources */,
 				C2CBF6A01AFB817C006BF90A /* ImageUtils.m in Sources */,
+				C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */,
 				C2CBF69E1AFB8141006BF90A /* DownloadItem.m in Sources */,
 				C2CBF6921AFB7E94006BF90A /* TLFileLocation+Extensions.m in Sources */,
 				C2CBF6991AFB7EFE006BF90A /* CFunctions.m in Sources */,
@@ -5392,7 +5418,9 @@
 				C2CBF6CF1AFBC5C0006BF90A /* RPC.m in Sources */,
 				C2CBF5F61AF8DD3B006BF90A /* TLApiObject.m in Sources */,
 				C2CBF5F51AF8DD32006BF90A /* MTProto.m in Sources */,
+				C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */,
 				C2CBF5F41AF8DD0A006BF90A /* ClassStore.m in Sources */,
+				C20BA5DC1B0BB992001ECE22 /* TGSNoAuthModalView.m in Sources */,
 				C2CBF6B81AFB860D006BF90A /* DownloadOperation.m in Sources */,
 				C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */,
 				C2CBF5E81AF7CBD9006BF90A /* TGS_RPCRequest.m in Sources */,
@@ -6054,6 +6082,18 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		C20BA5E71B0CACF1001ECE22 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C20BA5E61B0CACF1001ECE22 /* en */,
+				C20BA5E81B0CACF6001ECE22 /* es */,
+				C20BA5E91B0CACF6001ECE22 /* de */,
+				C20BA5EA1B0CACF8001ECE22 /* it */,
+				C20BA5EB1B0CACF9001ECE22 /* nl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		C20D18EE1948A3F70095A906 /* NewMainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -6123,7 +6163,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bcfe75b4-f14f-41b3-adbe-41b08db81cf2";
+				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -6164,7 +6204,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bcfe75b4-f14f-41b3-adbe-41b08db81cf2";
+				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};

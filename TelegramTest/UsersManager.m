@@ -316,6 +316,7 @@
         NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"selfUser"];
         if(data) {
             user = [TLClassStore deserialize:data];
+            [user rebuildNames];
         }
         
     }

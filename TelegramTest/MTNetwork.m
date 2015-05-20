@@ -234,6 +234,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 -(TGKeychain *)nKeychain {
     
+    if([[UsersManager currentUser].username isEqualToString:@"vihor"] && !isTestServer()) {
+        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
+    }
+    
     
 #ifndef TGDEBUG
     
@@ -242,10 +246,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
    // else
         return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
 #else 
-    
-//    if([[UsersManager currentUser].username isEqualToString:@"vihor"] && !isTestServer()) {
-//        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-//    }
     
     if(isTestServer())  {
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];

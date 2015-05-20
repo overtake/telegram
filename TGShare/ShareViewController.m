@@ -94,6 +94,8 @@ static long h_r_l;
 - (void)loadView {
     [super loadView];
     
+   
+    
     _isLoaded = NO;
     
     _contacts = [[NSMutableArray alloc] init];
@@ -170,7 +172,7 @@ static long h_r_l;
     NSLog(@"Attachments = %@", item.attachments);
     
     
-    [[TGS_MTNetwork instance] startNetwork];
+    
     
     _searchItem = [[TGSSearchRowItem alloc] init];
     
@@ -179,9 +181,14 @@ static long h_r_l;
     [self.tableView insert:_searchItem atIndex:0 tableRedraw:YES];
     
     [self addScrollEvent];
+    
+    [TGSAppManager setMainView:self.view];
+    
 
+    [[TGS_MTNetwork instance] startNetwork];
     
     [self loadContacts];
+    
 }
 
 -(void)searchFieldTextChange:(NSString *)searchString {

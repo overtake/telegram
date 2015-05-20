@@ -20,6 +20,8 @@
     if(self = [super init]) {
         _conversation = conversation;
         
+        assert(_conversation == [[DialogsManager sharedManager] find:conversation.peer_id]);
+        
         
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
@@ -116,6 +118,10 @@
 }
 
 -(void)update {
+    
+    
+    
+    
     _messageText = [MessagesUtils conversationLastText:_conversation.lastMessage conversation:_conversation];
     
     int time = self.conversation.last_message_date;
