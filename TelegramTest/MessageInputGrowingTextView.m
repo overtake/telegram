@@ -146,7 +146,7 @@ typedef enum {
         NSArray *objectsToPaste = [pasteboard readObjectsForClasses:[NSArray arrayWithObject:[NSImage class]] options:[NSDictionary dictionary]];
         
         
-        if(objectsToPaste.count > 0) {
+        if(objectsToPaste.count > 0 && [[[[pasteboard pasteboardItems] objectAtIndex:0] types] indexOfObject:@"com.apple.traditional-mac-plain-text"] == NSNotFound) {
             
             image = [objectsToPaste objectAtIndex:0];
             
