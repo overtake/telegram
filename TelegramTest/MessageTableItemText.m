@@ -44,54 +44,6 @@
     [self.textAttributed detectAndAddLinks];
     
     
-
- //   [self.textAttributed addAttribute:NSBackgroundColorAttributeName value:NSColorFromRGB(0xcfcfcf) range:self.textAttributed.range];
-    
-  //  [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:self.textAttributed.range];
-    
-    
-    NSString *fullname = self.user.fullName;
-    
-//    self.headerAttributed = [[NSMutableAttributedString alloc] init];
-    
-    self.nameAttritutedString = [[NSMutableAttributedString alloc] init];
-    NSRange rangeHeader =  [self.nameAttritutedString appendString:fullname ? fullname : NSLocalizedString(@"User.Deleted", nil) withColor:[MessagesUtils colorForUserId:self.message.from_id]];
-    
-    
-    [self.nameAttritutedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:11] forRange:rangeHeader];
-    
-//    NSMutableParagraphStyle *paragraphStyle =
-    CGFloat spacing = 14;
-    NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
-//    [para setLineSpacing:spacing];
-    [para setMinimumLineHeight:spacing];
-    [para setMaximumLineHeight:spacing];
-    [self.nameAttritutedString addAttribute:NSParagraphStyleAttributeName value:para range:rangeHeader];
-
-    
-    [self.nameAttritutedString setLink:[TMInAppLinks userProfile:self.user.n_id] withColor:[MessagesUtils colorForUserId:self.message.from_id] forRange:rangeHeader];
-    
-    
-    if(self.isForwadedMessage) {
-        
-        self.forwardAttributedString = [[NSMutableAttributedString alloc] init];
-        NSRange range1 = [self.forwardAttributedString appendString:@"Message.ForwardedFrom" withColor:NSColorFromRGB(0x6da2cb)];
-        TLUser *user = self.fwd_user;
-        NSRange range2 = [self.forwardAttributedString appendString:user.fullName withColor:NSColorFromRGB(0x57a4e1)];
-        
-        [self.forwardAttributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:range2];
-        
-        NSDate *fwd_date = [NSDate dateWithTimeIntervalSince1970:object.fwd_date];
-        [[MessageTableItem dateFormatter] setDateFormat:@"HH:mm"];
-        
-        NSRange range3 = [self.forwardAttributedString appendString:[NSString stringWithFormat:@", %@", [[MessageTableItem dateFormatter] stringFromDate:fwd_date]] withColor:NSColorFromRGB(0x6da2cb)];
-
-        NSRange rangeFinal = NSMakeRange(range1.location, range1.length + range2.length + range3.length);
-        [self.forwardAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:11.5] forRange:rangeFinal];
-        
-        //User
-        [self.forwardAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:11.5] forRange:range2];
-    }
     
     [self updateWebPage];
     
@@ -105,7 +57,7 @@
 
 -(void)updateMessageFont {
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
-    [self makeSizeByWidth:[Telegram rightViewController].messagesViewController.table.containerSize.width];
+    [self makeSizeByWidth:self.blockWidth];
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {

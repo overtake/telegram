@@ -415,7 +415,6 @@
 }
 
 -(void)dealloc {
-    MTLog(@"%@",NSStringFromClass(self.class));
 }
 
 

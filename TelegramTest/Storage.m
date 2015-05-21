@@ -187,7 +187,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY DESC,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
         
         
-        [db executeUpdate:@"CREATE INDEX if not exists msg_idx ON messages(peer_id,date,filter_mask,destruct_time)"];
+        [db executeUpdate:@"CREATE INDEX if not exists msg_idx ON messages(peer_id,date,destruct_time,filter_mask)"];
         
         
         [db executeUpdate:@"create table if not exists dialogs (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
@@ -210,14 +210,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"CREATE INDEX if not exists user_id_index ON contacts(user_id)"];
         
-        [db executeUpdate:@"create table if not exists sessions (session blob)"];
-        
         [db executeUpdate:@"create table if not exists chats_full_new (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)"];
         
         [db executeUpdate:@"create table if not exists imported_contacts (hash blob primary key, hashObject string, user_id integer)"];
         
-        
-        [db executeUpdate:@"create table if not exists dc_options (dc_id integer primary key, ip_address string, port integer)"];
         
         [db executeUpdate:@"create table if not exists encrypted_chats (chat_id integer primary key,serialized blob)"];
         
@@ -228,7 +224,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
-        
         
         
         [db executeUpdate:@"create table if not exists user_photos (id blob primary key, user_id integer, serialized blob,date integer)"];
@@ -487,8 +482,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and (filter_mask & %d > 0) and destruct_time > %d order by date %@, n_id %@ limit %d",conversationId,next ? @"<=" : @">",currentDate,mask,[[MTNetwork instance] getTime], next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
-        
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and destruct_time > %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",conversationId,next ? @"<=" : @">",currentDate,[[MTNetwork instance] getTime],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
@@ -535,8 +529,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         
         
-        
-        
     }];
     
     
@@ -549,6 +541,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [supportIds addObject:@([obj reply_to_msg_id])];
         
     }];
+    
     
     NSArray *support = [self selectSupportMessages:supportIds];
     

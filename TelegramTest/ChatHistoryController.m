@@ -177,11 +177,7 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
         
-       
-            
             NSArray *list = notify.object;
-            
-        
             
             list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
         
@@ -575,6 +571,10 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
         
+        
+        
+       
+        
         if([self checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
             return;
         }
@@ -660,7 +660,7 @@ static NSMutableArray *listeners;
             
         }
         
-        
+
         
         if(anotherSource && !notify) {
             
@@ -671,12 +671,17 @@ static NSMutableArray *listeners;
                     
                     [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
                         
+                       
                         [[MessagesManager sharedManager] add:result];
                         
+                        NSArray *items = [self.controller messageTableItemsFromMessages:result];
                         
-                        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:result] isLates:NO];
+                        
+                        NSArray *converted = [self filterAndAdd:items isLates:NO];
+                        
                         
                         converted = [self sortItems:converted];
+                        
                         
                         [self saveId:converted next:next];
                         
@@ -688,6 +693,8 @@ static NSMutableArray *listeners;
                                 [self setState:ChatHistoryStateFull next:NO];
                             }
                         }
+                        
+                        
                         
                         [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
                         

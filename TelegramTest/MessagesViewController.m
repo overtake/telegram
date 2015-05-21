@@ -2162,9 +2162,12 @@ static NSTextAttachment *headerMediaIcon() {
     self.historyController.selectLimit = isFirst ? count : 50;
     
     
+    
+    
+    
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range) {
         
-        if(prevResult.count > 0) {
+       if(prevResult.count > 0) {
             MessageTableItem *item = prevResult[0];
             if(self.conversation.peer_id != item.message.peer_id)
                 return;

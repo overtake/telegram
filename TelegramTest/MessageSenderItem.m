@@ -73,17 +73,6 @@
             self.message.media = response.media;
             
             
-        } else {
-            
-            
-//            TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-//            [TL_localMessage convertReceivedMessages:stated.messages];
-//            
-//            [SharedManager proccessGlobalResponse:stated];
-//            
-//            [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-//            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
-            
         }
         
         self.message.dstate = DeliveryStateNormal;
