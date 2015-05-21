@@ -184,18 +184,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
+        [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY DESC,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
         
         
-        [db executeUpdate:@"CREATE INDEX if not exists peer_id_index ON messages(peer_id)"];
-        [db executeUpdate:@"CREATE INDEX if not exists date_id_index ON messages(date)"];
-        [db executeUpdate:@"CREATE INDEX if not exists filter_mask_index ON messages(filter_mask)"];
-        [db executeUpdate:@"CREATE INDEX if not exists n_id_index ON messages(n_id)"];
-        
-        [db executeUpdate:@"CREATE INDEX if not exists message_text_index ON messages(message_text COLLATE NOCASE)"];
+        [db executeUpdate:@"CREATE INDEX if not exists msg_idx ON messages(peer_id,date,filter_mask,destruct_time)"];
         
         
         [db executeUpdate:@"create table if not exists dialogs (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
+        
+         [db executeUpdate:@"CREATE INDEX if not exists cnv_idx ON dialogs(top_message,last_real_message_date)"];
+        
         
         [db executeUpdate:@"create table if not exists chats (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
@@ -459,38 +457,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     }];
 }
 
--(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
-    
-    int peer_id = [peer peer_id];
-    [queue inDatabase:^(FMDatabase *db) {
-        
-        NSString *tableName = @"messages";
-        
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from %@ where destruct_time > %d and peer_id = %d and n_id %@ %d and (filter_mask & %d > 0) order by date %@ limit %d",tableName,[[MTNetwork instance] getTime],peer_id,(next && (max_id != 0 && max_id != INT32_MIN)) ? @"<" : @">",max_id,mask,next ? @"DESC" : @"ASC",limit];
-        
-        
-        
-        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
-        __block NSMutableArray *messages = [[NSMutableArray alloc] init];
-        while ([result next]) {
-            TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            msg.flags = -1;
-            msg.message = [result stringForColumn:@"message_text"];
-            msg.flags = [result intForColumn:@"flags"];
-            [messages addObject:msg];
-        }
-        [result close];
-        
-      
-        
-        
-        [LoopingUtils runOnMainQueueAsync:^{
-            if(completeHandler)
-                completeHandler(messages);
-        }];
-        
-    }];
-}
 
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
     
@@ -521,7 +487,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where destruct_time > %d and peer_id = %d and date %@ %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",[[MTNetwork instance] getTime],conversationId,next ? @"<=" : @">",currentDate,mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and (filter_mask & %d > 0) and destruct_time > %d order by date %@, n_id %@ limit %d",conversationId,next ? @"<=" : @">",currentDate,mask,[[MTNetwork instance] getTime], next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         
         
@@ -529,6 +495,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         while ([result next]) {
+            
             TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
             msg.message = [result stringForColumn:@"message_text"];
@@ -537,7 +504,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         [result close];
         
-      //  test_step_group(@"history");
+        
+        //select serialized,flags,message_text from messages where destruct_time > 1432213513 and peer_id = 699140 and date <= 1432213513 and (filter_mask & 2 > 0) order by date DESC, n_id DESC limit 18;
+        
+      //  (@"history");
         
         TL_localMessage *lastMessage = [messages lastObject];
         
@@ -1089,9 +1059,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         
         
-        FMResultSet *result = [db executeQuery:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",[NSNumber numberWithInt:limit],[NSNumber numberWithInt:offset]];
+        
+        FMResultSet *result = [db executeQuery:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",@(limit),@(offset)];
+        
+        
         
         [self parseDialogs:result dialogs:dialogs messages:messages];
+        
         
         [result close];
         
@@ -1209,7 +1183,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
             [users addObject:user];
         }
-        
         
         [result close];
         

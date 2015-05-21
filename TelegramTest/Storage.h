@@ -145,7 +145,6 @@ extern NSString *const ATTACHMENTS;
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 
 
--(void)messages:(TLPeer *)peer max_id:(int)max_id limit:(int)limit next:(BOOL)next filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
 -(TL_localMessage *)messageById:(int)msgId;

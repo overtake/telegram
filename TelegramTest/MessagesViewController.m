@@ -1980,9 +1980,9 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController removeAllItems];
         }
         
-        if(dialog.top_message != dialog.last_marked_message) {
-            [self.historyController removeAllItems];
-        }
+      //  if(dialog.top_message != dialog.last_marked_message) {
+       //     [self.historyController removeAllItems];
+      //  }
         
         
         [self.normalNavigationCenterView setDialog:dialog];
@@ -2157,7 +2157,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSSize size = self.table.scrollView.documentSize;
     
-    int count = size.height/30;
+    int count = size.height/20;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     

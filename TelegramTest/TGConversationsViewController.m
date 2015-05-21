@@ -106,7 +106,11 @@
     
     [SecretChatAccepter instance];
     
+  
+    
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
+        
+
         
         [EmojiViewController loadStickersIfNeeded];
         
