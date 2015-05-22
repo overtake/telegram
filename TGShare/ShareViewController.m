@@ -47,7 +47,9 @@ static long h_r_l;
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(5, 5, NSWidth(frameRect) - 10 , NSHeight(frameRect) - 10)];
+        _searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(5, 5, NSWidth(frameRect) - 20 , 30)];
+        
+        [_searchField setCenterByView:self];
         
         [self addSubview:_searchField];
   
@@ -91,17 +93,19 @@ static long h_r_l;
     return @"ShareViewController";
 }
 
+static ShareViewController *shareViewController;
+
 - (void)loadView {
     [super loadView];
     
-   
+    shareViewController = self;
     
     _isLoaded = NO;
     
     _contacts = [[NSMutableArray alloc] init];
     _items = [[NSMutableArray alloc] init];
     
-    _searchRowView = [[TGSSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 40)];
+    _searchRowView = [[TGSSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), 60)];
     
     _searchRowView.searchField.delegate = self;
     
@@ -122,7 +126,7 @@ static long h_r_l;
     
     [_cancelButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
     
-    [_cancelButton setTitle:@"Cancel" forControlState:BTRControlStateNormal];
+    [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
     
     
     weak();
@@ -143,7 +147,7 @@ static long h_r_l;
     
     [_sendButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
     
-    [_sendButton setTitle:@"Send" forControlState:BTRControlStateNormal];
+    [_sendButton setTitle:NSLocalizedString(@"Share", nil) forControlState:BTRControlStateNormal];
     
     [_sendButton addBlock:^(BTRControlEvents events) {
         
@@ -227,6 +231,19 @@ static long h_r_l;
     [_tableView insert:_isSearchActive ? _searchItems : _items startIndex:1 tableRedraw:YES];
     
     
+}
+
+
+
+
++(void)loadContacts {
+    [shareViewController loadContacts];
+}
+
++(void)close {
+    
+    NSError *cancelError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
+    [shareViewController.extensionContext cancelRequestWithError:cancelError];
 }
 
 -(void)loadContacts {
@@ -360,7 +377,7 @@ static long h_r_l;
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 40 : 50;
+    return row == 0 ? 60 : 50;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;

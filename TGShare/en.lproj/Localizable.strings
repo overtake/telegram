@@ -8,3 +8,43 @@
 "Search" = "Search";
 "Passcode.EnterPlaceholder" = "Enter passcode";
 "NoAuthDescription" = "Sorry. You need login from main application to use share menu.";
+
+"Time.at" = "at";
+"Time.last_seen" = "last seen";
+"Time.today" = "today";
+"Time.tomorrow" = "tomorrow";
+"Time.yesterday" = "yesterday";
+"Time.agoHour" = "%d hour ago";
+"Time.agoHours" = "%d hours ago";
+"Time.agoMinute" = "%d minute ago";
+"Time.agoMinutes" = "%d minutes ago";
+"Time.justnow" = "just now";
+
+"Weekday.Friday" = "Friday";
+"Weekday.Monday" = "Monday";
+"Weekday.Saturday" = "Saturday";
+"Weekday.ShortFriday" = "Fri";
+"Weekday.ShortMonday" = "Mon";
+"Weekday.ShortSaturday" = "Sat";
+"Weekday.ShortSunday" = "Sun";
+"Weekday.ShortThursday" = "Thu";
+"Weekday.ShortTuesday" = "Tue";
+"Weekday.ShortWednesday" = "Wed";
+"Weekday.Sunday" = "Sunday";
+"Weekday.Thursday" = "Thursday";
+"Weekday.Tuesday" = "Tuesday";
+"Weekday.Wednesday" = "Wednesday";
+
+"LastSeen.longTimeAgo" = "last seen a long time ago";
+"LastSeen.Recently" = "last seen recently";
+"LastSeen.Monthly" = "last seen within a month";
+"LastSeen.Weekly" = "last seen within a week";
+
+"Account.Online" = "online";
+"Account.Offline" = "offline";
+
+"Group.membersCount" = "%d members";
+"Group.memberCount" = "%d member";
+
+"Share" = "Share";
+"Cancel" = "Cancel";

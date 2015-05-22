@@ -13,9 +13,12 @@
 #import "TGSAppManager.h"
 #import "NSStringCategory.h"
 #import "TGS_MTNetwork.h"
+#import "TGImageView.h"
+#import "TGSImageObject.h"
 @interface TGSEnterPasscodeView ()
 @property (nonatomic,strong) NSSecureTextField *secureField;
 @property (nonatomic,strong) BTRButton *enterButton;
+@property (nonatomic,strong) TGImageView *avatar;
 @end
 
 @implementation TGSEnterPasscodeView
@@ -28,6 +31,25 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+        
+        
+        
+        _avatar = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+        
+        
+         [_avatar setCenterByView:self];
+        
+        [_avatar setFrameOrigin:NSMakePoint(NSMinX(_avatar.frame), NSMinY(_avatar.frame) + 50)];
+        
+        [self addSubview:_avatar];
+        
+        TLUser *user = [ClassStore deserialize:[[TGSAppManager standartUserDefaults] objectForKey:@"selfUser"]];
+        
+        TGSImageObject *imageObject = [[TGSImageObject alloc] initWithLocation:user.photo.photo_small];
+        
+        imageObject.imageSize = NSMakeSize(100, 100);
+        
+        _avatar.object = imageObject;
         
         
         
@@ -75,6 +97,8 @@
         [self.secureField setTextColor:DARK_BLACK];
         
         [self.secureField setCenterByView:self];
+        
+        [self.secureField setFrameOrigin:NSMakePoint(NSMinX(_secureField.frame), NSMinY(_secureField.frame) - 30)];
         
         
         [self addSubview:self.secureField];

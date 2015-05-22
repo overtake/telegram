@@ -478,6 +478,9 @@
     NSMenuItem *attachLocationItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Location", nil) withBlock:^(id sender) {
         
         MapPanel *panel = [MapPanel sharedPanel];
+        
+        [panel update];
+        
         [self.window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
             
         }];
@@ -502,11 +505,6 @@
     
     if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
         [theMenu addItem:attachLocationItem];
-    //йцуаор =))frfr
-    // oqwhefjkwqehf kj
-    //qwefwf
-    //qwefqkwjef lqwjkef lwqkef/
-    
     
 #else
     

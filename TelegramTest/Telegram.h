@@ -34,6 +34,7 @@ NSString* appName();
 + (SettingsWindowController *)settingsWindowController;
 + (AppDelegate *)delegate;
 
++(NSUserDefaults *)standartUserDefaults;
 
 + (void)setConnectionState:(ConnectingStatusType)state;
 

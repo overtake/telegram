@@ -60,6 +60,18 @@ Telegram *TelegramInstance() {
     return [[self mainViewController] settingsWindowController];
 }
 
++(NSUserDefaults *)standartUserDefaults {
+    
+    static NSUserDefaults *instance;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[NSUserDefaults alloc] initWithSuiteName:@"group.ru.keepcoder.Telegram"];
+    });
+    
+    return instance;
+}
+
 - (id)init {
     self = [super init];
     if(self) {

@@ -7,6 +7,11 @@
 //
 
 #import "TGSNoAuthModalView.h"
+#import "BTRButton.h"
+#import "ShareViewController.h"
+@interface TGSNoAuthModalView ()
+@property (nonatomic,strong) BTRButton *cancelButton;
+@end
 
 @implementation TGSNoAuthModalView
 
@@ -33,6 +38,32 @@
         [textField setCenterByView:self];
         
         [self addSubview:textField];
+        
+        
+        _cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), 50)];
+        
+        _cancelButton.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        [_cancelButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+        
+        [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+        
+        
+        [_cancelButton addBlock:^(BTRControlEvents events) {
+            [ShareViewController close];
+        } forControlEvents:BTRControlEventClick];
+        
+        
+        TMView *topSeparator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, NSWidth(self.frame), DIALOG_BORDER_WIDTH)];
+        
+        topSeparator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+       
+        
+        [self addSubview:_cancelButton];
+        
+        [self addSubview:topSeparator];
+
     }
     
     return self;

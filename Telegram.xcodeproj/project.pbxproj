@@ -230,10 +230,8 @@
 		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
 		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
 		C20BA5E51B0CACF1001ECE22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C20BA5E71B0CACF1001ECE22 /* Localizable.strings */; };
-		C20BA5EC1B0CDE61001ECE22 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C20BA5ED1B0CDE61001ECE22 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C20BA5EE1B0CDE64001ECE22 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C20BA5EF1B0CDE64001ECE22 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20BA62F1B0E5909001ECE22 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C20BA6301B0E5E76001ECE22 /* TGDateUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2AA4EE018A8ED5500E20C68 /* TGDateUtils.mm */; };
 		C20D188B193CBC230095A906 /* AudioSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D188A193CBC230095A906 /* AudioSenderItem.m */; };
 		C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */; };
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
@@ -809,6 +807,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C20BA62D1B0E5902001ECE22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
 		C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
@@ -832,8 +837,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C20BA5EE1B0CDE64001ECE22 /* Sparkle.framework in Copy Files (6 items) */,
-				C20BA5EF1B0CDE64001ECE22 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -853,6 +856,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				C20BA62F1B0E5909001ECE22 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2379,8 +2383,6 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C20BA5EC1B0CDE61001ECE22 /* Sparkle.framework in Frameworks */,
-				C20BA5ED1B0CDE61001ECE22 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5168,6 +5170,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C20BA62E1B0E5902001ECE22 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -5187,6 +5190,9 @@
 						CreatedOnToolsVersion = 6.3;
 						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -5195,6 +5201,9 @@
 					CEB09E5717DAFC250055F150 = {
 						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
 							com.apple.GameCenter = {
 								enabled = 0;
 							};
@@ -5333,6 +5342,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C20BA6301B0E5E76001ECE22 /* TGDateUtils.mm in Sources */,
 				C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */,
 				C2CBF6DC1AFBE691006BF90A /* TMButton.m in Sources */,
 				C2CBF6DB1AFBE662006BF90A /* NSTextFieldCategory.m in Sources */,
@@ -6071,6 +6081,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C20BA62E1B0E5902001ECE22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C20BA62D1B0E5902001ECE22 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -6306,7 +6324,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;
@@ -6349,7 +6367,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;

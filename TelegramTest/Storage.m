@@ -1197,7 +1197,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         for (TLUser *user in users) {
             
             if([user isKindOfClass:[TL_userSelf class]]) {
-                [[NSUserDefaults standardUserDefaults] setObject:[TLClassStore serialize:user] forKey:@"selfUser"];
+                [[Telegram standartUserDefaults] setObject:[TLClassStore serialize:user] forKey:@"selfUser"];
                 [[MTNetwork instance] setUserId:user.n_id];
             }
             

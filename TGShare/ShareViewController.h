@@ -12,4 +12,7 @@
 
 @interface ShareViewController : NSViewController
 
++(void)loadContacts;
++(void)close;
+
 @end

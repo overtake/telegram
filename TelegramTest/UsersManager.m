@@ -313,7 +313,7 @@
     TLUser *user = [[UsersManager sharedManager] userSelf];
     
     if(!user) {
-        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"selfUser"];
+        NSData *data = [[Telegram standartUserDefaults] objectForKey:@"selfUser"];
         if(data) {
             user = [TLClassStore deserialize:data];
             [user rebuildNames];

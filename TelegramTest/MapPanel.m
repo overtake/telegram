@@ -8,7 +8,7 @@
 
 #import "MapPanel.h"
 #import <MapKit/MapKit.h>
-
+#import "Reachability.h"
 @interface TMAnnotation ()
 @property (nonatomic,assign) CLLocationCoordinate2D mainCoordinates;
 @end
@@ -80,6 +80,7 @@
 
 @property (nonatomic,strong) TMView *controlView;
 @property (nonatomic,assign) BOOL isFindUser;
+@property (nonatomic,strong) TMTextField *textField;
 @end
 
 @implementation MapPanel
@@ -106,6 +107,8 @@
         [self setFrame:NSMakeRect(0, 0, 400, 400) display:NO];
         self.view = [[TMView alloc] initWithFrame:self.frame];
         self.contentView = self.view;
+        
+        _textField = [TMTextField defaultTextField];
         
         int controlHeight = 40;
         
@@ -193,8 +196,7 @@
         
         [self loadUserLocation];
         
-        
-        self.mapView.delegate = self;
+       
        
     }
     return self;
@@ -216,19 +218,38 @@
 }
 
 
+-(void)update {
+    
+    self.mapView.delegate = self;
+    
+    [self loadUserLocation];
+}
+
 -(void)loadUserLocation {
     
-    [self.backgroundView setHidden:NO];
-    [self.mapView setHidden:YES];
-    [self.progressView startAnimation:self];
+    [self.backgroundView setHidden:YES];
+    [self.mapView setHidden:NO];
+ //   [self.progressView startAnimation:self];
     
     self.mapView.showsUserLocation = YES;
     
 }
 
 -(void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
+
+}
+
+
+- (void)mapViewWillStartLocatingUser:(MKMapView *)mapView {
     
 }
+
+
+- (void)mapViewDidStopLocatingUser:(MKMapView *)mapView  {
+    
+}
+
+
 
 - (void)mapView:(MKMapView *)aMapView didUpdateUserLocation:(MKUserLocation *)aUserLocation {
     

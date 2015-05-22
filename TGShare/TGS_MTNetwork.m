@@ -154,10 +154,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
                             
                             [TGSAppManager initializeContacts];
                             
-                            if(![self isAuth]) {
+                        //    if(![self isAuth]) {
                                 [TGSAppManager hidePasslock];
                                 [TGSAppManager showNoAuthView];
-                            }
+                         //   }
                         }
                         
                         

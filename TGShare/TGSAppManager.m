@@ -9,6 +9,7 @@
 #import "TGSAppManager.h"
 #import "TGSNoAuthModalView.h"
 #import "TGSEnterPasscodeView.h"
+#import "ShareViewController.h"
 @implementation TGSAppManager
 
 
@@ -51,7 +52,19 @@ static TGSEnterPasscodeView *passcodeView;
 }
 
 +(void)initializeContacts {
-    
+    [ShareViewController loadContacts];
 }
 
+
++(NSUserDefaults *)standartUserDefaults {
+    
+    static NSUserDefaults *instance;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[NSUserDefaults alloc] initWithSuiteName:@"group.ru.keepcoder.Telegram"];
+    });
+    
+    return instance;
+}
 @end

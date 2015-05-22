@@ -20,4 +20,6 @@
 
 +(void)initializeContacts;
 
++(NSUserDefaults *)standartUserDefaults;
+
 @end

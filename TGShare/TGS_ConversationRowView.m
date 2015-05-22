@@ -25,7 +25,7 @@
     
     [DIALOG_BORDER_COLOR set];
     
-    NSRectFill(NSMakeRect(80, 0, NSWidth(dirtyRect) - 85, DIALOG_BORDER_WIDTH));
+    NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 60, DIALOG_BORDER_WIDTH));
     
 }
 
@@ -40,19 +40,19 @@
         [_nameField setEditable:NO];
         [[_nameField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         
-        [_nameField setFrameOrigin:NSMakePoint(80, 17)];
-        [_nameField setFrameSize:NSMakeSize(NSWidth(frameRect) - 85, 20)];
+        [_nameField setFrameOrigin:NSMakePoint(60, 17)];
+        [_nameField setFrameSize:NSMakeSize(NSWidth(frameRect) - 85, 40)];
         
         [self addSubview:_nameField];
         
         
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(30, 5, 0, 0)];
+        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(10, 5, 0, 0)];
         
         [self addSubview:_imageView];
         
         
         
-        _selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(5, roundf((NSHeight(frameRect) - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        _selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(frameRect) - image_ComposeCheckActive().size.width - 10, roundf((NSHeight(frameRect) - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
         
         weak();
         
@@ -114,6 +114,8 @@
     [_nameField setAttributedStringValue:item.name];
     
     [_imageView setFrameSize:item.imageObject.imageSize];
+    
+    [_nameField setCenteredYByView:self];
 
     _imageView.object = item.imageObject;
     

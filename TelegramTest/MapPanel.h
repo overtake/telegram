@@ -21,4 +21,6 @@
 
 + (MapPanel *)sharedPanel;
 
+-(void)update;
+
 @end

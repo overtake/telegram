@@ -16,6 +16,7 @@
 
 
 @property (nonatomic,strong,readonly) NSAttributedString *name;
+
 @property (nonatomic,assign,readonly) NSSize nameSize;
 
 @property (nonatomic,strong,readonly) TGSImageObject *imageObject;

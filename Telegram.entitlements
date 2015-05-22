@@ -6,6 +6,11 @@
 	<true/>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>$(TeamIdentifierPrefix)ru.keepcoder.Telegram.TGShare</string>
+		<string>group.ru.keepcoder.Telegram</string>
+	</array>
 	<key>com.apple.security.device.camera</key>
 	<true/>
 	<key>com.apple.security.device.microphone</key>
