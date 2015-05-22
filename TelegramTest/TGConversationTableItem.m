@@ -18,9 +18,8 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
-        _conversation = conversation;
         
-        assert(_conversation == [[DialogsManager sharedManager] find:conversation.peer_id]);
+        _conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
         
         
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
