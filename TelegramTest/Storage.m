@@ -163,13 +163,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     [[Storage yap] flushMemoryWithFlags:YapDatabaseConnectionFlushMemoryFlags_All];
 
-    
-    
      [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         res = [db setKey:encryptionKey];
         
-    }];
+     }];
     
     
     NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];

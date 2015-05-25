@@ -16,6 +16,7 @@
 #import "TLFileLocation+Extensions.h"
 #import "TGSendTypingManager.h"
 #import "TGTimer.h"
+#import "MessageTableItemPhoto.h"
 @interface ImageSenderItem ()
 @property (nonatomic, strong) UploadOperation *uploadOperation;
 @property (nonatomic, strong) NSImage *image;
@@ -142,6 +143,15 @@
             } else {
                 ((TL_localMessage *)strongSelf.message).media = msg.media;
             }
+            
+            
+            // fix file location for download image after clearing cache.
+            {
+                MessageTableItemPhoto *item = (MessageTableItemPhoto *)strongSelf.tableItem;
+                
+                item.imageObject.location = newSize.location;
+            }
+            
             
            
             strongSelf.uploadOperation = nil;

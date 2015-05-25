@@ -92,7 +92,7 @@ NSImage *placeholder() {
         _siteName = siteName;
         
         
-        if(webpage.n_description) {
+        if(webpage.n_description || webpage.title) {
             
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];

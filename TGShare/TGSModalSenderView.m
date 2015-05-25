@@ -115,6 +115,17 @@
     _ts_count = (int) obj.attachments.count * (int) rowItems.count;
     
     
+    if(obj.attachments.count == 0 && obj.attributedContentText.length > 0) {
+        
+        _ts_count = 1 * (int) rowItems.count;
+        
+        [_rowItems enumerateObjectsUsingBlock:^(id rowItem, NSUInteger idx, BOOL *stop) {
+            [self sendAsMessage:obj.attributedContentText.string rowItem:rowItem];
+        }];
+         return;
+    }
+    
+    
     [obj.attachments enumerateObjectsUsingBlock:^(NSItemProvider *itemProvider, NSUInteger idx, BOOL *stop) {
             
         if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
@@ -132,7 +143,6 @@
                     
             }];
         }
-            
     }];
 
 }

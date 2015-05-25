@@ -61,7 +61,7 @@
         
         [self.avatarImageView setFrameOrigin:NSMakePoint(100, 7)];
         
-        self.unblockButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Unblock", nil)];
+        self.unblockButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"User.Unlock", nil)];
         
         [self.unblockButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
         [self.unblockButton setTextColor:BLUE_UI_COLOR];
@@ -106,6 +106,9 @@
     [super setFrameSize:newSize];
     
     [self.unblockButton setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 113, 18)];
+    
+    [self.titleTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 260, NSHeight(_titleTextField.frame))];
+    [self.numberTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 260, NSHeight(_numberTextField.frame))];
 }
 
 

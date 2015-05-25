@@ -98,6 +98,8 @@
 - (void)orderOut:(id)sender {
     [super orderOut:sender];
     
+    self.mapView.showsUserLocation = NO;
+    
     [((AppDelegate *)[NSApp delegate]).window endSheet:self];
 }
 
@@ -139,7 +141,7 @@
         
         BTRButton *sendButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.controlView.frame) - 70, (controlHeight - 17) / 2, 50, 20)];
         
-        [sendButton setTitle:@"Send" forControlState:BTRControlStateNormal];
+        [sendButton setTitle:NSLocalizedString(@"Message.Send", nil) forControlState:BTRControlStateNormal];
       
         
         [sendButton addBlock:^(BTRControlEvents events) {
@@ -151,7 +153,7 @@
         
         BTRButton *cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, (controlHeight - 17) / 2, 50, 20)];
         
-        [cancelButton setTitle:@"Cancel" forControlState:BTRControlStateNormal];
+        [cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
         
         [cancelButton addBlock:^(BTRControlEvents events) {
             
@@ -210,6 +212,8 @@
         coordinates = self.mapView.userLocation.coordinate;
     }
     
+    if(coordinates.latitude == 0 && coordinates.longitude == 0)
+        return;
     
     [[Telegram rightViewController].messagesViewController sendLocation:coordinates forConversation:[Telegram rightViewController].messagesViewController.conversation];
     
@@ -219,6 +223,7 @@
 
 
 -(void)update {
+    
     
     self.mapView.delegate = self;
     

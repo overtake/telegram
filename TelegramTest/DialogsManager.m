@@ -349,7 +349,7 @@
         
         if(message.n_out) {
             dialog.last_marked_message = message.n_id;
-            dialog.last_marked_date = message.date;
+            dialog.last_marked_date = message.date + 1;
         }
         if(dialog.last_marked_message == 0) {
             dialog.last_marked_message = dialog.top_message;

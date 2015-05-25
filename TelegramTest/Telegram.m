@@ -66,7 +66,7 @@ Telegram *TelegramInstance() {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NSUserDefaults alloc] initWithSuiteName:@"group.ru.keepcoder.Telegram"];
+        instance = [NSUserDefaults standardUserDefaults]; //[[NSUserDefaults alloc] initWithSuiteName:@"group.ru.keepcoder.Telegram"]
     });
     
     return instance;

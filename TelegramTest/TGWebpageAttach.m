@@ -60,7 +60,6 @@
         
         _deleteImageView.image = image_CancelReply();
         
-        weak();
         
         [_deleteImageView setCallback:^{
             

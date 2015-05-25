@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="6000" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner"/>
@@ -285,7 +285,7 @@
                                     <action selector="performZoom:" target="-1" id="103"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Float on Top" id="Jch-vg-XlR">
+                            <menuItem title="Sempre in primo piano" id="Jch-vg-XlR">
                                 <connections>
                                     <action selector="toogleFloatOnTop:" target="89" id="lDh-UY-J1s"/>
                                 </connections>

@@ -23,7 +23,7 @@
 @end
 
 @interface ImageObject : NSObject
-@property (nonatomic,strong,readonly) TLFileLocation *location;
+@property (nonatomic,strong) TLFileLocation *location;
 @property (nonatomic,assign,readonly) int size;
 @property (nonatomic,strong,readonly) NSImage *placeholder;
 @property (nonatomic,assign,readonly) int sourceId;

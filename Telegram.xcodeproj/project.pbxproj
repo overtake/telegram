@@ -230,8 +230,8 @@
 		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
 		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
 		C20BA5E51B0CACF1001ECE22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C20BA5E71B0CACF1001ECE22 /* Localizable.strings */; };
-		C20BA62F1B0E5909001ECE22 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C20BA6301B0E5E76001ECE22 /* TGDateUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2AA4EE018A8ED5500E20C68 /* TGDateUtils.mm */; };
+		C20BA66A1B110353001ECE22 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C20D188B193CBC230095A906 /* AudioSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D188A193CBC230095A906 /* AudioSenderItem.m */; };
 		C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */; };
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
@@ -807,7 +807,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C20BA62D1B0E5902001ECE22 /* PBXContainerItemProxy */ = {
+		C20BA6681B110348001ECE22 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
 			proxyType = 1;
@@ -856,7 +856,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C20BA62F1B0E5909001ECE22 /* TGShare.appex in Embed App Extensions */,
+				C20BA66A1B110353001ECE22 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5170,7 +5170,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				C20BA62E1B0E5902001ECE22 /* PBXTargetDependency */,
+				C20BA6691B110348001ECE22 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -5202,7 +5202,7 @@
 						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.GameCenter = {
 								enabled = 0;
@@ -5211,7 +5211,7 @@
 								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Mac = {
 								enabled = 0;
@@ -6082,10 +6082,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C20BA62E1B0E5902001ECE22 /* PBXTargetDependency */ = {
+		C20BA6691B110348001ECE22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C20BA62D1B0E5902001ECE22 /* PBXContainerItemProxy */;
+			targetProxy = C20BA6681B110348001ECE22 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

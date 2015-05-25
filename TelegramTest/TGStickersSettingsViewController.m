@@ -103,6 +103,8 @@
     if (self = [super initWithFrame:frameRect]) {
         _titleField = [TMTextField defaultTextField];
         
+        [[_titleField cell] setTruncatesLastVisibleLine:NO];
+        
         [self addSubview:_titleField];
         
         _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
@@ -160,8 +162,7 @@
     
     [_removeButton setFrameOrigin:NSMakePoint(newSize.width - 100 - NSWidth(_removeButton.frame), 17)];
     [_titleField setFrameOrigin:NSMakePoint(100, 8)];
-    
-     [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, 5)];
+    [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, 5)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
