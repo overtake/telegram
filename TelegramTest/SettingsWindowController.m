@@ -174,7 +174,7 @@
     
     self.blocked_table_view.removeButton = self.remove_from_block_button;
     
-    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 15)];
+    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 90)];
     
     [self.security_settings_view setFrameOrigin:NSMakePoint(-5, self.security_settings_view.frame.size.height-70)];
     

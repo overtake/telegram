@@ -31,6 +31,8 @@ typedef enum {
 
 @property (nonatomic, strong) MessageInputGrowingTextView *inputMessageTextField;
 
+- (void)smileButtonClick:(BTRButton *)button;
+
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;

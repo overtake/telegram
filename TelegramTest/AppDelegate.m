@@ -47,6 +47,8 @@
 #import "TGPasslockModalView.h"
 #import "ASCommon.h"
 #import "TGModalView.h"
+#import "MessageInputGrowingTextView.h"
+#import "MessagesBottomView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -608,6 +610,29 @@ void exceptionHandler(NSException * exception)
             if(![responder isKindOfClass:NSClassFromString(@"NSSecureTextView")]) {
                 [TMViewController becomePasslock];
             }
+        }
+        
+        if(result.keyCode == 48) {
+          //  NSTextView *textView = responder;
+            if([responder isKindOfClass:[MessageInputGrowingTextView class]] ) {
+                [[Telegram rightViewController].messagesViewController.bottomView smileButtonClick:nil];
+                
+            }
+            
+            return [[NSEvent alloc]init];
+        }
+    
+        
+        if((result.modifierFlags & 1048840 ) == 1048840 ) {
+            
+            if(result.keyCode == 121 || result.keyCode == 116) {
+                [[TMTableView current] keyDown:result];
+                
+                
+                 return [[NSEvent alloc]init];
+            }
+            
+            
         }
         
         return result;

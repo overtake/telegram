@@ -368,7 +368,7 @@ static TMTableView *tableStatic;
 
 - (void) keyDown:(NSEvent *)theEvent {
     
-    if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
+    if(theEvent.keyCode == 125 || theEvent.keyCode == 126 || theEvent.keyCode == 121 || theEvent.keyCode == 116) {
         
         if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
             return;
@@ -382,7 +382,7 @@ static TMTableView *tableStatic;
             }
             
             
-            if(theEvent.keyCode == 125) {
+            if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
                 pos++;
             } else {
                 pos--;
@@ -398,7 +398,7 @@ static TMTableView *tableStatic;
                 break;
             }
             
-            if(theEvent.keyCode == 125) {
+            if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
                 pos++;
             } else {
                 pos--;
@@ -409,7 +409,7 @@ static TMTableView *tableStatic;
         if(self.count > pos && pos < NSNotFound) {
             [self selectRowIndexes:[NSIndexSet indexSetWithIndex:pos] byExtendingSelection:NO];
             
-            int posS = (int)(pos + (theEvent.keyCode == 125 ? 1 : -1));
+            int posS = (int)(pos + (theEvent.keyCode == 125 || theEvent.keyCode == 121 ? 1 : -1));
             int count = (int)self.count - 1;
             
             int rowIndex = MAX(0, MIN(posS, count));

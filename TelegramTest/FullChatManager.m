@@ -207,7 +207,16 @@
 - (void)loadFullChatByChatId:(int)chat_id callback:(dispatch_block_t)callback {
     
         
-    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, id result) {
+    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
+        
+        if([result isKindOfClass:[TL_messages_chatFull class]]) {
+            TL_conversation *conversation = [[DialogsManager sharedManager] findByChatId:chat_id];
+            
+            conversation.notify_settings = result.full_chat.notify_settings;
+            
+            [conversation save];
+        }
+        
         
         [SharedManager proccessGlobalResponse:result];
         

@@ -28,8 +28,8 @@
        // _desc = [super title];
         
         NSSize size = [_videoTimeAttributedString size];
-        size.width = ceil(size.width + 14);
-        size.height = ceil(size.height + 7);
+        size.width = ceil(size.width + 10);
+        size.height = ceil(size.height + 3);
         _videoTimeSize = size;
         
      //   _author = [super title];
