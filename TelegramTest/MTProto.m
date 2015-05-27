@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.05.15.
+//  Auto created by Mikhail Filimonov on 27.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1137,6 +1137,47 @@
 }
 @end
 
+@implementation TL_user
++(TL_user*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:()photo status:()status bot_info_version:(int)bot_info_version {
+	TL_user* obj = [[TL_user alloc] init];
+	obj.flags = flags;
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.first_name = first_name;
+	obj.last_name = last_name;
+	obj.username = username;
+	obj.phone = phone;
+	obj.photo = photo;
+	obj.status = status;
+	obj.bot_info_version = bot_info_version;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeInt:self.n_id];
+	if(self.flags & (1 << 0)) [stream writeLong:self.access_hash];
+	if(self.flags & (1 << 1)) [stream writeString:self.first_name];
+	if(self.flags & (1 << 2)) [stream writeString:self.last_name];
+	if(self.flags & (1 << 3)) [stream writeString:self.username];
+	if(self.flags & (1 << 4)) [stream writeString:self.phone];
+	if(self.flags & (1 << 5)) [ClassStore TLSerialize:self.photo stream:stream];
+	if(self.flags & (1 << 6)) [ClassStore TLSerialize:self.status stream:stream];
+	if(self.flags & (1 << 14)) [stream writeInt:self.bot_info_version];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
+	self.n_id = [stream readInt];
+	if(self.flags & (1 << 0)) self.access_hash = [stream readLong];
+	if(self.flags & (1 << 1)) self.first_name = [stream readString];
+	if(self.flags & (1 << 2)) self.last_name = [stream readString];
+	if(self.flags & (1 << 3)) self.username = [stream readString];
+	if(self.flags & (1 << 4)) self.phone = [stream readString];
+	if(self.flags & (1 << 5)) self.photo = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 6)) self.status = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 14)) self.bot_info_version = [stream readInt];
+}
+@end
+
 @implementation TL_userSelf
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status {
 	TL_userSelf* obj = [[TL_userSelf alloc] init];
@@ -1543,8 +1584,53 @@
 @end
 
 @implementation TL_chatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings bot_info:(NSMutableArray*)bot_info {
 	TL_chatFull* obj = [[TL_chatFull alloc] init];
+	obj.n_id = n_id;
+	obj.participants = participants;
+	obj.chat_photo = chat_photo;
+	obj.notify_settings = notify_settings;
+	obj.bot_info = bot_info;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.participants stream:stream];
+	[ClassStore TLSerialize:self.chat_photo stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.bot_info count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLBotInfo* obj = [self.bot_info objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.participants = [ClassStore TLDeserialize:stream];
+	self.chat_photo = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.bot_info)
+			self.bot_info = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLBotInfo* obj = [ClassStore TLDeserialize:stream];
+			[self.bot_info addObject:obj];
+		}
+	}
+}
+@end
+
+@implementation TL_chatFull_old29
++(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
+	TL_chatFull_old29* obj = [[TL_chatFull_old29 alloc] init];
 	obj.n_id = n_id;
 	obj.participants = participants;
 	obj.chat_photo = chat_photo;
@@ -2462,18 +2548,15 @@
 @end
 
 @implementation TL_auth_authorization
-+(TL_auth_authorization*)createWithExpires:(int)expires user:(TLUser*)user {
++(TL_auth_authorization*)createWithUser:(TLUser*)user {
 	TL_auth_authorization* obj = [[TL_auth_authorization alloc] init];
-	obj.expires = expires;
 	obj.user = user;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.expires];
 	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.expires = [stream readInt];
 	self.user = [ClassStore TLDeserialize:stream];
 }
 @end
@@ -2787,15 +2870,14 @@
 @end
 
 @implementation TL_userFull
-+(TL_userFull*)createWithUser:(TLUser*)user link:(TLcontacts_Link*)link profile_photo:(TLPhoto*)profile_photo notify_settings:(TLPeerNotifySettings*)notify_settings blocked:(Boolean)blocked real_first_name:(NSString*)real_first_name real_last_name:(NSString*)real_last_name {
++(TL_userFull*)createWithUser:(TLUser*)user link:(TLcontacts_Link*)link profile_photo:(TLPhoto*)profile_photo notify_settings:(TLPeerNotifySettings*)notify_settings blocked:(Boolean)blocked bot_info:(TLBotInfo*)bot_info {
 	TL_userFull* obj = [[TL_userFull alloc] init];
 	obj.user = user;
 	obj.link = link;
 	obj.profile_photo = profile_photo;
 	obj.notify_settings = notify_settings;
 	obj.blocked = blocked;
-	obj.real_first_name = real_first_name;
-	obj.real_last_name = real_last_name;
+	obj.bot_info = bot_info;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -2804,8 +2886,7 @@
 	[ClassStore TLSerialize:self.profile_photo stream:stream];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
 	[stream writeBool:self.blocked];
-	[stream writeString:self.real_first_name];
-	[stream writeString:self.real_last_name];
+	[ClassStore TLSerialize:self.bot_info stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.user = [ClassStore TLDeserialize:stream];
@@ -2813,8 +2894,7 @@
 	self.profile_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.blocked = [stream readBool];
-	self.real_first_name = [stream readString];
-	self.real_last_name = [stream readString];
+	self.bot_info = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -5410,23 +5490,23 @@
 @end
 
 @implementation TL_dcOption
-+(TL_dcOption*)createWithN_id:(int)n_id hostname:(NSString*)hostname ip_address:(NSString*)ip_address port:(int)port {
++(TL_dcOption*)createWithFlags:(int)flags n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port {
 	TL_dcOption* obj = [[TL_dcOption alloc] init];
+	obj.flags = flags;
 	obj.n_id = n_id;
-	obj.hostname = hostname;
 	obj.ip_address = ip_address;
 	obj.port = port;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
-	[stream writeString:self.hostname];
 	[stream writeString:self.ip_address];
 	[stream writeInt:self.port];
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
-	self.hostname = [stream readString];
 	self.ip_address = [stream readString];
 	self.port = [stream readInt];
 }
@@ -8281,6 +8361,92 @@
 		for(int i = 0; i < count; i++) {
 			TLDocument* obj = [ClassStore TLDeserialize:stream];
 			[self.documents addObject:obj];
+		}
+	}
+}
+@end
+
+
+
+@implementation TLBotCommand
+@end
+
+@implementation TL_botCommand
++(TL_botCommand*)createWithCommand:(NSString*)command params:(NSString*)params n_description:(NSString*)n_description {
+	TL_botCommand* obj = [[TL_botCommand alloc] init];
+	obj.command = command;
+	obj.params = params;
+	obj.n_description = n_description;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.command];
+	[stream writeString:self.params];
+	[stream writeString:self.n_description];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.command = [stream readString];
+	self.params = [stream readString];
+	self.n_description = [stream readString];
+}
+@end
+
+
+
+@implementation TLBotInfo
+@end
+
+@implementation TL_botInfoEmpty
++(TL_botInfoEmpty*)create {
+	TL_botInfoEmpty* obj = [[TL_botInfoEmpty alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+@end
+
+@implementation TL_botInfo
++(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version n_description:(NSString*)n_description commands:(NSMutableArray*)commands {
+	TL_botInfo* obj = [[TL_botInfo alloc] init];
+	obj.user_id = user_id;
+	obj.version = version;
+	obj.n_description = n_description;
+	obj.commands = commands;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeInt:self.version];
+	[stream writeString:self.n_description];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.commands count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLBotCommand* obj = [self.commands objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+	self.version = [stream readInt];
+	self.n_description = [stream readString];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.commands)
+			self.commands = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLBotCommand* obj = [ClassStore TLDeserialize:stream];
+			[self.commands addObject:obj];
 		}
 	}
 }

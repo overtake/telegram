@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.05.15..
+//  Auto created by Mikhail Filimonov on 27.05.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1790,6 +1790,25 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:954152242];
 	[stream writeInt:self.period];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_importBotAuthorization
++(TLAPI_auth_importBotAuthorization*)createWithFlags:(int)flags api_id:(int)api_id api_hash:(NSString*)api_hash bot_auth_token:(NSString*)bot_auth_token {
+    TLAPI_auth_importBotAuthorization* obj = [[TLAPI_auth_importBotAuthorization alloc] init];
+    obj.flags = flags;
+	obj.api_id = api_id;
+	obj.api_hash = api_hash;
+	obj.bot_auth_token = bot_auth_token;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1738800940];
+	[stream writeInt:self.flags];
+	[stream writeInt:self.api_id];
+	[stream writeString:self.api_hash];
+	[stream writeString:self.bot_auth_token];
 	return [stream getOutput];
 }
 @end

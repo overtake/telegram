@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.05.15.
+//  Auto created by Mikhail Filimonov on 27.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -771,6 +771,15 @@
 @property int period;
 
 +(TLAPI_account_updateDeviceLocked*)createWithPeriod:(int)period;
+@end
+
+@interface TLAPI_auth_importBotAuthorization : TLApiObject
+@property int flags;
+@property int api_id;
+@property (nonatomic, strong) NSString* api_hash;
+@property (nonatomic, strong) NSString* bot_auth_token;
+
++(TLAPI_auth_importBotAuthorization*)createWithFlags:(int)flags api_id:(int)api_id api_hash:(NSString*)api_hash bot_auth_token:(NSString*)bot_auth_token;
 @end
 
 @interface TLAPI_messages_getWebPagePreview : TLApiObject

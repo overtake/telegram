@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 08.05.15.
+//  Auto created by Dmitry Kondratyev on 27.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -370,6 +370,12 @@
 @end
 	
 @interface TLmessages_StickerSet : TLObject
+@end
+	
+@interface TLBotCommand : TLObject
+@end
+	
+@interface TLBotInfo : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -751,17 +757,22 @@
 	
 @interface TLUser()
 @property int n_id;
+@property int flags;
+@property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
 @property (nonatomic, strong) NSString* username;
 @property (nonatomic, strong) NSString* phone;
 @property (nonatomic, strong) TLUserProfilePhoto* photo;
 @property (nonatomic, strong) TLUserStatus* status;
-@property long access_hash;
+@property int bot_info_version;
 @end
 
 @interface TL_userEmpty : TLUser
 +(TL_userEmpty*)createWithN_id:(int)n_id;
+@end
+@interface TL_user : TLUser
++(TL_user*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:()photo status:()status bot_info_version:(int)bot_info_version;
 @end
 @interface TL_userSelf : TLUser
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -849,11 +860,15 @@
 @property (nonatomic, strong) TLChatParticipants* participants;
 @property (nonatomic, strong) TLPhoto* chat_photo;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
+@property (nonatomic, strong) NSMutableArray* bot_info;
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @end
 
 @interface TL_chatFull : TLChatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings bot_info:(NSMutableArray*)bot_info;
+@end
+@interface TL_chatFull_old29 : TLChatFull
++(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 	
 @interface TLChatParticipant()
@@ -1107,12 +1122,11 @@
 @end
 	
 @interface TLauth_Authorization()
-@property int expires;
 @property (nonatomic, strong) TLUser* user;
 @end
 
 @interface TL_auth_authorization : TLauth_Authorization
-+(TL_auth_authorization*)createWithExpires:(int)expires user:(TLUser*)user;
++(TL_auth_authorization*)createWithUser:(TLUser*)user;
 @end
 	
 @interface TLauth_ExportedAuthorization()
@@ -1212,12 +1226,11 @@
 @property (nonatomic, strong) TLPhoto* profile_photo;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property Boolean blocked;
-@property (nonatomic, strong) NSString* real_first_name;
-@property (nonatomic, strong) NSString* real_last_name;
+@property (nonatomic, strong) TLBotInfo* bot_info;
 @end
 
 @interface TL_userFull : TLUserFull
-+(TL_userFull*)createWithUser:(TLUser*)user link:(TLcontacts_Link*)link profile_photo:(TLPhoto*)profile_photo notify_settings:(TLPeerNotifySettings*)notify_settings blocked:(Boolean)blocked real_first_name:(NSString*)real_first_name real_last_name:(NSString*)real_last_name;
++(TL_userFull*)createWithUser:(TLUser*)user link:(TLcontacts_Link*)link profile_photo:(TLPhoto*)profile_photo notify_settings:(TLPeerNotifySettings*)notify_settings blocked:(Boolean)blocked bot_info:(TLBotInfo*)bot_info;
 @end
 	
 @interface TLContact()
@@ -1673,14 +1686,14 @@
 @end
 	
 @interface TLDcOption()
+@property int flags;
 @property int n_id;
-@property (nonatomic, strong) NSString* hostname;
 @property (nonatomic, strong) NSString* ip_address;
 @property int port;
 @end
 
 @interface TL_dcOption : TLDcOption
-+(TL_dcOption*)createWithN_id:(int)n_id hostname:(NSString*)hostname ip_address:(NSString*)ip_address port:(int)port;
++(TL_dcOption*)createWithFlags:(int)flags n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port;
 @end
 	
 @interface TLConfig()
@@ -2409,6 +2422,30 @@
 
 @interface TL_messages_stickerSet : TLmessages_StickerSet
 +(TL_messages_stickerSet*)createWithSet:(TLStickerSet*)set packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents;
+@end
+	
+@interface TLBotCommand()
+@property (nonatomic, strong) NSString* command;
+@property (nonatomic, strong) NSString* params;
+@property (nonatomic, strong) NSString* n_description;
+@end
+
+@interface TL_botCommand : TLBotCommand
++(TL_botCommand*)createWithCommand:(NSString*)command params:(NSString*)params n_description:(NSString*)n_description;
+@end
+	
+@interface TLBotInfo()
+@property int user_id;
+@property int version;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) NSMutableArray* commands;
+@end
+
+@interface TL_botInfoEmpty : TLBotInfo
++(TL_botInfoEmpty*)create;
+@end
+@interface TL_botInfo : TLBotInfo
++(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version n_description:(NSString*)n_description commands:(NSMutableArray*)commands;
 @end
 	
 @interface TLProtoMessage()
