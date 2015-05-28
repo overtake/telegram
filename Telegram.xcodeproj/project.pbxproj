@@ -709,6 +709,8 @@
 		C2D51B7E1B137164009327C0 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2D51B7F1B13716B009327C0 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2D51B801B13716B009327C0 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2D51B8B1B174B9E009327C0 /* EMImageData.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B881B174B9E009327C0 /* EMImageData.m */; };
+		C2D51B8C1B174B9E009327C0 /* EMInMemoryImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B8A1B174B9E009327C0 /* EMInMemoryImageCache.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
@@ -2132,6 +2134,10 @@
 		C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseExtensionConnection.m; sourceTree = "<group>"; };
 		C2D4B8C31AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensionTransaction.h; sourceTree = "<group>"; };
 		C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseExtensionTransaction.m; sourceTree = "<group>"; };
+		C2D51B871B174B9E009327C0 /* EMImageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMImageData.h; sourceTree = "<group>"; };
+		C2D51B881B174B9E009327C0 /* EMImageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMImageData.m; sourceTree = "<group>"; };
+		C2D51B891B174B9E009327C0 /* EMInMemoryImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMInMemoryImageCache.h; sourceTree = "<group>"; };
+		C2D51B8A1B174B9E009327C0 /* EMInMemoryImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMInMemoryImageCache.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -4143,6 +4149,10 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2D51B871B174B9E009327C0 /* EMImageData.h */,
+				C2D51B881B174B9E009327C0 /* EMImageData.m */,
+				C2D51B891B174B9E009327C0 /* EMInMemoryImageCache.h */,
+				C2D51B8A1B174B9E009327C0 /* EMInMemoryImageCache.m */,
 				C2C85B991AEE4E1F00FBEABD /* ASCommon.h */,
 				C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */,
 				C274C40C1ACC0988000DFDE4 /* XCDYouTubeKit */,
@@ -5539,6 +5549,7 @@
 				C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
+				C2D51B8C1B174B9E009327C0 /* EMInMemoryImageCache.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
 				C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */,
 				C2227759190E7309002AA0F6 /* TMTaskRequest.m in Sources */,
@@ -6044,6 +6055,7 @@
 				C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */,
 				0A9EDC531897BA0E0037E1BC /* NSView+RBLAlignmentAdditions.m in Sources */,
 				C20B228818E971D0007BCCD6 /* bitwise.c in Sources */,
+				C2D51B8B1B174B9E009327C0 /* EMImageData.m in Sources */,
 				C2D4B8791AFCE8FA0035B4E4 /* YapDatabaseTransaction.m in Sources */,
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,

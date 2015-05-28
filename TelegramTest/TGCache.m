@@ -8,7 +8,7 @@
 
 #import "TGCache.h"
 #import "ASQueue.h"
-
+#import "EMInMemoryImageCache.h"
 @interface TGCacheRecord : NSObject
 
 @property (nonatomic) NSTimeInterval date;
@@ -49,6 +49,8 @@
 
 @property (nonatomic,strong) ASQueue *queue;
 
+@property (nonatomic,strong) EMInMemoryImageCache *emCache;
+
 
 @end
 
@@ -69,6 +71,7 @@ NSString *const AVACACHE = @"AVACACHE";
         _queue = [[ASQueue alloc] initWithName:"tgcachequeue"];
         
         [_queue dispatchOnQueue:^{
+            
             _groups = [[NSMutableDictionary alloc] init];
             _groupMemoryTaken = [[NSMutableDictionary alloc] init];
             _groupMemoryLimit = [[NSMutableDictionary alloc] init];
@@ -83,6 +86,9 @@ NSString *const AVACACHE = @"AVACACHE";
                 _groupCountLimit[obj] = @(0);
                 
             }];
+            
+            _emCache = [[EMInMemoryImageCache alloc] initWithMaxResidentSize:100*1024*1024];
+            
         } synchronous:YES];
         
     }
@@ -195,6 +201,9 @@ NSString *const AVACACHE = @"AVACACHE";
     if(!image || !key || !groups)
         return;
     
+    
+    
+    
     NSUInteger size = image.size.width * image.size.height * 4;
     
     [groups enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
@@ -210,9 +219,19 @@ NSString *const AVACACHE = @"AVACACHE";
         } else {
             group[key] = [[TGCacheRecord alloc] initWithObject:image size:size];
         }
+        
+        
+        [_emCache setImageDataWithSize:image.size generator:^(uint8_t *memory, NSUInteger bytesPerRow) {
+            
+            
+        } forKey:[NSString stringWithFormat:@"%@_%@",key,obj]];
+        
          _groupMemoryTaken[obj] = @([_groupMemoryTaken[obj] integerValue] + size);
         
     }];
+    
+    
+   
     
     [self checkMemory];
 
@@ -225,7 +244,7 @@ NSString *const AVACACHE = @"AVACACHE";
 -(NSImage *)cachedImage:(NSString *)key group:(NSArray *)groups {
     __block NSImage *image;
     
-    [groups enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+     [groups enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
         
        TGCacheRecord *record = _groups[obj][key];
         
@@ -234,6 +253,12 @@ NSString *const AVACACHE = @"AVACACHE";
             record.date = CFAbsoluteTimeGetCurrent();
             image = record.object;
             *stop = YES;
+        } else  {
+          //  image = [_emCache imageForKey:[NSString stringWithFormat:@"%@_%@",key,obj]];
+            
+          //  if(image) {
+          //      *stop = YES;
+          //  }
         }
         
     }];

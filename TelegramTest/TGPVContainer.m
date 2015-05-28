@@ -194,9 +194,6 @@ static const int bottomHeight = 60;
     }
     
     
-   
-    
-    
     NSSize size = [self contentFullSize:currentViewerItem];
     
     NSSize containerSize = size;
@@ -249,6 +246,8 @@ static const int bottomHeight = 60;
     
     [self.imageView setFrameSize:NSMakeSize(size.width , size.height )];
     
+    self.imageView.backgroundColor = [NSColor redColor];
+    
     [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height + c_s.height + 10 ) / 2) )];
     
     
@@ -268,8 +267,6 @@ static const int bottomHeight = 60;
         
         
         if(!_videoPlayerView) {
-            
-            
             
             _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
             _videoPlayerView.showsFullScreenToggleButton = YES;
