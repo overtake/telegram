@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 28.05.15.
+//  Auto created by Dmitry Kondratyev on 29.05.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
