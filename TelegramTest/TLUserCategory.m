@@ -54,18 +54,35 @@ DYNAMIC_PROPERTY(DType);
     int type;
     
     
-    if([self isKindOfClass:[TL_userContact class]])
-        type = TLUserTypeContact;
-    else if([self isKindOfClass:[TL_userDeleted class]])
-        type = TLUserTypeDeleted;
-    else if([self isKindOfClass:[TL_userEmpty class]])
-        type = TLUserTypeEmpty;
-    else if([self isKindOfClass:[TL_userForeign class]])
-        type = TLUserTypeForeign;
-    else if([self isKindOfClass:[TL_userSelf class]])
-        type = TLUserTypeSelf;
-    else
-        type = TLUserTypeRequest;
+    if(self.class == [TL_user class])
+    {
+        if((self.flags & TGUSERFLAGSELF) == TGUSERFLAGSELF) {
+            type = TLUserTypeSelf;
+        } else if((self.flags & TGUSERFLAGCONTACT) == TGUSERFLAGCONTACT) {
+            type = TLUserTypeRequest;
+        } else if((self.flags & TGUSERFLAGMUTUAL) == TGUSERFLAGMUTUAL) {
+            type = TLUserTypeContact;
+        } else if((self.flags & TGUSERFLAGDELETED) == TGUSERFLAGDELETED) {
+            type = TLUserTypeDeleted;
+        } else
+            type = TLUserTypeForeign;
+        
+        
+    } else {
+        if([self isKindOfClass:[TL_userContact class]])
+            type = TLUserTypeContact;
+        else if([self isKindOfClass:[TL_userDeleted class]])
+            type = TLUserTypeDeleted;
+        else if([self isKindOfClass:[TL_userEmpty class]])
+            type = TLUserTypeEmpty;
+        else if([self isKindOfClass:[TL_userForeign class]])
+            type = TLUserTypeForeign;
+        else if([self isKindOfClass:[TL_userSelf class]])
+            type = TLUserTypeSelf;
+        else
+            type = TLUserTypeRequest;
+    }
+    
     [self setType:type];
     
     return type;
@@ -78,6 +95,10 @@ Online
     return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
 }
 
+-(BOOL)isBot {
+    return (self.flags & TGUSERFLAGBOT) == TGUSERFLAGBOT;
+}
+
 - (BOOL)isBlocked {
     return [[BlockedUsersManager sharedManager] isBlocked:self.n_id];
 }
@@ -87,6 +108,11 @@ Online
 }
 
 - (NSString *)lastSeen {
+    
+    
+    if([self isBot]) {
+        return NSLocalizedString(@"LastSeen.Bot", nil);
+    }
     
     if(self.n_id == 777000) {
         return NSLocalizedString(@"Service notifications", nil);
@@ -140,7 +166,8 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
 
 - (void) rebuildNames {
     
-    
+    if(!self.last_name)
+        self.last_name = @"";
     
     
     //Fullname

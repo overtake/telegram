@@ -45,11 +45,18 @@
     NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
+    
+    regex = [NSRegularExpression regularExpressionWithPattern:@"(/[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSMutableArray* botCommands = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
+    
+    
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSRange range = [obj range];
         
         NSMutableArray *toremoveUsers = [[NSMutableArray alloc] init];
         NSMutableArray *toremoveTags = [[NSMutableArray alloc] init];
+        NSMutableArray *toremoveCommands = [[NSMutableArray alloc] init];
         
         [userNames enumerateObjectsUsingBlock:^(id userObj, NSUInteger idx, BOOL *stop) {
             
@@ -72,8 +79,20 @@
             
         }];
         
+        [botCommands enumerateObjectsUsingBlock:^(id commandObject, NSUInteger idx, BOOL *stop) {
+            
+            NSRange commandRange = [commandObject range];
+            
+            if(range.location <= commandRange.location && (range.location+range.length) >= (commandRange.location + commandRange.length)) {
+                [toremoveCommands addObject:commandObject];
+            }
+            
+        }];
+        
+        
         [hashTags removeObjectsInArray:toremoveTags];
         [userNames removeObjectsInArray:toremoveUsers];
+        [botCommands removeObjectsInArray:toremoveCommands];
         
     }];
     
@@ -96,7 +115,7 @@
     //return the range of URL scheme to program
     NSArray* newResult = [results arrayByAddingObjectsFromArray:schemeResult];
     
-    return [[newResult arrayByAddingObjectsFromArray:userNames] arrayByAddingObjectsFromArray:hashTags];
+    return [[[newResult arrayByAddingObjectsFromArray:userNames] arrayByAddingObjectsFromArray:hashTags] arrayByAddingObjectsFromArray:botCommands];
     
     //return [results arrayByAddingObjectsFromArray:userNames];
 }

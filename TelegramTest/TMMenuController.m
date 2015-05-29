@@ -159,9 +159,11 @@
     if(self.imageView.image == nil) {
         
         [self.textLayer setFrameOrigin:NSMakePoint(round((NSWidth(self.frame) - NSWidth(self.textLayer.frame))/2), round((NSHeight(self.frame) - NSHeight(self.textLayer.frame))/2 + (self.subTextLayer == nil ? 0 : 8)))];
+        [self.subTextLayer setFrameOrigin:CGPointMake(round((NSWidth(self.frame) - NSWidth(self.subTextLayer.frame))/2), roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
         
     } else {
         [self.textLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.textLayer.size.height) / 2.0 + (self.subTextLayer == nil ? 0 : 8)) - 1)];
+        [self.subTextLayer setFrameOrigin:CGPointMake(48, roundf((self.bounds.size.height - self.subTextLayer.size.height) / 2.0) - 10)];
     }
 }
 

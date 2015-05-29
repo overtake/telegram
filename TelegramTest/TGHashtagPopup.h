@@ -7,19 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@interface TGHashtagPopup : NSObject
+#import "TGHelpPopup.h"
+@interface TGHashtagPopup : TGHelpPopup
 
 +(void)show:(NSString *)string peer_id:(int)peer_id view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback;
 
-+(BOOL)isVisibility;
-
-+(void)selectNext;
-+(void)selectPrev;
-
-+(void)performSelected;
-
-+(void)close;
 
 
 @end

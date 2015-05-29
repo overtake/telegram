@@ -420,8 +420,13 @@
 - (void)buildPage {
     float offset = self.bounds.size.height - 187;
     
+    [self.phoneView setHidden:self.user.isBot];
+    
    
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
+    
+    if(self.phoneView.isHidden)
+        offset+=62;
     
    
     [self.userNameView setHidden:self.user.username.length == 0];
@@ -461,7 +466,7 @@
         [self.importContacts setHidden:YES];
     }
 
-    if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile) {
+    if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile && ![self.user isBot]) {
         
          offset -= self.shareContactButton.bounds.size.height;
         

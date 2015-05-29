@@ -26,6 +26,22 @@
 #define TGMINSECRETID 800000000
 
 
+// flags.10 = self
+// flags.11 - contact
+// flags.12 - mutual contact
+// flags.13 - deleted
+// flags.14 - bot
+// flags.15 - bot reading all the group history
+
+
+#define TGUSERFLAGSELF 1 << 10
+#define TGUSERFLAGCONTACT 1 << 11
+#define TGUSERFLAGMUTUAL 1 << 12
+#define TGUSERFLAGDELETED 1 << 13
+#define TGUSERFLAGBOT 1 << 14
+#define TGUSERFLAGREADHISTORY 1 << 15
+
+
 #define API_VERSION  [NSString stringWithFormat:@"%@.%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]
 
 #define IS_RETINA ([[NSScreen mainScreen] backingScaleFactor] == 2.0)

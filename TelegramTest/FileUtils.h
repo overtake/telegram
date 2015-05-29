@@ -27,6 +27,7 @@ extern NSString *const TGImagePType;
 extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
 extern NSString *const TLHashTagPrefix;
+extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
 unsigned long fileSize(NSString *path);

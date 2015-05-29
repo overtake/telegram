@@ -66,6 +66,7 @@
 #import "TGPasslock.h"
 #import "NSString+FindURLs.h"
 #import "ImageAttachSenderItem.h"
+#import "FullUsersManager.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1171,6 +1172,9 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)showTopInfoView:(BOOL)animated {
     
+    return;
+    
+    
     NSRect topRect = NSMakeRect(0,self.view.frame.size.height-40, self.view.frame.size.width, 40);
     NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 40);
     
@@ -1190,6 +1194,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)hideTopInfoView:(BOOL)animated {
+    
+    
+    return;
+    
     NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
     NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
     if(animated) {
@@ -2001,6 +2009,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
         [self addScrollEvent];
+        
     }
 }
 

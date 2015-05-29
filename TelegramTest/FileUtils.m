@@ -48,7 +48,7 @@ NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TGStickerPackPrefix = @"tg://addstickers?set=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
-
+NSString *const TLBotCommandPrefix = @"/";
 
 
 
@@ -559,6 +559,12 @@ void open_link(NSString *link) {
         return;
     }
     
+    
+    if([link hasPrefix:TLBotCommandPrefix]) {
+        [[Telegram rightViewController].messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",link]];
+        [[Telegram rightViewController].messagesViewController becomeFirstResponder];
+        return;
+    }
     
     
     

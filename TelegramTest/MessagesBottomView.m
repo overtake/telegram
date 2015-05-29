@@ -31,8 +31,8 @@
 #import "TGHashtagPopup.h"
 #import "TGWebpageAttach.h"
 #import "TGImageAttachmentsController.h"
-
-
+#import "FullUsersManager.h"
+#import "TGBotCommandsPopup.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -74,6 +74,9 @@
 @property (nonatomic,strong) TGWebpageAttach *webpageAttach;
 
 @property (nonatomic,strong,readonly) TGImageAttachmentsController *imageAttachmentsController;
+
+
+@property (nonatomic,strong) TL_userFull *userFull;
 
 @end
 
@@ -176,6 +179,18 @@
         [self setForwardEnabled:NO];
     } else {
          [self setForwardEnabled:YES];
+    }
+    
+    
+    
+    if(self.dialog.type == DialogTypeUser) {
+        
+        
+        [[FullUsersManager sharedManager] loadUserFull:self.dialog.user callback:^(TL_userFull *userFull) {
+            
+            _userFull = userFull;
+            
+        }];
     }
     
     [self checkReplayMessage:YES animated:NO];
@@ -884,13 +899,20 @@
     NSString *search;
     
     NSRange selectedRange = self.inputMessageTextField.selectedRange;
+
     
+    int type = 0;
+    
+    // mention = 1
+    // hashtag = 2
+    // botCommand = 3
     
     BOOL isMention;
+
     
-    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound) {
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
         
-        isMention = [[string substringWithRange:range] isEqualToString:@"@"];
+        type = [[string substringWithRange:range] isEqualToString:@"@"] ? 1 : ([[string substringWithRange:range] isEqualToString:@"#"] ? 2 : 3);
         
         search = [string substringFromIndex:range.location + 1];
         
@@ -912,10 +934,13 @@
         string = [string substringFromIndex:range.location +1];
         
     }
+    
+    
+    [TGMentionPopup close];
+    [TGHashtagPopup close];
+    [TGBotCommandsPopup close];
+    
     if(search != nil && ![string hasPrefix:@" "]) {
-        
-        
-        
         
         void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
@@ -928,18 +953,21 @@
             
         };
         
-        if(isMention) {
+        
+        
+        
+        if(type == 1) {
             if(self.dialog.type == DialogTypeChat)
                 [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
-            [TGHashtagPopup close];
-        } else {
+        } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
-            [TGMentionPopup close];
+        } else {
+            if([_dialog.user isBot])
+                [TGBotCommandsPopup show:search botInfo:_userFull.bot_info view:self.window.contentView ofRect:rect callback:callback];
         }
         
     } else {
-        [TGMentionPopup close];
-        [TGHashtagPopup close];
+        
     }
     
 

@@ -114,7 +114,7 @@ static NSImage *mentionCap() {
 @implementation TGMentionPopup
 
 
-static TMMenuPopover *popover;
+
 
 +(void)show:(NSString *)string chat:(TLChat *)chat view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback {
     
@@ -142,8 +142,7 @@ static TMMenuPopover *popover;
             
             callback(obj.username);
             
-            [popover close];
-            popover = nil;
+            [self close];
             
         }];
         
@@ -157,43 +156,23 @@ static TMMenuPopover *popover;
     }];
     
     if(menu.itemArray.count > 0) {
-        [popover close];
+        [self close];
         
-        popover = [[TMMenuPopover alloc] initWithMenu:menu];
+        [self setPopover:[[TMMenuPopover alloc] initWithMenu:menu]];
         
-        [popover setAutoHighlight:NO];
+        [[self popover] setAutoHighlight:NO];
         
-        [popover showRelativeToRect:rect ofView:view preferredEdge:CGRectMinYEdge];
+        [[self popover] showRelativeToRect:rect ofView:view preferredEdge:CGRectMinYEdge];
         
-        [popover.contentViewController selectNext];
+        [[self popover].contentViewController selectNext];
     } else {
-        [popover close];
-        popover = nil;
+        [self close];
     }
     
 }
 
 
-+(BOOL)isVisibility {
-    return [popover isShown];
-    
-}
 
-+(void)performSelected {
-    [popover.contentViewController performSelected];
-}
-
-+(void)selectNext {
-    [popover.contentViewController selectNext];
-}
-
-+(void)selectPrev {
-    [popover.contentViewController selectPrev];
-}
-
-+(void)close {
-    [popover close];
-}
 
 
 @end

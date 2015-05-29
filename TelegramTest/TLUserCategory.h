@@ -14,7 +14,8 @@ typedef enum {
     TLUserTypeDeleted,
     TLUserTypeForeign,
     TLUserTypeSelf,
-    TLUserTypeRequest
+    TLUserTypeRequest,
+    TLUserTypeBot
 } TLUserType;
 
 @interface TLUser (Category)
@@ -26,6 +27,9 @@ typedef enum {
 - (BOOL)isBlocked;
 - (void)rebuildNames;
 - (void)rebuidStatuses;
+
+
+-(BOOL)isBot;
 
 - (NSString *)fullName;
 - (NSString *)phoneWithFormat;
