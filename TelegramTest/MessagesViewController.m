@@ -162,7 +162,7 @@
 @property (nonatomic,strong) RPCRequest *webPageRequest;
 @property (nonatomic,strong) NSString *noWebpageString;
 
-@property (nonatomic, strong) TL_conversation *conv;
+@property (nonatomic, strong) TL_conversation *conversation;
 
 @end
 
@@ -1930,7 +1930,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
     [self hideSearchBox:NO];
     
-    
+        assert(dialog == [[DialogsManager sharedManager] find:dialog.peer_id]);
     
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
@@ -2133,17 +2133,7 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
--(void)setConversation:(TL_conversation *)conversation {
-    _conv = conversation;
-}
 
--(TL_conversation *)conversation {
-    
-    __block TL_conversation *conversation;
-    conversation = _conv;
-
-    return conversation;
-}
 
 - (void)loadhistory:(int)message_id toEnd:(BOOL)toEnd prev:(BOOL)prev isFirst:(BOOL)isFirst {
     if(!self.conversation || self.historyController.isProccessing || _locked)

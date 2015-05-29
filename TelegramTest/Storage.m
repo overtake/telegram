@@ -246,6 +246,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
         
+        if([db hadError]) {
+            [self drop:^{
+                [self open:completeHandler];
+            }];
+            return;
+        }
+        
+        
         [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
             
             if (sqlite3_value_type(aargv[0]) == SQLITE_TEXT) {
