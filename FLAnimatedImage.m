@@ -325,11 +325,7 @@ typedef NS_ENUM(NSUInteger, FLAnimatedImageFrameCacheSize) {
     }
     
     // Needed for deployment target iOS 5.0
-#if ((__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) || (!defined(__IPHONE_6_0)))
-    if (_serialQueue) {
-        dispatch_release(_serialQueue);
-    }
-#endif
+
 }
 
 

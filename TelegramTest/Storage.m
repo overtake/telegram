@@ -1179,8 +1179,11 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         while ([result next]) {
             TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
-            [users addObject:user];
+            if([user isKindOfClass:[TLUser class]]) {
+                user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
+                [users addObject:user];
+
+            }
         }
         
         [result close];
@@ -1202,12 +1205,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         for (TLUser *user in users) {
             
-            if([user isKindOfClass:[TL_userSelf class]]) {
-                [[Telegram standartUserDefaults] setObject:[TLClassStore serialize:user] forKey:@"selfUser"];
-                [[MTNetwork instance] setUserId:user.n_id];
+            if([user isKindOfClass:[TLUser class]]) {
+                if(user.type == TLUserTypeSelf) {
+                    [[Telegram standartUserDefaults] setObject:[TLClassStore serialize:user] forKey:@"selfUser"];
+                    [[MTNetwork instance] setUserId:user.n_id];
+                }
+                
+                [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate)];
+
             }
             
-            [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate)];
         }
         
         if(completeHandler) {

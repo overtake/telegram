@@ -705,12 +705,12 @@
 		C2D4B9281AFCEA1D0035B4E4 /* YapDatabaseExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C01AFCEA1D0035B4E4 /* YapDatabaseExtension.m */; };
 		C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */; };
 		C2D4B92A1AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */; };
-		C2D51B7D1B137164009327C0 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D51B7E1B137164009327C0 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D51B7F1B13716B009327C0 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D51B801B13716B009327C0 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D51B8B1B174B9E009327C0 /* EMImageData.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B881B174B9E009327C0 /* EMImageData.m */; };
 		C2D51B8C1B174B9E009327C0 /* EMInMemoryImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B8A1B174B9E009327C0 /* EMInMemoryImageCache.m */; };
+		C2D51BAD1B1C6A91009327C0 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D51BAE1B1C6A92009327C0 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D51BAF1B1C6A98009327C0 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2D51BB01B1C6A98009327C0 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
@@ -835,8 +835,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D51B7D1B137164009327C0 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D51B7E1B137164009327C0 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2D51BAD1B1C6A91009327C0 /* Sparkle.framework in Copy Files (6 items) */,
+				C2D51BAE1B1C6A92009327C0 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2386,8 +2386,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D51B7F1B13716B009327C0 /* Sparkle.framework in Frameworks */,
-				C2D51B801B13716B009327C0 /* HockeySDK.framework in Frameworks */,
+				C2D51BAF1B1C6A98009327C0 /* Sparkle.framework in Frameworks */,
+				C2D51BB01B1C6A98009327C0 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6321,7 +6321,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
@@ -6364,7 +6364,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";

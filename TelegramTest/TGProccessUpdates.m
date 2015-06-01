@@ -504,7 +504,6 @@ static ASQueue *queue;
     
     if(completionHandler == nil) {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        dispatch_release(semaphore);
     }
     
    
