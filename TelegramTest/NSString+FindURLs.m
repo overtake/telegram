@@ -46,7 +46,7 @@
     
     
     
-    regex = [NSRegularExpression regularExpressionWithPattern:@"(/[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    regex = [NSRegularExpression regularExpressionWithPattern:@"( /[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
     
     NSMutableArray* botCommands = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
