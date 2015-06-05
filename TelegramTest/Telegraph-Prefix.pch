@@ -32,7 +32,7 @@
 #import "TL_localMessage.h"
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"
-
+#import "TL_messageActionBotDescription.h"
 
 #import "TLClassStore.h"
 #import "UsersManager.h"

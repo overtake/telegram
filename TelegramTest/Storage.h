@@ -33,6 +33,7 @@ extern NSString *const SOCIAL_DESC_COLLECTION;
 extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
+extern NSString *const BOT_COMMANDS;
 -(void)drop:(void (^)())completeHandler;
 
 
@@ -63,6 +64,9 @@ extern NSString *const ATTACHMENTS;
 
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
+
+-(TL_localMessage *)lastMessage:(int)peer_id from_id:(int)from_id;
+
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 

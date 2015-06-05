@@ -561,8 +561,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLBotCommandPrefix]) {
-        [[Telegram rightViewController].messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",link]];
-        [[Telegram rightViewController].messagesViewController becomeFirstResponder];
+        [[Telegram rightViewController].messagesViewController sendMessage:link forConversation:[Telegram conversation]];
         return;
     }
     

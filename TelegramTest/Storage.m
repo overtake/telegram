@@ -31,6 +31,7 @@ NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
 NSString *const REPLAY_COLLECTION = @"replay_collection";
 NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
+NSString *const BOT_COMMANDS = @"bot_commands";
 -(id)init {
     if(self = [super init]) {
         [self open:nil];
@@ -634,37 +635,47 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [queue inDatabase:^(FMDatabase *db) {
         
         TL_localMessage *message;
-        FMResultSet *result = [db executeQuery:@"select * from messages where peer_id = ? ORDER BY date DESC LIMIT 1",@(peer_id)];
+        FMResultSet *result = [db executeQuery:@"select message_text,serialized,flags from messages where peer_id = ? ORDER BY date DESC LIMIT 1",@(peer_id)];
         
         
         if([result next]) {
-            int date = [result intForColumn:@"date"];
-            
-            [result close];
-            
-            
-            result = [db executeQuery:@"select * from messages where peer_id = ? AND date = ? ORDER BY n_id DESC LIMIT 1",@(peer_id),@(date)];
-            
-            
-            if([result next]) {
-                message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                message.flags = -1;
-                message.message = [result stringForColumn:@"message_text"];
-                message.flags = [result intForColumn:@"flags"];
-            }
-            
+            message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            message.flags = -1;
+            message.message = [result stringForColumn:@"message_text"];
+            message.flags = [result intForColumn:@"flags"];
         }
         
         
-        
-        
-        
         [result close];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler != nil) completeHandler(message);
         });
     }];
 
+}
+
+-(TL_localMessage *)lastMessage:(int)peer_id from_id:(int)from_id {
+    
+    __block TL_localMessage *msg;
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        FMResultSet *result = [db executeQuery:@"select message_text,serialized,flags from messages where peer_id = ? and from_id = ? ORDER BY date DESC LIMIT 1",@(peer_id),@(from_id)];
+        
+        
+        if([result next]) {
+            msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            msg.flags = -1;
+            msg.message = [result stringForColumn:@"message_text"];
+            msg.flags = [result intForColumn:@"flags"];
+        }
+        
+        [result close];
+        
+    }];
+    
+    return msg;
 }
 
 

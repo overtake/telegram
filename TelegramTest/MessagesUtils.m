@@ -40,7 +40,7 @@
         } else {
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.LeftGroup", nil), [user fullName]];
         }
-    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
+    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]] || [action isKindOfClass:[TL_messageActionBotDescription class]]) {
         text = action.title;
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
         
@@ -317,7 +317,7 @@
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
         }
-    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
+    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]] || [action isKindOfClass:[TL_messageActionBotDescription class]]) {
         actionText = action.title;
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
@@ -330,6 +330,26 @@
     
     static float size = 11.5;
     
+    if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
+        
+        attributedString = [[NSMutableAttributedString alloc] init];
+        
+        NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
+        [attributedString setFont:TGSystemMediumFont(13) forRange:range];
+        
+        [attributedString appendString:@"\n\n"];
+        
+        range = [attributedString appendString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." withColor:TEXT_COLOR];
+        
+        [attributedString setFont:TGSystemFont(13) forRange:range];
+        
+      //  [attributedString setAlignment:NSLeftTextAlignment range:attributedString.range];
+        
+        return attributedString;
+    }
+    
+    
+    
     NSRange start;
     //  if(user != [UsersManager currentUser]) {
     start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
@@ -340,6 +360,8 @@
     //        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
     //        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
     //    }
+    
+    
     
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];

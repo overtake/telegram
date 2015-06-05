@@ -24,6 +24,7 @@
 #import "TMMediaController.h"
 #import "TMSharedMediaButton.h"
 #import "TMMenuPopover.h"
+#import "FullUsersManager.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -50,6 +51,7 @@
 
 @property (nonatomic, strong) UserInfoParamsView *phoneView;
 @property (nonatomic, strong) UserInfoParamsView *userNameView;
+@property (nonatomic, strong) UserInfoParamsView *botInfoView;
 
 @property (nonatomic, strong) UserInfoShortButtonView *notificationView;
 
@@ -262,6 +264,14 @@
         
         [self addSubview:self.userNameView];
         
+        self.botInfoView = [[UserInfoParamsView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
+        
+        [self.botInfoView setHeader:NSLocalizedString(@"Profile.botInfo", nil)];
+        
+        [self addSubview:self.botInfoView];
+        
+        
+        
          weakify();
         
         
@@ -422,11 +432,13 @@
     
     [self.phoneView setHidden:self.user.isBot];
     
-   
+    
+    [self.botInfoView setHidden:!self.user.isBot];
+    
+    [self.botInfoView setFrameOrigin:NSMakePoint(100, offset)];
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
-    if(self.phoneView.isHidden)
-        offset+=62;
+
     
    
     [self.userNameView setHidden:self.user.username.length == 0];
@@ -600,6 +612,16 @@
     
     [self.statusTextField setUser:self.user];
     [self.phoneView setString:self.user.phoneWithFormat ? self.user.phoneWithFormat : NSLocalizedString(@"User.Hidden", nil)];
+    
+    if(user.isBot) {
+        [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
+            
+            [_botInfoView setString:userFull.bot_info.n_description];
+            
+        }];
+    }
+    
+    
     
     
     if(self.user.type != TLUserTypeSelf) {

@@ -29,7 +29,7 @@
 
 -(void)performRequest {
     
-    TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId];
+    TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithRows:[@[]mutableCopy]]];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         

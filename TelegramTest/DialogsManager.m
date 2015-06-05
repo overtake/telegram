@@ -377,6 +377,26 @@
         [self add:@[dialog]];
         
         
+        if(isTestServer() && [message.message isEqualToString:@"Choose bot to generate token."]) {
+            NSMutableArray *f = [[NSMutableArray alloc] init];
+            
+            [f addObject:[TL_keyboardButtonRow createWithButtons:[@[[TL_keyboardButton createWithText:@"@asdf"]] mutableCopy]]];
+            [f addObject:[TL_keyboardButtonRow createWithButtons:[@[[TL_keyboardButton createWithText:@"@asdf"],[TL_keyboardButton createWithText:@"@sdfqwefef"]] mutableCopy]]];
+            [f addObject:[TL_keyboardButtonRow createWithButtons:[@[[TL_keyboardButton createWithText:@"@asdfqqqwef"],[TL_keyboardButton createWithText:@"@sfrffvfdfqwefef"]] mutableCopy]]];
+
+            message.reply_markup = [TL_replyKeyboardMarkup createWithRows:f];
+        }
+        
+        
+        if(message.reply_markup != nil && !message.n_out) {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:dialog.cacheKey inCollection:BOT_COMMANDS];
+            }];
+            
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+        }
+        
+        
         if(needUpdate) {
             
             NSUInteger position = [self positionForConversation:dialog];
@@ -386,8 +406,7 @@
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
             [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         }
-
-
+        
     }];
     
 }

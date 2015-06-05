@@ -2085,25 +2085,25 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.messages.count > 1) {
         //    dispatch_async(dispatch_get_main_queue(), ^{
             
-            NSArray *backItems;
+            NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
+            NSSize oldsize = self.table.scrollView.documentSize;
+            NSPoint offset = self.table.scrollView.documentOffset;
             
-                NSRange range = [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
-                NSSize oldsize = self.table.scrollView.documentSize;
-                NSPoint offset = self.table.scrollView.documentOffset;
+            [self.table beginUpdates];
+            [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
+            [self.table endUpdates];
+            
+            if(!next) {
+                NSSize newsize = self.table.scrollView.documentSize;
                 
-                [self.table beginUpdates];
-                [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
-                [self.table endUpdates];
-                
-                if(!next) {
-                    NSSize newsize = self.table.scrollView.documentSize;
-                    
-                    [self.table.scrollView scrollToPoint:NSMakePoint(0, newsize.height - oldsize.height + offset.y) animation:NO];
-                }
-                
-                [self didUpdateTable];
-                self.locked = NO;
-                
+                [self.table.scrollView scrollToPoint:NSMakePoint(0, newsize.height - oldsize.height + offset.y) animation:NO];
+            }
+            
+            [self didUpdateTable];
+            self.locked = NO;
+            
+            
+            
            // });
         } else {
              [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
@@ -2114,6 +2114,20 @@ static NSTextAttachment *headerMediaIcon() {
         }
     } else {
         [self didUpdateTable];
+    }
+    
+    
+    if(_conversation.user.isBot && _historyController.nextState == ChatHistoryStateFull) {
+        
+        [[FullUsersManager sharedManager] loadUserFull:_conversation.user callback:^(TL_userFull *userFull) {
+            
+            TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+            
+            
+            [self receivedMessage:[self messageTableItemsFromMessages:@[service]][0] position:_messages.count itsSelf:YES];
+            
+        }];
+        
     }
 }
 
@@ -2175,6 +2189,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(message_id != 0 && prev && self.historyController.prevState == ChatHistoryStateRemote) {
             self.historyController.nextState = self.historyController.prevState;
         }
+        
         
        NSUInteger pos = prev ? 0 : self.messages.count;
         if(isFirst && prev) {

@@ -37,7 +37,7 @@
     [self.cs_classes setObject:[TL_broadcast class] forKey:[NSNumber numberWithInt:10]];
     [self.cs_classes setObject:[TL_messageActionSetMessageTTL class] forKey:[NSNumber numberWithInt:11]];
     [self.cs_classes setObject:[TL_secretServiceMessage class] forKey:[NSNumber numberWithInt:12]];
-    
+    [self.cs_classes setObject:[TL_messageActionBotDescription class] forKey:[NSNumber numberWithInt:13]];
     
     
     for(NSNumber* number in [self.cs_classes allKeys]) {

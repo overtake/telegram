@@ -11,7 +11,8 @@
 #import "TGImageObject.h"
 typedef enum {
     MessageTableItemServiceMessageAction,
-    MessageTableItemServiceMessageDate
+    MessageTableItemServiceMessageDate,
+    MessagetableitemServiceMessageDescription
 } MessageTableItemServiceMessageType;
 
 @interface MessageTableItemServiceMessage : MessageTableItem

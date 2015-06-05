@@ -27,6 +27,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _selectLimit = 1;
+        _type = SelectTableTypeUser;
     }
     return self;
 }
@@ -43,6 +44,11 @@ static NSCache *cacheItems;
 
 
 -(void)ready {
+    
+    if(_type == SelectTableTypeUser) {
+        
+    }
+    
     NSArray *contacts = [[NewContactsManager sharedManager] all];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
@@ -65,20 +71,6 @@ static NSCache *cacheItems;
     
     [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
-//    
-//    [items sortUsingComparator:^NSComparisonResult(SelectUserItem* obj1, SelectUserItem* obj2) {
-//        int first = obj1.contact.user.lastSeenTime;
-//        int second = obj2.contact.user.lastSeenTime;
-//        
-//        if ( first > second ) {
-//            return (NSComparisonResult)NSOrderedAscending;
-//        } else if ( first < second ) {
-//            return (NSComparisonResult)NSOrderedDescending;
-//        } else {
-//            return (NSComparisonResult)NSOrderedSame;
-//        }
-//        
-//    }];
     
     
     self.tm_delegate = self;

@@ -10,6 +10,12 @@
 #import "SelectUserRowView.h"
 #import "SelectUserItem.h"
 
+
+typedef enum {
+    SelectTableTypeUser,
+    SelectTableTypeChats
+} SelectTableType ;
+
 @protocol SelectTableDelegate <NSObject>
 
 @required
@@ -30,6 +36,8 @@
 @property (nonatomic,strong) NSArray *selectedItems;
 
 @property (nonatomic,assign) NSUInteger selectLimit;
+
+@property (nonatomic,assign) SelectTableType type;
 
 - (BOOL) canSelectItem;
 

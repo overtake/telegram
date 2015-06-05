@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.05.15.
+//  Auto created by Mikhail Filimonov on 05.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1584,12 +1584,13 @@
 @end
 
 @implementation TL_chatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings bot_info:(NSMutableArray*)bot_info {
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info {
 	TL_chatFull* obj = [[TL_chatFull alloc] init];
 	obj.n_id = n_id;
 	obj.participants = participants;
 	obj.chat_photo = chat_photo;
 	obj.notify_settings = notify_settings;
+	obj.exported_invite = exported_invite;
 	obj.bot_info = bot_info;
 	return obj;
 }
@@ -1598,6 +1599,7 @@
 	[ClassStore TLSerialize:self.participants stream:stream];
 	[ClassStore TLSerialize:self.chat_photo stream:stream];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.exported_invite stream:stream];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -1614,6 +1616,7 @@
 	self.participants = [ClassStore TLDeserialize:stream];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
+	self.exported_invite = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -1625,32 +1628,6 @@
 			[self.bot_info addObject:obj];
 		}
 	}
-}
-@end
-
-@implementation TL_chatFull_old29
-+(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
-	TL_chatFull_old29* obj = [[TL_chatFull_old29 alloc] init];
-	obj.n_id = n_id;
-	obj.participants = participants;
-	obj.chat_photo = chat_photo;
-	obj.notify_settings = notify_settings;
-	obj.exported_invite = exported_invite;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.n_id];
-	[ClassStore TLSerialize:self.participants stream:stream];
-	[ClassStore TLSerialize:self.chat_photo stream:stream];
-	[ClassStore TLSerialize:self.notify_settings stream:stream];
-	[ClassStore TLSerialize:self.exported_invite stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.participants = [ClassStore TLDeserialize:stream];
-	self.chat_photo = [ClassStore TLDeserialize:stream];
-	self.notify_settings = [ClassStore TLDeserialize:stream];
-	self.exported_invite = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -1796,7 +1773,7 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media {
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
@@ -1808,6 +1785,7 @@
 	obj.date = date;
 	obj.message = message;
 	obj.media = media;
+	obj.reply_markup = reply_markup;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -1821,6 +1799,7 @@
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[ClassStore TLSerialize:self.media stream:stream];
+	if(self.flags & (1 << 6)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -1833,6 +1812,7 @@
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 6)) self.reply_markup = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -8411,10 +8391,11 @@
 @end
 
 @implementation TL_botInfo
-+(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version n_description:(NSString*)n_description commands:(NSMutableArray*)commands {
++(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version share_text:(NSString*)share_text n_description:(NSString*)n_description commands:(NSMutableArray*)commands {
 	TL_botInfo* obj = [[TL_botInfo alloc] init];
 	obj.user_id = user_id;
 	obj.version = version;
+	obj.share_text = share_text;
 	obj.n_description = n_description;
 	obj.commands = commands;
 	return obj;
@@ -8422,6 +8403,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.version];
+	[stream writeString:self.share_text];
 	[stream writeString:self.n_description];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -8437,6 +8419,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 	self.version = [stream readInt];
+	self.share_text = [stream readString];
 	self.n_description = [stream readString];
 	//UNS FullVector
 	[stream readInt];
@@ -8447,6 +8430,101 @@
 		for(int i = 0; i < count; i++) {
 			TLBotCommand* obj = [ClassStore TLDeserialize:stream];
 			[self.commands addObject:obj];
+		}
+	}
+}
+@end
+
+
+
+@implementation TLKeyboardButton
+@end
+
+@implementation TL_keyboardButton
++(TL_keyboardButton*)createWithText:(NSString*)text {
+	TL_keyboardButton* obj = [[TL_keyboardButton alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.text = [stream readString];
+}
+@end
+
+
+
+@implementation TLKeyboardButtonRow
+@end
+
+@implementation TL_keyboardButtonRow
++(TL_keyboardButtonRow*)createWithButtons:(NSMutableArray*)buttons {
+	TL_keyboardButtonRow* obj = [[TL_keyboardButtonRow alloc] init];
+	obj.buttons = buttons;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.buttons count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLKeyboardButton* obj = [self.buttons objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.buttons)
+			self.buttons = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLKeyboardButton* obj = [ClassStore TLDeserialize:stream];
+			[self.buttons addObject:obj];
+		}
+	}
+}
+@end
+
+
+
+@implementation TLReplyMarkup
+@end
+
+@implementation TL_replyKeyboardMarkup
++(TL_replyKeyboardMarkup*)createWithRows:(NSMutableArray*)rows {
+	TL_replyKeyboardMarkup* obj = [[TL_replyKeyboardMarkup alloc] init];
+	obj.rows = rows;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.rows count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+			TLKeyboardButtonRow* obj = [self.rows objectAtIndex:i];
+			[ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.rows)
+			self.rows = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLKeyboardButtonRow* obj = [ClassStore TLDeserialize:stream];
+			[self.rows addObject:obj];
 		}
 	}
 }
@@ -9262,8 +9340,6 @@
 	self.orig_message = [ClassStore TLDeserialize:stream];
 }
 @end
-
-
 
 
 @implementation TL_gzip_packed

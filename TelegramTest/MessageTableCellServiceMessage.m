@@ -30,14 +30,13 @@
         [self.textField setDrawsBackground:NO];
         [self.textField setBackgroundColor:[NSColor clearColor]];
         [self.textField setBezeled:NO];
-        [self.textField setAutoresizesSubviews:YES];
-        [self.textField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
         [self addSubview:self.textField];
         
         self.photoImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
-        [self.photoImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
         [self.photoImageView setRoundSize:4];
         [self addSubview:self.photoImageView];
+        
+        self.wantsLayer = YES;
         
         weak();
         
@@ -88,7 +87,7 @@
         [self.textField setAttributedStringValue:item.messageAttributedString];
         [self.textField setAlignment:NSCenterTextAlignment];
         [self.textField setFrameSize:item.blockSize];
-        [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.blockSize.width) / 2), 8 + (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.blockSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
         
         
         if(item.photo) {
@@ -102,12 +101,19 @@
         } else {
             [self.photoImageView setHidden:YES];
         }
-    } else {
+    } else if(item.type == MessagetableitemServiceMessageDescription) {
         [self.photoImageView setHidden:YES];
         [self.textField setAttributedStringValue:item.messageAttributedString];
         [self.textField setFrameSize:item.blockSize];
-        [self.textField setFrameOrigin:NSMakePoint(74, 8)];
+        [self.textField setFrameOrigin:NSMakePoint(0, 0)];
+        [self.textField setCenteredXByView:self.textField.superview];
 
+    } else  {
+        [self.photoImageView setHidden:YES];
+        [self.textField setAttributedStringValue:item.messageAttributedString];
+        [self.textField setAlignment:NSLeftTextAlignment];
+        [self.textField setFrameSize:item.blockSize];
+        [self.textField setFrameOrigin:NSMakePoint(74, 8)];
     }
     
     

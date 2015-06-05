@@ -14,6 +14,7 @@
 #import "TGHashtagPopup.h"
 #import "NSString+FindURLs.h"
 #import "NSString+Extended.h"
+#import "TGBotCommandsPopup.h"
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -400,9 +401,11 @@ typedef enum {
             if(theEvent.keyCode == 125) {
                 [TGMentionPopup selectNext];
                 [TGHashtagPopup selectNext];
+                [TGBotCommandsPopup selectNext];
             } else {
                 [TGMentionPopup selectPrev];
                 [TGHashtagPopup selectPrev];
+                [TGBotCommandsPopup selectNext];
             }
             
             return;

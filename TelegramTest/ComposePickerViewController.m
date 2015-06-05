@@ -93,10 +93,6 @@
     
     [self.tableView ready];
     
-    
-    
-   
-    
     [self.tableView scrollToBeginningOfDocument:self];
     
     self.action.currentViewController = self;

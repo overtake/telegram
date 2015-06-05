@@ -20,11 +20,29 @@
     
     NSArray *commands = string.length > 0 ? [botInfo.commands filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.command BEGINSWITH[c] %@",string]] : botInfo.commands;
     
+    
+    __block NSMutableArray *allCommands;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
+        allCommands = [transaction objectForKey:@"commands" inCollection:BOT_COMMANDS];
+        
+        if(!allCommands) {
+            allCommands = [[NSMutableArray alloc] init];
+        }
+    }];
+    
+    
+    NSMutableArray *localCommands = [[allCommands subarrayWithRange:NSMakeRange(0, MIN(allCommands.count,20))] mutableCopy];
+    
+    
     [commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
+        
+        [localCommands removeObject:obj.command];
         
         NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"/%@",obj.command] withBlock:^(id sender) {
             
             callback([obj command]);
+            
             
             [self close];
             
@@ -34,6 +52,21 @@
         
         [menu addItem:item];
         
+    }];
+    
+    
+    [localCommands enumerateObjectsUsingBlock:^(NSString*lc, NSUInteger idx, BOOL *stop) {
+        
+        NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"/%@",lc] withBlock:^(id sender) {
+            
+            callback(lc);
+            
+            [self close];
+            
+        }];
+        
+        
+        [menu addItem:item];
     }];
     
     if(menu.itemArray.count > 0) {

@@ -1377,12 +1377,7 @@
          contextName = "-[TGWebpageStandartObject initWithWebPage:]:TGWebpageStandartObject.m">
       </ContextState>
       <ContextState
-         contextName = "-[MessagesBottomView setDialog:]:MessagesBottomView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.dialog.user">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__56-[DocumentHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:DocumentHistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "__41-[GeneralSettingsViewController loadView]_block_invoke153:GeneralSettingsViewController.m">

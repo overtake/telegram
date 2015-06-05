@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.05.15..
+//  Auto created by Mikhail Filimonov on 05.06.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -692,43 +692,47 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id {
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
     obj.flags = flags;
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.message = message;
 	obj.random_id = random_id;
+	obj.reply_markup = reply_markup;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1696755930];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-61479243];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
+	if(self.flags & (1 << 2)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_sendMedia
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id {
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
     TLAPI_messages_sendMedia* obj = [[TLAPI_messages_sendMedia alloc] init];
     obj.flags = flags;
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.media = media;
 	obj.random_id = random_id;
+	obj.reply_markup = reply_markup;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:762913713];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-923703407];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
+	if(self.flags & (1 << 2)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 	return [stream getOutput];
 }
 @end

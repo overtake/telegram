@@ -33,6 +33,7 @@
 #import "TGImageAttachmentsController.h"
 #import "FullUsersManager.h"
 #import "TGBotCommandsPopup.h"
+#import "TGBotCommandsKeyboard.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -72,6 +73,8 @@
 @property (nonatomic,strong) TGForwardContainer *fwdContainer;
 
 @property (nonatomic,strong) TGWebpageAttach *webpageAttach;
+
+@property (nonatomic,strong) TGBotCommandsKeyboard *botKeyboard;
 
 @property (nonatomic,strong,readonly) TGImageAttachmentsController *imageAttachmentsController;
 
@@ -153,9 +156,21 @@
     [Notification removeObserver:self];
 }
 
+
+-(void)botKeyboardNotification:(NSNotification *)notification
+{
+    [self checkBotKeyboard:YES animated:YES];
+}
+
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
+    
+    [Notification removeObserver:self];
+    
+    [Notification addObserver:self selector:@selector(botKeyboardNotification:) name:[Notification notificationNameByDialog:dialog action:@"botKeyboard"]];
 
+    //botKeyboard
+    
     [self stopRecord:nil];
     
     if(self.dialog.type == DialogTypeSecretChat) {
@@ -192,6 +207,10 @@
             
         }];
     }
+    
+    
+     [self checkBotKeyboard:YES animated:NO];
+
     
     [self checkReplayMessage:YES animated:NO];
     
@@ -809,6 +828,10 @@
     
     [self.messagesViewController sendMessage];
     
+    
+    [_botKeyboard clear];
+    
+    
     [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] forConversation:self.dialog addCompletionHandler:nil];
     
     if(_imageAttachmentsController.isShown) {
@@ -962,8 +985,18 @@
         } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
         } else {
-            if([_dialog.user isBot])
-                [TGBotCommandsPopup show:search botInfo:_userFull.bot_info view:self.window.contentView ofRect:rect callback:callback];
+            if([_dialog.user isBot]) {
+                [TGBotCommandsPopup show:search botInfo:_userFull.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
+                    
+                    callback(command);
+                    
+                    [[Telegram rightViewController].messagesViewController sendMessage];
+                    
+                }];
+                
+            }
+            
+            
         }
         
     } else {
@@ -972,6 +1005,31 @@
     
 
 }
+
+-(void)checkBotKeyboard:(BOOL)updateHeight animated:(BOOL)animated  {
+    
+    
+    if(!_botKeyboard) {
+        [_botKeyboard removeFromSuperview];
+        
+        _botKeyboard = nil;
+        
+        _botKeyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        
+        [self.normalView addSubview:_botKeyboard];
+    }
+    
+    
+    [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
+    
+    if(updateHeight) {
+        [self updateBottomHeight:animated];
+    }
+    
+    [self TMGrowingTextViewTextDidChange:nil];
+    
+}
+
 
 -(void)checkFwdMessages:(BOOL)updateHeight animated:(BOOL)animated {
     
@@ -1201,6 +1259,10 @@
         height+= 35;
     }
     
+    if(_botKeyboard != nil) {
+        height+=NSHeight(_botKeyboard.frame);
+    }
+    
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
@@ -1218,6 +1280,10 @@
             
             int offset = _imageAttachmentsController.isShown ? 95 : 20;
             
+            
+            [[_botKeyboard animator] setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
+
+            
             [[_imageAttachmentsController animator] setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
             [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
@@ -1234,6 +1300,9 @@
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
             
             int offset = _imageAttachmentsController.isShown ? 95 : 20;
+            
+            
+            [_botKeyboard setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             

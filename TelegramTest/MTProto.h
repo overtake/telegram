@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Dmitry Kondratyev on 29.05.15.
+//  Auto created by Dmitry Kondratyev on 05.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -376,6 +376,15 @@
 @end
 	
 @interface TLBotInfo : TLObject
+@end
+	
+@interface TLKeyboardButton : TLObject
+@end
+	
+@interface TLKeyboardButtonRow : TLObject
+@end
+	
+@interface TLReplyMarkup : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -860,15 +869,12 @@
 @property (nonatomic, strong) TLChatParticipants* participants;
 @property (nonatomic, strong) TLPhoto* chat_photo;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
-@property (nonatomic, strong) NSMutableArray* bot_info;
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
+@property (nonatomic, strong) NSMutableArray* bot_info;
 @end
 
 @interface TL_chatFull : TLChatFull
-+(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings bot_info:(NSMutableArray*)bot_info;
-@end
-@interface TL_chatFull_old29 : TLChatFull
-+(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 	
 @interface TLChatParticipant()
@@ -918,6 +924,7 @@
 @property int date;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) TLMessageMedia* media;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) TLMessageAction* action;
 @end
 
@@ -925,7 +932,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_messageService : TLMessage
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -2437,6 +2444,7 @@
 @interface TLBotInfo()
 @property int user_id;
 @property int version;
+@property (nonatomic, strong) NSString* share_text;
 @property (nonatomic, strong) NSString* n_description;
 @property (nonatomic, strong) NSMutableArray* commands;
 @end
@@ -2445,7 +2453,31 @@
 +(TL_botInfoEmpty*)create;
 @end
 @interface TL_botInfo : TLBotInfo
-+(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version n_description:(NSString*)n_description commands:(NSMutableArray*)commands;
++(TL_botInfo*)createWithUser_id:(int)user_id version:(int)version share_text:(NSString*)share_text n_description:(NSString*)n_description commands:(NSMutableArray*)commands;
+@end
+	
+@interface TLKeyboardButton()
+@property (nonatomic, strong) NSString* text;
+@end
+
+@interface TL_keyboardButton : TLKeyboardButton
++(TL_keyboardButton*)createWithText:(NSString*)text;
+@end
+	
+@interface TLKeyboardButtonRow()
+@property (nonatomic, strong) NSMutableArray* buttons;
+@end
+
+@interface TL_keyboardButtonRow : TLKeyboardButtonRow
++(TL_keyboardButtonRow*)createWithButtons:(NSMutableArray*)buttons;
+@end
+	
+@interface TLReplyMarkup()
+@property (nonatomic, strong) NSMutableArray* rows;
+@end
+
+@interface TL_replyKeyboardMarkup : TLReplyMarkup
++(TL_replyKeyboardMarkup*)createWithRows:(NSMutableArray*)rows;
 @end
 	
 @interface TLProtoMessage()
