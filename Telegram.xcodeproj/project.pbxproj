@@ -716,6 +716,11 @@
 		C2D51BCF1B1CB8AF009327C0 /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BCE1B1CB8AF009327C0 /* TGAudioPlayerWindow.m */; };
 		C2D51BD21B1E3230009327C0 /* TGAudioProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD11B1E3230009327C0 /* TGAudioProgressView.m */; };
 		C2D51BD71B1F4C8E009327C0 /* TGAudioPlayerListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD61B1F4C8E009327C0 /* TGAudioPlayerListView.m */; };
+		C2D51C0F1B221D74009327C0 /* TGAudioRowItem.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC41B1CB801009327C0 /* TGAudioRowItem.h */; };
+		C2D51C101B221D74009327C0 /* TGAudioRowView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC61B1CB801009327C0 /* TGAudioRowView.h */; };
+		C2D51C111B221D74009327C0 /* TGAudioPlayerWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BCD1B1CB8AF009327C0 /* TGAudioPlayerWindow.h */; };
+		C2D51C121B221D74009327C0 /* TGAudioProgressView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD01B1E3230009327C0 /* TGAudioProgressView.h */; };
+		C2D51C131B221D74009327C0 /* TGAudioPlayerListView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD51B1F4C8E009327C0 /* TGAudioPlayerListView.h */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
@@ -5484,6 +5489,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2D51C0F1B221D74009327C0 /* TGAudioRowItem.h in Sources */,
+				C2D51C101B221D74009327C0 /* TGAudioRowView.h in Sources */,
+				C2D51C111B221D74009327C0 /* TGAudioPlayerWindow.h in Sources */,
+				C2D51C121B221D74009327C0 /* TGAudioProgressView.h in Sources */,
+				C2D51C131B221D74009327C0 /* TGAudioPlayerListView.h in Sources */,
 				0A6758E31895505C00F4487D /* MessageTableItem.m in Sources */,
 				0A59067C18AA32C8002ED7BA /* BTRImageView.m in Sources */,
 				CEB09E6817DAFC250055F150 /* main.m in Sources */,
