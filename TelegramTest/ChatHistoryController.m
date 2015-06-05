@@ -944,18 +944,27 @@ static NSMutableArray *listeners;
             
             [item.messageSender addEventListener:self];
             
-             NSArray *added =  [self filterAndAdd:@[item] isLates:YES];
-             if(added.count == 1 && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
+            NSArray *added = [self filterAndAdd:@[item] isLates:YES];
+            
+            [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *controller, NSUInteger idx, BOOL *stop) {
                 
-                 [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [self.controller receivedMessage:item position:0 itsSelf:YES];
-               
-                
-                if(sentControllerCallback)
-                    sentControllerCallback();
+                if(added.count == 1 && (item.message.filterType & controller.filter.type) > 0 && item.messageSender.conversation.peer.peer_id == controller.conversation.peer.peer_id) {
                     
-                }];
-             }
+                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                        
+                        
+                        [controller.controller receivedMessage:item position:0 itsSelf:YES];
+                        
+                        if(controller == self) {
+                            if(sentControllerCallback)
+                                sentControllerCallback();
+                        }
+                       
+                    }];
+                }
+            }];
+            
+            
             
            
             

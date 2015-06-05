@@ -10,6 +10,7 @@
 #import "DownloadDocumentItem.h"
 #import "NSStringCategory.h"
 #import "NSString+Extended.h"
+#import <AVFoundation/AVFoundation.h>
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -24,6 +25,8 @@
             self.state = AudioStateWaitPlaying;
         else
             self.state = AudioStateWaitDownloading;
+        
+        
     }
     return self;
 }
@@ -40,6 +43,10 @@
     return nil;
 }
 
+-(void)doAfterDownload {
+    self.duration = self.message.media.document.file_name;
+}
+
 
 - (Class)downloadClass {
     return [DownloadDocumentItem class];
@@ -47,6 +54,12 @@
 
 - (BOOL)canDownload {
     return self.message.media.document.dc_id != 0;
+}
+
+-(void)setDownloadItem:(DownloadItem *)downloadItem {
+    [super setDownloadItem:downloadItem];
+    
+    _secondDownloadListener = [[DownloadEventListener alloc] init];
 }
 
 - (int)size {
@@ -57,5 +70,12 @@
     return self.message.media.document.file_name;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    self.blockSize = NSMakeSize(width - 200, 60);
+    
+    return NO;
+}
 
 @end

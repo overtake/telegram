@@ -12,4 +12,10 @@
 
 @property (nonatomic,strong) NSString *fileSize;
 
+@property (nonatomic,strong) NSString *id3fileName;
+
+-(NSString *)fileName;
+
+@property (nonatomic,strong,readonly) DownloadEventListener *secondDownloadListener;
+
 @end

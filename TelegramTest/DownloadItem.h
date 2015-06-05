@@ -23,12 +23,10 @@ typedef enum {
 typedef void (^DownloadItemHandler)(DownloadItem *item);
 
 @interface DownloadEventListener : NSObject
-@property (nonatomic,strong,readonly) DownloadItem *item;
 @property (atomic,copy) DownloadItemHandler progressHandler;
 @property (atomic,strong) DownloadItemHandler completeHandler;
 @property (atomic,copy) DownloadItemHandler errorHandler;
 
--(id)initWithItem:(DownloadItem *)item;
 
 -(void)clear;
 

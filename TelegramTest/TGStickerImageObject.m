@@ -38,9 +38,9 @@
     
     self.downloadItem = [[DownloadStickerItem alloc] initWithObject:self.message];
     
-    self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    self.downloadListener = [[DownloadEventListener alloc] init];
     
-    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    _supportDownloadListener = [[DownloadEventListener alloc] init];
     
     [self.downloadItem addEvent:_supportDownloadListener];
     

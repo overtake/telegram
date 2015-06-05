@@ -246,7 +246,6 @@ static const int bottomHeight = 60;
     
     [self.imageView setFrameSize:NSMakeSize(size.width , size.height )];
     
-    self.imageView.backgroundColor = [NSColor redColor];
     
     [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height + c_s.height + 10 ) / 2) )];
     

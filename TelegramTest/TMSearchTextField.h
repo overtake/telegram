@@ -27,6 +27,8 @@
 
 - (void)setStringValue:(NSString *)value;
 
+- (NSString *)stringValue;
+
 - (bool)endEditing;
 
 @end

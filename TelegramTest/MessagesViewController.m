@@ -1946,9 +1946,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.noMessagesView setConversation:dialog];
         
-        [globalAudioPlayer() stop];
-        
-        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
         
         _isMarkIsset = NO;
         

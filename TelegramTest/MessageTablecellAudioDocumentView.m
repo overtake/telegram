@@ -17,7 +17,7 @@
 
 #import "TGTimer.h"
 #import "NSStringCategory.h"
-
+#import "TGAudioPlayerWindow.h"
 #define OFFSET 75.0f
 
 @interface MessageTablecellAudioDocumentView()
@@ -48,9 +48,13 @@
             
             if(weakSelf.item.state == AudioStateWaitPlaying) {
                 if(weakSelf.item.isset) {
-                    weakSelf.currentTime = 0;
-                    [weakSelf setNeedsDisplay:YES];
-                    [weakSelf play:0];
+                    
+                    [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+                    [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
+                    
+                //    weakSelf.currentTime = 0;
+                 //   [weakSelf setNeedsDisplay:YES];
+                 //   [weakSelf play:0];
                 } else {
                     if([weakSelf.item canDownload])
                         [weakSelf startDownload:YES];
@@ -115,6 +119,9 @@
     return self;
 }
 
+-(float)progressWidth {
+    return MAX(150, MIN(self.item.blockSize.width, self.item.message.media.document.duration * 30));
+}
 
 - (NSRect)progressRect {
     return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 27, [self progressWidth], 3);

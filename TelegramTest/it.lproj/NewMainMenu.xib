@@ -103,6 +103,11 @@
                                     <action selector="showMedia:" target="89" id="116"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Show Audio" keyEquivalent="u" id="S89-hB-HZJ">
+                                <connections>
+                                    <action selector="showAudioMiniPlayer:" target="89" id="YOF-Cs-9Hn"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="26">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>

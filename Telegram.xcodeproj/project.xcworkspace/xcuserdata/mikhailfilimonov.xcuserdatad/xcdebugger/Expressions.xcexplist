@@ -9,12 +9,15 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.messages">
-            </PersistentString>
-            <PersistentString
                value = "current.isHeaderMessage">
             </PersistentString>
+            <PersistentString
+               value = "self.messages">
+            </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAudioPlayerListView setSelectedId:]:TGAudioPlayerListView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer show:user:]:TGPhotoViewer.m">
@@ -454,13 +457,13 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type &amp; SearchTypeGlobalUsers">
+               value = "self.type">
             </PersistentString>
             <PersistentString
                value = "tags">
             </PersistentString>
             <PersistentString
-               value = "self.type">
+               value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -601,6 +604,14 @@
          contextName = "__39-[MTNetwork sendRequest:forDatacenter:]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_3:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -610,10 +621,10 @@
                value = "self.item.isset">
             </PersistentString>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1149,10 +1160,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1352,6 +1363,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageStandartObject initWithWebPage:]:TGWebpageStandartObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[DocumentHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:DocumentHistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "__41-[GeneralSettingsViewController loadView]_block_invoke153:GeneralSettingsViewController.m">
@@ -1866,7 +1880,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -1875,10 +1889,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2335,7 +2349,7 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "abset.count">
+               value = "changeSet.count">
             </PersistentString>
             <PersistentString
                value = "deleteSet">
@@ -2344,7 +2358,7 @@
                value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "changeSet.count">
+               value = "abset.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2501,10 +2515,10 @@
                value = "item.message.n_id">
             </PersistentString>
             <PersistentString
-               value = "_conversation.top_message">
+               value = "_conversation">
             </PersistentString>
             <PersistentString
-               value = "_conversation">
+               value = "_conversation.top_message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2563,6 +2577,14 @@
       </ContextState>
       <ContextState
          contextName = "__38-[TGAttachObject prepareImage:orData:]_block_invoke:TGAttachObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "__78-[ChatHistoryController addItem:conversation:callback:sentControllerCallback:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "listeners">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">

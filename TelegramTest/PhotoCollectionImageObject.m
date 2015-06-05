@@ -34,10 +34,10 @@ static const int width = 180;
     
     self.downloadItem = [[DownloadPhotoCollectionItem alloc] initWithObject:self.location size:self.size];
     
-    self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    self.downloadListener = [[DownloadEventListener alloc] init];
     
     
-    _supportDownloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+    _supportDownloadListener = [[DownloadEventListener alloc] init];
     
     [self.downloadItem addEvent:_supportDownloadListener];
     

@@ -17,7 +17,7 @@
     [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
         
         if([obj isKindOfClass:[TL_documentAttributeFilename class]]) {
-            fileName = obj.file_name;
+            fileName = [obj.file_name stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
             *stop = YES;
         }
         
@@ -25,6 +25,19 @@
     
     return fileName;
 }
+
+-(int)duration  {
+    
+    TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];
+    
+    if(attr) {
+        return attr.duration;
+    }
+    
+    
+    return 0;
+}
+
 
 
 -(TLDocumentAttribute *)attributeWithClass:(Class)className {

@@ -12,7 +12,7 @@
 #import "AboutViewControllerWindowController.h"
 #import "Rebel/Rebel.h"
 #import "TGPhotoViewer.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TelegramFirstController ()
 @property (nonatomic,strong) AboutViewControllerWindowController *aboutViewController;
 
@@ -159,6 +159,8 @@
             return YES;
         } else if(menuItem.action == @selector(checkForUpdates:)) {
             return YES;
+        } else if(menuItem.action == @selector(showAudioMiniPlayer:)) {
+            return [Telegram conversation] && [Telegram conversation].type != DialogTypeSecretChat && [Telegram conversation].type != DialogTypeBroadcast;
         }
     }
     
@@ -170,6 +172,11 @@
 }
 
 
+- (IBAction)showAudioMiniPlayer:(id)sender {
+    
+    [TGAudioPlayerWindow show:[Telegram conversation]];
+    
+}
 
 
 - (IBAction)aboutAction:(id)sender {

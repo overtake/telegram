@@ -184,6 +184,15 @@ CACHE_IMAGE(WebpageTwitterIcon);
 
 CACHE_IMAGE(WebpageInstagramVideoPlay);
 
+
+CACHE_IMAGE(MiniPlayerPrev);
+CACHE_IMAGE(MiniPlayerPlay);
+CACHE_IMAGE(MiniPlayerNext);
+CACHE_IMAGE(MiniPlayerPause);
+CACHE_IMAGE(MiniPlayerClose);
+CACHE_IMAGE(MiniPlayerStop);
+CACHE_IMAGE(MiniPlayerDefaultCover);
+CACHE_IMAGE(MiniPlayerPlaylist);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

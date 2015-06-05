@@ -528,4 +528,5 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     
     [self.window setFrame:frame display:YES animate:animate];
 }
+
 @end

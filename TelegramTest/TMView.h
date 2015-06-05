@@ -30,6 +30,8 @@ typedef NSUInteger TMViewBorder;
 
 @property (nonatomic,assign,getter=flipper) BOOL isFlipped;
 
+@property (nonatomic,assign) BOOL movableWindow;
+
 - (void)sizeToFit;
 
 -(void)removeAllSubviews;

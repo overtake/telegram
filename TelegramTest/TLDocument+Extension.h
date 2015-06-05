@@ -10,6 +10,7 @@
 
 @interface TLDocument (Extension)
 
+-(int)duration;
 -(NSString *)file_name;
 -(BOOL)isSticker;
 -(TLDocumentAttribute *)attributeWithClass:(Class)className;

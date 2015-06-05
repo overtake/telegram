@@ -304,7 +304,7 @@
 -(void)setDownloadItem:(DownloadItem *)downloadItem {
     self->_downloadItem = downloadItem;
     
-    self.downloadListener = [[DownloadEventListener alloc] initWithItem:downloadItem];
+    self.downloadListener = [[DownloadEventListener alloc] init];
     
     [self.downloadItem addEvent:self.downloadListener];
 }

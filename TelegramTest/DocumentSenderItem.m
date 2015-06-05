@@ -15,6 +15,7 @@
 #import "FileUtils.h"
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
+#import <AVFoundation/AVFoundation.h>
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -48,7 +49,40 @@
         
         NSMutableArray *attrs = [[NSMutableArray alloc] init];
         
-        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]];
+        
+        TL_documentAttributeFilename *filenameAttr = [TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]];
+        
+        [attrs addObject:filenameAttr];
+        
+        if([_mimeType hasPrefix:@"audio/"]) {
+            AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+
+            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration)]];
+            
+            if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
+                
+                NSArray *metadata = [asset metadataForFormat:@"org.id3"];
+                
+                NSString *songName;
+                NSString *artistName;
+                
+                for (AVMutableMetadataItem *metaItem in metadata) {
+                    if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
+                        artistName = (NSString *) metaItem.value;
+                    } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
+                        songName = (NSString *) metaItem.value;
+                    }
+                }
+                
+                if(songName && artistName)
+                    filenameAttr.file_name = [NSString stringWithFormat:@"%@ - %@",artistName,songName];
+ 
+                
+            }
+
+        }
+        
+        
         
         __block NSData *thumbData;
         __block NSImage *thumbImage;
