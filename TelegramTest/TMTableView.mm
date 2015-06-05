@@ -359,6 +359,19 @@ static TMTableView *tableStatic;
     return YES;
 }
 
+- (void) removeItemsInRange:(NSRange)range tableRedraw:(BOOL)tableRedraw {
+    
+    NSArray *copy = [_list copy];
+    
+    [copy enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeItem:obj tableRedraw:NO];
+    }];
+    
+    if(tableRedraw) {
+         [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
+    }
+}
+
 
 - (void)redrawAll {
     for (TMRowItem *item in self.list) {

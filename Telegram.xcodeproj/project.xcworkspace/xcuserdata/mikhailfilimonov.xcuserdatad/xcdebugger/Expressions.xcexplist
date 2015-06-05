@@ -17,6 +17,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGAudioPlayerListView setSelectedId:]:TGAudioPlayerListView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGPhotoViewer show:user:]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
@@ -602,6 +605,14 @@
       </ContextState>
       <ContextState
          contextName = "__39-[MTNetwork sendRequest:forDatacenter:]_block_invoke:MTNetwork.m">
+      </ContextState>
+      <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_3:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
@@ -2610,6 +2621,14 @@
       </ContextState>
       <ContextState
          contextName = "__38-[TGAttachObject prepareImage:orData:]_block_invoke:TGAttachObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "__78-[ChatHistoryController addItem:conversation:callback:sentControllerCallback:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "listeners">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">

@@ -16,16 +16,10 @@
 
 @implementation DownloadEventListener
 
--(id)initWithItem:(DownloadItem *)item {
-    if(self = [super init]) {
-        _item = item;
-    }
-    
-    return self;
-}
+
 
 -(void)clear {
-    _item = nil;
+   // _item = nil;
     _completeHandler = nil;
     _errorHandler = nil;
     _progressHandler = nil;
@@ -120,13 +114,13 @@ static int futureUniqueKey = 0;
             
             switch (type) {
                 case DownloadItemHandlerTypeCompletion:
-                    if(obj.completeHandler) obj.completeHandler(obj.item);
+                    if(obj.completeHandler) obj.completeHandler(self);
                     break;
                 case DownloadItemHandlerTypeError:
-                    if(obj.errorHandler) obj.errorHandler(obj.item);
+                    if(obj.errorHandler) obj.errorHandler(self);
                     break;
                 case DownloadItemHandlerTypeProgress:
-                    if(obj.progressHandler) obj.progressHandler(obj.item);
+                    if(obj.progressHandler) obj.progressHandler(self);
                     break;
                 default:
                     break;

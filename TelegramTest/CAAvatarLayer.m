@@ -106,7 +106,7 @@ typedef enum {
         
         self.downloadItem = [[DownloadPhotoItem alloc] initWithObject:self.fileLocation size:0];
         
-        self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+        self.downloadListener = [[DownloadEventListener alloc] init];
         
         [self.downloadItem addEvent:self.downloadListener];
         

@@ -836,8 +836,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D51B7D1B137164009327C0 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D51B7E1B137164009327C0 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2D51BAD1B1C6A91009327C0 /* Sparkle.framework in Copy Files (6 items) */,
+				C2D51BAE1B1C6A92009327C0 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2389,8 +2389,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D51B7F1B13716B009327C0 /* Sparkle.framework in Frameworks */,
-				C2D51B801B13716B009327C0 /* HockeySDK.framework in Frameworks */,
+				C2D51BAF1B1C6A98009327C0 /* Sparkle.framework in Frameworks */,
+				C2D51BB01B1C6A98009327C0 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4151,6 +4151,10 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2D51B871B174B9E009327C0 /* EMImageData.h */,
+				C2D51B881B174B9E009327C0 /* EMImageData.m */,
+				C2D51B891B174B9E009327C0 /* EMInMemoryImageCache.h */,
+				C2D51B8A1B174B9E009327C0 /* EMInMemoryImageCache.m */,
 				C2C85B991AEE4E1F00FBEABD /* ASCommon.h */,
 				C2C85B9A1AEE4E1F00FBEABD /* ASCommon.m */,
 				C274C40C1ACC0988000DFDE4 /* XCDYouTubeKit */,
@@ -4978,6 +4982,7 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C2D51BC01B1CB7F9009327C0 /* audio */,
 				C2D4B73A1AFCD35F0035B4E4 /* modal */,
 				C2ACCE531ADD298800ABEE78 /* conversations */,
 				C2967B0D1A94B3FC003759B2 /* links-preview */,
@@ -5571,6 +5576,7 @@
 				C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
+				C2D51B8C1B174B9E009327C0 /* EMInMemoryImageCache.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
 				C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */,
 				C2227759190E7309002AA0F6 /* TMTaskRequest.m in Sources */,
@@ -5693,6 +5699,7 @@
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
+				C2D51BCB1B1CB801009327C0 /* TGAudioRowView.m in Sources */,
 				C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */,
 				C21C7B3818D769B100253A7A /* VideoSenderItem.m in Sources */,
 				C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */,
@@ -5766,6 +5773,7 @@
 				0A67588E1892A7D600F4487D /* TMScrollView.m in Sources */,
 				C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */,
 				0AB8500F18756FAD001A796C /* SearchSeparatorTableCell.m in Sources */,
+				C2D51BD71B1F4C8E009327C0 /* TGAudioPlayerListView.m in Sources */,
 				0A7C78C71947701A001617DB /* TMMenuController.m in Sources */,
 				C2C85B8A1AE9269B00FBEABD /* TGModalSetCaptionView.m in Sources */,
 				C247015219839A20007AB338 /* TGAnimationBlockDelegate.m in Sources */,
@@ -5929,6 +5937,7 @@
 				C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */,
 				0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */,
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
+				C2D51BCF1B1CB8AF009327C0 /* TGAudioPlayerWindow.m in Sources */,
 				C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,
 				C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */,
@@ -6028,6 +6037,7 @@
 				C274C4221ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
 				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
+				C2D51BD21B1E3230009327C0 /* TGAudioProgressView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,
 				0A6758881892798500F4487D /* SJExpandingTextView.m in Sources */,
@@ -6078,6 +6088,7 @@
 				C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */,
 				0A9EDC531897BA0E0037E1BC /* NSView+RBLAlignmentAdditions.m in Sources */,
 				C20B228818E971D0007BCCD6 /* bitwise.c in Sources */,
+				C2D51B8B1B174B9E009327C0 /* EMImageData.m in Sources */,
 				C2D4B8791AFCE8FA0035B4E4 /* YapDatabaseTransaction.m in Sources */,
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,
@@ -6108,6 +6119,7 @@
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,
 				C2CBF6B71AFB860D006BF90A /* DownloadOperation.m in Sources */,
 				C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */,
+				C2D51BCA1B1CB801009327C0 /* TGAudioRowItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6343,7 +6355,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
@@ -6386,7 +6398,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";

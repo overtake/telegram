@@ -181,7 +181,7 @@ static NSImage *playVideoImage() {
     [downloadItem removeAllEvents];
     
     
-    self.listener = [[DownloadEventListener alloc] initWithItem:downloadItem];
+    self.listener = [[DownloadEventListener alloc] init];
     
     weak();
     

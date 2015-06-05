@@ -70,7 +70,7 @@
 
 -(void)performRequest {
     
-    TLAPI_messages_sendEncrypted *request = [TLAPI_messages_sendEncrypted createWithPeer:[TL_inputEncryptedChat createWithChat_id:self.action.chat_id access_hash:self.params.access_hash] random_id:self.random_id data:[MessageSender getEncrypted:self.params messageData:[self decryptedMessageLayer]]];
+    TLAPI_messages_sendEncrypted *request = [TLAPI_messages_sendEncrypted createWithPeer:[TL_inputEncryptedChat createWithChat_id:self.action.chat_id access_hash:self.params.access_hash] random_id:self.message.randomId data:[MessageSender getEncrypted:self.params messageData:[self decryptedMessageLayer]]];
         
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedMessage *response) {
         

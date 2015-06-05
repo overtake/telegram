@@ -153,6 +153,9 @@ typedef enum {
             image = prettysize(image);
             
             if(!image || image.size.width == 0 || image.size.height == 0) {
+                
+                
+                
                 [super paste:sender];
                 return;
             }

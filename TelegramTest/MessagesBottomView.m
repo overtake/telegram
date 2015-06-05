@@ -570,7 +570,7 @@
     self.recordHelpLayer.string = string;
     [self.recordHelpLayer sizeToFit];
     
-    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), roundf( (self.bounds.size.height - self.recordHelpLayer.bounds.size.height) / 2.f ) - 1)];
+    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), 18)];
 }
 
 - (void)startRecord:(BTRButton *)button {

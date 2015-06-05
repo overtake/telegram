@@ -49,6 +49,7 @@
 #import "TGModalView.h"
 #import "MessageInputGrowingTextView.h"
 #import "MessagesBottomView.h"
+#import "TGAudioPlayerWindow.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -795,7 +796,6 @@ void exceptionHandler(NSException * exception)
     
     [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
-    
     
 }
 

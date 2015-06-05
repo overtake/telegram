@@ -149,7 +149,7 @@
     [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
     
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-    dispatch_release(sema);
+//    dispatch_release(sema);
 
     
     

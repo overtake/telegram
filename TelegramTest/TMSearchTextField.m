@@ -335,6 +335,10 @@ static float duration = 0.1;
     [self controlTextDidChange:nil];
 }
 
+- (NSString *)stringValue {
+    return _textField.stringValue;
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     

@@ -70,7 +70,7 @@
             
             [self.downloadItem removeEvent:self.downloadListener];
             
-            self.downloadListener = [[DownloadEventListener alloc] initWithItem:self.downloadItem];
+            self.downloadListener = [[DownloadEventListener alloc] init];
             
             [self.downloadItem addEvent:self.downloadListener];
             

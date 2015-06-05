@@ -9,6 +9,8 @@
 #import "DownloadDocumentItem.h"
 #import "FileUtils.h"
 #import "ImageCache.h"
+#import <AVFoundation/AVFoundation.h>
+#import "MessageTableItemAudioDocument.h"
 @implementation DownloadDocumentItem
 
 
@@ -40,7 +42,49 @@
             [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
         
-        ((TLMessageMedia *)[self.object media]).document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[self.object media]).document file_path:self.path];
+        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[self.object media]).document file_path:self.path];
+        
+        
+        if([document.mime_type hasPrefix:@"audio/"]) {
+            
+            NSString *id3fileName;
+            
+            if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
+                
+                AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+                
+                NSArray *metadata = [asset metadataForFormat:@"org.id3"];
+                
+                NSString *songName;
+                NSString *artistName;
+                
+                for (AVMutableMetadataItem *metaItem in metadata) {
+                    if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
+                        artistName = (NSString *) metaItem.value;
+                    } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
+                        songName = (NSString *) metaItem.value;
+                    }
+                }
+                
+                if(songName && artistName)
+                    id3fileName = [NSString stringWithFormat:@"%@ - %@",artistName,songName];
+                else
+                    id3fileName = document.file_name;
+                
+                
+                
+                //AVMetadataIdentifierID3MetadataTitleDescription - song name
+                //AVMetadataIdentifierID3MetadataLeadPerformer - artist name
+            } else
+                id3fileName = document.file_name;
+            
+            TL_documentAttributeFilename *attr = (TL_documentAttributeFilename *) [document attributeWithClass:[TL_documentAttributeFilename class]];
+            
+            attr.file_name = id3fileName;
+            
+        }
+        
+        ((TLMessageMedia *)[self.object media]).document = document;
         
         [[Storage manager] updateMessages:@[self.object]];
         
@@ -58,3 +102,9 @@
 }
 
 @end
+
+/*
+ 
+ 
+ 
+ */

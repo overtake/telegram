@@ -79,6 +79,7 @@
 - (BOOL) removeItem:(TMRowItem *)item;
 - (BOOL)removeItem:(TMRowItem *)item  tableRedraw:(BOOL)tableRedraw;
 - (BOOL) removeAllItems:(BOOL)tableRedraw;
+- (void) removeItemsInRange:(NSRange)range tableRedraw:(BOOL)tableRedraw;
 - (void) redrawAll;
 - (NSUInteger) count;
 

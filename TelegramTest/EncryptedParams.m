@@ -73,8 +73,8 @@ static NSMutableDictionary *cached;
         [data setObject:self.random forKey:@"random"];
     if(self.g_a_or_b)
         [data setObject:self.g_a_or_b forKey:@"g_a_or_b"];
-    
-    [data setObject:self.keys forKey:@"keys"];
+    if(self.keys)
+        [data setObject:self.keys forKey:@"keys"];
     
     return data;
 }
@@ -139,7 +139,10 @@ static NSMutableDictionary *cached;
     if([[EncryptedParams cache] objectForKey:@(self.n_id)])
         [[EncryptedParams cache] setObject:self forKey:@(self.n_id)];
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:[self yapObject] forKey:[self key] inCollection:ENCRYPTED_PARAMS_COLLECTION];
+        NSDictionary *params = [self yapObject];
+        
+        if(params)
+            [transaction setObject:[self yapObject] forKey:[self key] inCollection:ENCRYPTED_PARAMS_COLLECTION];
     }];
 
 }

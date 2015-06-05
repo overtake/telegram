@@ -504,7 +504,6 @@ static ASQueue *queue;
     
     if(completionHandler == nil) {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        dispatch_release(semaphore);
     }
     
    
@@ -734,9 +733,13 @@ static ASQueue *queue;
                    
                 }
                 
-                [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
-               
-                [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
+                if(chat.dialog) {
+                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
+                    
+                    [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
+                }
+                
+                
                                 
             }
             

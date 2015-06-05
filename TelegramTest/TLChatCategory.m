@@ -19,8 +19,29 @@ DYNAMIC_PROPERTY(DType);
     return [type intValue];
 }
 
+DYNAMIC_PROPERTY(DDialog);
+
 -(TL_conversation *)dialog {
-    return [[DialogsManager sharedManager] findByChatId:self.n_id];
+    TL_conversation *dialog = [self getDDialog];
+    
+    if(!dialog) {
+        dialog = [[DialogsManager sharedManager] findByChatId:self.n_id];
+        [self setDDialog:dialog];
+    }
+    
+    if(!dialog) {
+        dialog = [[Storage manager] selectConversation:[TL_peerChat createWithChat_id:self.n_id]];
+        
+        if(!dialog)
+            dialog = [[DialogsManager sharedManager] createDialogForChat:self];
+        else
+            [[DialogsManager sharedManager] add:@[dialog]];
+        
+        [self setDDialog:dialog];
+    }
+    
+    return dialog;
+
 }
 
 - (void) setType:(TLChatType)type {
