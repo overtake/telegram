@@ -1799,7 +1799,8 @@
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[ClassStore TLSerialize:self.media stream:stream];
-	if(self.flags & (1 << 6)) [ClassStore TLSerialize:self.reply_markup stream:stream];
+	if(self.flags & (1 << 6))
+        [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -1812,7 +1813,10 @@
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
-	if(self.flags & (1 << 6)) self.reply_markup = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 6))
+        self.reply_markup = [ClassStore TLDeserialize:stream];
+    
+    int i = 0;
 }
 @end
 

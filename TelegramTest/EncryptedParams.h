@@ -65,5 +65,7 @@ typedef void (^stateHandler)(EncryptedState state);
 -(int)in_x;
 -(int)out_x;
 
+-(void)discard;
+
 
 @end

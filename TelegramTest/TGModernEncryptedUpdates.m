@@ -106,8 +106,18 @@
         SEL proccessMethod = NSSelectorFromString([NSString stringWithFormat:@"proccess%dLayer:params:conversation:encryptedMessage:",layer]);
         
         IMP imp = [self methodForSelector:proccessMethod];
+        
+        id des;
+        
+        @try {
+            des = [DeserializeClass parseObject:decrypted];
+        }
+        @catch (NSException *exception) {
+            [params discard];
+        }
+        
         void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
-        func(self, proccessMethod,[DeserializeClass parseObject:decrypted],params,chat.dialog, update);
+        func(self, proccessMethod,des,params,chat.dialog, update);
          
     }
     
