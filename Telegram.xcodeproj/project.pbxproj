@@ -713,14 +713,13 @@
 		C2D51BB01B1C6A98009327C0 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D51BCA1B1CB801009327C0 /* TGAudioRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC51B1CB801009327C0 /* TGAudioRowItem.m */; };
 		C2D51BCB1B1CB801009327C0 /* TGAudioRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC71B1CB801009327C0 /* TGAudioRowView.m */; };
-		C2D51BCF1B1CB8AF009327C0 /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BCE1B1CB8AF009327C0 /* TGAudioPlayerWindow.m */; };
 		C2D51BD21B1E3230009327C0 /* TGAudioProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD11B1E3230009327C0 /* TGAudioProgressView.m */; };
 		C2D51BD71B1F4C8E009327C0 /* TGAudioPlayerListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD61B1F4C8E009327C0 /* TGAudioPlayerListView.m */; };
 		C2D51C0F1B221D74009327C0 /* TGAudioRowItem.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC41B1CB801009327C0 /* TGAudioRowItem.h */; };
 		C2D51C101B221D74009327C0 /* TGAudioRowView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BC61B1CB801009327C0 /* TGAudioRowView.h */; };
-		C2D51C111B221D74009327C0 /* TGAudioPlayerWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BCD1B1CB8AF009327C0 /* TGAudioPlayerWindow.h */; };
 		C2D51C121B221D74009327C0 /* TGAudioProgressView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD01B1E3230009327C0 /* TGAudioProgressView.h */; };
 		C2D51C131B221D74009327C0 /* TGAudioPlayerListView.h in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BD51B1F4C8E009327C0 /* TGAudioPlayerListView.h */; };
+		C2D51C2F1B249BAE009327C0 /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C2E1B249BAE009327C0 /* TGAudioPlayerWindow.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
@@ -2152,12 +2151,12 @@
 		C2D51BC51B1CB801009327C0 /* TGAudioRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioRowItem.m; sourceTree = "<group>"; };
 		C2D51BC61B1CB801009327C0 /* TGAudioRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioRowView.h; sourceTree = "<group>"; };
 		C2D51BC71B1CB801009327C0 /* TGAudioRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioRowView.m; sourceTree = "<group>"; };
-		C2D51BCD1B1CB8AF009327C0 /* TGAudioPlayerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioPlayerWindow.h; sourceTree = "<group>"; };
-		C2D51BCE1B1CB8AF009327C0 /* TGAudioPlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerWindow.m; sourceTree = "<group>"; };
 		C2D51BD01B1E3230009327C0 /* TGAudioProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioProgressView.h; sourceTree = "<group>"; };
 		C2D51BD11B1E3230009327C0 /* TGAudioProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioProgressView.m; sourceTree = "<group>"; };
 		C2D51BD51B1F4C8E009327C0 /* TGAudioPlayerListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioPlayerListView.h; sourceTree = "<group>"; };
 		C2D51BD61B1F4C8E009327C0 /* TGAudioPlayerListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerListView.m; sourceTree = "<group>"; };
+		C2D51C2D1B249BAE009327C0 /* TGAudioPlayerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioPlayerWindow.h; sourceTree = "<group>"; };
+		C2D51C2E1B249BAE009327C0 /* TGAudioPlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerWindow.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -4643,12 +4642,12 @@
 		C2D51BC01B1CB7F9009327C0 /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				C2D51C2D1B249BAE009327C0 /* TGAudioPlayerWindow.h */,
+				C2D51C2E1B249BAE009327C0 /* TGAudioPlayerWindow.m */,
 				C2D51BC41B1CB801009327C0 /* TGAudioRowItem.h */,
 				C2D51BC51B1CB801009327C0 /* TGAudioRowItem.m */,
 				C2D51BC61B1CB801009327C0 /* TGAudioRowView.h */,
 				C2D51BC71B1CB801009327C0 /* TGAudioRowView.m */,
-				C2D51BCD1B1CB8AF009327C0 /* TGAudioPlayerWindow.h */,
-				C2D51BCE1B1CB8AF009327C0 /* TGAudioPlayerWindow.m */,
 				C2D51BD01B1E3230009327C0 /* TGAudioProgressView.h */,
 				C2D51BD11B1E3230009327C0 /* TGAudioProgressView.m */,
 				C2D51BD51B1F4C8E009327C0 /* TGAudioPlayerListView.h */,
@@ -5491,7 +5490,6 @@
 			files = (
 				C2D51C0F1B221D74009327C0 /* TGAudioRowItem.h in Sources */,
 				C2D51C101B221D74009327C0 /* TGAudioRowView.h in Sources */,
-				C2D51C111B221D74009327C0 /* TGAudioPlayerWindow.h in Sources */,
 				C2D51C121B221D74009327C0 /* TGAudioProgressView.h in Sources */,
 				C2D51C131B221D74009327C0 /* TGAudioPlayerListView.h in Sources */,
 				0A6758E31895505C00F4487D /* MessageTableItem.m in Sources */,
@@ -5951,7 +5949,6 @@
 				C26976A51A0AB3B80047E2C3 /* PhotoCollectionImageObject.m in Sources */,
 				0AAAE58018C9BEF100A2F9F1 /* UserInfoEditContainerView.m in Sources */,
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
-				C2D51BCF1B1CB8AF009327C0 /* TGAudioPlayerWindow.m in Sources */,
 				C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,
 				C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */,
@@ -6017,6 +6014,7 @@
 				0AA3F3A518BD2D0800D383F1 /* UserInfoContainerView.m in Sources */,
 				0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */,
 				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,
+				C2D51C2F1B249BAE009327C0 /* TGAudioPlayerWindow.m in Sources */,
 				C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */,
 				C2D4B8771AFCE8FA0035B4E4 /* YapDatabaseConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
