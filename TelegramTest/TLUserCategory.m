@@ -59,7 +59,7 @@ DYNAMIC_PROPERTY(DType);
         if((self.flags & TGUSERFLAGSELF) == TGUSERFLAGSELF) {
             type = TLUserTypeSelf;
         } else if((self.flags & TGUSERFLAGCONTACT) == TGUSERFLAGCONTACT) {
-            type = TLUserTypeRequest;
+            type = TLUserTypeContact;
         } else if((self.flags & TGUSERFLAGMUTUAL) == TGUSERFLAGMUTUAL) {
             type = TLUserTypeContact;
         } else if((self.flags & TGUSERFLAGDELETED) == TGUSERFLAGDELETED) {
