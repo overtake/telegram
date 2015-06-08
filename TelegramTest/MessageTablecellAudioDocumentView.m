@@ -49,12 +49,12 @@
             if(weakSelf.item.state == AudioStateWaitPlaying) {
                 if(weakSelf.item.isset) {
                     
-                    [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-                    [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
+                   //  [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+                   // [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
                     
-                //    weakSelf.currentTime = 0;
-                 //   [weakSelf setNeedsDisplay:YES];
-                 //   [weakSelf play:0];
+                    weakSelf.currentTime = 0;
+                    [weakSelf setNeedsDisplay:YES];
+                    [weakSelf play:0];
                 } else {
                     if([weakSelf.item canDownload])
                         [weakSelf startDownload:YES];

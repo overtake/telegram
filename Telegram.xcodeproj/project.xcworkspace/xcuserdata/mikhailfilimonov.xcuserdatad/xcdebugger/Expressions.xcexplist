@@ -471,9 +471,6 @@
          contextName = "-[MTContext transportSchemeForDatacenterWithid:]:MTContext.m">
       </ContextState>
       <ContextState
-         contextName = "__32-[MessagesBottomView setDialog:]_block_invoke86:MessagesBottomView.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -685,9 +682,6 @@
                value = "self.frame">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__42-[FullUsersManager loadUserFull:callback:]_block_invoke:FullUsersManager.m">
       </ContextState>
       <ContextState
          contextName = "__41-[TGPVMediaBehavior loadRemote:callback:]_block_invoke_2:TGPVMediaBehavior.m">
@@ -904,6 +898,9 @@
          contextName = "__81-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[TL_message unserialize:]:MTProto.m">
+      </ContextState>
+      <ContextState
          contextName = "-[UserInfoShortButtonView setRightContainer:]:UserInfoShortButtonView.m">
          <PersistentStrings>
             <PersistentString
@@ -913,9 +910,6 @@
       </ContextState>
       <ContextState
          contextName = "-[TGMessagesStickerImageObject initDownloadItem]:TGMessagesStickerImageObject.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TLUser(Category) rebuildNames]:TLUserCategory.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forConversation:]:ImageSenderItem.m">
@@ -1221,9 +1215,6 @@
          contextName = "-[TGPhotoViewer indexOfObject:]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
-         contextName = "__29-[TGCache cachedImage:group:]_block_invoke:TGCache.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TL_localMessage conversation]:TL_localMessage.m">
       </ContextState>
       <ContextState
@@ -1383,9 +1374,6 @@
          contextName = "__41-[GeneralSettingsViewController loadView]_block_invoke153:GeneralSettingsViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[TL_user unserialize:]:MTProto.m">
-      </ContextState>
-      <ContextState
          contextName = "__42-[TGSModalSenderView sendAsMedia:rowItem:]_block_invoke_2:TGSModalSenderView.m">
       </ContextState>
       <ContextState
@@ -1532,9 +1520,6 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke_3:NewContactsManager.m">
       </ContextState>
       <ContextState
-         contextName = "-[TLUser(Category) rebuildType]:TLUserCategory.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
       </ContextState>
       <ContextState
@@ -1542,6 +1527,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates isLastUpdate:inUpdates:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[DialogsManager updateTop:needUpdate:update_real_date:]_block_invoke:DialogsManager.m">
       </ContextState>
       <ContextState
          contextName = "__41-[TGPVMediaBehavior loadRemote:callback:]_block_invoke:TGPVMediaBehavior.m">
@@ -1559,9 +1547,6 @@
                value = "item.imageObject">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
          contextName = "__32-[NewLoginViewController signIn]_block_invoke227:NewLoginViewController.m">
@@ -1586,12 +1571,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TGPVContainer setCurrentViewerItem:animated:]:TGPVContainer.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TLAPI_users_getFullUser getData]:TLApi.m">
-      </ContextState>
-      <ContextState
          contextName = "__37-[MessagesViewController sendMessage]_block_invoke:MessagesViewController.m">
       </ContextState>
       <ContextState
@@ -1607,9 +1586,6 @@
       </ContextState>
       <ContextState
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TL_user serialize:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke:DialogsHistoryController.m">
@@ -2179,6 +2155,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGBotCommandsKeyboard drawKeyboardWithKeyboard:]:TGBotCommandsKeyboard.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "f">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemGif initWithObject:]:MessageTableItemGif.m">
       </ContextState>
       <ContextState
@@ -2225,9 +2209,6 @@
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesManager notifyMessage:update_real_date:notify:]_block_invoke:MessagesManager.m">
-      </ContextState>
-      <ContextState
-         contextName = "__49-[FullChatManager loadFullChatByChatId:callback:]_block_invoke:FullChatManager.m">
       </ContextState>
       <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
@@ -2439,9 +2420,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[EMImageData _createImage]:EMImageData.m">
-      </ContextState>
-      <ContextState
          contextName = "__39-[TGProccessUpdates uptodate:qts:date:]_block_invoke:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -2532,9 +2510,6 @@
       </ContextState>
       <ContextState
          contextName = "-[Storage executeSaveConversation:db:]:Storage.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[DeleteRandomMessagesSenderItem decryptedMessageLayer23]:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController deleteMessages:]:MessagesViewController.m">

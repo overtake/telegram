@@ -829,8 +829,6 @@
     [self.messagesViewController sendMessage];
     
     
-    [_botKeyboard clear];
-    
     
     [self.messagesViewController sendAttachments:[_imageAttachmentsController attachments] forConversation:self.dialog addCompletionHandler:nil];
     

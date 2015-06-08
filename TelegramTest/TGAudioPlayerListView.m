@@ -387,20 +387,22 @@ static long h_r_l;
 
 - (void) searchFieldTextChange:(NSString*)searchString {
     
-    NSArray *items = _fullItems;
-    
-    if(searchString.length > 0) {
-       items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TGAudioRowItem *evaluatedObject, NSDictionary *bindings) {
-            
-            return [evaluatedObject.trackName searchInStringByWordsSeparated:searchString];
-            
-        }]];
+    if(_fullItems.count > 0) {
+        NSArray *items = _fullItems;
+        
+        if(searchString.length > 0) {
+            items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TGAudioRowItem *evaluatedObject, NSDictionary *bindings) {
+                
+                return [evaluatedObject.trackName searchInStringByWordsSeparated:searchString];
+                
+            }]];
+        }
+        
+        
+        [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
+        
+        [_tableView insert:items startIndex:1 tableRedraw:YES];
     }
-
-    
-    [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
-    
-    [_tableView insert:items startIndex:1 tableRedraw:YES];
     
 }
 

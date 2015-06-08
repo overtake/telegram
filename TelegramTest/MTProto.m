@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.06.15.
+//  Auto created by Mikhail Filimonov on 07.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1631,6 +1631,32 @@
 }
 @end
 
+@implementation TL_chatFull_old29
++(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
+	TL_chatFull_old29* obj = [[TL_chatFull_old29 alloc] init];
+	obj.n_id = n_id;
+	obj.participants = participants;
+	obj.chat_photo = chat_photo;
+	obj.notify_settings = notify_settings;
+	obj.exported_invite = exported_invite;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.participants stream:stream];
+	[ClassStore TLSerialize:self.chat_photo stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.exported_invite stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.participants = [ClassStore TLDeserialize:stream];
+	self.chat_photo = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
+	self.exported_invite = [ClassStore TLDeserialize:stream];
+}
+@end
+
 
 
 @implementation TLChatParticipant
@@ -1799,8 +1825,7 @@
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[ClassStore TLSerialize:self.media stream:stream];
-	if(self.flags & (1 << 6))
-        [ClassStore TLSerialize:self.reply_markup stream:stream];
+	if(self.flags & (1 << 6)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -1813,10 +1838,7 @@
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
-	if(self.flags & (1 << 6))
-        self.reply_markup = [ClassStore TLDeserialize:stream];
-    
-    int i = 0;
+	if(self.flags & (1 << 6)) self.reply_markup = [ClassStore TLDeserialize:stream];
 }
 @end
 
@@ -9344,6 +9366,7 @@
 	self.orig_message = [ClassStore TLDeserialize:stream];
 }
 @end
+
 
 
 @implementation TL_gzip_packed

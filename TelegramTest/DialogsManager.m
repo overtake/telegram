@@ -377,14 +377,21 @@
         [self add:@[dialog]];
         
         
-        
-        if(message.reply_markup != nil && !message.n_out) {
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:dialog.cacheKey inCollection:BOT_COMMANDS];
-            }];
-            
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+        if(message.fromUser.isBot) {
+            if(message.reply_markup != nil && !message.n_out) {
+                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                    [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:dialog.cacheKey inCollection:BOT_COMMANDS];
+                }];
+                
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+            } else if(!message.n_out) {
+                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                    [transaction removeObjectForKey:dialog.cacheKey inCollection:BOT_COMMANDS];
+                }];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+            }
         }
+        
         
         
         if(needUpdate) {

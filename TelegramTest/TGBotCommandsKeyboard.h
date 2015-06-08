@@ -12,6 +12,5 @@
 
 -(void)setConversation:(TL_conversation *)conversation botUser:(TLUser *)botUser;
 
--(void)clear;
 
 @end

@@ -13,6 +13,9 @@
 @property (nonatomic,strong) TLKeyboardButton *keyboardButton;
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TMTextField *textField;
+
+
+
 @end
 
 
@@ -33,11 +36,12 @@
         [_textField setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:_textField];
         
+        
+        
     }
     
     return self;
 }
-
 
 
 -(void)setKeyboardButton:(TLKeyboardButton *)keyboardButton {
@@ -49,12 +53,6 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     [[Telegram rightViewController].messagesViewController sendMessage:_keyboardButton.text forConversation:_conversation];
-    
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        [transaction removeObjectForKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-    }];
-    
-    [Notification perform:[Notification notificationNameByDialog:_conversation action:@"botKeyboard"] data:@{KEY_DIALOG:_conversation}];
 }
 
 @end
@@ -62,9 +60,36 @@
 @interface TGBotCommandsKeyboard ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *botUser;
+@property (nonatomic,strong) NSScrollView *scrollView;
+
+@property (nonatomic,strong) TMView *containerView;
 @end
 
 @implementation TGBotCommandsKeyboard
+
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        _scrollView = [[NSScrollView alloc] initWithFrame:self.bounds];
+        
+        
+        self.autoresizingMask = NSViewWidthSizable;
+        
+        [self addSubview:_scrollView];
+        
+        
+        _containerView = [[TMView alloc] initWithFrame:self.bounds];
+        _containerView.backgroundColor = [NSColor clearColor];
+        _scrollView.backgroundColor = NSColorFromRGB(0xfafafa);
+        _scrollView.documentView = _containerView;
+        
+    }
+    
+    return self;
+}
+
+
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -76,7 +101,7 @@
     _botUser = botUser;
     _conversation = conversation;
     
-    [self removeAllSubviews];
+    [_containerView removeAllSubviews];
     
     [self load];
 }
@@ -108,22 +133,59 @@
 
 -(void)drawKeyboardWithKeyboard:(TL_replyKeyboardMarkup *)keyboard {
     
-    NSMutableArray *f = keyboard.rows;
+    NSMutableArray *f = [[NSMutableArray alloc] init];
+    
+    [f addObject:[[NSMutableArray alloc] init]];
+    
+    __block int rowId = 0;
+    
+    [keyboard.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+            
+            NSMutableArray *row = f[rowId];
+            
+            [row addObject:button];
+            
+            if(row.count == 2) {
+                [f addObject:[[NSMutableArray alloc] init]];
+                rowId++;
+            }
+            
+        }];
+        
+        
+    }];
+    
+    if([[f lastObject] count] == 0) {
+        [f removeLastObject];
+    }
     
     int itemHeight = 25;
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), f.count * itemHeight + ((f.count -1) * 5 ) + 6)];
+    NSUInteger height = f.count * itemHeight + ((f.count -1) * 5 ) + 6;
+    
+    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 5 ) + 6);
+    
+   
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
+    
+    [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
+    
+    [_containerView setFrameSize:NSMakeSize(NSWidth(self.frame), height)];
+    
+    
     
     __block int x = 0;
-    __block int y = 0;
+    __block int y = 3;
     
-    [f enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *row, NSUInteger idx, BOOL *stop) {
+    [f enumerateObjectsUsingBlock:^(NSMutableArray *row, NSUInteger idx, BOOL *stop) {
         
-        int itemWidth = floor(NSWidth(self.frame)/row.buttons.count) - ((row.buttons.count-1) * 6 )/row.buttons.count;
+        int itemWidth = floor(NSWidth(self.frame)/row.count) - ((row.count-1) * 6 )/row.count;
         
         x = 0;
        
-        [row.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+        [row enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
             
             TGBotKeyboardItemView *itemView = [[TGBotKeyboardItemView alloc] initWithFrame:NSMakeRect(x, y, itemWidth, itemHeight)];
             
@@ -132,7 +194,7 @@
             
             x+=itemWidth+6;
             
-            [self addSubview:itemView];
+            [_containerView addSubview:itemView];
             
         }];
         
@@ -141,13 +203,5 @@
     }];
 }
 
--(void)clear {
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        [transaction removeObjectForKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-    }];
-    
-     [Notification perform:[Notification notificationNameByDialog:_conversation action:@"botKeyboard"] data:@{KEY_DIALOG:_conversation}];
-
-}
 
 @end
