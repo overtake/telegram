@@ -34,6 +34,7 @@
 #import "FullUsersManager.h"
 #import "TGBotCommandsPopup.h"
 #import "TGBotCommandsKeyboard.h"
+#import "FullChatManager.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -196,7 +197,7 @@
          [self setForwardEnabled:YES];
     }
     
-    
+    _userFull = nil;
     
     if(self.dialog.type == DialogTypeUser) {
         
@@ -206,6 +207,7 @@
             _userFull = userFull;
             
         }];
+        
     }
     
     
@@ -983,8 +985,8 @@
         } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
         } else {
-            if([_dialog.user isBot]) {
-                [TGBotCommandsPopup show:search botInfo:_userFull.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
+            if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
+                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
                     
                     callback(command);
                     
@@ -993,8 +995,6 @@
                 }];
                 
             }
-            
-            
         }
         
     } else {

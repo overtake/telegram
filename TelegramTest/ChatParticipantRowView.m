@@ -111,6 +111,8 @@
     [self.nameTextField setUser:item.user];
     [self.statusTextField setUser:item.user];
     
+    
+    
     [self setNeedsDisplay:YES];
 }
 

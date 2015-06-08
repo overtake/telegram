@@ -289,6 +289,10 @@ static void *kType;
     return _p_chat;
 }
 
+- (TLChatFull *)fullChat {
+    return [[FullChatManager sharedManager] find:[self chat].n_id];
+}
+
 
 - (TL_encryptedChat *) encryptedChat {
     return (TL_encryptedChat *)[self chat];

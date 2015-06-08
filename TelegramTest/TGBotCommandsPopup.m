@@ -12,13 +12,22 @@
 
 
 
-+(void)show:(NSString *)string botInfo:(TLBotInfo *)botInfo view:(NSView *)view  ofRect:(NSRect)rect callback:(void (^)(NSString *command))callback  {
++(void)show:(NSString *)string botInfo:(NSArray *)botInfo view:(NSView *)view  ofRect:(NSRect)rect callback:(void (^)(NSString *command))callback  {
     
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"menu"];
     
     
-    NSArray *commands = string.length > 0 ? [botInfo.commands filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.command BEGINSWITH[c] %@",string]] : botInfo.commands;
+    NSMutableArray *commands = [[NSMutableArray alloc] init];
+    
+    [botInfo enumerateObjectsUsingBlock:^(TLBotInfo *obj, NSUInteger idx, BOOL *stop) {
+        
+        [commands addObjectsFromArray:obj.commands];
+        
+    }];
+    
+    
+    commands = string.length > 0 ? [[commands filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.command BEGINSWITH[c] %@",string]] mutableCopy] : commands;
     
     
     __block NSMutableArray *allCommands;
@@ -48,7 +57,8 @@
             
         }];
         
-        [item setSubtitle:obj.n_description];
+        if(obj.n_description.length > 0)
+            [item setSubtitle:obj.n_description];
         
         [menu addItem:item];
         

@@ -111,7 +111,7 @@ Online
     
     
     if([self isBot]) {
-        return NSLocalizedString(@"LastSeen.Bot", nil);
+       return NSLocalizedString(@"LastSeen.Bot", nil);
     }
     
     if(self.n_id == 777000) {
@@ -465,6 +465,16 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
         
         NSString *string = self.lastSeen;
+        
+        if([self isBot]) {
+            if((self.flags & TGUSERFLAGREADHISTORY) == TGUSERFLAGREADHISTORY) {
+                string = NSLocalizedString(@"Bot.botCantReadAllMessages", nil);
+            } else {
+                string = NSLocalizedString(@"Bot.onlySeenMessagesWithSlash", nil);
+            }
+        }
+       
+        
         NSRange range;
         if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
             range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];

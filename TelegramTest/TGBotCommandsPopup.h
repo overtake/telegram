@@ -10,6 +10,6 @@
 
 @interface TGBotCommandsPopup : TGHelpPopup
 
-+(void)show:(NSString *)string botInfo:(TLBotInfo *)botInfo view:(NSView *)view  ofRect:(NSRect)rect callback:(void (^)(NSString *command))callback;
++(void)show:(NSString *)string botInfo:(NSArray *)botInfo view:(NSView *)view  ofRect:(NSRect)rect callback:(void (^)(NSString *command))callback;
 
 @end
