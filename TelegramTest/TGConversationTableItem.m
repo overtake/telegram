@@ -118,7 +118,7 @@
 
 -(void)update {
     
-    assert(_conversation == [[DialogsManager sharedManager] find:_conversation.peer_id]);
+    _conversation = [[DialogsManager sharedManager] find:_conversation.peer_id];
     
     _messageText = [MessagesUtils conversationLastText:_conversation.lastMessage conversation:_conversation];
     

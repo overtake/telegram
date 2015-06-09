@@ -60,14 +60,17 @@
 @interface TGAllStickersTableItem : TMRowItem
 @property (nonatomic,strong) NSMutableArray *stickers;
 @property (nonatomic,strong) NSMutableArray *objects;
+
+@property (nonatomic,assign) long packId;
 @end
 
 @implementation TGAllStickersTableItem
 
 
--(id)initWithObject:(NSArray *)object {
+-(id)initWithObject:(NSArray *)object packId:(long)packId {
     if(self = [super initWithObject:object]) {
         _stickers = [object mutableCopy];
+        _packId = packId;
         
         _objects = [[NSMutableArray alloc] init];
         
@@ -235,10 +238,15 @@ static NSImage *higlightedImage() {
     if(self = [super initWithFrame:frameRect]) {
         _stickers = [[NSMutableArray alloc] init];
         self.tm_delegate = self;
+        
+       
     }
     
     return self;
 }
+
+
+
 
 -(NSScrollView *)containerView {
     return [super containerView];
@@ -412,36 +420,41 @@ static NSImage *higlightedImage() {
         
         NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
         
-        NSArray *stickers = [_stickers sortedArrayUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
-            
-            NSNumber *c1 = sort[@(obj1.n_id)];
-            NSNumber *c2 = sort[@(obj2.n_id)];
-            
-            if ([c1 longValue] > [c2 longValue])
-                return NSOrderedAscending;
-            else if ([c1 longValue] < [c2 longValue])
-                return NSOrderedDescending;
-            
-            return NSOrderedSame;
-        }];
+        
+        NSArray *stickers = _stickers;
         
         
         NSMutableArray *row = [[NSMutableArray alloc] init];
         
+        __block long packId = 0;
         
-        [stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            if(packId != sticker.stickerset.n_id) {
+                
+                if(row.count > 0) {
+                    [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:packId]];
+                    [row removeAllObjects];
+                }
+                
+                packId = sticker.stickerset.n_id;
+                return;
+            }
             
             [row addObject:obj];
             
             if(row.count == 5) {
-                [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy]]];
+                [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:packId]];
                 [row removeAllObjects];
             }
         }];
         
         
         if(row.count > 0) {
-            [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy]]];
+            [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:packId]];
             [row removeAllObjects];
         }
         
@@ -493,6 +506,23 @@ static NSImage *higlightedImage() {
     _isCustomStickerPack = YES;
     
     [self reloadData];
+    
+}
+
+-(void)scrollToStickerPack:(long)packId {
+    
+    __block TGAllStickersTableItem *item;
+    
+    [self.list enumerateObjectsUsingBlock:^(TGAllStickersTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.packId == packId) {
+            item = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    [self.scrollView scrollToPoint:[self rectOfRow:[self indexOfItem:item]].origin animation:YES];
     
 }
 

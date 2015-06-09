@@ -1042,6 +1042,7 @@ static NSMutableArray *listeners;
         void (^checkItem)(MessageTableItem *checkItem) = ^(MessageTableItem *checkItem) {
             
             
+            
             [queue dispatchOnQueue:^{
                 
                 if(self.controller.conversation.last_marked_message > TGMINFAKEID || self.controller.conversation.last_marked_message < checkItem.message.n_id) {

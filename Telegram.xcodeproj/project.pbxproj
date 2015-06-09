@@ -723,6 +723,8 @@
 		C2D51C011B21D942009327C0 /* TL_messageActionBotDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C001B21D942009327C0 /* TL_messageActionBotDescription.m */; };
 		C2D51C081B21F18F009327C0 /* SelectChatItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C071B21F18F009327C0 /* SelectChatItem.m */; };
 		C2D51C0C1B21FA5F009327C0 /* TGBotCommandsKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C0B1B21FA5F009327C0 /* TGBotCommandsKeyboard.m */; };
+		C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */; };
+		C2D51C3E1B2618DE009327C0 /* TGTransformScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
@@ -2174,6 +2176,10 @@
 		C2D51C071B21F18F009327C0 /* SelectChatItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectChatItem.m; sourceTree = "<group>"; };
 		C2D51C0A1B21FA5F009327C0 /* TGBotCommandsKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotCommandsKeyboard.h; sourceTree = "<group>"; };
 		C2D51C0B1B21FA5F009327C0 /* TGBotCommandsKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotCommandsKeyboard.m; sourceTree = "<group>"; };
+		C2D51C361B25F5A8009327C0 /* TGStickerPackEmojiController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerPackEmojiController.h; sourceTree = "<group>"; };
+		C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPackEmojiController.m; sourceTree = "<group>"; };
+		C2D51C3C1B2618DE009327C0 /* TGTransformScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTransformScrollView.h; sourceTree = "<group>"; };
+		C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTransformScrollView.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -3773,6 +3779,8 @@
 				C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */,
 				C2ACCE6C1AE122A400ABEE78 /* EmojiButton.h */,
 				C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */,
+				C2D51C361B25F5A8009327C0 /* TGStickerPackEmojiController.h */,
+				C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */,
 			);
 			name = emoji;
 			sourceTree = "<group>";
@@ -4009,6 +4017,8 @@
 				C291C7BB1836C39900ABBB50 /* LBProgressBar.m */,
 				C274C3E61ACAB97D000DFDE4 /* TGNotifyViewController.h */,
 				C274C3E71ACAB97D000DFDE4 /* TGNotifyViewController.m */,
+				C2D51C3C1B2618DE009327C0 /* TGTransformScrollView.h */,
+				C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -5775,6 +5785,7 @@
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
+				C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */,
 				C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */,
 				C21C7B3818D769B100253A7A /* VideoSenderItem.m in Sources */,
 				C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */,
@@ -6103,6 +6114,7 @@
 				C26F7EBB1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m in Sources */,
 				C268C1B019F6B1F7007F836A /* SearchMessageTableItem.m in Sources */,
 				CEC22DF81827CC10008817D0 /* FullChatManager.m in Sources */,
+				C2D51C3E1B2618DE009327C0 /* TGTransformScrollView.m in Sources */,
 				0AA3F3AB18BE1F7600D383F1 /* TMNameTextField.m in Sources */,
 				C25F91B31977E115006868F3 /* TGImageView.m in Sources */,
 				C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */,

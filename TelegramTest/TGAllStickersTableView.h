@@ -8,6 +8,7 @@
 
 #import "TMTableView.h"
 
+
 @interface TGAllStickersTableView : TMTableView
 
 -(void)removeSticker:(TL_outDocument *)document;
@@ -17,5 +18,7 @@
 
 -(NSArray *)allStickers;
 -(NSArray *)sets;
+
+-(void)scrollToStickerPack:(long)packId;
 
 @end
