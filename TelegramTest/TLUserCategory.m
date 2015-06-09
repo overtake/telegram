@@ -169,6 +169,9 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     if(!self.last_name)
         self.last_name = @"";
     
+    if(!self.first_name)
+        self.first_name = @"";
+    
     
     //Fullname
     NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
