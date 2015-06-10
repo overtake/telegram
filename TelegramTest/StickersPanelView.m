@@ -12,8 +12,9 @@
 #import "TGMessagesStickerImageObject.h"
 #import "SenderHeader.h"
 #import "EmojiViewController.h"
+#import "TGTransformScrollView.h"
 @interface StickersPanelView ()
-@property (nonatomic,strong) NSScrollView *scrollView;
+@property (nonatomic,strong) TGTransformScrollView *scrollView;
 
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMView *background;
@@ -37,18 +38,14 @@
         
         [self addSubview:separator];
         
-        self.scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), NSHeight(self.bounds) - 1)];
-       
+        self.scrollView = [[TGTransformScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), NSHeight(self.bounds) - 1)];
        
         
         self.containerView = [[TMView alloc] initWithFrame:self.scrollView.bounds];
         
+        
         self.scrollView.documentView = self.containerView;
-        
-        [self.scrollView setHasVerticalScroller:NO];
-        self.scrollView.verticalScrollElasticity = NO;
-        [self.scrollView setDrawsBackground:NO];
-        
+     
         
         [self addSubview:self.scrollView];
         
@@ -137,6 +134,8 @@ static NSImage *higlightedImage() {
         }
         
     }];
+    
+    [self.containerView setBackgroundColor:NSColorFromRGBWithAlpha(0xffffff, 0.9)];
     
     [self.containerView setFrameSize:NSMakeSize(xOffset, NSHeight(self.containerView.frame))];
 }
