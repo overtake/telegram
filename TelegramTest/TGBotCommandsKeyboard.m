@@ -80,6 +80,7 @@
         
         _containerView = [[TMView alloc] initWithFrame:self.bounds];
         _containerView.backgroundColor = [NSColor clearColor];
+        _containerView.isFlipped = YES;
         _scrollView.backgroundColor = NSColorFromRGB(0xfafafa);
         _scrollView.documentView = _containerView;
         

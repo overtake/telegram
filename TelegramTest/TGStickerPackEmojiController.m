@@ -36,7 +36,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(2, 2, 35, 35)];
+        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(2, 2, 28, 28)];
         [_imageView setCenterByView:self];
         [self addSubview:_imageView];
     }
@@ -181,8 +181,9 @@
     
     [_packsContainerView removeAllSubviews];
     
-    
-    
+    if(_stickers.hasRecentStickers) {
+        stickers = [@[[[NSObject alloc] init]] arrayByAddingObjectsFromArray:stickers];
+    }
     
     __block int x = 0;
     
@@ -191,15 +192,28 @@
     
     [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL *stop) {
         
-        
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
-        
-        TGMessagesStickerImageObject *imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
-        imageObject.imageSize = NSMakeSize(35, 35);
-        
         TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
-        button.packId = attr.stickerset.n_id;
-        button.delegate = self;
+        
+        if(obj.class != [NSObject class]) {
+            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            TGMessagesStickerImageObject *imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
+            imageObject.imageSize = NSMakeSize(28, 28);
+            
+            
+            button.packId = attr.stickerset.n_id;
+            button.delegate = self;
+            
+             button.imageView.object = imageObject;
+            
+        } else {
+            button.packId = -1;
+            button.delegate = self;
+            [button.imageView setContentMode:BTRViewContentModeCenter];
+            button.imageView.image = image_emojiContainer1();
+        }
+        
+        
         
         if(_selectedItem != nil) {
             if(_selectedItem.packId == button.packId)
@@ -209,7 +223,7 @@
                 [self selectItem:button];
         }
         
-        button.imageView.object = imageObject;
+       
         
         [_packsContainerView addSubview:button];
         

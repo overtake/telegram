@@ -420,14 +420,56 @@ static NSImage *higlightedImage() {
         
         NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
         
+
+        NSArray *recent = [_stickers sortedArrayUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+            
+            NSNumber *c1 = sort[@(obj1.n_id)];
+            NSNumber *c2 = sort[@(obj2.n_id)];
+            
+            if ([c1 longValue] > [c2 longValue])
+                return NSOrderedAscending;
+            else if ([c1 longValue] < [c2 longValue])
+                return NSOrderedDescending;
+            
+            return NSOrderedSame;
+        }];
+        
+        recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
+        
+        recent = [recent filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
+            
+            return sort[@(evaluatedObject.n_id)] > 0;
+            
+        }]];
+        
+        _hasRecentStickers = recent.count > 0;
         
         NSArray *stickers = _stickers;
         
         
         NSMutableArray *row = [[NSMutableArray alloc] init];
         
-        __block long packId = 0;
+        __block long packId = -1;
         
+        
+        [recent enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [row addObject:obj];
+            
+            if(row.count == 5) {
+                [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:packId]];
+                [row removeAllObjects];
+            }
+            
+        }];
+        
+        
+        if(row.count > 0) {
+            [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:packId]];
+            [row removeAllObjects];
+        }
+        
+        packId = 0;
         
         [stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
             

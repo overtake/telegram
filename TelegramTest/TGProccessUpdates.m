@@ -18,6 +18,7 @@
 #import "MessagesUtils.h"
 #import "TGDateUtils.h"
 #import "TGModernEncryptedUpdates.h"
+#import "FullUsersManager.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
@@ -850,6 +851,11 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateContactRegistered class]]) {
         
         TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
+        
+        if(!user) {
+            [self failSequence];
+            return;
+        }
         
         NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
         
