@@ -65,7 +65,7 @@ __attribute__((constructor)) static void PSPDFUIKitMainThreadGuard(void) {
             if ([selStr hasSuffix:@":"]) {
                 PSPDFReplaceMethodWithBlock(NSView.class, selector, newSelector, ^(__unsafe_unretained NSView *_self, CGRect r) {
                     
-                    if (_self.window && ![_self isKindOfClass:[NSProgressIndicator class]]) PSPDFAssertIfNotMainThread();
+                    if (_self.window && ![_self isKindOfClass:[NSProgressIndicator class]] && ![_self isKindOfClass:[IKImageBrowserView class]]) PSPDFAssertIfNotMainThread();
                     
                     ((void ( *)(id, SEL, CGRect))objc_msgSend)(_self, newSelector, r);
                     
