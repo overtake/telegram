@@ -129,7 +129,7 @@
 
 -(void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)notify {
     
-    id fItem =  [_stickers itemAtPosition:MIN([_stickers rowsInRect:[_stickers visibleRect]].location+1,_stickers.count-1)];
+    id fItem =  [_stickers itemAtPosition:MIN([_stickers rowsInRect:[_stickers visibleRect]].location,_stickers.count-1)];
     
     long packId = [[fItem valueForKey:@"packId"] longValue];
     

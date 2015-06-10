@@ -470,8 +470,8 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         NSString *string = self.lastSeen;
         
         if([self isBot]) {
-            if((self.flags & TGUSERFLAGREADHISTORY) == TGUSERFLAGREADHISTORY) {
-                string = NSLocalizedString(@"Bot.botCantReadAllMessages", nil);
+            if((self.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
+                string = NSLocalizedString(@"Bot.botCanReadAllMessages", nil);
             } else {
                 string = NSLocalizedString(@"Bot.onlySeenMessagesWithSlash", nil);
             }
