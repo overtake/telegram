@@ -289,7 +289,6 @@ typedef enum {
 -(NSPoint)textContainerOrigin {
     
     if([self numberOfLines] < 10) {
-        [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         
         int yOffset = [self.string getEmojiFromString:NO].count > 0 ? 0 : 1;

@@ -15,7 +15,8 @@
 
 
 @protocol TGStickerPackButtonDelegate <NSObject>
-
+-(void)removeScrollEvent;
+-(void)addScrollEvent;
 -(void)didSelected:(id)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem;
 
 @end
@@ -35,8 +36,8 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(2, 2, 26, 26)];
-        
+        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(2, 2, 35, 35)];
+        [_imageView setCenterByView:self];
         [self addSubview:_imageView];
     }
     
@@ -46,10 +47,10 @@
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if(!_isSelected) {
-        [GRAY_BORDER_COLOR set];
+    if(_isSelected) {
+        [LINK_COLOR set];
         
-        NSRectFill(dirtyRect);
+        NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect), DIALOG_BORDER_WIDTH));
     }
     
 }
@@ -61,7 +62,8 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    [_delegate didSelected:self scrollToPack:YES selectItem:NO];
+    
+    [_delegate didSelected:self scrollToPack:YES selectItem:YES];
 }
 
 @end
@@ -84,17 +86,24 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _scrollView = [[TGTransformScrollView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - 30, NSWidth(frameRect), 30)];
+        _scrollView = [[TGTransformScrollView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - 44, NSWidth(frameRect), 44)];
         
         
         [self addSubview:_scrollView];
         
         _packsContainerView = [[TMView alloc] initWithFrame:_scrollView.bounds];
         
+        weak();
+        
+        [_packsContainerView setDrawBlock:^{
+            [DIALOG_BORDER_COLOR set];
+            NSRectFill(NSMakeRect(0, 0, NSWidth(weakSelf.packsContainerView.frame), DIALOG_BORDER_WIDTH));
+        }];
+        
         _scrollView.documentView = _packsContainerView;
         
         
-        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect) - 30)];
+        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect) - 44)];
         
         [self addSubview:_stickers.containerView];
         
@@ -112,6 +121,10 @@
                                              selector:@selector(scrollViewDocumentOffsetChangingNotificationHandler:)
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)notify {
@@ -134,6 +147,7 @@
     }
     
 }
+
 
 
 -(void)reload {
@@ -168,10 +182,12 @@
     [_packsContainerView removeAllSubviews];
     
     
+    
+    
     __block int x = 0;
-    [_packsContainerView setFrameSize:NSMakeSize(stickers.count*30, NSHeight(_packsContainerView.frame))];
     
     
+    float itemWidth = MAX(roundf(NSWidth(self.frame)/stickers.count),48);
     
     [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL *stop) {
         
@@ -179,44 +195,56 @@
         TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
         
         TGMessagesStickerImageObject *imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
-        imageObject.imageSize = NSMakeSize(26, 26);
+        imageObject.imageSize = NSMakeSize(35, 35);
         
-        TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, 30, 30)];
+        TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
         button.packId = attr.stickerset.n_id;
         button.delegate = self;
         
         if(_selectedItem != nil) {
             if(_selectedItem.packId == button.packId)
-                [self didSelected:button scrollToPack:NO selectItem:YES];
+                [self selectItem:button];
         } else {
             if(idx == 0)
-                [self didSelected:button scrollToPack:NO selectItem: YES];
+                [self selectItem:button];
         }
         
         button.imageView.object = imageObject;
         
         [_packsContainerView addSubview:button];
         
-        x+=30;
+        x+=itemWidth;
         
     }];
+    
+    [_packsContainerView setFrameSize:NSMakeSize(x, NSHeight(_packsContainerView.frame))];
     
 }
 
 
+-(void)selectItem:(TGStickerPackButton *)button {
+    [_selectedItem setSelected:NO];
+    _selectedItem = button;
+    [_selectedItem setSelected:YES];
+}
+
 -(void)didSelected:(TGStickerPackButton *)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem {
     
-    if(selectItem)
-    {
-        [_selectedItem setSelected:NO];
-        _selectedItem = button;
-        [_selectedItem setSelected:YES];
+    [self removeScrollEvent];
+    
+    if(selectItem) {
+        [self selectItem:button];
     }
     
-    [self.scrollView.clipView scrollRectToVisible:button.frame animated:selectItem && !scrollToPack];
+    if(!NSContainsRect(_scrollView.clipView.documentVisibleRect, button.frame)) {
+        [self.scrollView.clipView scrollRectToVisible:button.frame animated:selectItem && !scrollToPack];
+    }
+    
     
     if(scrollToPack)
         [_stickers scrollToStickerPack:button.packId];
+    
+     [self addScrollEvent];
 }
 
 @end

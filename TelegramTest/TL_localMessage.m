@@ -224,23 +224,29 @@ DYNAMIC_PROPERTY(DDialog);
 
 - (TL_conversation *)conversation {
     
-    TL_conversation *dialog = [self getDDialog];
+    __block TL_conversation *dialog;
     
-    if(!dialog) {
-        dialog = [[DialogsManager sharedManager] find:self.peer_id];
-        [self setDDialog:dialog];
-    }
+    [ASQueue dispatchOnStageQueue:^{
+         dialog = [self getDDialog];
+        
+        if(!dialog) {
+            dialog = [[DialogsManager sharedManager] find:self.peer_id];
+            [self setDDialog:dialog];
+        }
+        
+        if(!dialog) {
+            dialog = [[Storage manager] selectConversation:self.peer];
+            
+            if(!dialog)
+                dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
+            else
+                [[DialogsManager sharedManager] add:@[dialog]];
+            
+            [self setDDialog:dialog];
+        }
+
+    } synchronous:YES];
     
-    if(!dialog) {
-        dialog = [[Storage manager] selectConversation:self.peer];
-        
-        if(!dialog)
-            dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
-        else
-            [[DialogsManager sharedManager] add:@[dialog]];
-        
-        [self setDDialog:dialog];
-    }
     
     
     

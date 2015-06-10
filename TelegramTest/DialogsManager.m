@@ -532,6 +532,8 @@
 
 - (void)add:(NSArray *)all {
     
+    int bp = 0;
+    
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer.peer_id)];
