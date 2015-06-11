@@ -44,6 +44,7 @@
     return self;
 }
 
+
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
@@ -201,8 +202,9 @@
             TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
             
             TGMessagesStickerImageObject *imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
-            imageObject.imageSize = NSMakeSize(28, 28);
+            imageObject.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 28);
             
+            [button.imageView setFrameSize:imageObject.imageSize];
             
             button.packId = attr.stickerset.n_id;
             button.delegate = self;

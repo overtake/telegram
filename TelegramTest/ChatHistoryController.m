@@ -634,9 +634,11 @@ static NSMutableArray *listeners;
                 ChatHistoryState state;
                 
                 if(!next) {
-                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id > self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
                 } else {
-                    state = self.filter.class == HistoryFilter.class || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = (self.filter.class == HistoryFilter.class && _max_id > _controller.conversation.sync_message_id) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
                 }
                 
                 [self setState:state next:next];
@@ -739,7 +741,7 @@ static NSMutableArray *listeners;
                                     last = messages[0];
                                 
                                 ChatHistoryState old_state = _prevState;
-                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id > self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                                 [self setState:new_state next:next];
                                 
                                 if(old_state != new_state && new_state == ChatHistoryStateLocal) {

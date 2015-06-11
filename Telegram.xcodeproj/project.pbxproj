@@ -305,6 +305,7 @@
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
+		C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -566,7 +567,6 @@
 		C2CBF3C11AF38427006BF90A /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3C01AF38427006BF90A /* ShareViewController.xib */; };
 		C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */; };
 		C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */; };
-		C2CBF5CC1AF3A145006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C2CBF5D61AF7C5D2006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C2CBF5E51AF7CB42006BF90A /* TGS_MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */; };
 		C2CBF5E81AF7CBD9006BF90A /* TGS_RPCRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */; };
@@ -826,6 +826,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C242376A1B28C467009B9C6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D079AB971AF39B8000076F59;
+			remoteInfo = MtProtoKitMac;
+		};
 		C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
@@ -2392,8 +2399,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */,
 				C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */,
-				C2CBF5CC1AF3A145006BF90A /* MtProtoKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
 				C274C4241ACC0D4D000DFDE4 /* JavaScriptCore.framework in Frameworks */,
@@ -4800,6 +4807,7 @@
 			isa = PBXGroup;
 			children = (
 				C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */,
+				C242376B1B28C467009B9C6F /* MtProtoKitMac.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5384,6 +5392,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		C242376B1B28C467009B9C6F /* MtProtoKitMac.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MtProtoKitMac.framework;
+			remoteRef = C242376A1B28C467009B9C6F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -6448,6 +6463,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
@@ -6491,6 +6507,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";

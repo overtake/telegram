@@ -474,15 +474,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
                 
         if(localMaxId != 0 && currentDate == 0) {
-            FMResultSet *selectedMessageDateResult = [db executeQuery:@"SELECT date FROM messages WHERE n_id=?",@(localMaxId)];
-            if([selectedMessageDateResult next])
-                currentDate = [selectedMessageDateResult intForColumn:@"date"];
+            currentDate = [db intForQuery:@"SELECT date FROM messages WHERE n_id=?",@(localMaxId)];
             
-            [selectedMessageDateResult close];
-            
-            
-            
-            
+            int bp = 0;
         }
         
         

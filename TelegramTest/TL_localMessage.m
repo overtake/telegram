@@ -226,8 +226,7 @@ DYNAMIC_PROPERTY(DDialog);
     
     __block TL_conversation *dialog;
     
-    [ASQueue dispatchOnStageQueue:^{
-         dialog = [self getDDialog];
+    dialog = [self getDDialog];
         
         if(!dialog) {
             dialog = [[DialogsManager sharedManager] find:self.peer_id];
@@ -245,10 +244,6 @@ DYNAMIC_PROPERTY(DDialog);
             [self setDDialog:dialog];
         }
 
-    } synchronous:YES];
-    
-    
-    
     
     return dialog;
 }

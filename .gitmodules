@@ -4,3 +4,6 @@
 [submodule "sqlcipher"]
 	path = sqlcipher
 	url = https://github.com/sqlcipher/sqlcipher.git
+[submodule "Signals"]
+	path = Signals
+	url = https://github.com/peter-iakovlev/Signals

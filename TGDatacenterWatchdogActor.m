@@ -194,7 +194,7 @@
         
         for (TL_dcOption *dcOption in config.dc_options)
         {
-            MTDatacenterAddress *configAddress = [[MTDatacenterAddress alloc] initWithIp:dcOption.ip_address port:(uint16_t)dcOption.port];
+            MTDatacenterAddress *configAddress = [[MTDatacenterAddress alloc] initWithIp:dcOption.ip_address port:(uint16_t)dcOption.port preferForMedia:(dcOption.flags & 1 << 1) == 1 << 1];
             
             NSMutableArray *array = addressListByDatacenterId[@(dcOption.n_id)];
             if (array == nil)

@@ -789,6 +789,7 @@ static ASQueue *queue;
         
         if(user.photo.photo_id != [update photo].photo_id) {
             user.photo = [update photo];
+            user.flags&= ~ (1 << 5);
             
             if(user) {
                 [[Storage manager] insertUser:user completeHandler:nil];
