@@ -19,7 +19,7 @@
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         
-        _conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
+        self.conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
         
         
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
@@ -107,18 +107,31 @@
 
 -(void)dealloc {
 
+    [self clear];
+    
+}
+
+-(void)clear {
     if(self.class == [TGConversationTableItem class]) {
         [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
         [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
         
         [Notification removeObserver:self];
     }
+}
+
+-(void)setConversation:(TL_conversation *)conversation {
     
+    if(_conversation) {
+        [self clear];
+    }
+    
+    _conversation = conversation;
 }
 
 -(void)update {
     
-    _conversation = [[DialogsManager sharedManager] find:_conversation.peer_id];
+    self.conversation = [[DialogsManager sharedManager] find:_conversation.peer_id];
     
     _messageText = [MessagesUtils conversationLastText:_conversation.lastMessage conversation:_conversation];
     

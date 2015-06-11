@@ -433,12 +433,16 @@
     [self.phoneView setHidden:self.user.isBot];
     
     
-    [self.botInfoView setHidden:!self.user.isBot];
+    [self.botInfoView setHidden:!self.user.isBot || self.botInfoView.string.length == 0];
+    
     
     [self.botInfoView setFrameOrigin:NSMakePoint(100, offset)];
+    
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
     
-
+    if(self.botInfoView.isHidden && self.user.isBot) {
+        offset+=62;
+    }
     
    
     [self.userNameView setHidden:self.user.username.length == 0];
@@ -617,6 +621,8 @@
         [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
             
             [_botInfoView setString:userFull.bot_info.n_description];
+            
+            [self buildPage];
             
         }];
     }

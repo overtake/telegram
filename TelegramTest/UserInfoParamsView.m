@@ -49,6 +49,10 @@
 }
 
 
+-(NSString *)string {
+    return [self.textView string];
+}
+
 - (void)setHeader:(NSString *)header {
     _header = header ? header : @"";
     

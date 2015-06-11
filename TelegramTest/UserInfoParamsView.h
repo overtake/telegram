@@ -12,5 +12,5 @@
 
 - (void)setString:(NSString *)string;
 - (void)setHeader:(NSString *)header;
-
+- (NSString *)string;
 @end

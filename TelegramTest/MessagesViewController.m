@@ -2119,10 +2119,15 @@ static NSTextAttachment *headerMediaIcon() {
         
         [[FullUsersManager sharedManager] loadUserFull:_conversation.user callback:^(TL_userFull *userFull) {
             
-            TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
-            
-            
-            [self receivedMessage:[self messageTableItemsFromMessages:@[service]][0] position:_messages.count itsSelf:YES];
+            if(userFull.bot_info.n_description.length > 0) {
+                TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                NSArray *items;
+                
+                NSRange range = [self insertMessageTableItemsToList:[self messageTableItemsFromMessages:@[service]] startPosition:_messages.count needCheckLastMessage:YES backItems:&items checkActive:NO];
+                
+                [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
+            }
             
         }];
         
