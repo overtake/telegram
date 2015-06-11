@@ -636,9 +636,11 @@ static NSMutableArray *listeners;
                 if(!next) {
                     state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id > self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                     
+                    int bp = 0;
                 } else {
-                    state = (self.filter.class == HistoryFilter.class && _max_id > _controller.conversation.sync_message_id) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = (self.filter.class == HistoryFilter.class && (_max_id == 0 ? _min_id > _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                     
+                    int bp = 0;
                 }
                 
                 [self setState:state next:next];
@@ -734,28 +736,28 @@ static NSMutableArray *listeners;
                             }
                             
                             
-                            if(!next) {
-                                
-                                TL_localMessage *last;
-                                if(messages.count > 0)
-                                    last = messages[0];
-                                
-                                ChatHistoryState old_state = _prevState;
-                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id > self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-                                [self setState:new_state next:next];
-                                
-                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
-                                    NSMutableArray *copy = [messages mutableCopy];
-                                    
-                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
-                                        if(obj.n_id <= self.controller.conversation.sync_message_id)
-                                            [copy removeObject:obj];
-                                    }];
-                                    
-                                    messages = copy;
-                                }
-                                
-                            }
+//                            if(!next) {
+//                                
+//                                TL_localMessage *last;
+//                                if(messages.count > 0)
+//                                    last = messages[0];
+//                                
+//                                ChatHistoryState old_state = _prevState;
+//                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id < self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+//                                [self setState:new_state next:next];
+//                                
+//                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
+//                                    NSMutableArray *copy = [messages mutableCopy];
+//                                    
+//                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
+//                                        if(obj.n_id < self.controller.conversation.sync_message_id)
+//                                            [copy removeObject:obj];
+//                                    }];
+//                                    
+//                                    messages = copy;
+//                                }
+//                                
+//                            }
                             
                             
                             

@@ -621,7 +621,7 @@
                value = "next">
             </PersistentString>
             <PersistentString
-               value = "self.controller.conversation.top_message">
+               value = "self.conversation.sync_message_id">
             </PersistentString>
             <PersistentString
                value = "messages">
