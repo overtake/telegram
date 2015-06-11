@@ -106,7 +106,7 @@
                                     <action selector="showAudioMiniPlayer:" target="QPE-Oq-DBa" id="Me0-8C-uW8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="LA8-TF-Ir0">
+                            <menuItem isSeparatorItem="YES" tag="2000" id="LA8-TF-Ir0">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Leave from Chat..." id="Mor-AG-ZB5">

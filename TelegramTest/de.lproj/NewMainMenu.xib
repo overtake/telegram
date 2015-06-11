@@ -102,7 +102,7 @@
                                     <action selector="showMedia:" target="89" id="116"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Audio" keyEquivalent="u" id="sbx-vG-1xH">
+                            <menuItem title="Show Audio" tag="2000" keyEquivalent="u" id="sbx-vG-1xH">
                                 <connections>
                                     <action selector="showAudioMiniPlayer:" target="89" id="RKr-hz-GRV"/>
                                 </connections>

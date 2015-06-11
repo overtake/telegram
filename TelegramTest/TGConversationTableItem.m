@@ -24,11 +24,8 @@
         
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
         [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
-        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:self.conversation action:@"typing"]];
+        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"typing"]];
 
-        [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
-        [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
-        
         
         [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:conversation action:@"typing"]];
        
@@ -108,6 +105,8 @@
 -(void)dealloc {
 
     [self clear];
+ 
+     [Notification removeObserver:self];
     
 }
 
@@ -115,8 +114,6 @@
     if(self.class == [TGConversationTableItem class]) {
         [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
         [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
-        
-        [Notification removeObserver:self];
     }
 }
 
@@ -127,6 +124,10 @@
     }
     
     _conversation = conversation;
+    
+    
+    [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
+    [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
 }
 
 -(void)update {

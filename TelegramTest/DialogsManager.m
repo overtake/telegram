@@ -164,7 +164,7 @@
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
                 
-                
+                [self checkBotKeyboard:dialog forMessage:lastMessage];
                 
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
@@ -186,6 +186,24 @@
     }];
 
     
+}
+
+
+-(void)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message {
+    if(message.fromUser.isBot) {
+        if(message.reply_markup != nil && !message.n_out) {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+            }];
+            
+            [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
+        } else if(!message.n_out) {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+            }];
+            [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
+        }
+    }
 }
 
 -(NSUInteger)positionForConversation:(TL_conversation *)dialog {
@@ -283,6 +301,7 @@
         
         dialog.lastMessage = nil;
         
+        
         [dialog save];
         
         [MessagesManager unreadBadgeCount];
@@ -377,20 +396,7 @@
         [self add:@[dialog]];
         
         
-        if(message.fromUser.isBot) {
-            if(message.reply_markup != nil && !message.n_out) {
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                    [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:dialog.cacheKey inCollection:BOT_COMMANDS];
-                }];
-                
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
-            } else if(!message.n_out) {
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                    [transaction removeObjectForKey:dialog.cacheKey inCollection:BOT_COMMANDS];
-                }];
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
-            }
-        }
+        [self checkBotKeyboard:dialog forMessage:message];
         
         
         
@@ -467,6 +473,7 @@
                 
                 dialog.lastMessage = message;
                 
+                
             } else {
                 [self updateTop:message needUpdate:NO update_real_date:NO];
                 dialog = message.conversation;
@@ -475,6 +482,12 @@
             if(dialog) {
                 [last setObject:dialog forKey:@(dialog.peer.peer_id)];
             }
+            
+            [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
+                
+                [self checkBotKeyboard:obj forMessage:obj.lastMessage];
+                
+            }];
             
             if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                 [[Storage manager] insertMedia:message];
