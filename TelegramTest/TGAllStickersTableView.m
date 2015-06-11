@@ -482,6 +482,8 @@ static NSImage *higlightedImage() {
                     [row removeAllObjects];
                 }
                 
+                [row addObject:obj];
+                
                 packId = sticker.stickerset.n_id;
                 return;
             }

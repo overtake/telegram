@@ -40,7 +40,9 @@
     return self;
 }
 
-
+-(void)dealloc {
+    
+}
 
 
 -(void)update {

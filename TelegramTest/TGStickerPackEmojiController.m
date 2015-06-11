@@ -206,6 +206,7 @@
             
             [button.imageView setFrameSize:imageObject.imageSize];
             
+            [button.imageView setCenterByView:button];
             button.packId = attr.stickerset.n_id;
             button.delegate = self;
             

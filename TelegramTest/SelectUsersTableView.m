@@ -53,7 +53,7 @@ static NSCache *cacheItems;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN %@ AND (self.flags & 1 << 16) == 0)",self.exceptions]];
+    contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN %@ AND (self.user.flags & 1 << 16) == 0)",self.exceptions]];
     
     
     

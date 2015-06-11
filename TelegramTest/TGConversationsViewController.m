@@ -111,10 +111,9 @@
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
 
+        [[MTNetwork instance] startNetwork];
         
         [EmojiViewController loadStickersIfNeeded];
-        
-        [[MTNetwork instance] startNetwork];
         
         [[BlockedUsersManager sharedManager] remoteLoad];
         

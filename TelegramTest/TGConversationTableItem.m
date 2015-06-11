@@ -106,14 +106,14 @@
 }
 
 -(void)dealloc {
-//    [_conversation removeObserver:self forKeyPath:@"lastMessage" context:NULL];
-//    [_conversation removeObserver:self forKeyPath:@"lastMessage.flags" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
-//    [_conversation removeObserver:self forKeyPath:@"unread_count" context:NULL];
+
+    if(self.class == [TGConversationTableItem class]) {
+        [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
+        [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
+        
+        [Notification removeObserver:self];
+    }
     
-    
-    [Notification removeObserver:self];
 }
 
 -(void)update {
