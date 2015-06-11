@@ -392,7 +392,7 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility]) {
+    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]) {
         
         
         if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
@@ -404,7 +404,7 @@ typedef enum {
             } else {
                 [TGMentionPopup selectPrev];
                 [TGHashtagPopup selectPrev];
-                [TGBotCommandsPopup selectNext];
+                [TGBotCommandsPopup selectPrev];
             }
             
             return;
@@ -419,7 +419,7 @@ typedef enum {
                 
                 [TGMentionPopup performSelected];
                 [TGHashtagPopup performSelected];
-                
+                [TGBotCommandsPopup performSelected];
                 return;
             }
             

@@ -12,6 +12,7 @@
 
 
 static TMMenuPopover *popover;
+static Class classSetter;
 
 +(TMMenuPopover *)popover {
     return popover;
@@ -19,6 +20,7 @@ static TMMenuPopover *popover;
 
 +(void)setPopover:(TMMenuPopover *)p {
     popover = p;
+    classSetter = [self class];
 }
 
 +(BOOL)isVisibility {
@@ -27,20 +29,24 @@ static TMMenuPopover *popover;
 }
 
 +(void)performSelected {
-    [popover.contentViewController performSelected];
+    if([self class] == classSetter)
+        [popover.contentViewController performSelected];
 }
 
 +(void)selectNext {
-    [popover.contentViewController selectNext];
+    if([self class] == classSetter)
+        [popover.contentViewController selectNext];
 }
 
 +(void)selectPrev {
-    [popover.contentViewController selectPrev];
+    if([self class] == classSetter)
+        [popover.contentViewController selectPrev];
 }
 
 +(void)close {
     [popover close];
     [self setPopover:nil];
+    classSetter = [NSNull class];
 }
 
 
