@@ -197,9 +197,9 @@
     
     int itemHeight = 22;
     
-    NSUInteger height = f.count * itemHeight + ((f.count -1) * 5 ) + 6;
+    NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + 6;
     
-    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 5 ) + 6);
+    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6);
     
    
    
@@ -229,7 +229,7 @@
     _rows = f;
     
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight+8)];
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight+12)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -238,7 +238,7 @@
     [_deleteImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - image_CancelReply().size.width , NSHeight(self.frame) - image_CancelReply().size.height)];
     
     __block int x = 0;
-    __block int y = 6;
+    __block int y = 3;
     
     int itemHeight = 22;
     
