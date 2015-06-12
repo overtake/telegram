@@ -209,7 +209,7 @@ static NSMutableArray *listeners;
                 int pos = (int) [items indexOfObject:accepted[0]];
                 
                 
-                NSRange range = NSMakeRange(pos, accepted.count);
+                NSRange range = NSMakeRange(pos+1, accepted.count);
                 
                 
                 accepted = [accepted mutableCopy];
@@ -365,7 +365,7 @@ static NSMutableArray *listeners;
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
                         if([obj isFiltredAccepted:message.filterType]) {
-                            [obj.controller receivedMessage:tableItem position:position itsSelf:NO];
+                            [obj.controller receivedMessage:tableItem position:position+1 itsSelf:NO];
                         }
                     
                     }];
@@ -551,7 +551,7 @@ static NSMutableArray *listeners;
         if(items.count > 0) {
             MessageTableItem *item = items[0];
             
-            if(self.filter.class == HistoryFilter.class && item.message.n_id != self.controller.conversation.top_message) {
+            if(self.filter.class == HistoryFilter.class && (item.message.n_id != self.controller.conversation.top_message && item.message.n_id < TGMINFAKEID)) {
                 [[self.filter class] removeAllItems:self.controller.conversation.peer.peer_id];
             }
         }
@@ -891,7 +891,8 @@ static NSMutableArray *listeners;
 
 -(NSArray *)sortItems:(NSArray *)sort {
     return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
-        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+        
+        return (obj1.message.date < obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedDescending : (obj1.message.date > obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
     }];
 }
 

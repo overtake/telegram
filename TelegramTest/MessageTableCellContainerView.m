@@ -971,7 +971,7 @@ static int offsetEditable = 30;
     
     [ASQueue dispatchOnMainQueue:^{
         if(item == self.item.messageSender) {
-            [self uploadProgressHandler:item animated:NO];
+            [self uploadProgressHandler:item animated:YES];
             [self updateCellState];
         }
     }];
