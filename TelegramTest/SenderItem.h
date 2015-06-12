@@ -56,6 +56,8 @@ typedef enum {
 
 -(void)send;
 
+
+-(void)enumerateEventListeners:(void (^)(id<SenderListener> listener, NSUInteger idx, BOOL *stop))enumerator;
 -(void)addEventListener:(id<SenderListener>)listener;
 -(void)removeEventListener:(id<SenderListener>)listener;
 

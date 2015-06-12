@@ -700,6 +700,14 @@ static BOOL dragAction = NO;
     
     if(item.messageSender)  {
         
+        [item.messageSender enumerateEventListeners:^(id<SenderListener> listener, NSUInteger idx, BOOL *stop) {
+            
+            if([listener isKindOfClass:self.class] && listener != self) {
+                [item.messageSender removeEventListener:listener];
+            }
+            
+        }];
+        
         [item.messageSender addEventListener:self];
         
         if(item.messageSender.state == MessageStateWaitSend)
@@ -1084,6 +1092,14 @@ static int offsetEditable = 30;
     
     _replyContainer.messageField.layer.backgroundColor = (__bridge CGColorRef)(value);
     [_replyContainer.messageField setNeedsDisplay:YES];
+}
+
+-(void)dealloc {
+    [self.item.downloadListener setCompleteHandler:nil];
+    [self.item.downloadListener setProgressHandler:nil];
+    [self.item.downloadListener setErrorHandler:nil];
+    
+    [self.item.messageSender removeEventListener:self];
 }
 
 @end

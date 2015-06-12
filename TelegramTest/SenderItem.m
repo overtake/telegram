@@ -266,6 +266,16 @@ static NSMutableArray *waiting;
      }];
 }
 
+-(void)enumerateEventListeners:(void (^)(id<SenderListener> listener, NSUInteger idx, BOOL *stop))enumerator {
+    [ASQueue dispatchOnStageQueue:^{
+        NSArray *copy = [self.listeners copy];
+        
+        [copy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            enumerator(obj,idx,stop);
+        }];
+    }];
+}
+
 -(void)removeAllListeners {
     [self notifyAllListeners:@selector(onRemovedListener:)];
     
