@@ -22,7 +22,19 @@
     
     [botInfo enumerateObjectsUsingBlock:^(TLBotInfo *obj, NSUInteger idx, BOOL *stop) {
         
-        [commands addObjectsFromArray:obj.commands];
+         TLUser *user = [[UsersManager sharedManager] find:obj.user_id];
+        
+        [obj.commands enumerateObjectsUsingBlock:^(TL_botCommand *command, NSUInteger idx, BOOL *stop) {
+            
+            NSString *cmd = command.command;
+            
+            if([Telegram conversation].type == DialogTypeChat && (user.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
+                cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
+            }
+            
+            [commands addObject:[TL_botCommand createWithCommand:cmd params:command.params n_description:command.n_description]];
+            
+        }];
         
     }];
     

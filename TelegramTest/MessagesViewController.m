@@ -2125,8 +2125,9 @@ static NSTextAttachment *headerMediaIcon() {
                 NSArray *items;
                 
                 NSRange range = [self insertMessageTableItemsToList:[self messageTableItemsFromMessages:@[service]] startPosition:_messages.count needCheckLastMessage:YES backItems:&items checkActive:NO];
-                
+                [self.table beginUpdates];
                 [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
+                [self.table endUpdates];
             }
             
         }];

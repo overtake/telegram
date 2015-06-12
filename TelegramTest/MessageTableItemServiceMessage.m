@@ -91,7 +91,7 @@
     
     
     NSSize size = [self.messageAttributedString sizeForTextFieldForWidth:width];
-    
+    size.width = width;
     size.height += 10;
     size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;
     self.blockSize = size;

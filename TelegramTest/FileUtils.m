@@ -226,24 +226,30 @@ void alert_bad_files(NSArray *bad_files) {
 
 void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void)) {
     
-    NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
-        if([result intValue] == 1000)
-            block();
-        else if(cancelBlock)
-            cancelBlock();
+    [ASQueue dispatchOnMainQueue:^{
+        NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
+            if([result intValue] == 1000)
+                block();
+            else if(cancelBlock)
+                cancelBlock();
+        }];
+        [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];
+        [alert show];
     }];
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];
-    [alert show];
+    
 }
 
 void alert(NSString *text, NSString *info) {
     
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert setAlertStyle:NSInformationalAlertStyle];
-    [alert setMessageText:text.length > 0 ? text : appName()];
-    [alert setInformativeText:info];
-    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    [ASQueue dispatchOnMainQueue:^{
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert setMessageText:text.length > 0 ? text : appName()];
+        [alert setInformativeText:info];
+        [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    }];
+    
 }
 
 + (NSString *)dataMD5:(NSData *)data {

@@ -105,9 +105,9 @@
         [self.photoImageView setHidden:YES];
         [self.textField setAttributedStringValue:item.messageAttributedString];
         [self.textField setFrameSize:item.blockSize];
-        [self.textField setFrameOrigin:NSMakePoint(0, 0)];
-        [self.textField setCenteredXByView:self.textField.superview];
+        [self.textField setFrameOrigin:NSMakePoint(78, 0)];
 
+        
     } else  {
         [self.photoImageView setHidden:YES];
         [self.textField setAttributedStringValue:item.messageAttributedString];
