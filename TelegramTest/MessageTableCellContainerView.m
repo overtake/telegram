@@ -617,7 +617,7 @@ static BOOL dragAction = NO;
     
     
    
-    
+    [self.progressView setCurrentProgress:0];
         
     self.stateLayer.container = self;
     

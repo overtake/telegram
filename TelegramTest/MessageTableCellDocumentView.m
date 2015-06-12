@@ -487,6 +487,7 @@ static NSImage *attachBackgroundThumb() {
     
     [self setProgressFrameSize:NSMakeSize(48, 48)];
     
+    
     if(item.isHasThumb) {
         [self.attachButton setBackgroundImage:attachBackgroundThumb() forControlState:BTRControlStateNormal];
         self.thumbView.image = nil;
