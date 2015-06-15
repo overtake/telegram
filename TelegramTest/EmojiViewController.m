@@ -449,7 +449,6 @@
         cell.controller = self;
     }
     
-    
     NSArray *currentArray = self.segments[MIN(self.currentButton.index - 1, 5)];
     long startPos = row * EMOJI_COUNT_PER_ROW;
     for(long i = 0; i < EMOJI_COUNT_PER_ROW; i++) {

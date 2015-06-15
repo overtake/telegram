@@ -238,8 +238,6 @@ static NSImage *higlightedImage() {
     if(self = [super initWithFrame:frameRect]) {
         _stickers = [[NSMutableArray alloc] init];
         self.tm_delegate = self;
-        
-       
     }
     
     return self;

@@ -55,9 +55,6 @@ static NSMutableArray *listeners;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
         
-        
-        assert([NSThread isMainThread]);
-        
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
