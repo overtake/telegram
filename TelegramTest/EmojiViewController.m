@@ -175,7 +175,7 @@
     static EmojiViewController *controller;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 240)];
+        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 300)];
     });
     return controller;
 }

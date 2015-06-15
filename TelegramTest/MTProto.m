@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 07.06.15.
+//  Auto created by Mikhail Filimonov on 14.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -40,7 +40,6 @@
 
 
 
-
 @implementation TLInputPeer
 @end
 
@@ -56,6 +55,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPeerEmpty *)copy {
+    
+    TL_inputPeerEmpty *objc = [[TL_inputPeerEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPeerSelf
@@ -70,6 +79,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPeerSelf *)copy {
+    
+    TL_inputPeerSelf *objc = [[TL_inputPeerSelf alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPeerContact
@@ -84,6 +103,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_inputPeerContact *)copy {
+    
+    TL_inputPeerContact *objc = [[TL_inputPeerContact alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPeerForeign
@@ -101,6 +130,17 @@
 	self.user_id = [stream readInt];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputPeerForeign *)copy {
+    
+    TL_inputPeerForeign *objc = [[TL_inputPeerForeign alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPeerChat
@@ -115,8 +155,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 }
+        
+-(TL_inputPeerChat *)copy {
+    
+    TL_inputPeerChat *objc = [[TL_inputPeerChat alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputUser
@@ -134,6 +183,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputUserEmpty *)copy {
+    
+    TL_inputUserEmpty *objc = [[TL_inputUserEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputUserSelf
@@ -148,6 +207,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputUserSelf *)copy {
+    
+    TL_inputUserSelf *objc = [[TL_inputUserSelf alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputUserContact
@@ -162,6 +231,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_inputUserContact *)copy {
+    
+    TL_inputUserContact *objc = [[TL_inputUserContact alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputUserForeign
@@ -179,8 +258,18 @@
 	self.user_id = [stream readInt];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputUserForeign *)copy {
+    
+    TL_inputUserForeign *objc = [[TL_inputUserForeign alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputContact
@@ -207,8 +296,20 @@
 	self.first_name = [stream readString];
 	self.last_name = [stream readString];
 }
+        
+-(TL_inputPhoneContact *)copy {
+    
+    TL_inputPhoneContact *objc = [[TL_inputPhoneContact alloc] init];
+    
+    objc.client_id = self.client_id;
+    objc.phone = self.phone;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputFile
@@ -235,6 +336,19 @@
 	self.name = [stream readString];
 	self.md5_checksum = [stream readString];
 }
+        
+-(TL_inputFile *)copy {
+    
+    TL_inputFile *objc = [[TL_inputFile alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.parts = self.parts;
+    objc.name = self.name;
+    objc.md5_checksum = self.md5_checksum;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputFileBig
@@ -255,8 +369,19 @@
 	self.parts = [stream readInt];
 	self.name = [stream readString];
 }
+        
+-(TL_inputFileBig *)copy {
+    
+    TL_inputFileBig *objc = [[TL_inputFileBig alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.parts = self.parts;
+    objc.name = self.name;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputMedia
@@ -274,6 +399,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMediaEmpty *)copy {
+    
+    TL_inputMediaEmpty *objc = [[TL_inputMediaEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedPhoto
@@ -291,6 +426,17 @@
 	self.file = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
+        
+-(TL_inputMediaUploadedPhoto *)copy {
+    
+    TL_inputMediaUploadedPhoto *objc = [[TL_inputMediaUploadedPhoto alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaPhoto
@@ -308,6 +454,17 @@
 	self.n_id = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
+        
+-(TL_inputMediaPhoto *)copy {
+    
+    TL_inputMediaPhoto *objc = [[TL_inputMediaPhoto alloc] init];
+    
+    objc.n_id = [self.n_id copy];
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaGeoPoint
@@ -322,6 +479,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.geo_point = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputMediaGeoPoint *)copy {
+    
+    TL_inputMediaGeoPoint *objc = [[TL_inputMediaGeoPoint alloc] init];
+    
+    objc.geo_point = [self.geo_point copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaContact
@@ -342,6 +509,18 @@
 	self.first_name = [stream readString];
 	self.last_name = [stream readString];
 }
+        
+-(TL_inputMediaContact *)copy {
+    
+    TL_inputMediaContact *objc = [[TL_inputMediaContact alloc] init];
+    
+    objc.phone_number = self.phone_number;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedVideo
@@ -368,6 +547,20 @@
 	self.h = [stream readInt];
 	self.caption = [stream readString];
 }
+        
+-(TL_inputMediaUploadedVideo *)copy {
+    
+    TL_inputMediaUploadedVideo *objc = [[TL_inputMediaUploadedVideo alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.duration = self.duration;
+    objc.w = self.w;
+    objc.h = self.h;
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedThumbVideo
@@ -397,6 +590,21 @@
 	self.h = [stream readInt];
 	self.caption = [stream readString];
 }
+        
+-(TL_inputMediaUploadedThumbVideo *)copy {
+    
+    TL_inputMediaUploadedThumbVideo *objc = [[TL_inputMediaUploadedThumbVideo alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.thumb = [self.thumb copy];
+    objc.duration = self.duration;
+    objc.w = self.w;
+    objc.h = self.h;
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaVideo
@@ -414,6 +622,17 @@
 	self.n_id = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
+        
+-(TL_inputMediaVideo *)copy {
+    
+    TL_inputMediaVideo *objc = [[TL_inputMediaVideo alloc] init];
+    
+    objc.n_id = [self.n_id copy];
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedAudio
@@ -434,6 +653,18 @@
 	self.duration = [stream readInt];
 	self.mime_type = [stream readString];
 }
+        
+-(TL_inputMediaUploadedAudio *)copy {
+    
+    TL_inputMediaUploadedAudio *objc = [[TL_inputMediaUploadedAudio alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.duration = self.duration;
+    objc.mime_type = self.mime_type;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaAudio
@@ -448,6 +679,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputMediaAudio *)copy {
+    
+    TL_inputMediaAudio *objc = [[TL_inputMediaAudio alloc] init];
+    
+    objc.n_id = [self.n_id copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedDocument
@@ -487,6 +728,18 @@
 		}
 	}
 }
+        
+-(TL_inputMediaUploadedDocument *)copy {
+    
+    TL_inputMediaUploadedDocument *objc = [[TL_inputMediaUploadedDocument alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.mime_type = self.mime_type;
+    objc.attributes = [self.attributes copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaUploadedThumbDocument
@@ -529,6 +782,19 @@
 		}
 	}
 }
+        
+-(TL_inputMediaUploadedThumbDocument *)copy {
+    
+    TL_inputMediaUploadedThumbDocument *objc = [[TL_inputMediaUploadedThumbDocument alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.thumb = [self.thumb copy];
+    objc.mime_type = self.mime_type;
+    objc.attributes = [self.attributes copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaDocument
@@ -543,6 +809,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputMediaDocument *)copy {
+    
+    TL_inputMediaDocument *objc = [[TL_inputMediaDocument alloc] init];
+    
+    objc.n_id = [self.n_id copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMediaVenue
@@ -569,8 +845,21 @@
 	self.provider = [stream readString];
 	self.venue_id = [stream readString];
 }
+        
+-(TL_inputMediaVenue *)copy {
+    
+    TL_inputMediaVenue *objc = [[TL_inputMediaVenue alloc] init];
+    
+    objc.geo_point = [self.geo_point copy];
+    objc.title = self.title;
+    objc.address = self.address;
+    objc.provider = self.provider;
+    objc.venue_id = self.venue_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputChatPhoto
@@ -588,6 +877,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputChatPhotoEmpty *)copy {
+    
+    TL_inputChatPhotoEmpty *objc = [[TL_inputChatPhotoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputChatUploadedPhoto
@@ -605,6 +904,17 @@
 	self.file = [ClassStore TLDeserialize:stream];
 	self.crop = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputChatUploadedPhoto *)copy {
+    
+    TL_inputChatUploadedPhoto *objc = [[TL_inputChatUploadedPhoto alloc] init];
+    
+    objc.file = [self.file copy];
+    objc.crop = [self.crop copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputChatPhoto
@@ -622,8 +932,18 @@
 	self.n_id = [ClassStore TLDeserialize:stream];
 	self.crop = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputChatPhoto *)copy {
+    
+    TL_inputChatPhoto *objc = [[TL_inputChatPhoto alloc] init];
+    
+    objc.n_id = [self.n_id copy];
+    objc.crop = [self.crop copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputGeoPoint
@@ -641,6 +961,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputGeoPointEmpty *)copy {
+    
+    TL_inputGeoPointEmpty *objc = [[TL_inputGeoPointEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputGeoPoint
@@ -658,8 +988,18 @@
 	self.lat = [stream readDouble];
 	self.n_long = [stream readDouble];
 }
+        
+-(TL_inputGeoPoint *)copy {
+    
+    TL_inputGeoPoint *objc = [[TL_inputGeoPoint alloc] init];
+    
+    objc.lat = self.lat;
+    objc.n_long = self.n_long;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPhoto
@@ -677,6 +1017,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPhotoEmpty *)copy {
+    
+    TL_inputPhotoEmpty *objc = [[TL_inputPhotoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPhoto
@@ -694,8 +1044,18 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputPhoto *)copy {
+    
+    TL_inputPhoto *objc = [[TL_inputPhoto alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputVideo
@@ -713,6 +1073,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputVideoEmpty *)copy {
+    
+    TL_inputVideoEmpty *objc = [[TL_inputVideoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputVideo
@@ -730,8 +1100,18 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputVideo *)copy {
+    
+    TL_inputVideo *objc = [[TL_inputVideo alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputFileLocation
@@ -755,6 +1135,18 @@
 	self.local_id = [stream readInt];
 	self.secret = [stream readLong];
 }
+        
+-(TL_inputFileLocation *)copy {
+    
+    TL_inputFileLocation *objc = [[TL_inputFileLocation alloc] init];
+    
+    objc.volume_id = self.volume_id;
+    objc.local_id = self.local_id;
+    objc.secret = self.secret;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputVideoFileLocation
@@ -772,6 +1164,17 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputVideoFileLocation *)copy {
+    
+    TL_inputVideoFileLocation *objc = [[TL_inputVideoFileLocation alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputEncryptedFileLocation
@@ -789,6 +1192,17 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputEncryptedFileLocation *)copy {
+    
+    TL_inputEncryptedFileLocation *objc = [[TL_inputEncryptedFileLocation alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputAudioFileLocation
@@ -806,6 +1220,17 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputAudioFileLocation *)copy {
+    
+    TL_inputAudioFileLocation *objc = [[TL_inputAudioFileLocation alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputDocumentFileLocation
@@ -823,8 +1248,18 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputDocumentFileLocation *)copy {
+    
+    TL_inputDocumentFileLocation *objc = [[TL_inputDocumentFileLocation alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPhotoCrop
@@ -842,6 +1277,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPhotoCropAuto *)copy {
+    
+    TL_inputPhotoCropAuto *objc = [[TL_inputPhotoCropAuto alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPhotoCrop
@@ -862,8 +1307,19 @@
 	self.crop_top = [stream readDouble];
 	self.crop_width = [stream readDouble];
 }
+        
+-(TL_inputPhotoCrop *)copy {
+    
+    TL_inputPhotoCrop *objc = [[TL_inputPhotoCrop alloc] init];
+    
+    objc.crop_left = self.crop_left;
+    objc.crop_top = self.crop_top;
+    objc.crop_width = self.crop_width;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputAppEvent
@@ -890,8 +1346,20 @@
 	self.peer = [stream readLong];
 	self.data = [stream readString];
 }
+        
+-(TL_inputAppEvent *)copy {
+    
+    TL_inputAppEvent *objc = [[TL_inputAppEvent alloc] init];
+    
+    objc.time = self.time;
+    objc.type = self.type;
+    objc.peer = self.peer;
+    objc.data = self.data;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPeer
@@ -909,6 +1377,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_peerUser *)copy {
+    
+    TL_peerUser *objc = [[TL_peerUser alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_peerChat
@@ -923,8 +1401,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 }
+        
+-(TL_peerChat *)copy {
+    
+    TL_peerChat *objc = [[TL_peerChat alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLstorage_FileType
@@ -942,6 +1429,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileUnknown *)copy {
+    
+    TL_storage_fileUnknown *objc = [[TL_storage_fileUnknown alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileJpeg
@@ -956,6 +1453,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileJpeg *)copy {
+    
+    TL_storage_fileJpeg *objc = [[TL_storage_fileJpeg alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileGif
@@ -970,6 +1477,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileGif *)copy {
+    
+    TL_storage_fileGif *objc = [[TL_storage_fileGif alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_filePng
@@ -984,6 +1501,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_filePng *)copy {
+    
+    TL_storage_filePng *objc = [[TL_storage_filePng alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_filePdf
@@ -998,6 +1525,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_filePdf *)copy {
+    
+    TL_storage_filePdf *objc = [[TL_storage_filePdf alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileMp3
@@ -1012,6 +1549,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileMp3 *)copy {
+    
+    TL_storage_fileMp3 *objc = [[TL_storage_fileMp3 alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileMov
@@ -1026,6 +1573,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileMov *)copy {
+    
+    TL_storage_fileMov *objc = [[TL_storage_fileMov alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_filePartial
@@ -1040,6 +1597,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_filePartial *)copy {
+    
+    TL_storage_filePartial *objc = [[TL_storage_filePartial alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileMp4
@@ -1054,6 +1621,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileMp4 *)copy {
+    
+    TL_storage_fileMp4 *objc = [[TL_storage_fileMp4 alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_storage_fileWebp
@@ -1068,8 +1645,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_storage_fileWebp *)copy {
+    
+    TL_storage_fileWebp *objc = [[TL_storage_fileWebp alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLFileLocation
@@ -1093,6 +1679,18 @@
 	self.local_id = [stream readInt];
 	self.secret = [stream readLong];
 }
+        
+-(TL_fileLocationUnavailable *)copy {
+    
+    TL_fileLocationUnavailable *objc = [[TL_fileLocationUnavailable alloc] init];
+    
+    objc.volume_id = self.volume_id;
+    objc.local_id = self.local_id;
+    objc.secret = self.secret;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_fileLocation
@@ -1116,8 +1714,20 @@
 	self.local_id = [stream readInt];
 	self.secret = [stream readLong];
 }
+        
+-(TL_fileLocation *)copy {
+    
+    TL_fileLocation *objc = [[TL_fileLocation alloc] init];
+    
+    objc.dc_id = self.dc_id;
+    objc.volume_id = self.volume_id;
+    objc.local_id = self.local_id;
+    objc.secret = self.secret;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUser
@@ -1135,6 +1745,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 }
+        
+-(TL_userEmpty *)copy {
+    
+    TL_userEmpty *objc = [[TL_userEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_user
@@ -1176,6 +1796,25 @@
 	if(self.flags & (1 << 6)) self.status = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 14)) self.bot_info_version = [stream readInt];
 }
+        
+-(TL_user *)copy {
+    
+    TL_user *objc = [[TL_user alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    objc.phone = self.phone;
+    objc.photo = [self.photo copy];
+    objc.status = [self.status copy];
+    objc.bot_info_version = self.bot_info_version;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userSelf
@@ -1208,6 +1847,22 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userSelf *)copy {
+    
+    TL_userSelf *objc = [[TL_userSelf alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    objc.phone = self.phone;
+    objc.photo = [self.photo copy];
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userContact
@@ -1243,6 +1898,23 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userContact *)copy {
+    
+    TL_userContact *objc = [[TL_userContact alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    objc.access_hash = self.access_hash;
+    objc.phone = self.phone;
+    objc.photo = [self.photo copy];
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userRequest
@@ -1278,6 +1950,23 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userRequest *)copy {
+    
+    TL_userRequest *objc = [[TL_userRequest alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    objc.access_hash = self.access_hash;
+    objc.phone = self.phone;
+    objc.photo = [self.photo copy];
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userForeign
@@ -1310,6 +1999,22 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userForeign *)copy {
+    
+    TL_userForeign *objc = [[TL_userForeign alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    objc.access_hash = self.access_hash;
+    objc.photo = [self.photo copy];
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userDeleted
@@ -1333,8 +2038,20 @@
 	self.last_name = [stream readString];
 	self.username = [stream readString];
 }
+        
+-(TL_userDeleted *)copy {
+    
+    TL_userDeleted *objc = [[TL_userDeleted alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUserProfilePhoto
@@ -1352,6 +2069,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_userProfilePhotoEmpty *)copy {
+    
+    TL_userProfilePhotoEmpty *objc = [[TL_userProfilePhotoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userProfilePhoto
@@ -1372,8 +2099,19 @@
 	self.photo_small = [ClassStore TLDeserialize:stream];
 	self.photo_big = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userProfilePhoto *)copy {
+    
+    TL_userProfilePhoto *objc = [[TL_userProfilePhoto alloc] init];
+    
+    objc.photo_id = self.photo_id;
+    objc.photo_small = [self.photo_small copy];
+    objc.photo_big = [self.photo_big copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUserStatus
@@ -1391,6 +2129,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_userStatusEmpty *)copy {
+    
+    TL_userStatusEmpty *objc = [[TL_userStatusEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userStatusOnline
@@ -1405,6 +2153,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.expires = [stream readInt];
 }
+        
+-(TL_userStatusOnline *)copy {
+    
+    TL_userStatusOnline *objc = [[TL_userStatusOnline alloc] init];
+    
+    objc.expires = self.expires;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userStatusOffline
@@ -1419,6 +2177,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.was_online = [stream readInt];
 }
+        
+-(TL_userStatusOffline *)copy {
+    
+    TL_userStatusOffline *objc = [[TL_userStatusOffline alloc] init];
+    
+    objc.was_online = self.was_online;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userStatusRecently
@@ -1433,6 +2201,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_userStatusRecently *)copy {
+    
+    TL_userStatusRecently *objc = [[TL_userStatusRecently alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userStatusLastWeek
@@ -1447,6 +2225,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_userStatusLastWeek *)copy {
+    
+    TL_userStatusLastWeek *objc = [[TL_userStatusLastWeek alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_userStatusLastMonth
@@ -1461,8 +2249,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_userStatusLastMonth *)copy {
+    
+    TL_userStatusLastMonth *objc = [[TL_userStatusLastMonth alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChat
@@ -1480,6 +2277,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 }
+        
+-(TL_chatEmpty *)copy {
+    
+    TL_chatEmpty *objc = [[TL_chatEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chat
@@ -1512,6 +2319,22 @@
 	self.left = [stream readBool];
 	self.version = [stream readInt];
 }
+        
+-(TL_chat *)copy {
+    
+    TL_chat *objc = [[TL_chat alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.photo = [self.photo copy];
+    objc.participants_count = self.participants_count;
+    objc.date = self.date;
+    objc.left = self.left;
+    objc.version = self.version;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatForbidden
@@ -1532,6 +2355,18 @@
 	self.title = [stream readString];
 	self.date = [stream readInt];
 }
+        
+-(TL_chatForbidden *)copy {
+    
+    TL_chatForbidden *objc = [[TL_chatForbidden alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_geoChat
@@ -1576,8 +2411,27 @@
 	self.checked_in = [stream readBool];
 	self.version = [stream readInt];
 }
+        
+-(TL_geoChat *)copy {
+    
+    TL_geoChat *objc = [[TL_geoChat alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.title = self.title;
+    objc.address = self.address;
+    objc.venue = self.venue;
+    objc.geo = [self.geo copy];
+    objc.photo = [self.photo copy];
+    objc.participants_count = self.participants_count;
+    objc.date = self.date;
+    objc.checked_in = self.checked_in;
+    objc.version = self.version;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatFull
@@ -1629,6 +2483,21 @@
 		}
 	}
 }
+        
+-(TL_chatFull *)copy {
+    
+    TL_chatFull *objc = [[TL_chatFull alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.participants = [self.participants copy];
+    objc.chat_photo = [self.chat_photo copy];
+    objc.notify_settings = [self.notify_settings copy];
+    objc.exported_invite = [self.exported_invite copy];
+    objc.bot_info = [self.bot_info copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatFull_old29
@@ -1655,8 +2524,21 @@
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_chatFull_old29 *)copy {
+    
+    TL_chatFull_old29 *objc = [[TL_chatFull_old29 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.participants = [self.participants copy];
+    objc.chat_photo = [self.chat_photo copy];
+    objc.notify_settings = [self.notify_settings copy];
+    objc.exported_invite = [self.exported_invite copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatParticipant
@@ -1680,8 +2562,19 @@
 	self.inviter_id = [stream readInt];
 	self.date = [stream readInt];
 }
+        
+-(TL_chatParticipant *)copy {
+    
+    TL_chatParticipant *objc = [[TL_chatParticipant alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.inviter_id = self.inviter_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatParticipants
@@ -1699,6 +2592,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 }
+        
+-(TL_chatParticipantsForbidden *)copy {
+    
+    TL_chatParticipantsForbidden *objc = [[TL_chatParticipantsForbidden alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatParticipants
@@ -1741,8 +2644,20 @@
 	}
 	self.version = [stream readInt];
 }
+        
+-(TL_chatParticipants *)copy {
+    
+    TL_chatParticipants *objc = [[TL_chatParticipants alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.admin_id = self.admin_id;
+    objc.participants = [self.participants copy];
+    objc.version = self.version;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatPhoto
@@ -1760,6 +2675,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_chatPhotoEmpty *)copy {
+    
+    TL_chatPhotoEmpty *objc = [[TL_chatPhotoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatPhoto
@@ -1777,8 +2702,18 @@
 	self.photo_small = [ClassStore TLDeserialize:stream];
 	self.photo_big = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_chatPhoto *)copy {
+    
+    TL_chatPhoto *objc = [[TL_chatPhoto alloc] init];
+    
+    objc.photo_small = [self.photo_small copy];
+    objc.photo_big = [self.photo_big copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMessage
@@ -1796,6 +2731,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 }
+        
+-(TL_messageEmpty *)copy {
+    
+    TL_messageEmpty *objc = [[TL_messageEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_message
@@ -1840,6 +2785,26 @@
 	self.media = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 6)) self.reply_markup = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_message *)copy {
+    
+    TL_message *objc = [[TL_message alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.from_id = self.from_id;
+    objc.to_id = [self.to_id copy];
+    objc.fwd_from_id = self.fwd_from_id;
+    objc.fwd_date = self.fwd_date;
+    objc.reply_to_msg_id = self.reply_to_msg_id;
+    objc.date = self.date;
+    objc.message = self.message;
+    objc.media = [self.media copy];
+    objc.reply_markup = [self.reply_markup copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageService
@@ -1869,8 +2834,22 @@
 	self.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageService *)copy {
+    
+    TL_messageService *objc = [[TL_messageService alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.from_id = self.from_id;
+    objc.to_id = [self.to_id copy];
+    objc.date = self.date;
+    objc.action = [self.action copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMessageMedia
@@ -1888,6 +2867,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messageMediaEmpty *)copy {
+    
+    TL_messageMediaEmpty *objc = [[TL_messageMediaEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaPhoto
@@ -1905,6 +2894,17 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
+        
+-(TL_messageMediaPhoto *)copy {
+    
+    TL_messageMediaPhoto *objc = [[TL_messageMediaPhoto alloc] init];
+    
+    objc.photo = [self.photo copy];
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaVideo
@@ -1922,6 +2922,17 @@
 	self.video = [ClassStore TLDeserialize:stream];
 	self.caption = [stream readString];
 }
+        
+-(TL_messageMediaVideo *)copy {
+    
+    TL_messageMediaVideo *objc = [[TL_messageMediaVideo alloc] init];
+    
+    objc.video = [self.video copy];
+    objc.caption = self.caption;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaGeo
@@ -1936,6 +2947,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.geo = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageMediaGeo *)copy {
+    
+    TL_messageMediaGeo *objc = [[TL_messageMediaGeo alloc] init];
+    
+    objc.geo = [self.geo copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaContact
@@ -1959,6 +2980,19 @@
 	self.last_name = [stream readString];
 	self.user_id = [stream readInt];
 }
+        
+-(TL_messageMediaContact *)copy {
+    
+    TL_messageMediaContact *objc = [[TL_messageMediaContact alloc] init];
+    
+    objc.phone_number = self.phone_number;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaUnsupported
@@ -1973,6 +3007,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messageMediaUnsupported *)copy {
+    
+    TL_messageMediaUnsupported *objc = [[TL_messageMediaUnsupported alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaDocument
@@ -1987,6 +3031,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.document = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageMediaDocument *)copy {
+    
+    TL_messageMediaDocument *objc = [[TL_messageMediaDocument alloc] init];
+    
+    objc.document = [self.document copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaAudio
@@ -2001,6 +3055,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.audio = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageMediaAudio *)copy {
+    
+    TL_messageMediaAudio *objc = [[TL_messageMediaAudio alloc] init];
+    
+    objc.audio = [self.audio copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaWebPage
@@ -2015,6 +3079,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.webpage = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageMediaWebPage *)copy {
+    
+    TL_messageMediaWebPage *objc = [[TL_messageMediaWebPage alloc] init];
+    
+    objc.webpage = [self.webpage copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageMediaVenue
@@ -2041,8 +3115,21 @@
 	self.provider = [stream readString];
 	self.venue_id = [stream readString];
 }
+        
+-(TL_messageMediaVenue *)copy {
+    
+    TL_messageMediaVenue *objc = [[TL_messageMediaVenue alloc] init];
+    
+    objc.geo = [self.geo copy];
+    objc.title = self.title;
+    objc.address = self.address;
+    objc.provider = self.provider;
+    objc.venue_id = self.venue_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMessageAction
@@ -2060,6 +3147,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messageActionEmpty *)copy {
+    
+    TL_messageActionEmpty *objc = [[TL_messageActionEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatCreate
@@ -2096,6 +3193,17 @@
 		}
 	}
 }
+        
+-(TL_messageActionChatCreate *)copy {
+    
+    TL_messageActionChatCreate *objc = [[TL_messageActionChatCreate alloc] init];
+    
+    objc.title = self.title;
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatEditTitle
@@ -2110,6 +3218,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.title = [stream readString];
 }
+        
+-(TL_messageActionChatEditTitle *)copy {
+    
+    TL_messageActionChatEditTitle *objc = [[TL_messageActionChatEditTitle alloc] init];
+    
+    objc.title = self.title;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatEditPhoto
@@ -2124,6 +3242,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.photo = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messageActionChatEditPhoto *)copy {
+    
+    TL_messageActionChatEditPhoto *objc = [[TL_messageActionChatEditPhoto alloc] init];
+    
+    objc.photo = [self.photo copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatDeletePhoto
@@ -2138,6 +3266,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messageActionChatDeletePhoto *)copy {
+    
+    TL_messageActionChatDeletePhoto *objc = [[TL_messageActionChatDeletePhoto alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatAddUser
@@ -2152,6 +3290,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_messageActionChatAddUser *)copy {
+    
+    TL_messageActionChatAddUser *objc = [[TL_messageActionChatAddUser alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatDeleteUser
@@ -2166,6 +3314,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_messageActionChatDeleteUser *)copy {
+    
+    TL_messageActionChatDeleteUser *objc = [[TL_messageActionChatDeleteUser alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionGeoChatCreate
@@ -2183,6 +3341,17 @@
 	self.title = [stream readString];
 	self.address = [stream readString];
 }
+        
+-(TL_messageActionGeoChatCreate *)copy {
+    
+    TL_messageActionGeoChatCreate *objc = [[TL_messageActionGeoChatCreate alloc] init];
+    
+    objc.title = self.title;
+    objc.address = self.address;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionGeoChatCheckin
@@ -2197,6 +3366,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messageActionGeoChatCheckin *)copy {
+    
+    TL_messageActionGeoChatCheckin *objc = [[TL_messageActionGeoChatCheckin alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messageActionChatJoinedByLink
@@ -2211,8 +3390,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.inviter_id = [stream readInt];
 }
+        
+-(TL_messageActionChatJoinedByLink *)copy {
+    
+    TL_messageActionChatJoinedByLink *objc = [[TL_messageActionChatJoinedByLink alloc] init];
+    
+    objc.inviter_id = self.inviter_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDialog
@@ -2242,8 +3430,21 @@
 	self.unread_count = [stream readInt];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_dialog *)copy {
+    
+    TL_dialog *objc = [[TL_dialog alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.top_message = self.top_message;
+    objc.read_inbox_max_id = self.read_inbox_max_id;
+    objc.unread_count = self.unread_count;
+    objc.notify_settings = [self.notify_settings copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPhoto
@@ -2261,6 +3462,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 }
+        
+-(TL_photoEmpty *)copy {
+    
+    TL_photoEmpty *objc = [[TL_photoEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_photo
@@ -2309,8 +3520,22 @@
 		}
 	}
 }
+        
+-(TL_photo *)copy {
+    
+    TL_photo *objc = [[TL_photo alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    objc.geo = [self.geo copy];
+    objc.sizes = [self.sizes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPhotoSize
@@ -2328,6 +3553,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.type = [stream readString];
 }
+        
+-(TL_photoSizeEmpty *)copy {
+    
+    TL_photoSizeEmpty *objc = [[TL_photoSizeEmpty alloc] init];
+    
+    objc.type = self.type;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_photoSize
@@ -2354,6 +3589,20 @@
 	self.h = [stream readInt];
 	self.size = [stream readInt];
 }
+        
+-(TL_photoSize *)copy {
+    
+    TL_photoSize *objc = [[TL_photoSize alloc] init];
+    
+    objc.type = self.type;
+    objc.location = [self.location copy];
+    objc.w = self.w;
+    objc.h = self.h;
+    objc.size = self.size;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_photoCachedSize
@@ -2380,8 +3629,21 @@
 	self.h = [stream readInt];
 	self.bytes = [stream readByteArray];
 }
+        
+-(TL_photoCachedSize *)copy {
+    
+    TL_photoCachedSize *objc = [[TL_photoCachedSize alloc] init];
+    
+    objc.type = self.type;
+    objc.location = [self.location copy];
+    objc.w = self.w;
+    objc.h = self.h;
+    objc.bytes = [self.bytes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLVideo
@@ -2399,6 +3661,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 }
+        
+-(TL_videoEmpty *)copy {
+    
+    TL_videoEmpty *objc = [[TL_videoEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_video
@@ -2440,8 +3712,26 @@
 	self.w = [stream readInt];
 	self.h = [stream readInt];
 }
+        
+-(TL_video *)copy {
+    
+    TL_video *objc = [[TL_video alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    objc.duration = self.duration;
+    objc.size = self.size;
+    objc.thumb = [self.thumb copy];
+    objc.dc_id = self.dc_id;
+    objc.w = self.w;
+    objc.h = self.h;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLGeoPoint
@@ -2459,6 +3749,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_geoPointEmpty *)copy {
+    
+    TL_geoPointEmpty *objc = [[TL_geoPointEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_geoPoint
@@ -2476,8 +3776,18 @@
 	self.n_long = [stream readDouble];
 	self.lat = [stream readDouble];
 }
+        
+-(TL_geoPoint *)copy {
+    
+    TL_geoPoint *objc = [[TL_geoPoint alloc] init];
+    
+    objc.n_long = self.n_long;
+    objc.lat = self.lat;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLauth_CheckedPhone
@@ -2495,8 +3805,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.phone_registered = [stream readBool];
 }
+        
+-(TL_auth_checkedPhone *)copy {
+    
+    TL_auth_checkedPhone *objc = [[TL_auth_checkedPhone alloc] init];
+    
+    objc.phone_registered = self.phone_registered;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLauth_SentCode
@@ -2523,6 +3842,19 @@
 	self.send_call_timeout = [stream readInt];
 	self.is_password = [stream readBool];
 }
+        
+-(TL_auth_sentCode *)copy {
+    
+    TL_auth_sentCode *objc = [[TL_auth_sentCode alloc] init];
+    
+    objc.phone_registered = self.phone_registered;
+    objc.phone_code_hash = self.phone_code_hash;
+    objc.send_call_timeout = self.send_call_timeout;
+    objc.is_password = self.is_password;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_auth_sentAppCode
@@ -2546,8 +3878,20 @@
 	self.send_call_timeout = [stream readInt];
 	self.is_password = [stream readBool];
 }
+        
+-(TL_auth_sentAppCode *)copy {
+    
+    TL_auth_sentAppCode *objc = [[TL_auth_sentAppCode alloc] init];
+    
+    objc.phone_registered = self.phone_registered;
+    objc.phone_code_hash = self.phone_code_hash;
+    objc.send_call_timeout = self.send_call_timeout;
+    objc.is_password = self.is_password;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLauth_Authorization
@@ -2565,8 +3909,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_auth_authorization *)copy {
+    
+    TL_auth_authorization *objc = [[TL_auth_authorization alloc] init];
+    
+    objc.user = [self.user copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLauth_ExportedAuthorization
@@ -2587,8 +3940,18 @@
 	self.n_id = [stream readInt];
 	self.bytes = [stream readByteArray];
 }
+        
+-(TL_auth_exportedAuthorization *)copy {
+    
+    TL_auth_exportedAuthorization *objc = [[TL_auth_exportedAuthorization alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.bytes = [self.bytes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputNotifyPeer
@@ -2606,6 +3969,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputNotifyPeer *)copy {
+    
+    TL_inputNotifyPeer *objc = [[TL_inputNotifyPeer alloc] init];
+    
+    objc.peer = [self.peer copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputNotifyUsers
@@ -2620,6 +3993,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputNotifyUsers *)copy {
+    
+    TL_inputNotifyUsers *objc = [[TL_inputNotifyUsers alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputNotifyChats
@@ -2634,6 +4017,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputNotifyChats *)copy {
+    
+    TL_inputNotifyChats *objc = [[TL_inputNotifyChats alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputNotifyAll
@@ -2648,6 +4041,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputNotifyAll *)copy {
+    
+    TL_inputNotifyAll *objc = [[TL_inputNotifyAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputNotifyGeoChatPeer
@@ -2662,8 +4065,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_inputNotifyGeoChatPeer *)copy {
+    
+    TL_inputNotifyGeoChatPeer *objc = [[TL_inputNotifyGeoChatPeer alloc] init];
+    
+    objc.peer = [self.peer copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPeerNotifyEvents
@@ -2681,6 +4093,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPeerNotifyEventsEmpty *)copy {
+    
+    TL_inputPeerNotifyEventsEmpty *objc = [[TL_inputPeerNotifyEventsEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPeerNotifyEventsAll
@@ -2695,8 +4117,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPeerNotifyEventsAll *)copy {
+    
+    TL_inputPeerNotifyEventsAll *objc = [[TL_inputPeerNotifyEventsAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPeerNotifySettings
@@ -2723,8 +4154,20 @@
 	self.show_previews = [stream readBool];
 	self.events_mask = [stream readInt];
 }
+        
+-(TL_inputPeerNotifySettings *)copy {
+    
+    TL_inputPeerNotifySettings *objc = [[TL_inputPeerNotifySettings alloc] init];
+    
+    objc.mute_until = self.mute_until;
+    objc.sound = self.sound;
+    objc.show_previews = self.show_previews;
+    objc.events_mask = self.events_mask;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPeerNotifyEvents
@@ -2742,6 +4185,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_peerNotifyEventsEmpty *)copy {
+    
+    TL_peerNotifyEventsEmpty *objc = [[TL_peerNotifyEventsEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_peerNotifyEventsAll
@@ -2756,8 +4209,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_peerNotifyEventsAll *)copy {
+    
+    TL_peerNotifyEventsAll *objc = [[TL_peerNotifyEventsAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPeerNotifySettings
@@ -2775,6 +4237,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_peerNotifySettingsEmpty *)copy {
+    
+    TL_peerNotifySettingsEmpty *objc = [[TL_peerNotifySettingsEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_peerNotifySettings
@@ -2798,8 +4270,20 @@
 	self.show_previews = [stream readBool];
 	self.events_mask = [stream readInt];
 }
+        
+-(TL_peerNotifySettings *)copy {
+    
+    TL_peerNotifySettings *objc = [[TL_peerNotifySettings alloc] init];
+    
+    objc.mute_until = self.mute_until;
+    objc.sound = self.sound;
+    objc.show_previews = self.show_previews;
+    objc.events_mask = self.events_mask;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLWallPaper
@@ -2845,6 +4329,19 @@
 	}
 	self.color = [stream readInt];
 }
+        
+-(TL_wallPaper *)copy {
+    
+    TL_wallPaper *objc = [[TL_wallPaper alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.sizes = [self.sizes copy];
+    objc.color = self.color;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_wallPaperSolid
@@ -2868,8 +4365,20 @@
 	self.bg_color = [stream readInt];
 	self.color = [stream readInt];
 }
+        
+-(TL_wallPaperSolid *)copy {
+    
+    TL_wallPaperSolid *objc = [[TL_wallPaperSolid alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.bg_color = self.bg_color;
+    objc.color = self.color;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUserFull
@@ -2902,8 +4411,22 @@
 	self.blocked = [stream readBool];
 	self.bot_info = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_userFull *)copy {
+    
+    TL_userFull *objc = [[TL_userFull alloc] init];
+    
+    objc.user = [self.user copy];
+    objc.link = [self.link copy];
+    objc.profile_photo = [self.profile_photo copy];
+    objc.notify_settings = [self.notify_settings copy];
+    objc.blocked = self.blocked;
+    objc.bot_info = [self.bot_info copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContact
@@ -2924,8 +4447,18 @@
 	self.user_id = [stream readInt];
 	self.mutual = [stream readBool];
 }
+        
+-(TL_contact *)copy {
+    
+    TL_contact *objc = [[TL_contact alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.mutual = self.mutual;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLImportedContact
@@ -2946,8 +4479,18 @@
 	self.user_id = [stream readInt];
 	self.client_id = [stream readLong];
 }
+        
+-(TL_importedContact *)copy {
+    
+    TL_importedContact *objc = [[TL_importedContact alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.client_id = self.client_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContactBlocked
@@ -2968,8 +4511,18 @@
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
 }
+        
+-(TL_contactBlocked *)copy {
+    
+    TL_contactBlocked *objc = [[TL_contactBlocked alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContactSuggested
@@ -2990,8 +4543,18 @@
 	self.user_id = [stream readInt];
 	self.mutual_contacts = [stream readInt];
 }
+        
+-(TL_contactSuggested *)copy {
+    
+    TL_contactSuggested *objc = [[TL_contactSuggested alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.mutual_contacts = self.mutual_contacts;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContactStatus
@@ -3012,8 +4575,18 @@
 	self.user_id = [stream readInt];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_contactStatus *)copy {
+    
+    TL_contactStatus *objc = [[TL_contactStatus alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatLocated
@@ -3034,8 +4607,18 @@
 	self.chat_id = [stream readInt];
 	self.distance = [stream readInt];
 }
+        
+-(TL_chatLocated *)copy {
+    
+    TL_chatLocated *objc = [[TL_chatLocated alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.distance = self.distance;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_Link
@@ -3059,8 +4642,19 @@
 	self.foreign_link = [ClassStore TLDeserialize:stream];
 	self.user = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_contacts_link *)copy {
+    
+    TL_contacts_link *objc = [[TL_contacts_link alloc] init];
+    
+    objc.my_link = [self.my_link copy];
+    objc.foreign_link = [self.foreign_link copy];
+    objc.user = [self.user copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_Contacts
@@ -3078,6 +4672,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_contacts_contactsNotModified *)copy {
+    
+    TL_contacts_contactsNotModified *objc = [[TL_contacts_contactsNotModified alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_contacts_contacts
@@ -3133,8 +4737,18 @@
 		}
 	}
 }
+        
+-(TL_contacts_contacts *)copy {
+    
+    TL_contacts_contacts *objc = [[TL_contacts_contacts alloc] init];
+    
+    objc.contacts = [self.contacts copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_ImportedContacts
@@ -3215,8 +4829,19 @@
 		}
 	}
 }
+        
+-(TL_contacts_importedContacts *)copy {
+    
+    TL_contacts_importedContacts *objc = [[TL_contacts_importedContacts alloc] init];
+    
+    objc.imported = [self.imported copy];
+    objc.retry_contacts = [self.retry_contacts copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_Blocked
@@ -3275,6 +4900,17 @@
 		}
 	}
 }
+        
+-(TL_contacts_blocked *)copy {
+    
+    TL_contacts_blocked *objc = [[TL_contacts_blocked alloc] init];
+    
+    objc.blocked = [self.blocked copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_contacts_blockedSlice
@@ -3333,8 +4969,19 @@
 		}
 	}
 }
+        
+-(TL_contacts_blockedSlice *)copy {
+    
+    TL_contacts_blockedSlice *objc = [[TL_contacts_blockedSlice alloc] init];
+    
+    objc.n_count = self.n_count;
+    objc.blocked = [self.blocked copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_Suggested
@@ -3393,8 +5040,18 @@
 		}
 	}
 }
+        
+-(TL_contacts_suggested *)copy {
+    
+    TL_contacts_suggested *objc = [[TL_contacts_suggested alloc] init];
+    
+    objc.results = [self.results copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_Dialogs
@@ -3497,6 +5154,19 @@
 		}
 	}
 }
+        
+-(TL_messages_dialogs *)copy {
+    
+    TL_messages_dialogs *objc = [[TL_messages_dialogs alloc] init];
+    
+    objc.dialogs = [self.dialogs copy];
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_dialogsSlice
@@ -3599,8 +5269,21 @@
 		}
 	}
 }
+        
+-(TL_messages_dialogsSlice *)copy {
+    
+    TL_messages_dialogsSlice *objc = [[TL_messages_dialogsSlice alloc] init];
+    
+    objc.n_count = self.n_count;
+    objc.dialogs = [self.dialogs copy];
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_Messages
@@ -3681,6 +5364,18 @@
 		}
 	}
 }
+        
+-(TL_messages_messages *)copy {
+    
+    TL_messages_messages *objc = [[TL_messages_messages alloc] init];
+    
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_messagesSlice
@@ -3761,8 +5456,20 @@
 		}
 	}
 }
+        
+-(TL_messages_messagesSlice *)copy {
+    
+    TL_messages_messagesSlice *objc = [[TL_messages_messagesSlice alloc] init];
+    
+    objc.n_count = self.n_count;
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_Message
@@ -3780,8 +5487,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messages_messageEmpty *)copy {
+    
+    TL_messages_messageEmpty *objc = [[TL_messages_messageEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_SentMessage
@@ -3811,6 +5527,20 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_messages_sentMessage *)copy {
+    
+    TL_messages_sentMessage *objc = [[TL_messages_sentMessage alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.date = self.date;
+    objc.media = [self.media copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_sentMessageLink
@@ -3862,8 +5592,23 @@
 	}
 	self.seq = [stream readInt];
 }
+        
+-(TL_messages_sentMessageLink *)copy {
+    
+    TL_messages_sentMessageLink *objc = [[TL_messages_sentMessageLink alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.date = self.date;
+    objc.media = [self.media copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    objc.links = [self.links copy];
+    objc.seq = self.seq;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_Chats
@@ -3900,8 +5645,17 @@
 		}
 	}
 }
+        
+-(TL_messages_chats *)copy {
+    
+    TL_messages_chats *objc = [[TL_messages_chats alloc] init];
+    
+    objc.chats = [self.chats copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_ChatFull
@@ -3963,8 +5717,19 @@
 		}
 	}
 }
+        
+-(TL_messages_chatFull *)copy {
+    
+    TL_messages_chatFull *objc = [[TL_messages_chatFull alloc] init];
+    
+    objc.full_chat = [self.full_chat copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_AffectedHistory
@@ -3988,8 +5753,19 @@
 	self.pts_count = [stream readInt];
 	self.offset = [stream readInt];
 }
+        
+-(TL_messages_affectedHistory *)copy {
+    
+    TL_messages_affectedHistory *objc = [[TL_messages_affectedHistory alloc] init];
+    
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    objc.offset = self.offset;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMessagesFilter
@@ -4007,6 +5783,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterEmpty *)copy {
+    
+    TL_inputMessagesFilterEmpty *objc = [[TL_inputMessagesFilterEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterPhotos
@@ -4021,6 +5807,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterPhotos *)copy {
+    
+    TL_inputMessagesFilterPhotos *objc = [[TL_inputMessagesFilterPhotos alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterVideo
@@ -4035,6 +5831,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterVideo *)copy {
+    
+    TL_inputMessagesFilterVideo *objc = [[TL_inputMessagesFilterVideo alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterPhotoVideo
@@ -4049,6 +5855,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterPhotoVideo *)copy {
+    
+    TL_inputMessagesFilterPhotoVideo *objc = [[TL_inputMessagesFilterPhotoVideo alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterPhotoVideoDocuments
@@ -4063,6 +5879,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterPhotoVideoDocuments *)copy {
+    
+    TL_inputMessagesFilterPhotoVideoDocuments *objc = [[TL_inputMessagesFilterPhotoVideoDocuments alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterDocument
@@ -4077,6 +5903,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterDocument *)copy {
+    
+    TL_inputMessagesFilterDocument *objc = [[TL_inputMessagesFilterDocument alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputMessagesFilterAudio
@@ -4091,8 +5927,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputMessagesFilterAudio *)copy {
+    
+    TL_inputMessagesFilterAudio *objc = [[TL_inputMessagesFilterAudio alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUpdate
@@ -4116,6 +5961,18 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_updateNewMessage *)copy {
+    
+    TL_updateNewMessage *objc = [[TL_updateNewMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateMessageID
@@ -4133,6 +5990,17 @@
 	self.n_id = [stream readInt];
 	self.random_id = [stream readLong];
 }
+        
+-(TL_updateMessageID *)copy {
+    
+    TL_updateMessageID *objc = [[TL_updateMessageID alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.random_id = self.random_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateDeleteMessages
@@ -4172,6 +6040,18 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_updateDeleteMessages *)copy {
+    
+    TL_updateDeleteMessages *objc = [[TL_updateDeleteMessages alloc] init];
+    
+    objc.messages = [self.messages copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserTyping
@@ -4189,6 +6069,17 @@
 	self.user_id = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateUserTyping *)copy {
+    
+    TL_updateUserTyping *objc = [[TL_updateUserTyping alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.action = [self.action copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateChatUserTyping
@@ -4209,6 +6100,18 @@
 	self.user_id = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateChatUserTyping *)copy {
+    
+    TL_updateChatUserTyping *objc = [[TL_updateChatUserTyping alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.user_id = self.user_id;
+    objc.action = [self.action copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateChatParticipants
@@ -4223,6 +6126,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.participants = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateChatParticipants *)copy {
+    
+    TL_updateChatParticipants *objc = [[TL_updateChatParticipants alloc] init];
+    
+    objc.participants = [self.participants copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserStatus
@@ -4240,6 +6153,17 @@
 	self.user_id = [stream readInt];
 	self.status = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateUserStatus *)copy {
+    
+    TL_updateUserStatus *objc = [[TL_updateUserStatus alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.status = [self.status copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserName
@@ -4263,6 +6187,19 @@
 	self.last_name = [stream readString];
 	self.username = [stream readString];
 }
+        
+-(TL_updateUserName *)copy {
+    
+    TL_updateUserName *objc = [[TL_updateUserName alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.first_name = self.first_name;
+    objc.last_name = self.last_name;
+    objc.username = self.username;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserPhoto
@@ -4286,6 +6223,19 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.previous = [stream readBool];
 }
+        
+-(TL_updateUserPhoto *)copy {
+    
+    TL_updateUserPhoto *objc = [[TL_updateUserPhoto alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    objc.photo = [self.photo copy];
+    objc.previous = self.previous;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateContactRegistered
@@ -4303,6 +6253,17 @@
 	self.user_id = [stream readInt];
 	self.date = [stream readInt];
 }
+        
+-(TL_updateContactRegistered *)copy {
+    
+    TL_updateContactRegistered *objc = [[TL_updateContactRegistered alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateContactLink
@@ -4323,6 +6284,18 @@
 	self.my_link = [ClassStore TLDeserialize:stream];
 	self.foreign_link = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateContactLink *)copy {
+    
+    TL_updateContactLink *objc = [[TL_updateContactLink alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.my_link = [self.my_link copy];
+    objc.foreign_link = [self.foreign_link copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateNewAuthorization
@@ -4346,6 +6319,19 @@
 	self.device = [stream readString];
 	self.location = [stream readString];
 }
+        
+-(TL_updateNewAuthorization *)copy {
+    
+    TL_updateNewAuthorization *objc = [[TL_updateNewAuthorization alloc] init];
+    
+    objc.auth_key_id = self.auth_key_id;
+    objc.date = self.date;
+    objc.device = self.device;
+    objc.location = self.location;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateNewGeoChatMessage
@@ -4360,6 +6346,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.message = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateNewGeoChatMessage *)copy {
+    
+    TL_updateNewGeoChatMessage *objc = [[TL_updateNewGeoChatMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateNewEncryptedMessage
@@ -4377,6 +6373,17 @@
 	self.message = [ClassStore TLDeserialize:stream];
 	self.qts = [stream readInt];
 }
+        
+-(TL_updateNewEncryptedMessage *)copy {
+    
+    TL_updateNewEncryptedMessage *objc = [[TL_updateNewEncryptedMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    objc.qts = self.qts;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateEncryptedChatTyping
@@ -4391,6 +6398,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 }
+        
+-(TL_updateEncryptedChatTyping *)copy {
+    
+    TL_updateEncryptedChatTyping *objc = [[TL_updateEncryptedChatTyping alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateEncryption
@@ -4408,6 +6425,17 @@
 	self.chat = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 }
+        
+-(TL_updateEncryption *)copy {
+    
+    TL_updateEncryption *objc = [[TL_updateEncryption alloc] init];
+    
+    objc.chat = [self.chat copy];
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateEncryptedMessagesRead
@@ -4428,6 +6456,18 @@
 	self.max_date = [stream readInt];
 	self.date = [stream readInt];
 }
+        
+-(TL_updateEncryptedMessagesRead *)copy {
+    
+    TL_updateEncryptedMessagesRead *objc = [[TL_updateEncryptedMessagesRead alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.max_date = self.max_date;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateChatParticipantAdd
@@ -4451,6 +6491,19 @@
 	self.inviter_id = [stream readInt];
 	self.version = [stream readInt];
 }
+        
+-(TL_updateChatParticipantAdd *)copy {
+    
+    TL_updateChatParticipantAdd *objc = [[TL_updateChatParticipantAdd alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.user_id = self.user_id;
+    objc.inviter_id = self.inviter_id;
+    objc.version = self.version;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateChatParticipantDelete
@@ -4471,6 +6524,18 @@
 	self.user_id = [stream readInt];
 	self.version = [stream readInt];
 }
+        
+-(TL_updateChatParticipantDelete *)copy {
+    
+    TL_updateChatParticipantDelete *objc = [[TL_updateChatParticipantDelete alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.user_id = self.user_id;
+    objc.version = self.version;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateDcOptions
@@ -4504,6 +6569,16 @@
 		}
 	}
 }
+        
+-(TL_updateDcOptions *)copy {
+    
+    TL_updateDcOptions *objc = [[TL_updateDcOptions alloc] init];
+    
+    objc.dc_options = [self.dc_options copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserBlocked
@@ -4521,6 +6596,17 @@
 	self.user_id = [stream readInt];
 	self.blocked = [stream readBool];
 }
+        
+-(TL_updateUserBlocked *)copy {
+    
+    TL_updateUserBlocked *objc = [[TL_updateUserBlocked alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.blocked = self.blocked;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateNotifySettings
@@ -4538,6 +6624,17 @@
 	self.peer = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateNotifySettings *)copy {
+    
+    TL_updateNotifySettings *objc = [[TL_updateNotifySettings alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.notify_settings = [self.notify_settings copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateServiceNotification
@@ -4561,6 +6658,19 @@
 	self.media = [ClassStore TLDeserialize:stream];
 	self.popup = [stream readBool];
 }
+        
+-(TL_updateServiceNotification *)copy {
+    
+    TL_updateServiceNotification *objc = [[TL_updateServiceNotification alloc] init];
+    
+    objc.type = self.type;
+    objc.message = self.message;
+    objc.media = [self.media copy];
+    objc.popup = self.popup;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updatePrivacy
@@ -4597,6 +6707,17 @@
 		}
 	}
 }
+        
+-(TL_updatePrivacy *)copy {
+    
+    TL_updatePrivacy *objc = [[TL_updatePrivacy alloc] init];
+    
+    objc.n_key = [self.n_key copy];
+    objc.rules = [self.rules copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateUserPhone
@@ -4614,6 +6735,17 @@
 	self.user_id = [stream readInt];
 	self.phone = [stream readString];
 }
+        
+-(TL_updateUserPhone *)copy {
+    
+    TL_updateUserPhone *objc = [[TL_updateUserPhone alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.phone = self.phone;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateReadHistoryInbox
@@ -4637,6 +6769,19 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_updateReadHistoryInbox *)copy {
+    
+    TL_updateReadHistoryInbox *objc = [[TL_updateReadHistoryInbox alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.max_id = self.max_id;
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateReadHistoryOutbox
@@ -4660,6 +6805,19 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_updateReadHistoryOutbox *)copy {
+    
+    TL_updateReadHistoryOutbox *objc = [[TL_updateReadHistoryOutbox alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.max_id = self.max_id;
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateWebPage
@@ -4674,6 +6832,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.webpage = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updateWebPage *)copy {
+    
+    TL_updateWebPage *objc = [[TL_updateWebPage alloc] init];
+    
+    objc.webpage = [self.webpage copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateReadMessagesContents
@@ -4713,8 +6881,19 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_updateReadMessagesContents *)copy {
+    
+    TL_updateReadMessagesContents *objc = [[TL_updateReadMessagesContents alloc] init];
+    
+    objc.messages = [self.messages copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLupdates_State
@@ -4744,8 +6923,21 @@
 	self.seq = [stream readInt];
 	self.unread_count = [stream readInt];
 }
+        
+-(TL_updates_state *)copy {
+    
+    TL_updates_state *objc = [[TL_updates_state alloc] init];
+    
+    objc.pts = self.pts;
+    objc.qts = self.qts;
+    objc.date = self.date;
+    objc.seq = self.seq;
+    objc.unread_count = self.unread_count;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLupdates_Difference
@@ -4766,6 +6958,17 @@
 	self.date = [stream readInt];
 	self.seq = [stream readInt];
 }
+        
+-(TL_updates_differenceEmpty *)copy {
+    
+    TL_updates_differenceEmpty *objc = [[TL_updates_differenceEmpty alloc] init];
+    
+    objc.date = self.date;
+    objc.seq = self.seq;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updates_difference
@@ -4890,6 +7093,21 @@
 	}
 	self.state = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updates_difference *)copy {
+    
+    TL_updates_difference *objc = [[TL_updates_difference alloc] init];
+    
+    objc.n_messages = [self.n_messages copy];
+    objc.n_encrypted_messages = [self.n_encrypted_messages copy];
+    objc.other_updates = [self.other_updates copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    objc.state = [self.state copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updates_differenceSlice
@@ -5014,8 +7232,22 @@
 	}
 	self.intermediate_state = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_updates_differenceSlice *)copy {
+    
+    TL_updates_differenceSlice *objc = [[TL_updates_differenceSlice alloc] init];
+    
+    objc.n_messages = [self.n_messages copy];
+    objc.n_encrypted_messages = [self.n_encrypted_messages copy];
+    objc.other_updates = [self.other_updates copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    objc.intermediate_state = [self.intermediate_state copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLUpdates
@@ -5033,6 +7265,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_updatesTooLong *)copy {
+    
+    TL_updatesTooLong *objc = [[TL_updatesTooLong alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateShortMessage
@@ -5074,6 +7316,25 @@
 	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
 	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 }
+        
+-(TL_updateShortMessage *)copy {
+    
+    TL_updateShortMessage *objc = [[TL_updateShortMessage alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.user_id = self.user_id;
+    objc.message = self.message;
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    objc.date = self.date;
+    objc.fwd_from_id = self.fwd_from_id;
+    objc.fwd_date = self.fwd_date;
+    objc.reply_to_msg_id = self.reply_to_msg_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateShortChatMessage
@@ -5118,6 +7379,26 @@
 	if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
 	if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
 }
+        
+-(TL_updateShortChatMessage *)copy {
+    
+    TL_updateShortChatMessage *objc = [[TL_updateShortChatMessage alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.from_id = self.from_id;
+    objc.chat_id = self.chat_id;
+    objc.message = self.message;
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    objc.date = self.date;
+    objc.fwd_from_id = self.fwd_from_id;
+    objc.fwd_date = self.fwd_date;
+    objc.reply_to_msg_id = self.reply_to_msg_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updateShort
@@ -5135,6 +7416,17 @@
 	self.update = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 }
+        
+-(TL_updateShort *)copy {
+    
+    TL_updateShort *objc = [[TL_updateShort alloc] init];
+    
+    objc.update = [self.update copy];
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updatesCombined
@@ -5221,6 +7513,21 @@
 	self.seq_start = [stream readInt];
 	self.seq = [stream readInt];
 }
+        
+-(TL_updatesCombined *)copy {
+    
+    TL_updatesCombined *objc = [[TL_updatesCombined alloc] init];
+    
+    objc.updates = [self.updates copy];
+    objc.users = [self.users copy];
+    objc.chats = [self.chats copy];
+    objc.date = self.date;
+    objc.seq_start = self.seq_start;
+    objc.seq = self.seq;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_updates
@@ -5304,8 +7611,21 @@
 	self.date = [stream readInt];
 	self.seq = [stream readInt];
 }
+        
+-(TL_updates *)copy {
+    
+    TL_updates *objc = [[TL_updates alloc] init];
+    
+    objc.updates = [self.updates copy];
+    objc.users = [self.users copy];
+    objc.chats = [self.chats copy];
+    objc.date = self.date;
+    objc.seq = self.seq;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLphotos_Photos
@@ -5364,6 +7684,17 @@
 		}
 	}
 }
+        
+-(TL_photos_photos *)copy {
+    
+    TL_photos_photos *objc = [[TL_photos_photos alloc] init];
+    
+    objc.photos = [self.photos copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_photos_photosSlice
@@ -5422,8 +7753,19 @@
 		}
 	}
 }
+        
+-(TL_photos_photosSlice *)copy {
+    
+    TL_photos_photosSlice *objc = [[TL_photos_photosSlice alloc] init];
+    
+    objc.n_count = self.n_count;
+    objc.photos = [self.photos copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLphotos_Photo
@@ -5463,8 +7805,18 @@
 		}
 	}
 }
+        
+-(TL_photos_photo *)copy {
+    
+    TL_photos_photo *objc = [[TL_photos_photo alloc] init];
+    
+    objc.photo = [self.photo copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLupload_File
@@ -5488,8 +7840,19 @@
 	self.mtime = [stream readInt];
 	self.bytes = [stream readByteArray];
 }
+        
+-(TL_upload_file *)copy {
+    
+    TL_upload_file *objc = [[TL_upload_file alloc] init];
+    
+    objc.type = [self.type copy];
+    objc.mtime = self.mtime;
+    objc.bytes = [self.bytes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDcOption
@@ -5516,8 +7879,20 @@
 	self.ip_address = [stream readString];
 	self.port = [stream readInt];
 }
+        
+-(TL_dcOption *)copy {
+    
+    TL_dcOption *objc = [[TL_dcOption alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.ip_address = self.ip_address;
+    objc.port = self.port;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLConfig
@@ -5624,8 +7999,34 @@
 		}
 	}
 }
+        
+-(TL_config *)copy {
+    
+    TL_config *objc = [[TL_config alloc] init];
+    
+    objc.date = self.date;
+    objc.expires = self.expires;
+    objc.test_mode = self.test_mode;
+    objc.this_dc = self.this_dc;
+    objc.dc_options = [self.dc_options copy];
+    objc.chat_size_max = self.chat_size_max;
+    objc.broadcast_size_max = self.broadcast_size_max;
+    objc.forwarded_count_max = self.forwarded_count_max;
+    objc.online_update_period_ms = self.online_update_period_ms;
+    objc.offline_blur_timeout_ms = self.offline_blur_timeout_ms;
+    objc.offline_idle_timeout_ms = self.offline_idle_timeout_ms;
+    objc.online_cloud_timeout_ms = self.online_cloud_timeout_ms;
+    objc.notify_cloud_delay_ms = self.notify_cloud_delay_ms;
+    objc.notify_default_delay_ms = self.notify_default_delay_ms;
+    objc.chat_big_size = self.chat_big_size;
+    objc.push_chat_period_ms = self.push_chat_period_ms;
+    objc.push_chat_limit = self.push_chat_limit;
+    objc.disabled_features = [self.disabled_features copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLNearestDc
@@ -5649,8 +8050,19 @@
 	self.this_dc = [stream readInt];
 	self.nearest_dc = [stream readInt];
 }
+        
+-(TL_nearestDc *)copy {
+    
+    TL_nearestDc *objc = [[TL_nearestDc alloc] init];
+    
+    objc.country = self.country;
+    objc.this_dc = self.this_dc;
+    objc.nearest_dc = self.nearest_dc;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLhelp_AppUpdate
@@ -5677,6 +8089,19 @@
 	self.url = [stream readString];
 	self.text = [stream readString];
 }
+        
+-(TL_help_appUpdate *)copy {
+    
+    TL_help_appUpdate *objc = [[TL_help_appUpdate alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.critical = self.critical;
+    objc.url = self.url;
+    objc.text = self.text;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_help_noAppUpdate
@@ -5691,8 +8116,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_help_noAppUpdate *)copy {
+    
+    TL_help_noAppUpdate *objc = [[TL_help_noAppUpdate alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLhelp_InviteText
@@ -5710,8 +8144,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.message = [stream readString];
 }
+        
+-(TL_help_inviteText *)copy {
+    
+    TL_help_inviteText *objc = [[TL_help_inviteText alloc] init];
+    
+    objc.message = self.message;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputGeoChat
@@ -5732,8 +8175,18 @@
 	self.chat_id = [stream readInt];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputGeoChat *)copy {
+    
+    TL_inputGeoChat *objc = [[TL_inputGeoChat alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLGeoChatMessage
@@ -5754,6 +8207,17 @@
 	self.chat_id = [stream readInt];
 	self.n_id = [stream readInt];
 }
+        
+-(TL_geoChatMessageEmpty *)copy {
+    
+    TL_geoChatMessageEmpty *objc = [[TL_geoChatMessageEmpty alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_geoChatMessage
@@ -5783,6 +8247,21 @@
 	self.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_geoChatMessage *)copy {
+    
+    TL_geoChatMessage *objc = [[TL_geoChatMessage alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.n_id = self.n_id;
+    objc.from_id = self.from_id;
+    objc.date = self.date;
+    objc.message = self.message;
+    objc.media = [self.media copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_geoChatMessageService
@@ -5809,8 +8288,21 @@
 	self.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_geoChatMessageService *)copy {
+    
+    TL_geoChatMessageService *objc = [[TL_geoChatMessageService alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.n_id = self.n_id;
+    objc.from_id = self.from_id;
+    objc.date = self.date;
+    objc.action = [self.action copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLgeochats_StatedMessage
@@ -5875,8 +8367,20 @@
 	}
 	self.seq = [stream readInt];
 }
+        
+-(TL_geochats_statedMessage *)copy {
+    
+    TL_geochats_statedMessage *objc = [[TL_geochats_statedMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    objc.seq = self.seq;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLgeochats_Located
@@ -5979,8 +8483,20 @@
 		}
 	}
 }
+        
+-(TL_geochats_located *)copy {
+    
+    TL_geochats_located *objc = [[TL_geochats_located alloc] init];
+    
+    objc.results = [self.results copy];
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLgeochats_Messages
@@ -6061,6 +8577,18 @@
 		}
 	}
 }
+        
+-(TL_geochats_messages *)copy {
+    
+    TL_geochats_messages *objc = [[TL_geochats_messages alloc] init];
+    
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_geochats_messagesSlice
@@ -6141,8 +8669,20 @@
 		}
 	}
 }
+        
+-(TL_geochats_messagesSlice *)copy {
+    
+    TL_geochats_messagesSlice *objc = [[TL_geochats_messagesSlice alloc] init];
+    
+    objc.n_count = self.n_count;
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLEncryptedChat
@@ -6160,6 +8700,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 }
+        
+-(TL_encryptedChatEmpty *)copy {
+    
+    TL_encryptedChatEmpty *objc = [[TL_encryptedChatEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedChatWaiting
@@ -6186,6 +8736,20 @@
 	self.admin_id = [stream readInt];
 	self.participant_id = [stream readInt];
 }
+        
+-(TL_encryptedChatWaiting *)copy {
+    
+    TL_encryptedChatWaiting *objc = [[TL_encryptedChatWaiting alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.date = self.date;
+    objc.admin_id = self.admin_id;
+    objc.participant_id = self.participant_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedChatRequested
@@ -6215,6 +8779,21 @@
 	self.participant_id = [stream readInt];
 	self.g_a = [stream readByteArray];
 }
+        
+-(TL_encryptedChatRequested *)copy {
+    
+    TL_encryptedChatRequested *objc = [[TL_encryptedChatRequested alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.date = self.date;
+    objc.admin_id = self.admin_id;
+    objc.participant_id = self.participant_id;
+    objc.g_a = [self.g_a copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedChat
@@ -6247,6 +8826,22 @@
 	self.g_a_or_b = [stream readByteArray];
 	self.key_fingerprint = [stream readLong];
 }
+        
+-(TL_encryptedChat *)copy {
+    
+    TL_encryptedChat *objc = [[TL_encryptedChat alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.date = self.date;
+    objc.admin_id = self.admin_id;
+    objc.participant_id = self.participant_id;
+    objc.g_a_or_b = [self.g_a_or_b copy];
+    objc.key_fingerprint = self.key_fingerprint;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedChatDiscarded
@@ -6261,8 +8856,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
 }
+        
+-(TL_encryptedChatDiscarded *)copy {
+    
+    TL_encryptedChatDiscarded *objc = [[TL_encryptedChatDiscarded alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputEncryptedChat
@@ -6283,8 +8887,18 @@
 	self.chat_id = [stream readInt];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputEncryptedChat *)copy {
+    
+    TL_inputEncryptedChat *objc = [[TL_inputEncryptedChat alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLEncryptedFile
@@ -6302,6 +8916,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_encryptedFileEmpty *)copy {
+    
+    TL_encryptedFileEmpty *objc = [[TL_encryptedFileEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedFile
@@ -6328,8 +8952,21 @@
 	self.dc_id = [stream readInt];
 	self.key_fingerprint = [stream readInt];
 }
+        
+-(TL_encryptedFile *)copy {
+    
+    TL_encryptedFile *objc = [[TL_encryptedFile alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.size = self.size;
+    objc.dc_id = self.dc_id;
+    objc.key_fingerprint = self.key_fingerprint;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputEncryptedFile
@@ -6347,6 +8984,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputEncryptedFileEmpty *)copy {
+    
+    TL_inputEncryptedFileEmpty *objc = [[TL_inputEncryptedFileEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputEncryptedFileUploaded
@@ -6370,6 +9017,19 @@
 	self.md5_checksum = [stream readString];
 	self.key_fingerprint = [stream readInt];
 }
+        
+-(TL_inputEncryptedFileUploaded *)copy {
+    
+    TL_inputEncryptedFileUploaded *objc = [[TL_inputEncryptedFileUploaded alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.parts = self.parts;
+    objc.md5_checksum = self.md5_checksum;
+    objc.key_fingerprint = self.key_fingerprint;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputEncryptedFile
@@ -6387,6 +9047,17 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputEncryptedFile *)copy {
+    
+    TL_inputEncryptedFile *objc = [[TL_inputEncryptedFile alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputEncryptedFileBigUploaded
@@ -6407,8 +9078,19 @@
 	self.parts = [stream readInt];
 	self.key_fingerprint = [stream readInt];
 }
+        
+-(TL_inputEncryptedFileBigUploaded *)copy {
+    
+    TL_inputEncryptedFileBigUploaded *objc = [[TL_inputEncryptedFileBigUploaded alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.parts = self.parts;
+    objc.key_fingerprint = self.key_fingerprint;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLEncryptedMessage
@@ -6438,6 +9120,20 @@
 	self.bytes = [stream readByteArray];
 	self.file = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_encryptedMessage *)copy {
+    
+    TL_encryptedMessage *objc = [[TL_encryptedMessage alloc] init];
+    
+    objc.random_id = self.random_id;
+    objc.chat_id = self.chat_id;
+    objc.date = self.date;
+    objc.bytes = [self.bytes copy];
+    objc.file = [self.file copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_encryptedMessageService
@@ -6461,8 +9157,20 @@
 	self.date = [stream readInt];
 	self.bytes = [stream readByteArray];
 }
+        
+-(TL_encryptedMessageService *)copy {
+    
+    TL_encryptedMessageService *objc = [[TL_encryptedMessageService alloc] init];
+    
+    objc.random_id = self.random_id;
+    objc.chat_id = self.chat_id;
+    objc.date = self.date;
+    objc.bytes = [self.bytes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_DhConfig
@@ -6480,6 +9188,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.random = [stream readByteArray];
 }
+        
+-(TL_messages_dhConfigNotModified *)copy {
+    
+    TL_messages_dhConfigNotModified *objc = [[TL_messages_dhConfigNotModified alloc] init];
+    
+    objc.random = [self.random copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_dhConfig
@@ -6503,8 +9221,20 @@
 	self.version = [stream readInt];
 	self.random = [stream readByteArray];
 }
+        
+-(TL_messages_dhConfig *)copy {
+    
+    TL_messages_dhConfig *objc = [[TL_messages_dhConfig alloc] init];
+    
+    objc.g = self.g;
+    objc.p = [self.p copy];
+    objc.version = self.version;
+    objc.random = [self.random copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_SentEncryptedMessage
@@ -6522,6 +9252,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.date = [stream readInt];
 }
+        
+-(TL_messages_sentEncryptedMessage *)copy {
+    
+    TL_messages_sentEncryptedMessage *objc = [[TL_messages_sentEncryptedMessage alloc] init];
+    
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_sentEncryptedFile
@@ -6539,8 +9279,18 @@
 	self.date = [stream readInt];
 	self.file = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_messages_sentEncryptedFile *)copy {
+    
+    TL_messages_sentEncryptedFile *objc = [[TL_messages_sentEncryptedFile alloc] init];
+    
+    objc.date = self.date;
+    objc.file = [self.file copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputAudio
@@ -6558,6 +9308,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputAudioEmpty *)copy {
+    
+    TL_inputAudioEmpty *objc = [[TL_inputAudioEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputAudio
@@ -6575,8 +9335,18 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputAudio *)copy {
+    
+    TL_inputAudio *objc = [[TL_inputAudio alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputDocument
@@ -6594,6 +9364,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputDocumentEmpty *)copy {
+    
+    TL_inputDocumentEmpty *objc = [[TL_inputDocumentEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputDocument
@@ -6611,8 +9391,18 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputDocument *)copy {
+    
+    TL_inputDocument *objc = [[TL_inputDocument alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLAudio
@@ -6630,6 +9420,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 }
+        
+-(TL_audioEmpty *)copy {
+    
+    TL_audioEmpty *objc = [[TL_audioEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_audio
@@ -6665,8 +9465,24 @@
 	self.size = [stream readInt];
 	self.dc_id = [stream readInt];
 }
+        
+-(TL_audio *)copy {
+    
+    TL_audio *objc = [[TL_audio alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    objc.duration = self.duration;
+    objc.mime_type = self.mime_type;
+    objc.size = self.size;
+    objc.dc_id = self.dc_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDocument
@@ -6684,6 +9500,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 }
+        
+-(TL_documentEmpty *)copy {
+    
+    TL_documentEmpty *objc = [[TL_documentEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_document
@@ -6738,8 +9564,24 @@
 		}
 	}
 }
+        
+-(TL_document *)copy {
+    
+    TL_document *objc = [[TL_document alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.date = self.date;
+    objc.mime_type = self.mime_type;
+    objc.size = self.size;
+    objc.thumb = [self.thumb copy];
+    objc.dc_id = self.dc_id;
+    objc.attributes = [self.attributes copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLhelp_Support
@@ -6760,8 +9602,18 @@
 	self.phone_number = [stream readString];
 	self.user = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_help_support *)copy {
+    
+    TL_help_support *objc = [[TL_help_support alloc] init];
+    
+    objc.phone_number = self.phone_number;
+    objc.user = [self.user copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLNotifyPeer
@@ -6779,6 +9631,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_notifyPeer *)copy {
+    
+    TL_notifyPeer *objc = [[TL_notifyPeer alloc] init];
+    
+    objc.peer = [self.peer copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_notifyUsers
@@ -6793,6 +9655,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_notifyUsers *)copy {
+    
+    TL_notifyUsers *objc = [[TL_notifyUsers alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_notifyChats
@@ -6807,6 +9679,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_notifyChats *)copy {
+    
+    TL_notifyChats *objc = [[TL_notifyChats alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_notifyAll
@@ -6821,8 +9703,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_notifyAll *)copy {
+    
+    TL_notifyAll *objc = [[TL_notifyAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLSendMessageAction
@@ -6840,6 +9731,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageTypingAction *)copy {
+    
+    TL_sendMessageTypingAction *objc = [[TL_sendMessageTypingAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageCancelAction
@@ -6854,6 +9755,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageCancelAction *)copy {
+    
+    TL_sendMessageCancelAction *objc = [[TL_sendMessageCancelAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageRecordVideoAction
@@ -6868,6 +9779,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageRecordVideoAction *)copy {
+    
+    TL_sendMessageRecordVideoAction *objc = [[TL_sendMessageRecordVideoAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageUploadVideoAction
@@ -6882,6 +9803,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.progress = [stream readInt];
 }
+        
+-(TL_sendMessageUploadVideoAction *)copy {
+    
+    TL_sendMessageUploadVideoAction *objc = [[TL_sendMessageUploadVideoAction alloc] init];
+    
+    objc.progress = self.progress;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageRecordAudioAction
@@ -6896,6 +9827,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageRecordAudioAction *)copy {
+    
+    TL_sendMessageRecordAudioAction *objc = [[TL_sendMessageRecordAudioAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageUploadAudioAction
@@ -6910,6 +9851,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.progress = [stream readInt];
 }
+        
+-(TL_sendMessageUploadAudioAction *)copy {
+    
+    TL_sendMessageUploadAudioAction *objc = [[TL_sendMessageUploadAudioAction alloc] init];
+    
+    objc.progress = self.progress;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageUploadPhotoAction
@@ -6924,6 +9875,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.progress = [stream readInt];
 }
+        
+-(TL_sendMessageUploadPhotoAction *)copy {
+    
+    TL_sendMessageUploadPhotoAction *objc = [[TL_sendMessageUploadPhotoAction alloc] init];
+    
+    objc.progress = self.progress;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageUploadDocumentAction
@@ -6938,6 +9899,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.progress = [stream readInt];
 }
+        
+-(TL_sendMessageUploadDocumentAction *)copy {
+    
+    TL_sendMessageUploadDocumentAction *objc = [[TL_sendMessageUploadDocumentAction alloc] init];
+    
+    objc.progress = self.progress;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageGeoLocationAction
@@ -6952,6 +9923,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageGeoLocationAction *)copy {
+    
+    TL_sendMessageGeoLocationAction *objc = [[TL_sendMessageGeoLocationAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_sendMessageChooseContactAction
@@ -6966,8 +9947,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_sendMessageChooseContactAction *)copy {
+    
+    TL_sendMessageChooseContactAction *objc = [[TL_sendMessageChooseContactAction alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContactFound
@@ -6985,8 +9975,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.user_id = [stream readInt];
 }
+        
+-(TL_contactFound *)copy {
+    
+    TL_contactFound *objc = [[TL_contactFound alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLcontacts_Found
@@ -7045,8 +10044,18 @@
 		}
 	}
 }
+        
+-(TL_contacts_found *)copy {
+    
+    TL_contacts_found *objc = [[TL_contacts_found alloc] init];
+    
+    objc.results = [self.results copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPrivacyKey
@@ -7064,8 +10073,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPrivacyKeyStatusTimestamp *)copy {
+    
+    TL_inputPrivacyKeyStatusTimestamp *objc = [[TL_inputPrivacyKeyStatusTimestamp alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPrivacyKey
@@ -7083,8 +10101,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_privacyKeyStatusTimestamp *)copy {
+    
+    TL_privacyKeyStatusTimestamp *objc = [[TL_privacyKeyStatusTimestamp alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputPrivacyRule
@@ -7102,6 +10129,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPrivacyValueAllowContacts *)copy {
+    
+    TL_inputPrivacyValueAllowContacts *objc = [[TL_inputPrivacyValueAllowContacts alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPrivacyValueAllowAll
@@ -7116,6 +10153,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPrivacyValueAllowAll *)copy {
+    
+    TL_inputPrivacyValueAllowAll *objc = [[TL_inputPrivacyValueAllowAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPrivacyValueAllowUsers
@@ -7149,6 +10196,16 @@
 		}
 	}
 }
+        
+-(TL_inputPrivacyValueAllowUsers *)copy {
+    
+    TL_inputPrivacyValueAllowUsers *objc = [[TL_inputPrivacyValueAllowUsers alloc] init];
+    
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPrivacyValueDisallowContacts
@@ -7163,6 +10220,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPrivacyValueDisallowContacts *)copy {
+    
+    TL_inputPrivacyValueDisallowContacts *objc = [[TL_inputPrivacyValueDisallowContacts alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPrivacyValueDisallowAll
@@ -7177,6 +10244,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputPrivacyValueDisallowAll *)copy {
+    
+    TL_inputPrivacyValueDisallowAll *objc = [[TL_inputPrivacyValueDisallowAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputPrivacyValueDisallowUsers
@@ -7210,8 +10287,17 @@
 		}
 	}
 }
+        
+-(TL_inputPrivacyValueDisallowUsers *)copy {
+    
+    TL_inputPrivacyValueDisallowUsers *objc = [[TL_inputPrivacyValueDisallowUsers alloc] init];
+    
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPrivacyRule
@@ -7229,6 +10315,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_privacyValueAllowContacts *)copy {
+    
+    TL_privacyValueAllowContacts *objc = [[TL_privacyValueAllowContacts alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_privacyValueAllowAll
@@ -7243,6 +10339,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_privacyValueAllowAll *)copy {
+    
+    TL_privacyValueAllowAll *objc = [[TL_privacyValueAllowAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_privacyValueAllowUsers
@@ -7276,6 +10382,16 @@
 		}
 	}
 }
+        
+-(TL_privacyValueAllowUsers *)copy {
+    
+    TL_privacyValueAllowUsers *objc = [[TL_privacyValueAllowUsers alloc] init];
+    
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_privacyValueDisallowContacts
@@ -7290,6 +10406,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_privacyValueDisallowContacts *)copy {
+    
+    TL_privacyValueDisallowContacts *objc = [[TL_privacyValueDisallowContacts alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_privacyValueDisallowAll
@@ -7304,6 +10430,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_privacyValueDisallowAll *)copy {
+    
+    TL_privacyValueDisallowAll *objc = [[TL_privacyValueDisallowAll alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_privacyValueDisallowUsers
@@ -7337,8 +10473,17 @@
 		}
 	}
 }
+        
+-(TL_privacyValueDisallowUsers *)copy {
+    
+    TL_privacyValueDisallowUsers *objc = [[TL_privacyValueDisallowUsers alloc] init];
+    
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_PrivacyRules
@@ -7397,8 +10542,18 @@
 		}
 	}
 }
+        
+-(TL_account_privacyRules *)copy {
+    
+    TL_account_privacyRules *objc = [[TL_account_privacyRules alloc] init];
+    
+    objc.rules = [self.rules copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLAccountDaysTTL
@@ -7416,8 +10571,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.days = [stream readInt];
 }
+        
+-(TL_accountDaysTTL *)copy {
+    
+    TL_accountDaysTTL *objc = [[TL_accountDaysTTL alloc] init];
+    
+    objc.days = self.days;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_SentChangePhoneCode
@@ -7438,8 +10602,18 @@
 	self.phone_code_hash = [stream readString];
 	self.send_call_timeout = [stream readInt];
 }
+        
+-(TL_account_sentChangePhoneCode *)copy {
+    
+    TL_account_sentChangePhoneCode *objc = [[TL_account_sentChangePhoneCode alloc] init];
+    
+    objc.phone_code_hash = self.phone_code_hash;
+    objc.send_call_timeout = self.send_call_timeout;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDocumentAttribute
@@ -7460,6 +10634,17 @@
 	self.w = [stream readInt];
 	self.h = [stream readInt];
 }
+        
+-(TL_documentAttributeImageSize *)copy {
+    
+    TL_documentAttributeImageSize *objc = [[TL_documentAttributeImageSize alloc] init];
+    
+    objc.w = self.w;
+    objc.h = self.h;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_documentAttributeAnimated
@@ -7474,6 +10659,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_documentAttributeAnimated *)copy {
+    
+    TL_documentAttributeAnimated *objc = [[TL_documentAttributeAnimated alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_documentAttributeSticker
@@ -7491,6 +10686,17 @@
 	self.alt = [stream readString];
 	self.stickerset = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_documentAttributeSticker *)copy {
+    
+    TL_documentAttributeSticker *objc = [[TL_documentAttributeSticker alloc] init];
+    
+    objc.alt = self.alt;
+    objc.stickerset = [self.stickerset copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_documentAttributeVideo
@@ -7511,6 +10717,18 @@
 	self.w = [stream readInt];
 	self.h = [stream readInt];
 }
+        
+-(TL_documentAttributeVideo *)copy {
+    
+    TL_documentAttributeVideo *objc = [[TL_documentAttributeVideo alloc] init];
+    
+    objc.duration = self.duration;
+    objc.w = self.w;
+    objc.h = self.h;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_documentAttributeAudio
@@ -7525,6 +10743,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.duration = [stream readInt];
 }
+        
+-(TL_documentAttributeAudio *)copy {
+    
+    TL_documentAttributeAudio *objc = [[TL_documentAttributeAudio alloc] init];
+    
+    objc.duration = self.duration;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_documentAttributeFilename
@@ -7539,8 +10767,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.file_name = [stream readString];
 }
+        
+-(TL_documentAttributeFilename *)copy {
+    
+    TL_documentAttributeFilename *objc = [[TL_documentAttributeFilename alloc] init];
+    
+    objc.file_name = self.file_name;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_Stickers
@@ -7558,6 +10795,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messages_stickersNotModified *)copy {
+    
+    TL_messages_stickersNotModified *objc = [[TL_messages_stickersNotModified alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_stickers
@@ -7594,8 +10841,18 @@
 		}
 	}
 }
+        
+-(TL_messages_stickers *)copy {
+    
+    TL_messages_stickers *objc = [[TL_messages_stickers alloc] init];
+    
+    objc.n_hash = self.n_hash;
+    objc.stickers = [self.stickers copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLStickerPack
@@ -7635,8 +10892,18 @@
 		}
 	}
 }
+        
+-(TL_stickerPack *)copy {
+    
+    TL_stickerPack *objc = [[TL_stickerPack alloc] init];
+    
+    objc.emoticon = self.emoticon;
+    objc.documents = [self.documents copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_AllStickers
@@ -7654,6 +10921,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_messages_allStickersNotModified *)copy {
+    
+    TL_messages_allStickersNotModified *objc = [[TL_messages_allStickersNotModified alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_messages_allStickers
@@ -7734,8 +11011,20 @@
 		}
 	}
 }
+        
+-(TL_messages_allStickers *)copy {
+    
+    TL_messages_allStickers *objc = [[TL_messages_allStickers alloc] init];
+    
+    objc.n_hash = self.n_hash;
+    objc.packs = [self.packs copy];
+    objc.sets = [self.sets copy];
+    objc.documents = [self.documents copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDisabledFeature
@@ -7756,8 +11045,18 @@
 	self.feature = [stream readString];
 	self.n_description = [stream readString];
 }
+        
+-(TL_disabledFeature *)copy {
+    
+    TL_disabledFeature *objc = [[TL_disabledFeature alloc] init];
+    
+    objc.feature = self.feature;
+    objc.n_description = self.n_description;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_AffectedMessages
@@ -7778,8 +11077,18 @@
 	self.pts = [stream readInt];
 	self.pts_count = [stream readInt];
 }
+        
+-(TL_messages_affectedMessages *)copy {
+    
+    TL_messages_affectedMessages *objc = [[TL_messages_affectedMessages alloc] init];
+    
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLContactLink
@@ -7797,6 +11106,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_contactLinkUnknown *)copy {
+    
+    TL_contactLinkUnknown *objc = [[TL_contactLinkUnknown alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_contactLinkNone
@@ -7811,6 +11130,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_contactLinkNone *)copy {
+    
+    TL_contactLinkNone *objc = [[TL_contactLinkNone alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_contactLinkHasPhone
@@ -7825,6 +11154,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_contactLinkHasPhone *)copy {
+    
+    TL_contactLinkHasPhone *objc = [[TL_contactLinkHasPhone alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_contactLinkContact
@@ -7839,8 +11178,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_contactLinkContact *)copy {
+    
+    TL_contactLinkContact *objc = [[TL_contactLinkContact alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLWebPage
@@ -7858,6 +11206,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readLong];
 }
+        
+-(TL_webPageEmpty *)copy {
+    
+    TL_webPageEmpty *objc = [[TL_webPageEmpty alloc] init];
+    
+    objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_webPagePending
@@ -7875,6 +11233,17 @@
 	self.n_id = [stream readLong];
 	self.date = [stream readInt];
 }
+        
+-(TL_webPagePending *)copy {
+    
+    TL_webPagePending *objc = [[TL_webPagePending alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_webPage
@@ -7931,8 +11300,31 @@
 	if(self.flags & (1 << 7)) self.duration = [stream readInt];
 	if(self.flags & (1 << 8)) self.author = [stream readString];
 }
+        
+-(TL_webPage *)copy {
+    
+    TL_webPage *objc = [[TL_webPage alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.url = self.url;
+    objc.display_url = self.display_url;
+    objc.type = self.type;
+    objc.site_name = self.site_name;
+    objc.title = self.title;
+    objc.n_description = self.n_description;
+    objc.photo = [self.photo copy];
+    objc.embed_url = self.embed_url;
+    objc.embed_type = self.embed_type;
+    objc.embed_width = self.embed_width;
+    objc.embed_height = self.embed_height;
+    objc.duration = self.duration;
+    objc.author = self.author;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLAuthorization
@@ -7986,8 +11378,29 @@
 	self.country = [stream readString];
 	self.region = [stream readString];
 }
+        
+-(TL_authorization *)copy {
+    
+    TL_authorization *objc = [[TL_authorization alloc] init];
+    
+    objc.n_hash = self.n_hash;
+    objc.flags = self.flags;
+    objc.device_model = self.device_model;
+    objc.platform = self.platform;
+    objc.system_version = self.system_version;
+    objc.api_id = self.api_id;
+    objc.app_name = self.app_name;
+    objc.app_version = self.app_version;
+    objc.date_created = self.date_created;
+    objc.date_active = self.date_active;
+    objc.ip = self.ip;
+    objc.country = self.country;
+    objc.region = self.region;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_Authorizations
@@ -8024,8 +11437,17 @@
 		}
 	}
 }
+        
+-(TL_account_authorizations *)copy {
+    
+    TL_account_authorizations *objc = [[TL_account_authorizations alloc] init];
+    
+    objc.authorizations = [self.authorizations copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_Password
@@ -8046,6 +11468,17 @@
 	self.n_salt = [stream readByteArray];
 	self.email_unconfirmed_pattern = [stream readString];
 }
+        
+-(TL_account_noPassword *)copy {
+    
+    TL_account_noPassword *objc = [[TL_account_noPassword alloc] init];
+    
+    objc.n_salt = [self.n_salt copy];
+    objc.email_unconfirmed_pattern = self.email_unconfirmed_pattern;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_account_password
@@ -8072,8 +11505,21 @@
 	self.has_recovery = [stream readBool];
 	self.email_unconfirmed_pattern = [stream readString];
 }
+        
+-(TL_account_password *)copy {
+    
+    TL_account_password *objc = [[TL_account_password alloc] init];
+    
+    objc.current_salt = [self.current_salt copy];
+    objc.n_salt = [self.n_salt copy];
+    objc.hint = self.hint;
+    objc.has_recovery = self.has_recovery;
+    objc.email_unconfirmed_pattern = self.email_unconfirmed_pattern;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_PasswordSettings
@@ -8091,8 +11537,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.email = [stream readString];
 }
+        
+-(TL_account_passwordSettings *)copy {
+    
+    TL_account_passwordSettings *objc = [[TL_account_passwordSettings alloc] init];
+    
+    objc.email = self.email;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLaccount_PasswordInputSettings
@@ -8122,8 +11577,21 @@
 	if(self.flags & (1 << 0)) self.hint = [stream readString];
 	if(self.flags & (1 << 1)) self.email = [stream readString];
 }
+        
+-(TL_account_passwordInputSettings *)copy {
+    
+    TL_account_passwordInputSettings *objc = [[TL_account_passwordInputSettings alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_salt = [self.n_salt copy];
+    objc.n_password_hash = [self.n_password_hash copy];
+    objc.hint = self.hint;
+    objc.email = self.email;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLauth_PasswordRecovery
@@ -8141,8 +11609,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.email_pattern = [stream readString];
 }
+        
+-(TL_auth_passwordRecovery *)copy {
+    
+    TL_auth_passwordRecovery *objc = [[TL_auth_passwordRecovery alloc] init];
+    
+    objc.email_pattern = self.email_pattern;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLReceivedNotifyMessage
@@ -8163,8 +11640,18 @@
 	self.n_id = [stream readInt];
 	self.flags = [stream readInt];
 }
+        
+-(TL_receivedNotifyMessage *)copy {
+    
+    TL_receivedNotifyMessage *objc = [[TL_receivedNotifyMessage alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.flags = self.flags;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLExportedChatInvite
@@ -8182,6 +11669,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_chatInviteEmpty *)copy {
+    
+    TL_chatInviteEmpty *objc = [[TL_chatInviteEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatInviteExported
@@ -8196,8 +11693,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.link = [stream readString];
 }
+        
+-(TL_chatInviteExported *)copy {
+    
+    TL_chatInviteExported *objc = [[TL_chatInviteExported alloc] init];
+    
+    objc.link = self.link;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLChatInvite
@@ -8215,6 +11721,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.chat = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_chatInviteAlready *)copy {
+    
+    TL_chatInviteAlready *objc = [[TL_chatInviteAlready alloc] init];
+    
+    objc.chat = [self.chat copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_chatInvite
@@ -8229,8 +11745,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.title = [stream readString];
 }
+        
+-(TL_chatInvite *)copy {
+    
+    TL_chatInvite *objc = [[TL_chatInvite alloc] init];
+    
+    objc.title = self.title;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLInputStickerSet
@@ -8248,6 +11773,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_inputStickerSetEmpty *)copy {
+    
+    TL_inputStickerSetEmpty *objc = [[TL_inputStickerSetEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputStickerSetID
@@ -8265,6 +11800,17 @@
 	self.n_id = [stream readLong];
 	self.access_hash = [stream readLong];
 }
+        
+-(TL_inputStickerSetID *)copy {
+    
+    TL_inputStickerSetID *objc = [[TL_inputStickerSetID alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_inputStickerSetShortName
@@ -8279,8 +11825,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.short_name = [stream readString];
 }
+        
+-(TL_inputStickerSetShortName *)copy {
+    
+    TL_inputStickerSetShortName *objc = [[TL_inputStickerSetShortName alloc] init];
+    
+    objc.short_name = self.short_name;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLStickerSet
@@ -8307,8 +11862,20 @@
 	self.title = [stream readString];
 	self.short_name = [stream readString];
 }
+        
+-(TL_stickerSet *)copy {
+    
+    TL_stickerSet *objc = [[TL_stickerSet alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.title = self.title;
+    objc.short_name = self.short_name;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLmessages_StickerSet
@@ -8370,8 +11937,19 @@
 		}
 	}
 }
+        
+-(TL_messages_stickerSet *)copy {
+    
+    TL_messages_stickerSet *objc = [[TL_messages_stickerSet alloc] init];
+    
+    objc.set = [self.set copy];
+    objc.packs = [self.packs copy];
+    objc.documents = [self.documents copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLBotCommand
@@ -8395,8 +11973,19 @@
 	self.params = [stream readString];
 	self.n_description = [stream readString];
 }
+        
+-(TL_botCommand *)copy {
+    
+    TL_botCommand *objc = [[TL_botCommand alloc] init];
+    
+    objc.command = self.command;
+    objc.params = self.params;
+    objc.n_description = self.n_description;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLBotInfo
@@ -8414,6 +12003,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_botInfoEmpty *)copy {
+    
+    TL_botInfoEmpty *objc = [[TL_botInfoEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_botInfo
@@ -8459,8 +12058,21 @@
 		}
 	}
 }
+        
+-(TL_botInfo *)copy {
+    
+    TL_botInfo *objc = [[TL_botInfo alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.version = self.version;
+    objc.share_text = self.share_text;
+    objc.n_description = self.n_description;
+    objc.commands = [self.commands copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLKeyboardButton
@@ -8478,8 +12090,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.text = [stream readString];
 }
+        
+-(TL_keyboardButton *)copy {
+    
+    TL_keyboardButton *objc = [[TL_keyboardButton alloc] init];
+    
+    objc.text = self.text;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLKeyboardButtonRow
@@ -8516,8 +12137,17 @@
 		}
 	}
 }
+        
+-(TL_keyboardButtonRow *)copy {
+    
+    TL_keyboardButtonRow *objc = [[TL_keyboardButtonRow alloc] init];
+    
+    objc.buttons = [self.buttons copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLReplyMarkup
@@ -8554,8 +12184,17 @@
 		}
 	}
 }
+        
+-(TL_replyKeyboardMarkup *)copy {
+    
+    TL_replyKeyboardMarkup *objc = [[TL_replyKeyboardMarkup alloc] init];
+    
+    objc.rows = [self.rows copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLProtoMessage
@@ -8582,8 +12221,20 @@
 	self.bytes = [stream readInt];
 	self.body = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_proto_message *)copy {
+    
+    TL_proto_message *objc = [[TL_proto_message alloc] init];
+    
+    objc.msg_id = self.msg_id;
+    objc.seqno = self.seqno;
+    objc.bytes = self.bytes;
+    objc.body = [self.body copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLProtoMessageContainer
@@ -8620,8 +12271,17 @@
 		}
 	}
 }
+        
+-(TL_msg_container *)copy {
+    
+    TL_msg_container *objc = [[TL_msg_container alloc] init];
+    
+    objc.messages = [self.messages copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLResPQ
@@ -8639,6 +12299,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.nonce = [stream readData:16];
 }
+        
+-(TL_req_pq *)copy {
+    
+    TL_req_pq *objc = [[TL_req_pq alloc] init];
+    
+    objc.nonce = self.nonce;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_resPQ
@@ -8681,8 +12351,20 @@
 		}
 	}
 }
+        
+-(TL_resPQ *)copy {
+    
+    TL_resPQ *objc = [[TL_resPQ alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.pq = [self.pq copy];
+    objc.server_public_key_fingerprints = [self.server_public_key_fingerprints copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLServer_DH_inner_data
@@ -8715,8 +12397,22 @@
 	self.g_a = [stream readByteArray];
 	self.server_time = [stream readInt];
 }
+        
+-(TL_server_DH_inner_data *)copy {
+    
+    TL_server_DH_inner_data *objc = [[TL_server_DH_inner_data alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.g = self.g;
+    objc.dh_prime = [self.dh_prime copy];
+    objc.g_a = [self.g_a copy];
+    objc.server_time = self.server_time;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLP_Q_inner_data
@@ -8749,8 +12445,22 @@
 	self.server_nonce = [stream readData:16];
 	self.n_nonce = [stream readData:32];
 }
+        
+-(TL_p_q_inner_data *)copy {
+    
+    TL_p_q_inner_data *objc = [[TL_p_q_inner_data alloc] init];
+    
+    objc.pq = [self.pq copy];
+    objc.p = [self.p copy];
+    objc.q = [self.q copy];
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.n_nonce = self.n_nonce;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLServer_DH_Params
@@ -8783,6 +12493,21 @@
 	self.public_key_fingerprint = [stream readLong];
 	self.encrypted_data = [stream readByteArray];
 }
+        
+-(TL_req_DH_params *)copy {
+    
+    TL_req_DH_params *objc = [[TL_req_DH_params alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.p = [self.p copy];
+    objc.q = [self.q copy];
+    objc.public_key_fingerprint = self.public_key_fingerprint;
+    objc.encrypted_data = [self.encrypted_data copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_server_DH_params_fail
@@ -8803,6 +12528,18 @@
 	self.server_nonce = [stream readData:16];
 	self.n_nonce_hash = [stream readData:16];
 }
+        
+-(TL_server_DH_params_fail *)copy {
+    
+    TL_server_DH_params_fail *objc = [[TL_server_DH_params_fail alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.n_nonce_hash = self.n_nonce_hash;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_server_DH_params_ok
@@ -8823,8 +12560,19 @@
 	self.server_nonce = [stream readData:16];
 	self.encrypted_answer = [stream readByteArray];
 }
+        
+-(TL_server_DH_params_ok *)copy {
+    
+    TL_server_DH_params_ok *objc = [[TL_server_DH_params_ok alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.encrypted_answer = [self.encrypted_answer copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLClient_DH_Inner_Data
@@ -8851,8 +12599,20 @@
 	self.retry_id = [stream readLong];
 	self.g_b = [stream readByteArray];
 }
+        
+-(TL_client_DH_inner_data *)copy {
+    
+    TL_client_DH_inner_data *objc = [[TL_client_DH_inner_data alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.retry_id = self.retry_id;
+    objc.g_b = [self.g_b copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLSet_client_DH_params_answer
@@ -8876,6 +12636,18 @@
 	self.server_nonce = [stream readData:16];
 	self.encrypted_data = [stream readByteArray];
 }
+        
+-(TL_set_client_DH_params *)copy {
+    
+    TL_set_client_DH_params *objc = [[TL_set_client_DH_params alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.encrypted_data = [self.encrypted_data copy];
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_dh_gen_ok
@@ -8896,6 +12668,18 @@
 	self.server_nonce = [stream readData:16];
 	self.n_nonce_hash1 = [stream readData:16];
 }
+        
+-(TL_dh_gen_ok *)copy {
+    
+    TL_dh_gen_ok *objc = [[TL_dh_gen_ok alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.n_nonce_hash1 = self.n_nonce_hash1;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_dh_gen_retry
@@ -8916,6 +12700,18 @@
 	self.server_nonce = [stream readData:16];
 	self.n_nonce_hash2 = [stream readData:16];
 }
+        
+-(TL_dh_gen_retry *)copy {
+    
+    TL_dh_gen_retry *objc = [[TL_dh_gen_retry alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.n_nonce_hash2 = self.n_nonce_hash2;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_dh_gen_fail
@@ -8936,8 +12732,19 @@
 	self.server_nonce = [stream readData:16];
 	self.n_nonce_hash3 = [stream readData:16];
 }
+        
+-(TL_dh_gen_fail *)copy {
+    
+    TL_dh_gen_fail *objc = [[TL_dh_gen_fail alloc] init];
+    
+    objc.nonce = self.nonce;
+    objc.server_nonce = self.server_nonce;
+    objc.n_nonce_hash3 = self.n_nonce_hash3;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLPong
@@ -8955,6 +12762,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.ping_id = [stream readLong];
 }
+        
+-(TL_ping *)copy {
+    
+    TL_ping *objc = [[TL_ping alloc] init];
+    
+    objc.ping_id = self.ping_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_pong
@@ -8972,8 +12789,18 @@
 	self.msg_id = [stream readLong];
 	self.ping_id = [stream readLong];
 }
+        
+-(TL_pong *)copy {
+    
+    TL_pong *objc = [[TL_pong alloc] init];
+    
+    objc.msg_id = self.msg_id;
+    objc.ping_id = self.ping_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLBadMsgNotification
@@ -8997,6 +12824,18 @@
 	self.bad_msg_seqno = [stream readInt];
 	self.error_code = [stream readInt];
 }
+        
+-(TL_bad_msg_notification *)copy {
+    
+    TL_bad_msg_notification *objc = [[TL_bad_msg_notification alloc] init];
+    
+    objc.bad_msg_id = self.bad_msg_id;
+    objc.bad_msg_seqno = self.bad_msg_seqno;
+    objc.error_code = self.error_code;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_bad_server_salt
@@ -9020,8 +12859,20 @@
 	self.error_code = [stream readInt];
 	self.new_server_salt = [stream readLong];
 }
+        
+-(TL_bad_server_salt *)copy {
+    
+    TL_bad_server_salt *objc = [[TL_bad_server_salt alloc] init];
+    
+    objc.bad_msg_id = self.bad_msg_id;
+    objc.bad_msg_seqno = self.bad_msg_seqno;
+    objc.error_code = self.error_code;
+    objc.new_server_salt = self.new_server_salt;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLNewSession
@@ -9045,8 +12896,19 @@
 	self.unique_id = [stream readLong];
 	self.server_salt = [stream readLong];
 }
+        
+-(TL_new_session_created *)copy {
+    
+    TL_new_session_created *objc = [[TL_new_session_created alloc] init];
+    
+    objc.first_msg_id = self.first_msg_id;
+    objc.unique_id = self.unique_id;
+    objc.server_salt = self.server_salt;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLRpcResult
@@ -9067,8 +12929,18 @@
 	self.req_msg_id = [stream readLong];
 	self.result = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_rpc_result *)copy {
+    
+    TL_rpc_result *objc = [[TL_rpc_result alloc] init];
+    
+    objc.req_msg_id = self.req_msg_id;
+    objc.result = [self.result copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLRpcError
@@ -9089,8 +12961,18 @@
 	self.error_code = [stream readInt];
 	self.error_message = [stream readString];
 }
+        
+-(TL_rpc_error *)copy {
+    
+    TL_rpc_error *objc = [[TL_rpc_error alloc] init];
+    
+    objc.error_code = self.error_code;
+    objc.error_message = self.error_message;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLRSAPublicKey
@@ -9111,8 +12993,18 @@
 	self.n = [stream readByteArray];
 	self.e = [stream readByteArray];
 }
+        
+-(TL_rsa_public_key *)copy {
+    
+    TL_rsa_public_key *objc = [[TL_rsa_public_key alloc] init];
+    
+    objc.n = [self.n copy];
+    objc.e = [self.e copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgsAck
@@ -9149,8 +13041,17 @@
 		}
 	}
 }
+        
+-(TL_msgs_ack *)copy {
+    
+    TL_msgs_ack *objc = [[TL_msgs_ack alloc] init];
+    
+    objc.msg_ids = [self.msg_ids copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLRpcDropAnswer
@@ -9168,6 +13069,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.req_msg_id = [stream readLong];
 }
+        
+-(TL_rpc_drop_answer *)copy {
+    
+    TL_rpc_drop_answer *objc = [[TL_rpc_drop_answer alloc] init];
+    
+    objc.req_msg_id = self.req_msg_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_rpc_answer_unknown
@@ -9182,6 +13093,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_rpc_answer_unknown *)copy {
+    
+    TL_rpc_answer_unknown *objc = [[TL_rpc_answer_unknown alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_rpc_answer_dropped_running
@@ -9196,6 +13117,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	
 }
+        
+-(TL_rpc_answer_dropped_running *)copy {
+    
+    TL_rpc_answer_dropped_running *objc = [[TL_rpc_answer_dropped_running alloc] init];
+    
+    
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_rpc_answer_dropped
@@ -9216,8 +13147,19 @@
 	self.seq_no = [stream readInt];
 	self.bytes = [stream readInt];
 }
+        
+-(TL_rpc_answer_dropped *)copy {
+    
+    TL_rpc_answer_dropped *objc = [[TL_rpc_answer_dropped alloc] init];
+    
+    objc.msg_id = self.msg_id;
+    objc.seq_no = self.seq_no;
+    objc.bytes = self.bytes;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLFutureSalts
@@ -9235,6 +13177,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.num = [stream readInt];
 }
+        
+-(TL_get_future_salts *)copy {
+    
+    TL_get_future_salts *objc = [[TL_get_future_salts alloc] init];
+    
+    objc.num = self.num;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_future_salts
@@ -9274,8 +13226,19 @@
 		}
 	}
 }
+        
+-(TL_future_salts *)copy {
+    
+    TL_future_salts *objc = [[TL_future_salts alloc] init];
+    
+    objc.req_msg_id = self.req_msg_id;
+    objc.now = self.now;
+    objc.salts = [self.salts copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLFutureSalt
@@ -9299,8 +13262,19 @@
 	self.valid_until = [stream readInt];
 	self.salt = [stream readLong];
 }
+        
+-(TL_future_salt *)copy {
+    
+    TL_future_salt *objc = [[TL_future_salt alloc] init];
+    
+    objc.valid_since = self.valid_since;
+    objc.valid_until = self.valid_until;
+    objc.salt = self.salt;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLDestroySessionRes
@@ -9318,6 +13292,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.session_id = [stream readLong];
 }
+        
+-(TL_destroy_session *)copy {
+    
+    TL_destroy_session *objc = [[TL_destroy_session alloc] init];
+    
+    objc.session_id = self.session_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_destroy_session_ok
@@ -9332,6 +13316,16 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.session_id = [stream readLong];
 }
+        
+-(TL_destroy_session_ok *)copy {
+    
+    TL_destroy_session_ok *objc = [[TL_destroy_session_ok alloc] init];
+    
+    objc.session_id = self.session_id;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_destroy_session_none
@@ -9346,8 +13340,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.session_id = [stream readLong];
 }
+        
+-(TL_destroy_session_none *)copy {
+    
+    TL_destroy_session_none *objc = [[TL_destroy_session_none alloc] init];
+    
+    objc.session_id = self.session_id;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLProtoMessageCopy
@@ -9365,9 +13368,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.orig_message = [ClassStore TLDeserialize:stream];
 }
+        
+-(TL_msg_copy *)copy {
+    
+    TL_msg_copy *objc = [[TL_msg_copy alloc] init];
+    
+    objc.orig_message = [self.orig_message copy];
+    
+    return objc;
+}
+        
 @end
-
-
 
 @implementation TL_gzip_packed
 +(TL_gzip_packed*)createWithPacked_data:(NSData*)packed_data {
@@ -9381,8 +13392,17 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.packed_data = [stream readByteArray];
 }
+        
+-(TL_gzip_packed *)copy {
+    
+    TL_gzip_packed *objc = [[TL_gzip_packed alloc] init];
+    
+    objc.packed_data = [self.packed_data copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLHttpWait
@@ -9406,8 +13426,19 @@
 	self.wait_after = [stream readInt];
 	self.max_wait = [stream readInt];
 }
+        
+-(TL_http_wait *)copy {
+    
+    TL_http_wait *objc = [[TL_http_wait alloc] init];
+    
+    objc.max_delay = self.max_delay;
+    objc.wait_after = self.wait_after;
+    objc.max_wait = self.max_wait;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgsStateReq
@@ -9444,8 +13475,17 @@
 		}
 	}
 }
+        
+-(TL_msgs_state_req *)copy {
+    
+    TL_msgs_state_req *objc = [[TL_msgs_state_req alloc] init];
+    
+    objc.msg_ids = [self.msg_ids copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgsStateInfo
@@ -9466,8 +13506,18 @@
 	self.req_msg_id = [stream readLong];
 	self.info = [stream readByteArray];
 }
+        
+-(TL_msgs_state_info *)copy {
+    
+    TL_msgs_state_info *objc = [[TL_msgs_state_info alloc] init];
+    
+    objc.req_msg_id = self.req_msg_id;
+    objc.info = [self.info copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgsAllInfo
@@ -9507,8 +13557,18 @@
 	}
 	self.info = [stream readByteArray];
 }
+        
+-(TL_msgs_all_info *)copy {
+    
+    TL_msgs_all_info *objc = [[TL_msgs_all_info alloc] init];
+    
+    objc.msg_ids = [self.msg_ids copy];
+    objc.info = [self.info copy];
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgDetailedInfo
@@ -9535,6 +13595,19 @@
 	self.bytes = [stream readInt];
 	self.status = [stream readInt];
 }
+        
+-(TL_msg_detailed_info *)copy {
+    
+    TL_msg_detailed_info *objc = [[TL_msg_detailed_info alloc] init];
+    
+    objc.msg_id = self.msg_id;
+    objc.answer_msg_id = self.answer_msg_id;
+    objc.bytes = self.bytes;
+    objc.status = self.status;
+    
+    return objc;
+}
+        
 @end
 
 @implementation TL_msg_new_detailed_info
@@ -9555,8 +13628,19 @@
 	self.bytes = [stream readInt];
 	self.status = [stream readInt];
 }
+        
+-(TL_msg_new_detailed_info *)copy {
+    
+    TL_msg_new_detailed_info *objc = [[TL_msg_new_detailed_info alloc] init];
+    
+    objc.answer_msg_id = self.answer_msg_id;
+    objc.bytes = self.bytes;
+    objc.status = self.status;
+    
+    return objc;
+}
+        
 @end
-
 
 
 @implementation TLMsgResendReq
@@ -9593,4 +13677,14 @@
 		}
 	}
 }
+        
+-(TL_msg_resend_req *)copy {
+    
+    TL_msg_resend_req *objc = [[TL_msg_resend_req alloc] init];
+    
+    objc.msg_ids = [self.msg_ids copy];
+    
+    return objc;
+}
+        
 @end

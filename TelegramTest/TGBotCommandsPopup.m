@@ -7,6 +7,27 @@
 //
 
 #import "TGBotCommandsPopup.h"
+#import "TGMenuItemPhoto.h"
+@interface TL_botCommand (BotCommandCategory)
+
+-(void)setUser:(TL_user *)user;
+-(TLUser *)user;
+
+@end
+
+@implementation TL_botCommand (BotCommandCategory)
+
+DYNAMIC_PROPERTY(DUser);
+
+-(void)setUser:(TLUser *)user {
+    [self setDUser:user];
+}
+
+-(TLUser *)user {
+    return [self getDUser];
+}
+
+@end
 
 @implementation TGBotCommandsPopup
 
@@ -32,7 +53,11 @@
                 cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
             }
             
-            [commands addObject:[TL_botCommand createWithCommand:cmd params:command.params n_description:command.n_description]];
+            TL_botCommand *c = [TL_botCommand createWithCommand:cmd params:command.params n_description:command.n_description];
+            
+            [c setUser:user];
+            
+            [commands addObject:c];
             
         }];
         
@@ -71,6 +96,8 @@
         
         if(obj.n_description.length > 0)
             [item setSubtitle:obj.n_description];
+        
+         item.representedObject = [[TGMenuItemPhoto alloc] initWithUser:obj.user menuItem:item];
         
         [menu addItem:item];
         

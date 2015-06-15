@@ -475,7 +475,7 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
         
         [TMViewController hideModalProgress];
         
-    }];
+    } timeout:5];
     
 }
 

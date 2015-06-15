@@ -195,7 +195,7 @@
     
     
     
-    int itemHeight = 22;
+    int itemHeight = 24;
     
     NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + 6;
     
@@ -240,7 +240,7 @@
     __block int x = 0;
     __block int y = 3;
     
-    int itemHeight = 22;
+    int itemHeight = 24;
     
     __block int k = 0;
     

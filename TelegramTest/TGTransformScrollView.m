@@ -19,8 +19,16 @@
 
 - (void) scrollWheel:(NSEvent *) event
 {
+    
+    
+    
     NSPoint scrollPoint = [[self contentView] bounds].origin;
-    scrollPoint.x += ([event scrollingDeltaY] + [event scrollingDeltaX]);
+    
+    BOOL isInverted = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue];
+    if(!isInverted)
+        scrollPoint.x += ([event scrollingDeltaY] + [event scrollingDeltaX]);
+    else
+        scrollPoint.x -= ([event scrollingDeltaY] + [event scrollingDeltaX]);
     [[self documentView] scrollPoint: scrollPoint];
 }
 

@@ -182,7 +182,10 @@
     
     int reply_to_msg_id = replyMessage.n_id;
     
-    int flags = TGOUTUNREADMESSAGE;
+    int flags = TGOUTMESSAGE;
+    
+    if(!conversation.user.isBot)
+        flags|=TGUNREADMESSAGE;
     
     if(reply_to_msg_id > 0)
         flags|=TGREPLYMESSAGE;
