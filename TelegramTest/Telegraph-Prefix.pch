@@ -15,7 +15,6 @@
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import <MtProtoKit/MTLogging.h>
-
 #import "ImageUtils.h"
 #import "POP.h"
 #import "SelectTextManager.h"

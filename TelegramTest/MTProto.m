@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 14.06.15.
+//  Auto created by Mikhail Filimonov on 15.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -65,6 +65,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPeerSelf
@@ -89,6 +91,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPeerContact
@@ -112,6 +116,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -141,6 +147,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPeerChat
@@ -164,6 +172,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -193,6 +203,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputUserSelf
@@ -217,6 +229,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputUserContact
@@ -240,6 +254,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -268,6 +284,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -309,6 +327,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -349,6 +369,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputFileBig
@@ -381,6 +403,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -408,6 +432,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -437,6 +463,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMediaPhoto
@@ -465,6 +493,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMediaGeoPoint
@@ -488,6 +518,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -520,6 +552,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -560,6 +594,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -605,6 +641,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMediaVideo
@@ -632,6 +670,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -665,6 +705,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMediaAudio
@@ -688,6 +730,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -739,6 +783,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -795,6 +841,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMediaDocument
@@ -818,6 +866,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -859,6 +909,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -886,6 +938,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -915,6 +969,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputChatPhoto
@@ -942,6 +998,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -971,6 +1029,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputGeoPoint
@@ -998,6 +1058,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1027,6 +1089,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPhoto
@@ -1054,6 +1118,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1083,6 +1149,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputVideo
@@ -1110,6 +1178,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1147,6 +1217,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputVideoFileLocation
@@ -1174,6 +1246,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1203,6 +1277,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputAudioFileLocation
@@ -1230,6 +1306,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1259,6 +1337,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -1286,6 +1366,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1318,6 +1400,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1359,6 +1443,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -1387,6 +1473,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_peerChat
@@ -1410,6 +1498,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1439,6 +1529,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_storage_fileJpeg
@@ -1462,6 +1554,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1487,6 +1581,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_storage_filePng
@@ -1510,6 +1606,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1535,6 +1633,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_storage_fileMp3
@@ -1558,6 +1658,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1583,6 +1685,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_storage_filePartial
@@ -1606,6 +1710,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1631,6 +1737,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_storage_fileWebp
@@ -1654,6 +1762,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1691,6 +1801,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_fileLocation
@@ -1727,6 +1839,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -1754,6 +1868,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1815,6 +1931,56 @@
     return objc;
 }
         
+        
+-(void)setAccess_hash:(long)access_hash
+{
+    [super setAccess_hash:access_hash];
+            
+    if(self.access_hash == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setFirst_name:(NSString*)first_name
+{
+    [super setFirst_name:first_name];
+            
+    if(self.first_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
+}        
+-(void)setLast_name:(NSString*)last_name
+{
+    [super setLast_name:last_name];
+            
+    if(self.last_name == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setUsername:(NSString*)username
+{
+    [super setUsername:username];
+            
+    if(self.username == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}        
+-(void)setPhone:(NSString*)phone
+{
+    [super setPhone:phone];
+            
+    if(self.phone == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
+}        
+-(void)setPhoto:(TLUserProfilePhoto*)photo
+{
+    [super setPhoto:photo];
+            
+    if(self.photo == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
+}        
+-(void)setStatus:(TLUserStatus*)status
+{
+    [super setStatus:status];
+            
+    if(self.status == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}        
+-(void)setBot_info_version:(int)bot_info_version
+{
+    [super setBot_info_version:bot_info_version];
+            
+    if(self.bot_info_version == 0)  { self.flags&= ~ (1 << 14) ;} else { self.flags|= (1 << 14); }
+}
+        
 @end
 
 @implementation TL_userSelf
@@ -1862,6 +2028,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -1915,6 +2083,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userRequest
@@ -1967,6 +2137,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userForeign
@@ -2015,6 +2187,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userDeleted
@@ -2051,6 +2225,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2078,6 +2254,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2111,6 +2289,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2139,6 +2319,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userStatusOnline
@@ -2162,6 +2344,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2187,6 +2371,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userStatusRecently
@@ -2210,6 +2396,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2235,6 +2423,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_userStatusLastMonth
@@ -2258,6 +2448,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2286,6 +2478,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2335,6 +2529,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_chatForbidden
@@ -2366,6 +2562,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2430,6 +2628,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2498,6 +2698,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_chatFull_old29
@@ -2538,6 +2740,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2574,6 +2778,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2601,6 +2807,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2657,6 +2865,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2684,6 +2894,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2713,6 +2925,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2740,6 +2954,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2805,6 +3021,32 @@
     return objc;
 }
         
+        
+-(void)setFwd_from_id:(int)fwd_from_id
+{
+    [super setFwd_from_id:fwd_from_id];
+            
+    if(self.fwd_from_id == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setFwd_date:(int)fwd_date
+{
+    [super setFwd_date:fwd_date];
+            
+    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+    [super setReply_to_msg_id:reply_to_msg_id];
+            
+    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}        
+-(void)setReply_markup:(TLReplyMarkup*)reply_markup
+{
+    [super setReply_markup:reply_markup];
+            
+    if(self.reply_markup == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}
+        
 @end
 
 @implementation TL_messageService
@@ -2849,6 +3091,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -2876,6 +3120,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2905,6 +3151,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageMediaVideo
@@ -2933,6 +3181,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageMediaGeo
@@ -2956,6 +3206,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -2993,6 +3245,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageMediaUnsupported
@@ -3016,6 +3270,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3041,6 +3297,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageMediaAudio
@@ -3065,6 +3323,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageMediaWebPage
@@ -3088,6 +3348,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3129,6 +3391,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3156,6 +3420,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3204,6 +3470,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageActionChatEditTitle
@@ -3227,6 +3495,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3252,6 +3522,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageActionChatDeletePhoto
@@ -3275,6 +3547,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3300,6 +3574,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageActionChatDeleteUser
@@ -3323,6 +3599,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3352,6 +3630,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageActionGeoChatCheckin
@@ -3376,6 +3656,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messageActionChatJoinedByLink
@@ -3399,6 +3681,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3444,6 +3728,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3471,6 +3757,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3535,6 +3823,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3562,6 +3852,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3603,6 +3895,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_photoCachedSize
@@ -3643,6 +3937,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3670,6 +3966,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3731,6 +4029,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3758,6 +4058,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3787,6 +4089,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3814,6 +4118,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3855,6 +4161,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_auth_sentAppCode
@@ -3891,6 +4199,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3918,6 +4228,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -3951,6 +4263,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -3979,6 +4293,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputNotifyUsers
@@ -4002,6 +4318,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4027,6 +4345,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputNotifyAll
@@ -4051,6 +4371,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputNotifyGeoChatPeer
@@ -4074,6 +4396,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4103,6 +4427,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPeerNotifyEventsAll
@@ -4126,6 +4452,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4167,6 +4495,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4195,6 +4525,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_peerNotifyEventsAll
@@ -4218,6 +4550,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4246,6 +4580,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4282,6 +4618,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4342,6 +4680,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_wallPaperSolid
@@ -4377,6 +4717,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4426,6 +4768,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4457,6 +4801,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4490,6 +4836,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4521,6 +4869,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4554,6 +4904,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4586,6 +4938,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4617,6 +4971,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4654,6 +5010,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4681,6 +5039,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4747,6 +5107,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4841,6 +5203,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -4910,6 +5274,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -4981,6 +5347,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5050,6 +5418,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5167,6 +5537,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_messages_dialogsSlice
@@ -5283,6 +5655,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5375,6 +5749,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5469,6 +5845,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5496,6 +5874,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5540,6 +5920,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5608,6 +5990,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5654,6 +6038,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5729,6 +6115,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5765,6 +6153,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -5793,6 +6183,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMessagesFilterPhotos
@@ -5816,6 +6208,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5841,6 +6235,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMessagesFilterPhotoVideo
@@ -5864,6 +6260,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5889,6 +6287,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMessagesFilterDocument
@@ -5913,6 +6313,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputMessagesFilterAudio
@@ -5936,6 +6338,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -5973,6 +6377,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateMessageID
@@ -6000,6 +6406,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6052,6 +6460,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateUserTyping
@@ -6079,6 +6489,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6112,6 +6524,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateChatParticipants
@@ -6135,6 +6549,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6163,6 +6579,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6200,6 +6618,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateUserPhoto
@@ -6236,6 +6656,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateContactRegistered
@@ -6263,6 +6685,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6295,6 +6719,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6332,6 +6758,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateNewGeoChatMessage
@@ -6355,6 +6783,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6384,6 +6814,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateEncryptedChatTyping
@@ -6407,6 +6839,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6435,6 +6869,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6467,6 +6903,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6504,6 +6942,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateChatParticipantDelete
@@ -6535,6 +6975,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6579,6 +7021,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateUserBlocked
@@ -6607,6 +7051,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateNotifySettings
@@ -6634,6 +7080,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6670,6 +7118,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6718,6 +7168,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateUserPhone
@@ -6745,6 +7197,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6782,6 +7236,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateReadHistoryOutbox
@@ -6818,6 +7274,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updateWebPage
@@ -6841,6 +7299,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -6893,6 +7353,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -6937,6 +7399,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -6968,6 +7432,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -7108,6 +7574,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updates_differenceSlice
@@ -7247,6 +7715,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -7274,6 +7744,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -7333,6 +7805,26 @@
     objc.reply_to_msg_id = self.reply_to_msg_id;
     
     return objc;
+}
+        
+        
+-(void)setFwd_from_id:(int)fwd_from_id
+{
+    [super setFwd_from_id:fwd_from_id];
+            
+    if(self.fwd_from_id == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setFwd_date:(int)fwd_date
+{
+    [super setFwd_date:fwd_date];
+            
+    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+    [super setReply_to_msg_id:reply_to_msg_id];
+            
+    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
 }
         
 @end
@@ -7399,6 +7891,26 @@
     return objc;
 }
         
+        
+-(void)setFwd_from_id:(int)fwd_from_id
+{
+    [super setFwd_from_id:fwd_from_id];
+            
+    if(self.fwd_from_id == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setFwd_date:(int)fwd_date
+{
+    [super setFwd_date:fwd_date];
+            
+    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+    [super setReply_to_msg_id:reply_to_msg_id];
+            
+    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}
+        
 @end
 
 @implementation TL_updateShort
@@ -7426,6 +7938,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -7528,6 +8042,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_updates
@@ -7625,6 +8141,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -7694,6 +8212,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -7765,6 +8285,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -7816,6 +8338,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -7851,6 +8375,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -7891,6 +8417,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8026,6 +8554,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8061,6 +8591,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8102,6 +8634,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_help_noAppUpdate
@@ -8125,6 +8659,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8153,6 +8689,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8186,6 +8724,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8217,6 +8757,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8262,6 +8804,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_geoChatMessageService
@@ -8301,6 +8845,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8379,6 +8925,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8496,6 +9044,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8588,6 +9138,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8682,6 +9234,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8709,6 +9263,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8749,6 +9305,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8793,6 +9351,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8842,6 +9402,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_encryptedChatDiscarded
@@ -8865,6 +9427,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8898,6 +9462,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8925,6 +9491,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -8966,6 +9534,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -8993,6 +9563,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9030,6 +9602,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputEncryptedFile
@@ -9057,6 +9631,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9089,6 +9665,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9134,6 +9712,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_encryptedMessageService
@@ -9170,6 +9750,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9197,6 +9779,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9234,6 +9818,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9261,6 +9847,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9290,6 +9878,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9317,6 +9907,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9346,6 +9938,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9373,6 +9967,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9402,6 +9998,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9429,6 +10027,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9482,6 +10082,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9509,6 +10111,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9581,6 +10185,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9613,6 +10219,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -9641,6 +10249,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_notifyUsers
@@ -9664,6 +10274,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9689,6 +10301,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_notifyAll
@@ -9712,6 +10326,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9741,6 +10357,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_sendMessageCancelAction
@@ -9764,6 +10382,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9789,6 +10409,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_sendMessageUploadVideoAction
@@ -9812,6 +10434,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9837,6 +10461,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_sendMessageUploadAudioAction
@@ -9860,6 +10486,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9885,6 +10513,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_sendMessageUploadDocumentAction
@@ -9908,6 +10538,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9933,6 +10565,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_sendMessageChooseContactAction
@@ -9956,6 +10590,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -9984,6 +10620,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10055,6 +10693,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10082,6 +10722,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10111,6 +10753,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10139,6 +10783,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPrivacyValueAllowAll
@@ -10162,6 +10808,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10206,6 +10854,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPrivacyValueDisallowContacts
@@ -10230,6 +10880,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputPrivacyValueDisallowAll
@@ -10253,6 +10905,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10297,6 +10951,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10325,6 +10981,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_privacyValueAllowAll
@@ -10348,6 +11006,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10392,6 +11052,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_privacyValueDisallowContacts
@@ -10416,6 +11078,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_privacyValueDisallowAll
@@ -10439,6 +11103,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10482,6 +11148,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10553,6 +11221,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10580,6 +11250,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10613,6 +11285,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10645,6 +11319,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_documentAttributeAnimated
@@ -10668,6 +11344,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10696,6 +11374,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10729,6 +11409,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_documentAttributeAudio
@@ -10753,6 +11435,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_documentAttributeFilename
@@ -10776,6 +11460,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10804,6 +11490,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10851,6 +11539,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -10903,6 +11593,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -10930,6 +11622,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11024,6 +11718,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11055,6 +11751,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11088,6 +11786,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11116,6 +11816,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_contactLinkNone
@@ -11139,6 +11841,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11164,6 +11868,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_contactLinkContact
@@ -11187,6 +11893,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11216,6 +11924,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_webPagePending
@@ -11243,6 +11953,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11324,6 +12036,74 @@
     return objc;
 }
         
+        
+-(void)setType:(NSString*)type
+{
+    [super setType:type];
+            
+    if(self.type == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setSite_name:(NSString*)site_name
+{
+    [super setSite_name:site_name];
+            
+    if(self.site_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
+}        
+-(void)setTitle:(NSString*)title
+{
+    [super setTitle:title];
+            
+    if(self.title == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setN_description:(NSString*)n_description
+{
+    [super setN_description:n_description];
+            
+    if(self.n_description == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}        
+-(void)setPhoto:(TLPhoto*)photo
+{
+    [super setPhoto:photo];
+            
+    if(self.photo == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
+}        
+-(void)setEmbed_url:(NSString*)embed_url
+{
+    [super setEmbed_url:embed_url];
+            
+    if(self.embed_url == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
+}        
+-(void)setEmbed_type:(NSString*)embed_type
+{
+    [super setEmbed_type:embed_type];
+            
+    if(self.embed_type == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
+}        
+-(void)setEmbed_width:(int)embed_width
+{
+    [super setEmbed_width:embed_width];
+            
+    if(self.embed_width == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}        
+-(void)setEmbed_height:(int)embed_height
+{
+    [super setEmbed_height:embed_height];
+            
+    if(self.embed_height == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}        
+-(void)setDuration:(int)duration
+{
+    [super setDuration:duration];
+            
+    if(self.duration == 0)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
+}        
+-(void)setAuthor:(NSString*)author
+{
+    [super setAuthor:author];
+            
+    if(self.author == nil)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
+}
+        
 @end
 
 
@@ -11400,6 +12180,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11447,6 +12229,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11478,6 +12262,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11519,6 +12305,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11546,6 +12334,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11591,6 +12381,32 @@
     return objc;
 }
         
+        
+-(void)setN_salt:(NSData*)n_salt
+{
+    [super setN_salt:n_salt];
+            
+    if(self.n_salt == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setN_password_hash:(NSData*)n_password_hash
+{
+    [super setN_password_hash:n_password_hash];
+            
+    if(self.n_password_hash == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setHint:(NSString*)hint
+{
+    [super setHint:hint];
+            
+    if(self.hint == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setEmail:(NSString*)email
+{
+    [super setEmail:email];
+            
+    if(self.email == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
+}
+        
 @end
 
 
@@ -11618,6 +12434,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11651,6 +12469,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11679,6 +12499,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_chatInviteExported
@@ -11702,6 +12524,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11731,6 +12555,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_chatInvite
@@ -11754,6 +12580,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11783,6 +12611,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputStickerSetID
@@ -11811,6 +12641,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_inputStickerSetShortName
@@ -11834,6 +12666,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11874,6 +12708,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -11949,6 +12785,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -11985,6 +12823,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12012,6 +12852,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12072,6 +12914,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12099,6 +12943,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12147,6 +12993,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12194,6 +13042,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12233,6 +13083,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12281,6 +13133,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12308,6 +13162,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12364,6 +13220,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12411,6 +13269,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12460,6 +13320,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12508,6 +13370,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_server_DH_params_fail
@@ -12540,6 +13404,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_server_DH_params_ok
@@ -12571,6 +13437,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12612,6 +13480,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12648,6 +13518,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_dh_gen_ok
@@ -12679,6 +13551,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12712,6 +13586,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_dh_gen_fail
@@ -12744,6 +13620,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12772,6 +13650,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_pong
@@ -12799,6 +13679,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12836,6 +13718,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_bad_server_salt
@@ -12871,6 +13755,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12908,6 +13794,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -12939,6 +13827,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -12972,6 +13862,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13003,6 +13895,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13051,6 +13945,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13079,6 +13975,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_rpc_answer_unknown
@@ -13103,6 +14001,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_rpc_answer_dropped_running
@@ -13126,6 +14026,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13159,6 +14061,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13186,6 +14090,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13238,6 +14144,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13274,6 +14182,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13302,6 +14212,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_destroy_session_ok
@@ -13326,6 +14238,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_destroy_session_none
@@ -13349,6 +14263,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13378,6 +14294,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_gzip_packed
@@ -13401,6 +14319,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13437,6 +14357,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13485,6 +14407,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13516,6 +14440,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13568,6 +14494,8 @@
     return objc;
 }
         
+
+        
 @end
 
 
@@ -13608,6 +14536,8 @@
     return objc;
 }
         
+
+        
 @end
 
 @implementation TL_msg_new_detailed_info
@@ -13639,6 +14569,8 @@
     
     return objc;
 }
+        
+
         
 @end
 
@@ -13686,5 +14618,7 @@
     
     return objc;
 }
+        
+
         
 @end
