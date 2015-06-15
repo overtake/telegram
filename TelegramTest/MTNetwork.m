@@ -235,11 +235,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(TGKeychain *)nKeychain {
     
     
-    if( [[NSProcessInfo processInfo].environment[@"debug"] boolValue]) {
-        
-        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-        
-    }
+
     
 #ifndef TGDEBUG
     

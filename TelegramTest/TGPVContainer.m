@@ -163,10 +163,10 @@ static const int bottomHeight = 60;
 
 -(NSAttributedString *)caption {
     
-    if([_currentViewerItem.previewObject.media isKindOfClass:[TL_localMessage class]] && [[_currentViewerItem.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
+    if([_currentViewerItem.previewObject.media isKindOfClass:[TL_localMessage class]] && [[(TL_localMessage *)_currentViewerItem.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:[(TL_messageMediaPhoto *)[_currentViewerItem.previewObject.media media] caption] withColor:[NSColor whiteColor]];
+        [attr appendString:[(TL_messageMediaPhoto *)[(TL_localMessage *)_currentViewerItem.previewObject.media media] caption] withColor:[NSColor whiteColor]];
         
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         

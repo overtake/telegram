@@ -123,6 +123,9 @@ static NSDictionary *attributes() {
         
         [_nameTextField setFrameOrigin:NSMakePoint(68, 40)];
         
+        [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
+        
         _nameTextField.wantsLayer = YES;
 
         

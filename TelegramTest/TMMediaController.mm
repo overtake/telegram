@@ -691,19 +691,19 @@ static TMMediaController* currentController;
     
     id<TMPreviewItem> item;
     
-    if([[from.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
         item = [[TMPreviewDocumentItem alloc] initWithItem:from];
     }
     
-    if([[from.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
+    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         item = [[TMPreviewPhotoItem alloc] initWithItem:from];
     }
     
-    if([[from.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
+    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
         item = [[TMPreviewVideoItem alloc] initWithItem:from];
     }
     
-    if([[from.media media] isKindOfClass:[TL_messageMediaAudio class]]) {
+    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaAudio class]]) {
         item = [[TMPreviewAudioItem alloc] initWithItem:from];
     }
 

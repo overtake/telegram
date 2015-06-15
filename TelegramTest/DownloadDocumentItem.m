@@ -32,7 +32,7 @@
         NSString *old_path = self.path;
         
         
-        self.path = mediaFilePath([self.object media]);
+        self.path = mediaFilePath([(TL_localMessage *)self.object media]);
         
         NSError *error = nil;
         
@@ -42,7 +42,7 @@
             [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
         
-        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[self.object media]).document file_path:self.path];
+        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[(TL_localMessage *)self.object media]).document file_path:self.path];
         
         
         if([document.mime_type hasPrefix:@"audio/"]) {
@@ -84,7 +84,7 @@
             
         }
         
-        ((TLMessageMedia *)[self.object media]).document = document;
+        ((TLMessageMedia *)[(TL_localMessage *)self.object media]).document = document;
         
         [[Storage manager] updateMessages:@[self.object]];
         

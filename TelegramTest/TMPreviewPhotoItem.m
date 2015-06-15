@@ -40,7 +40,7 @@
          _previewObject = previewObject;
         
         
-         TL_photoSize *size = [((TL_messageMediaPhoto *)[_previewObject.media media]).photo.sizes lastObject];
+         TL_photoSize *size = [((TL_messageMediaPhoto *)[(TL_localMessage *)_previewObject.media media]).photo.sizes lastObject];
         
         if(size.location.dc_id == 0 || size.location.secret == 0)
             return nil;
@@ -64,7 +64,7 @@
 
 -(NSImage *)previewImage {
     
-    TL_photoSize *size = [((TL_messageMediaPhoto *)[_previewObject.media media]).photo.sizes lastObject];
+    TL_photoSize *size = [((TL_messageMediaPhoto *)[(TL_localMessage *)_previewObject.media media]).photo.sizes lastObject];
     
     if(!_previewImage) {
         _previewImage = [[ImageCache sharedManager] imageFromMemory:size.location];
@@ -76,7 +76,7 @@
 
 
 -(NSURL *)previewItemURL {
-    NSArray *sizes = ((TL_messageMediaPhoto *)[_previewObject.media media]).photo.sizes;
+    NSArray *sizes = ((TL_messageMediaPhoto *)[(TL_localMessage *)_previewObject.media media]).photo.sizes;
     
     TL_photoSize *size = [sizes lastObject];
     

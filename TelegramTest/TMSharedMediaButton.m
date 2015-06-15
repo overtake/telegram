@@ -99,7 +99,7 @@ static const NSMutableDictionary *cache;
 
 - (void)didReceivedMedia:(NSNotification *)notify {
     PreviewObject *preview = notify.userInfo[KEY_PREVIEW_OBJECT];
-    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
+    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[(TL_localMessage *)preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
         int count = [cache[[self primaryKey]][@(preview.peerId)] intValue];
         count++;
         cache[[self primaryKey]][@(preview.peerId)] = @(count);

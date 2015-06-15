@@ -43,8 +43,6 @@
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
 
 
-
-
 @property (nonatomic, strong) UserInfoShortButtonView *encryptedKeyButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
 @property (nonatomic, strong) UserInfoShortButtonView *deleteSecretChatButton;
@@ -115,7 +113,27 @@
         
 
         self.shareContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShareContact", nil) tapBlock:^{
-            [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+            
+            if(weakSelf.user.isBot) {
+                
+                
+                [TMViewController showModalProgress];
+                
+                NSPasteboard* cb = [NSPasteboard generalPasteboard];
+                
+                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+                [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.user.username] forType:NSStringPboardType];
+                
+                dispatch_after_seconds(0.2, ^{
+                    
+                    [TMViewController hideModalProgressWithSuccess];
+                    
+                });
+                
+            } else {
+                [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+            }
+            
         }];
         
         
@@ -467,7 +485,11 @@
         [self.importContacts setHidden:self.user.type != TLUserTypeSelf];
         
         
-        if(self.user.type == TLUserTypeContact || self.user.type == TLUserTypeSelf) {
+        if(self.user.type == TLUserTypeContact || self.user.type == TLUserTypeSelf || self.user.isBot) {
+            
+            [self.shareContactButton.textButton setStringValue:NSLocalizedString(self.user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil)];
+            [self.shareContactButton sizeToFit];
+            
             offset -= self.shareContactButton.bounds.size.height;
             [self.shareContactButton setFrameOrigin:NSMakePoint(100, offset)];
             [self.shareContactButton setHidden:NO];
