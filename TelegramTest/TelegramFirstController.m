@@ -180,9 +180,9 @@
 
 
 - (IBAction)showAudioMiniPlayer:(id)sender {
-    
+#ifdef TGDEBUG
     [TGAudioPlayerWindow show:[Telegram conversation]];
-    
+#endif
 }
 
 

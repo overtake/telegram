@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.06.15.
+//  Auto created by Mikhail Filimonov on 16.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -13002,12 +13002,14 @@
 @end
 
 @implementation TL_replyKeyboardMarkup
-+(TL_replyKeyboardMarkup*)createWithRows:(NSMutableArray*)rows {
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows {
 	TL_replyKeyboardMarkup* obj = [[TL_replyKeyboardMarkup alloc] init];
+	obj.flags = flags;
 	obj.rows = rows;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -13020,6 +13022,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -13037,6 +13040,7 @@
     
     TL_replyKeyboardMarkup *objc = [[TL_replyKeyboardMarkup alloc] init];
     
+    objc.flags = self.flags;
     objc.rows = [self.rows copy];
     
     return objc;

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.06.15.
+//  Auto created by Mikhail Filimonov on 16.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2476,11 +2476,12 @@
 @end
 	
 @interface TLReplyMarkup()
+@property int flags;
 @property (nonatomic, strong) NSMutableArray* rows;
 @end
 
 @interface TL_replyKeyboardMarkup : TLReplyMarkup
-+(TL_replyKeyboardMarkup*)createWithRows:(NSMutableArray*)rows;
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows;
 @end
 	
 @interface TLProtoMessage()

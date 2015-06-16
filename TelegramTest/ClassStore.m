@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 15.06.15.
+    //  Created by keepcoder on 16.06.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -467,7 +467,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_botInfo class] forKey:[NSNumber numberWithInt:164583517]];
    [cs_classes setObject:[TL_keyboardButton class] forKey:[NSNumber numberWithInt:-1560655744]];
    [cs_classes setObject:[TL_keyboardButtonRow class] forKey:[NSNumber numberWithInt:2002815875]];
-   [cs_classes setObject:[TL_replyKeyboardMarkup class] forKey:[NSNumber numberWithInt:-711197647]];
+   [cs_classes setObject:[TL_replyKeyboardMarkup class] forKey:[NSNumber numberWithInt:889353612]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

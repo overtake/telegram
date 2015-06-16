@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.06.15.
+//  Auto created by Mikhail Filimonov on 16.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -873,5 +873,14 @@
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
 
 +(TLAPI_messages_uninstallStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
+@end
+
+@interface TLAPI_messages_startBot : TLApiObject
+@property (nonatomic, strong) TLInputUser* bot;
+@property int chat_id;
+@property long random_id;
+@property (nonatomic, strong) NSString* start_param;
+
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
 @end
 

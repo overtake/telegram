@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.06.15..
+//  Auto created by Mikhail Filimonov on 16.06.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2010,6 +2010,25 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-110209570];
 	[ClassStore TLSerialize:self.stickerset stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_startBot
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param {
+    TLAPI_messages_startBot* obj = [[TLAPI_messages_startBot alloc] init];
+    obj.bot = bot;
+	obj.chat_id = chat_id;
+	obj.random_id = random_id;
+	obj.start_param = start_param;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:457052156];
+	[ClassStore TLSerialize:self.bot stream:stream];
+	[stream writeInt:self.chat_id];
+	[stream writeLong:self.random_id];
+	[stream writeString:self.start_param];
 	return [stream getOutput];
 }
 @end
