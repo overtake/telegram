@@ -95,32 +95,70 @@
 }
 
 - (TL_conversation *)createDialogForUser:(TLUser *)user {
-    TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
-    dialog.fake = YES;
-    [self add:@[dialog]];
+    __block TL_conversation *dialog;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
+   
+    
+        dialog.fake = YES;
+        [self add:@[dialog]];
+        
+    } synchronous:YES];
    
     return dialog;
 }
 
 - (TL_conversation *)createDialogForChat:(TLChat *)chat {
-    TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
-    dialog.fake = YES;
-    [self add:@[dialog]];
+    
+    
+    __block TL_conversation *dialog;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
+        
+        
+        dialog.fake = YES;
+        [self add:@[dialog]];
+        
+    } synchronous:YES];
+    
     return dialog;
+
 }
 
 - (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat {
-    TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
-    dialog.fake = YES;
-    [self add:@[dialog]];
+    
+    __block TL_conversation *dialog;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
+        
+        
+        dialog.fake = YES;
+        [self add:@[dialog]];
+        
+    } synchronous:YES];
+    
     return dialog;
+
 }
 
 - (TL_conversation *)createDialogForMessage:(TL_localMessage *)message {
-    TL_conversation *dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id];
-    dialog.fake = YES;
-    [self add:@[dialog]];
+    
+    __block TL_conversation *dialog;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id];
+        
+        
+        dialog.fake = YES;
+        [self add:@[dialog]];
+        
+    } synchronous:YES];
+    
     return dialog;
+    
 }
 
 - (void)deleteMessages:(NSNotification *)messages {

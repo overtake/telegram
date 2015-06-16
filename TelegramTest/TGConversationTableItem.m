@@ -131,8 +131,7 @@
 }
 
 -(void)update {
-    
-    self.conversation = [[DialogsManager sharedManager] find:_conversation.peer_id];
+
     
     _messageText = [MessagesUtils conversationLastText:_conversation.lastMessage conversation:_conversation];
     

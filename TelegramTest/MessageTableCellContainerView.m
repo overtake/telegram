@@ -700,14 +700,6 @@ static BOOL dragAction = NO;
     
     if(item.messageSender)  {
         
-        [item.messageSender enumerateEventListeners:^(id<SenderListener> listener, NSUInteger idx, BOOL *stop) {
-            
-            if([listener isKindOfClass:self.class] && listener != self) {
-                [item.messageSender removeEventListener:listener];
-            }
-            
-        }];
-        
         [item.messageSender addEventListener:self];
         
         if(item.messageSender.state == MessageStateWaitSend)
