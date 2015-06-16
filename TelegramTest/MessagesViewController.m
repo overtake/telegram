@@ -67,6 +67,7 @@
 #import "NSString+FindURLs.h"
 #import "ImageAttachSenderItem.h"
 #import "FullUsersManager.h"
+#import "StartBotSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -673,13 +674,20 @@
 
 
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated {
-    [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
-    for(int i = 0; i < self.messages.count; i++) {
-        MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
-        if([cell isKindOfClass:[MessageTableCellContainerView class]] && [cell canEdit]) {
-            [cell setEditable:show animation:animated];
+    
+    if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
+    {
+        [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
+        for(int i = 0; i < self.messages.count; i++) {
+            MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
+            if([cell isKindOfClass:[MessageTableCellContainerView class]] && [cell canEdit]) {
+                [cell setEditable:show animation:animated];
+            }
         }
     }
+    
+    
+    
 }
 
 -(void)_didStackRemoved {
@@ -714,6 +722,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)showNoMessages:(BOOL)show {
     
     [ASQueue dispatchOnMainQueue:^{
+        
+        
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.noMessagesView setHidden:!show];
@@ -732,6 +742,32 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
+-(void)showBotStartButton:(NSString *)startParam {
+    [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
+    
+    weak();
+    [self.bottomView setOnClickToLockedView:^{
+       
+        TL_conversation *conversation = weakSelf.conversation;
+        
+        [ASQueue dispatchOnStageQueue:^{
+            
+            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:@"/start" forConversation:conversation startParam:startParam];
+            sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
+            [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+            
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [weakSelf.bottomView setOnClickToLockedView:nil];
+                [weakSelf.bottomView setStateBottom:MessagesBottomViewNormalState];
+                
+            }];
+       
+        }];
+    
+        
+    }];
+}
 
 
 - (void)changeDialogSelectionNotification:(NSNotification *)notify {
@@ -2137,7 +2173,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)didUpdateTable {
-    [self showNoMessages:self.messages.count == 1];
+    [self showNoMessages:self.messages.count == 1 || (self.conversation.user.isBot && self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])];
     
     BOOL isHaveMessages = NO;
     for(MessageTableItem *item in self.messages) {

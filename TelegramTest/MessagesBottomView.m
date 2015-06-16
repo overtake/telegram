@@ -45,6 +45,7 @@
 
 @property (nonatomic, strong) BTRButton *attachButton;
 @property (nonatomic, strong) BTRButton *smileButton;
+@property (nonatomic, strong) BTRButton *botKeyboardButton;
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -81,6 +82,7 @@
 
 
 @property (nonatomic,strong) TL_userFull *userFull;
+
 
 @end
 
@@ -160,11 +162,13 @@
 
 -(void)botKeyboardNotification:(NSNotification *)notification
 {
-    [self checkBotKeyboard:YES animated:YES];
+    [self checkBotKeyboard:YES animated:YES forceShow:YES];
 }
 
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
+    
+    [self setOnClickToLockedView:nil];
     
     [Notification removeObserver:self];
     
@@ -211,7 +215,7 @@
     }
     
     
-     [self checkBotKeyboard:YES animated:NO];
+    [self checkBotKeyboard:YES animated:NO forceShow:NO];
 
     
     [self checkReplayMessage:YES animated:NO];
@@ -455,7 +459,17 @@
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected | BTRControlStateHover];
     [self.smileButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected];
-  //  [self.smileButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
+    
+    
+    
+    self.botKeyboardButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 7, image_smile().size.width, image_smile().size.height)];
+    [self.botKeyboardButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.botKeyboardButton.layer disableActions];
+    
+    [self.botKeyboardButton addTarget:self action:@selector(botKeyboardButtonAction:) forControlEvents:BTRControlEventMouseDownInside];
+    
+
+    [self.inputMessageTextField.containerView addSubview:self.botKeyboardButton];
     
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
@@ -472,6 +486,16 @@
 
     
     return self.normalView;
+}
+
+-(void)botKeyboardButtonAction:(BTRButton *)button {
+    [self.botKeyboard setHidden:!self.botKeyboard.isHidden];
+    
+    [_botKeyboardButton setSelected:!self.botKeyboard.isHidden];
+    
+    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_BotOSXGray() : image_BotOSXBlue() forControlState:BTRControlStateNormal];
+    
+    [self updateBottomHeight:YES];
 }
 
 -(NSMenu *)attachMenu {
@@ -720,6 +744,16 @@
     [self.encryptedStateTextField setTextColor:NSColorFromRGB(0xa1a1a1)];
     [self.secretInfoView addSubview:self.encryptedStateTextField];
     
+    weak();
+    
+    [_secretInfoView setCallback:^{
+       
+        if(_onClickToLockedView != nil)
+        {
+            weakSelf.onClickToLockedView();
+        }
+        
+    }];
     
     return self.secretInfoView;
 }
@@ -772,13 +806,18 @@
             newView = self.secretInfoView;
             break;
     }
-    
-    if(self.dialog && !self.dialog.canSendMessage) {
-        animated = NO;
-        [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
-        [self.encryptedStateTextField sizeToFit];
-        [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
+    if(state == MessagesBottomViewBlockChat || state == MessagesBottomViewBlockSecretState) {
+        if((self.dialog && !self.dialog.canSendMessage) || self.dialog.user.isBot) {
+            animated = NO;
+            
+            [self.encryptedStateTextField setTextColor:self.dialog.user.isBot ? LINK_COLOR : GRAY_TEXT_COLOR];
+            
+            [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
+            [self.encryptedStateTextField sizeToFit];
+            [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
+        }
     }
+   
     
     if(oldView == newView) {
         [self becomeFirstResponder];
@@ -1004,7 +1043,9 @@
 
 }
 
--(void)checkBotKeyboard:(BOOL)updateHeight animated:(BOOL)animated  {
+
+-(void)checkBotKeyboard:(BOOL)updateHeight animated:(BOOL)animated forceShow:(BOOL)forceShow  {
+    
     
     
     if(!_botKeyboard) {
@@ -1017,8 +1058,20 @@
         [self.normalView addSubview:_botKeyboard];
     }
     
+   
     
     [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
+    
+    
+    [_botKeyboardButton setSelected:forceShow];
+    [_botKeyboardButton setHidden:!_botKeyboard.isCanShow];
+    
+    
+    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_BotOSXGray() : image_BotOSXBlue() forControlState:BTRControlStateNormal];
+    
+    [_botKeyboard setHidden:!forceShow];
+    
+    [self setFrame:self.frame];
     
     if(updateHeight) {
         [self updateBottomHeight:animated];
@@ -1258,7 +1311,7 @@
     }
     
     if(_botKeyboard != nil) {
-        height+=NSHeight(_botKeyboard.frame);
+        height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
     }
     
     
@@ -1331,6 +1384,9 @@
     int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, 30);
+    
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    
     [self.inputMessageTextField textDidChange:nil];
 }
 

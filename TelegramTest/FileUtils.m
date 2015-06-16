@@ -52,6 +52,9 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 
+
+
+
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize {
     int pathsize = (int)fileSize(path);
     int dif = abs(pathsize-checksize);
@@ -262,7 +265,23 @@ void alert(NSString *text, NSString *info) {
 
 
 
-
+NSDictionary *getUrlVars(NSString *url) {
+    
+    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
+    
+    if([url rangeOfString:@"?"].location == NSNotFound) {
+        return @{@"domain":url,@"showProfile":@(1)};
+    }
+    
+    NSArray *hashes = [[url substringFromIndex:[url rangeOfString:@"?"].location + 1] componentsSeparatedByString:@"&"];;
+    
+    for (int i = 0; i < hashes.count; i++) {
+        
+        NSArray *hash = [hashes[i] componentsSeparatedByString:@"="];
+        d[hash[0]] = hash[1];
+    }
+    return d;
+}
 
 
 /*
@@ -479,16 +498,39 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
     
 }
 
-void open_user_by_name(NSString * userName) {
+void open_user_by_name(NSDictionary *params) {
     
-    TLUser *user = [UsersManager findUserByName:userName];
+    __block TLUser *user = [UsersManager findUserByName:params[@"domain"]];
     
-    if(user) {
+    dispatch_block_t showConversation = ^ {
+        [[Telegram rightViewController] showByDialog:user.dialog sender:[Telegram rightViewController]];
+        
+        if(user.isBot && params[@"start"]) {
+            [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"]];
+        }
+    };
+    
+    dispatch_block_t showInfo = ^ {
         [[Telegram rightViewController] showUserInfoPage:user];
+    };
+    
+    dispatch_block_t perform = ^ {
+      
+        if(params[@"showProfile"])
+            showInfo();
+        else
+            showConversation();
+        
+    };
+    
+    if(user) {        
+        
+        perform();
+        
     } else {
         [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:params[@"domain"]] successHandler:^(RPCRequest *request, TLUser *response) {
             
             [TMViewController hideModalProgress];
             
@@ -498,7 +540,10 @@ void open_user_by_name(NSString * userName) {
                     
                     [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:YES];
                     
-                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:response.n_id]];
+                    user = [[UsersManager sharedManager] find:response.n_id];
+                    
+                    perform();
+                    
                 } else {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }
@@ -525,7 +570,6 @@ void open_user_by_name(NSString * userName) {
 
 
 
-
 void open_link(NSString *link) {
     
     
@@ -538,7 +582,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLUserNamePrefix]) {
-        open_user_by_name([link substringFromIndex:TLUserNamePrefix.length]);
+        open_user_by_name(getUrlVars(link));
         return;
     }
     

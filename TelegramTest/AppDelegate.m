@@ -87,7 +87,7 @@
     if(url) {
         
         if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
-            open_user_by_name([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
+            open_user_by_name(getUrlVars([url absoluteString]));
             [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
             [self.mainWindow deminiaturize:self];
             return;

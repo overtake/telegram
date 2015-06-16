@@ -193,6 +193,11 @@ CACHE_IMAGE(MiniPlayerClose);
 CACHE_IMAGE(MiniPlayerStop);
 CACHE_IMAGE(MiniPlayerDefaultCover);
 CACHE_IMAGE(MiniPlayerPlaylist);
+
+
+CACHE_IMAGE(BotOSXGray);
+CACHE_IMAGE(BotOSXBlue);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

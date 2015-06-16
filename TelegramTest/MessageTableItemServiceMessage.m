@@ -11,7 +11,7 @@
 #import "NS(Attributed)String+Geometrics.h"
 #import "ImageUtils.h"
 #import "TGDateUtils.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @implementation MessageTableItemServiceMessage
 
 - (id) initWithDate:(int)date {
@@ -43,7 +43,7 @@
 - (id)initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.messageAttributedString = [MessagesUtils serviceAttributedMessage:object forAction:object.action];
+        self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
         self.type = MessageTableItemServiceMessageAction;
         
         if([object.action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -81,7 +81,7 @@
             self.imageObject.imageSize = self.photoSize;
         }
         
-        
+        [self.messageAttributedString detectAndAddLinks];
     }
     return self;
 }

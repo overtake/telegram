@@ -7,7 +7,8 @@
 //
 
 #import "NoMessagesView.h"
-
+#import "MessagesUtils.h"
+#import "FullUsersManager.h"
 @interface NoMessagesView ()
 @property (nonatomic,strong) NSProgressIndicator *progress;
 @property (nonatomic,strong) TMTextField *field;
@@ -156,7 +157,21 @@
         [self.field setAttributedStringValue:self.secret];
                 
     } else {
-        [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
+        if(conversation.user.isBot) {
+            
+            [[FullUsersManager sharedManager] loadUserFull:conversation.user callback:^(TL_userFull *userFull) {
+                TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                
+                [self.field setAttributedStringValue:[MessagesUtils serviceAttributedMessage:service forAction:service.action]];
+                
+            }];
+            
+            
+            
+            
+        } else
+            [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
     }
     
     self.progress.usesThreadedAnimation = NO;

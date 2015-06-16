@@ -40,6 +40,9 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
+
+
+
 -(void)setConversation:(TL_conversation *)conversation;
 -(TL_conversation *)conversation;
 
@@ -92,7 +95,7 @@ typedef enum {
 - (void)resendItem:(MessageTableItem *)item;
 
 
-
+-(void)showBotStartButton:(NSString *)startParam;
 
 -(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;

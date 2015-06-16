@@ -12,5 +12,6 @@
 
 -(void)setConversation:(TL_conversation *)conversation botUser:(TLUser *)botUser;
 
+-(BOOL)isCanShow;
 
 @end

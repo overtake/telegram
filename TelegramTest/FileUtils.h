@@ -44,7 +44,7 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
 
 
 
-
+NSDictionary *getUrlVars(NSString *url);
 NSString *mediaFilePath(TLMessageMedia *media);
 NSString *documentPath(TLDocument *document);
 NSString* dp();
@@ -67,7 +67,7 @@ NSString *exportPath(long randomId,NSString *extension);
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
-void open_user_by_name(NSString * userName);
+void open_user_by_name(NSDictionary * userName);
 
 void join_group_by_hash(NSString * hash);
 

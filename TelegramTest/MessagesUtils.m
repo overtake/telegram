@@ -337,13 +337,15 @@
         NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
         [attributedString setFont:TGSystemMediumFont(13) forRange:range];
         
+        [attributedString setAlignment:NSCenterTextAlignment range:range];
+        
         [attributedString appendString:@"\n\n"];
         
         range = [attributedString appendString:actionText withColor:TEXT_COLOR];
         
         [attributedString setFont:TGSystemFont(13) forRange:range];
         
-      //  [attributedString setAlignment:NSLeftTextAlignment range:attributedString.range];
+        [attributedString setAlignment:NSLeftTextAlignment range:range];
         
         return attributedString;
     }

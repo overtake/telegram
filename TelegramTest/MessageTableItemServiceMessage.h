@@ -19,7 +19,7 @@ typedef enum {
 
 - (id) initWithDate:(int)date;
 
-@property (nonatomic, strong) NSAttributedString *messageAttributedString;
+@property (nonatomic, strong) NSMutableAttributedString *messageAttributedString;
 
 @property (nonatomic) MessageTableItemServiceMessageType type;
 

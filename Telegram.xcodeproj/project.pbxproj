@@ -727,6 +727,7 @@
 		C2D51C3E1B2618DE009327C0 /* TGTransformScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D7C5B11B2B4FAF0042DC01 /* TGMenuItemPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */; };
+		C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2190,6 +2191,8 @@
 		C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTransformScrollView.m; sourceTree = "<group>"; };
 		C2D7C5AF1B2B4FAF0042DC01 /* TGMenuItemPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMenuItemPhoto.h; sourceTree = "<group>"; };
 		C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMenuItemPhoto.m; sourceTree = "<group>"; };
+		C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartBotSenderItem.h; sourceTree = "<group>"; };
+		C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartBotSenderItem.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -3262,6 +3265,8 @@
 				C2C1DC2B1A44942E00BBCC63 /* StickerSenderItem.m */,
 				C2C85B851AE6597000FBEABD /* ImageAttachSenderItem.h */,
 				C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */,
+				C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */,
+				C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -6227,6 +6232,7 @@
 				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
+				C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */,
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,
 				C2CBF6B71AFB860D006BF90A /* DownloadOperation.m in Sources */,
 				C2D51BF91B21C707009327C0 /* TGAudioProgressView.m in Sources */,

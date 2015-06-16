@@ -150,7 +150,7 @@
         
         BOOL accept = ![self mouseInText:theEvent];;
         
-        if(accept)
+        if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
             [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
     }
     

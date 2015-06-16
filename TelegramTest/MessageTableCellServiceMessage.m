@@ -11,9 +11,10 @@
 #import "TMMediaController.h"
 #import "TGImageView.h"
 #import "TGPhotoViewer.h"
+#import "TGCTextView.h"
 @interface MessageTableCellServiceMessage()
 
-@property (nonatomic, strong) TMHyperlinkTextField *textField;
+@property (nonatomic, strong) TGCTextView *textField;
 @property (nonatomic, strong) TGImageView *photoImageView;
 @end
 
@@ -23,13 +24,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.textField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 10, 0, 0)];
-        [self.textField setEditable:NO];
-        [self.textField setSelectable:NO];
-        [self.textField setBordered:NO];
-        [self.textField setDrawsBackground:NO];
-        [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setBezeled:NO];
+        self.textField = [[TGCTextView alloc] initWithFrame:NSMakeRect(0, 10, 0, 0)];
+        
+      //  [self.textField setEditable:YES];
+        
         [self addSubview:self.textField];
         
         self.photoImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
@@ -84,8 +82,7 @@
     [super setItem:item];
 
     if(item.type == MessageTableItemServiceMessageAction) {
-        [self.textField setAttributedStringValue:item.messageAttributedString];
-        [self.textField setAlignment:NSCenterTextAlignment];
+        [self.textField setAttributedString:item.messageAttributedString];
         [self.textField setFrameSize:item.blockSize];
         [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.blockSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
         
@@ -103,20 +100,28 @@
         }
     } else if(item.type == MessagetableitemServiceMessageDescription) {
         [self.photoImageView setHidden:YES];
-        [self.textField setAttributedStringValue:item.messageAttributedString];
         [self.textField setFrameSize:item.blockSize];
+        [self.textField setAttributedString:item.messageAttributedString];
+       
         [self.textField setFrameOrigin:NSMakePoint(78, 0)];
-
+        
         
     } else  {
         [self.photoImageView setHidden:YES];
-        [self.textField setAttributedStringValue:item.messageAttributedString];
-        [self.textField setAlignment:NSLeftTextAlignment];
+        [self.textField setAttributedString:item.messageAttributedString];
         [self.textField setFrameSize:item.blockSize];
         [self.textField setFrameOrigin:NSMakePoint(74, 8)];
     }
     
     
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+}
+
+-(NSMenu *)contextMenu {
+    return nil;
 }
 
 @end

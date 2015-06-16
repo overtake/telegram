@@ -764,8 +764,8 @@
                 if(_isEditable)
                     [[NSCursor IBeamCursor] set];
             }
-            if(_isEditable)
-                 return;
+           // if(_isEditable)
+            return;
         }
     }
     
@@ -784,7 +784,7 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if(self.selectRange.location == NSNotFound) {
+    if(self.selectRange.location == NSNotFound || !_isEditable) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest;

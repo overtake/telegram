@@ -14,6 +14,8 @@
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TMTextField *textField;
 
+@property (nonatomic,strong) TL_replyKeyboardMarkup *keyboard;
+
 
 
 @end
@@ -47,8 +49,14 @@
 -(void)setKeyboardButton:(TLKeyboardButton *)keyboardButton {
     _keyboardButton = keyboardButton;
     [_textField setStringValue:_keyboardButton.text];
+    [_textField sizeToFit];
     
-    [_textField setFrame:self.bounds];
+   
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+     [_textField setCenterByView:self];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -65,8 +73,6 @@
 @property (nonatomic,strong) TMView *containerView;
 
 
-@property (nonatomic,strong) NSImageView *deleteImageView;
-
 @property (nonatomic,strong) NSArray *rows;
 
 @end
@@ -78,27 +84,10 @@
     if(self = [super initWithFrame:frameRect]) {
         _scrollView = [[NSScrollView alloc] initWithFrame:self.bounds];
         
-        
-        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width , NSHeight(self.frame) - image_CancelReply().size.height , image_CancelReply().size.width , image_CancelReply().size.height)];
-        
-        _deleteImageView.image = image_CancelReply();
-        
-        weak();
-        
-        [_deleteImageView setCallback:^{
-            
-            [weakSelf deleteKeyboard];
-            
-        }];
-        
-        [_deleteImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-        
        
         
         [self addSubview:_scrollView];
-        
-        [self addSubview:_deleteImageView];
-        
+
         
         _containerView = [[TMView alloc] initWithFrame:self.bounds];
         _containerView.backgroundColor = [NSColor clearColor];
@@ -139,6 +128,9 @@
     [self load];
 }
 
+-(BOOL)isCanShow {
+    return _rows.count > 0;
+}
 
 -(void)load {
     
@@ -195,7 +187,7 @@
     
     
     
-    int itemHeight = 24;
+    int itemHeight = 33;
     
     NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + 6;
     
@@ -229,18 +221,16 @@
     _rows = f;
     
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight+12)];
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight+3)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_deleteImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - image_CancelReply().size.width , NSHeight(self.frame) - image_CancelReply().size.height)];
-    
     __block int x = 0;
     __block int y = 3;
     
-    int itemHeight = 24;
+    int itemHeight = 33;
     
     __block int k = 0;
     
