@@ -165,14 +165,22 @@
     
     __block TLWebPage *webpage;
     
+    
+    __block TL_localMessage *keyboardMessage;
+    
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
         if(data)
             replyMessage = [TLClassStore deserialize:data];
         
+        
+        data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+        if(data)
+            keyboardMessage = [TLClassStore deserialize:data];
+        
         [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-
+       
     }];
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
@@ -180,7 +188,12 @@
         webpage = [Storage findWebpage:[message webpageLink]];
     }
     
+    if(!replyMessage) {
+        replyMessage = keyboardMessage;
+    }
+    
     int reply_to_msg_id = replyMessage.n_id;
+    
     
     int flags = TGOUTMESSAGE;
     

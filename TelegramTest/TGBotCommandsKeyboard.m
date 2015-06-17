@@ -14,7 +14,7 @@
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TMTextField *textField;
 
-@property (nonatomic,strong) TL_replyKeyboardMarkup *keyboard;
+@property (nonatomic,strong) TL_localMessage *keyboard;
 
 
 
@@ -60,7 +60,14 @@
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
-    [[Telegram rightViewController].messagesViewController sendMessage:_keyboardButton.text forConversation:_conversation];
+    
+    NSString *command = _keyboardButton.text;
+    
+    if(_conversation.type == DialogTypeChat && _keyboard.fromUser.username.length > 0) {
+        command = [[NSString stringWithFormat:@"@%@ ",_keyboard.fromUser.username] stringByAppendingString:command];
+    }
+    
+    [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
 }
 
 @end
@@ -136,7 +143,7 @@
     
     _rows = nil;
 
-    __block TL_replyKeyboardMarkup *keyboard;
+    __block TL_localMessage *keyboard;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
         
@@ -157,7 +164,7 @@
 }
 
 
--(void)drawKeyboardWithKeyboard:(TL_replyKeyboardMarkup *)keyboard {
+-(void)drawKeyboardWithKeyboard:(TL_localMessage *)keyboard {
     
     NSMutableArray *f = [[NSMutableArray alloc] init];
     
@@ -165,7 +172,7 @@
     
     __block int rowId = 0;
     
-    [keyboard.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
+    [keyboard.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
         
         [f addObject:[[NSMutableArray alloc] init]];
         NSMutableArray *row = f[rowId];
@@ -210,7 +217,7 @@
             
             [itemView setKeyboardButton:button];
             [itemView setConversation:_conversation];
-            
+            [itemView setKeyboard:keyboard];
             [_containerView addSubview:itemView];
             
         }];
@@ -221,7 +228,7 @@
     _rows = f;
     
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight+3)];
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), _rows.count == 0 ? 0 : maxHeight+2)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {

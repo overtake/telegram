@@ -31,7 +31,7 @@ NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
 NSString *const REPLAY_COLLECTION = @"replay_collection";
 NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
-NSString *const BOT_COMMANDS = @"bot_commands";
+NSString *const BOT_COMMANDS = @"bot_commands_v1";
 -(id)init {
     if(self = [super init]) {
         [self open:nil];

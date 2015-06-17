@@ -215,7 +215,7 @@
     }
     
     
-    [self checkBotKeyboard:YES animated:NO forceShow:NO];
+    [self checkBotKeyboard:YES animated:NO forceShow:YES];
 
     
     [self checkReplayMessage:YES animated:NO];

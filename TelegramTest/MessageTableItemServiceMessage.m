@@ -81,7 +81,7 @@
             self.imageObject.imageSize = self.photoSize;
         }
         
-        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot ? URLFindTypeBotCommands : 0)];
+        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
     }
     return self;
 }

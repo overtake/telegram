@@ -141,6 +141,8 @@
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
+    if(self.flags & (1 << 6))
+        [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
@@ -156,6 +158,8 @@
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
+    if(self.flags & (1 << 6))
+        self.reply_markup = [ClassStore TLDeserialize:stream];
 }
 
 -(int)peer_id {

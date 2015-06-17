@@ -231,13 +231,24 @@
     if(message.fromUser.isBot) {
         if(message.reply_markup != nil && !message.n_out) {
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                [transaction setObject:[TLClassStore serialize:message.reply_markup] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
             }];
             
             [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         } else if(!message.n_out) {
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                
+                NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                
+                if(data){
+                    TL_localMessage *msg = [TLClassStore deserialize:data];
+                    
+                    if(msg.from_id == message.from_id) {
+                        [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                    }
+                }
+                
+                
             }];
             [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         }
