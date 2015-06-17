@@ -121,7 +121,7 @@ NSImage *placeholder() {
             
             _desc = desc;
             
-            [desc detectExternalLinks];
+            [desc detectAndAddLinks:URLFindTypeLinks];
         } else {
             _desc = [[NSAttributedString alloc] init];
         }

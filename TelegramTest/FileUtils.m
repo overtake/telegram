@@ -635,7 +635,20 @@ void open_link(NSString *link) {
                 add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[name substringFromIndex:stickerPrefix.length]]);
                 return;
             } else if([name rangeOfString:@"/"].location == NSNotFound) {
-                open_user_by_name(name);
+                
+                NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
+                
+                if([name rangeOfString:@"?"].location != NSNotFound) {
+                    NSDictionary *vars = getUrlVars(name);
+                    
+                    user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                   
+                    if(vars[@"s"]) {
+                        user[@"start"] = vars[@"s"];
+                    }
+                }
+                
+                open_user_by_name(user);
                 return;
             }
             
