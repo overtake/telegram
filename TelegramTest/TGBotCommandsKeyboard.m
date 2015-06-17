@@ -63,10 +63,6 @@
     
     NSString *command = _keyboardButton.text;
     
-    if(_conversation.type == DialogTypeChat && _keyboard.fromUser.username.length > 0) {
-        command = [[NSString stringWithFormat:@"@%@ ",_keyboard.fromUser.username] stringByAppendingString:command];
-    }
-    
     [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
 }
 

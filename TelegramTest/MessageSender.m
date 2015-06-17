@@ -159,7 +159,9 @@
 
 
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation {
++(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation {
+    
+    __block NSString *message = msg;
     
     __block TL_localMessage *replyMessage;
     
@@ -176,12 +178,41 @@
         
         
         data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-        if(data)
+        if(data) {
             keyboardMessage = [TLClassStore deserialize:data];
+            
+        }
+        
         
         [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
        
     }];
+    
+    
+    __block BOOL clear = YES;
+    
+    [keyboardMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+            
+            if([message isEqualToString:button.text]) {
+                clear = NO;
+                
+                if(conversation.type == DialogTypeChat && keyboardMessage.fromUser.username.length > 0) {
+                    message = [[NSString stringWithFormat:@"@%@ ",keyboardMessage.fromUser.username] stringByAppendingString:message];
+                }
+                
+                *stop = YES;
+            }
+            
+        }];
+        
+    }];
+    
+    
+    if(clear) {
+        keyboardMessage = nil;
+    }
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
         
