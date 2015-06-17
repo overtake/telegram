@@ -41,8 +41,7 @@
     
     
     
-    [self.textAttributed detectAndAddLinks];
-    
+    [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot ? URLFindTypeBotCommands : 0)];
     
     
     [self updateWebPage];

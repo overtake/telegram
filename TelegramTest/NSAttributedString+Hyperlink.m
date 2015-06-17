@@ -1,5 +1,5 @@
 #import "NSAttributedString+Hyperlink.h"
-#import "NSString+FindURLs.h"
+
 
 
 @implementation NSMutableAttributedString (Hyperlink)
@@ -17,9 +17,9 @@
 	return attrString;
 }
 
--(void)detectAndAddLinks {
+-(void)detectAndAddLinks:(URLFindType)urlType {
     
-    NSArray *linkLocations = [[self string] locationsOfLinks];
+    NSArray *linkLocations = [[self string] locationsOfLinks:urlType];
     NSArray *links = [[self string] arrayOfLinks:linkLocations];
     
     [self beginEditing];
@@ -48,38 +48,6 @@
     
 }
 
--(void)detectExternalLinks {
-    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
-    
-    
-    NSArray *linkLocations = [detect matchesInString:[self string] options:0 range:NSMakeRange(0, [self length])];
-    
-    NSArray *links = [[self string] arrayOfLinks:linkLocations];
-    
-    [self beginEditing];
-    int i = 0;
-    for( NSString *link in links ) {
-        if(link) {
-            id object = [linkLocations objectAtIndex:i];
-            if(object) {
-                NSRange range = [object range];
-                
-                if(range.location != NSNotFound) {
-                    //  NSURL *url = [NSURL URLWithString:link];
-                    //  if(url) {
-                    [self addAttribute:NSLinkAttributeName value:link range:range];
-                    [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-                    [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-                    
-                    //  }
-                }
-            }
-        }
-        i++;
-    }
-    [self endEditing];
-}
 
 
 @end

@@ -11,9 +11,9 @@
 #import "NSAttributedString+Hyperlink.h"
 @implementation NSTextView (NSTextView_AutomaticLinkDetection)
 
--(void)detectAndAddLinks
+-(void)detectAndAddLinks:(URLFindType)urlType
 {
-    NSArray *linkLocations = [[self string] locationsOfLinks];
+    NSArray *linkLocations = [[self string] locationsOfLinks:urlType];
     NSArray *links = [[self string] arrayOfLinks:linkLocations];
     
     NSRange selectRange = self.selectedRange;

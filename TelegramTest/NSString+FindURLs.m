@@ -25,33 +25,40 @@
     return links;  
 }
 
-- (NSArray *)locationsOfLinks
+- (NSArray *)locationsOfLinks:(URLFindType)findType
 {
    
     NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
     
     
-    NSArray *results = [detect matchesInString:self options:0 range:NSMakeRange(0, [self length])];
+    NSMutableArray *userNames = [[NSMutableArray alloc] init];
+    NSMutableArray *hashTags = [[NSMutableArray alloc] init];
+    NSMutableArray *botCommands = [[NSMutableArray alloc] init];
+    NSArray *links = @[];
+    
+    
+    if((findType & URLFindTypeLinks) == URLFindTypeLinks)
+        links = [detect matchesInString:self options:0 range:NSMakeRange(0, [self length])];
     
     NSError *error = nil;
     
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@[A-Za-z][A-Za-z0-9_]{4,100}+)" options:NSRegularExpressionCaseInsensitive error:&error];
-    
-    NSMutableArray* userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
+    if((findType & URLFindTypeMentions) == URLFindTypeMentions)
+        userNames = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
     regex = [NSRegularExpression regularExpressionWithPattern:@"(#[\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
-    
-    NSMutableArray* hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
+    if((findType & URLFindTypeHashtags) == URLFindTypeHashtags)
+        hashTags = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
     
     
     regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\S)/[\\w|\\w@\\w]{1,150}+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    if((findType & URLFindTypeBotCommands) == URLFindTypeBotCommands)
+        botCommands = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
-    NSMutableArray* botCommands = [[regex matchesInString:self options:0 range:NSMakeRange(0, [self length])] mutableCopy];
     
-    
-    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSRange range = [obj range];
         
         NSMutableArray *toremoveUsers = [[NSMutableArray alloc] init];
@@ -113,7 +120,7 @@
     //check the contents of messages against the schemes (Regex or other?)
     NSArray* schemeResult = [schemeRegex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
     //return the range of URL scheme to program
-    NSArray* newResult = [results arrayByAddingObjectsFromArray:schemeResult];
+    NSArray* newResult = [links arrayByAddingObjectsFromArray:schemeResult];
     
     return [[[newResult arrayByAddingObjectsFromArray:userNames] arrayByAddingObjectsFromArray:hashTags] arrayByAddingObjectsFromArray:botCommands];
     

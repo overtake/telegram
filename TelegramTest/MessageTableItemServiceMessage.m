@@ -40,7 +40,7 @@
     return self;
 }
 
-- (id)initWithObject:(TLMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
@@ -81,7 +81,7 @@
             self.imageObject.imageSize = self.photoSize;
         }
         
-        [self.messageAttributedString detectAndAddLinks];
+        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot ? URLFindTypeBotCommands : 0)];
     }
     return self;
 }

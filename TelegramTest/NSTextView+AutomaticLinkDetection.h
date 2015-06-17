@@ -10,6 +10,6 @@
 #import "NSString+FindURLs.h"
 @interface NSTextView (NSTextView_AutomaticLinkDetection)
 
--(void)detectAndAddLinks;
+-(void)detectAndAddLinks:(URLFindType)urlType;
 
 @end
