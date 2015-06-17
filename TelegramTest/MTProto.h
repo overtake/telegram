@@ -1458,6 +1458,9 @@
 @interface TL_inputMessagesFilterAudio : TLMessagesFilter
 +(TL_inputMessagesFilterAudio*)create;
 @end
+@interface TL_inputMessagesFilterAudioDocuments : TLMessagesFilter
++(TL_inputMessagesFilterAudioDocuments*)create;
+@end
 	
 @interface TLUpdate()
 @property (nonatomic, strong) NSString* message;
@@ -2480,6 +2483,9 @@
 @property (nonatomic, strong) NSMutableArray* rows;
 @end
 
+@interface TL_replyKeyboardHide : TLReplyMarkup
++(TL_replyKeyboardHide*)create;
+@end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup
 +(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows;
 @end

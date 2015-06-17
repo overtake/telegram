@@ -198,9 +198,9 @@
             if([message isEqualToString:button.text]) {
                 clear = NO;
                 
-                if(conversation.type == DialogTypeChat && keyboardMessage.fromUser.username.length > 0) {
-                    message = [[NSString stringWithFormat:@"@%@ ",keyboardMessage.fromUser.username] stringByAppendingString:message];
-                }
+                //if(conversation.type == DialogTypeChat && keyboardMessage.fromUser.username.length > 0) {
+                //    message = [[NSString stringWithFormat:@"@%@ ",keyboardMessage.fromUser.username] stringByAppendingString:message];
+                //}
                 
                 *stop = YES;
             }

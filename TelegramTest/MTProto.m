@@ -2998,8 +2998,7 @@
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
 	[ClassStore TLSerialize:self.media stream:stream];
-	if(self.flags & (1 << 6))
-        [ClassStore TLSerialize:self.reply_markup stream:stream];
+	if(self.flags & (1 << 6)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -3012,8 +3011,7 @@
 	self.date = [stream readInt];
 	self.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
-	if(self.flags & (1 << 6))
-        self.reply_markup = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 6)) self.reply_markup = [ClassStore TLDeserialize:stream];
 }
         
 -(TL_message *)copy {
@@ -6443,6 +6441,32 @@
 -(TL_inputMessagesFilterAudio *)copy {
     
     TL_inputMessagesFilterAudio *objc = [[TL_inputMessagesFilterAudio alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+        
+@end
+
+@implementation TL_inputMessagesFilterAudioDocuments
++(TL_inputMessagesFilterAudioDocuments*)create {
+	TL_inputMessagesFilterAudioDocuments* obj = [[TL_inputMessagesFilterAudioDocuments alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputMessagesFilterAudioDocuments *)copy {
+    
+    TL_inputMessagesFilterAudioDocuments *objc = [[TL_inputMessagesFilterAudioDocuments alloc] init];
     
     
     
@@ -13283,6 +13307,32 @@
 
 
 @implementation TLReplyMarkup
+@end
+
+@implementation TL_replyKeyboardHide
++(TL_replyKeyboardHide*)create {
+	TL_replyKeyboardHide* obj = [[TL_replyKeyboardHide alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_replyKeyboardHide *)copy {
+    
+    TL_replyKeyboardHide *objc = [[TL_replyKeyboardHide alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+        
 @end
 
 @implementation TL_replyKeyboardMarkup

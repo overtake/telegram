@@ -643,8 +643,8 @@ void open_link(NSString *link) {
                     
                     user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
                    
-                    if(vars[@"s"]) {
-                        user[@"start"] = vars[@"s"];
+                    if(vars[@"start"]) {
+                        user[@"start"] = vars[@"start"];
                     }
                 }
                 
