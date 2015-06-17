@@ -547,6 +547,9 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
 
 
 - (TLInputUser *)inputUser {
+    
+    
+    
     switch (self.type) {
         case TLUserTypeContact:
             return [TL_inputUserContact createWithUser_id:self.n_id];

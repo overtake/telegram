@@ -169,6 +169,8 @@
     
     
     __block TL_localMessage *keyboardMessage;
+    __block BOOL clear = YES;
+    __block BOOL removeKeyboard = NO;
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
@@ -180,34 +182,39 @@
         data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
         if(data) {
             keyboardMessage = [TLClassStore deserialize:data];
-            
+        } else {
+            clear = NO;
         }
         
+        [keyboardMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
+            
+            [obj.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+                
+                if([message isEqualToString:button.text]) {
+                    clear = NO;
+                    
+                    *stop = YES;
+                }
+                
+            }];
+            
+            
+        }];
+        
+        
+        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
+            
+            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+            
+            removeKeyboard = YES;
+        }
         
         [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
        
     }];
     
+
     
-    __block BOOL clear = YES;
-    
-    [keyboardMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
-        
-        [obj.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
-            
-            if([message isEqualToString:button.text]) {
-                clear = NO;
-                
-                //if(conversation.type == DialogTypeChat && keyboardMessage.fromUser.username.length > 0) {
-                //    message = [[NSString stringWithFormat:@"@%@ ",keyboardMessage.fromUser.username] stringByAppendingString:message];
-                //}
-                
-                *stop = YES;
-            }
-            
-        }];
-        
-    }];
     
     
     if(clear) {
@@ -248,17 +255,23 @@
         [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];
     }
     
-    if(replyMessage)
-    {
-        
-        if(conversation.peer_id == [Telegram conversation].peer_id) {
+    
+    if(conversation.peer_id == [Telegram conversation].peer_id) {
+        if(replyMessage || removeKeyboard) {
             [ASQueue dispatchOnMainQueue:^{
                 
-                [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
+                if(replyMessage) {
+                    [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
+                }
+                if(removeKeyboard) {
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
+                }
+                
             }];
         }
         
     }
+    
     
     return  outMessage;
 }

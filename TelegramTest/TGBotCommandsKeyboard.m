@@ -64,6 +64,7 @@
     NSString *command = _keyboardButton.text;
     
     [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
+    
 }
 
 @end

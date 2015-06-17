@@ -230,27 +230,45 @@
 -(void)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message {
     if(message.fromUser.isBot) {
         if(message.reply_markup != nil && !message.n_out) {
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-            }];
             
-            [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
-        } else if(!message.n_out) {
+            __block TL_localMessage *currentKeyboard;
+            
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
                 
                 NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 
-                if(data){
-                    TL_localMessage *msg = [TLClassStore deserialize:data];
+                if(data)
+                    currentKeyboard = [TLClassStore deserialize:data];
+                
+                if([message.reply_markup isKindOfClass:[TL_replyKeyboardHide class]]) {
                     
-                    if(msg.from_id == message.from_id) {
+                    if(currentKeyboard.from_id == message.from_id) {
                         [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     }
+                } else {
+                     [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 }
                 
-                
             }];
+            
             [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
+        } else if(!message.n_out) {
+            
+//            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+//                
+//                NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+//                
+//                if(data){
+//                    TL_localMessage *msg = [TLClassStore deserialize:data];
+//                                
+//                    if(msg.from_id == message.from_id) {
+//                        [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+//                    }
+//                }
+//                
+//                
+//            }];
+//            [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         }
     }
 }
