@@ -155,8 +155,6 @@
 
 @property (nonatomic,strong) StickersPanelView *stickerPanel;
 
-
-
 @property (nonatomic,strong) NSMutableDictionary *fwdCache;
 
 @property (nonatomic,strong) NSMutableArray *replyMsgsStack;
@@ -1226,7 +1224,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)showTopInfoView:(BOOL)animated {
     
-    return;
     
     
     NSRect topRect = NSMakeRect(0,self.view.frame.size.height-40, self.view.frame.size.width, 40);

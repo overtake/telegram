@@ -291,8 +291,8 @@
 		C22520E518B2801D00049558 /* MTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C22520E418B2801D00049558 /* MTConnection.m */; };
 		C226CC6F1B32DA000042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C226CC751B32DA080042C5D8 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C226CC761B32DA080042C5D8 /* HockeySDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CC771B3303210042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CC781B3303210042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -858,19 +858,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C226CC771B3303210042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
+				C226CC781B3303210042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C23536A919CB1A5A0044978E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-				C226CC751B32DA080042C5D8 /* Sparkle.framework in CopyFiles */,
-				C226CC761B32DA080042C5D8 /* HockeySDK.framework in CopyFiles */,
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C2CBF3C41AF38427006BF90A /* Embed App Extensions */ = {
@@ -5300,7 +5291,6 @@
 				CEB09E5517DAFC250055F150 /* Frameworks */,
 				CEB09E5617DAFC250055F150 /* Resources */,
 				0AB6A4FB1827DD4B0015920A /* Copy Files (6 items) */,
-				C23536A919CB1A5A0044978E /* CopyFiles */,
 				C2CBF3C41AF38427006BF90A /* Embed App Extensions */,
 				C2CBF64F1AFA9DCB006BF90A /* ShellScript */,
 			);

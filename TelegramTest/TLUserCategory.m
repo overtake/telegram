@@ -66,6 +66,8 @@ DYNAMIC_PROPERTY(DType);
             type = TLUserTypeContact;
         } else if((self.flags & TGUSERFLAGDELETED) == TGUSERFLAGDELETED) {
             type = TLUserTypeDeleted;
+        } else if(self.flags & (1 << 4)) {
+            type = TLUserTypeRequest;
         } else
             type = TLUserTypeForeign;
         
