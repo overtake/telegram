@@ -202,7 +202,7 @@
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
                 
-                [self checkBotKeyboard:dialog forMessage:lastMessage];
+                [self checkBotKeyboard:dialog forMessage:lastMessage notify:YES];
                 
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
@@ -227,7 +227,10 @@
 }
 
 
--(void)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message {
+-(BOOL)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message notify:(BOOL)notify {
+    
+    __block BOOL needNotify = NO;
+    
     if(message.fromUser.isBot || ([message.action isKindOfClass:[TL_messageActionChatDeleteUser class]])) {
         if(message.reply_markup != nil && !message.n_out) {
             
@@ -244,14 +247,16 @@
                     
                     if(currentKeyboard.from_id == message.from_id) {
                         [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                        needNotify = YES;
                     }
                 } else {
-                     [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                    [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                    needNotify = YES;
                 }
                 
             }];
-            
-            [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
+            if(notify)
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         } else if(!message.n_out && [message.action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
             
             __block BOOL updKeyboard = NO;
@@ -265,16 +270,19 @@
                                 
                     if(msg.from_id == message.action.user_id) {
                         [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                        needNotify = YES;
                         updKeyboard = YES;
                     }
                 }
                 
                 
             }];
-            if(updKeyboard)
+            if(updKeyboard && notify)
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         }
     }
+    
+    return needNotify;
 }
 
 -(NSUInteger)positionForConversation:(TL_conversation *)dialog {
@@ -467,7 +475,7 @@
         [self add:@[dialog]];
         
         
-        [self checkBotKeyboard:dialog forMessage:message];
+        [self checkBotKeyboard:dialog forMessage:message notify:YES];
         
         
         
@@ -556,7 +564,11 @@
             
             [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
                 
-                [self checkBotKeyboard:obj forMessage:obj.lastMessage];
+                BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
+                
+                if(needNotify) {
+                     [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
+                }
                 
             }];
             
@@ -615,8 +627,6 @@
 }
 
 - (void)add:(NSArray *)all {
-    
-    int bp = 0;
     
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
