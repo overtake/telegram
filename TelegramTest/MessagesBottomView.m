@@ -1064,7 +1064,7 @@
     }
     
    
-    if(forceShow) {
+    if(!forceShow) {
         forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 1)) == (1 << 1);
     }
     
