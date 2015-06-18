@@ -257,7 +257,7 @@
             }];
             if(notify)
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
-        } else if(!message.n_out && [message.action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
+        } else if(!message.n_out || [message.action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
             
             __block BOOL updKeyboard = NO;
             
