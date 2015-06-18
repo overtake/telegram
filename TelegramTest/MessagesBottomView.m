@@ -159,6 +159,9 @@
     [Notification removeObserver:self];
 }
 
+-(void)hideBotKeyboard:(NSNotification *)notification {
+    [self botKeyboardButtonAction:_botKeyboardButton];
+}
 
 -(void)botKeyboardNotification:(NSNotification *)notification
 {
@@ -173,6 +176,8 @@
     [Notification removeObserver:self];
     
     [Notification addObserver:self selector:@selector(botKeyboardNotification:) name:[Notification notificationNameByDialog:dialog action:@"botKeyboard"]];
+    
+    [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyaboard"]];
 
     //botKeyboard
     
@@ -215,7 +220,7 @@
     }
     
     
-    [self checkBotKeyboard:YES animated:NO forceShow:YES];
+    [self checkBotKeyboard:YES animated:NO forceShow:NO];
 
     
     [self checkReplayMessage:YES animated:NO];
@@ -1059,6 +1064,9 @@
     }
     
    
+    if(forceShow) {
+        forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 1)) == (1 << 1);
+    }
     
     [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
     

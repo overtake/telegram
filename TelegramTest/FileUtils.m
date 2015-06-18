@@ -573,6 +573,15 @@ void open_user_by_name(NSDictionary *params) {
 void open_link(NSString *link) {
     
     
+    if([link hasPrefix:@"USER_PROFILE:"]) {
+        
+        TLUser *user = [[UsersManager sharedManager] find:[[link substringFromIndex:@"USER_PROFILE:".length] intValue]];
+        
+        [[Telegram rightViewController] showUserInfoPage:user];
+        
+        return;
+    }
+    
     if([link hasPrefix:TGImportCardPrefix]) {
         
         open_card([link substringFromIndex:TGImportCardPrefix.length]);

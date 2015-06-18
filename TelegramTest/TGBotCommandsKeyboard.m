@@ -69,6 +69,10 @@
     
     [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
     
+    
+    if(((_keyboard.reply_markup.flags & (1 << 1) ) == (1 << 1))) {
+        [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyaboard"] data:@{KEY_DIALOG:_conversation}];
+    }
 }
 
 @end
@@ -82,6 +86,7 @@
 
 
 @property (nonatomic,strong) NSArray *rows;
+@property (nonatomic,strong) TL_localMessage *keyboard;
 
 @end
 
@@ -155,6 +160,8 @@
         }
         
     }];
+    
+    _keyboard = keyboard;
     
     if(keyboard) {
         [self drawKeyboardWithKeyboard:keyboard];

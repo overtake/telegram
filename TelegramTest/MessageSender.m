@@ -202,12 +202,12 @@
         }];
         
         
-        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
-            
-            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-            
-            removeKeyboard = YES;
-        }
+//        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
+//            
+//            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+//            
+//            removeKeyboard = YES;
+//        }
         
         [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
        
@@ -262,9 +262,6 @@
                 
                 if(replyMessage) {
                     [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
-                }
-                if(removeKeyboard) {
-                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
                 }
                 
             }];
