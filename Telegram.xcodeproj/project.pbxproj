@@ -289,6 +289,10 @@
 		C22421CA19EBCFA80030078A /* BlockedUserRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421C919EBCFA80030078A /* BlockedUserRowItem.m */; };
 		C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421D019EBCFBC0030078A /* BlockedUserRowView.m */; };
 		C22520E518B2801D00049558 /* MTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C22520E418B2801D00049558 /* MTConnection.m */; };
+		C226CC6F1B32DA000042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C226CC751B32DA080042C5D8 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CC761B32DA080042C5D8 /* HockeySDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -710,10 +714,6 @@
 		C2D51BA31B17AA14009327C0 /* TGBotCommandsPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BA21B17AA14009327C0 /* TGBotCommandsPopup.m */; };
 		C2D51BE31B21C67B009327C0 /* EMImageData.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BE01B21C67B009327C0 /* EMImageData.m */; };
 		C2D51BE41B21C67B009327C0 /* EMInMemoryImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BE21B21C67B009327C0 /* EMInMemoryImageCache.m */; };
-		C2D51BE81B21C6B8009327C0 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D51BE91B21C6B8009327C0 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D51BEA1B21C6BD009327C0 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D51BEB1B21C6BD009327C0 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D51BF71B21C707009327C0 /* TGAudioPlayerListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BEE1B21C707009327C0 /* TGAudioPlayerListView.m */; };
 		C2D51BF81B21C707009327C0 /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF01B21C707009327C0 /* TGAudioPlayerWindow.m */; };
 		C2D51BF91B21C707009327C0 /* TGAudioProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF21B21C707009327C0 /* TGAudioProgressView.m */; };
@@ -858,8 +858,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D51BE81B21C6B8009327C0 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D51BE91B21C6B8009327C0 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -870,6 +868,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				C226CC751B32DA080042C5D8 /* Sparkle.framework in CopyFiles */,
+				C226CC761B32DA080042C5D8 /* HockeySDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2441,8 +2441,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D51BEA1B21C6BD009327C0 /* Sparkle.framework in Frameworks */,
-				C2D51BEB1B21C6BD009327C0 /* HockeySDK.framework in Frameworks */,
+				C226CC6F1B32DA000042C5D8 /* Sparkle.framework in Frameworks */,
+				C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

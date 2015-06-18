@@ -1029,7 +1029,7 @@
                     
                     callback(command);
                     
-                 //   [[Telegram rightViewController].messagesViewController sendMessage];
+                    [[Telegram rightViewController].messagesViewController sendMessage];
                     
                 }];
                 

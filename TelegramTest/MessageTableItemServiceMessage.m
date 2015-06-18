@@ -44,6 +44,7 @@
     self = [super initWithObject:object];
     if(self) {
         self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
+        [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
         self.type = MessageTableItemServiceMessageAction;
         
         if([object.action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -91,6 +92,9 @@
     
     
     NSSize size = [self.messageAttributedString sizeForTextFieldForWidth:width];
+    
+    _textSize = size;
+    
     size.width = width;
     size.height += 10;
     size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;

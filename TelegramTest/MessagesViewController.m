@@ -724,6 +724,24 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnMainQueue:^{
         
         
+        if(show || (self.conversation.user.isBot && self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])) {
+            [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
+            
+            if(self.bottomView.onClickToLockedView == nil) {
+                weak();
+                
+                [self.bottomView setOnClickToLockedView:^{
+                    [weakSelf sendMessage:@"/start" forConversation:weakSelf.conversation];
+                }];
+            }
+
+        } else {
+            [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+            [self.bottomView setOnClickToLockedView:nil];
+        }
+       
+        
+        
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.noMessagesView setHidden:!show];

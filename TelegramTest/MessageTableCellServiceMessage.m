@@ -100,7 +100,7 @@
         }
     } else if(item.type == MessagetableitemServiceMessageDescription) {
         [self.photoImageView setHidden:YES];
-        [self.textField setFrameSize:item.blockSize];
+        [self.textField setFrameSize:item.textSize];
         [self.textField setAttributedString:item.messageAttributedString];
        
         [self.textField setFrameOrigin:NSMakePoint(78, 0)];
@@ -109,7 +109,7 @@
     } else  {
         [self.photoImageView setHidden:YES];
         [self.textField setAttributedString:item.messageAttributedString];
-        [self.textField setFrameSize:item.blockSize];
+        [self.textField setFrameSize:item.textSize];
         [self.textField setFrameOrigin:NSMakePoint(74, 8)];
     }
     

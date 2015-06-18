@@ -722,7 +722,7 @@
         
         int width = CTLineGetTypographicBounds(lineRef, &ascent, &descent, &leading);
         
-        if( (NSMinX(self.frame) + width) > location.x && location.x > NSMinX(self.frame)) {
+        if( (NSMinX(self.frame) + width) > location.x) { // && location.x > NSMinX(self.frame)
             NSRange range;
             
             int position = (int) CTLineGetStringIndexForPosition(lineRef, location);

@@ -9,11 +9,16 @@
 #import "NoMessagesView.h"
 #import "MessagesUtils.h"
 #import "FullUsersManager.h"
+#import "TGCTextView.h"
+#import "NSAttributedString+Hyperlink.h"
 @interface NoMessagesView ()
 @property (nonatomic,strong) NSProgressIndicator *progress;
-@property (nonatomic,strong) TMTextField *field;
+@property (nonatomic,strong) TGCTextView *field;
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) NSAttributedString *secret;
+
+@property (nonatomic,strong) NSAttributedString *defAttrString;
+
 @end
 
 @implementation NoMessagesView
@@ -26,16 +31,9 @@
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
         
-        _field = [[TMTextField alloc] initWithFrame:NSMakeRect(0, roundf(self.frame.size.height / 2 - 12.5), self.bounds.size.width, 25)];
-        [_field setAlignment:NSCenterTextAlignment];
-        [_field setEditable:NO];
-        [_field setBordered:NO];
-        [_field setSelectable:NO];
-        [_field setDrawsBackground:NO];
-        [_field setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-        [_field setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
-        [_field setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [_field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
+        _field = [[TGCTextView alloc] initWithFrame:NSMakeRect(0, roundf(self.frame.size.height / 2 - 12.5), self.bounds.size.width, 25)];
+       
+      
         
        // [self.field setBackgroundColor:NSColorFromRGB(0xf43d2)];
         
@@ -51,10 +49,13 @@
         self.secret = [self buildSecretString];
         
         
-        [_field setAttributedStringValue:self.secret];
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
+        [attr appendString:NSLocalizedString(@"Conversation.NoMessages", nil) withColor:NSColorFromRGB(0x9b9b9b)];
         
-       
+        [attr setAlignment:NSCenterTextAlignment range:attr.range];
+        
+        _defAttrString = attr;
 
     }
     return self;
@@ -150,11 +151,15 @@
     
     _conversation = conversation;
     // && conversation.top_message == -1
+    
+    
+    
     if(conversation.type == DialogTypeSecretChat) {
+        
         
         self.secret = [self buildSecretString];
         
-        [self.field setAttributedStringValue:self.secret];
+        [self.field setAttributedString:self.secret];
                 
     } else {
         if(conversation.user.isBot) {
@@ -163,23 +168,27 @@
                 TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
                 
                 
-                [self.field setAttributedStringValue:[MessagesUtils serviceAttributedMessage:service forAction:service.action]];
+                NSMutableAttributedString *attr = [[MessagesUtils serviceAttributedMessage:service forAction:service.action] mutableCopy];
+                
+                [attr detectAndAddLinks:URLFindTypeAll];
+                
+                
+                [self.field setAttributedString:attr];
                 
             }];
             
-            
-            
-            
-        } else
-            [self.field setStringValue:NSLocalizedString(@"Conversation.NoMessages", nil)];
+        } else {
+            [self.field setAttributedString:_defAttrString];
+        }
+        
     }
     
     self.progress.usesThreadedAnimation = NO;
 
     
-    [self.field sizeToFit];
+    NSSize size = [self.field.attributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame) - 100];
     
-    [self.field setFrameSize:NSMakeSize(230, self.field.frame.size.height)];
+    [self.field setFrameSize:size];
     [self.field setCenterByView:self];
 }
 

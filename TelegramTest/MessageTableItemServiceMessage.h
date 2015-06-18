@@ -27,6 +27,6 @@ typedef enum {
 @property (nonatomic) NSSize photoSize;
 @property (nonatomic, strong) TLFileLocation *photoLocation;
 @property (nonatomic, strong) NSImage *cachePhoto;
-
+@property (nonatomic, assign) NSSize textSize;
 @property (nonatomic,strong) TGImageObject *imageObject;
 @end

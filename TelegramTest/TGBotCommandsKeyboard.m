@@ -36,9 +36,10 @@
         [_textField setFont:TGSystemFont(13)];
         [_textField setAlignment:NSCenterTextAlignment];
         [_textField setAutoresizingMask:NSViewWidthSizable];
+        [[_textField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:_textField];
         
-        
+       
         
     }
     
@@ -51,12 +52,15 @@
     [_textField setStringValue:_keyboardButton.text];
     [_textField sizeToFit];
     
-   
+    [self setToolTip:_keyboardButton.text];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-     [_textField setCenterByView:self];
+    [_textField setFrameSize:NSMakeSize(newSize.width-10, NSHeight(_textField.frame))];
+    [_textField setCenteredYByView:self];
+    [_textField setFrameOrigin:NSMakePoint(5, NSMinY(self.textField.frame) +2)];
+    
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
