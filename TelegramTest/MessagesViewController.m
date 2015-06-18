@@ -1246,9 +1246,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)hideTopInfoView:(BOOL)animated {
     
-    
-    return;
-    
     NSSize newSize = NSMakeSize(self.table.scrollView.frame.size.width, self.view.frame.size.height-_lastBottomOffsetY);
     NSPoint newPoint = NSMakePoint(0, self.view.frame.size.height);
     if(animated) {

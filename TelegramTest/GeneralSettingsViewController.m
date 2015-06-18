@@ -156,9 +156,6 @@
         
         
         [menu addItem:item];
-        if(i == 0) {
-            [menu addItem:[NSMenuItem separatorItem]];
-        }
     }
     
     soundNotification.menu = menu;
