@@ -45,7 +45,7 @@ static const TGTwoColors colors[] = {
     }
 
     
-   if((self.downloadItem && (self.downloadItem.downloadState != DownloadStateCompleted || self.downloadItem.downloadState != DownloadStateCanceled)) || !self.location)
+    if((self.downloadItem && (self.downloadItem.downloadState != DownloadStateCompleted && self.downloadItem.downloadState != DownloadStateCanceled && self.downloadItem.downloadState != DownloadStateWaitingStart)) || !self.location)
         return;//[_downloadItem cancel];
     
     

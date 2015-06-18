@@ -32,7 +32,7 @@
 -(void)initDownloadItem {
     
     
-    if((self.downloadItem && (self.downloadItem.downloadState != DownloadStateCompleted || self.downloadItem.downloadState != DownloadStateCanceled)) || !self.location)
+    if((self.downloadItem && (self.downloadItem.downloadState != DownloadStateCompleted && self.downloadItem.downloadState != DownloadStateCanceled && self.downloadItem.downloadState != DownloadStateWaitingStart)))
         return;//[_downloadItem cancel];
     
     
