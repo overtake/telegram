@@ -156,7 +156,6 @@
     
     if(conversation.type == DialogTypeSecretChat) {
         
-        
         self.secret = [self buildSecretString];
         
         [self.field setAttributedString:self.secret];
@@ -165,15 +164,21 @@
         if(conversation.user.isBot) {
             
             [[FullUsersManager sharedManager] loadUserFull:conversation.user callback:^(TL_userFull *userFull) {
-                TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
                 
-                
-                NSMutableAttributedString *attr = [[MessagesUtils serviceAttributedMessage:service forAction:service.action] mutableCopy];
-                
-                [attr detectAndAddLinks:URLFindTypeAll];
-                
-                
-                [self.field setAttributedString:attr];
+                if(userFull.bot_info.n_description.length > 0) {
+                    TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                    
+                    
+                    NSMutableAttributedString *attr = [[MessagesUtils serviceAttributedMessage:service forAction:service.action] mutableCopy];
+                    
+                    [attr detectAndAddLinks:URLFindTypeAll];
+                    
+                    
+                    [self.field setAttributedString:attr];
+                } else {
+                    [self.field setAttributedString:_defAttrString];
+                }
+               
                 
             }];
             
