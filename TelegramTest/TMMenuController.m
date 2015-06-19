@@ -74,7 +74,8 @@
         }
         
         
-        
+        self.subTextLayer.truncationMode = @"end";
+        self.textLayer.truncationMode = @"end";
         
         
         self.imageView = [[NSImageView alloc] init];
@@ -155,6 +156,8 @@
         
     }
     
+    [self.subTextLayer setFrameSize:NSMakeSize(NSWidth(self.frame) - (self.imageView.image ? 60 : 10), NSHeight(self.subTextLayer.frame))];
+    [self.textLayer setFrameSize:NSMakeSize(NSWidth(self.frame) - (self.imageView.image ? 60 : 10), NSHeight(self.textLayer.frame))];
     
     if(self.imageView.image == nil) {
         
