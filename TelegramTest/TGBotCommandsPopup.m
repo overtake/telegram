@@ -78,7 +78,7 @@ DYNAMIC_PROPERTY(DUser);
     }];
     
     
-    NSMutableArray *localCommands = [[allCommands subarrayWithRange:NSMakeRange(0, MIN(allCommands.count,20))] mutableCopy];
+    NSMutableArray *localCommands = [[allCommands subarrayWithRange:NSMakeRange(0, MIN(allCommands.count,10))] mutableCopy];
     
     
     [commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {

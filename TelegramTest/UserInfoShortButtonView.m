@@ -169,6 +169,9 @@
     [super setNeedsDisplay:flag];
 }
 
+-(void)sizeToFit {
+    [self setFrameSize:self.frame.size];
+}
 
 - (void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];

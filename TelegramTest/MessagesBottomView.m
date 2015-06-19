@@ -744,7 +744,7 @@
     
     
     self.encryptedStateTextField = [TMTextField defaultTextField];
-    [self.encryptedStateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [self.encryptedStateTextField setFont:TGSystemFont(15)];
     [self.encryptedStateTextField setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
     [self.encryptedStateTextField setTextColor:NSColorFromRGB(0xa1a1a1)];
     [self.secretInfoView addSubview:self.encryptedStateTextField];
@@ -1079,7 +1079,6 @@
     
     [_botKeyboard setHidden:!forceShow];
     
-    [self setFrame:self.frame];
     
     if(updateHeight) {
         [self updateBottomHeight:animated];

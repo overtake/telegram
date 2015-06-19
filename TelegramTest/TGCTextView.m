@@ -791,7 +791,7 @@
         NSString *link = [self linkAtPoint:location hitTest:&hitTest];
         
         if(link) {
-            open_link(link);
+            [self open_link:link];
         } else if(![self _checkClickCount:theEvent]) {
             [super mouseUp:theEvent];
         }
@@ -800,10 +800,11 @@
     }
     
     
-    
-    
-    
     [[NSCursor arrowCursor] set];
+}
+
+-(void)open_link:(NSString *)link {
+    open_link(link);
 }
 
 

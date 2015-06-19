@@ -31,13 +31,10 @@
 }
 
 - (void)remoteLoad {    
-    if(![SettingsArchiver checkMaskedSetting:BlockedContactsSynchronized]) {
-         [self _remoteLoadWithOffset:0 limit:100 array:nil];
-    } else {
-        [[Storage manager] blockedList:^(NSArray *users) {
-            [self add:users];
-        }];
-    }
+     [[Storage manager] blockedList:^(NSArray *users) {
+        [self add:users];
+        [self _remoteLoadWithOffset:0 limit:100 array:nil];
+    }];
 }
 
 - (void)_remoteLoadWithOffset:(int)offset limit:(int)limit array:(NSMutableArray *)array {
@@ -64,8 +61,8 @@
 
 - (void)_compleRemoteLoad:(NSArray *)array {
     [self->keys removeAllObjects];
+    [self->list removeAllObjects];
     [[Storage manager] insertBlockedUsers:array];
-    [SettingsArchiver addSetting:BlockedContactsSynchronized];
     [self add:array];
 }
 
