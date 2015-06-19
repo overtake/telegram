@@ -58,7 +58,7 @@ static int offsetEditable = 30;
         [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
         [self.lastSeenTextField setSelector:@selector(statusForGroupInfo)];
-        
+        [self.lastSeenTextField setTextColor:GRAY_TEXT_COLOR];
         [self addSubview:self.lastSeenTextField];
         
         
@@ -94,6 +94,11 @@ static int offsetEditable = 30;
    // [self.titleTextField setAttributedStringValue:[self rowItem].title];
     
     [self.lastSeenTextField setUser:[self rowItem].user];
+    
+    if([self rowItem].isSearchUser) {
+        [self.lastSeenTextField setUser:nil];
+        [self.lastSeenTextField setStringValue:[NSString stringWithFormat:@"@%@",[self rowItem].user.username]];
+    }
 
     
     [self setSelected:[[self rowItem] isSelected]];

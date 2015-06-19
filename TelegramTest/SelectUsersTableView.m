@@ -375,7 +375,10 @@ static NSCache *cacheItems;
                 [obj rebuildNames];
                 
                // if([obj isKindOfClass:[TL_userContact class]]) {
-                    [converted addObject:[[SelectUserItem alloc] initWithObject:obj]];
+                
+                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+                item.isSearchUser = YES;
+                [converted addObject:item];
               //  }
                 
             }];

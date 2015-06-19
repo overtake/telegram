@@ -494,21 +494,26 @@
 }
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
-     NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog];
-    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
-    [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
+     [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog callback:^(NSArray *ids) {
+         if(ids.count > 0) {
+             [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+             [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
+         }
+         
+     }];
+    
 }
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id {
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:peer.peer_id];
     
-    NSArray *marked = [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id];
+    [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id callback:^(NSArray *ids) {
+        if(ids.count > 0) {
+            [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+        }
+    }];
     
-    if(marked.count > 0) {
-        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:marked}];
-    }
-
 }
 
 - (void)insertDialog:(TL_conversation *)dialog {

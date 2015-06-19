@@ -2102,11 +2102,13 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.conversation.unread_count == 0)
         return;
     
-    NSArray *readed = [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation];
+     [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
+         if(ids.count > 0) {
+             [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+         }
+    }];
     
-    if(readed.count > 0) {
-        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:readed}];
-    }
+    
     
     self.conversation.unread_count = 0;
     

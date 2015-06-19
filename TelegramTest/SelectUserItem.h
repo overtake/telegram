@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) TLUser *user;
 
+@property (nonatomic,assign) BOOL isSearchUser;
+
 @property (nonatomic) BOOL isSelected;
 
 @end

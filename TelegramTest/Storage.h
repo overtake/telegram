@@ -144,7 +144,7 @@ extern NSString *const BOT_COMMANDS;
 
 -(void)markAllInDialog:(TL_conversation *)dialog;
 
--(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id completeHandler:(void (^)(NSArray * ids))completeHandler;
 
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 

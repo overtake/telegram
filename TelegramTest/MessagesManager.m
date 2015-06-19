@@ -390,13 +390,14 @@ static const int seconds_to_notify = 120;
 }
 
 
--(NSArray *)markAllInDialog:(TL_conversation *)dialog {
-    return [self markAllInConversation:dialog max_id:dialog.top_message];
+-(void)markAllInDialog:(TL_conversation *)dialog callback:(void (^)(NSArray *ids))callback {
+    [self markAllInConversation:dialog max_id:dialog.top_message callback:callback];
 }
 
 
--(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id  callback:(void (^)(NSArray *ids))callback{
     
+    dispatch_queue_t queue = dispatch_get_current_queue();
     
     [self.queue dispatchOnQueue:^{
         NSArray *copy = [[self.messages allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d AND self.n_id <= %d AND self.unread == YES",conversation.peer.peer_id,max_id]];
@@ -406,11 +407,18 @@ static const int seconds_to_notify = 120;
             msg.flags&=~TGUNREADMESSAGE;
         }
         
-    } synchronous:YES];
+        [[Storage manager] markAllInConversation:conversation max_id:max_id completeHandler:^(NSArray *ids) {
+            
+            dispatch_async(queue, ^{
+                callback(ids);
+            });
+            
+            
+        }];
+        
+    }];
     
     
-    
-    return [[Storage manager] markAllInConversation:conversation max_id:max_id];
 }
 
 -(void)readMessagesContent:(NSArray *)msg_ids {
@@ -429,7 +437,7 @@ static const int seconds_to_notify = 120;
         
         [Notification perform:UPDATE_READ_CONTENTS data:@{KEY_MESSAGE_ID_LIST:msg_ids}];
         
-    } synchronous:NO];
+    }];
     
     
     
