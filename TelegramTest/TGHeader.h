@@ -40,7 +40,7 @@
 #define TGUSERFLAGDELETED 1 << 13
 #define TGUSERFLAGBOT 1 << 14
 #define TGUSERFLAGREADHISTORY 1 << 15
-
+#define TGBOTGROUPBLOCKED 1 << 16
 
 #define API_VERSION  [NSString stringWithFormat:@"%@.%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]
 

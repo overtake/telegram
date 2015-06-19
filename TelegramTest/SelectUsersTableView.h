@@ -19,7 +19,7 @@ typedef enum {
 @protocol SelectTableDelegate <NSObject>
 
 @required
--(void)selectTableDidChangedItem:(SelectUserItem *)item;
+-(void)selectTableDidChangedItem:(id)item;
 
 @end
 
@@ -37,11 +37,12 @@ typedef enum {
 
 @property (nonatomic,assign) NSUInteger selectLimit;
 
-@property (nonatomic,assign) SelectTableType type;
+@property (nonatomic,assign,readonly) SelectTableType type;
 
 - (BOOL) canSelectItem;
 
-- (void)ready;
+- (void)readyContacts;
+- (void)readyChats;
 
 - (void)search:(NSString *)searchString;
 

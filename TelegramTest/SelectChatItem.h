@@ -9,5 +9,5 @@
 #import "TMRowItem.h"
 
 @interface SelectChatItem : TMRowItem
-
+@property (nonatomic,strong,readonly) TLChat *chat;
 @end

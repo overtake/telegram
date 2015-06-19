@@ -293,6 +293,9 @@
 		C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C226CC771B3303210042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C226CC781B3303210042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
+		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
+		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -1455,6 +1458,12 @@
 		C22421D019EBCFBC0030078A /* BlockedUserRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockedUserRowView.m; sourceTree = "<group>"; };
 		C22520E318B2801D00049558 /* MTConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTConnection.h; sourceTree = "<group>"; };
 		C22520E418B2801D00049558 /* MTConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTConnection.m; sourceTree = "<group>"; };
+		C226CC7A1B341CED0042C5D8 /* ComposeChooseGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChooseGroupViewController.h; sourceTree = "<group>"; };
+		C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChooseGroupViewController.m; sourceTree = "<group>"; };
+		C226CC7D1B3422F80042C5D8 /* SelectChatRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectChatRowView.h; sourceTree = "<group>"; };
+		C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectChatRowView.m; sourceTree = "<group>"; };
+		C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddUserToGroupBehavior.h; sourceTree = "<group>"; };
+		C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddUserToGroupBehavior.m; sourceTree = "<group>"; };
 		C22C7F2818B2163F007C4D17 /* MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetwork.h; sourceTree = "<group>"; };
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
 		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
@@ -3336,6 +3345,7 @@
 		C21D484619AF3C0E000F06E1 /* compose */ = {
 			isa = PBXGroup;
 			children = (
+				C226CC791B341CC80042C5D8 /* add_to_group */,
 				C2D51C021B21F02D009327C0 /* select_groups */,
 				C22019FD192CCB4000C0E441 /* select_users */,
 				C271525B19B6398500841C8A /* ui */,
@@ -3366,6 +3376,8 @@
 				C297954919EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m */,
 				C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */,
 				C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */,
+				C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */,
+				C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -3471,6 +3483,15 @@
 				C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */,
 			);
 			name = social;
+			sourceTree = "<group>";
+		};
+		C226CC791B341CC80042C5D8 /* add_to_group */ = {
+			isa = PBXGroup;
+			children = (
+				C226CC7A1B341CED0042C5D8 /* ComposeChooseGroupViewController.h */,
+				C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */,
+			);
+			name = add_to_group;
 			sourceTree = "<group>";
 		};
 		C23298D818CF6180000826E5 /* qlmedia */ = {
@@ -4722,6 +4743,8 @@
 			children = (
 				C2D51C061B21F18F009327C0 /* SelectChatItem.h */,
 				C2D51C071B21F18F009327C0 /* SelectChatItem.m */,
+				C226CC7D1B3422F80042C5D8 /* SelectChatRowView.h */,
+				C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */,
 			);
 			name = select_groups;
 			sourceTree = "<group>";
@@ -5714,6 +5737,7 @@
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
 				C2967B521AB05E9B003759B2 /* TGReplyObject.m in Sources */,
+				C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */,
 				0ACF9E3F19235FED001F9E1E /* SearchLoadMoreCell.m in Sources */,
 				C274C3AF1AC0842D000DFDE4 /* SearchHashtagCellView.m in Sources */,
 				C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */,
@@ -5922,6 +5946,7 @@
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,
 				C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */,
 				0A7EB71B183A873D00F02E04 /* NSString+Extended.m in Sources */,
+				C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */,
 				0A241A9D18AB176B00C32F45 /* MessageTableCellTextView.m in Sources */,
 				CECBC15618008B3300AD98E6 /* CMath.c in Sources */,
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
@@ -6090,6 +6115,7 @@
 				C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */,
 				C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */,
 				0AC7F479185DBA0800F90558 /* TMView.m in Sources */,
+				C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */,
 				0A59068118AA32C8002ED7BA /* BTRTextField.m in Sources */,
 				C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */,
 				C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */,

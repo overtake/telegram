@@ -17,7 +17,7 @@
 #import <MtProtoKit/MTEncryption.h>
 #import "NSData+Extensions.h"
 #import "TGStickerPackModalView.h"
-
+#import "ComposeActionAddUserToGroupBehavior.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -250,7 +250,7 @@ void alert(NSString *text, NSString *info) {
         [alert setAlertStyle:NSInformationalAlertStyle];
         [alert setMessageText:text.length > 0 ? text : appName()];
         [alert setInformativeText:info];
-        [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+        [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
     }];
     
 }
@@ -503,10 +503,14 @@ void open_user_by_name(NSDictionary *params) {
     __block TLUser *user = [UsersManager findUserByName:params[@"domain"]];
     
     dispatch_block_t showConversation = ^ {
-        [[Telegram rightViewController] showByDialog:user.dialog sender:[Telegram rightViewController]];
         
         if(user.isBot && params[@"start"]) {
+            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
             [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"]];
+        } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
+            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
+        } else {
+            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
         }
     };
     
@@ -652,9 +656,7 @@ void open_link(NSString *link) {
                     
                     user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
                    
-                    if(vars[@"start"]) {
-                        user[@"start"] = vars[@"start"];
-                    }
+                    [user addEntriesFromDictionary:vars];
                 }
                 
                 open_user_by_name(user);

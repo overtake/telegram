@@ -665,6 +665,22 @@
 
 }
 
+- (void)showComposeAddUserToGroup:(ComposeAction *)composeAction {
+    if(self.navigationViewController.currentController == self.composeChooseGroupViewController && self.composeChooseGroupViewController.action == composeAction)
+        return;
+    
+    if(!_composeChooseGroupViewController) {
+        _composeChooseGroupViewController = [[ComposeChooseGroupViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.composeChooseGroupViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeChooseGroupViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
 - (void)showChatInfoPage:(TLChat *)chat {
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)
         return;

@@ -91,7 +91,7 @@
     
     self.tableView.selectedItems = ids;
     
-    [self.tableView ready];
+    [self.tableView readyContacts];
     
     [self.tableView scrollToBeginningOfDocument:self];
     

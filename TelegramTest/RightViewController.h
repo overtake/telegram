@@ -38,6 +38,7 @@
 #import "TGPasswordEmailViewController.h"
 #import "ChatExportLinkViewController.h"
 #import "TGStickersSettingsViewController.h"
+#import "ComposeChooseGroupViewController.h"
 @interface RightViewController : TMViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
@@ -72,6 +73,8 @@
 @property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
 @property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
 
+@property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
+
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
 - (BOOL)isActiveDialog;
@@ -88,6 +91,7 @@
 - (void)showComposeWithAction:(ComposeAction *)composeAction;
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
+- (void)showComposeAddUserToGroup:(ComposeAction *)composeAction;
 - (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation;
 - (void)showUserInfoPage:(TLUser *)user;
 - (void)showCollectionPage:(TL_conversation *)conversation;

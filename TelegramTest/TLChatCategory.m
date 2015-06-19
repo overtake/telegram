@@ -44,6 +44,10 @@ DYNAMIC_PROPERTY(DDialog);
 
 }
 
+-(TLChatFull *)chatFull  {
+    return [[FullChatManager sharedManager] find:self.n_id];
+}
+
 - (void) setType:(TLChatType)type {
     [self setDType:[NSNumber numberWithInt:type]];
 }

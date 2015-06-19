@@ -50,4 +50,22 @@
     return self;
 }
 
+-(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object reservedObjects:(NSArray *)objects {
+    if(self = [self initWithBehaviorClass:behavior filter:filter object:object]) {
+        
+        [objects enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            NSString *key = [NSString stringWithFormat:@"reservedObject%lu",idx+1];
+            
+            if([self respondsToSelector:NSSelectorFromString(key)]) {
+                [self setValue:objects[idx] forKey:key];
+            }
+            
+        }];
+        
+    }
+    
+    return self;
+}
+
 @end

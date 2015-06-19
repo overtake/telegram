@@ -137,7 +137,7 @@
     
     self.currentAction = self.currentAction;
     self.tableView.exceptions = self.filter;
-    [self.tableView ready];
+    [self.tableView readyContacts];
     
     weakify();
     [self.tableView setMultipleCallback:^(NSArray *contacts) {

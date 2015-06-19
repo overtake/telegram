@@ -25,6 +25,7 @@
 #import "TMSharedMediaButton.h"
 #import "TMMenuPopover.h"
 #import "FullUsersManager.h"
+#import "ComposeActionAddUserToGroupBehavior.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -41,11 +42,12 @@
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
-
+@property (nonatomic, strong) UserInfoShortButtonView *addToGroupButton;
 
 @property (nonatomic, strong) UserInfoShortButtonView *encryptedKeyButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
 @property (nonatomic, strong) UserInfoShortButtonView *deleteSecretChatButton;
+
 
 @property (nonatomic, strong) UserInfoParamsView *phoneView;
 @property (nonatomic, strong) UserInfoParamsView *userNameView;
@@ -155,6 +157,13 @@
             
         }];
         
+        self.addToGroupButton =[UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.AddToGroup", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
+            
+        }];
+
+        
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
             [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
@@ -202,6 +211,10 @@
         
         [self.filesMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.filesMediaButton];
+        
+        [self.addToGroupButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.addToGroupButton];
+
         
         
         [self.blockContact.textButton setTextColor:[NSColor redColor]];
@@ -479,6 +492,12 @@
         [self.sendMessageButton setHidden:NO];
         
         
+        [self.addToGroupButton setHidden:!self.user.isBot || ((self.user.flags & TGBOTGROUPBLOCKED) == TGBOTGROUPBLOCKED)];
+        if(self.user.isBot) {
+            offset-=NSHeight(self.sendMessageButton.frame);
+            
+            [self.addToGroupButton setFrameOrigin:NSMakePoint(100, offset)];
+        }
         
         
         [self.setProfilePhotoButton setHidden:self.user.type != TLUserTypeSelf];

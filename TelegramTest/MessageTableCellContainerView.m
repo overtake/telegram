@@ -305,7 +305,7 @@ NSImage *selectCheckActiveImage() {
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Delete", nil)];
     
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Ignore", nil)];
-    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
+    [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
     
 
 }

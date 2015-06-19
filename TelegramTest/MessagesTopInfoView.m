@@ -174,6 +174,10 @@ static NSMutableDictionary *cache;
          newAction = MessagesTopInfoActionUnblockUser;
     }
     
+    if(user.isBot) {
+        newAction = MessagesTopInfoActionNone;
+    }
+    
     
     
     if(cache[@(newAction)] && cache[@(newAction)][@(conversation.peer.peer_id)]) {

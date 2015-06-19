@@ -10,8 +10,8 @@
 #import "NSString+Extended.h"
 #import "TMSearchTextField.h"
 #import "TGSearchRowView.h"
-
-
+#import "SelectChatItem.h"
+#import "SelectChatRowView.h"
 
 @interface SelectUsersTableView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) NSMutableArray *items;
@@ -43,11 +43,9 @@ static NSCache *cacheItems;
 
 
 
--(void)ready {
+-(void)readyContacts {
     
-    if(_type == SelectTableTypeUser) {
-        
-    }
+    _type = SelectTableTypeUser;
     
     NSArray *contacts = [[NewContactsManager sharedManager] all];
     
@@ -94,6 +92,43 @@ static NSCache *cacheItems;
         dispatch_after_seconds(0.3, ^{
             [self insertOther:[contacts subarrayWithRange:NSMakeRange(30, contacts.count - 30)]];
         });
+    
+}
+
+
+-(void)readyChats {
+    
+    
+    _type = SelectTableTypeChats;
+    
+    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == %d",DialogTypeChat]];
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+        
+        [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
+        
+    }];
+    
+    
+    self.tm_delegate = self;
+    
+    [self removeAllItems:NO];
+    
+    self.items = items;
+    
+    self.searchItem = [[TGSearchRowItem alloc] init];
+    
+    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
+    
+    [self insert:self.searchItem atIndex:0 tableRedraw:NO];
+    
+    [self insert:self.items startIndex:1 tableRedraw:NO];
+    
+    
+    [self reloadData];
     
 }
 
@@ -231,14 +266,51 @@ static NSCache *cacheItems;
 
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
-    return row == 0 ? self.searchView : [self cacheViewForClass:[SelectUserRowView class] identifier:@"SelectUserRowView" withSize:NSMakeSize(NSWidth(self.frame), 50)];
+    
+    Class itemClass = [item isKindOfClass:[SelectUserItem class]] ? [SelectUserRowView class] : [SelectChatRowView class] ;
+    
+    return row == 0 ? self.searchView : [self cacheViewForClass:itemClass identifier:NSStringFromClass(itemClass) withSize:NSMakeSize(NSWidth(self.frame), 50)];
 }
 
 -(void)searchFieldTextChange:(NSString *)searchString {
-    [self search:searchString];
+    if(_type == SelectTableTypeUser)
+        [self searchUsers:searchString];
+    else
+        if(_type == SelectTableTypeChats)
+            [self searchChats:searchString];
 }
 
-- (void)search:(NSString *)searchString {
+
+-(void)searchChats:(NSString *)searchString {
+    
+    NSArray *sorted = self.items;
+    
+    
+    if(searchString.length > 0) {
+        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectChatItem *evaluatedObject, NSDictionary *bindings) {
+            
+            return [evaluatedObject.chat.title searchInStringByWordsSeparated:searchString];
+            
+        }]];
+    }
+    
+    
+    NSRange range = NSMakeRange(1, self.list.count-1);
+    
+    NSArray *list = [self.list subarrayWithRange:range];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeItem:obj tableRedraw:NO];
+    }];
+    
+    [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
+    
+    
+    [self insert:sorted startIndex:1 tableRedraw:YES];
+    
+}
+
+- (void)searchUsers:(NSString *)searchString {
 
     __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     

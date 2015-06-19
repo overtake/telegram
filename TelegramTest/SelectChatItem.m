@@ -10,4 +10,17 @@
 
 @implementation SelectChatItem
 
+-(id)initWithObject:(id)object {
+    if(self = [super initWithObject:object]) {
+        _chat = object;
+    }
+    
+    return self;
+}
+
+
+-(NSUInteger)hash {
+    return _chat.n_id;
+}
+
 @end
