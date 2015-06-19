@@ -601,7 +601,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     if([self isKindOfClass:[TL_userContact class]]) {
         return [TL_inputPeerContact createWithUser_id:self.n_id];
     }
-    return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash];
+    return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash]; 
 }
 
 - (TL_contact *)contact {

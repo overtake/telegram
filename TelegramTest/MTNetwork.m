@@ -371,6 +371,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
          [self initConnectionWithId:_masterDatacenter];
+        
+         [_datacenterWatchdog execute:nil];
     });
 }
 

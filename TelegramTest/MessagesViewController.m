@@ -722,7 +722,7 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnMainQueue:^{
         
         
-        if((self.conversation.user.isBot && (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])))) {
+        if((self.conversation.user.isBot && ( (self.historyController.nextState == ChatHistoryStateFull &&  self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])))) {
             [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
             
             if(self.bottomView.onClickToLockedView == nil) {
@@ -730,10 +730,12 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 [self.bottomView setOnClickToLockedView:^{
                     [weakSelf sendMessage:@"/start" forConversation:weakSelf.conversation];
+                    [weakSelf.bottomView setOnClickToLockedView:nil];
+                    [weakSelf.bottomView setStateBottom:weakSelf.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState];
                 }];
             }
 
-        } else {
+        } else if(self.bottomView.onClickToLockedView == nil) {
             [self.bottomView setStateBottom:self.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState];
             [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
             [self.bottomView setOnClickToLockedView:nil];

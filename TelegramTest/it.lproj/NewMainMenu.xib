@@ -108,15 +108,6 @@
                                     <action selector="showAudioMiniPlayer:" target="89" id="YOF-Cs-9Hn"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" tag="2000" id="26">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Lascia chat..." id="27">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="clearChatHistory:" target="89" id="109"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="28">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>

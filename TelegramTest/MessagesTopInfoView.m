@@ -167,7 +167,7 @@ static NSMutableDictionary *cache;
         newAction = MessagesTopInfoActionAddContact;
     
     if(user.type == TLUserTypeForeign) {
-        newAction = MessagesTopInfoActionShareContact;
+        newAction = MessagesTopInfoActionNone;//MessagesTopInfoActionShareContact;
     }
     
     if(user.isBlocked) {
