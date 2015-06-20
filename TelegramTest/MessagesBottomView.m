@@ -1034,7 +1034,7 @@
                     
                     callback(command);
                     
-                    [[Telegram rightViewController].messagesViewController sendMessage];
+                 //   [[Telegram rightViewController].messagesViewController sendMessage];
                     
                 }];
                 
@@ -1158,15 +1158,18 @@
             block();
             
         } completionHandler:^{
-            
+            [self setFrame:self.frame];
         }];
         
     };
     
     if(animated)
         animationBlock();
-    else
+    else {
+        [self setFrame:self.frame];
         block();
+    }
+    
 }
 
 
@@ -1396,6 +1399,7 @@
     
     [self.inputMessageTextField textDidChange:nil];
 }
+
 
 
 - (void) attachButtonPressed {

@@ -34,6 +34,7 @@
         [self.textButton sizeToFit];
         [self.textButton setFrameOrigin:NSMakePoint(0, 12)]; // 10
         [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[self.textButton cell] setTruncatesLastVisibleLine:YES];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textButton];
         

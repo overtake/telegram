@@ -722,7 +722,7 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnMainQueue:^{
         
         
-        if((self.conversation.user.isBot && ( (self.historyController.nextState == ChatHistoryStateFull &&  self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])))) {
+        if((self.conversation.user.isBot && ( (self.historyController.nextState == ChatHistoryStateFull &&  (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))))) {
             [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
             
             if(self.bottomView.onClickToLockedView == nil) {
