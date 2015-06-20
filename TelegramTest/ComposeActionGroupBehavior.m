@@ -77,24 +77,25 @@
     
     self.request = [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
-        
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
-        
-        
-        [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
+        if(response.updates.count > 1) {
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
             
-            [self.delegate behaviorDidEndRequest:response];
-            
-            [[Telegram rightViewController] clearStack];
-            
-            [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
-        }];
+            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
+                
+                [self.delegate behaviorDidEndRequest:response];
+                
+                [[Telegram rightViewController] clearStack];
+                
+                [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
+            }];
+        }
+        
+        
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [self.delegate behaviorDidEndRequest:nil];
-    } timeout:10];
+    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
     
     
 }
