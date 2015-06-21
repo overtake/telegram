@@ -58,13 +58,13 @@ DYNAMIC_PROPERTY(DType);
     
     if(self.class == [TL_user class])
     {
-        if((self.flags & TGUSERFLAGSELF) == TGUSERFLAGSELF) {
+        if(self.flags & TGUSERFLAGSELF) {
             type = TLUserTypeSelf;
-        } else if((self.flags & TGUSERFLAGCONTACT) == TGUSERFLAGCONTACT) {
+        } else if(self.flags & TGUSERFLAGCONTACT) {
             type = TLUserTypeContact;
-        } else if((self.flags & TGUSERFLAGMUTUAL) == TGUSERFLAGMUTUAL) {
+        } else if(self.flags & TGUSERFLAGMUTUAL) {
             type = TLUserTypeContact;
-        } else if((self.flags & TGUSERFLAGDELETED) == TGUSERFLAGDELETED) {
+        } else if(self.flags & TGUSERFLAGDELETED) {
             type = TLUserTypeDeleted;
         } else if(self.flags & (1 << 4)) {
             type = TLUserTypeRequest;

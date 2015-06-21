@@ -194,12 +194,12 @@
 
 
 -(BOOL)n_out {
-    return (self.flags & TGOUTMESSAGE) == TGOUTMESSAGE;
+    return self.flags & TGOUTMESSAGE;
 }
 
 
 -(BOOL)unread {
-    return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
+    return self.flags & TGUNREADMESSAGE;
 }
 
 -(BOOL)readedContent {
