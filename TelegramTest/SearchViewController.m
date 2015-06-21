@@ -275,8 +275,14 @@ typedef enum {
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
     if(![[Telegram rightViewController] isModalViewActive]) {
-        return ![Telegram rightViewController].navigationViewController.isLocked;
+        
+        BOOL res = ![Telegram rightViewController].navigationViewController.isLocked;
+        
+        
+        return res;
     }
+    
+    
     
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
@@ -311,7 +317,7 @@ typedef enum {
             TMViewController *controller = [[Telegram leftViewController] currentTabController];
             
             if([controller isKindOfClass:[StandartViewController class]]) {
-                [(StandartViewController *)controller searchByString:@""];
+              //  [(StandartViewController *)controller searchByString:@""];
             }
             
         }

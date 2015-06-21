@@ -595,7 +595,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLUserNamePrefix]) {
-        open_user_by_name(getUrlVars(link));
+        open_user_by_name(@{@"domain":[link substringFromIndex:TLUserNamePrefix.length]});
         return;
     }
     
