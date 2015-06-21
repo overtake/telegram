@@ -67,23 +67,13 @@ DYNAMIC_PROPERTY(DUser);
     commands = string.length > 0 ? [[commands filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.command BEGINSWITH[c] %@",string]] mutableCopy] : commands;
     
     
-    __block NSMutableArray *allCommands;
+
     
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
-        allCommands = [transaction objectForKey:@"commands" inCollection:BOT_COMMANDS];
-        
-        if(!allCommands) {
-            allCommands = [[NSMutableArray alloc] init];
-        }
-    }];
-    
-    
-    NSMutableArray *localCommands = [[allCommands subarrayWithRange:NSMakeRange(0, MIN(allCommands.count,10))] mutableCopy];
+    commands = [[commands subarrayWithRange:NSMakeRange(0, MIN(commands.count,10))] mutableCopy];
     
     
     [commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
         
-        [localCommands removeObject:obj.command];
         
         NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"/%@",obj.command] withBlock:^(id sender) {
             
@@ -103,20 +93,6 @@ DYNAMIC_PROPERTY(DUser);
         
     }];
     
-    
-    [localCommands enumerateObjectsUsingBlock:^(NSString*lc, NSUInteger idx, BOOL *stop) {
-        
-        NSMenuItem *item = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"/%@",lc] withBlock:^(id sender) {
-            
-            callback(lc);
-            
-            [self close];
-            
-        }];
-        
-        
-        [menu addItem:item];
-    }];
     
     if(menu.itemArray.count > 0) {
         [self close];

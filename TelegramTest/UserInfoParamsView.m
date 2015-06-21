@@ -47,6 +47,8 @@
     
     if(size.height > 21)
         [self setToolTip:phoneAttributedString.string];
+    else
+        [self setToolTip:nil];
    
 }
 

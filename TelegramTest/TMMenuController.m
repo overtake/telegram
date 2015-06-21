@@ -32,7 +32,7 @@
 @implementation TMMenuItemView
 
 - (id)initWithMenuItem:(NSMenuItem *)item {
-    self = [super initWithFrame:NSMakeRect(0, 0, 200, 36)];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, 36)];
     if(self) {
         
         self.item = item;
@@ -182,7 +182,7 @@
 @implementation TMMenuController
 
 - (id)initWithMenu:(NSMenu *)menu {
-    self = [super initWithFrame:NSMakeRect(0, 0, 200, menu.itemArray.count * 36 + 12)];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, menu.itemArray.count * 36 + 12)];
     if(self) {
         self.menuController = menu;
         _selectedIndex = -1;
