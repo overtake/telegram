@@ -43,7 +43,7 @@
     [self.textView setAttributedString:phoneAttributedString];
     
     [self.textView setFrameOrigin:NSMakePoint(0, 10)];
-    [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, 18)];
+    [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, 17)];
     
     if(size.height > 21)
         [self setToolTip:phoneAttributedString.string];
