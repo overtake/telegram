@@ -164,7 +164,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/StickersPanelView.m"
-                  timestampString = "456596571.162634"
+                  timestampString = "456598760.89881"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "220"
@@ -179,7 +179,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/StickersPanelView.m"
-                  timestampString = "456596571.162905"
+                  timestampString = "456598760.899286"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "220"
@@ -202,6 +202,22 @@
             startingLineNumber = "48"
             endingLineNumber = "48"
             landmarkName = "+show:chat:view:ofRect:callback:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/UserInfoShortButtonView.m"
+            timestampString = "456597807.401077"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "-setFrameSize:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

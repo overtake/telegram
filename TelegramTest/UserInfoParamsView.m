@@ -9,9 +9,9 @@
 #import "UserInfoParamsView.h"
 #import "UserInfoContainerView.h"
 #import "NS(Attributed)String+Geometrics.h"
-
+#import "TGCTextView.h"
 @interface UserInfoParamsView()
-@property (nonatomic, strong) NSTextView *textView;
+@property (nonatomic, strong) TGCTextView *textView;
 @property (nonatomic,strong) NSString *header;
 @end
 
@@ -21,10 +21,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setAutoresizingMask:NSViewWidthSizable];
-        self.textView = [[NSTextView alloc] initWithFrame:NSZeroRect];
+        self.textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         [self.textView setAutoresizingMask:NSViewWidthSizable];
-        [self.textView setEditable:NO];
-        [self.textView setSelectable:YES];
+        [self.textView setEditable:YES];
         [self addSubview:self.textView];
         self.header = @"";
     }
@@ -35,22 +34,25 @@
 - (void)setString:(NSString *)string {
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
-    
     [paragraphStyle setAlignment:NSLeftTextAlignment];
     
-    NSAttributedString *phoneAttributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Light" size:14], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *phoneAttributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
     
-    NSSize size = [phoneAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
+    NSSize size = [phoneAttributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame)];
     
-    [[self.textView textStorage] setAttributedString:phoneAttributedString];
-    [self.textView setTextContainerInset:NSMakeSize(-3, 0)];
-    [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, size.height)];
+    [self.textView setAttributedString:phoneAttributedString];
+    
     [self.textView setFrameOrigin:NSMakePoint(0, 10)];
+    [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, 18)];
+    
+    if(size.height > 21)
+        [self setToolTip:phoneAttributedString.string];
+   
 }
 
 
 -(NSString *)string {
-    return [self.textView string];
+    return [self.textView attributedString].string;
 }
 
 - (void)setHeader:(NSString *)header {

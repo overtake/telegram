@@ -51,8 +51,7 @@
     _keyboardButton = keyboardButton;
     [_textField setStringValue:_keyboardButton.text];
     [_textField sizeToFit];
-    
-    [self setToolTip:_keyboardButton.text];
+    [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -70,7 +69,7 @@
     [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
     
     
-    if(((_keyboard.reply_markup.flags & (1 << 1) ) == (1 << 1))) {
+    if(_keyboard.reply_markup.flags & (1 << 1) ) {
         [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyaboard"] data:@{KEY_DIALOG:_conversation}];
     }
 }

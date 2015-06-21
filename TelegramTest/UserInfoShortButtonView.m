@@ -182,7 +182,7 @@
     
     [self.textButton sizeToFit];
     
-    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), NSHeight(self.textButton.frame))];
+    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), 20)];
     
     
     [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
