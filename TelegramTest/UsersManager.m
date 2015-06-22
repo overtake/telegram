@@ -51,6 +51,8 @@
         if(user.lastSeenUpdate + 300 < [[MTNetwork instance] getTime]) {
             if(user.type == TLUserTypeForeign || user.type == TLUserTypeRequest) {
                 [needUsersUpdate addObject:user.inputUser];
+                if(needUsersUpdate.count >= 100)
+                    break;
             }
         }
     }

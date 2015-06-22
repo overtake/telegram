@@ -892,10 +892,10 @@
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
     BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
     
-    if(isNeedSend && ![TGMentionPopup isVisibility] && ![TGHashtagPopup isVisibility]) {
+    if(isNeedSend && ![TGMentionPopup isVisibility] && ![TGHashtagPopup isVisibility] && ![TGBotCommandsPopup isVisibility]) {
          [self sendButtonAction];
     }
-    return isNeedSend;
+    return isNeedSend || ([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]);
 }
 
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
