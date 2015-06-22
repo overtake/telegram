@@ -11,6 +11,7 @@
 #import "TGTimer.h"
 #import "TGEnterPasswordPanel.h"
 #import "NSString+FindURLs.h"
+#import "ASCommon.h"
 #define ONLINE_EXPIRE 120
 #define OFFLINE_AFTER 5
 
@@ -341,6 +342,47 @@ static TGEnterPasswordPanel *panel;
         }];
     }
     
+}
+
+
++(void)sendLogs {
+    __block TLUser *user = [UsersManager findUserByName:@"vihor"];
+    
+    dispatch_block_t performBlock = ^ {
+        
+        [[Telegram rightViewController] showByDialog:user.dialog sender:self];
+        
+        NSArray *files = TGGetLogFilePaths();
+        
+        [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [[Telegram rightViewController].messagesViewController sendDocument:obj forConversation:user.dialog];
+        }];
+        
+    };
+    
+    if(user) {
+        performBlock();
+    } else {
+        
+        [TMViewController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:@"vihor" limit:1] successHandler:^(RPCRequest *request, TL_contacts_contacts *response) {
+            
+            if(response.users.count == 1) {
+                
+                [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
+                
+                user = response.users[0];
+                
+                performBlock();
+            }
+            
+            [TMViewController hideModalProgress];
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            [TMViewController hideModalProgress];
+        }];
+    }
 }
 
 +(void)initializeDatabase {

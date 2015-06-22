@@ -119,7 +119,7 @@
                     MTLog(@"fatal error: %@",[exception callStackSymbols]);
                     
 #ifdef TGDEBUG
-                    @throw exception;
+                    [self alertUserWithCrash:exception];
 #endif
                 }
                 
@@ -133,7 +133,7 @@
                     @catch (NSException *exception) {
                          MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        @throw exception;
+                        [self alertUserWithCrash:exception];
 #endif
                     }
                     
@@ -146,7 +146,7 @@
                     @catch (NSException *exception) {
                          MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        @throw exception;
+                        [self alertUserWithCrash:exception];
 #endif
                     }
                 });
@@ -160,7 +160,7 @@
                 @catch (NSException *exception) {
                     MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                    @throw exception;
+                    [self alertUserWithCrash:exception];
 #endif
                 }
             else if (synchronous)
@@ -171,7 +171,7 @@
                     @catch (NSException *exception) {
                          MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        @throw exception;
+                        [self alertUserWithCrash:exception];
 #endif
                     }
                 });
@@ -183,13 +183,43 @@
                     @catch (NSException *exception) {
                          MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        @throw exception;
+                        [self alertUserWithCrash:exception];
 #endif
                     }
                 });
         }
     }
 
+}
+
+-(void)alertUserWithCrash:(NSException *)crash {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert setMessageText:appName()];
+        [alert setInformativeText:[NSString stringWithFormat:@"Application throw uncaught exception: \n%@",crash]];
+        
+        [alert addButtonWithTitle:@"Crash application"];
+        [alert addButtonWithTitle:@"Send Logs"];
+        
+        [alert addButtonWithTitle:@"Ignore ;("];
+        [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(crash)];
+    }];
+   
+}
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+    
+    NSException *crash = (__bridge NSException *)(contextInfo);
+    
+    
+    if(returnCode == 1000) {
+        @throw crash;
+    } else if(returnCode == 1001) {
+        [Telegram sendLogs];
+    }
+    
 }
 
 @end
