@@ -11,6 +11,7 @@
 #import "Telegram.h"
 #import "PreviewObject.h"
 #import "SenderHeader.h"
+#import "MessagesBottomView.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -249,13 +250,30 @@
                         [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                         needNotify = YES;
                     }
-                } else {
+                } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
                     if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
                     [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }
                 
             }];
+            
+            if([message.reply_markup isKindOfClass:[TL_replyKeyboardForceReply class]]) {
+                
+                
+                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    
+                    [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
+                    
+                }];
+                
+                if(conversation.peer_id == [Telegram conversation].peer_id) {
+                    [ASQueue dispatchOnMainQueue:^{
+                        [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
+                    }];
+                }
+            }
+            
             if(notify)
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"botKeyboard"] data:@{KEY_DIALOG:conversation}];
         } else if(!message.n_out || [message.action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
