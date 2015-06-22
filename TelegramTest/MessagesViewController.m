@@ -2616,6 +2616,13 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
+    if([message isEqualToString:@"performcrash"]) {
+        [ASQueue dispatchOnStageQueue:^{
+            [(TMView *)self.conversation becomeFirstResponder];
+        }];
+        return;
+    }
+    
     if(!self.conversation.canSendMessage)  {
         NSBeep();
         return;

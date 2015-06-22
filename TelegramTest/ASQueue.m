@@ -111,23 +111,85 @@
     {
         if (_isMainQueue)
         {
-            if ([NSThread isMainThread])
-                block();
+            if ([NSThread isMainThread]) {
+                @try {
+                     block();
+                }
+                @catch (NSException *exception) {
+                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                    
+#ifdef TGDEBUG
+                    @throw exception;
+#endif
+                }
+                
+            }
+            
             else if (synchronous)
-                dispatch_sync(_queue, block);
+                dispatch_sync(_queue, ^{
+                    @try {
+                        block();
+                    }
+                    @catch (NSException *exception) {
+                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+#ifdef TGDEBUG
+                        @throw exception;
+#endif
+                    }
+                    
+                });
             else
-                dispatch_async(_queue, block);
+                dispatch_async(_queue, ^{
+                    @try {
+                        block();
+                    }
+                    @catch (NSException *exception) {
+                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+#ifdef TGDEBUG
+                        @throw exception;
+#endif
+                    }
+                });
         }
         else
         {
             if (dispatch_get_current_queue() == self.nativeQueue)
-                block();
+                @try {
+                    block();
+                }
+                @catch (NSException *exception) {
+                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+#ifdef TGDEBUG
+                    @throw exception;
+#endif
+                }
             else if (synchronous)
-                dispatch_sync(_queue, block);
+                dispatch_sync(_queue, ^{
+                    @try {
+                        block();
+                    }
+                    @catch (NSException *exception) {
+                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+#ifdef TGDEBUG
+                        @throw exception;
+#endif
+                    }
+                });
             else
-                dispatch_async(_queue, block);
+                dispatch_async(_queue, ^{
+                    @try {
+                        block();
+                    }
+                    @catch (NSException *exception) {
+                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+#ifdef TGDEBUG
+                        @throw exception;
+#endif
+                    }
+                });
         }
     }
+
 }
 
 @end

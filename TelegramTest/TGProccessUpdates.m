@@ -657,15 +657,16 @@ static ASQueue *queue;
         TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
-        if(!fullChat) {
-            [[FullChatManager sharedManager] loadIfNeed:chatParticipants.chat_id];
-            return;
+        
+        [[FullChatManager sharedManager] loadIfNeed:chatParticipants.chat_id force:YES];
+        
+        if(fullChat) {
+            fullChat.participants = chatParticipants;
+            [[Storage manager] insertFullChat:fullChat completeHandler:nil];
+            
+            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
         }
         
-        fullChat.participants = chatParticipants;
-        [[Storage manager] insertFullChat:fullChat completeHandler:nil];
-        
-        [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
         return;
     }
     

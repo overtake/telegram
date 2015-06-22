@@ -191,12 +191,12 @@
     }
 }
 
-- (void) loadIfNeed:(int)chat_id {
+- (void) loadIfNeed:(int)chat_id force:(BOOL)force {
     if(!self.isLoad)
         return;
     
     TLChatFull *chat = [self find:chat_id];
-    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime])
+    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime] || force)
         [self loadFullChatByChatId:chat_id];
 }
 
