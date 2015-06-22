@@ -2185,6 +2185,9 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.table beginUpdates];
                 [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
                 [self.table endUpdates];
+                
+                
+                [self didUpdateTable];
             }
             
         }];

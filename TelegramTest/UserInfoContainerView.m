@@ -484,6 +484,7 @@
         [self.userNameView setFrameOrigin:NSMakePoint(100, offset)];
     }
     
+    [self.addToGroupButton setHidden:YES];
    
     if(!self.controller.isSecretProfile) {
         offset -= 62;
@@ -492,7 +493,7 @@
         [self.sendMessageButton setHidden:NO];
         
         
-        [self.addToGroupButton setHidden:!self.user.isBot || ((self.user.flags & TGBOTGROUPBLOCKED) == TGBOTGROUPBLOCKED)];
+        [self.addToGroupButton setHidden:!self.user.isBot || (self.user.flags & TGBOTGROUPBLOCKED)];
         if(self.user.isBot) {
             offset-=NSHeight(self.sendMessageButton.frame);
             

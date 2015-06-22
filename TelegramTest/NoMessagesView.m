@@ -152,15 +152,20 @@
     _conversation = conversation;
     // && conversation.top_message == -1
     
-    
+    [self.field removeFromSuperview];
     
     if(conversation.type == DialogTypeSecretChat) {
         
+        self.field = [TMTextField defaultTextField];
+        
         self.secret = [self buildSecretString];
         
-        [self.field setAttributedString:self.secret];
+        [(TMTextField *)self.field setAttributedStringValue:self.secret];
                 
     } else {
+        
+        self.field = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        
         if(conversation.user.isBot) {
             
             [[FullUsersManager sharedManager] loadUserFull:conversation.user callback:^(TL_userFull *userFull) {
@@ -188,15 +193,22 @@
         
     }
     
+    [self addSubview:_field];
+    
     self.progress.usesThreadedAnimation = NO;
 
     
-    NSSize size = [self.field.attributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame) - 100];
+    NSSize size = [self.field isKindOfClass:[TMTextField class]] ? [((TMTextField *)_field).attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 100] : [self.field.attributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame) - 100];
     
     [self.field setFrameSize:size];
     [self.field setCenterByView:self];
 }
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.field setCenterByView:self];
+}
 
 -(void)setHidden:(BOOL)flag {
     
