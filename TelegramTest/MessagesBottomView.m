@@ -1065,7 +1065,7 @@
     
    
     if(!forceShow) {
-        forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 1)) == (1 << 1);
+        forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 1));
     }
     
     [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
