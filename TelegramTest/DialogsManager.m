@@ -250,6 +250,7 @@
                         needNotify = YES;
                     }
                 } else {
+                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
                     [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }

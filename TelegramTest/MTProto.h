@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.06.15.
+//  Auto created by Mikhail Filimonov on 22.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2439,12 +2439,11 @@
 	
 @interface TLBotCommand()
 @property (nonatomic, strong) NSString* command;
-@property (nonatomic, strong) NSString* params;
 @property (nonatomic, strong) NSString* n_description;
 @end
 
 @interface TL_botCommand : TLBotCommand
-+(TL_botCommand*)createWithCommand:(NSString*)command params:(NSString*)params n_description:(NSString*)n_description;
++(TL_botCommand*)createWithCommand:(NSString*)command n_description:(NSString*)n_description;
 @end
 	
 @interface TLBotInfo()
@@ -2484,7 +2483,10 @@
 @end
 
 @interface TL_replyKeyboardHide : TLReplyMarkup
-+(TL_replyKeyboardHide*)create;
++(TL_replyKeyboardHide*)createWithFlags:(int)flags;
+@end
+@interface TL_replyKeyboardForceReply : TLReplyMarkup
++(TL_replyKeyboardForceReply*)createWithFlags:(int)flags;
 @end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup
 +(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows;

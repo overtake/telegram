@@ -53,7 +53,7 @@ DYNAMIC_PROPERTY(DUser);
                 cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
             }
             
-            TL_botCommand *c = [TL_botCommand createWithCommand:cmd params:command.params n_description:command.n_description];
+            TL_botCommand *c = [TL_botCommand createWithCommand:cmd n_description:command.n_description];
             
             [c setUser:user];
             

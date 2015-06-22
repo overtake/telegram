@@ -206,6 +206,10 @@
     return (self.flags & TGREADEDCONTENT) == 0;
 }
 
+-(BOOL)isMentioned {
+    return self.flags & TGMENTIONMESSAGE;
+}
+
 -(void)setFlags:(int)flags {
     
     int of = self.flags;
