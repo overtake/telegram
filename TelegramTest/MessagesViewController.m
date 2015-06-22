@@ -2867,9 +2867,34 @@ static NSTextAttachment *headerMediaIcon() {
     [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
-        ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:messages forConversation:conversation];
-        sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
-        [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
+        
+        
+        void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
+            ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation];
+            sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
+            [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
+        };
+        
+        
+        if(messages.count < 50) {
+            fwd_blck(messages);
+        } else {
+            
+            NSMutableArray *copy = [messages mutableCopy];
+            
+            while (copy.count > 0) {
+                
+                NSArray *fwd = [copy subarrayWithRange:NSMakeRange(0, MIN(copy.count,50))];
+                
+                [copy removeObjectsInArray:fwd];
+                
+                fwd_blck(fwd);
+                
+                
+            }
+        }
+        
+        
         
     }];
 }

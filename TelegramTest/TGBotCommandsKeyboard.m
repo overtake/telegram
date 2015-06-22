@@ -205,7 +205,7 @@
     
     NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + 6;
     
-    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6);
+    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
    
    

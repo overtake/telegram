@@ -110,7 +110,7 @@
         
         int k = (int) messages.count;
         
-        for(int i = 0; i < self.fakes.count; i++) {
+        for(int i = 0; i < messages.count; i++) {
             
             --k;
             
