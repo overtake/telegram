@@ -9,6 +9,7 @@
 #import "ImageAttachSenderItem.h"
 #import "TGAttachObject.h"
 #import "TGSendTypingManager.h"
+#import "MessageTableItemPhoto.h"
 @interface ImageAttachSenderItem ()
 
 @property (nonatomic, strong) TGAttachObject *attach;
@@ -110,6 +111,12 @@
             ((TL_localMessage *)self.message).media = msg.media;
         }
         
+        // fix file location for download image after clearing cache.
+        {
+            MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.tableItem;
+            
+            item.imageObject.location = newSize.location;
+        }
         
         self.message.dstate = DeliveryStateNormal;
         
