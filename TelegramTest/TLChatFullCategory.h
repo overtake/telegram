@@ -10,6 +10,8 @@
 
 @interface TLChatFull (Category)
 
+-(BOOL)isLastLayerUpdated;
+-(void)setLastLayerUpdated:(BOOL)value;
 - (int)lastUpdateTime;
 - (void)setLastUpdateTime:(int)lastUpdateTime;
 -(TL_conversation *)conversation;

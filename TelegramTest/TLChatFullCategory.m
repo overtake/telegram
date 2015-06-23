@@ -11,6 +11,8 @@
 @implementation TLChatFull (Category)
 
 DYNAMIC_PROPERTY(LASTUPDATETIME);
+DYNAMIC_PROPERTY(LASTLAYERUPDATED);
+
 DYNAMIC_PROPERTY(Conversation);
 
 - (int)lastUpdateTime {
@@ -22,6 +24,13 @@ DYNAMIC_PROPERTY(Conversation);
 }
 
 
+-(BOOL)isLastLayerUpdated {
+    return [[self getLASTLAYERUPDATED] boolValue];
+}
+
+-(void)setLastLayerUpdated:(BOOL)value {
+    [self setLASTLAYERUPDATED:@(value)];
+}
 
 - (TL_conversation *)conversation {
     

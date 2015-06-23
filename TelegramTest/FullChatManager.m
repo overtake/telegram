@@ -204,6 +204,10 @@
     [self loadFullChatByChatId:chat_id force:NO callback:callback];
 }
 
+- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:force callback:callback];
+}
+
 - (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
     
     TLChatFull *fullChat = [self find:chat_id];
@@ -233,6 +237,10 @@
         [self.queue dispatchOnQueue:^{
             
             [self add:@[[result full_chat]]];
+            
+            TLChatFull *current = [self find:chat_id];
+            
+            [current setLastLayerUpdated:YES];
             
             [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
             
