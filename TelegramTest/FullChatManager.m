@@ -187,7 +187,7 @@
 - (void)loadFullChats:(NSArray *)array {
     for(NSNumber *number in array) {
         int chat_id = [number intValue];
-        [self loadFullChatByChatId:chat_id];
+        [self loadFullChatByChatId:chat_id force:NO];
     }
 }
 
@@ -196,24 +196,23 @@
         return;
     
     TLChatFull *chat = [self find:chat_id];
-    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime] || force)
-        [self loadFullChatByChatId:chat_id];
+    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime] || force || chat.class == [TL_chatFull_old29 class])
+        [self loadFullChatByChatId:chat_id force:force];
 }
 
 - (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
-    [self loadFullChatByChatId:chat_id callback:callback];
+    [self loadFullChatByChatId:chat_id force:NO callback:callback];
 }
 
-- (void)loadFullChatByChatId:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
     
     TLChatFull *fullChat = [self find:chat_id];
     
     if(fullChat ) {
         if(callback != nil)
             callback(fullChat);
-        
-        if(fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime])
-            return;
+    if( fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime] || !force || fullChat.class != [TL_chatFull_old29 class])
+        return;
     }
     
         
@@ -251,8 +250,8 @@
     
 }
 
-- (void)loadFullChatByChatId:(int)chat_id {
-    [self loadFullChatByChatId:chat_id callback:nil];
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force {
+    [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 
 - (int)getOnlineCount:(int)chat_id {

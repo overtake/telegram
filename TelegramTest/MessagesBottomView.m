@@ -506,7 +506,7 @@
     
     
     
-    self.botCommandButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_smile().size.width, image_smile().size.height)];
+    self.botCommandButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_botCommand().size.width, image_botCommand().size.height)];
     [self.botCommandButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.botCommandButton.layer disableActions];
     

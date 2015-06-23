@@ -49,7 +49,9 @@
 
 -(void)setKeyboardButton:(TLKeyboardButton *)keyboardButton {
     _keyboardButton = keyboardButton;
-    [_textField setStringValue:_keyboardButton.text];
+    
+    
+    [_textField setStringValue:[_keyboardButton.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "]];
     [_textField sizeToFit];
     [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
