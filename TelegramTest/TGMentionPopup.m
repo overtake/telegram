@@ -36,9 +36,7 @@
     
     NSArray *users = [UsersManager findUsersByMention:string withUids:uids];
     
-    
-    users = [users subarrayWithRange:NSMakeRange(0, MIN(20,users.count))];
-    
+        
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"menu"];
     
     [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
