@@ -2048,9 +2048,12 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.normalNavigationCenterView setDialog:dialog];
         
-         [self.bottomView setDialog:dialog];
+        
+        [self.bottomView setDialog:dialog];
+        
         
         self.state = MessagesViewControllerStateNone;
+        
         
         [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
         

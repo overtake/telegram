@@ -2054,6 +2054,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__38-[TGStickerPackRowView initWithFrame:]_block_invoke:TGStickersSettingsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.rowItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
          <PersistentStrings>
             <PersistentString
@@ -2375,6 +2383,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:params:conversation:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__50-[TGAllStickersTableView loadSetsIfNeeded:n_hash:]_block_invoke266:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__37-[TGAllStickersTableView reloadData:]_block_invoke:TGAllStickersTableView.m">

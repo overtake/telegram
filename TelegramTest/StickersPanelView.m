@@ -259,9 +259,8 @@ bool isRemoteStickersLoaded() {
         
         NSArray *serialized = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"serialized"];
         
-        [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [serialized enumerateObjectsUsingBlock:^(TL_document *ds, NSUInteger idx, BOOL *stop) {
             
-            TL_document *ds = [TLClassStore deserialize:obj];
             
             if(ds.n_id == document.n_id)
             {
@@ -274,9 +273,8 @@ bool isRemoteStickersLoaded() {
         if(!has) {
             serialized = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
             
-            [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [serialized enumerateObjectsUsingBlock:^(TL_document *ds, NSUInteger idx, BOOL *stop) {
                 
-                TL_document *ds = [TLClassStore deserialize:obj];
                 
                 if(ds.n_id == document.n_id)
                 {

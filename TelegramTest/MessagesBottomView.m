@@ -495,7 +495,7 @@
     
     
     
-    self.botKeyboardButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 7, image_smile().size.width, image_smile().size.height)];
+    self.botKeyboardButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 7, image_botKeyboard().size.width, image_botKeyboard().size.height)];
     [self.botKeyboardButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.botKeyboardButton.layer disableActions];
     
