@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.06.15.
+//  Auto created by Mikhail Filimonov on 23.06.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -865,8 +865,9 @@
 
 @interface TLAPI_messages_installStickerSet : TLApiObject
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
+@property Boolean disabled;
 
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled;
 @end
 
 @interface TLAPI_messages_uninstallStickerSet : TLApiObject

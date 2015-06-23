@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.06.15..
+//  Auto created by Mikhail Filimonov on 23.06.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2016,14 +2016,16 @@
 @end
 
 @implementation TLAPI_messages_installStickerSet
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset {
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled {
     TLAPI_messages_installStickerSet* obj = [[TLAPI_messages_installStickerSet alloc] init];
     obj.stickerset = stickerset;
+	obj.disabled = disabled;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-272893207];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2066793382];
 	[ClassStore TLSerialize:self.stickerset stream:stream];
+	[stream writeBool:self.disabled];
 	return [stream getOutput];
 }
 @end

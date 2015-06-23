@@ -179,23 +179,24 @@ bool isRemoteStickersLoaded() {
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
 
-    __block NSString *hash = @"";
     __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        NSDictionary *dictionary = [transaction objectForKey:emotion inCollection:STICKERS_COLLECTION];
         
-        NSArray *serialized = dictionary[@"serialized"];
-        hash = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"hash"];
         
-        [serialized enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [stickers addObject:[TLClassStore deserialize:obj]];
-        }];
+         NSDictionary *data = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
         
+        stickers = [[data[@"serialized"] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
+            
+            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            return [attr.alt isEqualToString:emotion];
+            
+        }]] mutableCopy];
         
         NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
         
-       [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+        [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
             
             NSNumber *c1 = sort[@(obj1.n_id)];
             NSNumber *c2 = sort[@(obj2.n_id)];
@@ -211,46 +212,9 @@ bool isRemoteStickersLoaded() {
     }];
     
     
-    
     if(stickers.count > 0) {
         [self show:YES stickers:stickers];
     }
-    
-    if(!isRemoteStickersLoaded()) {
-        [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_messages_allStickers * response) {
-            
-            if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
-                
-                TL_stickerPack *pack = [[response.packs filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.emoticon = %@",emotion]] lastObject];
-                
-                NSArray *documents = [response.documents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",pack.documents]];
-                
-                
-                if(documents.count > 0) {
-                    if(stickers.count > 0) {
-                        [self rebuild:documents];
-                    } else {
-                        [self show:animated stickers:documents];
-                    }
-                } else {
-                    [self hide:YES];
-                }
-                
-                stickers = [documents mutableCopy];
-                
-                [StickersPanelView saveResponse:response];
-                
-            }
-            
-            setRemoteStickersLoaded(YES);
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-        
-        
-    }
-    
     
 }
 
@@ -276,77 +240,7 @@ bool isRemoteStickersLoaded() {
     
 }
 
-+(void)saveResponse:(TL_messages_allStickers *)response {
-    
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        
-        [response.packs enumerateObjectsUsingBlock:^(TL_stickerPack *pack, NSUInteger idx, BOOL *stop) {
-            
-            NSMutableArray *docs = [[NSMutableArray alloc] init];
-            
-            [pack.documents enumerateObjectsUsingBlock:^(NSNumber *d_id, NSUInteger idx, BOOL *stop) {
-                
-                TL_document *document = [[response.documents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id = %ld",[d_id longValue]]] lastObject];
-                
-                if(document) {
-                    [docs addObject:[TLClassStore serialize:document]];
-                }
-                
-            }];
-            
-            
-            [transaction setObject:@{@"serialized":docs} forKey:pack.emoticon inCollection:STICKERS_COLLECTION];
-            
-        }];
-        
-         NSMutableArray *serialized = [[NSMutableArray alloc] init];
-        
-        [response.documents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            [serialized addObject:[TLClassStore serialize:obj]];
-            
-        }];
-        
-        NSMutableArray *serializedSets = [[NSMutableArray alloc] init];
-        
-        [response.sets enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [serializedSets addObject:[TLClassStore serialize:obj]];
-        }];
-        
-        [transaction setObject:@{@"hash":response.n_hash,@"serialized":serialized,@"sets":serializedSets} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
-        
-    }];
-    
-    [ASQueue dispatchOnStageQueue:^{
-        dispatch_after_seconds(60*60, ^{
-            setRemoteStickersLoaded(NO);
-        });
-    }];
-    
-    
-}
 
-+(void)addLocalSticker:(TLDocument *)document {
-    
-    if(![self hasSticker:document]) {
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            
-            NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-            
-            if(!stickers)
-                stickers = @[];
-            
-             stickers = [stickers arrayByAddingObject:[TLClassStore serialize:document]];
-                
-            [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-        }];
-        
-        [EmojiViewController reloadStickers];
-    }
-    
-    
-}
 
 +(BOOL)hasSticker:(TLDocument *)document {
     
@@ -399,3 +293,185 @@ bool isRemoteStickersLoaded() {
 }
 
 @end
+
+
+
+/*
+ +(void)saveResponse:(NSArray *)packs allSets:(NSArray *)sets currentSet:(TL_stickerSet *)set documents:(NSArray *)documents n_hash:(NSString *)n_hash {
+ 
+ [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+ 
+ [packs enumerateObjectsUsingBlock:^(TL_stickerPack *pack, NSUInteger idx, BOOL *stop) {
+ 
+ NSArray *emoticonStickers = [transaction objectForKey:pack.emoticon inCollection:STICKERS_COLLECTION];
+ 
+ NSMutableArray *packDocuments = [[NSMutableArray alloc] init];
+ 
+ [emoticonStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ @try {
+ TL_document *document = [TLClassStore deserialize:obj];
+ 
+ [packDocuments addObject:document];
+ 
+ }
+ @catch (NSException *exception) {
+ 
+ }
+ 
+ }];
+ 
+ [pack.documents enumerateObjectsUsingBlock:^(NSNumber *n_id, NSUInteger idx, BOOL *stop) {
+ 
+ if([packDocuments filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",[n_id longValue]]].count == 0) {
+ 
+ @try {
+ TL_document *document = [documents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",[n_id longValue]]][0];
+ 
+ [packDocuments addObject:document];
+ }
+ @catch (NSException *exception) {
+ 
+ }
+ 
+ }
+ 
+ }];
+ 
+ NSMutableArray *serialized = [[NSMutableArray alloc] init];
+ 
+ [packDocuments enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ [serialized addObject:[TLClassStore serialize:obj]];
+ }];
+ 
+ [transaction setObject:serialized forKey:pack.emoticon inCollection:STICKERS_COLLECTION];
+ 
+ }];
+ 
+ 
+ NSArray *serializedStickers = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"serialized"];
+ NSArray *serializedSets = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"sets"];
+ 
+ 
+ NSMutableArray *allStickers = [[NSMutableArray alloc] init];
+ NSMutableArray *allSets = [[NSMutableArray alloc] init];
+ 
+ 
+ 
+ [serializedStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ [allStickers addObject:[TLClassStore deserialize:obj]];
+ 
+ }];
+ 
+ 
+ [serializedSets enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ [allSets addObject:[TLClassStore deserialize:obj]];
+ 
+ }];
+ 
+ 
+ NSMutableArray *changedSets = [[NSMutableArray alloc] init];
+ NSMutableArray *removedSets = [[NSMutableArray alloc] init];
+ 
+ [allSets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+ NSArray *current = [sets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]];
+ 
+ if(current.count == 0)
+ {
+ [removedSets addObject:current];
+ }
+ }];
+ 
+ [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+ 
+ NSArray *current = [allSets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]];
+ 
+ if(current.count == 0 || [(TL_stickerSet *)current[0] n_hash] != obj.n_hash) {
+ 
+ [changedSets addObject:obj];
+ }
+ 
+ }];
+ 
+ NSMutableArray *toremove = [[NSMutableArray alloc] init];
+ 
+ [allStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [obj attributeWithClass:[TL_documentAttributeSticker class]];
+ 
+ BOOL res = [changedSets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]].count == 0 && [removedSets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]].count == 0;
+ 
+ if(!res)
+ {
+ [toremove addObject:obj];
+ }
+ 
+ }];
+ 
+ [allStickers removeObjectsInArray:toremove];
+ 
+ [documents enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
+ 
+ if([allStickers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]].count == 0) {
+ [allStickers addObject:obj];
+ }
+ 
+ }];
+ 
+ 
+ 
+ NSMutableArray *ser = [[NSMutableArray alloc] init];
+ 
+ [allStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ 
+ [ser addObject:[TLClassStore serialize:obj]];
+ 
+ }];
+ 
+ 
+ serializedStickers = ser;
+ 
+ ser = [[NSMutableArray alloc] init];
+ 
+ [sets enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ [ser addObject:[TLClassStore serialize:obj]];
+ }];
+ 
+ serializedSets = ser;
+ 
+ [transaction setObject:@{@"hash":n_hash,@"serialized":serializedStickers,@"sets":serializedSets} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+ 
+ }];
+ 
+ [ASQueue dispatchOnStageQueue:^{
+ dispatch_after_seconds(60*60, ^{
+ setRemoteStickersLoaded(NO);
+ });
+ }];
+ 
+ 
+ }
+ 
+ +(void)addLocalSticker:(TLDocument *)document {
+ 
+ if(![self hasSticker:document]) {
+ [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+ 
+ NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+ 
+ if(!stickers)
+ stickers = @[];
+ 
+ stickers = [stickers arrayByAddingObject:[TLClassStore serialize:document]];
+ 
+ [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+ }];
+ 
+ [EmojiViewController reloadStickers];
+ }
+ 
+ 
+ }
+*/

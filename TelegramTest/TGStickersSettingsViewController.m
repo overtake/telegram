@@ -224,7 +224,7 @@
                     if(f.count == 1)
                         set = f[0];
                     else
-                        set = [TL_stickerSet createWithN_id:0 access_hash:0 title:@"Great Minds" short_name:@""];
+                        set = [TL_stickerSet createWithFlags:0 n_id:0 access_hash:0 title:@"Great Minds" short_name:@"" n_count:0 n_hash:0];
                     
                     [packs setObject:@{@"stickers":p,@"set":set} forKey:@(attr.stickerset.n_id)];
                 }

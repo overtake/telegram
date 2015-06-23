@@ -252,7 +252,7 @@
                     }
                 } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
                     if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
-                    [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                        [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }
                 
@@ -260,18 +260,20 @@
             
             if([message.reply_markup isKindOfClass:[TL_replyKeyboardForceReply class]]) {
                 
-                
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    
-                    [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-                    
-                }];
-                
-                if(conversation.peer_id == [Telegram conversation].peer_id) {
-                    [ASQueue dispatchOnMainQueue:^{
-                        [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
+                if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
+                    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        
+                        [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
+                        
                     }];
+                    
+                    if(conversation.peer_id == [Telegram conversation].peer_id) {
+                        [ASQueue dispatchOnMainQueue:^{
+                            [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
+                        }];
+                    }
                 }
+                
             }
             
             if(notify)

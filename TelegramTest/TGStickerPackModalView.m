@@ -86,7 +86,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
             [TMViewController showModalProgress];
             
             
-            [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:weakSelf.pack.set.n_id access_hash:weakSelf.pack.set.access_hash]] successHandler:^(id request, id response) {
+            [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:weakSelf.pack.set.n_id access_hash:weakSelf.pack.set.access_hash] disabled:NO] successHandler:^(id request, id response) {
                 
                 dispatch_after_seconds(0.2, ^{
                     [TMViewController hideModalProgressWithSuccess];

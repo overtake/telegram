@@ -57,7 +57,7 @@
         if([_mimeType hasPrefix:@"audio/"]) {
             AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
 
-            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration)]];
+            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration) title:@"" performer:@""]];
             
             if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
                 

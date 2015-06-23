@@ -30,7 +30,6 @@
             callback(userFull);
       //  }];
         
-        return;
     }
     
     [ASQueue dispatchOnStageQueue:^{

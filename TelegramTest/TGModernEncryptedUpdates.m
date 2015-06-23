@@ -581,7 +581,7 @@ Class convertClass(NSString *c, int layer) {
         } else if([obj isKindOfClass:videoAttr]) {
             [attrs addObject:[TL_documentAttributeVideo createWithDuration:[[obj valueForKey:@"duration"] intValue] w:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
         } else if([obj isKindOfClass:audioAttr]) {
-            [attrs addObject:[TL_documentAttributeAudio createWithDuration:[[obj valueForKey:@"duration"] intValue]]];
+            [attrs addObject:[TL_documentAttributeAudio_old31 createWithDuration:[[obj valueForKey:@"duration"] intValue]]];
         } else if([obj isKindOfClass:animatedAttr]) {
             [attrs addObject:[TL_documentAttributeAnimated create]];
         }
