@@ -706,42 +706,52 @@
 
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
+    
+   
+    
     if([self mouse:location inRect:self.bounds]) {
         
-        CFArrayRef lines = CTFrameGetLines(CTFrame);
         
-        
-        CGPoint origins[CFArrayGetCount(lines)];
-        CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
-        
-        int line = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
-        
-        CTLineRef lineRef = CFArrayGetValueAtIndex(lines, line);
-        
-        CGFloat ascent,descent,leading;
-        
-        int width = CTLineGetTypographicBounds(lineRef, &ascent, &descent, &leading);
-        
-        if( (NSMinX(self.frame) + width) > location.x) { // && location.x > NSMinX(self.frame)
-            NSRange range;
-            
-            int position = (int) CTLineGetStringIndexForPosition(lineRef, location);
-            
-            NSString *link;
-            
-            if(position < 0)
-                position = 0;
-            if(position >= self.attributedString.length)
-                position = (int)self.attributedString.length - 1;
+        @try {
+            CFArrayRef lines = CTFrameGetLines(CTFrame);
             
             
-            NSDictionary *attrs = [self.attributedString attributesAtIndex:position effectiveRange:&range];
-            link = [attrs objectForKey:NSLinkAttributeName];
+            CGPoint origins[CFArrayGetCount(lines)];
+            CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
             
-            *hitTest = YES;
+            int line = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
             
-            return link;
+            CTLineRef lineRef = CFArrayGetValueAtIndex(lines, line);
+            
+            CGFloat ascent,descent,leading;
+            
+            int width = CTLineGetTypographicBounds(lineRef, &ascent, &descent, &leading);
+            
+            if( (NSMinX(self.frame) + width) > location.x) { // && location.x > NSMinX(self.frame)
+                NSRange range;
+                
+                int position = (int) CTLineGetStringIndexForPosition(lineRef, location);
+                
+                NSString *link;
+                
+                if(position < 0)
+                    position = 0;
+                if(position >= self.attributedString.length)
+                    position = (int)self.attributedString.length - 1;
+                
+                
+                NSDictionary *attrs = [self.attributedString attributesAtIndex:position effectiveRange:&range];
+                link = [attrs objectForKey:NSLinkAttributeName];
+                
+                *hitTest = YES;
+                
+                return link;
+            }
         }
+        @catch (NSException *exception) {
+            return nil;
+        }
+        
     }
     
     return nil;
