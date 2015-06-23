@@ -182,6 +182,8 @@
 
 @interface TMMenuController ()
 @property (nonatomic,assign) int selectedIndex;
+@property (nonatomic,strong) BTRScrollView *scrollView;
+@property (nonatomic,strong) TMView *documentView;
 @end
 
 
@@ -189,10 +191,12 @@
 @implementation TMMenuController
 
 - (id)initWithMenu:(NSMenu *)menu {
-    self = [super initWithFrame:NSMakeRect(0, 0, 250, menu.itemArray.count * 36 + 12)];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + 12,372))];
     if(self) {
         self.menuController = menu;
         _selectedIndex = -1;
+       
+        
     }
     return self;
 }
@@ -205,31 +209,50 @@
 - (void)loadView {
     [super loadView];
     
+    
+    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(2, 2, NSWidth(self.view.frame) - 4, NSHeight(self.view.frame) - 4)];
+    _documentView = [[TMView alloc] initWithFrame:_scrollView.bounds];
+    
+    [self.view addSubview:_scrollView];
+    
+    _scrollView.documentView = _documentView;
+    
+    
+    
     int count = (int)self.menuController.itemArray.count - 1;
+    
+    NSUInteger h = self.menuController.itemArray.count * 36 + 6;
+    
     for(NSMenuItem *item in self.menuController.itemArray) {
         TMMenuItemView *itemView = [[TMMenuItemView alloc] initWithMenuItem:item];
         itemView.controller = self;
         [itemView setFrameOrigin:NSMakePoint(0, count * 36 + 6)];
-        [self.view addSubview:itemView];
+        [_documentView addSubview:itemView];
         count--;
     }
+    
+    [_documentView setFrameSize:NSMakeSize(NSWidth(_documentView.frame), h)];
 }
 
 -(void)selectNext {
     
     _selectedIndex++;
     
-    if(_selectedIndex >= self.view.subviews.count) {
+    if(_selectedIndex >= _documentView.subviews.count) {
         _selectedIndex = 0;
     }
     
     TMMenuItemView *lastItem = _selectedItem;
     
-     _selectedItem = self.view.subviews[_selectedIndex];
+     _selectedItem = _documentView.subviews[_selectedIndex];
     
     [lastItem handleStateChange];
     
+    [self.scrollView.clipView scrollRectToVisible:[_selectedItem frame] animated:NO];
+    
     [(TMMenuItemView *)_selectedItem handleStateChange];
+    
+    
     
 }
 
@@ -237,18 +260,21 @@
     _selectedIndex--;
     
     if(_selectedIndex < 0) {
-        _selectedIndex = (int)self.view.subviews.count - 1;
+        _selectedIndex = (int)_documentView.subviews.count - 1;
     }
     
     TMMenuItemView *lastItem = _selectedItem;
     
     [(TMMenuItemView *)_selectedItem handleStateChange];
     
-    _selectedItem = self.view.subviews[_selectedIndex];
+    _selectedItem = _documentView.subviews[_selectedIndex];
     
-     [lastItem handleStateChange];
+    [lastItem handleStateChange];
+    
+    [self.scrollView.clipView scrollRectToVisible:[_selectedItem frame] animated:NO];
     
     [(TMMenuItemView *)_selectedItem handleStateChange];
+    
 }
 
 -(void)performSelected {

@@ -67,11 +67,6 @@ DYNAMIC_PROPERTY(DUser);
     commands = string.length > 0 ? [[commands filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.command BEGINSWITH[c] %@",string]] mutableCopy] : commands;
     
     
-
-    
-    commands = [[commands subarrayWithRange:NSMakeRange(0, MIN(commands.count,10))] mutableCopy];
-    
-    
     [commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
         
         
