@@ -196,7 +196,7 @@
         return;
     
     TLChatFull *chat = [self find:chat_id];
-    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime] || force || chat.class == [TL_chatFull_old29 class])
+    if(!chat || (chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime]) || force || chat.class == [TL_chatFull_old29 class])
         [self loadFullChatByChatId:chat_id force:force];
 }
 
@@ -211,8 +211,10 @@
     if(fullChat ) {
         if(callback != nil)
             callback(fullChat);
-    if( fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime] || !force || fullChat.class != [TL_chatFull_old29 class])
-        return;
+        if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) || !force) {
+                return;
+        }
+        
     }
     
         
@@ -230,7 +232,7 @@
         
         [self.queue dispatchOnQueue:^{
             
-            [self add:[[NSArray alloc] initWithObjects:[result full_chat], nil]];
+            [self add:@[[result full_chat]]];
             
             [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
             
@@ -291,7 +293,7 @@
                 currentChat.chat_photo = newChatFull.chat_photo;
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
-                
+                currentChat.bot_info = newChatFull.bot_info;
                 //            if(currentChat.notify_settings.mute_until != newChatFull.notify_settings.mute_until) {
                 //                currentChat.notify_settings = newChatFull.notify_settings;
                 //
