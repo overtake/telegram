@@ -70,6 +70,13 @@
     
     
     if(_keyboard.reply_markup.flags & (1 << 1) ) {
+        
+        _keyboard.reply_markup.flags|= (1 << 5);
+        
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+            [transaction setObject:_keyboard forKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
+        }];
+        
         [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyaboard"] data:@{KEY_DIALOG:_conversation}];
     }
 }
@@ -153,10 +160,6 @@
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
         
          keyboard = [transaction objectForKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-        
-        if(keyboard) {
-            keyboard = [TLClassStore deserialize:(NSData *)keyboard];
-        }
         
     }];
     

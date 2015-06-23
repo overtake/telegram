@@ -200,11 +200,21 @@
         [self loadFullChatByChatId:chat_id];
 }
 
-- (void)performLoad:(int)chat_id callback:(dispatch_block_t)callback {
+- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
     [self loadFullChatByChatId:chat_id callback:callback];
 }
 
-- (void)loadFullChatByChatId:(int)chat_id callback:(dispatch_block_t)callback {
+- (void)loadFullChatByChatId:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
+    
+    TLChatFull *fullChat = [self find:chat_id];
+    
+    if(fullChat ) {
+        if(callback != nil)
+            callback(fullChat);
+        
+        if(fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime])
+            return;
+    }
     
         
     [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
@@ -217,7 +227,6 @@
             [conversation save];
         }
         
-        
         [SharedManager proccessGlobalResponse:result];
         
         [self.queue dispatchOnQueue:^{
@@ -227,18 +236,17 @@
             [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
             
             
-            [LoopingUtils runOnMainQueueAsync:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(callback)
-                    callback();
+                    callback([result full_chat]);
             }];
+
         }];
-        
-       
-        
+
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
         if(callback)
-            callback();
+            callback(nil);
     }];
     
 }

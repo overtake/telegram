@@ -174,15 +174,11 @@
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-        if(data)
-            replyMessage = [TLClassStore deserialize:data];
+        replyMessage = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
         
         
-        data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-        if(data) {
-            keyboardMessage = [TLClassStore deserialize:data];
-        } else {
+        keyboardMessage = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+        if(!keyboardMessage) {
             clear = NO;
         }
         

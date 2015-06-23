@@ -28,10 +28,10 @@ NSString *const ENCRYPTED_IMAGE_COLLECTION = @"encrypted_image_collection";
 NSString *const ENCRYPTED_PARAMS_COLLECTION = @"encrypted_params_collection";
 NSString *const STICKERS_COLLECTION = @"stickers_collection_v28";
 NSString *const SOCIAL_DESC_COLLECTION = @"social_desc_collection";
-NSString *const REPLAY_COLLECTION = @"replay_collection";
+NSString *const REPLAY_COLLECTION = @"replay_collection_v2";
 NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
-NSString *const BOT_COMMANDS = @"bot_commands_v1";
+NSString *const BOT_COMMANDS = @"bot_commands_v2";
 -(id)init {
     if(self = [super init]) {
         [self open:nil];

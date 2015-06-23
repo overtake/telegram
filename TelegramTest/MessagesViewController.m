@@ -2043,13 +2043,17 @@ static NSTextAttachment *headerMediaIcon() {
       //  }
         
         
+        
         [self.normalNavigationCenterView setDialog:dialog];
         
-        [self.bottomView setDialog:dialog];
+         [self.bottomView setDialog:dialog];
+        
+        self.state = MessagesViewControllerStateNone;
+        
         [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
         
         [self unSelectAll:NO];
-        self.state = MessagesViewControllerStateNone;
+        
         
         
         [self.typingReservation removeAllObjects];
@@ -3085,7 +3089,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class])  {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
-            [transaction setObject:[TLClassStore serialize:message] forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
+            [transaction setObject:message forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
             
         }];
         
@@ -3111,9 +3115,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        NSData *data = [transaction objectForKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
-        if(data)
-            replyMessage = [TLClassStore deserialize:data];
+        replyMessage = [transaction objectForKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
         
     }];
     

@@ -192,6 +192,17 @@
 }
 
 
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    if((self = [TLClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[TLClassStore serialize:self] forKey:@"data"];
+}
 
 -(BOOL)n_out {
     return self.flags & TGOUTMESSAGE;

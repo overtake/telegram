@@ -182,6 +182,8 @@
         for(TL_conversation *dialog in dialogstoUpdate.allValues) {
             [self updateLastMessageForDialog:dialog];
         }
+        
+        
     }];
     
 }
@@ -218,6 +220,8 @@
             NSUInteger position = [self positionForConversation:dialog];
             
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
+            
+            [MessagesManager updateUnreadBadge];
 
             
         }];
@@ -239,10 +243,8 @@
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
                 
-                NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                currentKeyboard = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 
-                if(data)
-                    currentKeyboard = [TLClassStore deserialize:data];
                 
                 if([message.reply_markup isKindOfClass:[TL_replyKeyboardHide class]]) {
                     
@@ -252,7 +254,7 @@
                     }
                 } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
                     if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
-                        [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                        [transaction setObject:message forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }
                 
@@ -263,7 +265,7 @@
                 if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
                     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                         
-                        [transaction setObject:[TLClassStore serialize:message] forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
+                        [transaction setObject:message forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
                         
                     }];
                     
@@ -284,10 +286,9 @@
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
                 
-                NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                TL_localMessage *msg = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 
-                if(data){
-                    TL_localMessage *msg = [TLClassStore deserialize:data];
+                if(msg){
                                 
                     if(msg.from_id == message.action.user_id) {
                         [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];

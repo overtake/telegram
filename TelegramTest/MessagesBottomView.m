@@ -46,6 +46,7 @@
 @property (nonatomic, strong) BTRButton *attachButton;
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) BTRButton *botKeyboardButton;
+@property (nonatomic, strong) BTRButton *botCommandButton;
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -81,8 +82,8 @@
 @property (nonatomic,strong,readonly) TGImageAttachmentsController *imageAttachmentsController;
 
 
-@property (nonatomic,strong) TL_userFull *userFull;
-
+@property (nonatomic,strong) TLUserFull *userFull;
+@property (nonatomic,strong) TLChatFull *chatFull;
 
 @end
 
@@ -207,17 +208,9 @@
     }
     
     _userFull = nil;
+    _chatFull = nil;
     
-    if(self.dialog.type == DialogTypeUser) {
-        
-        
-        [[FullUsersManager sharedManager] loadUserFull:self.dialog.user callback:^(TL_userFull *userFull) {
-            
-            _userFull = userFull;
-            
-        }];
-        
-    }
+    [self updateBotButtons];
     
     
     [self checkBotKeyboard:YES animated:NO forceShow:NO];
@@ -228,15 +221,51 @@
     [self checkFwdMessages:YES animated:NO];
     
     
-    
+    if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
+        
+        
+        [[FullUsersManager sharedManager] loadUserFull:self.dialog.user callback:^(TL_userFull *userFull) {
+            
+            _userFull = userFull;
+            
+            [self updateBotButtons];
+            
+        }];
+        
+        
+    } else if(self.dialog.type == DialogTypeChat) {
+        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id callback:^(TLChatFull * chatFull) {
+            
+            _chatFull = chatFull;
+            
+            [self updateBotButtons];
+            
+        }];
+    }
     
     [_imageAttachmentsController show:_dialog animated:NO];
     
     [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
 
-    
-    
+}
 
+-(void)updateBotButtons {
+    if(self.dialog.type == DialogTypeUser) {
+        [self.botCommandButton setHidden:!self.dialog.user.isBot];
+    } else if(self.dialog.type == DialogTypeChat) {
+        [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
+    }
+    
+     [_botKeyboardButton setHidden:self.inputMessageString.length != 0 || !_botKeyboard.isCanShow];
+    
+    if(!_botCommandButton.isHidden)
+    {
+        [_botCommandButton setHidden:self.inputMessageString.length != 0];
+        
+        [_botCommandButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botKeyboardButton.isHidden ? 60 : 90), NSMinY(_botKeyboardButton.frame))];
+        
+    }
+    
 }
 
 - (TMView *)actionsView {
@@ -477,6 +506,18 @@
     [self.inputMessageTextField.containerView addSubview:self.botKeyboardButton];
     
     
+    
+    self.botCommandButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_smile().size.width, image_smile().size.height)];
+    [self.botCommandButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.botCommandButton.layer disableActions];
+    
+    [self.botCommandButton addTarget:self action:@selector(botCommandButtonAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.botCommandButton setBackgroundImage: image_PlayButtonBig() forControlState:BTRControlStateNormal];
+
+    
+    [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
+    
+    
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
@@ -501,6 +542,11 @@
     [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_BotOSXGray() : image_BotOSXBlue() forControlState:BTRControlStateNormal];
     
     [self updateBottomHeight:YES];
+}
+
+-(void)botCommandButtonAction:(BTRButton *)button {
+    [self.inputMessageTextField setString:@"/"];
+    [self.inputMessageTextField textDidChange:nil];
 }
 
 -(NSMenu *)attachMenu {
@@ -941,8 +987,13 @@
     
     [self checkMentionsOrTags];
     
+    if(textView) {
+        [self updateBotButtons];
+        [self updateTextFieldContainer];
+    }
     
     
+
 }
 
 -(void)checkMentionsOrTags {
@@ -1034,7 +1085,7 @@
                     
                     callback(command);
                     
-                 //   [[Telegram rightViewController].messagesViewController sendMessage];
+                    [[Telegram rightViewController].messagesViewController sendMessage];
                     
                 }];
                 
@@ -1064,11 +1115,17 @@
     }
     
    
-    if(!forceShow) {
-        forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 1));
-    }
-    
     [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
+    
+    if(!forceShow) {
+        
+        if((_botKeyboard.keyboard.reply_markup.flags & (1 << 1)) == 0) {
+            forceShow = YES;
+        } else {
+            forceShow = (_botKeyboard.keyboard.reply_markup.flags & (1 << 5)) == 0;
+        }
+    }
+
     
     
     [_botKeyboardButton setSelected:forceShow];
@@ -1184,12 +1241,7 @@
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        NSData *serialized = [transaction objectForKey:self.dialog.cacheKey inCollection:REPLAY_COLLECTION];
-        
-        if(serialized) {
-            replyMessage = [TLClassStore deserialize:serialized];
-        }
-        
+        replyMessage = [transaction objectForKey:self.dialog.cacheKey inCollection:REPLAY_COLLECTION];
         
     }];
     
@@ -1344,7 +1396,7 @@
             
             [[_botKeyboard animator] setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=NSHeight(_botKeyboard.frame);
+            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
 
             
             [[_imageAttachmentsController animator] setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
@@ -1357,7 +1409,7 @@
             
         } else {
             
-            [self setFrameSize:layoutSize];
+             [self setFrameSize:layoutSize];
              [self.normalView setFrameSize:NSMakeSize(NSWidth(self.normalView.frame), layoutSize.height + 23)];
             
              [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
@@ -1367,7 +1419,7 @@
             
             [_botKeyboard setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=NSHeight(_botKeyboard.frame);
+            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
@@ -1391,15 +1443,21 @@
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
     
-    int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
     
-    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, 30);
-    
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self updateTextFieldContainer];
     
     [self.inputMessageTextField textDidChange:nil];
 }
 
+
+-(void)updateTextFieldContainer {
+    
+    int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    
+    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
+    
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+}
 
 
 - (void) attachButtonPressed {
@@ -1443,11 +1501,13 @@
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
     
-
-    
     [self.inputMessageTextField textDidChange:nil];
 
     self.inputMessageTextField.disableAnimation = YES;
+    
+    [self updateBotButtons];
+    
+    [self updateTextFieldContainer];
     
 }
 
