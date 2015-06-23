@@ -256,7 +256,6 @@
         [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
     }
     
-     [_botKeyboardButton setHidden:self.inputMessageString.length != 0 || !_botKeyboard.isCanShow];
     
     if(!_botCommandButton.isHidden)
     {
@@ -512,7 +511,7 @@
     [self.botCommandButton.layer disableActions];
     
     [self.botCommandButton addTarget:self action:@selector(botCommandButtonAction:) forControlEvents:BTRControlEventMouseDownInside];
-    [self.botCommandButton setBackgroundImage: image_PlayButtonBig() forControlState:BTRControlStateNormal];
+    [self.botCommandButton setBackgroundImage: image_botCommand() forControlState:BTRControlStateNormal];
 
     
     [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
@@ -539,7 +538,8 @@
     
     [_botKeyboardButton setSelected:!self.botKeyboard.isHidden];
     
-    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_BotOSXGray() : image_BotOSXBlue() forControlState:BTRControlStateNormal];
+    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_botKeyboard() : image_botKeyboardActive() forControlState:BTRControlStateNormal];
+    
     
     [self updateBottomHeight:YES];
 }
@@ -987,12 +987,9 @@
     
     [self checkMentionsOrTags];
     
-    if(textView) {
-        [self updateBotButtons];
-        [self updateTextFieldContainer];
-    }
-    
-    
+    [self updateBotButtons];
+    [self updateTextFieldContainer];
+
 
 }
 
@@ -1131,8 +1128,11 @@
     [_botKeyboardButton setSelected:forceShow];
     [_botKeyboardButton setHidden:!_botKeyboard.isCanShow];
     
+    [self updateBotButtons];
     
-    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_BotOSXGray() : image_BotOSXBlue() forControlState:BTRControlStateNormal];
+    [self updateTextFieldContainer];
+    
+    [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_botKeyboard() : image_botKeyboardActive() forControlState:BTRControlStateNormal];
     
     [_botKeyboard setHidden:!forceShow];
     

@@ -68,6 +68,7 @@
 #import "ImageAttachSenderItem.h"
 #import "FullUsersManager.h"
 #import "StartBotSenderItem.h"
+#import "TGHelpPopup.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1995,7 +1996,8 @@ static NSTextAttachment *headerMediaIcon() {
         
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
-        
+        [TGHelpPopup popover].fadeDuration = 0;
+        [TGHelpPopup close];
         
         [_replyMsgsStack removeAllObjects];
         

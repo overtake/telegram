@@ -187,8 +187,9 @@ CACHE_IMAGE(MiniPlayerStop);
 CACHE_IMAGE(MiniPlayerDefaultCover);
 CACHE_IMAGE(MiniPlayerPlaylist);
 
-CACHE_IMAGE(BotOSXGray);
-CACHE_IMAGE(BotOSXBlue);
+CACHE_IMAGE(botCommand);
+CACHE_IMAGE(botKeyboard);
+CACHE_IMAGE(botKeyboardActive);
 
 @interface ImageUtils : NSObject
 
