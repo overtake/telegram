@@ -615,7 +615,7 @@ static NSMutableArray *listeners;
             }];
             
             
-            if(memory.count >= _selectLimit) {
+            if(memory.count >= _selectLimit && next) {
                 
                 NSUInteger location = next ? 0 : (memory.count-_selectLimit);
                 memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];

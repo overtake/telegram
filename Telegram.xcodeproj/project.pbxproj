@@ -292,6 +292,10 @@
 		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
 		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
 		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
+		C226CC8A1B3AC6240042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C226CC8B1B3AC6240042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C226CC8C1B3AC6270042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CC8D1B3AC6280042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -857,6 +861,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C226CC8C1B3AC6270042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
+				C226CC8D1B3AC6280042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1458,6 +1464,7 @@
 		C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectChatRowView.m; sourceTree = "<group>"; };
 		C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddUserToGroupBehavior.h; sourceTree = "<group>"; };
 		C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddUserToGroupBehavior.m; sourceTree = "<group>"; };
+		C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Telegram.xcodeproj; sourceTree = "<group>"; };
 		C22C7F2818B2163F007C4D17 /* MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetwork.h; sourceTree = "<group>"; };
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
 		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
@@ -2435,6 +2442,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C226CC8A1B3AC6240042C5D8 /* Sparkle.framework in Frameworks */,
+				C226CC8B1B3AC6240042C5D8 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3484,6 +3493,11 @@
 				C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */,
 			);
 			name = add_to_group;
+			sourceTree = "<group>";
+		};
+		C226CC861B3A3D460042C5D8 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C23298D818CF6180000826E5 /* qlmedia */ = {
@@ -4917,6 +4931,7 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */,
 				C2CBF6A11AFB81A8006BF90A /* QuickLook.framework */,
 				C2CBF6841AFB6FE6006BF90A /* QuartzCore.framework */,
 				C2CBF6821AFB6F33006BF90A /* AVFoundation.framework */,
@@ -5396,6 +5411,10 @@
 				{
 					ProductGroup = C2E560FE1AF3726300B4CAF0 /* Products */;
 					ProjectRef = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+				},
+				{
+					ProductGroup = C226CC861B3A3D460042C5D8 /* Products */;
+					ProjectRef = C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */;
 				},
 			);
 			projectRoot = "";

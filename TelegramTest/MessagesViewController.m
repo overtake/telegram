@@ -227,6 +227,7 @@
         self.historyController = [[ChatHistoryController alloc] initWithController:self];
         animated = NO;
         
+        
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
     }
     

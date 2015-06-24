@@ -513,7 +513,7 @@
         
         
         [self.addToGroupButton setHidden:!self.user.isBot || (self.user.flags & TGBOTGROUPBLOCKED)];
-        if(self.user.isBot) {
+        if(self.user.isBot && !self.addToGroupButton.isHidden) {
             offset-=NSHeight(self.sendMessageButton.frame);
             
             [self.addToGroupButton setFrameOrigin:NSMakePoint(100, offset)];

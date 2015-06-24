@@ -2601,6 +2601,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2301:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.prevState">
+            </PersistentString>
+            <PersistentString
+               value = "self.nextState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PhotoCollectionTableView setItems:conversation:]:PhotoCollectionTableView.m">
       </ContextState>
       <ContextState
