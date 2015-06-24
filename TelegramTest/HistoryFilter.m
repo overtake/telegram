@@ -45,7 +45,7 @@ static NSMutableDictionary * messageKeys;
     [[self messageItems] removeObjectsInArray:res];
     
     for (MessageTableItem *item in res) {
-        [[self messageKeys] removeObjectForKey:@(item.message.n_id)];
+        [[self messageKeys] removeObjectForKey:@(item.message.randomId)];
     }
 }
 
@@ -56,7 +56,7 @@ static NSMutableDictionary * messageKeys;
     [[self messageItems] removeObjectsInArray:res];
     
     for (MessageTableItem *item in res) {
-        [[self messageKeys] removeObjectForKey:@(item.message.n_id)];
+        [[self messageKeys] removeObjectForKey:@(item.message.randomId)];
     }
     
     

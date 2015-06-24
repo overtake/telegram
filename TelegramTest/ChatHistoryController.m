@@ -894,6 +894,7 @@ static NSMutableArray *listeners;
 }
 
 -(void)removeAllItems {
+    
     for (Class filterClass in filters) {
         [filterClass removeAllItems:self.controller.conversation.peer.peer_id];
     }
@@ -1053,7 +1054,7 @@ static NSMutableArray *listeners;
                     [self.controller.conversation save];
                     
                     [messageItems removeObject:checkItem];
-                    [messageKeys removeObjectForKey:@(checkItem.message.n_id)];
+                    [messageKeys removeObjectForKey:@(checkItem.message.randomId)];
                     
                     [self filterAndAdd:@[checkItem] isLates:YES];
                     
