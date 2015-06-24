@@ -34,12 +34,12 @@
         [self.lastSeenUpdater invalidate];
         [self.lastSeenRequest cancelRequest];
         
-        self.lastSeenUpdater = [[TGTimer alloc] initWithTimeout:300 repeat:YES completion:^{
-            [self statusUpdater];
-        } queue:self.queue.nativeQueue];
-        
-        [self.lastSeenUpdater start];
-        [self statusUpdater];
+//        self.lastSeenUpdater = [[TGTimer alloc] initWithTimeout:300 repeat:YES completion:^{
+//            [self statusUpdater];
+//        } queue:self.queue.nativeQueue];
+//        
+//        [self.lastSeenUpdater start];
+      //  [self statusUpdater];
     }];
 }
 

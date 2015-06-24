@@ -521,13 +521,19 @@ static NSImage *higlightedImage() {
             return NSOrderedSame;
         }];
         
-        recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
+        if(!_isCustomStickerPack) {
+            recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
+            
+            recent = [recent filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
+                
+                return sort[@(evaluatedObject.n_id)] > 0;
+                
+            }]];
+        } else {
+            recent = @[];
+        }
         
-        recent = [recent filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
-            
-            return sort[@(evaluatedObject.n_id)] > 0;
-            
-        }]];
+        
         
         _hasRecentStickers = recent.count > 0;
         
