@@ -1217,7 +1217,7 @@
         
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
             
-            [context setDuration:0.2];
+            [context setDuration:0.1];
             [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
             
             block();

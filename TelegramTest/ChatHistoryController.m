@@ -403,10 +403,10 @@ static NSMutableArray *listeners;
                (filterClass != HistoryFilter.class && obj.message.filterType & [filterClass type]) > 0) {
                 
                 
-                if(obj.message.randomId != 0) {
-                    id saved = filterKeys[@(obj.message.randomId)];
+                if(obj.message.n_id != 0) {
+                    id saved = filterKeys[@(obj.message.n_id)];
                     if(!saved) {
-                        filterKeys[@(obj.message.randomId)] = obj;
+                        filterKeys[@(obj.message.n_id)] = obj;
                     } else {
                         needAdd = NO;
                     }
@@ -615,7 +615,7 @@ static NSMutableArray *listeners;
             }];
             
             
-            if(memory.count >= _selectLimit && next) {
+            if(memory.count >= _selectLimit) {
                 
                 NSUInteger location = next ? 0 : (memory.count-_selectLimit);
                 memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];
@@ -894,7 +894,6 @@ static NSMutableArray *listeners;
 }
 
 -(void)removeAllItems {
-    
     for (Class filterClass in filters) {
         [filterClass removeAllItems:self.controller.conversation.peer.peer_id];
     }
@@ -1054,7 +1053,7 @@ static NSMutableArray *listeners;
                     [self.controller.conversation save];
                     
                     [messageItems removeObject:checkItem];
-                    [messageKeys removeObjectForKey:@(checkItem.message.randomId)];
+                    [messageKeys removeObjectForKey:@(checkItem.message.n_id)];
                     
                     [self filterAndAdd:@[checkItem] isLates:YES];
                     

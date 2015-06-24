@@ -94,6 +94,7 @@
         
         if(response.updates.count < 2)
         {
+            [self cancel];
             return;
         }
         

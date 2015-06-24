@@ -26,6 +26,8 @@
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
+        [self.message save:YES];
+        
     }
     
     return self;
@@ -45,6 +47,7 @@
         
         if(response.updates.count < 2)
         {
+            [self cancel];
             return;
         }
         

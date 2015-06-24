@@ -292,10 +292,10 @@
 		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
 		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
 		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
-		C226CC8A1B3AC6240042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C226CC8B1B3AC6240042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C226CC8C1B3AC6270042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C226CC8D1B3AC6280042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CCB71B3AE0960042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C226CCB81B3AE0960042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C226CCB91B3AE0980042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C226CCBA1B3AE0980042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -861,8 +861,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C226CC8C1B3AC6270042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
-				C226CC8D1B3AC6280042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
+				C226CCB91B3AE0980042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
+				C226CCBA1B3AE0980042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2442,8 +2442,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C226CC8A1B3AC6240042C5D8 /* Sparkle.framework in Frameworks */,
-				C226CC8B1B3AC6240042C5D8 /* HockeySDK.framework in Frameworks */,
+				C226CCB71B3AE0960042C5D8 /* Sparkle.framework in Frameworks */,
+				C226CCB81B3AE0960042C5D8 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

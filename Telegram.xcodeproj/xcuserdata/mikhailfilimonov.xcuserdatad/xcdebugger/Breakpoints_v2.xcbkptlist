@@ -147,13 +147,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "456836257.970327"
+            filePath = "TelegramTest/ImageSenderItem.m"
+            timestampString = "456844224.162187"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "479"
-            endingLineNumber = "479"
-            landmarkName = "-loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "-performRequest"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
