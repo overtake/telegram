@@ -263,6 +263,7 @@
             if([message.reply_markup isKindOfClass:[TL_replyKeyboardForceReply class]]) {
                 
                 if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
+                    
                     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                         
                         [transaction setObject:message forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
@@ -273,7 +274,10 @@
                         [ASQueue dispatchOnMainQueue:^{
                             [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
                         }];
+                        
                     }
+                    
+                    notify = NO;
                 }
                 
             }

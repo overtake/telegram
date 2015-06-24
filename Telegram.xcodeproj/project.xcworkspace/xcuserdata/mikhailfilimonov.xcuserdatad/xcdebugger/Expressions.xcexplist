@@ -551,6 +551,9 @@
          contextName = "-[UserInfoContainerView setUser:]:UserInfoContainerView.m">
       </ContextState>
       <ContextState
+         contextName = "__36-[StartBotSenderItem performRequest]_block_invoke:StartBotSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -664,6 +667,14 @@
       </ContextState>
       <ContextState
          contextName = "__48-[DeleteRandomMessagesSenderItem performRequest]_block_invoke79:DeleteRandomMessagesSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView botKeyboardButtonAction:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.botKeyboard.isHidden">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke_2:TGEnterPasswordPanel.m">
@@ -2367,6 +2378,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGImageObject cacheKey]:TGImageObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke_2:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "-[Storage open:]:Storage.m">

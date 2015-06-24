@@ -79,7 +79,7 @@
             [transaction setObject:_keyboard forKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
         }];
         
-        [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyaboard"] data:@{KEY_DIALOG:_conversation}];
+        [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyboard"] data:@{KEY_DIALOG:_conversation}];
     }
 }
 

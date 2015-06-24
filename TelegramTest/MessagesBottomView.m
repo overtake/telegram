@@ -180,7 +180,7 @@
     
     [Notification addObserver:self selector:@selector(botKeyboardNotification:) name:[Notification notificationNameByDialog:dialog action:@"botKeyboard"]];
     
-    [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyaboard"]];
+    [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyboard"]];
 
     //botKeyboard
     
@@ -215,12 +215,12 @@
     [self updateBotButtons];
     
     
-    [self checkBotKeyboard:YES animated:NO forceShow:NO];
-
     
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
+    
+    
     
     
     if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
@@ -1129,10 +1129,12 @@
         }
     }
 
-    
+    if(self.replyContainer != nil) {
+        forceShow = NO;
+    }
     
     [_botKeyboardButton setSelected:forceShow];
-    [_botKeyboardButton setHidden:!_botKeyboard.isCanShow];
+    [_botKeyboardButton setHidden:!_botKeyboard.isCanShow || self.replyContainer != nil];
     
     [self updateBotButtons];
     
@@ -1290,6 +1292,8 @@
         }
         
     }
+    
+    [self checkBotKeyboard:updateHeight animated:animated forceShow:NO];
 }
 
 -(void)updateWebpage:(BOOL)animated {

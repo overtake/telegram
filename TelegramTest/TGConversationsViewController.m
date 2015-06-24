@@ -113,7 +113,7 @@
 
         [[MTNetwork instance] startNetwork];
         
-        [EmojiViewController loadStickersIfNeeded];
+        [EmojiViewController reloadStickers];
         
         [[BlockedUsersManager sharedManager] remoteLoad];
         

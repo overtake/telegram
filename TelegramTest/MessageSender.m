@@ -222,7 +222,7 @@
         webpage = [Storage findWebpage:[message webpageLink]];
     }
     
-    if(!replyMessage && keyboardMessage.peer_id < 0) {
+    if(!replyMessage && keyboardMessage.peer_id < 0 && !clear) {
         replyMessage = keyboardMessage;
     }
     
