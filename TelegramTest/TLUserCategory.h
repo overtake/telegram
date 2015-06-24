@@ -31,6 +31,9 @@ typedef enum {
 
 -(BOOL)isBot;
 
+-(BOOL)needFullUpdate;
+-(void)fullUpdated;
+
 - (NSString *)fullName;
 - (NSString *)phoneWithFormat;
 

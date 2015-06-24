@@ -59,7 +59,7 @@
             [[Telegram rightViewController] showByDialog:item.chat.dialog sender:self];
             
             if(self.action.reservedObject1) {
-                [[Telegram rightViewController].messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"]];
+                [[Telegram rightViewController].messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
             }
             
         });

@@ -403,10 +403,10 @@ static NSMutableArray *listeners;
                (filterClass != HistoryFilter.class && obj.message.filterType & [filterClass type]) > 0) {
                 
                 
-                if(obj.message.n_id != 0) {
-                    id saved = filterKeys[@(obj.message.n_id)];
+                if(obj.message.randomId != 0) {
+                    id saved = filterKeys[@(obj.message.randomId)];
                     if(!saved) {
-                        filterKeys[@(obj.message.n_id)] = obj;
+                        filterKeys[@(obj.message.randomId)] = obj;
                     } else {
                         needAdd = NO;
                     }

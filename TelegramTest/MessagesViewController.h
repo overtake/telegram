@@ -95,7 +95,7 @@ typedef enum {
 - (void)resendItem:(MessageTableItem *)item;
 
 
--(void)showBotStartButton:(NSString *)startParam;
+-(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot;
 
 -(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;

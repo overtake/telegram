@@ -9,5 +9,5 @@
 #import "SenderItem.h"
 
 @interface StartBotSenderItem : SenderItem
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation startParam:(NSString *)startParam;
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation bot:(TLUser *)bot startParam:(NSString *)startParam;
 @end

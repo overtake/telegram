@@ -120,12 +120,9 @@
     if(self.type == DialogTypeUser) {
         if(self.user.isBlocked)
             return NSLocalizedString(@"User.Blocked", nil);
-        
-        if(self.user.isBot)
-            return NSLocalizedString(@"Bot.Start", nil);
     }
     
-    return @"";
+    return NSLocalizedString(@"Bot.Start", nil);
 }
 
 - (void)save {

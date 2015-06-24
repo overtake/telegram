@@ -506,7 +506,7 @@ void open_user_by_name(NSDictionary *params) {
         
         if(user.isBot && params[@"start"]) {
             [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
-            [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"]];
+            [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
         } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
             [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
         } else {

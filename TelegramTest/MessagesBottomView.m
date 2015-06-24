@@ -172,6 +172,8 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
+    self.botStartParam = nil;
+    
     [self setOnClickToLockedView:nil];
     
     [Notification removeObserver:self];
@@ -858,15 +860,19 @@
             break;
     }
     if(state == MessagesBottomViewBlockChat || state == MessagesBottomViewBlockSecretState) {
-        if((self.dialog && !self.dialog.canSendMessage) || self.dialog.user.isBot) {
+      //  if((self.dialog && !self.dialog.canSendMessage) || self.dialog.user.isBot) {
             animated = NO;
+ 
             
-            [self.encryptedStateTextField setTextColor:self.dialog.user.isBot ? LINK_COLOR : GRAY_TEXT_COLOR];
+        
             
-            [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
-            [self.encryptedStateTextField sizeToFit];
-            [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
-        }
+        [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
+        
+        [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
+        
+        [self.encryptedStateTextField sizeToFit];
+        [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
+     //   }
     }
    
     
@@ -1076,7 +1082,7 @@
                 [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
         } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
-        } else {
+        } else if([self.inputMessageString isEqualToString:@"/"]) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
                     

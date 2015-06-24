@@ -29,7 +29,8 @@
        // [ASQueue dispatchOnMainQueue:^{
             callback(userFull);
       //  }];
-        
+        if(![user needFullUpdate])
+            return;
     }
     
     [ASQueue dispatchOnStageQueue:^{
@@ -37,10 +38,15 @@
           [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, id response) {
                 
                 
-              if(![response isKindOfClass:[TL_userEmpty class]])
+              if(![response isKindOfClass:[TL_userEmpty class]]) {
                   [self add:@[response] withCustomKey:@"n_id"];
+                  
+                  
+              }
+              
                 
               [ASQueue dispatchOnMainQueue:^{
+                  [user fullUpdated];
                   callback(response);
               }];
                 

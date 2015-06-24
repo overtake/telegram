@@ -734,6 +734,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[UserInfoParamsView setString:]:UserInfoParamsView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -1508,6 +1516,9 @@
       </ContextState>
       <ContextState
          contextName = "__open_user_by_name_block_invoke386:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGStickerPackRowView redrawRow]:TGStickersSettingsViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[UpgradeLayerSenderItem performRequest]:UpgradeLayerSenderItem.m">

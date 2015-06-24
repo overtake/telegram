@@ -10,7 +10,9 @@
 
 @interface UserInfoParamsView : TMView
 
-- (void)setString:(NSString *)string;
+- (int)setString:(NSString *)string;
 - (void)setHeader:(NSString *)header;
 - (NSString *)string;
+
+
 @end

@@ -20,6 +20,7 @@ typedef enum {
 @interface MessagesBottomView : BTRControl<TMGrowingTextViewDelegate, NSMenuDelegate>
 
 
+@property (nonatomic,strong) NSString *botStartParam;
 @property (nonatomic, strong) RBLPopover *smilePopover;
 
 @property (nonatomic) BOOL forwardEnabled;

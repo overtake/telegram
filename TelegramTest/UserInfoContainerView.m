@@ -43,6 +43,7 @@
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
 @property (nonatomic, strong) UserInfoShortButtonView *addToGroupButton;
+@property (nonatomic, strong) UserInfoShortButtonView *helpBotButton;
 
 @property (nonatomic, strong) UserInfoShortButtonView *encryptedKeyButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
@@ -162,6 +163,14 @@
             [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
             
         }];
+        
+        self.helpBotButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Bot.Help", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showByDialog:self.user.dialog sender:self];
+            
+            [[Telegram rightViewController].messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
+            
+        }];
 
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
@@ -215,7 +224,9 @@
         [self.addToGroupButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.addToGroupButton];
 
-        
+        [self.helpBotButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.helpBotButton];
+
         
         [self.blockContact.textButton setTextColor:[NSColor redColor]];
         [self.blockContact setFrameSize:NSMakeSize(offsetRight, 42)];
@@ -459,13 +470,20 @@
 }
 
 - (void)buildPage {
-    float offset = self.bounds.size.height - 187;
+    float offset = self.bounds.size.height - 145;
     
     [self.phoneView setHidden:self.user.isBot];
     
     
     [self.botInfoView setHidden:!self.user.isBot || self.botInfoView.string.length == 0];
     
+    
+    if(self.botInfoView.isHidden)
+    {
+        offset-=42;
+    } else {
+        offset-=NSHeight(self.botInfoView.frame);
+    }
     
     [self.botInfoView setFrameOrigin:NSMakePoint(100, offset)];
     
@@ -474,6 +492,7 @@
     if(self.botInfoView.isHidden && self.user.isBot) {
         offset+=62;
     }
+    
     
    
     [self.userNameView setHidden:self.user.username.length == 0];
@@ -516,6 +535,13 @@
         } else {
             [self.shareContactButton setHidden:YES];
         }
+        
+        if(!self.helpBotButton.isHidden) {
+            
+            offset-=NSHeight(self.helpBotButton.frame);
+            [self.helpBotButton setFrameOrigin:NSMakePoint(100, offset)];
+        }
+        
     } else {
         [self.sendMessageButton setHidden:YES];
         [self.blockContact setHidden:YES];
@@ -642,6 +668,7 @@
     
     [self.filesMediaButton setConversation:self.controller.conversation];
     
+    [self.helpBotButton setHidden:YES];
     
     NSSize size;
     
@@ -662,7 +689,20 @@
     if(user.isBot) {
         [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
             
-            [_botInfoView setString:userFull.bot_info.n_description];
+            int h = [_botInfoView setString:userFull.bot_info.share_text];
+            
+            [_botInfoView setFrameSize:NSMakeSize(NSWidth(_botInfoView.frame), h+30)];
+            
+            __block BOOL canHelp = NO;
+            
+            [userFull.bot_info.commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
+                if([obj.command isEqualToString:@"help"]) {
+                    canHelp = YES;
+                    *stop = YES;
+                }
+            }];
+            
+            [_helpBotButton setHidden:!canHelp];
             
             [self buildPage];
             

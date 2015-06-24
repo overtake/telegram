@@ -31,9 +31,8 @@
 }
 
 
-- (void)setString:(NSString *)string {
+- (int)setString:(NSString *)string {
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     [paragraphStyle setAlignment:NSLeftTextAlignment];
     
     NSAttributedString *phoneAttributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
@@ -43,13 +42,15 @@
     [self.textView setAttributedString:phoneAttributedString];
     
     [self.textView setFrameOrigin:NSMakePoint(0, 10)];
-    [self.textView setFrameSize:NSMakeSize(self.bounds.size.width, 17)];
+    [self.textView setFrameSize:NSMakeSize(NSWidth(self.frame), size.height)];
     
     if(size.height > 21)
         [self setToolTip:phoneAttributedString.string];
     else
         [self setToolTip:nil];
    
+    return size.height;
+    
 }
 
 
@@ -69,7 +70,7 @@
 	
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.header attributes:[UserInfoContainerView attributsForInfoPlaceholderString]];
     
-    [attributedString drawAtPoint:NSMakePoint(0, 31)];
+    [attributedString drawAtPoint:NSMakePoint(0, NSMaxY(self.textView.frame) + 5)];
     
     [NSColorFromRGB(0xe6e6e6) set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));

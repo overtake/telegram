@@ -289,10 +289,6 @@
 		C22421CA19EBCFA80030078A /* BlockedUserRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421C919EBCFA80030078A /* BlockedUserRowItem.m */; };
 		C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C22421D019EBCFBC0030078A /* BlockedUserRowView.m */; };
 		C22520E518B2801D00049558 /* MTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C22520E418B2801D00049558 /* MTConnection.m */; };
-		C226CC6F1B32DA000042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C226CC771B3303210042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C226CC781B3303210042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
 		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
 		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
@@ -861,8 +857,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C226CC771B3303210042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
-				C226CC781B3303210042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2441,8 +2435,6 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C226CC6F1B32DA000042C5D8 /* Sparkle.framework in Frameworks */,
-				C226CC701B32DA000042C5D8 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

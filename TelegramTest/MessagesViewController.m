@@ -722,8 +722,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnMainQueue:^{
         
-        
         if((self.conversation.user.isBot && ( (self.historyController.nextState == ChatHistoryStateFull &&  (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))))) {
+          
             [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
             
             if(self.bottomView.onClickToLockedView == nil) {
@@ -736,9 +736,12 @@ static NSTextAttachment *headerMediaIcon() {
                 }];
             }
 
-        } else if(self.bottomView.onClickToLockedView == nil) {
+        } else if(self.bottomView.onClickToLockedView == nil || self.bottomView.botStartParam.length == 0) {
             [self.bottomView setStateBottom:self.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState];
             [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+            
+            
+            
             [self.bottomView setOnClickToLockedView:nil];
         }
        
@@ -762,9 +765,9 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
--(void)showBotStartButton:(NSString *)startParam {
+-(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot {
     [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
-    
+    self.bottomView.botStartParam = startParam;
     weak();
     [self.bottomView setOnClickToLockedView:^{
        
@@ -772,7 +775,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:@"/start" forConversation:conversation startParam:startParam];
+            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
             sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
             [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
             
@@ -2520,6 +2523,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     [self tryRead];
+    
     
     return NSMakeRange(pos, array.count);
 }

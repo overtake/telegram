@@ -103,6 +103,16 @@ Online
     return (self.flags & TGUSERFLAGBOT) == TGUSERFLAGBOT;
 }
 
+DYNAMIC_PROPERTY(FULLUPDATETIME)
+
+-(BOOL)needFullUpdate {
+    return [[self getFULLUPDATETIME] intValue] + 150 < [[MTNetwork instance] getTime];
+}
+
+-(void)fullUpdated {
+    [self setFULLUPDATETIME:@([[MTNetwork instance] getTime])];
+}
+
 - (BOOL)isBlocked {
     return [[BlockedUsersManager sharedManager] isBlocked:self.n_id];
 }

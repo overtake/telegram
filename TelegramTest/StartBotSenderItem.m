@@ -11,16 +11,18 @@
 #import "MessageTableItem.h"
 @interface StartBotSenderItem ()
 @property (nonatomic,strong) NSString *startParam;
+@property (nonatomic,strong) TLUser *bot;
 @end
 
 @implementation StartBotSenderItem
 
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation startParam:(NSString *)startParam {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation bot:(TLUser *)bot startParam:(NSString *)startParam {
     
     if(self = [super initWithConversation:conversation]) {
         
         _startParam = startParam;
+        _bot = bot;
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
@@ -37,7 +39,7 @@
 
 -(void)performRequest {
     
-    id request = [TLAPI_messages_startBot createWithBot:self.conversation.user.inputUser chat_id:0 random_id:self.message.randomId start_param:_startParam];
+    id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser chat_id:self.conversation.peer.chat_id random_id:self.message.randomId start_param:_startParam];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
