@@ -1,3 +1,9 @@
-.DC_Store
+.DS_Store
 UserInterfaceState.xcuserstate
 *.xccheckout
+*.swp
+*.xcworkspace
+*.xcuserdatad
+
+# Ignore Application.h
+TelegramTest/Application.h
