@@ -18,6 +18,7 @@
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "MP3HistoryFilter.h"
 #import "TGTimer.h"
 #import "TGProccessUpdates.h"
 @interface ChatHistoryController ()
@@ -67,7 +68,7 @@ static NSMutableArray *listeners;
             [filters addObject:[DocumentHistoryFilter class]];
             [filters addObject:[VideoHistoryFilter class]];
             [filters addObject:[AudioHistoryFilter class]];
-            
+            [filters addObject:[MP3HistoryFilter class]];
             listeners = [[NSMutableArray alloc] init];
         });
         

@@ -22,7 +22,8 @@ typedef enum {
     HistoryFilterDocuments = 1 << 6,
     HistoryFilterText = 1 << 7,
     HistoryFilterContact = 1 << 8,
-    HistoryFilterSearch = 1 << 9
+    HistoryFilterSearch = 1 << 9,
+    HistoryFilterAudioDocument = 1 << 10
 } HistoryFilterType;
 
 @property (nonatomic,weak) ChatHistoryController *controller;

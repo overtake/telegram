@@ -16,6 +16,9 @@
 
 -(NSString *)trackName;
 
+
+@property (nonatomic,strong) TGImageObject *imageObject;
+
 -(MessageTableItemAudioDocument *)document;
 
 @end

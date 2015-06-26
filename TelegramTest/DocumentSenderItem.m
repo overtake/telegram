@@ -54,33 +54,6 @@
         
         [attrs addObject:filenameAttr];
         
-        if([_mimeType hasPrefix:@"audio/"]) {
-            AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
-
-            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration) title:@"" performer:@""]];
-            
-            if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
-                
-                NSArray *metadata = [asset metadataForFormat:@"org.id3"];
-                
-                NSString *songName;
-                NSString *artistName;
-                
-                for (AVMutableMetadataItem *metaItem in metadata) {
-                    if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
-                        artistName = (NSString *) metaItem.value;
-                    } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
-                        songName = (NSString *) metaItem.value;
-                    }
-                }
-                
-                if(songName && artistName)
-                    filenameAttr.file_name = [NSString stringWithFormat:@"%@ - %@",artistName,songName];
- 
-                
-            }
-
-        }
         
         
         
@@ -88,12 +61,72 @@
         __block NSImage *thumbImage;
         __block NSString *thumbName;
         
-        dispatch_block_t thumbBlock = ^ {
-            if(![[self.filePath pathExtension] isEqualToString:@"mp3"]) {
-                thumbImage = previewImageForDocument(self.filePath);
+        
+        
+        if([_mimeType hasPrefix:@"audio/"]) {
+            AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+            
+            NSArray *k = [NSArray arrayWithObjects:@"commonMetadata", nil];
+            
+            dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+            
+            __block  NSImage *artworkImage;
+            
+            [asset loadValuesAsynchronouslyForKeys:k completionHandler: ^{
+                NSArray *artworks = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata
+                                                                   withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+                
+                for (AVMetadataItem *i in artworks)
+                {
+                    NSString *keySpace = i.keySpace;
+                    NSImage *im = nil;
+                    
+                    if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
+                    {
+                        im = [[NSImage alloc] initWithData:[i.value copyWithZone:nil]];
+                    }
+                    else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes])
+                        im = [[NSImage alloc] initWithData:[i.value copyWithZone:nil]];
+                    
+                    if (im)
+                    {
+                        artworkImage = im;
+                    }
+                }
+                
+                dispatch_semaphore_signal(sema);
+                
+                
+            }];
+            
+            dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+            
+            
+            if(artworkImage)
+            {
+                thumbImage = strongResize(artworkImage, 90);
+                thumbData = jpegNormalizedData(thumbImage);
+                thumbName = @"cover.jpg";
             }
-            thumbData = jpegNormalizedData(thumbImage);
-            thumbName = @"thumb.jpg";
+            
+            NSDictionary *tags = audioTags(asset);
+            
+            NSString *songName = tags[@"songName"];
+            NSString *artistName = tags[@"artist"];
+
+            
+            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration) title:songName performer:artistName]];
+            
+        }
+        
+        
+        dispatch_block_t thumbBlock = ^ {
+            if(!thumbImage) {
+                thumbImage = previewImageForDocument(self.filePath);
+                
+                thumbData = jpegNormalizedData(thumbImage);
+                thumbName = @"thumb.jpg";
+            }
         };
         
         if([self.filePath hasSuffix:@"webp"] && fileSize(self.filePath) < 128000) {

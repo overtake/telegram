@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <AVFoundation/AVFoundation.h>
 
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
@@ -79,4 +79,7 @@ NSData *passwordHash(NSString *password, NSData *salt);
 + (void) fillAppByUrl:(NSURL*)url bundle:(NSString**)bundle name:(NSString**)name version:(NSString**)version icon:(NSImage**)icon;
 
 +(NSArray *)appsForFileUrl:(NSString *)file;
+
+NSDictionary *audioTags(AVURLAsset *asset);
+
 @end

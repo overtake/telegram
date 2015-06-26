@@ -87,6 +87,7 @@ mov:video/quicktime
 movie:video/x-sgi-movie
 mp2:video/mpeg
 mp3:audio/mpeg
+m4a:audio/mpeg
 mpa:video/mpeg
 mpe:video/mpeg
 mpeg:video/mpeg

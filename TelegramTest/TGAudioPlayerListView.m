@@ -9,10 +9,10 @@
 #import "TGAudioPlayerListView.h"
 #import "TGAudioRowView.h"
 #import "ChatHistoryController.h"
-#import "DocumentHistoryFilter.h"
+#import "MP3HistoryFilter.h"
 #import "MessageTableItemAudioDocument.h"
 #import "NSString+Extended.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TGAudioSearchRowItem : TMRowItem
 
 @end
@@ -142,13 +142,13 @@ static long h_r_l;
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 40 : 60;
+    return row == 0 ? 40 : 50;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;
 }
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? _searchRow : [_tableView cacheViewForClass:[TGAudioRowView class] identifier:NSStringFromClass([TGAudioRowView class]) withSize:NSMakeSize(NSWidth(self.frame), 60)];
+    return row == 0 ? _searchRow : [_tableView cacheViewForClass:[TGAudioRowView class] identifier:NSStringFromClass([TGAudioRowView class]) withSize:NSMakeSize(NSWidth(self.frame), 50)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGAudioRowItem *) item {
     
@@ -184,7 +184,7 @@ static long h_r_l;
     if(_conversation) {
         _list = @[];
         _fullItems = [[NSMutableArray alloc] init];
-        _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
+        _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[MP3HistoryFilter class]];
         [_searchRow.searchField setStringValue:@""];
         [_tableView insert:[[TGAudioSearchRowItem alloc] init] atIndex:0 tableRedraw:YES];
         
@@ -231,6 +231,9 @@ static long h_r_l;
             
             [self check];
             
+            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1) {
+                [self selectNext];
+            }
             
             [self loadNext];
             

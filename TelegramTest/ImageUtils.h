@@ -178,14 +178,16 @@ CACHE_IMAGE(WebpageInstagramVideoPlay);
 
 
 
-CACHE_IMAGE(MiniPlayerPrev);
-CACHE_IMAGE(MiniPlayerPlay);
-CACHE_IMAGE(MiniPlayerNext);
-CACHE_IMAGE(MiniPlayerPause);
-CACHE_IMAGE(MiniPlayerClose);
-CACHE_IMAGE(MiniPlayerStop);
+CACHE_IMAGE(AudioPlayerBack);
+CACHE_IMAGE(AudioPlayerPlay);
+CACHE_IMAGE(AudioPlayerNext);
+CACHE_IMAGE(AudioPlayerPause);
+CACHE_IMAGE(AudioPlayerClose);
+CACHE_IMAGE(AudioPlayerStop);
 CACHE_IMAGE(MiniPlayerDefaultCover);
-CACHE_IMAGE(MiniPlayerPlaylist);
+CACHE_IMAGE(AudioPlayerList);
+CACHE_IMAGE(AudioPlayerListActive);
+CACHE_IMAGE(MusicStandartCover);
 
 CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);

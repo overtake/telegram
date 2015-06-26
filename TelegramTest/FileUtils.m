@@ -946,5 +946,57 @@ NSData *passwordHash(NSString *password, NSData *currentSalt) {
     return  MTSha256(hashData);
 }
 
+NSDictionary *audioTags(AVURLAsset *asset) {
+    
+    __block NSString *artistName = @"";
+    __block NSString *songName = @"";
+    
+    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
+        
+        
+        
+        [asset.availableMetadataFormats enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSArray *metadata = [asset metadataForFormat:obj];
+            
+            for (AVMutableMetadataItem *metaItem in metadata) {
+                
+                NSLog(@"%@",metaItem.identifier);
+                
+                if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataiTunesMetadataKeyArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataiTunesMetadataKeySongName]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataQuickTimeUserDataKeyArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataQuickTimeUserDataKeyTrackName]) {
+                    songName = (NSString *)metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataCommonIdentifierArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataCommonIdentifierTitle]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier hasSuffix:@"wrt"]) {
+                    artistName = (NSString *)metaItem.value;
+                } else if([metaItem.identifier hasSuffix:@"nam"]) {
+                    songName = (NSString *)metaItem.value;
+                }
+                
+            }
+            
+            if(artistName.length > 0 && songName.length > 0)
+                *stop = YES;
+            
+        }];
+        
+        
+    }
+    
+    return @{@"artist":artistName,@"songName":songName};
+}
+
 
 @end

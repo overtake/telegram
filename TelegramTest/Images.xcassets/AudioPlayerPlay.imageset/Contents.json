@@ -2,12 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "AudioPlayerPlay.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "MiniPlayerPlaylist@2x.png"
+      "filename" : "AudioPlayerPlay@2x.png"
     },
     {
       "idiom" : "universal",

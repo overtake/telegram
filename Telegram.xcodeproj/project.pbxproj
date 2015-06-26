@@ -292,10 +292,6 @@
 		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
 		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
 		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
-		C226CCBB1B3AE8D40042C5D8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C226CCBC1B3AE8D40042C5D8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C226CCBD1B3AE8D60042C5D8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C226CCBE1B3AE8D60042C5D8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -430,6 +426,12 @@
 		C271525E19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271525D19B72F3400841C8A /* ComposeActionAddGroupMembersBehavior.m */; };
 		C271526119B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */; };
 		C271526419B9ECCA00841C8A /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C271526319B9ECCA00841C8A /* AddContactViewController.m */; };
+		C27380411B3B22AF000C479E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C27380421B3B22B0000C479E /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C27380471B3B22B2000C479E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C27380481B3B22B2000C479E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C273804E1B3B2F77000C479E /* MP3HistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C273804D1B3B2F77000C479E /* MP3HistoryFilter.m */; };
+		C273805C1B3D90DC000C479E /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C273805B1B3D90DC000C479E /* TGAudioPlayerWindow.m */; };
 		C274C3731AB83182000DFDE4 /* TGForwardContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3721AB83182000DFDE4 /* TGForwardContainer.m */; };
 		C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C37B1AB831A3000DFDE4 /* TGForwardObject.m */; };
 		C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C274C3A81ABC6251000DFDE4 /* TGHashtagPopup.m */; };
@@ -718,7 +720,6 @@
 		C2D51BE31B21C67B009327C0 /* EMImageData.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BE01B21C67B009327C0 /* EMImageData.m */; };
 		C2D51BE41B21C67B009327C0 /* EMInMemoryImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BE21B21C67B009327C0 /* EMInMemoryImageCache.m */; };
 		C2D51BF71B21C707009327C0 /* TGAudioPlayerListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BEE1B21C707009327C0 /* TGAudioPlayerListView.m */; };
-		C2D51BF81B21C707009327C0 /* TGAudioPlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF01B21C707009327C0 /* TGAudioPlayerWindow.m */; };
 		C2D51BF91B21C707009327C0 /* TGAudioProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF21B21C707009327C0 /* TGAudioProgressView.m */; };
 		C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF41B21C707009327C0 /* TGAudioRowItem.m */; };
 		C2D51BFB1B21C707009327C0 /* TGAudioRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BF61B21C707009327C0 /* TGAudioRowView.m */; };
@@ -861,8 +862,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C226CCBB1B3AE8D40042C5D8 /* Sparkle.framework in Copy Files (6 items) */,
-				C226CCBC1B3AE8D40042C5D8 /* HockeySDK.framework in Copy Files (6 items) */,
+				C27380411B3B22AF000C479E /* Sparkle.framework in Copy Files (6 items) */,
+				C27380421B3B22B0000C479E /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1464,7 +1465,6 @@
 		C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectChatRowView.m; sourceTree = "<group>"; };
 		C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddUserToGroupBehavior.h; sourceTree = "<group>"; };
 		C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddUserToGroupBehavior.m; sourceTree = "<group>"; };
-		C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Telegram.xcodeproj; sourceTree = "<group>"; };
 		C22C7F2818B2163F007C4D17 /* MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetwork.h; sourceTree = "<group>"; };
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
 		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
@@ -1754,6 +1754,9 @@
 		C271526019B731DB00841C8A /* ComposeActionAddBroadcastMembersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddBroadcastMembersBehavior.m; sourceTree = "<group>"; };
 		C271526219B9ECCA00841C8A /* AddContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactViewController.h; sourceTree = "<group>"; };
 		C271526319B9ECCA00841C8A /* AddContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactViewController.m; sourceTree = "<group>"; };
+		C273804C1B3B2F77000C479E /* MP3HistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MP3HistoryFilter.h; sourceTree = "<group>"; };
+		C273804D1B3B2F77000C479E /* MP3HistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MP3HistoryFilter.m; sourceTree = "<group>"; };
+		C273805B1B3D90DC000C479E /* TGAudioPlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerWindow.m; sourceTree = "<group>"; };
 		C274C3711AB83182000DFDE4 /* TGForwardContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForwardContainer.h; sourceTree = "<group>"; };
 		C274C3721AB83182000DFDE4 /* TGForwardContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForwardContainer.m; sourceTree = "<group>"; };
 		C274C37A1AB831A3000DFDE4 /* TGForwardObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForwardObject.h; sourceTree = "<group>"; };
@@ -2171,7 +2174,6 @@
 		C2D51BED1B21C707009327C0 /* TGAudioPlayerListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioPlayerListView.h; sourceTree = "<group>"; };
 		C2D51BEE1B21C707009327C0 /* TGAudioPlayerListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerListView.m; sourceTree = "<group>"; };
 		C2D51BEF1B21C707009327C0 /* TGAudioPlayerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioPlayerWindow.h; sourceTree = "<group>"; };
-		C2D51BF01B21C707009327C0 /* TGAudioPlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioPlayerWindow.m; sourceTree = "<group>"; };
 		C2D51BF11B21C707009327C0 /* TGAudioProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioProgressView.h; sourceTree = "<group>"; };
 		C2D51BF21B21C707009327C0 /* TGAudioProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioProgressView.m; sourceTree = "<group>"; };
 		C2D51BF31B21C707009327C0 /* TGAudioRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioRowItem.h; sourceTree = "<group>"; };
@@ -2406,8 +2408,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C226CCBD1B3AE8D60042C5D8 /* Sparkle.framework in Frameworks */,
-				C226CCBE1B3AE8D60042C5D8 /* HockeySDK.framework in Frameworks */,
 				C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */,
 				C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
@@ -2444,6 +2444,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C27380471B3B22B2000C479E /* Sparkle.framework in Frameworks */,
+				C27380481B3B22B2000C479E /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3493,11 +3495,6 @@
 				C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */,
 			);
 			name = add_to_group;
-			sourceTree = "<group>";
-		};
-		C226CC861B3A3D460042C5D8 /* Products */ = {
-			isa = PBXGroup;
-			name = Products;
 			sourceTree = "<group>";
 		};
 		C23298D818CF6180000826E5 /* qlmedia */ = {
@@ -4733,7 +4730,7 @@
 				C2D51BED1B21C707009327C0 /* TGAudioPlayerListView.h */,
 				C2D51BEE1B21C707009327C0 /* TGAudioPlayerListView.m */,
 				C2D51BEF1B21C707009327C0 /* TGAudioPlayerWindow.h */,
-				C2D51BF01B21C707009327C0 /* TGAudioPlayerWindow.m */,
+				C273805B1B3D90DC000C479E /* TGAudioPlayerWindow.m */,
 				C2D51BF11B21C707009327C0 /* TGAudioProgressView.h */,
 				C2D51BF21B21C707009327C0 /* TGAudioProgressView.m */,
 				C2D51BF31B21C707009327C0 /* TGAudioRowItem.h */,
@@ -4807,6 +4804,8 @@
 				C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */,
 				C20D190019542AB80095A906 /* SearchHistoryFilter.h */,
 				C20D190119542AB80095A906 /* SearchHistoryFilter.m */,
+				C273804C1B3B2F77000C479E /* MP3HistoryFilter.h */,
+				C273804D1B3B2F77000C479E /* MP3HistoryFilter.m */,
 			);
 			name = filter;
 			sourceTree = "<group>";
@@ -4931,7 +4930,6 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */,
 				C2CBF6A11AFB81A8006BF90A /* QuickLook.framework */,
 				C2CBF6841AFB6FE6006BF90A /* QuartzCore.framework */,
 				C2CBF6821AFB6F33006BF90A /* AVFoundation.framework */,
@@ -5412,10 +5410,6 @@
 					ProductGroup = C2E560FE1AF3726300B4CAF0 /* Products */;
 					ProjectRef = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
 				},
-				{
-					ProductGroup = C226CC861B3A3D460042C5D8 /* Products */;
-					ProjectRef = C226CC851B3A3D460042C5D8 /* Telegram.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -5644,7 +5638,6 @@
 				0A59067718AA32C8002ED7BA /* BTRActivityIndicator.m in Sources */,
 				C274C3FF1ACBF780000DFDE4 /* TGWebpageTWContainer.m in Sources */,
 				0A613C2018AD9892004096DD /* MessageTableItemContact.m in Sources */,
-				C2D51BF81B21C707009327C0 /* TGAudioPlayerWindow.m in Sources */,
 				0A6758E61895507200F4487D /* MessageTableItemText.m in Sources */,
 				C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */,
 				C2C6D9711A12952D001EF8A2 /* TGPVImageView.m in Sources */,
@@ -5885,6 +5878,7 @@
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
 				C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */,
 				0AB8500B18756ABA001A796C /* SearchSeparatorItem.m in Sources */,
+				C273804E1B3B2F77000C479E /* MP3HistoryFilter.m in Sources */,
 				C26752771A15099A00152D9A /* TGPVEmptyBehavior.m in Sources */,
 				0A9EDC5E1897BA0E0037E1BC /* RBLTableCellView.m in Sources */,
 				0ACF9E391921F4BD001F9E1E /* SearchLoaderCell.m in Sources */,
@@ -6044,6 +6038,7 @@
 				0A7517CC193A04590088C806 /* TGSwipeTableControll.m in Sources */,
 				C2D51C081B21F18F009327C0 /* SelectChatItem.m in Sources */,
 				C21C7B3B18D769E400253A7A /* SenderItem.m in Sources */,
+				C273805C1B3D90DC000C479E /* TGAudioPlayerWindow.m in Sources */,
 				0AE2E3F41867263C004926A7 /* TMSearchTextField.m in Sources */,
 				C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */,
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,

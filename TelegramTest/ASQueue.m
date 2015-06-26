@@ -211,10 +211,8 @@
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
     
-    NSException *crash = (__bridge NSException *)(contextInfo);
-    
-    
     if(returnCode == 1000) {
+        NSException *crash = (__bridge NSException *)(contextInfo);
         @throw crash;
     } else if(returnCode == 1001) {
         [Telegram sendLogs];

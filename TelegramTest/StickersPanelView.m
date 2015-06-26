@@ -290,6 +290,27 @@ bool isRemoteStickersLoaded() {
     return has;
 }
 
+
+
++(void)addLocalSticker:(TLDocument *)document {
+    
+    if(![self hasSticker:document]) {
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+            
+            if(!stickers)
+                stickers = @[];
+            
+            stickers = [stickers arrayByAddingObject:document];
+            
+            [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+        }];
+        
+        [EmojiViewController reloadStickers];
+    }
+}
+
 @end
 
 
@@ -451,24 +472,7 @@ bool isRemoteStickersLoaded() {
  
  
  }
- 
- +(void)addLocalSticker:(TLDocument *)document {
- 
- if(![self hasSticker:document]) {
- [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
- 
- NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
- 
- if(!stickers)
- stickers = @[];
- 
- stickers = [stickers arrayByAddingObject:[TLClassStore serialize:document]];
- 
- [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
- }];
- 
- [EmojiViewController reloadStickers];
- }
+
  
  
  }

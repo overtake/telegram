@@ -247,11 +247,11 @@
                 
                 
                 if([message.reply_markup isKindOfClass:[TL_replyKeyboardHide class]]) {
-                    
-                    if(currentKeyboard.from_id == message.from_id) {
-                        [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-                        needNotify = YES;
-                    }
+                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
+                        if(currentKeyboard.from_id == message.from_id) {
+                            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+                            needNotify = YES;
+                        }
                 } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
                     if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
                         [transaction setObject:message forKey:conversation.cacheKey inCollection:BOT_COMMANDS];

@@ -279,6 +279,11 @@ DYNAMIC_PROPERTY(DDialog);
     }
     
     if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+        if(attr != nil) {
+            mask|=HistoryFilterAudioDocument;
+        }
+        
         mask|=HistoryFilterDocuments;
     }
     
@@ -293,6 +298,7 @@ DYNAMIC_PROPERTY(DDialog);
     if([self.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         mask|=HistoryFilterPhoto;
     }
+    
     
     return mask;
     

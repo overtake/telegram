@@ -19,28 +19,28 @@
     
     [NSColorFromRGB(0xDCDCDC) setFill];
     
-    NSRectFill(NSMakeRect(0, 3, NSWidth(dirtyRect), 4));
+    NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect), 4));
     
     
     if(_downloadProgress != 0) {
         int width = roundf(NSWidth(self.frame) * ((float)_downloadProgress/100.0f));
         
-        [LINK_COLOR set];
-        NSRectFill(NSMakeRect(0, 3, width, 4));
+        [NSColorFromRGB(0x7F7F7F) set];
+        NSRectFill(NSMakeRect(0, 0, width, 4));
     }
     
     
     int width = roundf(NSWidth(self.frame) * ((float)_currentProgress/100.0f));
     
-    [NSColorFromRGB(0x7F7F7F) set];
-    NSRectFill(NSMakeRect(0, 3, width, 4));
+    [BLUE_UI_COLOR set];
+    NSRectFill(NSMakeRect(0, 0, width, 4));
     
     
     
     
     if(_showDivider) {
         [NSColorFromRGB(0x000000) set];
-        NSRectFill(NSMakeRect(width-1, 0, 2, 10));
+        NSRectFill(NSMakeRect(width, 0, 3, 10));
     }
     
 }

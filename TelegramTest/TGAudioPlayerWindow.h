@@ -14,6 +14,7 @@
 
 +(void)show:(TL_conversation *)conversation;
 
++(MessageTableItemAudioDocument *)currentItem;
 
 +(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem;
 
