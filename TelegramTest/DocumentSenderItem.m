@@ -81,12 +81,27 @@
                     NSString *keySpace = i.keySpace;
                     NSImage *im = nil;
                     
+                    id value;
                     if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
                     {
-                        im = [[NSImage alloc] initWithData:[i.value copyWithZone:nil]];
+                        value = i.value;
                     }
-                    else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes])
-                        im = [[NSImage alloc] initWithData:[i.value copyWithZone:nil]];
+                    else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
+                        value = i.value;
+                    }
+                    
+                    if([value isKindOfClass:[NSDictionary class]]) {
+                        value = [value objectForKey:@"data"];
+                    }
+                    
+                    if([value isKindOfClass:[NSData class]]) {
+                        value = value;
+                    } else
+                        value = nil;
+                    
+                    if(value)
+                        im = [[NSImage alloc] initWithData:[value copyWithZone:nil]];
+                    
                     
                     if (im)
                     {
