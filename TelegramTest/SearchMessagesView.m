@@ -57,6 +57,8 @@
         
         [self.cancelButton setTapBlock:^ {
             strongSelf.closeCallback();
+            [strongSelf.request cancelRequest];
+            strongSelf.request = nil;
         }];
         
         [self.cancelButton setCenterByView:self];
@@ -133,6 +135,7 @@
     _currentIdx = -1;
     
     cancel_delayed_block(_block);
+    [_request cancelRequest];
     
     if(searchString)
     
@@ -143,6 +146,7 @@
         [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:0 max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
             
             self.locked = NO;
+            
             if(response.messages.count > 0) {
                 self.messages = response.messages;
                 [self next];
@@ -161,6 +165,9 @@
 
 -(void)next {
     
+    if(_messages.count == 0)
+        return;
+    
     if(++_currentIdx == _messages.count)
     {
         _currentIdx = 0;
@@ -170,6 +177,9 @@
 }
 
 -(void)prev {
+    if(_messages.count == 0)
+        return;
+    
     
     if(--_currentIdx == -1)
     {

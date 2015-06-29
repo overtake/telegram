@@ -877,8 +877,8 @@
    
     
     if(oldView == newView) {
-      //  [self becomeFirstResponder];
-      //  return;
+        [self becomeFirstResponder];
+        return;
     }
     
     if(newView) {
@@ -919,7 +919,7 @@
     
     
     
-  //  [self becomeFirstResponder];
+    [self becomeFirstResponder];
 }
 
 - (void)sendButtonAction {

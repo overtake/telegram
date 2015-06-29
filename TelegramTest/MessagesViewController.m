@@ -749,8 +749,14 @@ static NSTextAttachment *headerMediaIcon() {
             }
 
         } else if(self.bottomView.onClickToLockedView == nil || self.bottomView.botStartParam.length == 0) {
-            [self.bottomView setStateBottom:self.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState];
-            [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+            
+            MessagesBottomViewState nState = self.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState;
+            
+            if(nState != self.bottomView.stateBottom) {
+                [self.bottomView setStateBottom:nState];
+                [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+            }
+            
             
             
             
