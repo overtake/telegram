@@ -132,35 +132,50 @@
     
     self.locked = YES;
     
+    self.messages = [[NSMutableArray alloc] init];
+    
     _currentIdx = -1;
     
     cancel_delayed_block(_block);
     [_request cancelRequest];
     
-    if(searchString)
+    if(searchString.length > 0) {
+        _block = perform_block_after_delay(0.3,  ^{
+            
+            _block = nil;
+            
+            [self load:YES];
+            
+        });
+    } else {
+        self.locked = NO;
+    }
     
-    _block = perform_block_after_delay(0.4,  ^{
-        
-        _block = nil;
-        
-        [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:0 max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
-            
-            self.locked = NO;
-            
-            if(response.messages.count > 0) {
-                self.messages = response.messages;
-                [self next];
-            }
-            
-            
-        } errorHandler:^(id request, RpcError *error) {
-            self.locked = NO;
-        }];
-        
-    });
+}
+
+-(void)load:(BOOL)first {
     
-  //  if(self.searchCallback != nil)
-      //  self.searchCallback(searchString);
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+        
+        
+        if(response.messages.count > 0) {
+            [self.messages addObjectsFromArray:response.messages];
+        }
+        
+        if([response isKindOfClass:[TL_messages_messagesSlice class]]) {
+           if(self.messages.count != response.n_count)
+               [self load:NO];
+        }
+        if(first){
+            self.locked = NO;
+            [self next];
+        }
+        
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        self.locked = NO;
+    }];
 }
 
 -(void)next {
@@ -226,6 +241,10 @@
 
 
 -(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback {
+    
+    self.messages = nil;
+    self.currentIdx = -1;
+    [self.searchField setStringValue:@""];
     
     self.goToMessage = callback;
     self.closeCallback = closeCallback;

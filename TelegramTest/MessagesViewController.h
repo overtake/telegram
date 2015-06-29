@@ -71,7 +71,7 @@ typedef enum {
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId;
-
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;

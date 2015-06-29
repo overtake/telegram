@@ -208,7 +208,7 @@
         
         [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
         
-        [self showMessage:msg_id fromMsgId:0];
+        [self showMessage:msg_id fromMsgId:0 animated:YES];
         return;
     }
     
@@ -542,7 +542,7 @@
     
     [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
         
-        [self showMessage:msg_id fromMsgId:0];
+        [self showMessage:msg_id fromMsgId:0 animated:NO];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -1967,8 +1967,11 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId {
+    [self showMessage:messageId fromMsgId:msgId animated:YES];
+}
 
-- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId {
+- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
@@ -1977,7 +1980,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(item)
     {
-        [self scrollToItem:item animated:YES centered:YES highlight:YES];
+        [self scrollToItem:item animated:animated centered:YES highlight:YES];
     } else {
         
         
