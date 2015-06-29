@@ -419,7 +419,6 @@ typedef enum {
 }
 
 +(void)show:(TL_conversation *)conversation {
-    
     [[self instance] show:conversation];
     
     [[self instance] makeKeyAndOrderFront:nil];
@@ -442,8 +441,8 @@ typedef enum {
     [self updateWithItem:nil];
     _currentItem = nil;
     [_playListContainerView setConversation:_conversation];
-    
-    [self setFrameOrigin:[NSEvent mouseLocation]];
+    if(![self isVisible])
+        [self setFrameOrigin:[NSEvent mouseLocation]];
 }
 
 
@@ -586,7 +585,10 @@ typedef enum {
         return;
     }
     
+    [_currentItem.downloadItem removeEvent:_currentItem.secondDownloadListener];
+    
     _currentItem = audioItem;
+
     
     self.currentTime = 0;
     

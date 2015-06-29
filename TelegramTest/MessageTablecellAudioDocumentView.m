@@ -46,44 +46,15 @@
         
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
-            if(weakSelf.item.state == AudioStateWaitPlaying) {
-                if(weakSelf.item.isset) {
-                    
-                     [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-                    [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
-                    
-                   // weakSelf.currentTime = 0;
-                   // [weakSelf setNeedsDisplay:YES];
-                   // [weakSelf play:0];
-                } else {
-                    if([weakSelf.item canDownload])
-                        [weakSelf startDownload:YES];
-                }
-                return;
-            }
+            [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+            [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
             
-            if(weakSelf.item.state == AudioStatePaused) {
-                weakSelf.item.state = AudioStatePlaying;
-                weakSelf.cellState = weakSelf.cellState;
-                [globalAudioPlayer() reset];
-                [weakSelf startTimer];
-                return;
-            }
-            
-            if(weakSelf.item.state == AudioStatePlaying) {
-                weakSelf.item.state = AudioStatePaused;
-                weakSelf.cellState = weakSelf.cellState;
-                [weakSelf.progressTimer invalidate];
-                weakSelf.progressTimer = nil;
-                [weakSelf pause];
-                return;
-            }
             
         } forControlEvents:BTRControlEventClick];
         
         [self.containerView addSubview:self.playerButton];
         
-        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 23, 100, 20)];
+        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 30, 100, 23)];
         [self.durationView setEnabled:NO];
         [self.durationView setBordered:NO];
         [self.durationView setEditable:NO];
@@ -130,6 +101,10 @@
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
     [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width , NSHeight(self.durationView.frame))];
+}
+
+-(void)drawRect:(NSRect)dirtyRect {
+    
 }
 
 - (void)setCellState:(CellState)cellState {
