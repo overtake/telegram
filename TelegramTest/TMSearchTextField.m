@@ -232,6 +232,10 @@ const static int textFieldXOffset = 30;
     return success;
 }
 
+-(void)setSelectedRange:(NSRange)range {
+    [self.textField setSelectionRange:range];
+}
+
 
 - (void)setFrameSize:(NSSize)newSize {
     

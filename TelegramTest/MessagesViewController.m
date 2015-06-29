@@ -540,75 +540,14 @@
         }
     };
     
-    [self.searchMessagesView showSearchBox:^(NSString *search) {
+    [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
         
-        clearItems();
+        [self showMessage:msg_id fromMsgId:0];
         
-       [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-           
-           if([obj isKindOfClass:[MessageTableItemText class]]) {
-               
-               SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
-               
-               searchItem.item = obj;
-
-               
-               NSRange range = [obj.message.message rangeOfString:search options:NSCaseInsensitiveSearch];
-               while(range.location != NSNotFound)
-               {
-                   TGCTextMark *mark = [[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO];
-                   
-                   [searchItem.marks addObject:mark];
-                   
-                   ((MessageTableItemText *)obj).mark = searchItem;
-                   
-                   [self.searchItems addObject:searchItem];
-                   
-                   [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-                   
-                   
-                   range = [obj.message.message  rangeOfString:search options:NSCaseInsensitiveSearch range:NSMakeRange(range.location + 1, [obj.message.message length] - range.location - 1)];
-               }
-               
-            }
-            
-        }];
-        
-        if(self.searchItems.count > 0) {
-            currentId++;
-            next();
-        }
-        
-        
-        
-    } next:^ {
-        
-        currentId++;
-        
-        if(currentId >= self.searchItems.count)
-            currentId = 0;
-        
-        next();
-        
-        
-        
-    } prevCallback:^{
-        
-        currentId--;
-        
-        if(currentId < 0)
-            currentId = (int) self.searchItems.count - 1;
-        
-        next();
-        
-       
-
-    
     } closeCallback:^{
-        
-        [self hideSearchBox:YES];
-        
+         [self hideSearchBox:YES];
     }];
+   
     
  //   [self hideConnectionController:YES];
  //   [self hideTopInfoView:YES];
@@ -630,6 +569,78 @@
     }];
     
 }
+
+/*
+ [self.searchMessagesView showSearchBox:^(NSString *search) {
+ 
+ clearItems();
+ 
+ [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+ 
+ if([obj isKindOfClass:[MessageTableItemText class]]) {
+ 
+ SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
+ 
+ searchItem.item = obj;
+ 
+ 
+ NSRange range = [obj.message.message rangeOfString:search options:NSCaseInsensitiveSearch];
+ while(range.location != NSNotFound)
+ {
+ TGCTextMark *mark = [[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO];
+ 
+ [searchItem.marks addObject:mark];
+ 
+ ((MessageTableItemText *)obj).mark = searchItem;
+ 
+ [self.searchItems addObject:searchItem];
+ 
+ [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+ 
+ 
+ range = [obj.message.message  rangeOfString:search options:NSCaseInsensitiveSearch range:NSMakeRange(range.location + 1, [obj.message.message length] - range.location - 1)];
+ }
+ 
+ }
+ 
+ }];
+ 
+ if(self.searchItems.count > 0) {
+ currentId++;
+ next();
+ }
+ 
+ 
+ 
+ } next:^ {
+ 
+ currentId++;
+ 
+ if(currentId >= self.searchItems.count)
+ currentId = 0;
+ 
+ next();
+ 
+ 
+ 
+ } prevCallback:^{
+ 
+ currentId--;
+ 
+ if(currentId < 0)
+ currentId = (int) self.searchItems.count - 1;
+ 
+ next();
+ 
+ 
+ 
+ 
+ } closeCallback:^{
+ 
+ [self hideSearchBox:YES];
+ 
+ }];
+ */
 
 -(void)hideSearchBox:(BOOL)animated {
     
@@ -1963,6 +1974,29 @@ static NSTextAttachment *headerMediaIcon() {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
     } else {
         
+        
+        dispatch_block_t block = ^{
+            
+            
+            
+            [self.historyController drop:NO];
+            
+            self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:[HistoryFilter class]];
+            
+            self.historyController.min_id = messageId;
+            self.historyController.start_min = messageId;
+            self.historyController.max_id = messageId;
+            self.historyController.need_save_to_db = NO;
+            self.historyController.maxDate = 0;
+            self.historyController.minDate = 0;
+            [self.historyController removeAllItems];
+            
+            
+            [self flushMessages];
+            
+            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
+        };
+        
         TL_localMessage *msg = [[Storage manager] messageById:messageId];
         
         
@@ -1973,7 +2007,7 @@ static NSTextAttachment *headerMediaIcon() {
                 TLMessage *msg = response.messages[0];
                 
                 if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                    [self setCurrentConversation:self.conversation withJump:messageId historyFilter:nil force:YES];
+                    block();
                 }
                 
                 
@@ -1984,7 +2018,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             
         } else {
-            [self setCurrentConversation:self.conversation withJump:messageId historyFilter:nil force:YES];
+            block();
         }
     
         

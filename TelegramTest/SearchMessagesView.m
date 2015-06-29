@@ -7,17 +7,27 @@
 //
 
 #import "SearchMessagesView.h"
-
+#import "SpacemanBlocks.h"
 @interface SearchMessagesView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) TMSearchTextField *searchField;
 @property (nonatomic,strong) TMTextButton *cancelButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
 
-@property (nonatomic,copy) void (^searchCallback)(NSString *search);
-@property (nonatomic,copy) dispatch_block_t nextCallback;
-@property (nonatomic,copy) dispatch_block_t prevCallback;
+@property (nonatomic,strong) NSProgressIndicator *progressIndicator;
+
+@property (nonatomic,copy) void (^goToMessage)(int msg_id, NSString *searchString);
 @property (nonatomic,copy) dispatch_block_t closeCallback;
+
+
+@property (nonatomic,strong) RPCRequest *request;
+
+@property (nonatomic,assign) BOOL locked;
+
+@property (nonatomic,strong) SMDelayedBlockHandle block;
+
+@property (nonatomic,strong) NSMutableArray *messages;
+@property (nonatomic,assign) int currentIdx;
 
 
 @end
@@ -74,11 +84,11 @@
         [self.nextButton setBackgroundImage:searchDown forControlState:BTRControlStateNormal];
         
         [self.prevButton addBlock:^(BTRControlEvents events) {
-            strongSelf.prevCallback();
+           [strongSelf prev];
         } forControlEvents:BTRControlEventClick];
         
         [self.nextButton addBlock:^(BTRControlEvents events) {
-            strongSelf.nextCallback();
+           [strongSelf next];
         } forControlEvents:BTRControlEventClick];
         
         
@@ -87,6 +97,17 @@
         
         [self.prevButton setFrameOrigin:NSMakePoint(23, NSMinY(self.prevButton.frame))];
         [self.nextButton setFrameOrigin:NSMakePoint(46, NSMinY(self.prevButton.frame))];
+        
+        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(25, 0, 25, 25)];
+        
+        [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+        
+        [self.progressIndicator setCenteredYByView:self];
+        
+        [self addSubview:_progressIndicator];
+        
+        _locked = YES;
+        self.locked = NO;
         
         [self addSubview:self.prevButton];
         [self addSubview:self.nextButton];
@@ -106,13 +127,82 @@
 }
 
 -(void)searchFieldTextChange:(NSString *)searchString {
-    if(self.searchCallback != nil)
-        self.searchCallback(searchString);
+    
+    self.locked = YES;
+    
+    _currentIdx = -1;
+    
+    cancel_delayed_block(_block);
+    
+    if(searchString)
+    
+    _block = perform_block_after_delay(0.4,  ^{
+        
+        _block = nil;
+        
+        [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:0 max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+            
+            self.locked = NO;
+            if(response.messages.count > 0) {
+                self.messages = response.messages;
+                [self next];
+            }
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            self.locked = NO;
+        }];
+        
+    });
+    
+  //  if(self.searchCallback != nil)
+      //  self.searchCallback(searchString);
+}
+
+-(void)next {
+    
+    if(++_currentIdx == _messages.count)
+    {
+        _currentIdx = 0;
+    }
+    
+    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+}
+
+-(void)prev {
+    
+    if(--_currentIdx == -1)
+    {
+        _currentIdx = (int)_messages.count - 1;
+    }
+    
+    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+}
+
+-(void)setLocked:(BOOL)locked {
+    
+    if(_locked == locked)
+        return;
+    
+    
+    _locked = locked;
+    
+    if(_locked)
+    {
+        [self.progressIndicator startAnimation:self];
+    } else {
+        [self.progressIndicator stopAnimation:self];
+    }
+    
+    [self.progressIndicator setHidden:!locked];
+    [self.nextButton setHidden:locked];
+    [self.prevButton setHidden:locked];
 }
 
 -(void)searchFieldDidEnter {
-    if(self.nextCallback != nil)
-        self.nextCallback();
+    [self next];
+    
+    [self.searchField setSelectedRange:NSMakeRange(self.searchField.stringValue.length,0)];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -125,12 +215,9 @@
 
 
 
--(void)showSearchBox:(void (^)(NSString *search))callback next:(dispatch_block_t)nextCallback prevCallback:(dispatch_block_t)prevCallback closeCallback:(dispatch_block_t) closeCallback {
+-(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback {
     
-    self.searchCallback = callback;
-    self.nextCallback = nextCallback;
-    
-    self.prevCallback = prevCallback;
+    self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
 }

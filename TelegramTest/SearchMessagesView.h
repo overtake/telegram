@@ -12,7 +12,7 @@
 
 @property (nonatomic,strong) MessagesViewController *controller;
 
--(void)showSearchBox:(void (^)(NSString *search))callback next:(dispatch_block_t)nextCallback prevCallback:(dispatch_block_t)prevCallback closeCallback:(dispatch_block_t) closeCallback;
+-(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback;
 
 
 @end

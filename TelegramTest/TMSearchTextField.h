@@ -31,4 +31,6 @@
 
 - (bool)endEditing;
 
+-(void)setSelectedRange:(NSRange)range;
+
 @end
