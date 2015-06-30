@@ -389,8 +389,8 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-        NSMutableArray *filterItems = [filterClass messageItems];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys];
+        NSMutableArray *filterItems = [filterClass messageItems:self.conversation.peer_id];
+        NSMutableDictionary *filterKeys = [filterClass messageKeys:self.conversation.peer_id];
         
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
@@ -438,81 +438,7 @@ static NSMutableArray *listeners;
    
    [[ASQueue mainQueue] dispatchOnQueue:^{
         
-       long fwd_group_random = 0;
-        
-        NSMutableArray *fwd = [[NSMutableArray alloc] init];
-        
-        dispatch_block_t fwd_block = ^ {
-            ForwardSenterItem *sender = [[ForwardSenterItem alloc] init];
-            MessageTableItem *msg = fwd[0];
-            sender.conversation = msg.message.conversation;
-            
-            NSMutableArray *fakes = [[NSMutableArray alloc] init];
-            NSMutableArray *ids = [[NSMutableArray alloc] init];
-            [fwd enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@([obj.message n_id])];
-                [fakes insertObject:obj.message atIndex:0];
-            }];
-            
-            sender.msg_ids = ids;
-            
-            sender.fakes = fakes;
-            
-            
-           
-            
-            sender.state = msg.message.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
-            
-            [sender setTableItems:fwd];
-            
-            if(msg.message.dstate == DeliveryStatePending) {
-                [msg.messageSender send];
-            }
-            
-            [fwd removeAllObjects];
-            
-        };
-        
-
-        for (int i = (int) result.count - 1; i >= 0; i --) {
-            
-            
-            MessageTableItem *item = result[i];
-            
-             if((item.message.dstate == DeliveryStateError || item.message.dstate == DeliveryStatePending) && !item.messageSender) {
-                
-                
-                if(item.message.dstate == DeliveryStatePending && item.message.fwd_from_id != 0) {
-                
-                    if(fwd_group_random != 0 && fwd_group_random != item.message.randomId)
-                        fwd_block();
-                    
-                    [fwd addObject:item];
-                    
-                    fwd_group_random = item.message.randomId;
-                    
-                    continue;
-                }
-                
-                if(fwd.count > 0) {
-                    fwd_block();
-                }
-                
-                
-                
-                item.messageSender = [SenderItem senderForMessage:item.message];
-                item.messageSender.state = item.message.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
-                item.messageSender.tableItem = item;
-                
-                if(item.message.dstate == DeliveryStatePending) {
-                    [item.messageSender send];
-                }
-            }
-        }
-
-        
-        if(fwd.count > 0)
-            fwd_block();
+      
         
         self.isProccessing = NO;
         if(selectHandler)
@@ -533,8 +459,8 @@ static NSMutableArray *listeners;
     [queue dispatchOnQueue:^{
     
         _h_filter = filter;
-        messageKeys = [filter messageKeys];
-        messageItems = [filter messageItems];
+        messageKeys = [filter messageKeys:self.conversation.peer_id];
+        messageItems = [filter messageItems:self.conversation.peer_id];
         _requestCounter = 0;
         
         _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
@@ -872,15 +798,8 @@ static NSMutableArray *listeners;
 
 -(NSArray *)selectAllItems {
 
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.message.peer_id == %d",self.controller.conversation.peer.peer_id]];
-    
-    NSArray *memory = [messageItems
-                       filteredArrayUsingPredicate:predicate];
-    
-    memory = [self sortItems:memory];
-    
-    
+        
+    NSArray *memory = [self sortItems:messageItems];
    
     
     return memory;

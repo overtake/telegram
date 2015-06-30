@@ -10,7 +10,7 @@
 #import "ChatHistoryController.h"
 @implementation MP3HistoryFilter
 
-static NSMutableArray * messageItems;
+static NSMutableDictionary * messageItems;
 static NSMutableDictionary * messageKeys;
 
 -(id)initWithController:(ChatHistoryController *)controller {
@@ -25,7 +25,7 @@ static NSMutableDictionary * messageKeys;
 +(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        messageItems = [[NSMutableArray alloc] init];
+        messageItems = [[NSMutableDictionary alloc] init];
         messageKeys = [[NSMutableDictionary alloc] init];
         
     });
@@ -40,20 +40,36 @@ static NSMutableDictionary * messageKeys;
     return HistoryFilterAudioDocument;
 }
 
-- (NSMutableDictionary *)messageKeys {
-    return messageKeys;
+- (NSMutableDictionary *)messageKeys:(int)peer_id {
+    return [[self class] messageKeys:peer_id];
 }
 
-- (NSMutableArray *)messageItems {
-    return messageItems;
+- (NSMutableArray *)messageItems:(int)peer_id {
+    return [[self class] messageItems:peer_id];
 }
 
-+ (NSMutableDictionary *)messageKeys {
-    return messageKeys;
++ (NSMutableDictionary *)messageKeys:(int)peer_id {
+    NSMutableDictionary *keys = messageKeys[@(peer_id)];
+    
+    if(!keys)
+    {
+        keys = [[NSMutableDictionary alloc] init];
+        messageKeys[@(peer_id)] = keys;
+    }
+    
+    return keys;
 }
 
-+ (NSMutableArray *)messageItems {
-    return messageItems;
++ (NSMutableArray *)messageItems:(int)peer_id {
+    NSMutableArray *items = messageItems[@(peer_id)];
+    
+    if(!items)
+    {
+        items = [[NSMutableArray alloc] init];
+        messageItems[@(peer_id)] = items;
+    }
+    
+    return items;
 }
 
 

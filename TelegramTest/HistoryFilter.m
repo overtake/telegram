@@ -26,7 +26,7 @@
 
 @implementation HistoryFilter
 
-static NSMutableArray * messageItems;
+static NSMutableDictionary * messageItems;
 static NSMutableDictionary * messageKeys;
 
 -(id)initWithController:(ChatHistoryController *)controller {
@@ -41,47 +41,95 @@ static NSMutableDictionary * messageKeys;
 
 +(void)removeItems:(NSArray *)messageIds {
     
-    NSArray *res = [[self messageItems] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
-    [[self messageItems] removeObjectsInArray:res];
+    [messageItems enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableArray *obj, BOOL *stop) {
+        
+        NSMutableDictionary *keys = [self messageKeys:[key intValue]];
+        
+        [keys removeObjectsForKeys:messageIds];
+        
+        NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
+        
+        [obj removeObjectsInArray:f];
+        
+    }];
+
     
-    for (MessageTableItem *item in res) {
-        [[self messageKeys] removeObjectForKey:@(item.message.n_id)];
-    }
+}
+
++(NSArray *)items:(NSArray *)msgIds {
+    
+    NSMutableArray *messageIds = [msgIds mutableCopy];
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [messageKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
+    
+        
+        NSMutableArray *finded = [[NSMutableArray alloc] init];
+        
+        [messageIds enumerateObjectsUsingBlock:^(NSNumber *msgId, NSUInteger idx, BOOL *stop) {
+            
+            if(obj[msgId] != nil) {
+                [items addObject:obj[msgId]];
+                [finded addObject:msgId];
+            }
+            
+        }];
+        
+        [messageIds removeObjectsInArray:finded];
+        
+        if(messageIds.count == 0)
+            *stop = YES;
+        
+        
+    }];
+    
+    return items;
 }
 
 +(void)removeAllItems:(int)peerId {
     
-    NSArray *res = [[self messageItems] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.peer_id == %d AND self.message.n_id != 0",peerId]];
+    [[self messageKeys:peerId] removeAllObjects];
+    [[self messageItems:peerId] removeAllObjects];
     
-    [[self messageItems] removeObjectsInArray:res];
+}
+
+- (NSMutableDictionary *)messageKeys:(int)peer_id {
+    return [[self class] messageKeys:peer_id];
+}
+
+- (NSMutableArray *)messageItems:(int)peer_id {
+    return [[self class] messageItems:peer_id];
+}
+
++ (NSMutableDictionary *)messageKeys:(int)peer_id {
+    NSMutableDictionary *keys = messageKeys[@(peer_id)];
     
-    for (MessageTableItem *item in res) {
-        [[self messageKeys] removeObjectForKey:@(item.message.n_id)];
+    if(!keys)
+    {
+        keys = [[NSMutableDictionary alloc] init];
+        messageKeys[@(peer_id)] = keys;
     }
     
+    return keys;
+}
+
++ (NSMutableArray *)messageItems:(int)peer_id {
+    NSMutableArray *items = messageItems[@(peer_id)];
     
-}
-
-- (NSMutableDictionary *)messageKeys {
-    return messageKeys;
-}
-
-- (NSMutableArray *)messageItems {
-    return messageItems;
-}
-
-+ (NSMutableDictionary *)messageKeys {
-    return messageKeys;
-}
-
-+ (NSMutableArray *)messageItems {
-    return messageItems;
+    if(!items)
+    {
+        items = [[NSMutableArray alloc] init];
+        messageItems[@(peer_id)] = items;
+    }
+    
+    return items;
 }
 
 +(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        messageItems = [[NSMutableArray alloc] init];
+        messageItems = [[NSMutableDictionary alloc] init];
         messageKeys = [[NSMutableDictionary alloc] init];
         
     });

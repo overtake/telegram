@@ -451,7 +451,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
     
-    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
+    NSArray *items = [[HistoryFilter messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
@@ -469,9 +469,8 @@
     
     NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
     
-    NSArray *items = [[HistoryFilter messageItems] filteredArrayUsingPredicate:predicate];
+    NSArray *items = [HistoryFilter items:messages];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        

@@ -31,14 +31,17 @@ typedef enum {
 
 -(id)initWithController:(ChatHistoryController *)controller;
 
-- (NSMutableDictionary *)messageKeys;
-- (NSMutableArray *)messageItems;
-+ (NSMutableDictionary *)messageKeys;
-+ (NSMutableArray *)messageItems;
+- (NSMutableDictionary *)messageKeys:(int)peer_id;
+- (NSMutableArray *)messageItems:(int)peer_id;
+
++ (NSMutableDictionary *)messageKeys:(int)peer_id;
++ (NSMutableArray *)messageItems:(int)peer_id;
 
 +(void)removeItems:(NSArray *)messageIds;
 
 +(void)removeAllItems:(int)peerId;
+
++(NSArray *)items:(NSArray *)messageIds;
 
 -(int)type;
 +(int)type;
