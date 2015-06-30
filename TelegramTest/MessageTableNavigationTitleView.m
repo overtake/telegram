@@ -22,6 +22,8 @@
 
 @property (nonatomic,strong) TMView *container;
 
+@property (nonatomic,strong) BTRButton *searchButton;
+
 
 
 @end
@@ -63,6 +65,18 @@
         //[self.statusTextField setBackgroundColor:NSColorFromRGB(0x000000)];
         
         [self.container addSubview:self.statusTextField];
+        
+        _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width , image_SearchMessages().size.height)];
+        
+        [_searchButton addBlock:^(BTRControlEvents events) {
+            
+            [[Telegram rightViewController].messagesViewController showSearchBox];
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [_searchButton setImage:image_SearchMessages() forControlState:BTRControlStateNormal];
+        
+        [self.container addSubview:_searchButton];
         
         [self addSubview:self.container];
         
@@ -127,6 +141,7 @@
     
 
     [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
+    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame), 14)];
     
 
 }

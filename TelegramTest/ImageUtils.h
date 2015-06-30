@@ -192,7 +192,7 @@ CACHE_IMAGE(MusicStandartCover);
 CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);
 CACHE_IMAGE(botKeyboardActive);
-
+CACHE_IMAGE(SearchMessages);
 @interface ImageUtils : NSObject
 
 

@@ -199,7 +199,7 @@ CACHE_IMAGE(MusicStandartCover);
 CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);
 CACHE_IMAGE(botKeyboardActive);
-
+CACHE_IMAGE(SearchMessages);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
