@@ -55,7 +55,8 @@
 
 typedef enum {
     TGAudioPlayerStatePlaying,
-    TGAudioPlayerStatePaused
+    TGAudioPlayerStatePaused,
+    TGAudioPlayerStateForcePaused
 } TGAudioPlayerState;
 
 
@@ -320,7 +321,6 @@ typedef enum {
     if(self.playerState == TGAudioPlayerStatePlaying) {
         [self pause];
     } else {
-        
         [self play:self.currentTime];
     }
 }
@@ -451,6 +451,7 @@ typedef enum {
     
     [_nameTextField setAttributedStringValue:item.id3AttributedStringHeader];
     [_nameTextField sizeToFit];
+    [_progressView setDownloadProgress:0];
     
     if(NSWidth(_nameTextField.frame) < NSWidth(_nameContainer.frame))
     {
@@ -508,6 +509,7 @@ typedef enum {
     self.playerState = TGAudioPlayerStatePlaying;
     
     [globalAudioPlayer() stop];
+    [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[_currentItem path]]);
     
     if(globalAudioPlayer()) {
@@ -529,6 +531,12 @@ typedef enum {
 - (void)startTimer {
     if(!_progressTimer) {
         _progressTimer = [[TGTimer alloc] initWithTimeout:1.0f/60.0f repeat:YES completion:^{
+            
+            if(globalAudioPlayer() == nil)
+            {
+                [_progressTimer invalidate];
+                _progressTimer = nil;
+            }
             
             if(_currentItem.state != AudioStatePlaying) {
                 [_progressTimer invalidate];
@@ -563,8 +571,23 @@ typedef enum {
     [_playListContainerView selectPrev];
 }
 
++(void)pause {
+    if([self instance].playerState == TGAudioPlayerStatePlaying)
+    {
+        [[self instance] pause];
+        [[self instance] setPlayerState:TGAudioPlayerStateForcePaused];
+    }
+    
+}
+
++(void)resume {
+    if([self instance].playerState == TGAudioPlayerStateForcePaused)
+        [[self instance] play:[self instance].currentTime];
+}
+
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
-    [self nextTrack];
+    if(self.playerState == TGAudioPlayerStatePlaying)
+        [self nextTrack];
 }
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
     

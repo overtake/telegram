@@ -18,4 +18,8 @@
 
 +(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem;
 
+
++(void)pause;
++(void)resume;
+
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "MessagetableCellAudioController.h"
-
+#import "TGAudioPlayerWindow.h"
 
 @implementation MessagetableCellAudioController
 
@@ -245,6 +245,8 @@ NSImage *voicePlay() {
 
 -(void)play:(NSTimeInterval)fromPosition {
     
+    [TGAudioPlayerWindow pause];
+    
     [globalAudioPlayer() stop];
     [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[self.item path]]);
@@ -298,6 +300,8 @@ NSImage *voicePlay() {
     self.cellState = CellStateNormal;
     
     [self setNeedsDisplay:YES];
+    
+    [TGAudioPlayerWindow resume];
 }
 
 

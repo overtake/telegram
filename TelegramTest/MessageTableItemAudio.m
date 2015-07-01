@@ -12,7 +12,7 @@
 #import "NSStringCategory.h"
 #import "DownloadAudioItem.h"
 #import "MessagetableCellAudioController.h"
-
+#import "TGAudioPlayerWindow.h"
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
@@ -54,8 +54,7 @@
 }
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
-    [LoopingUtils runOnMainQueueAsync:^{
-        
+     [ASQueue dispatchOnMainQueue:^{
         [self.cellView stopPlayer];
     }];
 }
@@ -66,14 +65,18 @@
 
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
     
+
     if(!self.message.n_out && !self.message.readedContent) {
         [ASQueue dispatchOnMainQueue:^{
+            
+           
             
             self.message.flags&= ~TGREADEDCONTENT;
             
             [self.cellView setNeedsDisplay:YES];
             
         }];
+        
         
         NSMutableArray *msgs = [@[@(self.message.n_id)] mutableCopy];
         
