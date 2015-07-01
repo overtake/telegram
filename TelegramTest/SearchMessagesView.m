@@ -68,7 +68,7 @@
         
         int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;
 
-        [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame))];
+        [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame) + 1)];
         
         
         self.cancelButton.autoresizingMask =   NSViewMinXMargin;

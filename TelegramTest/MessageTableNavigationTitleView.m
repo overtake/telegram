@@ -66,7 +66,7 @@
         
         [self.container addSubview:self.statusTextField];
         
-        _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width , image_SearchMessages().size.height)];
+        _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width +10, image_SearchMessages().size.height+10)];
         
         [_searchButton addBlock:^(BTRControlEvents events) {
             
@@ -141,7 +141,7 @@
     
 
     [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
-    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame), 14)];
+    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
     
 
 }

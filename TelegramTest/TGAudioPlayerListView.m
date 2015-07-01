@@ -125,8 +125,10 @@ static long h_r_l;
         [_emptyTextField setTextColor:GRAY_TEXT_COLOR];
         
         
+        NSSize size = [[_emptyTextField cell] cellSizeForBounds:NSMakeRect(0, 0, NSWidth(self.frame) - 40, NSHeight(self.frame))];
+
         
-        [_emptyTextField setFrameSize:[_emptyTextField sizeThatFits:NSMakeSize(NSWidth(self.frame) - 40, NSHeight(self.frame))]];
+        [_emptyTextField setFrameSize:size];
         
         [_emptyTextField setCenterByView:self];
         

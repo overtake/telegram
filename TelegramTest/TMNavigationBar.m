@@ -188,8 +188,8 @@ static const float duration = 0.25;
 - (void) buildSizes {
     float maxSize = MAX(self.leftView.frame.size.width, self.rightView.frame.size.width);
     
-    [self.centerViewBlock setFrameSize:NSMakeSize(self.bounds.size.width - 60 - maxSize * 2, self.bounds.size.height)];
-    [self.centerViewBlock setFrameOrigin:NSMakePoint(32 + maxSize, 0)];
+    [self.centerViewBlock setFrameSize:NSMakeSize(self.bounds.size.width - 20 - maxSize * 2, self.bounds.size.height)];
+    [self.centerViewBlock setCenteredXByView:self.centerViewBlock.superview];
     [self.centerView setFrame:self.centerViewBlock.bounds];
     
     
