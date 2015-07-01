@@ -70,7 +70,8 @@
         
         if(audio.performer.length > 0)
             [attr appendString:audio.performer withColor:TEXT_COLOR];
-        
+        else
+            [attr appendString:@"Unknown Artist" withColor:TEXT_COLOR];
         [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
         
         if(audio.title.length > 0) {
