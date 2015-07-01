@@ -67,7 +67,7 @@ static NSMutableDictionary *senders;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        senders[@(_message.randomId)] = message;
+        senders[@(_message.randomId)] = self;
         
     }];
 }
