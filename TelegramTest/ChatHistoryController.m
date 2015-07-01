@@ -114,8 +114,8 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-        NSMutableArray *filterItems = [filterClass messageItems];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys];
+        NSMutableArray *filterItems = [filterClass messageItems:self.conversation.peer_id];
+        NSMutableDictionary *filterKeys = [filterClass messageKeys:self.conversation.peer_id];
         
         const int max = 300;
         
@@ -389,11 +389,14 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-        NSMutableArray *filterItems = [filterClass messageItems:self.conversation.peer_id];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys:self.conversation.peer_id];
+       
         
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            
+            NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
+            NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];
             
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
             

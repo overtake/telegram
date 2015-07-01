@@ -41,30 +41,49 @@ static NSMutableDictionary * messageKeys;
 }
 
 + (NSMutableDictionary *)messageKeys:(int)peer_id {
-    NSMutableDictionary *keys = messageKeys[@(peer_id)];
     
-    if(!keys)
-    {
-        keys = [[NSMutableDictionary alloc] init];
-        messageKeys[@(peer_id)] = keys;
-    }
+    __block NSMutableDictionary *keys;
+    [ASQueue dispatchOnStageQueue:^{
+        
+        keys = messageKeys[@(peer_id)];
+        
+        if(!keys)
+        {
+            keys = [[NSMutableDictionary alloc] init];
+            messageKeys[@(peer_id)] = keys;
+        }
+        
+    } synchronous:YES];
     
     return keys;
 }
 
 + (NSMutableArray *)messageItems:(int)peer_id {
-    NSMutableArray *items = messageItems[@(peer_id)];
+    __block NSMutableArray *items;
     
-    if(!items)
-    {
-        items = [[NSMutableArray alloc] init];
-        messageItems[@(peer_id)] = items;
-    }
+    [ASQueue dispatchOnStageQueue:^{
+        
+        items = messageItems[@(peer_id)];
+        
+        if(!items)
+        {
+            items = [[NSMutableArray alloc] init];
+            messageItems[@(peer_id)] = items;
+        }
+        
+    } synchronous:YES];
+    
+    
     
     return items;
 }
 
-
++(void)drop {
+    [ASQueue dispatchOnStageQueue:^{
+        [messageKeys removeAllObjects];
+        [messageItems removeAllObjects];
+    }];
+}
 
 -(int)type {
     return HistoryFilterSearch;

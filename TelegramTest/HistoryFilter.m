@@ -13,6 +13,8 @@
 #import "PhotoVideoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
+#import "AudioHistoryFilter.h"
+#import "MP3HistoryFilter.h"
 #import "MessageTableItem.h"
 
 
@@ -41,56 +43,69 @@ static NSMutableDictionary * messageKeys;
 
 +(void)removeItems:(NSArray *)messageIds {
     
-    [messageItems enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableArray *obj, BOOL *stop) {
-        
-        NSMutableDictionary *keys = [self messageKeys:[key intValue]];
-        
-        [keys removeObjectsForKeys:messageIds];
-        
-        NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
-        
-        [obj removeObjectsInArray:f];
-        
+    [ASQueue dispatchOnStageQueue:^{
+        [messageItems enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableArray *obj, BOOL *stop) {
+            
+            NSMutableDictionary *keys = [self messageKeys:[key intValue]];
+            
+            [keys removeObjectsForKeys:messageIds];
+            
+            NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
+            
+            [obj removeObjectsInArray:f];
+            
+        }];
     }];
+    
+    
 
     
 }
 
 +(NSArray *)items:(NSArray *)msgIds {
     
+
+    
     NSMutableArray *messageIds = [msgIds mutableCopy];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [messageKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
-    
-        
-        NSMutableArray *finded = [[NSMutableArray alloc] init];
-        
-        [messageIds enumerateObjectsUsingBlock:^(NSNumber *msgId, NSUInteger idx, BOOL *stop) {
+    [ASQueue dispatchOnStageQueue:^{
+        [messageKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
             
-            if(obj[msgId] != nil) {
-                [items addObject:obj[msgId]];
-                [finded addObject:msgId];
-            }
+            
+            NSMutableArray *finded = [[NSMutableArray alloc] init];
+            
+            [messageIds enumerateObjectsUsingBlock:^(NSNumber *msgId, NSUInteger idx, BOOL *stop) {
+                
+                if(obj[msgId] != nil) {
+                    [items addObject:obj[msgId]];
+                    [finded addObject:msgId];
+                }
+                
+            }];
+            
+            [messageIds removeObjectsInArray:finded];
+            
+            if(messageIds.count == 0)
+                *stop = YES;
+            
             
         }];
         
-        [messageIds removeObjectsInArray:finded];
-        
-        if(messageIds.count == 0)
-            *stop = YES;
-        
-        
-    }];
+    } synchronous:YES];
+    
+    
     
     return items;
 }
 
 +(void)removeAllItems:(int)peerId {
     
-    [[self messageKeys:peerId] removeAllObjects];
-    [[self messageItems:peerId] removeAllObjects];
+    [ASQueue dispatchOnStageQueue:^{
+        [[self messageKeys:peerId] removeAllObjects];
+        [[self messageItems:peerId] removeAllObjects];
+    }];
     
 }
 
@@ -103,25 +118,39 @@ static NSMutableDictionary * messageKeys;
 }
 
 + (NSMutableDictionary *)messageKeys:(int)peer_id {
-    NSMutableDictionary *keys = messageKeys[@(peer_id)];
     
-    if(!keys)
-    {
-        keys = [[NSMutableDictionary alloc] init];
-        messageKeys[@(peer_id)] = keys;
-    }
+    __block NSMutableDictionary *keys;
+    [ASQueue dispatchOnStageQueue:^{
+        
+        keys = messageKeys[@(peer_id)];
+        
+        if(!keys)
+        {
+            keys = [[NSMutableDictionary alloc] init];
+            messageKeys[@(peer_id)] = keys;
+        }
+
+    } synchronous:YES];
     
     return keys;
 }
 
 + (NSMutableArray *)messageItems:(int)peer_id {
-    NSMutableArray *items = messageItems[@(peer_id)];
+    __block NSMutableArray *items;
     
-    if(!items)
-    {
-        items = [[NSMutableArray alloc] init];
-        messageItems[@(peer_id)] = items;
-    }
+    [ASQueue dispatchOnStageQueue:^{
+        
+        items = messageItems[@(peer_id)];
+        
+        if(!items)
+        {
+            items = [[NSMutableArray alloc] init];
+            messageItems[@(peer_id)] = items;
+        }
+        
+    } synchronous:YES];
+    
+    
     
     return items;
 }
@@ -145,13 +174,23 @@ static NSMutableDictionary * messageKeys;
 }
 
 +(void)drop {
-    [messageKeys removeAllObjects];
-    [messageItems removeAllObjects];
+    [ASQueue dispatchOnStageQueue:^{
+        [messageKeys removeAllObjects];
+        [messageItems removeAllObjects];
+        
+        
+        [PhotoHistoryFilter drop];
+        [DocumentHistoryFilter drop];
+        [VideoHistoryFilter drop];
+        [PhotoVideoHistoryFilter drop];
+        [AudioHistoryFilter drop];
+        [MP3HistoryFilter drop];
+        
+    }];
     
-    [PhotoHistoryFilter drop];
-    [DocumentHistoryFilter drop];
-    [VideoHistoryFilter drop];
-    [PhotoVideoHistoryFilter drop];
+    
+    
+    
 }
 
 -(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback {
