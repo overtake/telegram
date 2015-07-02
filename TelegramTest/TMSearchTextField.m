@@ -45,7 +45,18 @@
 }
 
 -(BOOL)resignFirstResponder {
-    return [super resignFirstResponder];
+    
+    if(!self.isInitialize) {
+        self.isInitialize = YES;
+        return NO;
+    }
+    
+    BOOL result = [super resignFirstResponder];
+    if(result) {
+        [self.searchDelegate searchFieldBlur];
+    }
+
+    return result;
 }
 
 - (BOOL)becomeFirstResponder {
@@ -54,6 +65,10 @@
         self.isInitialize = YES;
         return NO;
     }
+    
+    if(self.window.firstResponder == self)
+        return false;
+    
     
     BOOL result = [super becomeFirstResponder];
     if(result) {
@@ -87,7 +102,7 @@
     [self setStringValue:self.stringValue];
     [super textDidEndEditing:notification];
     
-    if([[notification.userInfo objectForKey:@"NSTextMovement"] intValue] == 0) {
+    if([notification.userInfo objectForKey:@"_NSFirstResponderReplacingFieldEditor"]  != self) {
         [self.searchDelegate searchFieldBlur];
     }
 }
@@ -216,6 +231,9 @@ const static int textFieldXOffset = 30;
     [self.delegate searchFieldDidEnter];
 }
 
+-(BOOL)resignFirstResponder {
+    return [self.textField resignFirstResponder];
+}
 
 - (bool)endEditing;
 {
@@ -297,9 +315,10 @@ static float duration = 0.1;
     }
 }
 
-- (void)centerPosition:(BOOL)animation {
 
-    if(self.textField.stringValue.length > 0)
+- (void)centerPosition:(BOOL)animation {
+    
+    if(self.textField.stringValue.length > 0 || self.window.firstResponder == self.textField)
         return;
     
     NSPoint point = NSMakePoint(roundf((self.bounds.size.width - [self containerWidth]) / 2), self.containerView.frame.origin.y);
