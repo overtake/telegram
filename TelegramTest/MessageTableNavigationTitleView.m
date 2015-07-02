@@ -137,10 +137,10 @@
         
 
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 20, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 40, self.nameTextField.bounds.size.height)];
     
 
-    [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
+    [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 40, self.statusTextField.frame.size.height)];
     [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
     
 
