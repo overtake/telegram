@@ -9,7 +9,7 @@
 #import "MainViewController.h"
 #import "TGWindowArchiver.h"
 #import "NotSelectedDialogsViewController.h"
-
+#import "TGSplitView.h"
 
 
 #define MIN_SINGLE_LAYOUT_WIDTH 380

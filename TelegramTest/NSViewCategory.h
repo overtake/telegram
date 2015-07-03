@@ -26,5 +26,5 @@ typedef enum {
 - (void)setAnimation:(CAAnimation *)anim forKey:(NSString *)key;
 
 -(void)performShake:(dispatch_block_t)completeBlock;
-
+- (void)removeAllSubviews;
 @end

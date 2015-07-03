@@ -197,7 +197,7 @@
         [self insertAll:result];
         
         if(_history.state != DialogsHistoryStateEnd) {
-            dispatch_after_seconds(0.8, ^{
+            dispatch_after_seconds(5, ^{
                 [self loadhistory:limit];
             });
         }

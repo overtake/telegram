@@ -99,13 +99,7 @@ typedef enum {
 
 @property (nonatomic,assign) BOOL mouseInWindow;
 
-
 @property (nonatomic,assign) TGAudioPlayerWindowState windowState;
-
-
-
-
-
 
 
 @end
@@ -509,7 +503,8 @@ typedef enum {
     self.playerState = TGAudioPlayerStatePlaying;
     
     [globalAudioPlayer() stop];
-    [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
+    if(globalAudioPlayer().delegate != self)
+        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[_currentItem path]]);
     
     if(globalAudioPlayer()) {

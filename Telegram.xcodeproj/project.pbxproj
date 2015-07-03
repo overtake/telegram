@@ -570,6 +570,11 @@
 		C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB091A3F3BC900C857D6 /* libwebpdemux.a */; };
 		C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */; };
 		C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */; };
+		C2CB5CEE1B467D5A00CD61DF /* TGInternalObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5CE51B467D5A00CD61DF /* TGInternalObject.m */; };
+		C2CB5CEF1B467D5A00CD61DF /* TGSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5CE71B467D5A00CD61DF /* TGSplitView.m */; };
+		C2CB5CF01B467D5A00CD61DF /* TGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5CE91B467D5A00CD61DF /* TGSplitViewController.m */; };
+		C2CB5CF11B467D5A00CD61DF /* TGView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5CEB1B467D5A00CD61DF /* TGView.m */; };
+		C2CB5CF21B467D5A00CD61DF /* TGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5CED1B467D5A00CD61DF /* TGViewController.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
 		C2CBF3BB1AF38427006BF90A /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3BA1AF38427006BF90A /* icon.icns */; };
 		C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3BE1AF38427006BF90A /* ShareViewController.m */; };
@@ -2040,6 +2045,16 @@
 		C2C8AB0A1A3F3BC900C857D6 /* libwebpmux.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebpmux.a; sourceTree = "<group>"; };
 		C2C8AB0E1A3F508300C857D6 /* TLDocument+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDocument+Extension.h"; sourceTree = "<group>"; };
 		C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLDocument+Extension.m"; sourceTree = "<group>"; };
+		C2CB5CE41B467D5A00CD61DF /* TGInternalObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGInternalObject.h; sourceTree = "<group>"; };
+		C2CB5CE51B467D5A00CD61DF /* TGInternalObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInternalObject.m; sourceTree = "<group>"; };
+		C2CB5CE61B467D5A00CD61DF /* TGSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSplitView.h; sourceTree = "<group>"; };
+		C2CB5CE71B467D5A00CD61DF /* TGSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSplitView.m; sourceTree = "<group>"; };
+		C2CB5CE81B467D5A00CD61DF /* TGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSplitViewController.h; sourceTree = "<group>"; };
+		C2CB5CE91B467D5A00CD61DF /* TGSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSplitViewController.m; sourceTree = "<group>"; };
+		C2CB5CEA1B467D5A00CD61DF /* TGView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGView.h; sourceTree = "<group>"; };
+		C2CB5CEB1B467D5A00CD61DF /* TGView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGView.m; sourceTree = "<group>"; };
+		C2CB5CEC1B467D5A00CD61DF /* TGViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGViewController.h; sourceTree = "<group>"; };
+		C2CB5CED1B467D5A00CD61DF /* TGViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGViewController.m; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CBF3B61AF38426006BF90A /* TGShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TGShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4500,6 +4515,23 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		C2CB5CE31B467D4D00CD61DF /* uikit */ = {
+			isa = PBXGroup;
+			children = (
+				C2CB5CE41B467D5A00CD61DF /* TGInternalObject.h */,
+				C2CB5CE51B467D5A00CD61DF /* TGInternalObject.m */,
+				C2CB5CE61B467D5A00CD61DF /* TGSplitView.h */,
+				C2CB5CE71B467D5A00CD61DF /* TGSplitView.m */,
+				C2CB5CE81B467D5A00CD61DF /* TGSplitViewController.h */,
+				C2CB5CE91B467D5A00CD61DF /* TGSplitViewController.m */,
+				C2CB5CEA1B467D5A00CD61DF /* TGView.h */,
+				C2CB5CEB1B467D5A00CD61DF /* TGView.m */,
+				C2CB5CEC1B467D5A00CD61DF /* TGViewController.h */,
+				C2CB5CED1B467D5A00CD61DF /* TGViewController.m */,
+			);
+			name = uikit;
+			sourceTree = "<group>";
+		};
 		C2CBF3B71AF38427006BF90A /* TGShare */ = {
 			isa = PBXGroup;
 			children = (
@@ -4999,6 +5031,7 @@
 		CEB09E6117DAFC250055F150 /* Telegram */ = {
 			isa = PBXGroup;
 			children = (
+				C2CB5CE31B467D4D00CD61DF /* uikit */,
 				0A6D095319535E7A00A9AC64 /* categories */,
 				C2200B5C18EDD1CE00F28803 /* about */,
 				C2A5BFFE18E17B440021BE68 /* settings */,
@@ -5672,6 +5705,7 @@
 				C2C85BA41AEEB82100FBEABD /* ChatExportLinkViewController.m in Sources */,
 				C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */,
 				0AA3F3B518BE688A00D383F1 /* TMNavigationController.m in Sources */,
+				C2CB5CF11B467D5A00CD61DF /* TGView.m in Sources */,
 				C235365919C8B4320044978E /* UserCardViewController.m in Sources */,
 				C297954A19EC1CBA00BE893E /* ComposeActionBlockUsersBehavior.m in Sources */,
 				C2C3A88B1A29F972008C4C4A /* PhoneChangeConfirmController.m in Sources */,
@@ -6048,6 +6082,7 @@
 				0AB7927E182587E500B3E2A1 /* UploadOperation.m in Sources */,
 				0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */,
 				C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */,
+				C2CB5CF01B467D5A00CD61DF /* TGSplitViewController.m in Sources */,
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
 				C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */,
@@ -6094,6 +6129,7 @@
 				C274C4021ACBF7A5000DFDE4 /* TGWebpageObject.m in Sources */,
 				C256E91418D21A96008FFA04 /* DownloadPhotoItem.m in Sources */,
 				0A59068618AA32C8002ED7BA /* NSView+BTRAdditions.m in Sources */,
+				C2CB5CEF1B467D5A00CD61DF /* TGSplitView.m in Sources */,
 				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
 				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */,
@@ -6176,6 +6212,7 @@
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
 				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
+				C2CB5CEE1B467D5A00CD61DF /* TGInternalObject.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,
 				0A6758881892798500F4487D /* SJExpandingTextView.m in Sources */,
 				0A6D099019535E8500A9AC64 /* NSMenuCategory.m in Sources */,
@@ -6251,6 +6288,7 @@
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
 				CEB0A25117DB09C10055F150 /* TGInitializer.m in Sources */,
 				C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */,
+				C2CB5CF21B467D5A00CD61DF /* TGViewController.m in Sources */,
 				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
