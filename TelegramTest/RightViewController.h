@@ -39,7 +39,8 @@
 #import "ChatExportLinkViewController.h"
 #import "TGStickersSettingsViewController.h"
 #import "ComposeChooseGroupViewController.h"
-@interface RightViewController : TMViewController
+#import "TGSplitViewController.h"
+@interface RightViewController : TGSplitViewController
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) UserInfoViewController *userInfoViewController;

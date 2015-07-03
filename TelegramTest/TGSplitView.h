@@ -48,4 +48,7 @@ typedef enum {
 
 -(void)setProportion:(struct TGSplitProportion)proportion forState:(TGSplitViewState)state;
 
+
+-(void)update;
+
 @end

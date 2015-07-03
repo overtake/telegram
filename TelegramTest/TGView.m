@@ -12,12 +12,6 @@
 
 
 
--(void)layout {
-    
-    assert([NSThread isMainThread]);
-    
-    [super layout];
-}
 
 
 @end

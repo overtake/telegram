@@ -208,9 +208,7 @@
         
       //  [[self currentEmptyController].view removeFromSuperview];
         
-        
-        NSUInteger index = [self.navigationViewController.viewControllerStack indexOfObject:[self oldEmptyController]];
-        
+                
         [self.navigationViewController.viewControllerStack removeObject:[self oldEmptyController]];
         
         [self.navigationViewController.viewControllerStack insertObject:[self currentEmptyController] atIndex:0];

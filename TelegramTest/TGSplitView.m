@@ -29,7 +29,6 @@
         _layoutProportions = [[NSMutableDictionary alloc] init];
         
         _containerView = [[TGView alloc] initWithFrame:self.bounds];
-        _containerView.backgroundColor = [NSColor greenColor];
         _containerView.autoresizingMask = self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         self.autoresizesSubviews = YES;
         [self addSubview:_containerView];
@@ -48,7 +47,8 @@
 
 -(void)addController:(TGViewController *)controller proportion:(struct TGSplitProportion)proportion {
     
-    assert([NSThread isMainThread]);
+    assert([NSThread isMainThread] && controller.view.superview == nil);
+    
     
     [_containerView addSubview:controller.view];
     
@@ -60,13 +60,15 @@
     
     _proportions[controller.internalId] = encodeProportion;
     
-    
-    [self updateConstraintsForSubtreeIfNeeded];
 }
 
 
--(void)layout {
-    [super layout];
+-(void)update {
+    [self setFrameSize:self.frame.size];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
     
     
     struct TGSplitProportion singleLayout = {0,0};
@@ -79,17 +81,17 @@
     
     
     if(isAcceptLayout(singleLayout)) {
-        if(_state != TGSplitViewStateSingleLayout && NSWidth(_containerView.frame) <= singleLayout.max )
+        if(_state != TGSplitViewStateSingleLayout && NSWidth(_containerView.frame) < singleLayout.max )
             self.state = TGSplitViewStateSingleLayout;
         
         if(isAcceptLayout(dualLayout)) {
             if(isAcceptLayout(tripleLayout)) {
-                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) >= dualLayout.min && NSWidth(_containerView.frame) < tripleLayout.min)
+                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) > dualLayout.min && NSWidth(_containerView.frame) < tripleLayout.min)
                     self.state = TGSplitViewStateDualLayout;
                 else
                     self.state = TGSplitViewStateTripleLayout;
             } else
-                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) >= dualLayout.min)
+                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) > dualLayout.min)
                     self.state = TGSplitViewStateDualLayout;
         }
     }
