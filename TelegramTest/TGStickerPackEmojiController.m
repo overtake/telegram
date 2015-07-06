@@ -176,6 +176,28 @@
     }];
     
     
+    [sets sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+        
+        
+        NSNumber *sidx = @([_stickers.sets indexOfObjectPassingTest:^BOOL(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj1 attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            return sticker.stickerset.n_id == obj.n_id;
+            
+        }]);
+        NSNumber *oidx = @([_stickers.sets indexOfObjectPassingTest:^BOOL(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj2 attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            return sticker.stickerset.n_id == obj.n_id;
+            
+        }]);
+        
+        return [sidx compare:oidx];
+        
+        
+    }];
     
     [self drawWithStickers:sets];
     

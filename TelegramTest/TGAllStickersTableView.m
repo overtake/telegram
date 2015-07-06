@@ -12,6 +12,10 @@
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
 
+
+
+
+
 @interface TGAllStickersTableView ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMView *noEmojiView;
 @property (nonatomic,strong) NSMutableArray *stickers;
@@ -563,6 +567,32 @@ static NSImage *higlightedImage() {
         }
         
         packId = 0;
+        
+        
+        
+        
+        stickers = [stickers sortedArrayUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+            
+           
+            NSNumber *sidx = @([_sets indexOfObjectPassingTest:^BOOL(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj1 attributeWithClass:[TL_documentAttributeSticker class]];
+                
+                 return sticker.stickerset.n_id == obj.n_id;
+                
+            }]);
+            NSNumber *oidx = @([_sets indexOfObjectPassingTest:^BOOL(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj2 attributeWithClass:[TL_documentAttributeSticker class]];
+                
+                return sticker.stickerset.n_id == obj.n_id;
+                
+            }]);
+            
+            return [sidx compare:oidx];
+
+            
+        }];
         
         [stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
             
