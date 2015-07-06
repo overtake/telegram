@@ -71,7 +71,7 @@ typedef enum {
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId;
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated;
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated selectText:(NSString *)text;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;
@@ -136,7 +136,7 @@ typedef enum {
 //- (void)hideConnectionController:(BOOL)animated;
 
 -(void)showSearchBox;
-
+-(BOOL)searchBoxIsVisible;
 
 -(NSArray *)messageList;
 

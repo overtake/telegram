@@ -200,6 +200,10 @@ CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);
 CACHE_IMAGE(botKeyboardActive);
 CACHE_IMAGE(SearchMessages);
+
+CACHE_IMAGE(AudioPlayerPin);
+CACHE_IMAGE(AudioPlayerPinActive);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

@@ -839,6 +839,8 @@ void exceptionHandler(NSException * exception)
         
         [TMViewController hideModalProgress];
         
+        [TGAudioPlayerWindow hide];
+        
         [[Storage manager] drop:^{
             
             [TGCache clear];

@@ -244,6 +244,12 @@ static long h_r_l;
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.searchRow.searchField becomeFirstResponder];
+}
+
+
+
 -(void)check {
     [_emptyTextField setHidden:_tableView.count > 1 || _searchRow.searchField.stringValue.length > 0];
     [_tableView.containerView setHidden:!_emptyTextField.isHidden];
@@ -252,12 +258,46 @@ static long h_r_l;
 -(void)setSelectedId:(long)messageId {
     _selectedId = messageId;
     
+    __block TGAudioRowItem *selectedRow = nil;
+    __block int selectedIdx = -1;
+    
     [_fullItems enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
-            obj.isSelected = [obj hash] == messageId;
+        obj.isSelected = [obj hash] == messageId;
+        
+        if(obj.isSelected)
+        {
+            selectedRow = obj;
+            selectedIdx = (int) idx;
+        }
+        
     }];
+    
+    if(_fullItems.count > 1 && selectedIdx != -1)
+    {
+        
+        NSUInteger startIdx = MAX(selectedIdx-1,0);
+        NSUInteger length = MIN(3, _fullItems.count - selectedIdx);
+        
+        NSArray *dif = [_fullItems subarrayWithRange:NSMakeRange(startIdx, length)];
+        
+        
+        [dif enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj != selectedRow)
+            {
+                if(!obj.document.isset)
+                {
+                    [obj.document startDownload:NO force:YES];
+                }
+            }
+            
+        }];
+    }
     
     [self.tableView redrawAll];
     
+    [self.tableView.scrollView.clipView scrollRectToVisible:[self.tableView rectOfRow:selectedIdx]];
+
 }
 
 -(void)reloadData {
@@ -319,7 +359,7 @@ static long h_r_l;
         
         if(self.searchRow.searchField.stringValue.length > 0) {
             accept = [item.trackName searchInStringByWordsSeparated:self.searchRow.searchField.stringValue];
-            pos = 0;
+            pos = _fullItems.count-1;
         }
         
         _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
@@ -333,7 +373,7 @@ static long h_r_l;
 
 
 -(void)resort {
-    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:NO]]];
+    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:YES]]];
 }
 
 -(NSUInteger)posAsItem:(TGAudioRowItem *)item {

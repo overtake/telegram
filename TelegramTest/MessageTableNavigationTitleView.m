@@ -70,11 +70,15 @@
         
         [_searchButton addBlock:^(BTRControlEvents events) {
             
-            [[Telegram rightViewController].messagesViewController showSearchBox];
+            if(![[Telegram rightViewController].messagesViewController searchBoxIsVisible]) {
+                [[Telegram rightViewController].messagesViewController showSearchBox];
+            }
             
         } forControlEvents:BTRControlEventClick];
         
         [_searchButton setImage:image_SearchMessages() forControlState:BTRControlStateNormal];
+        
+        [_searchButton setToolTip:@"cmd+f"];
         
         [self.container addSubview:_searchButton];
         

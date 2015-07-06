@@ -134,7 +134,11 @@
             
             [TGSecretAction dequeAllStorageActions];
             
-            [self loadhistory:100];
+            
+            dispatch_after_seconds(3, ^{
+                [self loadhistory:35];
+            });
+            
             
             
         } else if(_history.state != DialogsHistoryStateEnd) {

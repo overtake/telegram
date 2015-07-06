@@ -78,6 +78,7 @@ typedef enum {
 
 
 @property (nonatomic,strong) BTRButton *closeButton;
+@property (nonatomic,strong) BTRButton *pinButton;
 @property (nonatomic,strong) BTRButton *playButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
@@ -130,7 +131,7 @@ typedef enum {
     
     [self.contentView addSubview:_windowContainerView];
     
-    
+    weakify();
     
     _containerView = [[TGAudioPlayerContainerView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_windowContainerView.frame), MINI_PHEIGHT)];
     _containerView.controller = self;
@@ -156,18 +157,7 @@ typedef enum {
     [_windowContainerView addSubview:_playListContainerView];
     
     
-    _closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - 20, NSHeight(_containerView.frame) - 20, image_AudioPlayerClose().size.width, image_AudioPlayerClose().size.height)];
-    
-    [_closeButton setBackgroundImage:image_AudioPlayerClose() forControlState:BTRControlStateNormal];
-    
-    [_containerView addSubview:_closeButton];
-    
-    [_closeButton addBlock:^(BTRControlEvents events) {
-        
-        [TGAudioPlayerWindow hide];
-        
-    } forControlEvents:BTRControlEventMouseDownInside];
-    
+   
     
     
     
@@ -175,7 +165,7 @@ typedef enum {
     _prevButton = [[BTRButton alloc] init];
     _nextButton = [[BTRButton alloc] init];
     
-    weakify();
+    
     
     
     [_prevButton addBlock:^(BTRControlEvents events) {
@@ -231,7 +221,10 @@ typedef enum {
     
     [_progressView setProgressCallback:^(float progress) {
         
-        if(globalAudioPlayer()) {
+        if(!strongSelf.currentItem)
+            return;
+        
+        if(globalAudioPlayer() && globalAudioPlayer().delegate == self && (self.currentItem.downloadItem == nil || self.currentItem.downloadItem.downloadState == DownloadStateCompleted)) {
             strongSelf.currentTime = globalAudioPlayer().duration * (progress/100);
             
             if(strongSelf.playerState == TGAudioPlayerStatePlaying) {
@@ -289,7 +282,39 @@ typedef enum {
     
     
     
-    _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(5, NSHeight(_containerView.frame) - 30, 25, 25)];
+    
+    
+    _closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(15, NSHeight(_containerView.frame) - 20, image_AudioPlayerClose().size.width, image_AudioPlayerClose().size.height)];
+    
+    [_closeButton setBackgroundImage:image_AudioPlayerClose() forControlState:BTRControlStateNormal];
+    
+    [_containerView addSubview:_closeButton];
+    
+    [_closeButton addBlock:^(BTRControlEvents events) {
+        
+        [TGAudioPlayerWindow hide];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    
+    
+    _pinButton = [[BTRButton alloc] initWithFrame:NSMakeRect(35, NSHeight(_containerView.frame) - 20, image_AudioPlayerPin().size.width, image_AudioPlayerPin().size.height)];
+    
+    [_pinButton setBackgroundImage:image_AudioPlayerPin() forControlState:BTRControlStateNormal];
+    
+    [_containerView addSubview:_pinButton];
+    
+    [_pinButton addBlock:^(BTRControlEvents events) {
+        
+        [strongSelf setLevel:self.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
+        
+        [strongSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    
+    
+    _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - 30, NSHeight(_containerView.frame) - 30, 25, 25)];
     
     [_showPlayListButton setImage:image_AudioPlayerList() forControlState:BTRControlStateNormal];
     
@@ -302,6 +327,7 @@ typedef enum {
     [_containerView addSubview:_showPlayListButton];
     
 }
+
 
 
 -(void)playOrPause {
@@ -436,7 +462,12 @@ typedef enum {
     _currentItem = nil;
     [_playListContainerView setConversation:_conversation];
     if(![self isVisible])
-        [self setFrameOrigin:[NSEvent mouseLocation]];
+    {
+        
+        NSScreen *screen = [NSScreen mainScreen];
+        [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
+                                         roundf((screen.frame.size.height - self.frame.size.height) / 2))];
+    }
 }
 
 
@@ -668,12 +699,13 @@ typedef enum {
 }
 
 
+
 +(TGAudioPlayerWindow *)instance {
     static TGAudioPlayerWindow *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[TGAudioPlayerWindow alloc] initWithContentRect:NSMakeRect(100, 100, 350, MINI_PHEIGHT) styleMask:NSBorderlessWindowMask | NSNonactivatingPanelMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
-        [instance setLevel:NSScreenSaverWindowLevel];
+        [instance setLevel:NSNormalWindowLevel];
         [instance setOpaque:NO];
         [instance setAcceptsMouseMovedEvents:YES];
         [instance setHasShadow:YES];

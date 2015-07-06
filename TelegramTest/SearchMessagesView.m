@@ -100,7 +100,7 @@
         [self.prevButton setFrameOrigin:NSMakePoint(23, NSMinY(self.prevButton.frame))];
         [self.nextButton setFrameOrigin:NSMakePoint(46, NSMinY(self.prevButton.frame))];
         
-        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(25, 0, 25, 25)];
+        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(25, 0, 20, 20)];
         
         [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
         

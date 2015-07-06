@@ -208,7 +208,7 @@
         
         [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
         
-        [self showMessage:msg_id fromMsgId:0 animated:YES];
+        [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil];
         return;
     }
     
@@ -541,7 +541,7 @@
     
     [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
         
-        [self showMessage:msg_id fromMsgId:0 animated:NO];
+        [self showMessage:msg_id fromMsgId:0 animated:NO selectText:searchString];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -567,6 +567,10 @@
         [self.searchMessagesView becomeFirstResponder];
     }];
     
+}
+
+-(BOOL)searchBoxIsVisible {
+    return !self.searchMessagesView.isHidden;
 }
 
 /*
@@ -1969,10 +1973,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId {
-    [self showMessage:messageId fromMsgId:msgId animated:YES];
+    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil];
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated {
+- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
@@ -2014,11 +2018,15 @@ static NSTextAttachment *headerMediaIcon() {
             
             [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
                 
-                TLMessage *msg = response.messages[0];
-                
-                if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                    block();
+                if(response.messages.count > 0) {
+                    TLMessage *msg = response.messages[0];
+                    
+                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                        block();
+                    }
                 }
+                
+                
                 
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {

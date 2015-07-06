@@ -13,7 +13,7 @@
 @property (nonatomic,strong,readonly) MessageTableItemAudioDocument *currentItem;
 
 +(void)show:(TL_conversation *)conversation;
-
++(void)hide;
 +(MessageTableItemAudioDocument *)currentItem;
 
 +(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem;
