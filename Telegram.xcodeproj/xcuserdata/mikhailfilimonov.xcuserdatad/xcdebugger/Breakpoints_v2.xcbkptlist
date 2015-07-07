@@ -41,7 +41,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "23"
             endingLineNumber = "23"
-            landmarkName = "-isEqual:"
+            landmarkName = "-isEqualTo:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

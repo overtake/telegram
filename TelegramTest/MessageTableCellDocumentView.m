@@ -18,7 +18,7 @@
 #import "TGOpusAudioPlayerAU.h"
 #import "StickersPanelView.h"
 #import "NSMenuItemCategory.h"
-
+#import "TGPhotoViewer.h"
 
 @interface DocumentThumbImageView()
 @property (nonatomic, strong) NSImage *originImage;
@@ -613,10 +613,16 @@ static NSImage *attachBackgroundThumb() {
 }
 
 - (void)open {
+    
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
-    [[TMMediaController controller] show:item];
+    if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
+        [[TGPhotoViewer viewer] show:previewObject];
+    } else {
+        TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
+        [[TMMediaController controller] show:item];
+    }
+    
 }
 
 

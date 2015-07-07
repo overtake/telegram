@@ -384,7 +384,7 @@ static NSCache *cacheItems;
             }];
             
             if(converted.count > 0) {
-                [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndex:0]];
+                [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, converted.count)]];
                 
                 [self insert:converted startIndex:self.count tableRedraw:YES];
             }

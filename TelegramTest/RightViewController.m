@@ -179,6 +179,7 @@
 
 -(void)addFirstControllerAfterLoadMainController:(TMViewController *)viewController {
     
+    [viewController.view removeFromSuperview];
     
     [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
     
@@ -191,7 +192,6 @@
 }
 
 -(void)didChangedLayout {
-    
     
     
     if(self.navigationViewController.viewControllerStack.count == 1) {
@@ -210,6 +210,8 @@
         
                 
         [self.navigationViewController.viewControllerStack removeObject:[self oldEmptyController]];
+        
+        
         
         [self.navigationViewController.viewControllerStack insertObject:[self currentEmptyController] atIndex:0];
         

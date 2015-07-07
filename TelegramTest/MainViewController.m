@@ -13,7 +13,7 @@
 
 
 #define MIN_SINGLE_LAYOUT_WIDTH 380
-#define MAX_SINGLE_LAYOUT_WIDTH 600
+#define MAX_SINGLE_LAYOUT_WIDTH 680
 
 #define MAX_LEFT_WIDTH 300
 
@@ -125,6 +125,8 @@
     
     self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.frame.size.width - NSWidth(self.leftViewController.view.frame), self.view.bounds.size.height)];
 
+    
+    
     [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
     [_splitView setProportion:(struct TGSplitProportion){300+MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX} forState:TGSplitViewStateDualLayout];
     
@@ -133,8 +135,13 @@
     [_splitView addController:self.rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
     
     _splitView.delegate = self;
+    
+    
 
     [_splitView update];
+    
+    [self.rightViewController addFirstControllerAfterLoadMainController:[self isSingleLayout] ? self.leftViewController : nil];
+    
    // [self layout];
     
    
@@ -145,9 +152,8 @@
     
      [_splitView removeAllControllers];
     
-    [[Telegram rightViewController] didChangedLayout];
+     [self.rightViewController didChangedLayout];
     
-   
     
     switch (state) {
         case TGSplitViewStateSingleLayout:
@@ -267,7 +273,7 @@
 
 
 -(BOOL)isSingleLayout {
-    return self.splitView.state == TGSplitViewStateSingleLayout;
+    return NSWidth(self.view.frame) < MAX_SINGLE_LAYOUT_WIDTH;
 }
 
 

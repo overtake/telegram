@@ -8,6 +8,8 @@
 
 #import "TGPVEmptyBehavior.h"
 #import "TGPhotoViewer.h"
+#import "TGPVDocumentObject.h"
+
 @implementation TGPVEmptyBehavior
 @synthesize conversation = _conversation;
 @synthesize user = _user;
@@ -41,6 +43,14 @@
             
             TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             
+            [converted addObject:item];
+        } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
+            
+            
+            TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:[[NSImage alloc] initWithContentsOfFile:mediaFilePath([(TL_localMessage *)obj.media media])]];
+            
+            
+            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             [converted addObject:item];
         }
         
