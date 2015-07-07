@@ -61,7 +61,7 @@ void open_card(NSString *link);
 NSString *exportPath(long randomId,NSString *extension);
 
 
-
+void determinateURLLink(NSString *link);
 
 
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);

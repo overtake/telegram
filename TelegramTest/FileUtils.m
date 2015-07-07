@@ -572,7 +572,31 @@ void open_user_by_name(NSDictionary *params) {
     
 }
 
-
+void determinateURLLink(NSString *link) {
+    
+    
+    if([link hasPrefix:TGImportCardPrefix]) {
+        open_user_by_name(getUrlVars(link));
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+    if([link hasPrefix:TGJoinGroupPrefix]) {
+        join_group_by_hash([link substringFromIndex:TGJoinGroupPrefix.length]);
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+    if([link hasPrefix:TGStickerPackPrefix]) {
+        add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[link substringFromIndex:TGStickerPackPrefix.length]]);
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+}
 
 void open_link(NSString *link) {
     
@@ -632,6 +656,7 @@ void open_link(NSString *link) {
     
     NSRange checkRange = [link rangeOfString:@"telegram.me/"];
     
+    
     if(checkRange.location != NSNotFound) {
         
         NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
@@ -667,6 +692,9 @@ void open_link(NSString *link) {
             
             
         }
+    } else if([link hasPrefix:@"tg://"]) {
+        determinateURLLink(link);
+        return;
     }
     
     NSArray *schemes = urlSchemes();

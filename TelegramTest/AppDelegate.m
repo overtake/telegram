@@ -86,80 +86,7 @@
     NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
     if(url) {
         
-        if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
-            open_user_by_name(getUrlVars([url absoluteString]));
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        if([[url absoluteString] hasPrefix:TGJoinGroupPrefix]) {
-            join_group_by_hash([[url absoluteString] substringFromIndex:TGJoinGroupPrefix.length]);
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        if([[url absoluteString] hasPrefix:TGStickerPackPrefix]) {
-            add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[[url absoluteString] substringFromIndex:TGStickerPackPrefix.length]]);
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        
-        
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        NSString *absoluteString = [url absoluteString];
-        NSRange range = [absoluteString rangeOfString:@"?"];
-        if(range.length == 1) {
-            NSString *query = [absoluteString substringFromIndex:range.location+1];
-            for (NSString *param in [query componentsSeparatedByString:@"&"]) {
-                NSArray *elts = [param componentsSeparatedByString:@"="];
-                if([elts count] < 2)
-                    continue;
-                [params setObject:[elts objectAtIndex:1] forKey:[elts objectAtIndex:0]];
-            }
-        }
-        
-        if(range.location > 12) {
-            NSString *method = [absoluteString substringWithRange:NSMakeRange(11, range.location-11)];
-            
-            if([method isEqualToString:@"msg"]) {
-                
-                NSString *number = [params objectForKey:@"to"];
-                NSString *msg = [params objectForKey:@"msg"];
-                
-                if(msg) {
-                    msg = [[msg trim] URLDecode];
-                }
-                if(!number) {
-                    [self.telegram.firstController newMessage:[[NSMenuItem alloc] initWithTitle:@"lol" action:@selector(newMessage:) keyEquivalent:@""]];
-                    return;
-                }
-                
-                if([number hasPrefix:@"+"] && number.length > 1)
-                    number = [number substringFromIndex:1];
-                
-                NSArray *users = [[UsersManager sharedManager] all];
-                TLUser *searchUser = nil;
-                for(TLUser *user in users) {
-                    if([user.phone isEqualToString:number]) {
-                        searchUser = user;
-                        break;
-                    }
-                }
-                
-                TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:searchUser.n_id];
-                
-                if(searchUser) {
-                    [[Telegram rightViewController] showByDialog:dialog sender:self];
-                    if(msg) {
-                        [[[Telegram rightViewController] messagesViewController] setStringValueToTextField:msg];
-                    }
-                }
-            }
-        }
+        determinateURLLink([url absoluteString]);
     }
 }
 
@@ -339,6 +266,12 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
+#ifdef TGDEBUG
+    
+    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
+    
+#endif
     
  //   if([[MTNetwork instance] isAuth]) {
         [self initializeMainWindow];
