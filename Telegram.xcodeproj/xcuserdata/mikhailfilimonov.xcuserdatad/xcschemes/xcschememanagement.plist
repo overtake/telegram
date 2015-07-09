@@ -6,6 +6,8 @@
 	<dict>
 		<key>AppStore.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
@@ -16,6 +18,8 @@
 		</dict>
 		<key>TGShare copy.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>11</integer>
 		</dict>
@@ -29,6 +33,13 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>Updater.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>13</integer>
+		</dict>
 		<key>debug.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -38,6 +49,26 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>C235369719CB1A100044978E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D0C1B4D65D000CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D1E1B4D65D200CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D301B4D68C800CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D3D1B4D697700CD61DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

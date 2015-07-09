@@ -14,5 +14,6 @@
 
 -(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback;
 
+-(NSString *)currentString;
 
 @end

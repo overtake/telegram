@@ -579,6 +579,13 @@
 		C2CB5CFF1B4AC1DE00CD61DF /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2CB5D001B4AC1DE00CD61DF /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2CB5D031B4AF9C000CD61DF /* TGPVDocumentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5D021B4AF9C000CD61DF /* TGPVDocumentObject.m */; };
+		C2CB5D411B4D697700CD61DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5D401B4D697700CD61DF /* main.m */; };
+		C2CB5D551B4D709000CD61DF /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF6741AFB6AFA006BF90A /* AppKit.framework */; };
+		C2CB5D5F1B4D871600CD61DF /* TGUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5D5E1B4D871600CD61DF /* TGUpdater.m */; };
+		C2CB5DA31B4DB18100CD61DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF67E1AFB6F13006BF90A /* Foundation.framework */; };
+		C2CB5DC51B4EAA4F00CD61DF /* NSObject+BObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5DC41B4EAA4F00CD61DF /* NSObject+BObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		C2CB5DC81B4EAA6300CD61DF /* AJObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5DC71B4EAA6300CD61DF /* AJObject.m */; };
+		C2CB5DCB1B4EAAAC00CD61DF /* AJUpdateObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB5DCA1B4EAAAC00CD61DF /* AJUpdateObject.m */; };
 		C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBAEE018F6D617008DF862 /* PreviewObject.m */; };
 		C2CBF3BB1AF38427006BF90A /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3BA1AF38427006BF90A /* icon.icns */; };
 		C2CBF3BF1AF38427006BF90A /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3BE1AF38427006BF90A /* ShareViewController.m */; };
@@ -876,6 +883,15 @@
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C2CB5D3C1B4D697700CD61DF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 		C2CBF3C41AF38427006BF90A /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -1501,9 +1517,6 @@
 		C235365719C8B4320044978E /* UserCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardViewController.h; sourceTree = "<group>"; };
 		C235365819C8B4320044978E /* UserCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardViewController.m; sourceTree = "<group>"; };
 		C235369919CB1A100044978E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		C235369C19CB1A100044978E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C235369F19CB1A100044978E /* TGKeeper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TGKeeper-Prefix.pch"; sourceTree = "<group>"; };
-		C23536A019CB1A100044978E /* TGKeeper.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TGKeeper.1; sourceTree = "<group>"; };
 		C23536A619CB1A430044978E /* FFYDaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFYDaemonController.h; sourceTree = "<group>"; };
 		C23536A719CB1A430044978E /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFYDaemonController.m; sourceTree = "<group>"; };
 		C23536AB19CC64330044978E /* LoginBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginBottomView.h; sourceTree = "<group>"; };
@@ -2067,6 +2080,18 @@
 		C2CB5CFB1B4AB43800CD61DF /* TGPVDocumentContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentContainer.m; sourceTree = "<group>"; };
 		C2CB5D011B4AF9C000CD61DF /* TGPVDocumentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentObject.h; sourceTree = "<group>"; };
 		C2CB5D021B4AF9C000CD61DF /* TGPVDocumentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentObject.m; sourceTree = "<group>"; };
+		C2CB5D3E1B4D697700CD61DF /* Updater */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Updater; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2CB5D401B4D697700CD61DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C2CB5D5D1B4D871600CD61DF /* TGUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdater.h; sourceTree = "<group>"; };
+		C2CB5D5E1B4D871600CD61DF /* TGUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdater.m; sourceTree = "<group>"; };
+		C2CB5DA11B4DB14F00CD61DF /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/libstdc++.dylib"; sourceTree = DEVELOPER_DIR; };
+		C2CB5DA41B4DB18700CD61DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		C2CB5DC31B4EAA4F00CD61DF /* NSObject+BObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+BObject.h"; sourceTree = "<group>"; };
+		C2CB5DC41B4EAA4F00CD61DF /* NSObject+BObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+BObject.m"; sourceTree = "<group>"; };
+		C2CB5DC61B4EAA6300CD61DF /* AJObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJObject.h; sourceTree = "<group>"; };
+		C2CB5DC71B4EAA6300CD61DF /* AJObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJObject.m; sourceTree = "<group>"; };
+		C2CB5DC91B4EAAAC00CD61DF /* AJUpdateObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJUpdateObject.h; sourceTree = "<group>"; };
+		C2CB5DCA1B4EAAAC00CD61DF /* AJUpdateObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJUpdateObject.m; sourceTree = "<group>"; };
 		C2CBAEDF18F6D616008DF862 /* PreviewObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewObject.h; sourceTree = "<group>"; };
 		C2CBAEE018F6D617008DF862 /* PreviewObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewObject.m; sourceTree = "<group>"; };
 		C2CBF3B61AF38426006BF90A /* TGShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TGShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2413,6 +2438,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C2CB5D3B1B4D697700CD61DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2CB5DA31B4DB18100CD61DF /* Foundation.framework in Frameworks */,
+				C2CB5D551B4D709000CD61DF /* AppKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C2CBF3B31AF38426006BF90A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3561,24 +3595,6 @@
 			name = exportcrard;
 			sourceTree = "<group>";
 		};
-		C235369B19CB1A100044978E /* TGKeeper */ = {
-			isa = PBXGroup;
-			children = (
-				C235369C19CB1A100044978E /* main.m */,
-				C23536A019CB1A100044978E /* TGKeeper.1 */,
-				C235369E19CB1A100044978E /* Supporting Files */,
-			);
-			path = TGKeeper;
-			sourceTree = "<group>";
-		};
-		C235369E19CB1A100044978E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				C235369F19CB1A100044978E /* TGKeeper-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		C23536A519CB1A3B0044978E /* daemon */ = {
 			isa = PBXGroup;
 			children = (
@@ -4560,6 +4576,36 @@
 			name = containers;
 			sourceTree = "<group>";
 		};
+		C2CB5D3F1B4D697700CD61DF /* Updater */ = {
+			isa = PBXGroup;
+			children = (
+				C2CB5D401B4D697700CD61DF /* main.m */,
+			);
+			path = Updater;
+			sourceTree = "<group>";
+		};
+		C2CB5D5C1B4D870D00CD61DF /* updater */ = {
+			isa = PBXGroup;
+			children = (
+				C2CB5D5D1B4D871600CD61DF /* TGUpdater.h */,
+				C2CB5D5E1B4D871600CD61DF /* TGUpdater.m */,
+			);
+			name = updater;
+			sourceTree = "<group>";
+		};
+		C2CB5DC21B4EAA1600CD61DF /* json */ = {
+			isa = PBXGroup;
+			children = (
+				C2CB5DC61B4EAA6300CD61DF /* AJObject.h */,
+				C2CB5DC71B4EAA6300CD61DF /* AJObject.m */,
+				C2CB5DC31B4EAA4F00CD61DF /* NSObject+BObject.h */,
+				C2CB5DC41B4EAA4F00CD61DF /* NSObject+BObject.m */,
+				C2CB5DC91B4EAAAC00CD61DF /* AJUpdateObject.h */,
+				C2CB5DCA1B4EAAAC00CD61DF /* AJUpdateObject.m */,
+			);
+			name = json;
+			sourceTree = "<group>";
+		};
 		C2CBF3B71AF38427006BF90A /* TGShare */ = {
 			isa = PBXGroup;
 			children = (
@@ -4972,7 +5018,7 @@
 				C2CBF3B71AF38427006BF90A /* TGShare */,
 				CEB09E6117DAFC250055F150 /* Telegram */,
 				CEB0A14817DB03A90055F150 /* RunLoop */,
-				C235369B19CB1A100044978E /* TGKeeper */,
+				C2CB5D3F1B4D697700CD61DF /* Updater */,
 				CEB09E5A17DAFC250055F150 /* Frameworks */,
 				CEB09E5917DAFC250055F150 /* Products */,
 			);
@@ -4983,6 +5029,7 @@
 			children = (
 				CEB09E5817DAFC250055F150 /* Telegram.app */,
 				C2CBF3B61AF38426006BF90A /* TGShare.appex */,
+				C2CB5D3E1B4D697700CD61DF /* Updater */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4990,6 +5037,8 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2CB5DA41B4DB18700CD61DF /* Cocoa.framework */,
+				C2CB5DA11B4DB14F00CD61DF /* libstdc++.dylib */,
 				C2CBF6A11AFB81A8006BF90A /* QuickLook.framework */,
 				C2CBF6841AFB6FE6006BF90A /* QuartzCore.framework */,
 				C2CBF6821AFB6F33006BF90A /* AVFoundation.framework */,
@@ -5223,6 +5272,7 @@
 		CEB2615B180C5B9B00378932 /* logic */ = {
 			isa = PBXGroup;
 			children = (
+				C2CB5D5C1B4D870D00CD61DF /* updater */,
 				C24F877C19FE92D700EC962E /* modernencryptedchats */,
 				C222775A190E734C002AA0F6 /* taskrequest */,
 				C2A5BFD218DDB1EE0021BE68 /* ASQueue.h */,
@@ -5292,6 +5342,7 @@
 		CEF8EB8617FCA7CF00740D66 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				C2CB5DC21B4EAA1600CD61DF /* json */,
 				C25F91E9197D36BC006868F3 /* test_utilites */,
 				CEC8B8881832108A00283E53 /* Reachability.h */,
 				CEC8B8891832108A00283E53 /* Reachability.m */,
@@ -5355,6 +5406,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C2CB5D3D1B4D697700CD61DF /* Updater */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C2CB5D421B4D697700CD61DF /* Build configuration list for PBXNativeTarget "Updater" */;
+			buildPhases = (
+				C2CB5D3A1B4D697700CD61DF /* Sources */,
+				C2CB5D3B1B4D697700CD61DF /* Frameworks */,
+				C2CB5D3C1B4D697700CD61DF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Updater;
+			productName = Updater;
+			productReference = C2CB5D3E1B4D697700CD61DF /* Updater */;
+			productType = "com.apple.product-type.tool";
+		};
 		C2CBF3B51AF38426006BF90A /* TGShare */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C2CBF3CE1AF38427006BF90A /* Build configuration list for PBXNativeTarget "TGShare" */;
@@ -5401,6 +5469,9 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = keepcoder;
 				TargetAttributes = {
+					C2CB5D3D1B4D697700CD61DF = {
+						CreatedOnToolsVersion = 6.3;
+					};
 					C2CBF3B51AF38426006BF90A = {
 						CreatedOnToolsVersion = 6.3;
 						DevelopmentTeam = 6N38VWS5BX;
@@ -5458,6 +5529,7 @@
 				nb,
 				sv,
 				nl,
+				Base,
 			);
 			mainGroup = CEB09E4F17DAFC240055F150;
 			productRefGroup = CEB09E5917DAFC250055F150 /* Products */;
@@ -5476,6 +5548,7 @@
 			targets = (
 				CEB09E5717DAFC250055F150 /* Telegram */,
 				C2CBF3B51AF38426006BF90A /* TGShare */,
+				C2CB5D3D1B4D697700CD61DF /* Updater */,
 			);
 		};
 /* End PBXProject section */
@@ -5560,6 +5633,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C2CB5D3A1B4D697700CD61DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2CB5D411B4D697700CD61DF /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C2CBF3B21AF38426006BF90A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5693,6 +5774,7 @@
 				C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */,
 				C274C3D61AC58639000DFDE4 /* TGSetPasswordAction.m in Sources */,
 				0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */,
+				C2CB5DCB1B4EAAAC00CD61DF /* AJUpdateObject.m in Sources */,
 				C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */,
 				C2C1DC201A444CCE00BBCC63 /* TGStickerImageView.m in Sources */,
 				C20B228918E971D0007BCCD6 /* framing.c in Sources */,
@@ -5965,6 +6047,7 @@
 				0AA7E1D918CD3BCB0064EFC7 /* AFImageRequestOperation.m in Sources */,
 				C2CBF6AD1AFB84DB006BF90A /* TGDownloadItem.m in Sources */,
 				0ACDB12E18CF2373009FE910 /* MainWindow.m in Sources */,
+				C2CB5DC81B4EAA6300CD61DF /* AJObject.m in Sources */,
 				0A67588E1892A7D600F4487D /* TMScrollView.m in Sources */,
 				C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */,
 				C2D51C0C1B21FA5F009327C0 /* TGBotCommandsKeyboard.m in Sources */,
@@ -6148,6 +6231,7 @@
 				C2C3A8911A2C7D57008C4C4A /* TLApi.m in Sources */,
 				C2ACCE5C1ADD2D5600ABEE78 /* TGConversationTableCell.m in Sources */,
 				C2C85B871AE6597000FBEABD /* ImageAttachSenderItem.m in Sources */,
+				C2CB5DC51B4EAA4F00CD61DF /* NSObject+BObject.m in Sources */,
 				C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */,
 				0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */,
 				C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */,
@@ -6245,6 +6329,7 @@
 				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
 				C2CB5CEE1B467D5A00CD61DF /* TGInternalObject.m in Sources */,
+				C2CB5D5F1B4D871600CD61DF /* TGUpdater.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,
 				0A6758881892798500F4487D /* SJExpandingTextView.m in Sources */,
 				0A6D099019535E8500A9AC64 /* NSMenuCategory.m in Sources */,
@@ -6386,6 +6471,57 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C2CB5D431B4D697700CD61DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INSTALL_PATH = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C2CB5D441B4D697700CD61DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INSTALL_PATH = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		C2CBF3C61AF38427006BF90A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6625,6 +6761,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C2CB5D421B4D697700CD61DF /* Build configuration list for PBXNativeTarget "Updater" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C2CB5D431B4D697700CD61DF /* Debug */,
+				C2CB5D441B4D697700CD61DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C2CBF3CE1AF38427006BF90A /* Build configuration list for PBXNativeTarget "TGShare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

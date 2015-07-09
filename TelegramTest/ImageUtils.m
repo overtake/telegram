@@ -773,8 +773,16 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         layer = [CALayer layer];
     }
     
+    @try {
+        [CATransaction begin];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
     
-    [CATransaction begin];
     
     NSImage *image = nil;
     @autoreleasepool {
@@ -818,7 +826,17 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         }
     }
     
-    [CATransaction commit];
+    @try {
+        [CATransaction commit];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+    
+    
     
     return image;
 }

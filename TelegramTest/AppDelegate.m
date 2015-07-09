@@ -50,6 +50,7 @@
 #import "MessageInputGrowingTextView.h"
 #import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
+#import "TGUpdater.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -271,6 +272,81 @@ void exceptionHandler(NSException * exception)
     CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
     LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
     
+    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
+        // close other proccess
+        {
+            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+            
+            
+            
+            daemonController.launchPath = updater_path;
+            
+            daemonController.startArguments = [NSArray arrayWithObjects:
+                                               @"--bundle_id=ru.keepcoder.Telegram",
+                                               @"--close_others=1",
+                                               nil];
+            
+            
+            [daemonController start];
+        }
+        
+        
+        
+        
+        // update application
+        {
+            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
+            
+            [updater itsHaveNewVersion:^(bool nVer){
+                
+                
+                if(nVer)
+                {
+                    confirm(appName(), @"New version avaiable, download?", ^{
+                        [updater startDownload:^(NSString *fpath) {
+                            
+                            NSLog(@"%@",fpath);
+                            
+                            [self.window setTitle:@"Proccessing..."];
+                            
+                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+                            
+                            daemonController.launchPath = updater_path;
+                            
+                            daemonController.startArguments = [NSArray arrayWithObjects:
+                                                               @"--bundle_id=ru.keepcoder.Telegram",
+                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
+                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
+                                                               nil];
+                            
+                            [daemonController setDaemonStoppedCallback:^{
+                                
+                                [self.window setTitle:appName()];
+                                
+                            }];
+                            
+                            [daemonController start];
+                            
+                            
+                        } progress:^(NSUInteger progress) {
+                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
+                        }];
+                        
+                    }, ^{
+                        
+                    });
+                    
+                }
+                
+            }];
+        }
+    }
+    
+    
+
+    
 #endif
     
  //   if([[MTNetwork instance] isAuth]) {
@@ -282,7 +358,6 @@ void exceptionHandler(NSException * exception)
  //   }
 
 }
-
 
 
 - (void)initializeUpdater {
@@ -728,7 +803,7 @@ void exceptionHandler(NSException * exception)
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
     
     
-  //  [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
+    [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
     
 }
@@ -768,26 +843,28 @@ void exceptionHandler(NSException * exception)
 - (void)logoutWithForce:(BOOL)force {
     
     dispatch_block_t block = ^ {
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [TMViewController hideModalProgress];
+            
+            [TGAudioPlayerWindow hide];
+            
+            [[Storage manager] drop:^{
                 
+                [TGCache clear];
+                [TGModernTypingManager drop];
+                [SharedManager drop];
+                [[MTNetwork instance] drop];
+                [Telegram drop];
+                [MessageSender drop];
+                [Notification perform:LOGOUT_EVENT data:nil];
+                
+                [MessagesManager updateUnreadBadge];
+                
+                [self initializeLoginWindow];
+            }];
+        }];  
         
-        [TMViewController hideModalProgress];
-        
-        [TGAudioPlayerWindow hide];
-        
-        [[Storage manager] drop:^{
-            
-            [TGCache clear];
-            [TGModernTypingManager drop];
-            [SharedManager drop];
-            [[MTNetwork instance] drop];
-            [Telegram drop];
-            [MessageSender drop];
-            [Notification perform:LOGOUT_EVENT data:nil];
-            
-            [MessagesManager updateUnreadBadge];
-            
-            [self initializeLoginWindow];
-        }];
     };
     
     if([[MTNetwork instance] isAuth] && !force) {

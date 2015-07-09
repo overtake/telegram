@@ -20,7 +20,7 @@
 
 @interface SearchSelectItem : NSObject
 @property (nonatomic,assign) BOOL isCurrent;
-@property (nonatomic,strong) MessageTableItem *item;
+@property (nonatomic,weak) MessageTableItem *item;
 @property (nonatomic,strong,readonly) NSMutableArray *marks;
 @end
 

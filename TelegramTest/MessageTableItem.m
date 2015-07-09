@@ -41,7 +41,9 @@
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         
-        self.isForwadedMessage = (self.message.fwd_from_id != 0 ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker] && ![self.message.media.document.mime_type isEqualToString:@"image/gif"]));
+        self.isForwadedMessage = (self.message.fwd_from_id != 0 ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker] && ![self.message.media.document.mime_type isEqualToString:@"image/gif"])) && ([self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]] == nil);
+        
+        
         self.isChat = self.message.conversation.type == DialogTypeChat;
         
         _containerOffset = self.isForwadedMessage ? 129 : 79;

@@ -12,21 +12,10 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.messages">
-            </PersistentString>
-            <PersistentString
                value = "current.isHeaderMessage">
             </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TMTextButton setDisable:]:TMTextButton.m">
-         <PersistentStrings>
             <PersistentString
-               value = "imageView.image.size">
-            </PersistentString>
-            <PersistentString
-               value = "imageView.image">
+               value = "self.messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -336,6 +325,9 @@
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
       </ContextState>
       <ContextState
+         contextName = "__36-[TGPVEmptyBehavior convertObjects:]_block_invoke:TGPVEmptyBehavior.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -471,13 +463,13 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type &amp; SearchTypeGlobalUsers">
+               value = "self.type">
             </PersistentString>
             <PersistentString
                value = "tags">
             </PersistentString>
             <PersistentString
-               value = "self.type">
+               value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -650,10 +642,10 @@
                value = "self.item.isset">
             </PersistentString>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -796,6 +788,9 @@
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__31-[TGUpdater itsHaveNewVersion:]_block_invoke:TGUpdater.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesTopInfoView setConversation:]:MessagesTopInfoView.m">
@@ -1045,16 +1040,16 @@
          contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke_2:ComposeActionGroupBehavior.m">
       </ContextState>
       <ContextState
-         contextName = "__40+[TGSecretAction dequeAllStorageActions]_block_invoke_2:TGSecretAction.m">
+         contextName = "__51-[MP3HistoryFilter remoteRequest:peer_id:callback:]_block_invoke:MP3HistoryFilter.m">
       </ContextState>
       <ContextState
-         contextName = "__34-[TGWebpageYTContainer mouseDown:]_block_invoke:TGWebpageYTContainer.m">
+         contextName = "__40+[TGSecretAction dequeAllStorageActions]_block_invoke_2:TGSecretAction.m">
       </ContextState>
       <ContextState
          contextName = "-[TL_conversation updateNotifySettings:]:TL_conversation.m">
       </ContextState>
       <ContextState
-         contextName = "__51-[MP3HistoryFilter remoteRequest:peer_id:callback:]_block_invoke:MP3HistoryFilter.m">
+         contextName = "__34-[TGWebpageYTContainer mouseDown:]_block_invoke:TGWebpageYTContainer.m">
       </ContextState>
       <ContextState
          contextName = "-[MTDiscoverDatacenterAddressAction getConfigSuccess:]:MTDiscoverDatacenterAddressAction.m">
@@ -1236,10 +1231,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2005,7 +2000,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -2014,10 +2009,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2079,6 +2074,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.item">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdater initWithVersion:token:url:]:TGUpdater.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "version">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2508,7 +2511,7 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "abset.count">
+               value = "changeSet.count">
             </PersistentString>
             <PersistentString
                value = "deleteSet">
@@ -2517,7 +2520,7 @@
                value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "changeSet.count">
+               value = "abset.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2701,10 +2704,10 @@
                value = "item.message.n_id">
             </PersistentString>
             <PersistentString
-               value = "_conversation.top_message">
+               value = "_conversation">
             </PersistentString>
             <PersistentString
-               value = "_conversation">
+               value = "_conversation.top_message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2814,7 +2817,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TGAudioPlayerListView setSelectedId:]:TGAudioPlayerListView.m">
+         contextName = "-[TMTextButton setDisable:]:TMTextButton.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "imageView.image.size">
+            </PersistentString>
+            <PersistentString
+               value = "imageView.image">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

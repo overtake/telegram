@@ -42,7 +42,7 @@ void alert(NSString *text, NSString *info);
 void alert_bad_files(NSArray *bad_files);
 void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void));
 
-
+NSString* md5sum(NSString *fp);
 
 NSDictionary *getUrlVars(NSString *url);
 NSString *mediaFilePath(TLMessageMedia *media);

@@ -805,7 +805,22 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
 }
 
 
-
+BOOL unzip(NSString * zipFile, NSString * destination)
+{
+    
+    NSTask *unzip = [[NSTask alloc] init];
+    [unzip setLaunchPath:@"/usr/bin/unzip"];
+    [unzip setArguments:[NSArray arrayWithObjects:@"-u", @"-d",
+                         destination, zipFile, nil]];
+    
+    NSPipe *aPipe = [[NSPipe alloc] init];
+    [unzip setStandardOutput:aPipe];
+    
+    [unzip launch];
+    [unzip waitUntilExit];
+    
+    return true;
+}
 
 
 NSString *exportPath(long randomId, NSString *extension) {
@@ -820,6 +835,37 @@ NSString *exportPath(long randomId, NSString *extension) {
     
     
     return [NSString stringWithFormat:@"%@/%lu.%@",exportDirectory,randomId,extension];
+}
+
+NSString* md5sum(NSString *fp)
+{
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/sbin/md5"];
+    [task setArguments:@[fp]];
+    
+    NSPipe *outPipe = [[NSPipe alloc] init];
+    [task setStandardOutput:outPipe];
+    
+    [task launch];
+    NSData *data = [[outPipe fileHandleForReading] readDataToEndOfFile];
+    [task waitUntilExit];
+    
+    if ([task terminationStatus] != 0) {
+        NSLog(@"NSString + MD5 : error");
+        return nil;
+    }
+    
+    NSString *str = [[NSString alloc] initWithData:data
+                                          encoding:NSUTF8StringEncoding];
+    
+    @try {
+        str = [[str substringFromIndex:[str rangeOfString:@"="].location + 1] trim];
+    }
+    @catch (NSException *exception) {
+        str = nil;
+    }
+    
+    return str;
 }
 
 

@@ -648,6 +648,8 @@
 -(void)hideSearchBox:(BOOL)animated {
     
     
+    
+    
     if(self.searchMessagesView.isHidden)
         return;
     
@@ -2350,6 +2352,37 @@ static NSTextAttachment *headerMediaIcon() {
                 [self scrollToRect:rect isCenter:message_id != 0  animated:NO];
                 //bug fix
                 
+                
+                
+                if([item isKindOfClass:[MessageTableItemText class]] && [self searchBoxIsVisible]) {
+                    MessageTableItemText *textItem = item;
+                    
+                    [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
+                        
+                        [obj clear];
+                        
+                    }];
+                    
+                    NSRange range = [textItem.message.message rangeOfString:self.searchMessagesView.currentString options:NSCaseInsensitiveSearch];
+                    
+                    if(range.location != NSNotFound)
+                    {
+                        SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
+                        searchItem.item = textItem;
+                        
+                        searchItem.isCurrent = YES;
+                        
+                        [searchItem.marks addObject:[[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO]];
+                        
+                        [textItem setMark:searchItem];
+                        
+                        [self.searchItems addObject:searchItem];
+                        
+                    }
+                    
+                    
+                }
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSUInteger idx = [self indexOfObject:item];
                     if(message_id && idx != NSNotFound) {
@@ -2364,8 +2397,11 @@ static NSTextAttachment *headerMediaIcon() {
                                 }
                             }
                             
+                           [cell searchSelection];
                             
-                            [cell searchSelection];
+                            if([(MessageTableItemText *)item mark] != nil) {
+                                [cell setItem:item];
+                            }
                         }
                     }
                 });

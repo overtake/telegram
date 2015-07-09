@@ -251,6 +251,10 @@
     
 }
 
+-(NSString *)currentString {
+    return self.searchField.stringValue;
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];

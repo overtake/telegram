@@ -91,6 +91,7 @@
 
 #define weak() __weak typeof(self) weakSelf = self;
 
+#define APP_VERSION [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] intValue]
 
 #import "CFunctions.h"
 
