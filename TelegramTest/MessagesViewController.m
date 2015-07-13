@@ -165,6 +165,8 @@
 
 @property (nonatomic, strong) TL_conversation *conversation;
 
+@property (nonatomic,assign) BOOL needNextRequest;
+
 @end
 
 @implementation MessagesViewController
@@ -658,7 +660,11 @@
         
         [obj clear];
         
-        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        if([self indexOfObject:obj.item] != NSNotFound) {
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+        
         
     }];
     
@@ -783,7 +789,7 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnMainQueue:^{
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
-        [self.noMessagesView setLoading:self.historyController.isProccessing];
+        [self.noMessagesView setLoading:self.historyController.isProccessing || _needNextRequest];
         [CATransaction commit];
     }];
 }
@@ -2304,7 +2310,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    
+    _needNextRequest = NO;
     
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range) {
         
@@ -2325,9 +2331,11 @@ static NSTextAttachment *headerMediaIcon() {
        NSUInteger pos = prev ? 0 : self.messages.count;
         if(isFirst && prev) {
             
+            _needNextRequest = YES;
+            
             [_historyController request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
                 
-                
+                _needNextRequest = NO;
                 
                 self.isMarkIsset = YES;
                 

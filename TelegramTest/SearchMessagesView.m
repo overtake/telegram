@@ -63,15 +63,7 @@
         
         [self.cancelButton setCenterByView:self];
         
-        int minX = NSMinX(self.searchField.frame) + NSWidth(self.searchField.frame);
-        int maxX = NSWidth(self.frame);
-        
-        int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;
-
-        [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame) + 1)];
-        
-        
-        self.cancelButton.autoresizingMask =   NSViewMinXMargin;
+       
         
         [self addSubview:self.cancelButton];
         
@@ -119,6 +111,19 @@
     return self;
 }
 
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_searchField setFrameSize:NSMakeSize(newSize.width - 160, NSHeight(_searchField.frame))];
+    
+    int minX = NSMinX(self.searchField.frame) + NSWidth(self.searchField.frame);
+    int maxX = NSWidth(self.frame);
+    
+    int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;
+    
+    [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame) + 1)];
+}
 
 -(BOOL)becomeFirstResponder {
     return [self.searchField becomeFirstResponder];

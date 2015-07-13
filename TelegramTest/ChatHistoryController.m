@@ -277,9 +277,11 @@ static NSMutableArray *listeners;
 }
 
 -(void)setIsProccessing:(BOOL)isProccessing {
-    self->_isProccessing = isProccessing;
-    
-    [self.controller updateLoading];
+    [ASQueue dispatchOnMainQueue:^{
+        self->_isProccessing = isProccessing;
+        
+        [self.controller updateLoading];
+    }];
 }
 
 -(void)notificationFlushHistory:(NSNotification *)notification {
@@ -308,7 +310,8 @@ static NSMutableArray *listeners;
             
         }];
         
-        self.isProccessing = NO;
+         self.isProccessing = NO;
+        
     }];
     
 }
@@ -439,12 +442,12 @@ static NSMutableArray *listeners;
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
    
+    
+    self.isProccessing = NO;
+    
    [[ASQueue mainQueue] dispatchOnQueue:^{
         
-      
-        
-        self.isProccessing = NO;
-        if(selectHandler)
+       if(selectHandler)
             selectHandler(result,range);
     }];
     

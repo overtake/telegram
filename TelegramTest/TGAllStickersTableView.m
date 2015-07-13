@@ -450,9 +450,9 @@ static NSImage *higlightedImage() {
             
         }];
         
-        _stickers = stickers;
         
         [ASQueue dispatchOnMainQueue:^{
+             _stickers = stickers;
             [self reloadData];
         }];
         

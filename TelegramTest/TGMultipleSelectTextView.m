@@ -61,6 +61,7 @@
         link = [NSString stringWithFormat:@"%@@%@",link,item.message.fromUser.username];
     }
     
+    
     open_link(link);
 }
 

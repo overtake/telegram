@@ -509,6 +509,8 @@ void open_user_by_name(NSDictionary *params) {
             [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
         } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
             [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
+        } else if(params[@"open_profile"]) {
+            [[Telegram rightViewController] showUserInfoPage:user];
         } else {
             [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
         }
@@ -619,7 +621,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLUserNamePrefix]) {
-        open_user_by_name(@{@"domain":[link substringFromIndex:TLUserNamePrefix.length]});
+        open_user_by_name(@{@"domain":[link substringFromIndex:TLUserNamePrefix.length],@"open_profile":@(1)});
         return;
     }
     
