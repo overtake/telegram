@@ -47,7 +47,7 @@
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
             [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-            [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
+            [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
             
             
         } forControlEvents:BTRControlEventClick];
@@ -60,9 +60,10 @@
         [self.durationView setEditable:NO];
         [self.durationView setDrawsBackground:NO];
         [self.durationView setStringValue:@"00:00 / 00:00"];
-        [self.durationView sizeToFit];
+        
         [[self.durationView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView sizeToFit];
         [self.durationView setTextColor:DARK_BLACK];
         [self.containerView addSubview:self.durationView];
         
@@ -222,7 +223,7 @@
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y - 2)];
+    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y )];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

@@ -1071,7 +1071,7 @@ NSDictionary *audioTags(AVURLAsset *asset) {
         
     }
     
-    return @{@"artist":artistName,@"songName":songName};
+    return @{@"artist":[artistName trim],@"songName":[songName trim]};
 }
 
 

@@ -48,8 +48,7 @@
     
     TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
     
-    if(audio && (audio.title.length > 0 && audio.performer.length > 0)) {
-
+    if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
         self.duration = [NSString stringWithFormat:@"%@ - %@",audio.performer,audio.title];
     } else {
         self.duration = self.message.media.document.file_name;
@@ -65,21 +64,27 @@
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+    
+    NSString *perfomer = [audio.performer trim];
+    NSString *title = [audio.title trim];
+    
 
-    if(audio && (audio.title.length > 0 || audio.performer.length > 0)) {
+    if(audio && (title.length > 0 || perfomer.length > 0)) {
         
-        if(audio.performer.length > 0)
-            [attr appendString:audio.performer withColor:TEXT_COLOR];
+        
+        
+        if(perfomer.length > 0)
+            [attr appendString:perfomer withColor:TEXT_COLOR];
         else
             [attr appendString:@"Unknown Artist" withColor:TEXT_COLOR];
         [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
         
-        if(audio.title.length > 0) {
+        if(title.length > 0) {
             [attr appendString:@"\n"];
         }
         
-        if(audio.title.length > 0) {
-            NSRange range = [attr appendString:audio.title withColor:NSColorFromRGB(0x7F7F7F)];
+        if(title.length > 0) {
+            NSRange range = [attr appendString:title withColor:NSColorFromRGB(0x7F7F7F)];
             [attr setFont:TGSystemFont(13) forRange:range];
         }
         
