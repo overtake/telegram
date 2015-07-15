@@ -125,8 +125,6 @@
     
     
     
-    // [self.playerButton setHidden:self.item.state != AudioStateWaitPlaying || self.item.state != AudioStatePaused || self.item.state != AudioStatePlaying];
-    
     
     switch (self.item.state) {
         case AudioStateWaitPlaying:

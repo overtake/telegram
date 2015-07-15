@@ -457,6 +457,10 @@ typedef enum {
 
 
 -(void)show:(TL_conversation *)conversation {
+    
+    if([self isVisible] && _conversation == conversation)
+        return;
+    
     _conversation = conversation;
     [self updateWithItem:nil];
     _currentItem = nil;

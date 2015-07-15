@@ -67,7 +67,7 @@
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:@""];
         
         
-        [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
         
