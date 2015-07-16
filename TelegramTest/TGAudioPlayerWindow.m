@@ -433,7 +433,7 @@ typedef enum {
     _mouseInWindow = mouseInWindow;
     [_progressView setShowDivider:mouseInWindow];
     if(mouseInWindow) {
-        [self makeKeyAndOrderFront:self];
+       // [self makeKeyAndOrderFront:self];
     }
     [self playAnimationForName];
 }

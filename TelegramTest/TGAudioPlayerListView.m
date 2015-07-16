@@ -296,7 +296,7 @@ static long h_r_l;
     
     [self.tableView redrawAll];
     
-    [self.tableView.scrollView.clipView scrollRectToVisible:[self.tableView rectOfRow:selectedIdx]];
+    [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 
 }
 
@@ -373,7 +373,7 @@ static long h_r_l;
 
 
 -(void)resort {
-    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:YES]]];
+    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.n_id" ascending:YES]]];
 }
 
 -(NSUInteger)posAsItem:(TGAudioRowItem *)item {
