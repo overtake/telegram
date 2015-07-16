@@ -135,7 +135,7 @@
                         [[Telegram delegate] logoutWithForce:YES];
                         
                     }
-                } else if( self.error.error_code == 303 && [self.error.error_msg hasPrefix:@"PHONE_MIGRATE"]) {
+                } else if( self.error.error_code == 303 && ([self.error.error_msg hasPrefix:@"PHONE_MIGRATE"] || [self.error.error_msg hasPrefix:@"NETWORK_MIGRATE"])) {
                     
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
