@@ -338,9 +338,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     _datacenterCount = 5;
     
     
-    NSString *address = isTestServer() ? @"149.154.175.10" : @"149.154.175.50";
+    NSString *address = isTestServer() ? @"149.154.175.10" : @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO]]]];
+    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 1 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO]]]];
     
     
     if(!isTestServer()) {
