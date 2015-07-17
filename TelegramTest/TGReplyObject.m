@@ -44,7 +44,9 @@
 //        }
         
         
-        NSString *name = replyMessage.fwd_from_id != 0 ? replyMessage.fromFwdUser.fullName : replyMessage.fromUser.fullName;
+        //NSString *name = replyMessage.fwd_from_id != 0 ? replyMessage.fromFwdUser.fullName : replyMessage.fromUser.fullName;
+        
+        NSString *name = replyMessage.fromUser.fullName;
         
         NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
         

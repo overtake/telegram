@@ -25,4 +25,6 @@
 
 -(void)reloadData;
 
+-(void)onShow;
+
 @end

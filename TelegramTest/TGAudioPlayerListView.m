@@ -140,7 +140,24 @@ static long h_r_l;
 }
 
 
+-(void)onShow {
+    
+    __block int selectedIdx = -1;
+    
+    [_fullItems enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
+        obj.isSelected = [obj hash] == _selectedId;
+        
+        if(obj.isSelected)
+        {
+            selectedIdx = (int) idx;
+        }
+        
+    }];
 
+    
+    if(!NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+        [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
+}
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
@@ -255,6 +272,7 @@ static long h_r_l;
     [_tableView.containerView setHidden:!_emptyTextField.isHidden];
 }
 
+
 -(void)setSelectedId:(long)messageId {
     _selectedId = messageId;
     
@@ -296,7 +314,8 @@ static long h_r_l;
     
     [self.tableView redrawAll];
     
-    [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
+    if(NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+        [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 
 }
 

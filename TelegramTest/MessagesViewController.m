@@ -69,6 +69,7 @@
 #import "FullUsersManager.h"
 #import "StartBotSenderItem.h"
 #import "TGHelpPopup.h"
+#import "TGAudioPlayerWindow.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -466,6 +467,8 @@
     }];
     
 }
+
+
 
 -(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
     

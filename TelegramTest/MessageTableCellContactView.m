@@ -93,7 +93,7 @@
         if(!self.addButton.superview) {
             [self.addButton setString:NSLocalizedString(@"Messages.AddContact", nil)];
             [self.containerView addSubview:self.addButton];
-            [self.addButton setFrameOrigin:NSMakePoint(self.phoneNumberTextView.frame.origin.x + self.phoneNumberTextView.frame.size.width + 20, 4)];
+            [self.addButton setFrameOrigin:NSMakePoint(self.phoneNumberTextView.frame.origin.x + self.phoneNumberTextView.frame.size.width + 0, 4)];
         }
     }
     

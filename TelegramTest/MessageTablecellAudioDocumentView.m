@@ -20,10 +20,10 @@
 #import "TGAudioPlayerWindow.h"
 #define OFFSET 75.0f
 
-@interface MessageTablecellAudioDocumentView()
+@interface MessageTablecellAudioDocumentView()<TGAudioPlayerWindowDelegate>
 
 
-
+@property (nonatomic,assign) TGAudioPlayerState audioState;
 @end
 
 @implementation MessageTablecellAudioDocumentView
@@ -87,8 +87,33 @@
         
         [self setProgressToView:self.playerButton];
         
+        [TGAudioPlayerWindow addEventListener:self];
+        
     }
     return self;
+}
+
+-(void)dealloc {
+    [TGAudioPlayerWindow removeEventListener:self];
+}
+
+-(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerState)state {
+    
+    if(item.message.n_id != self.item.message.n_id)
+    {
+        self.audioState = TGAudioPlayerStatePaused;
+    } else {
+        self.audioState = state;
+    }
+    
+    
+    
+}
+
+-(void)setAudioState:(TGAudioPlayerState)audioState {
+    _audioState = audioState;
+    
+    [self updateCellState];
 }
 
 -(float)progressWidth {
@@ -123,24 +148,16 @@
         [self.playerButton setBackgroundImage:grayBackground() forControlState:BTRControlStateNormal];
     }
     
-    
-    
-    
-    switch (self.item.state) {
-        case AudioStateWaitPlaying:
+    switch (self.audioState) {
+        case TGAudioPlayerStatePaused:
             [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
             break;
             
-        case AudioStatePaused:
-            [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStatePlaying:
+        case TGAudioPlayerStatePlaying:
             [self.playerButton setImage:image_DownloadPauseIconWhite() forControlState:BTRControlStateNormal];
             break;
-            
-        default:
-            [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
+        case TGAudioPlayerStateForcePaused: default :
+            [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
             break;
     }
     
@@ -211,6 +228,12 @@
     [super setItem:item];
     
     item.cellView = self;
+    
+    if([TGAudioPlayerWindow currentItem].message.n_id == item.message.n_id)
+        _audioState = [TGAudioPlayerWindow playerState];
+     else
+        _audioState = TGAudioPlayerStatePaused;
+    
     
     self.acceptTimeChanger = NO;
     

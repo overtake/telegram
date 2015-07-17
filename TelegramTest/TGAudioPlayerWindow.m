@@ -13,6 +13,10 @@
 #import "TGAudioPlayer.h"
 #import "TGTimer.h"
 #import "TGAudioPlayerListView.h"
+
+
+
+
 @interface TGAudioPlayerContainerView : TMView
 {
     NSTrackingArea *_trackingArea;
@@ -53,11 +57,7 @@
 @end
 
 
-typedef enum {
-    TGAudioPlayerStatePlaying,
-    TGAudioPlayerStatePaused,
-    TGAudioPlayerStateForcePaused
-} TGAudioPlayerState;
+
 
 
 typedef enum {
@@ -103,6 +103,8 @@ typedef enum {
 @property (nonatomic,assign) TGAudioPlayerWindowState windowState;
 
 
+@property (nonatomic,strong) NSMutableArray *eventListeners;
+
 @end
 
 @implementation TGAudioPlayerWindow
@@ -120,6 +122,8 @@ typedef enum {
 
 -(void)initialize {
     
+    
+    _eventListeners = [[NSMutableArray alloc] init];
     
     _windowContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([self.contentView bounds]), MINI_PHEIGHT)];
     _windowContainerView.autoresizingMask = NSViewHeightSizable;
@@ -352,7 +356,9 @@ typedef enum {
 -(void)setWindowState:(TGAudioPlayerWindowState)windowState {
     _windowState = windowState;
     
-    
+    if(_windowState == TGAudioPlayerWindowStatePlayList) {
+        [_playListContainerView onShow];
+    }
     
     [self updateWindowWithHeight:_windowState == TGAudioPlayerWindowStateMini ? MINI_PHEIGHT : FULL_PHEIGHT animate:YES];
 }
@@ -474,7 +480,9 @@ typedef enum {
     }
 }
 
-
++(TGAudioPlayerState)playerState {
+    return [[self instance] playerState];
+}
 
 -(void)updateWithItem:(MessageTableItemAudioDocument *)item {
     
@@ -522,6 +530,8 @@ typedef enum {
 
 -(void)setPlayerState:(TGAudioPlayerState)playerState {
     _playerState = playerState;
+    
+    [self notifyAllListeners];
     
     [_playButton setBackgroundImage:playerState == TGAudioPlayerStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
 }
@@ -614,6 +624,33 @@ typedef enum {
     if([self instance].playerState == TGAudioPlayerStateForcePaused)
         [[self instance] play:[self instance].currentTime];
 }
+
+
++(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [[self instance] addEventListener:delegate];
+}
++(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [[self instance] removeEventListener:delegate];
+}
+
+
+-(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    if([_eventListeners indexOfObject:delegate] == NSNotFound)
+    {
+        [_eventListeners addObject:delegate];
+    }
+}
+
+-(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [_eventListeners removeObject:delegate];
+}
+
+-(void)notifyAllListeners {
+    [_eventListeners enumerateObjectsUsingBlock:^(id<TGAudioPlayerWindowDelegate> obj, NSUInteger idx, BOOL *stop) {
+        [obj playerDidChangedState:self.currentItem playerState:self.playerState];
+    }];
+}
+
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
     if(self.playerState == TGAudioPlayerStatePlaying)

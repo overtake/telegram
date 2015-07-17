@@ -80,7 +80,7 @@ extern NSString *const UPDATE_NEW_AUTH;
 extern NSString *const UPDATE_WEB_PAGES;
 
 extern NSString *const UPDATE_READ_CONTENTS;
-
+extern NSString *const UPDATE_AUDIO_PLAYER_STATE;
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 
