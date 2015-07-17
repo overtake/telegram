@@ -598,6 +598,7 @@ typedef enum {
     _progressTimer = nil;
     setGlobalAudioPlayer(nil);
     _currentItem.state = AudioStateWaitPlaying;
+    self.playerState = TGAudioPlayerStatePaused;
     self.currentTime = 0;
     [_progressView setCurrentProgress:0];
     
