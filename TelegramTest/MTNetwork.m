@@ -102,7 +102,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
         _queue = [[ASQueue alloc] initWithName:"mtnetwork"];
         
         
-        
         [_queue dispatchOnQueue:^{
             
             [self moveAndEncryptKeychain];

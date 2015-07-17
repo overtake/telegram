@@ -254,6 +254,8 @@
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
+    [self setFrameSize:self.frame.size];
+    
 }
 
 -(NSString *)currentString {

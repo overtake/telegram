@@ -126,20 +126,15 @@
         } else {
             if(self.errorHandler != nil) {
                 
-                
                 if( self.error.error_code == 401)
                 {
-                    
                     if(![self.error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
                         
                         [[Telegram delegate] logoutWithForce:YES];
                         
                     }
-                } else if( self.error.error_code == 303 && ([self.error.error_msg hasPrefix:@"PHONE_MIGRATE"] || [self.error.error_msg hasPrefix:@"NETWORK_MIGRATE"])) {
+                } else if( self.error.error_code == 303 && ([self.error.error_msg hasPrefix:@"PHONE_MIGRATE"] || [self.error.error_msg hasPrefix:@"NETWORK_MIGRATE"] || [self.error.error_msg hasPrefix:@"USER_MIGRATE"])) {
                     
-                    [[MTNetwork instance] setDatacenter:self.error.resultId];
-                    [[MTNetwork instance] initConnectionWithId:self.error.resultId];
-                } else if([self.error.error_msg hasPrefix:@"USER_MIGRATE"]) {
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
                 } else {

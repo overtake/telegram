@@ -94,6 +94,8 @@ static NSDictionary *attributes() {
 
 @property (nonatomic,strong) TMView *containerView;
 
+@property (nonatomic,assign) BOOL isActiveDragging;
+
 @end
 
 
@@ -103,9 +105,54 @@ static NSDictionary *attributes() {
 @implementation TGConversationTableCell
 
 
+-(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
+    
+    self.isActiveDragging = YES;
+    
+    NSPasteboard *pboard;
+    NSDragOperation sourceDragMask;
+    sourceDragMask = [sender draggingSourceOperationMask];
+    pboard = [sender draggingPasteboard];
+    
+    if ( ![pboard.name isEqualToString:TGImagePType] ) {
+        if (sourceDragMask) {
+            return NSDragOperationLink;
+        }
+    }
+    
+    return NSDragOperationNone;
+}
+
+
+-(void)draggingExited:(id<NSDraggingInfo>)sender {
+    
+    self.isActiveDragging = NO;
+}
+
+-(void)draggingEnded:(id<NSDraggingInfo>)sender {
+
+    self.isActiveDragging = NO;
+    
+}
+
+
+-(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
+    
+    TL_conversation *conversation = [(TGConversationTableItem *)self.rowItem conversation];
+    
+    [[Telegram rightViewController] showByDialog:conversation sender:self];
+    
+    [MessageSender sendDraggedFiles:sender dialog:conversation asDocument:NO];
+    
+    return YES;
+}
+
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+        
+        
+        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
         
        // self.wantsLayer = YES;
         
@@ -182,6 +229,12 @@ static NSDictionary *attributes() {
                  _swipe.layer.backgroundColor = color.CGColor;
             }
             
+            if(self.isActiveDragging)
+            {
+                [GRAY_BORDER_COLOR set];
+                NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+            }
+            
          //
             
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0 && self.item.conversation.lastMessage.from_id != [UsersManager currentUserId])
@@ -200,8 +253,11 @@ static NSDictionary *attributes() {
     return self;
 }
 
-
-
+-(void)setIsActiveDragging:(BOOL)isActiveDragging {
+    _isActiveDragging = isActiveDragging;
+    
+    [_swipe.containerView setNeedsDisplay:YES];
+}
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];

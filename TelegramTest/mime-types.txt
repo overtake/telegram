@@ -46,6 +46,7 @@ exe:application/octet-stream
 fif:application/fractals
 flr:x-world/x-vrml
 gif:image/gif
+GIF:image/gif
 gtar:application/x-gtar
 gz:application/x-gzip
 h:text/plain
