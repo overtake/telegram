@@ -24,6 +24,8 @@
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
 @property (nonatomic,strong) TGCaptionView *captionView;
+
+@property (nonatomic,assign) NSPoint startDragLocation;
 @end
 
 @implementation MessageTableCellVideoView
@@ -316,7 +318,49 @@ static NSImage *playImage() {
     [_captionView.textView setNeedsDisplay:YES];
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
+    return;
+    
+    if(self.isEditable)
+        [super mouseDown:theEvent];
+}
+
 -(void)mouseDragged:(NSEvent *)theEvent {
+    
+    
+    if(![_imageView mouse:_startDragLocation inRect:_imageView.frame])
+    return;
+    
+    NSPoint eventLocation = [_imageView convertPoint: [theEvent locationInWindow] fromView: nil];
+    
+    if([_imageView hitTest:eventLocation]) {
+        NSPoint dragPosition = NSMakePoint(80, 8);
+        
+        NSString *path = mediaFilePath(self.item.message.media);
+        
+        
+        NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];
+        
+        
+        [pasteBrd declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,nil] owner:self];
+        
+        
+        NSImage *dragImage = [_imageView.image copy];
+        
+        dragImage = cropCenterWithSize(dragImage,_imageView.frame.size);
+        
+        dragImage = imageWithRoundCorners(dragImage,4,dragImage.size);
+        
+        [pasteBrd setPropertyList:@[path] forType:NSFilenamesPboardType];
+        
+        [pasteBrd setString:path forType:NSStringPboardType];
+        
+        [self dragImage:dragImage at:dragPosition offset:NSZeroSize event:theEvent pasteboard:pasteBrd source:self slideBack:NO];
+    }
     
 }
 

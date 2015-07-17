@@ -50,6 +50,9 @@
     return image;
 }
 
+
+
+
 + (NSImage *) roundedImageNew:(NSImage *)oldImage size:(NSSize)size {
     NSImage *result = [[NSImage alloc] initWithSize:size];
     [result lockFocus];

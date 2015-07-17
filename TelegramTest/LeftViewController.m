@@ -288,6 +288,8 @@ static const int bottomOffset = 58;
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.currentTabController.navigationViewController = self.navigationViewController;
+    
     [self.currentTabController viewWillAppear:animated];
     
     if(![[Telegram rightViewController] isModalViewActive]) {

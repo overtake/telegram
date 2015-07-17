@@ -1134,7 +1134,11 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
+    
     [self setState:self.state];
+    if(self.state == MessagesViewControllerStateEditable)
+        [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
     
     #ifdef __MAC_10_10
     

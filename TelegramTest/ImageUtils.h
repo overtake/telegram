@@ -219,7 +219,7 @@ NSImage *prettysize(NSImage *img);
 NSImage *imageFromFile(NSString *filePath);
 NSSize resizeToMaxCorner(NSSize from, float size);
 NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize);
-
+NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size);
 NSImage *TGIdenticonImage(NSData *data, CGSize size);
 
 NSImageView *imageViewWithImage(NSImage *image);

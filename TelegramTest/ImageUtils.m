@@ -856,4 +856,44 @@ NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
     return target;
 }
 
+NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size) {
+    
+    if(!oldImage)
+    return oldImage;
+    
+    CALayer *layer = [CALayer layer];
+    NSImage *image = nil;
+    @autoreleasepool {
+        CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
+        
+        size.width *= displayScale;
+        size.height *= displayScale;
+        
+        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
+        
+        if(source != NULL) {
+            CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
+            CFRelease(source);
+            
+            [layer setContents:(__bridge id)(maskRef)];
+            [layer setFrame:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setBounds:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setMasksToBounds:YES];
+            [layer setCornerRadius:cornerRadius];
+            
+            CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, [[NSColorSpace genericRGBColorSpace] CGColorSpace], kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
+            [layer renderInContext:context];
+            
+            CGImageRef cgImage = CGBitmapContextCreateImage(context);
+            CGContextRelease(context);
+            
+            image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(size.width * 0.5, size.height * 0.5)];
+            CGImageRelease(cgImage);
+            CGImageRelease(maskRef);
+        }
+    }
+    
+    return image;
+}
+
 @end

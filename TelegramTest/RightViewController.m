@@ -454,9 +454,7 @@
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
     
-    if([Telegram isSingleLayout]) {
-        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
-    }
+    
     
     
     
@@ -465,6 +463,11 @@
     
     self.modalView = view;
     self.modalObject = dialog;
+    
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
     
     [view removeFromSuperview];
     [view setFrameSize:view.bounds.size];

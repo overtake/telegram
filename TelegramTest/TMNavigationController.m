@@ -144,13 +144,16 @@ static const int navigationOffset = 48;
         return;
     
     
+    
     if([self.viewControllerStack indexOfObject:viewController] == NSNotFound) {
         [self.viewControllerStack addObject:viewController];
-        [viewController setNavigationViewController:self];
+        
     } else {
         [self.viewControllerStack removeObjectAtIndex:[self.viewControllerStack indexOfObject:viewController]];
         [self.viewControllerStack addObject:viewController];
     }
+    
+    [viewController setNavigationViewController:self];
     
     self.animationStyle = animated ? TMNavigationControllerStylePush : TMNavigationControllerStyleNone;
     self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
