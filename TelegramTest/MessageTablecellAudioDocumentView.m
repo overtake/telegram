@@ -161,6 +161,10 @@
             break;
     }
     
+    if(self.cellState == CellStateDownloading || self.cellState == CellStateNeedDownload || self.cellState == CellStateDownloading)
+    {
+        [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
+    }
     
     [self setNeedsDisplay:YES];
     
