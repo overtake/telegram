@@ -107,6 +107,11 @@ static NSDictionary *attributes() {
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
     
+    TL_conversation *conversation = [(TGConversationTableItem *)self.rowItem conversation];
+    
+    if(!conversation.canSendMessage)
+        return NSDragOperationNone;
+    
     self.isActiveDragging = YES;
     
     NSPasteboard *pboard;

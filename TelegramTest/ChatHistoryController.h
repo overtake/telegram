@@ -27,7 +27,11 @@ typedef enum {
 
 //@property (nonatomic,strong,readonly) TL_conversation *conversation;
 @property (nonatomic,readonly) id<MessagesDelegate> controller;
-@property (atomic,assign,readonly) BOOL isProccessing;
+
+
+-(BOOL)isProccessing;
+
+
 @property (nonatomic,assign) BOOL need_save_to_db;
 
 @property (nonatomic,assign) int max_id;

@@ -30,7 +30,7 @@
 @property (atomic)  dispatch_semaphore_t semaphore;
 @property (atomic,assign) int requestCounter;
 @property (nonatomic,strong) HistoryFilter *h_filter;
-
+@property (atomic,assign) BOOL proccessing;
 @end
 
 @implementation ChatHistoryController
@@ -246,9 +246,10 @@ static NSMutableArray *listeners;
 
 -(void)notificationDeleteMessage:(NSNotification *)notification {
     
-    self.isProccessing = YES;
     
     [queue dispatchOnQueue:^{
+        
+        self.proccessing = YES;
         
         NSArray *msgs = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
         
@@ -268,28 +269,45 @@ static NSMutableArray *listeners;
 
         }];
         
-        [ASQueue dispatchOnMainQueue:^{
-            self.isProccessing = NO;
-        }];
+        self.proccessing = NO;
         
     }];
     
 }
 
--(void)setIsProccessing:(BOOL)isProccessing {
+-(void)setProccessing:(BOOL)isProccessing {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        _proccessing = isProccessing;
+    }];
+    
+    
     [ASQueue dispatchOnMainQueue:^{
-        self->_isProccessing = isProccessing;
-        
         [self.controller updateLoading];
     }];
 }
 
+-(BOOL)isProccessing {
+    
+    
+    __block BOOL isProccessing = YES;
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        isProccessing = _proccessing;
+        
+    } synchronous:YES];
+    
+    return isProccessing;
+}
+
 -(void)notificationFlushHistory:(NSNotification *)notification {
     
-    self.isProccessing = YES;
+    
     
     [queue dispatchOnQueue:^{
         
+        self.proccessing = YES;
         
         TL_conversation *conversation = [notification.userInfo objectForKey:KEY_DIALOG];
         
@@ -310,7 +328,7 @@ static NSMutableArray *listeners;
             
         }];
         
-         self.isProccessing = NO;
+         self.proccessing = NO;
         
     }];
     
@@ -443,7 +461,7 @@ static NSMutableArray *listeners;
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
    
     
-    self.isProccessing = NO;
+    self.proccessing = NO;
     
    [[ASQueue mainQueue] dispatchOnQueue:^{
         
@@ -510,7 +528,7 @@ static NSMutableArray *listeners;
         }
         
         
-        self.isProccessing = YES;
+        self.proccessing = YES;
         
         
         BOOL notify = NO;
