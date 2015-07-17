@@ -352,7 +352,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
         };
         
-        _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+        _executeTimer = [[TGTimer alloc] initWithTimeout:15*60 repeat:YES completion:^{
             execute();
         } queue:_queue.nativeQueue];
         
