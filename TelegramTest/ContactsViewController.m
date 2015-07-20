@@ -241,9 +241,9 @@
     [self.tableView insert:self.firstItem atIndex:0 tableRedraw:YES];
     
     
-    [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
+   
     
-    [Notification addObserver:self selector:@selector(onContactsSortChanged:) name:CONTACTS_SORT_CHANGED];
+    
 
 }
 
@@ -295,9 +295,20 @@
     [[Telegram rightViewController].navigationViewController addDelegate:self];
     
     [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
+    
+    [Notification addObserver:self selector:@selector(onContactsSortChanged:) name:CONTACTS_SORT_CHANGED];
+    [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
+    
+    [self contactsLoaded:nil];
 }
 
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [Notification removeObserver:self];
+}
 
 -(void)contactsLoaded:(NSNotification *)notify {
     
@@ -346,10 +357,6 @@
     self.tableView.defaultAnimation = animation;
 }
 
-
-- (void)dealloc {
-    [Notification removeObserver:self];
-}
 
 - (void) setHidden:(BOOL)isHidden {
     [super setHidden:isHidden];
