@@ -248,7 +248,23 @@
 }
 
 -(void)onContactsSortChanged:(NSNotification *)notification {
-    [self contactsLoaded:notification];
+    [self.tableView.list sortUsingComparator:^NSComparisonResult(ContactUserItem *obj1, ContactUserItem *obj2) {
+        
+        if([obj1 isKindOfClass:[ContactFirstItem class]] )
+        {
+            return NSOrderedAscending;
+        } else if([obj2 isKindOfClass:[ContactFirstItem class]] )
+        {
+            return NSOrderedDescending;
+        }
+        
+        NSComparisonResult result = [@(obj1.user.lastSeenTime) compare:@(obj2.user.lastSeenTime)];
+        
+        return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+        
+    }];
+    
+    [self.tableView reloadData];
 }
 
 -(void)didChangedController:(TMViewController *)controller {
