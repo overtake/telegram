@@ -42,9 +42,9 @@
         [self.namesField setStringValue:@"super test"];
         
         
-        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 15, NSWidth(frameRect), 20)];
+        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 13, NSWidth(frameRect), 20)];
         
-        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 20)];
+        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 19)];
         
         [self addSubview:self.descriptionField];
         [self addSubview:self.namesField];

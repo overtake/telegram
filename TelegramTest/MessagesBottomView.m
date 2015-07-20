@@ -281,7 +281,7 @@
     [self.actionsView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
     
-        self.actionsView.backgroundColor = [NSColor whiteColor];
+    self.actionsView.backgroundColor = [NSColor whiteColor];
     
     self.deleteButton = [TMTextButton standartButtonWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) standartImage:image_MessageActionDeleteActive() disabledImage:image_MessageActionDelete()];
     
@@ -882,6 +882,8 @@
     }
     
     if(newView) {
+        
+        [newView setFrameSize:NSMakeSize(NSWidth(self.frame),NSHeight(self.frame) - 1)];
     
         NSMutableArray *subviews = [[self subviews] mutableCopy];
         [subviews removeObject:newView];

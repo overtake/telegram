@@ -2414,7 +2414,7 @@ static NSTextAttachment *headerMediaIcon() {
                             
                            [cell searchSelection];
                             
-                            if([(MessageTableItemText *)item mark] != nil) {
+                            if([item isKindOfClass:[MessageTableItemText class]] && [(MessageTableItemText *)item mark] != nil) {
                                 [cell setItem:item];
                             }
                         }

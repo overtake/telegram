@@ -240,6 +240,8 @@
             
             TLChatFull *current = [self find:chat_id];
             
+            
+            
             [current setLastLayerUpdated:YES];
             
             [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
@@ -302,17 +304,11 @@
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
                 currentChat.bot_info = newChatFull.bot_info;
-                //            if(currentChat.notify_settings.mute_until != newChatFull.notify_settings.mute_until) {
-                //                currentChat.notify_settings = newChatFull.notify_settings;
-                //
-                //                [[PushNotificationsManager sharedManager] set:currentChat.notify_settings.mute_until forPeer:-currentChat.n_id save:YES];
-                //            }
-                
+
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
                 currentChat = newChatFull;
-                
-                //            [[PushNotificationsManager sharedManager] set:currentChat.notify_settings.mute_until forPeer:-currentChat.n_id save:NO];
+                currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
             NSArray *copy = [currentChat.participants.participants copy];

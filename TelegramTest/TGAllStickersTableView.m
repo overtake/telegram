@@ -21,6 +21,7 @@
 @property (nonatomic,strong) NSMutableArray *stickers;
 @property (nonatomic,strong) NSMutableArray *sets;
 @property (nonatomic,assign) BOOL isCustomStickerPack;
+@property (nonatomic,strong) NSDictionary *topSets;
 @end
 
 
@@ -467,8 +468,24 @@ static NSImage *higlightedImage() {
     return _stickers;
 }
 
+
+
 -(NSArray *)sets {
-    return _sets;
+    
+    if(!_topSets)
+        return _sets;
+    
+    return [_sets sortedArrayUsingComparator:^NSComparisonResult(TL_stickerSet *obj1, TL_stickerSet *obj2) {
+        NSNumber *c1 = _topSets[@(obj1.n_id)];
+        NSNumber *c2 = _topSets[@(obj2.n_id)];
+        
+        if ([c1 longValue] > [c2 longValue])
+        return NSOrderedAscending;
+        else if ([c1 longValue] < [c2 longValue])
+        return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
 }
 
 -(void)removeSticker:(TL_outDocument *)document {
@@ -525,6 +542,22 @@ static NSImage *higlightedImage() {
             return NSOrderedSame;
         }];
         
+        NSMutableDictionary *topSets = [[NSMutableDictionary alloc] init];
+        
+        [recent enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj attributeWithClass:[TL_documentAttributeSticker class]];
+            
+            int count = [topSets[@(sticker.stickerset.n_id)] intValue];
+            
+            count+= [sort[@(obj.n_id)] intValue];
+            
+            topSets[@(sticker.stickerset.n_id)] = @(count);
+            
+        }];
+        
+        _topSets = topSets;
+        
         if(!_isCustomStickerPack) {
             recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
             
@@ -533,6 +566,7 @@ static NSImage *higlightedImage() {
                 return sort[@(evaluatedObject.n_id)] > 0;
                 
             }]];
+            
         } else {
             recent = @[];
         }
