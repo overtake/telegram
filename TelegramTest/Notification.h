@@ -45,7 +45,7 @@ extern NSString *const DIALOGS_NEED_FULL_RESORT; // надо полностью 
 extern NSString *const DIALOG_CREATE_NEW; // создан новй диалог, надо его отобразить сверху
 extern NSString *const DIALOGS_NEED_SHOW; // можно показать диалоги K
 extern NSString *const CONTACTS_MODIFIED; // контакты модифицированны
-
+extern NSString *const CONTACTS_SORT_CHANGED; // сортировка контактов обновлена
 extern NSString *const CONTACTS_NOT_REGISTRED_READY; // список неразеганных контактов
 
 extern NSString *const MODAL_VIEW_SHOW;

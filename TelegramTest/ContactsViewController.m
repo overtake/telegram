@@ -243,8 +243,12 @@
     
     [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
     
-   
+    [Notification addObserver:self selector:@selector(onContactsSortChanged:) name:CONTACTS_SORT_CHANGED];
 
+}
+
+-(void)onContactsSortChanged:(NSNotification *)notification {
+    [self contactsLoaded:notification];
 }
 
 -(void)didChangedController:(TMViewController *)controller {
