@@ -41,7 +41,10 @@
 
 -(void)userStatusChanged:(NSNotification *)notification
 {
-    [self sortAndNotify:YES];
+    [self.queue dispatchOnQueue:^{
+        [self sortAndNotify:YES];
+    }];
+    
 }
 
 - (void)protocolUpdated:(NSNotification *)notify {
