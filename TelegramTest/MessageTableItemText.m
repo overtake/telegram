@@ -56,7 +56,8 @@
 
 -(void)updateMessageFont {
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
-    [self makeSizeByWidth:self.blockWidth];
+    if(self.blockWidth != 0)
+        [self makeSizeByWidth:self.blockWidth];
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
@@ -100,8 +101,8 @@
         
         _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage]; // its only youtube.
         
-        
-        [self makeSizeByWidth:self.blockWidth];
+        if(self.blockWidth != 0)
+            [self makeSizeByWidth:self.blockWidth];
         
         
     } else if([self isWebPagePending]) {

@@ -86,7 +86,7 @@
 }
 
 - (NSSize)containerSize {
-    return NSMakeSize(self.bounds.size.width - 150, 0);
+    return NSMakeSize(NSWidth(self.containerView.frame) - 150, 0);
 }
 
 
@@ -124,7 +124,7 @@
             for(NSInteger i = visibleRows.location; i < count; i++) {
                 MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
                 
-                if([item makeSizeByWidth:MAX(self.containerSize.width,100)]) {
+                if([item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)]) {
                     id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
                   //  if([view isKindOfClass:[MessageTableCellTextView class]]) {
                     if(view)
@@ -164,7 +164,7 @@
 
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(self.containerSize.width,100)];
+        [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
     }
     
   //  [self reloadData];
@@ -400,7 +400,7 @@
 - (void)viewDidEndLiveResize {
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(self.containerSize.width,100)];
+        [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
     }
     
     [self reloadData];

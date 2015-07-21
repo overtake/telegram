@@ -1136,8 +1136,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    
+        
     
     [self setState:self.state];
     if(self.state == MessagesViewControllerStateEditable)
@@ -2601,8 +2600,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-        [current makeSizeByWidth:MAX(self.table.containerSize.width,100)];
-        [backItem makeSizeByWidth:MAX(self.table.containerSize.width,100)];
+        [current makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+        [backItem makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
         backItem = current;
         
     }];
