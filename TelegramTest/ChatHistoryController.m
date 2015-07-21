@@ -292,7 +292,7 @@ static NSMutableArray *listeners;
     
     __block BOOL isProccessing = YES;
     
-    [ASQueue dispatchOnMainQueue:^{
+    [ASQueue dispatchOnStageQueue:^{
         
         isProccessing = _proccessing;
         
