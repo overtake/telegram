@@ -33,7 +33,7 @@
         self.autoresizesSubviews = YES;
         [self addSubview:_containerView];
         
-        _state = TGSplitViewStateDualLayout;
+        _state = -1;
         
     }
     
@@ -69,7 +69,8 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    
+
+
     
     struct TGSplitProportion singleLayout = {0,0};
     struct TGSplitProportion dualLayout = {0,0};
@@ -170,8 +171,6 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
         [_startSize removeObjectForKey:controller.internalId];
         [_proportions removeObjectForKey:controller.internalId];
     }
-    
-    [self updateConstraintsForSubtreeIfNeeded];
     
 }
 

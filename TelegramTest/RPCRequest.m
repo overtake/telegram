@@ -9,7 +9,7 @@
 #import "RPCRequest.h"
 #import "CMath.h"
 #import "MTNetwork.h"
-
+#import "RpcErrorParser.h"
 @implementation RPCRequest
 
 - (id)init {
@@ -86,6 +86,15 @@
 }
 
 
++ (id)sendRequest:(id)object forDc:(int)dc_id successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler queue:(dispatch_queue_t)queue {
+    
+    RPCRequest *request = [self sendRequest:object forDc:dc_id successHandler:successHandler errorHandler:errorHandler];
+    
+    request.queue = queue;
+    
+    return request;
+}
+
 
 
 + (id)sendPollRequest:(id)object successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler {
@@ -113,9 +122,11 @@
 }
 
 - (void)completeHandler {
+    
     if(!self.queue) {
         self.queue = dispatch_get_main_queue();
     }
+    
     
     dispatch_block_t block = ^{
         if(self.response) {
@@ -164,5 +175,7 @@
         block();
     }
 }
+
+
 
 @end

@@ -40,7 +40,16 @@
 #import "TGStickersSettingsViewController.h"
 #import "ComposeChooseGroupViewController.h"
 #import "TGSplitViewController.h"
+
+@class MainViewController;
+@class LeftViewController;
+
 @interface RightViewController : TGSplitViewController
+
+
+@property (nonatomic,strong) MainViewController *mainViewController;
+@property (nonatomic,strong) LeftViewController *leftViewController;
+
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) UserInfoViewController *userInfoViewController;

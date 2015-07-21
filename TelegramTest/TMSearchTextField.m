@@ -187,6 +187,11 @@ const static int textFieldXOffset = 30;
         
         [self.containerView addSubview:self.textField];
         
+        
+        
+        
+        
+        
         self.cancelButton = [[TMButton alloc] initWithFrame:NSZeroRect];
         [self.cancelButton setAutoresizingMask:NSViewMinXMargin];
         [self.cancelButton setImage:image_clear() forState:TMButtonNormalState];
@@ -401,7 +406,7 @@ static float duration = 0.1;
 - (void) searchFieldBlur {
     self.isActive = NO;
 //    if(self.)
-    [self centerPosition:YES];
+ //   [self centerPosition:YES];
 //    [self setNeedsDisplay:YES];
 }
 

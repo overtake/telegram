@@ -102,7 +102,7 @@
   //  [self.splitView setDividerStyle:NSSplitViewDividerStyleThin];
   //  [self.splitView setDelegate:self];
     
-    [[Telegram delegate].mainWindow setMinSize:NSMakeSize( MIN_SINGLE_LAYOUT_WIDTH, 400)];
+    [self.view.window setMinSize:NSMakeSize( MIN_SINGLE_LAYOUT_WIDTH, 400)];
     [self.splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
     [self.view addSubview:self.splitView];
@@ -125,16 +125,18 @@
     
     self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.frame.size.width - NSWidth(self.leftViewController.view.frame), self.view.bounds.size.height)];
 
+    
+    self.rightViewController.mainViewController = self;
+    self.rightViewController.leftViewController = self.leftViewController;
+    
     [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
     [_splitView setProportion:(struct TGSplitProportion){300+MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX} forState:TGSplitViewStateDualLayout];
     
-    
-    [_splitView addController:self.leftViewController proportion:(struct TGSplitProportion){300,350}];
-    [_splitView addController:self.rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
-    
+        
     _splitView.delegate = self;
-
+ 
     [_splitView update];
+    
    // [self layout];
     
    
@@ -143,9 +145,10 @@
 
 -(void)splitViewDidNeedSwapToLayout:(TGSplitViewState)state {
     
-     [_splitView removeAllControllers];
+    [_splitView removeAllControllers];
     
-     [[Telegram rightViewController] didChangedLayout];
+    
+     [self.rightViewController didChangedLayout];
     
    
     

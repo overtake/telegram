@@ -177,8 +177,6 @@
     
     part.request = [RPCRequest sendRequest:upload forDc:part.dcId successHandler:^(RPCRequest *request, id response) {
         
-        [DownloadQueue dispatchOnDownloadQueue:^{
-            
             TLupload_File *obj = response;
             
             part.resultData = obj.bytes;
@@ -190,7 +188,6 @@
             [self.completePoll addObject:part];
             
            
-            
             [self.completePoll sortUsingComparator:^NSComparisonResult(DownloadPart *part1, DownloadPart *part2) {
                 return part1.partId > part2.partId ? NSOrderedDescending : NSOrderedAscending;
             }];
@@ -214,40 +211,34 @@
             }
             
             [self fill];
-            
-            
-        }];
  
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-       
-        [DownloadQueue dispatchOnDownloadQueue:^{
-            
-            
-            int n_dc = error.resultId;
-            n_dc = n_dc == 0 ? part.dcId : n_dc;
-            
-            if(part.dcId != n_dc) {
-               
-                [self flush];
-                
-                self.partEnumerator = 0;
-                self.item.dc_id = n_dc;
-                self.currentPartId = 0;
-                
-                [self.stream close];
-                
-                self.stream = [[NSOutputStream alloc] initToFileAtPath:_item.path append:NO];
-                
-                [self load];
-                
-            }  else {
-                _item.downloadState = DownloadStateCompleted;
-                [self cancel];
-            }
-        }];
         
-    }];
+        int n_dc = error.resultId;
+        n_dc = n_dc == 0 ? part.dcId : n_dc;
+        
+        if(part.dcId != n_dc) {
+            
+            [self flush];
+            
+            self.partEnumerator = 0;
+            self.item.dc_id = n_dc;
+            self.currentPartId = 0;
+            
+            [self.stream close];
+            
+            self.stream = [[NSOutputStream alloc] initToFileAtPath:_item.path append:NO];
+            
+            [self load];
+            
+        }  else {
+            _item.downloadState = DownloadStateCompleted;
+            part.request = nil;
+            [self cancel];
+        }
+        
+    } queue:[DownloadQueue nativeQueue]];
 }
 
 -(void)proccessPartData:(NSData *)partData {

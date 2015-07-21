@@ -82,6 +82,9 @@
     [topView setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
     [self.view addSubview:topView];
     
+    [self.view setAutoresizesSubviews:YES];
+    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
     
     self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , 205, 29)];
     
@@ -119,8 +122,7 @@
         
     } forControlEvents:BTRControlEventClick];
     
-    [self.view setAutoresizesSubviews:YES];
-    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+
     
 
     if(!self.menuPopover) {

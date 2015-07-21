@@ -2658,8 +2658,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)deleteItem:(MessageTableItem *)item {
     
-    
-    
     NSUInteger row = [self.messages indexOfObject:item];
     if(row != NSNotFound) {
         [self.messages removeObjectAtIndex:row];

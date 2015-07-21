@@ -803,7 +803,7 @@ void exceptionHandler(NSException * exception)
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
     
     
-    [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
+  //  [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
     
 }

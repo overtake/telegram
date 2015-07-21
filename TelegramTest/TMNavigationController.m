@@ -281,9 +281,7 @@ static const int navigationOffset = 48;
     
     self.currentController = newViewController;
     
-    
-    [[Telegram mainViewController] checkLayout];
-    
+        
     // Make view resize properly
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
@@ -316,17 +314,24 @@ static const int navigationOffset = 48;
     
 //
     
+    [newView.layer removeAllAnimations];
+    [oldView.layer removeAllAnimations];
+    
     if (!isAnimate) {
         // Add the new view
+        
+                
         [oldView removeFromSuperview];
         [newView removeFromSuperview];
         [newView.layer setOpacity:1];
+        
         
         [newView setHidden:NO];
         
         [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
-        [self.containerView addSubview:newView];
+        [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
+        
         
         [oldViewController viewDidDisappear:NO];
         [newViewController viewDidAppear:NO];
@@ -347,8 +352,7 @@ static const int navigationOffset = 48;
       //  [newView.layer setOpacity:0];
         
      
-        [newView.layer removeAllAnimations];
-        [oldView.layer removeAllAnimations];
+        
         
         
         [newView setHidden:NO];

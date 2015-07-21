@@ -108,7 +108,6 @@
     
     [self.view setBackgroundColor:[NSColor whiteColor]];
     [self.view setAutoresizesSubviews:YES];
-    [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
     
     [self.view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
     
@@ -172,29 +171,24 @@
    
     
     [self.navigationViewController.view.window makeFirstResponder:nil];
-    [[Telegram mainViewController] layout];
-    
     
 }
 
+
 -(void)addFirstControllerAfterLoadMainController:(TMViewController *)viewController {
-    
-    [viewController.view removeFromSuperview];
-    
     [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
-    
-    
 }
 
 
 -(TMViewController *)conversationsController {
-    return [Telegram leftViewController];
+    return _leftViewController;
 }
 
 -(void)didChangedLayout {
     
+    [self loadViewIfNeeded];
     
-    if(self.navigationViewController.viewControllerStack.count == 1) {
+    if(self.navigationViewController.viewControllerStack.count <= 1) {
         
         
         [self.navigationViewController.viewControllerStack removeAllObjects];
@@ -206,7 +200,7 @@
         
     } else {
         
-      //  [[self currentEmptyController].view removeFromSuperview];
+        [[self currentEmptyController].view removeFromSuperview];
         
                 
         [self.navigationViewController.viewControllerStack removeObject:[self oldEmptyController]];
@@ -227,7 +221,7 @@
     
     [self.modalView setHidden:[Telegram isSingleLayout]];
     
-    [[Telegram leftViewController] didChangedLayout:nil];
+    [_leftViewController didChangedLayout:nil];
     
 }
 
@@ -414,7 +408,7 @@
             [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
             
             
-            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            TMViewController *controller = [_leftViewController currentTabController];
             
             if([controller isKindOfClass:[StandartViewController class]]) {
                 [(StandartViewController *)controller searchByString:@""];
@@ -551,7 +545,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![[Telegram mainViewController] isSingleLayout]) {
+    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![_mainViewController isSingleLayout]) {
       
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         
@@ -564,7 +558,7 @@
         
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter force:[Telegram isSingleLayout]];
         
-        if(![[Telegram mainViewController] isSingleLayout]) {
+        if(![_mainViewController isSingleLayout]) {
             
             
             
@@ -580,11 +574,11 @@
 }
 
 -(TMViewController *)currentEmptyController {
-    return [[Telegram mainViewController] isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
+    return [_mainViewController isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
 }
 
 -(TMViewController *)oldEmptyController {
-    return ![[Telegram mainViewController] isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
+    return ![_mainViewController isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
 }
 
 - (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation {

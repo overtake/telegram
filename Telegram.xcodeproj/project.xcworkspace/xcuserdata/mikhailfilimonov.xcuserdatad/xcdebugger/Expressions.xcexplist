@@ -2802,6 +2802,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__28-[TGDownloadOperation load:]_block_invoke169:TGDownloadOperation.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "error">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString

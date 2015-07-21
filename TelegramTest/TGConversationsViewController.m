@@ -46,11 +46,10 @@
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset);
     
     self.tableView = [[TGConversationsTableView alloc] initWithFrame:tableRect];
-    
     self.tableView.tm_delegate = self;
     [self.view addSubview:self.tableView.containerView];
     
-    self.mainView = self.tableView.containerView;
+   // self.mainView = self.tableView.containerView;
     
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;

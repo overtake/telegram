@@ -39,6 +39,10 @@
     [[DownloadQueue dispatcher] dispatchOnQueue:block];
 }
 
++(dispatch_queue_t)nativeQueue {
+    return [DownloadQueue dispatcher].nativeQueue;
+}
+
 + (void)dispatchOnStageQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous {
     [[DownloadQueue dispatcher] dispatchOnQueue:block synchronous:synchronous];
 }
