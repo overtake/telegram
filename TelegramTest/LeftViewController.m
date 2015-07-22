@@ -108,6 +108,10 @@
     [super removeFromSuperview];
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+}
+
 
 -(void)setFrameSize:(NSSize)newSize {
     

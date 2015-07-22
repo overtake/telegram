@@ -68,7 +68,7 @@
             [replyText appendString:[str fixEmoji] withColor:TEXT_COLOR];
             
         } else {
-            [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:GRAY_TEXT_COLOR];
+            [replyText appendString:[[MessagesUtils mediaMessage:replyMessage] fixEmoji] withColor:GRAY_TEXT_COLOR];
         }
         
         

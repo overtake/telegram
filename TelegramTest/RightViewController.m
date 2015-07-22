@@ -175,9 +175,7 @@
 }
 
 
--(void)addFirstControllerAfterLoadMainController:(TMViewController *)viewController {
-    [self.navigationViewController pushViewController:viewController ? viewController : self.noDialogsSelectedViewController animated:NO];
-}
+
 
 
 -(TMViewController *)conversationsController {

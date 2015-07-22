@@ -27,4 +27,5 @@ typedef enum {
 
 -(void)performShake:(dispatch_block_t)completeBlock;
 - (void)removeAllSubviews;
+- (id)superviewByClass:(NSString *)className;
 @end

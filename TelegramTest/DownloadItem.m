@@ -157,7 +157,7 @@ static int futureUniqueKey = 0;
 #define PART_128KB_SIZE 2014*128
 
 -(int)partSize {
-    return self.size == 0 ? PART_32KB_SIZE : (self.size < PART_32MB_SIZE ? PART_32KB_SIZE : PART_128KB_SIZE);
+    return self.size == 0 ? 0 : (self.size < PART_32MB_SIZE ? PART_32KB_SIZE : PART_128KB_SIZE);
 }
 
 

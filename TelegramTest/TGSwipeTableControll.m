@@ -7,13 +7,16 @@
 //
 
 #import "TGSwipeTableControll.h"
-
+#import "HackUtils.h"
 @interface TGSwipeTableControll()
-
+{
+    BOOL _splitDrag;
+}
 @property (nonatomic, strong) TGSwipeRedView *buttonView;
 @property (nonatomic) BOOL isClossed;
 @property (nonatomic) NSPoint startDragPoint;
 @property (nonatomic) NSPoint startContainerPosition;
+
 @end
 
 @implementation TGSwipeTableControll
@@ -46,8 +49,6 @@
 }
 
 - (void)setBackgroundColor:(NSColor *)backgroundColor {
-    self->_backgroundColor = backgroundColor;
-    
     if(self.containerView.backgroundColor) {
         [self.containerView setBackgroundColor:backgroundColor];
         [self.containerView setNeedsDisplay:YES];
@@ -69,10 +70,14 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
+    
+    _splitDrag = NO;
+    
     if(!self.itemView.isSwipePanelActive) {
         [super mouseDown:theEvent];
         return;
     }
+    
     
     NSPoint point = [theEvent locationInWindow];
     
@@ -98,6 +103,9 @@
 
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    
+    _splitDrag = NO;
+    
     if(!self.itemView.isSwipePanelActive) {
         //  [super mouseUp:theEvent];
         return;
@@ -123,6 +131,8 @@
     } else {
         [self showButton];
     }
+    
+    
 }
 
 - (void)hideButton {
@@ -159,8 +169,25 @@
     self.tableView.swipeView = self;
 }
 
+
 - (void)mouseDragged:(NSEvent *)theEvent {
     if(!self.itemView.isSwipePanelActive) {
+        [super mouseDragged:theEvent];
+        return;
+    }
+    
+    
+    NSPoint viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if(!_splitDrag && NSWidth(self.frame) - viewPoint.x  <= 10) {
+        _splitDrag = YES;
+        
+        [[self superviewByClass:@"TGSplitView"] mouseDown:theEvent];
+        
+    }
+    
+    if(_splitDrag)
+    {
         [super mouseDragged:theEvent];
         return;
     }

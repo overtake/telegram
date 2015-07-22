@@ -16,6 +16,10 @@
     NSMutableArray *_controllers;
     BOOL _isSingleLayout;
     NSMutableDictionary *_layoutProportions;
+    
+    NSPoint _startPoint;
+    BOOL _splitSuccess;
+    NSUInteger _splitIdx;
 }
 @end
 
@@ -27,7 +31,7 @@
         _controllers = [[NSMutableArray alloc] init];
         _startSize = [[NSMutableDictionary alloc] init];
         _layoutProportions = [[NSMutableDictionary alloc] init];
-        
+        _canChangeState = YES;
         _containerView = [[TGView alloc] initWithFrame:self.bounds];
         _containerView.autoresizingMask = self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         self.autoresizesSubviews = YES;
@@ -81,7 +85,7 @@
     [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
     
     
-    if(isAcceptLayout(singleLayout)) {
+    if(isAcceptLayout(singleLayout) && _canChangeState) {
         if(_state != TGSplitViewStateSingleLayout && NSWidth(_containerView.frame) < singleLayout.max )
             self.state = TGSplitViewStateSingleLayout;
         
@@ -186,9 +190,76 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
 }
 
 
+-(void)updateStartSize:(NSSize)size forController:(TGViewController<TGSplitViewDelegate> *)controller {
+    
+    _startSize[controller.internalId] = [NSValue valueWithSize:size];
+    
+    
+    struct TGSplitProportion proportion = {.min = size.width, .max = size.width};
+    
+    NSValue *encodeProportion = [NSValue valueWithBytes:&proportion objCType:@encode(struct TGSplitProportion)];
+    
+    _proportions[controller.internalId] = encodeProportion;
+    
+    [self update];
+    
+}
+
 -(BOOL)wantsDefaultClipping {
     return NO;
 }
 
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    _startPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    _splitIdx = 0;
+    _splitSuccess = NO;
+    
+    [_containerView.subviews enumerateObjectsUsingBlock:^(TGView *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(fabs(_startPoint.x - NSMaxX(obj.frame)) <= 10)
+        {
+            _splitSuccess = YES;
+            _splitIdx = idx;
+            *stop = YES;
+        }
+        
+    }];
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    [super mouseUp:theEvent];
+    
+    _startPoint = NSMakePoint(0, 0);
+    _splitSuccess = NO;
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    [super mouseDragged:theEvent];
+    
+    if(_startPoint.x == 0 || !_splitSuccess)
+        return;
+    
+    NSPoint current = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    
+    if(_startPoint.x - current.x >= 100) {
+        
+        _startPoint = current;
+        
+        [self.delegate splitViewDidNeedMinimisize:_controllers[_splitIdx]];
+        
+        
+    } else if(current.x - _startPoint.x >= 100) {
+        
+        _startPoint = current;
+        
+        [self.delegate splitViewDidNeedFullsize:_controllers[_splitIdx]];
+        
+    }
+}
 
 @end

@@ -146,6 +146,12 @@
             
             BlockedHandler handlerBlock = ^(BOOL result) {
                 self.blockContact.locked = NO;
+                
+                if(!self.user.isBlocked)
+                {
+                    [[Telegram rightViewController] navigationGoBack];
+                    [[Telegram rightViewController].messagesViewController sendMessage:@"/start" forConversation:[Telegram conversation]];
+                }
             };
             
             if(self.user.isBlocked) {
@@ -405,6 +411,11 @@
 -(void)updateBlockedText {
     [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"Profile.UnblockContact", nil) : NSLocalizedString(@"Profile.BlockContact", nil)];
     
+    if(self.user.isBot)
+    {
+        [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"StartBot", nil)];
+    }
+    
     [self.blockContact sizeToFit];
 }
 
@@ -630,13 +641,7 @@
         
     }
     
-//    offset-=self.notificationView.frame.size.height;
-    
-    
-    
-    
-//    self.navigationView;
-
+ 
 }
 
 - (NSImage *)createEncryptedImage  {
@@ -730,6 +735,7 @@
     [self buildPage];
     
     [self updateBlockedText];
+    
 }
 
 - (void)TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {

@@ -214,10 +214,14 @@
                 msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
                 
             }
+            
+            
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
             
         }
+        
+        
         
         if(chatUserNameString)
             [messageText appendString:chatUserNameString withColor:DARK_BLACK];
@@ -236,6 +240,8 @@
         }
         
         msgText = [msgText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+        
+        msgText = [msgText fixEmoji];
         
         if(msgText) {
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];

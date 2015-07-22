@@ -18,6 +18,20 @@
 #import "EmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
+
+
+@interface TestView : TMView
+
+@end
+
+@implementation TestView
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+}
+
+@end
+
 @interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
 @property (nonatomic, strong) DialogsHistoryController *history;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
@@ -29,8 +43,7 @@
 
 - (void)loadView {
     [super loadView];
-    
-    
+        
     _list = [[NSMutableArray alloc] init];
     
     
@@ -48,9 +61,9 @@
     self.tableView = [[TGConversationsTableView alloc] initWithFrame:tableRect];
     self.tableView.tm_delegate = self;
     [self.view addSubview:self.tableView.containerView];
+        
     
-   // self.mainView = self.tableView.containerView;
-    
+    self.mainView = self.tableView.containerView;
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     

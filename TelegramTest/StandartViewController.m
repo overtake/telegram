@@ -134,7 +134,6 @@
     
     self.searchView = _searchViewController.view;
     
-    
 }
 
 -(BOOL)becomeFirstResponder {

@@ -81,6 +81,9 @@
         return !(self.chat.type != TLChatTypeNormal || self.chat.left);
     }
     
+    if(self.type == DialogTypeUser)
+        return  !self.user.isBot || !self.user.isBlocked;
+    
     return YES;
 }
 
@@ -118,8 +121,12 @@
     }
     
     if(self.type == DialogTypeUser) {
-        if(self.user.isBlocked)
+        if(self.user.isBlocked) {
+            if(self.user.isBot)
+                return NSLocalizedString(@"RestartBot", nil);
             return NSLocalizedString(@"User.Blocked", nil);
+        }
+        
     }
     
     return NSLocalizedString(@"Bot.Start", nil);

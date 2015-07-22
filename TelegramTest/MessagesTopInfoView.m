@@ -90,7 +90,7 @@ static NSMutableDictionary *cache;
 - (void)didChangeUserBlock:(NSNotification *)notification {
     TL_contactBlocked *contact = notification.userInfo[KEY_USER];
     
-    if(_conversation.user.n_id != contact.user_id)
+    if(_conversation.user.n_id != contact.user_id || _conversation.user.isBot)
         return;
     
     if(_conversation.user.isBlocked) {

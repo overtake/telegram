@@ -35,6 +35,7 @@
 #import "TGBotCommandsPopup.h"
 #import "TGBotCommandsKeyboard.h"
 #import "FullChatManager.h"
+#import "BlockedUsersManager.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -107,7 +108,7 @@
 
         [[EmojiViewController instance] loadView];
         
-        [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
+        [self normalView];
     }
     return self;
 }
@@ -182,9 +183,11 @@
     
     [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyboard"]];
 
+    
+    [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
     //botKeyboard
     
-    [self stopRecord:nil];
+    
     
     if(self.dialog.type == DialogTypeSecretChat) {
         weakify();
@@ -249,6 +252,9 @@
     
     [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:NO];
 
+    
+    
+    [self setHiddenRecoderControllers];
 }
 
 -(void)updateBotButtons {
@@ -483,7 +489,6 @@
     [self.inputMessageTextField textDidChange:nil];
     
     [self.normalView addSubview:self.inputMessageTextField.containerView];
-    
     
     
     self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 7, image_smile().size.width, image_smile().size.height)];
@@ -731,6 +736,10 @@
     [self.normalView setSubviews:subviews];
     [self.inputMessageTextField.window makeFirstResponder:self.inputMessageTextField];
     
+    [self setHiddenRecoderControllers];
+}
+
+-(void)setHiddenRecoderControllers {
     [self.smileButton setHidden:NO];
     [self.attachButton setHidden:NO];
     
@@ -801,6 +810,24 @@
     
     [_secretInfoView setCallback:^{
        
+        
+        if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
+        {
+            
+            [TMViewController showModalProgress];
+            
+            [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:^(BOOL response){
+                
+                [TMViewController hideModalProgress];
+                
+                [weakSelf.messagesViewController sendMessage:@"/start" forConversation:weakSelf.dialog];
+            }];
+            
+            
+            
+            return;
+        }
+        
         if(_onClickToLockedView != nil)
         {
             weakSelf.onClickToLockedView();
@@ -821,7 +848,7 @@
             }
         }
         
-        if(!self.dialog.canSendMessage && self.dialog.type  == DialogTypeChat)
+        if(!self.dialog.canSendMessage)
             state = MessagesBottomViewBlockChat;
     }
     
@@ -869,6 +896,13 @@
         [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
         
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
+        
+       
+        if(self.dialog.type == DialogTypeUser)
+        {
+            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
+        }
+        
         
         [self.encryptedStateTextField sizeToFit];
         [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
@@ -1110,7 +1144,6 @@
     
     
     if(!_botKeyboard) {
-        [_botKeyboard removeFromSuperview];
         
         _botKeyboard = nil;
         
