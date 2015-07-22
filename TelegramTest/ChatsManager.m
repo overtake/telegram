@@ -35,7 +35,7 @@
             if([obj isKindOfClass:[TLChat class]]) {
                 TLChat *newChat = (TLChat *)obj;
                 
-                [[FullChatManager sharedManager] loadIfNeed:newChat.n_id force:NO];
+            //    [[FullChatManager sharedManager] loadIfNeed:newChat.n_id force:NO];
                 
                 TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {

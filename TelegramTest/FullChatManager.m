@@ -134,12 +134,10 @@
 - (void)updateParticipantsNotification:(NSNotification *)notify {
     int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
     
-    [self.queue dispatchOnQueue:^{
-        FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
-        if(checker) {
-            [checker reloadParticipants];
-        }
-    }];
+    FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
+    if(checker) {
+        [checker reloadParticipants];
+    }
     
    
 }
@@ -148,7 +146,7 @@
     
     __block id object;
     
-    [self.queue dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         object = [self.membersCheker objectForKey:@(chatId)];
     } synchronous:YES];
     
@@ -168,20 +166,20 @@
 }
 
 - (void)loadChatFull {
-    [self.queue dispatchOnQueue:^{
-        NSArray *array =[[ChatsManager sharedManager] all];
-        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
-        for(TLChat *chat in array) {
-            if([chat isKindOfClass:[TL_chat class]]) {
-                if(![self find:chat.n_id]) {
-                    [needToLoad addObject:@(chat.n_id)];
-                }
-            }
-        }
-        
-        MTLog(@"need to load full chats%@", needToLoad);
-        [self loadFullChats:needToLoad];
-    }];
+//    [self.queue dispatchOnQueue:^{
+//        NSArray *array =[[ChatsManager sharedManager] all];
+//        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
+//        for(TLChat *chat in array) {
+//            if([chat isKindOfClass:[TL_chat class]]) {
+//                if(![self find:chat.n_id]) {
+//                    [needToLoad addObject:@(chat.n_id)];
+//                }
+//            }
+//        }
+//        
+//        MTLog(@"need to load full chats%@", needToLoad);
+//        [self loadFullChats:needToLoad];
+//    }];
 }
 
 - (void)loadFullChats:(NSArray *)array {
@@ -270,7 +268,7 @@
     
     __block int count;
     
-    [self.queue dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
