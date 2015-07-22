@@ -79,6 +79,18 @@
     }
     
     
+    NSPoint viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    
+    if(NSWidth(self.frame) - viewPoint.x  <= 10) {
+        
+        [[self superviewByClass:@"TGSplitView"] mouseDown:theEvent];
+        
+        _splitDrag = YES;
+        
+        return;
+    }
+    
     NSPoint point = [theEvent locationInWindow];
     
     point = [self.tableView convertPoint:point fromView:nil];
