@@ -85,17 +85,20 @@
 
 -(void)splitViewDidNeedFullsize:(TGViewController<TGSplitViewDelegate> *)controller {
     if([self isMinimisze]) {
-        [self.splitView updateStartSize:NSMakeSize(300, NSHeight(controller.view.frame)) forController:controller];
         self.splitView.canChangeState = YES;
+        [self.splitView updateStartSize:NSMakeSize(300, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
+        [self updateWindowMinSize];
     }
 }
 
 -(void)splitViewDidNeedMinimisize:(TGViewController<TGSplitViewDelegate> *)controller {
     if(![self isMinimisze] && self.leftViewController.canMinimisize) {
-        [self.splitView updateStartSize:NSMakeSize(70, NSHeight(controller.view.frame)) forController:controller];
         self.splitView.canChangeState = NO;
+        [self.splitView updateStartSize:NSMakeSize(70, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
+        
+        [self updateWindowMinSize];
     }
 }
 
@@ -103,10 +106,9 @@
     
     [_splitView removeAllControllers];
     
+    [self.rightViewController didChangedLayout];
     
-     [self.rightViewController didChangedLayout];
-    
-   
+    int w = [self isMinimisze] ? 70 : 300;
     
     switch (state) {
         case TGSplitViewStateSingleLayout:
@@ -115,7 +117,9 @@
             break;
         case TGSplitViewStateDualLayout:
             
-            [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){NSWidth(_leftViewController.view.frame),NSWidth(_leftViewController.view.frame)}];
+            [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
+            
+            [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
             [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
             // [self.window setMinSize:NSMakeSize(250+MIN_SINGLE_LAYOUT_WIDTH, FLT_MAX)];
             break;

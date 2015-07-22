@@ -28,6 +28,7 @@
         
       //  [self.textField setEditable:YES];
         
+        
         [self addSubview:self.textField];
         
         self.photoImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
@@ -84,9 +85,11 @@
     if(item.type == MessageTableItemServiceMessageAction) {
         [self.textField setAttributedString:item.messageAttributedString];
         [self.textField setFrameSize:item.textSize];
+        
+       
+        
         [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
-        
-        
+                
         if(item.photo) {
             [self.photoImageView setHidden:NO];
             [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.photoSize.width) / 2), 5)];
