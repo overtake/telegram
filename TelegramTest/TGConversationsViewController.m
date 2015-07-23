@@ -109,16 +109,19 @@
     [MessagesManager unreadBadgeCount];
     
     
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.tableView.scrollView.contentView setFrameSize:self.view.frame.size];
     
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+    
 }
+
 
 -(void)initConversations {
     
@@ -534,7 +537,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
     [TMTableView setCurrent:self.tableView];
 }
 

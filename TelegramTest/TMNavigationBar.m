@@ -53,6 +53,7 @@
         
         [self addSubview:self.connectionView];
         
+
         
     }
     return self;
@@ -335,8 +336,8 @@ static const float duration = 0.25;
 - (void)drawRect:(NSRect)dirtyRect {
 //	[super drawRect:dirtyRect];
     
-   // [NSColorFromRGB(0xfdfdfd) set];
-   // NSRectFill(dirtyRect);
+    [NSColorFromRGB(0xffffff) set];
+    NSRectFill(dirtyRect);
 
     [GRAY_BORDER_COLOR set];
     NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, 1));

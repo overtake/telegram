@@ -212,7 +212,7 @@ static const int bottomOffset = 58;
     
     
     
-    
+    self.isNavigationBarHidden = YES;
     
     
     [self.view.window setMovableByWindowBackground:YES];
@@ -293,6 +293,7 @@ static const int bottomOffset = 58;
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     
      [self.currentTabController viewWillDisappear:animated];
 }
