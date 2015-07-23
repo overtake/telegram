@@ -114,15 +114,17 @@
     
     int w = [self isMinimisze] ? 70 : 300;
     
+    
+    
     switch (state) {
         case TGSplitViewStateSingleLayout:
+            
+            [self.leftViewController.view setFrameSize:NSMakeSize(NSWidth(_splitView.frame), NSHeight(self.leftViewController.view.frame))];
                         
             [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
             break;
         case TGSplitViewStateDualLayout:
-            
             [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
-            
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
             [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
             // [self.window setMinSize:NSMakeSize(250+MIN_SINGLE_LAYOUT_WIDTH, FLT_MAX)];
