@@ -174,8 +174,15 @@
     
 }
 
-
-
+//
+//-(void)splitViewDidNeedResizeController:(NSRect)rect {
+//    [super splitViewDidNeedResizeController:rect];
+//    
+//    if([self.navigationViewController.currentController isKindOfClass:[LeftViewController class]])
+//    {
+//        [self.leftViewController splitViewDidNeedResizeController:rect];
+//    }
+//}
 
 
 -(TMViewController *)conversationsController {

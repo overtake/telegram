@@ -27,5 +27,5 @@ typedef enum {
 
 
 -(TGConversationsTableView *)tableView;
-
+-(void)updateFrames;
 @end

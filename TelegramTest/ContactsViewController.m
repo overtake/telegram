@@ -238,13 +238,6 @@
     
     self.firstView = [[ContactFirstView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), 40)];
     
-    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:YES];
-    
-    
-   
-    
-    
-
 }
 
 -(void)onContactsSortChanged:(NSNotification *)notification {

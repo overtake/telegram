@@ -33,8 +33,6 @@
         _layoutProportions = [[NSMutableDictionary alloc] init];
         _canChangeState = YES;
         _containerView = [[TGView alloc] initWithFrame:self.bounds];
-        _containerView.autoresizingMask = self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-        self.autoresizesSubviews = YES;
         [self addSubview:_containerView];
         
         _state = -1;
@@ -74,7 +72,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
 
-
+    [_containerView setFrameSize:newSize];
     
     struct TGSplitProportion singleLayout = {0,0};
     struct TGSplitProportion dualLayout = {0,0};

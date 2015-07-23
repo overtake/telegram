@@ -1596,7 +1596,7 @@ static NSTextAttachment *headerMediaIcon() {
     
    // [CATransaction begin];
     StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
-    if([controller isKindOfClass:[StandartViewController class]] && controller.isSearchActive) {
+    if([controller isKindOfClass:[StandartViewController class]] && controller.isSearchActive && forceEnd) {
         [(StandartViewController *)controller searchByString:@""];
     }
     

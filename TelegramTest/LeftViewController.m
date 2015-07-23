@@ -244,16 +244,6 @@ static const int bottomOffset = 58;
     
     [self updateSize];
     
-    
-    self.forwardView = [[TMForwardView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
-    
-    [self.forwardView setAutoresizesSubviews:YES];
-    [self.forwardView setAutoresizingMask:NSViewWidthSizable];
-    
-    [self.view addSubview:self.forwardView];
-    
-    [self updateForwardActionView];
-    
 
 }
 

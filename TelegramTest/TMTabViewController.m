@@ -206,24 +206,44 @@
 }
 
 
+-(void)updateConstraints {
+    [super updateConstraints];
+}
 
+-(void)updateConstraintsForSubtreeIfNeeded {
+    [super updateConstraintsForSubtreeIfNeeded];
+}
 
 -(void)setFrameSize:(NSSize)newSize {
+    
     
     [super setFrameSize:newSize];
     
     
-    [self redraw];
+ //   [self redraw];
+    
+    int width = NSWidth(self.bounds);
+    
+    int height = NSHeight(self.bounds);
+    
+    int defWidth = width/self.tabs.count;
+    
+    
+    __block int xOffset = 0;
     
     [self.subviews enumerateObjectsUsingBlock:^(NSView *obj, NSUInteger idx, BOOL *stop) {
         
         NSView *child = obj.subviews[0];
+        
+        [obj setFrame:NSMakeRect(xOffset, 0, defWidth, height)];
         
         [child setCenterByView:obj];
         
         if(idx == 1) {
             [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX(child.frame)+15, NSHeight(obj.bounds) - NSHeight(self.chatTabView.frame) - 3)];
         }
+        
+        xOffset+=defWidth;
         
     }];
 }
