@@ -62,7 +62,7 @@
         }];
         
         [self.cancelButton setCenterByView:self];
-        
+        [self.cancelButton setFrameOrigin:NSMakePoint(NSMinX(self.cancelButton.frame), NSMinY(self.cancelButton.frame) + 1)];
        
         
         [self addSubview:self.cancelButton];
@@ -254,7 +254,7 @@
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
-    [self setFrameSize:self.frame.size];
+    [self setFrameSize:NSMakeSize([Telegram rightViewController].view.frame.size.width, NSHeight(self.frame))];
     
 }
 

@@ -307,6 +307,8 @@ static NSImage *higlightedImage() {
                     
                     [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
                
+                } else {
+                    [self reloadData];
                 }
                 
                 setRemoteStickersLoaded(YES);
@@ -496,11 +498,10 @@ static NSImage *higlightedImage() {
         
         __block id toDelete;
         
-        [localStickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [localStickers enumerateObjectsUsingBlock:^(TL_outDocument *obj, NSUInteger idx, BOOL *stop) {
             
-            TL_outDocument *d = [TLClassStore deserialize:obj];
             
-            if(d.n_id == document.n_id) {
+            if(obj.n_id == document.n_id) {
                 
                 toDelete = obj;
                 

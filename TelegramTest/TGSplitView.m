@@ -228,6 +228,8 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
         }
         
     }];
+    
+    
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -235,6 +237,7 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
     
     _startPoint = NSMakePoint(0, 0);
     _splitSuccess = NO;
+    [[NSCursor arrowCursor] set];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
@@ -245,6 +248,13 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
     
     NSPoint current = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
+    
+    if(![self.delegate splitViewIsMinimisize:_controllers[_splitIdx]])
+    {
+        [[NSCursor resizeLeftCursor] set];
+    } else {
+        [[NSCursor resizeRightCursor] set];
+    }
     
     if(_startPoint.x - current.x >= 100) {
         

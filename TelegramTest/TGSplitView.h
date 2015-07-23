@@ -33,6 +33,7 @@ typedef enum {
 -(void)splitViewDidNeedSwapToLayout:(TGSplitViewState)state;
 -(void)splitViewDidNeedMinimisize:(TGViewController *)controller;
 -(void)splitViewDidNeedFullsize:(TGViewController *)controller;
+-(BOOL)splitViewIsMinimisize:(TGViewController *)controller;
 @end
 
 

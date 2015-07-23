@@ -102,6 +102,10 @@
     }
 }
 
+-(BOOL)splitViewIsMinimisize:(TGViewController *)controller {
+    return [self isMinimisze];
+}
+
 -(void)splitViewDidNeedSwapToLayout:(TGSplitViewState)state {
     
     [_splitView removeAllControllers];
