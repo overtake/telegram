@@ -63,7 +63,7 @@ typedef enum {
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
-
+- (void)jumpToLastMessages;
 - (void)saveInputText;
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;

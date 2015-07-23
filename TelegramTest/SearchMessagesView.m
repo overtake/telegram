@@ -57,6 +57,7 @@
         
         [self.cancelButton setTapBlock:^ {
             strongSelf.closeCallback();
+            [strongSelf.controller jumpToLastMessages];
             [strongSelf.request cancelRequest];
             strongSelf.request = nil;
         }];
@@ -67,15 +68,13 @@
         
         [self addSubview:self.cancelButton];
         
-        NSImage *searchUp = [NSImage imageNamed:@"SearchUp"];
-        NSImage *searchDown = [NSImage imageNamed:@"SearchDown"];
         
         
-        self.prevButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, searchUp.size.width, searchUp.size.height)];
-        self.nextButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, searchDown.size.width, searchDown.size.height)];
+        self.prevButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_SearchUp().size.width, image_SearchUp().size.height)];
+        self.nextButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_SearchDown().size.width, image_SearchDown().size.height)];
         
-        [self.prevButton setBackgroundImage:searchUp forControlState:BTRControlStateNormal];
-        [self.nextButton setBackgroundImage:searchDown forControlState:BTRControlStateNormal];
+        [self.prevButton setBackgroundImage:image_SearchUp() forControlState:BTRControlStateNormal];
+        [self.nextButton setBackgroundImage:image_SearchDown() forControlState:BTRControlStateNormal];
         
         [self.prevButton addBlock:^(BTRControlEvents events) {
            [strongSelf prev];
@@ -154,6 +153,8 @@
         });
     } else {
         self.locked = NO;
+        
+        [_controller jumpToLastMessages];
     }
     
 }
@@ -168,7 +169,7 @@
         }
         
         if([response isKindOfClass:[TL_messages_messagesSlice class]]) {
-           if(self.messages.count != response.n_count)
+           if(response.messages.count > 0)
                [self load:NO];
         }
         if(first){
@@ -176,11 +177,20 @@
             [self next];
         }
         
+        [self updateSearchArrows];
         
         
     } errorHandler:^(id request, RpcError *error) {
         self.locked = NO;
     }];
+}
+
+-(void)updateSearchArrows {
+    [self.prevButton setBackgroundImage:self.messages.count == 0 ? image_SearchUpDisabled() : image_SearchUp() forControlState:BTRControlStateNormal];
+    
+    [self.nextButton setBackgroundImage:self.messages.count == 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
+    
+    
 }
 
 -(void)next {
@@ -255,6 +265,8 @@
     self.closeCallback = closeCallback;
     
     [self setFrameSize:NSMakeSize([Telegram rightViewController].view.frame.size.width, NSHeight(self.frame))];
+    
+    [self updateSearchArrows];
     
 }
 

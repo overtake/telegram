@@ -44,7 +44,7 @@
     
     
     
-    [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width - DIALOG_BORDER_WIDTH, 48)];
+    [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width , 48)];
   
     
      if(newSize.width == 70)
@@ -83,7 +83,7 @@
     
     dispatch_block_t block = ^{
         [DIALOG_BORDER_COLOR setFill];
-        NSRectFill(NSMakeRect(NSWidth(topView.frame), 0, DIALOG_BORDER_WIDTH, NSHeight(topView.frame)));
+        NSRectFill(NSMakeRect(NSWidth(topView.frame)-DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(topView.frame)));
     };
     
     [topView setDrawBlock:block];

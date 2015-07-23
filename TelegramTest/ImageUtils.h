@@ -197,6 +197,10 @@ CACHE_IMAGE(SearchMessages);
 CACHE_IMAGE(AudioPlayerPin);
 CACHE_IMAGE(AudioPlayerPinActive);
 
+CACHE_IMAGE(SearchUpDisabled);
+CACHE_IMAGE(SearchDownDisabled);
+CACHE_IMAGE(SearchUp);
+CACHE_IMAGE(SearchDown);
 @interface ImageUtils : NSObject
 
 

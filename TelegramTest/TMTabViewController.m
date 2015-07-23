@@ -52,7 +52,7 @@
     }
     
     [DIALOG_BORDER_COLOR setFill];
-    NSRectFill(NSMakeRect(NSWidth(dirtyRect) - 1, 0, DIALOG_BORDER_WIDTH, NSHeight(dirtyRect)));
+    NSRectFill(NSMakeRect(NSWidth(dirtyRect) - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(dirtyRect)));
 }
 
 
