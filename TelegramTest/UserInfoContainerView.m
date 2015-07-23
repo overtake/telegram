@@ -413,7 +413,7 @@
     
     if(self.user.isBot)
     {
-        [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"StartBot", nil)];
+        [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"StopBot", nil)];
     }
     
     [self.blockContact sizeToFit];
