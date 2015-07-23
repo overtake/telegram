@@ -181,7 +181,7 @@ static const int bottomOffset = 58;
     self.view = view;
     
     
-    self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds)-DIALOG_BORDER_WIDTH, bottomOffset)];
+    self.tabController = [[TMTabViewController alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds), bottomOffset)];
     
     [self.tabController setTopBorderColor:GRAY_BORDER_COLOR];
     
@@ -317,7 +317,7 @@ static const int bottomOffset = 58;
     
     [self.tabViewController.view setFrame:NSMakeRect(0,min ? 0 : bottomOffset,NSWidth(self.view.frame) , min ? NSHeight(self.view.frame) : (NSHeight(self.view.frame) - bottomOffset))];
     
-    [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.tabController.frame))];
+    [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
   //  self.tabController.selectedIndex = self.tabController.selectedIndex;
 }
