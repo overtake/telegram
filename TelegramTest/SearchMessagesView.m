@@ -153,8 +153,6 @@
         });
     } else {
         self.locked = NO;
-        
-        [_controller jumpToLastMessages];
     }
     
 }
