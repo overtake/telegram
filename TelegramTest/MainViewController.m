@@ -61,6 +61,8 @@
     self.leftViewController.archiver = archiver;
 
     
+    
+    
     self.settingsWindowController = [[SettingsWindowController alloc] initWithWindowNibName:@"SettingsWindowController"];
     
     self.rightViewController = [[RightViewController alloc] initWithFrame:NSMakeRect(0, 0, self.view.frame.size.width - NSWidth(self.leftViewController.view.frame), self.view.bounds.size.height)];
@@ -68,6 +70,10 @@
     
     self.rightViewController.mainViewController = self;
     self.rightViewController.leftViewController = self.leftViewController;
+    
+    [self.rightViewController loadView];
+    
+    [self.rightViewController.navigationViewController addDelegate:self.leftViewController];
     
     [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
     [_splitView setProportion:(struct TGSplitProportion){300+MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX} forState:TGSplitViewStateDualLayout];

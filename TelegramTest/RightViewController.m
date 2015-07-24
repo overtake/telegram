@@ -236,7 +236,6 @@
     
    
     
-    
     [[[Telegram sharedInstance] firstController] closeAllPopovers];
     
     [self.navigationViewController goBackWithAnimation:YES];
