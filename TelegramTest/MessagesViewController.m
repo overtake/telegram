@@ -3205,6 +3205,11 @@ static NSTextAttachment *headerMediaIcon() {
         }];
         
         [self.bottomView updateReplayMessage:YES animated:animated];
+        
+        if([Telegram rightViewController].navigationViewController.currentController != self)
+        {
+            [[Telegram rightViewController] showByDialog:message.conversation sender:self];
+        }
     }
 }
 

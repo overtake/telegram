@@ -308,6 +308,10 @@
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
+		C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */; };
+		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
+		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
+		C240B1BE1B6294F300912248 /* TGSharedLinkRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */; };
 		C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
@@ -1523,6 +1527,14 @@
 		C23536AC19CC64330044978E /* LoginBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginBottomView.m; sourceTree = "<group>"; };
 		C23536C419D453720044978E /* EncryptedKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedKeyViewController.h; sourceTree = "<group>"; };
 		C23536C519D453720044978E /* EncryptedKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedKeyViewController.m; sourceTree = "<group>"; };
+		C240B1B31B627A3300912248 /* TGSharedLinksTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinksTableView.h; sourceTree = "<group>"; };
+		C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinksTableView.m; sourceTree = "<group>"; };
+		C240B1B61B627B3700912248 /* SharedLinksHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedLinksHistoryFilter.h; sourceTree = "<group>"; };
+		C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedLinksHistoryFilter.m; sourceTree = "<group>"; };
+		C240B1B91B627E6F00912248 /* TGSharedLinkRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinkRowView.h; sourceTree = "<group>"; };
+		C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinkRowView.m; sourceTree = "<group>"; };
+		C240B1BC1B6294F300912248 /* TGSharedLinkRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinkRowItem.h; sourceTree = "<group>"; };
+		C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinkRowItem.m; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
 		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
 		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
@@ -3604,6 +3616,19 @@
 			name = daemon;
 			sourceTree = "<group>";
 		};
+		C240B1B21B627A1A00912248 /* shared-links */ = {
+			isa = PBXGroup;
+			children = (
+				C240B1B31B627A3300912248 /* TGSharedLinksTableView.h */,
+				C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */,
+				C240B1B91B627E6F00912248 /* TGSharedLinkRowView.h */,
+				C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */,
+				C240B1BC1B6294F300912248 /* TGSharedLinkRowItem.h */,
+				C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */,
+			);
+			name = "shared-links";
+			sourceTree = "<group>";
+		};
 		C244358C1A1E1B8F00F9BB38 /* privacyuserlist */ = {
 			isa = PBXGroup;
 			children = (
@@ -4391,6 +4416,7 @@
 		C2ADB457191BBA0200305CC8 /* collection */ = {
 			isa = PBXGroup;
 			children = (
+				C240B1B21B627A1A00912248 /* shared-links */,
 				C2AC8D9F1A76CE1000655B9D /* documents */,
 				C222AB331A0901BE00BEF907 /* photocollection */,
 				C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */,
@@ -4912,6 +4938,8 @@
 				C20D190119542AB80095A906 /* SearchHistoryFilter.m */,
 				C273804C1B3B2F77000C479E /* MP3HistoryFilter.h */,
 				C273804D1B3B2F77000C479E /* MP3HistoryFilter.m */,
+				C240B1B61B627B3700912248 /* SharedLinksHistoryFilter.h */,
+				C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */,
 			);
 			name = filter;
 			sourceTree = "<group>";
@@ -5895,6 +5923,7 @@
 				0A6E13D218A8F3CB004D1BC7 /* NewContactsManager.m in Sources */,
 				C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */,
 				C268C18719F0519C007F836A /* POPAnimationEvent.mm in Sources */,
+				C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */,
 				C277E2A418ABB44A00FFCA35 /* DialogsHistoryController.m in Sources */,
 				C21C7B3E18D777B300253A7A /* DocumentSenderItem.m in Sources */,
 				0AA0A98718B160CF00836E83 /* TMAvatarImageView.m in Sources */,
@@ -5928,6 +5957,7 @@
 				C2D4B8641AFCE8F90035B4E4 /* NSDictionary+YapDatabase.m in Sources */,
 				CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */,
 				C2967B4F1AAF0830003759B2 /* MessageReplyContainer.m in Sources */,
+				C240B1BE1B6294F300912248 /* TGSharedLinkRowItem.m in Sources */,
 				0A9EDC4E1897BA0E0037E1BC /* NSColor+RBLCGColorAdditions.m in Sources */,
 				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */,
@@ -5975,6 +6005,7 @@
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
 				C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */,
+				C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */,
 				C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */,
 				C21C7B3818D769B100253A7A /* VideoSenderItem.m in Sources */,
 				C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */,
@@ -6019,6 +6050,7 @@
 				C2D4B8751AFCE8FA0035B4E4 /* YapWhitelistBlacklist.m in Sources */,
 				CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */,
 				C2AC8D9E1A7693F400655B9D /* TGUnreadMarkView.m in Sources */,
+				C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
 				C26F7EB51A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,

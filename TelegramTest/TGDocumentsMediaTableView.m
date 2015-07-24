@@ -30,6 +30,7 @@
 
 
 @interface TGDocumentsMediaTableView ()
+
 @property (nonatomic,strong) TGDocumentsController *controller;
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 @property (nonatomic,strong) NSMutableArray *selectedItems;
@@ -71,7 +72,7 @@
     
     _loader = nil;
     
-    _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
+    _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
     
     [_loader setPrevState:ChatHistoryStateFull];
     
@@ -89,9 +90,13 @@
         
         NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             
-            return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]] || [evaluatedObject isKindOfClass:[MessageTableItemAudioDocument class]];
+            return [self.tableView acceptMessageItem:evaluatedObject];
             
         }]];
+        
+        [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            [obj makeSizeByWidth:NSWidth(self.tableView.frame)];
+        }];
         
         [self.items addObjectsFromArray:filtred];
         
@@ -112,9 +117,9 @@
 
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {
     
-    if([message isKindOfClass:[MessageTableItemDocument class]]) {
+    if([self.tableView acceptMessageItem:message]) {
         [self.items insertObject:message atIndex:1];
-        
+        [message makeSizeByWidth:NSWidth(self.tableView.frame)];
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
         
         [self.tableView checkCap];
@@ -126,7 +131,7 @@
     if(self.items.count > 1) {
         NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
         
-        [items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
             [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self.items indexOfObject:obj]] withAnimation:NSTableViewAnimationEffectFade];
             
@@ -149,9 +154,13 @@
     
     list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
-        return [evaluatedObject isKindOfClass:[MessageTableItemDocument class]];
+        return [self.tableView acceptMessageItem:evaluatedObject];
         
     }]];
+    
+    [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        [obj makeSizeByWidth:NSWidth(self.tableView.frame)];
+    }];
     
     [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)]];
     
@@ -166,7 +175,9 @@
 
 
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages {
-    return [[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:messages];
+    
+   return [[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:messages];
+   
 }
 
 -(void)updateLoading {
@@ -175,7 +186,66 @@
 
 @end
 
+@interface TGDocumentsClipView : NSClipView
+@property (nonatomic, weak) TGDocumentsMediaTableView *tableView;
+@end
 
+@implementation TGDocumentsClipView
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    if([self inLiveResize]) {
+        NSRange visibleRows = [self.tableView rowsInRect:self.tableView.scrollView.contentView.bounds];
+        if(visibleRows.length > 0) {
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0];
+            
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            
+            NSInteger count = visibleRows.location + visibleRows.length;
+            for(NSInteger i = visibleRows.location; i < count; i++) {
+                MessageTableItem *item = self.tableView.controller.items[i];
+                
+                if([item isKindOfClass:[MessageTableItem class]]) {
+                   // [self.tableView prepareItem:item];
+                    [item makeSizeByWidth:newSize.width];
+                    id view = [self.tableView viewAtColumn:0 row:i makeIfNecessary:NO];
+                    
+                    if(view)
+                        [array addObject:view];
+                }
+                
+            }
+            
+            [self.tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:visibleRows]];
+            
+            for(MessageTableCell *cell in array) {
+                [cell resizeAndRedraw];
+            }
+            
+            [NSAnimationContext endGrouping];
+        }
+        
+        
+        
+        
+    } else {
+        for(NSUInteger i = 0; i < self.tableView.controller.items.count; i++) {
+            MessageTableItem *item = self.tableView.controller.items[i];
+            if([item isKindOfClass:[MessageTableItem class]])
+                [self.tableView prepareItem:item];
+        }
+    }
+    
+    
+}
+
+-(void)viewDidEndLiveResize {
+    [self.tableView reloadData];
+}
+
+@end
 
 
 @implementation TGDocumentsMediaTableView
@@ -186,8 +256,18 @@
         self.delegate = self;
         self.controller = [[TGDocumentsController alloc] initWithTableView:self];
         
-        [self.containerView setHidden:YES];
         
+        id document = self.scrollView.documentView;
+        TGDocumentsClipView *clipView = [[TGDocumentsClipView alloc] initWithFrame:self.scrollView.contentView.bounds];
+        clipView.tableView = document;
+        [clipView setWantsLayer:YES];
+        [clipView setDrawsBackground:YES];
+        //        [clipView setBackgroundColor:[NSColor redColor]];
+        [self.scrollView setContentView:clipView];
+        self.scrollView.documentView = document;
+
+        
+        [self.containerView setHidden:YES];
         
         [self addScrollEvent];
     }
@@ -216,9 +296,13 @@
 }
 
 
+
 -(void)reloadWithString:(NSString *)string {
     
+    
+    
     self.controller.inSearch = string.length != 0;
+    
     
     NSArray *f = [self.controller.defaultItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
     
@@ -251,7 +335,7 @@
     
     self.selectedItems = [[NSMutableArray alloc] init];
     
-    [self.controller.items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+    [self.controller.items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
         if(idx > 0) {
             TGDocumentMediaRowView *row = [self viewAtColumn:0 row:idx makeIfNecessary:NO];
@@ -299,7 +383,7 @@
 }
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
-    return row == 0 ? NSHeight(self.controller.searchView.frame) : 60;
+    return row == 0 ? NSHeight(self.controller.searchView.frame) : [self heightWithItem:self.controller.items[row]];
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -316,10 +400,11 @@
         
     }
     
-    static NSString *const kRowIdentifier = @"documentMediaView";
+    NSString *kRowIdentifier = NSStringFromClass([self rowViewClass]);
+    
     cell = [self makeViewWithIdentifier:kRowIdentifier owner:self];
     if(!cell) {
-        cell = [[TGDocumentMediaRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 60)];
+        cell = [[[self rowViewClass] alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), [self heightWithItem:item])];
         cell.identifier = kRowIdentifier;
     }
     
@@ -359,6 +444,25 @@
     [self.controller loadNext:NO];
 }
 
+-(Class)rowViewClass {
+    return [TGDocumentMediaRowView class];
+}
+
+-(Class)historyFilter {
+    return [DocumentHistoryFilter class];
+}
+
+- (void)prepareItem:(MessageTableItem *)item {
+    
+}
+
+-(BOOL)acceptMessageItem:(MessageTableItem *)item {
+    return [item isKindOfClass:[MessageTableItemDocument class]] || [item isKindOfClass:[MessageTableItemAudioDocument class]];
+}
+
+-(int)heightWithItem:(MessageTableItem *)item {
+    return 60;
+}
 
 - (void) addScrollEvent {
     id clipView = [[self enclosingScrollView] contentView];

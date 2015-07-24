@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 23.06.15.
+//  Auto created by Mikhail Filimonov on 24.07.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1460,6 +1460,9 @@
 @end
 @interface TL_inputMessagesFilterAudioDocuments : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterAudioDocuments*)create;
+@end
+@interface TL_inputMessagesFilterUrl : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterUrl*)create;
 @end
 	
 @interface TLUpdate()

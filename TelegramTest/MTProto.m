@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 23.06.15.
+//  Auto created by Mikhail Filimonov on 24.07.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -8791,6 +8791,46 @@
 -(TL_inputMessagesFilterAudioDocuments *)copy {
     
     TL_inputMessagesFilterAudioDocuments *objc = [[TL_inputMessagesFilterAudioDocuments alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_inputMessagesFilterUrl
++(TL_inputMessagesFilterUrl*)create {
+	TL_inputMessagesFilterUrl* obj = [[TL_inputMessagesFilterUrl alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputMessagesFilterUrl *)copy {
+    
+    TL_inputMessagesFilterUrl *objc = [[TL_inputMessagesFilterUrl alloc] init];
     
     
     

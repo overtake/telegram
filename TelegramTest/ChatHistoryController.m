@@ -16,6 +16,7 @@
 #import "PhotoVideoHistoryFilter.h"
 #import "PhotoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
+#import "SharedLinksHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "MP3HistoryFilter.h"
@@ -69,6 +70,7 @@ static NSMutableArray *listeners;
             [filters addObject:[VideoHistoryFilter class]];
             [filters addObject:[AudioHistoryFilter class]];
             [filters addObject:[MP3HistoryFilter class]];
+            [filters addObject:[SharedLinksHistoryFilter class]];
             listeners = [[NSMutableArray alloc] init];
         });
         
@@ -408,10 +410,7 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-       
-        
-        
-        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+       [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
             
             NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];

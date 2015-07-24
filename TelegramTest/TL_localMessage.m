@@ -299,6 +299,9 @@ DYNAMIC_PROPERTY(DDialog);
         mask|=HistoryFilterPhoto;
     }
     
+    if([self.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        mask|=HistoryFilterSharedLink;
+    }
     
     return mask;
     
