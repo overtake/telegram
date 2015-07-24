@@ -1136,7 +1136,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-        
+    
+    [self.table reloadData];
     
     [self setState:self.state];
     if(self.state == MessagesViewControllerStateEditable)

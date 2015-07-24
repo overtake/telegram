@@ -88,6 +88,7 @@
         self.splitView.canChangeState = YES;
         [self.splitView updateStartSize:NSMakeSize(300, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
+        [self.rightViewController.navigationViewController.currentController viewWillAppear:NO];
         [self updateWindowMinSize];
     }
 }
@@ -97,7 +98,7 @@
         self.splitView.canChangeState = NO;
         [self.splitView updateStartSize:NSMakeSize(70, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
-        
+        [self.rightViewController.navigationViewController.currentController viewWillAppear:NO];
         [self updateWindowMinSize];
     }
 }
