@@ -410,6 +410,8 @@
     
     item.table = self;
     
+    [cell setFrameSize:NSMakeSize(NSWidth(self.bounds),[self heightWithItem:item])];
+    
     [cell setItem:item];
     
     

@@ -26,11 +26,11 @@
 }
 
 -(BOOL)acceptMessageItem:(MessageTableItem *)item {
-    return [item isKindOfClass:[MessageTableItemText class]];
+    return [item isKindOfClass:[MessageTableItemText class]] && ((MessageTableItemText *)item).webpage != nil;
 }
 
 -(int)heightWithItem:(MessageTableItemText *)item {
-    return item.webpage.descSize.height+30;
+    return MAX(item.webpage.descSize.height+30, 60);
 }
 
 -(void)reloadWithString:(NSString *)string {

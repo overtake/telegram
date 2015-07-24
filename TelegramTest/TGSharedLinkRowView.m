@@ -14,6 +14,7 @@
 @property (nonatomic,strong) TGCTextView *textField;
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMTextField *linkField;
+@property (nonatomic,strong) TGImageView *imageView;
 @end
 
 @implementation TGSharedLinkRowView
@@ -59,6 +60,16 @@
         
         [_containerView addSubview:_linkField];
         
+        
+        
+        _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
+        
+        _imageView.cornerRadius = 4;
+        
+        [_imageView setTapBlock:block];
+        
+        [self.containerView addSubview:_imageView];
+        
     }
     
     return self;
@@ -87,6 +98,12 @@
     
     [_linkField setFrameOrigin:NSMakePoint(0, NSMinY(_textField.frame) - NSHeight(_linkField.frame))];
     [_linkField setFrameSize:NSMakeSize(NSWidth(_containerView.frame), 20)];
+    
+    [_imageView setObject:item.webpage.imageObject];
+    
+    [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
+    
+    
 }
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {
