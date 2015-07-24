@@ -51,10 +51,13 @@ static ASQueue *queue;
         
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         
+        
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             queue = [[ASQueue alloc] initWithName:"UpdatesQueue"];
         });
+        
+        [_encryptedUpdates setQueue:queue];
     }
     return self;
 }
@@ -995,7 +998,7 @@ static ASQueue *queue;
                     
                     [copy removeObjectsInArray:f];
                 }
-            } forIds:ids random:NO sync:YES];
+            } forIds:ids random:NO sync:YES queue:queue];
         }
     
         

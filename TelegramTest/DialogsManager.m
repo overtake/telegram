@@ -41,45 +41,42 @@
    
     [[Storage manager] messages:^(NSArray *messages) {
         
-        
-        [self.queue dispatchOnQueue:^{
-            NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
-            int total = 0;
-            for (TL_localMessage *message in messages) {
-                if(message.conversation) {
-                    if(!message.n_out) {
-                        if(message.conversation.unread_count != 0)
-                            ++total;
-                        message.conversation.unread_count--;
-                        
-                    }
+        NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
+        int total = 0;
+        for (TL_localMessage *message in messages) {
+            if(message.conversation) {
+                if(!message.n_out) {
+                    if(message.conversation.unread_count != 0)
+                        ++total;
+                    message.conversation.unread_count--;
                     
-                    if(message.n_id > message.conversation.last_marked_message) {
-                        message.conversation.last_marked_message = message.n_id;
-                        message.conversation.last_marked_date = message.date;
-                    }
-                    
-                    [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
                 }
                 
+                if(message.n_id > message.conversation.last_marked_message) {
+                    message.conversation.last_marked_message = message.n_id;
+                    message.conversation.last_marked_date = message.date;
+                }
+                
+                [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
             }
             
-            for (TL_conversation *dialog in updateDialogs.allValues) {
-                [dialog save];
-                [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
-            }
-            
-            
-            
-            [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
-            
-            
-            [MessagesManager unreadBadgeCount];
-            
-        }];
+        }
         
-    } forIds:copy random:NO];
+        for (TL_conversation *dialog in updateDialogs.allValues) {
+            [dialog save];
+            [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
+        }
+        
+        
+        
+        [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
+        
+        
+        [MessagesManager updateUnreadBadge];
+        
+
+    } forIds:copy random:NO queue:self.queue];
     
     
 }

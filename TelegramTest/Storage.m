@@ -575,13 +575,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 }
 
--(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random  {
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q  {
     
-    [self messages:completeHandler forIds:ids random:random sync:NO];
+    [self messages:completeHandler forIds:ids random:random sync:NO queue:q];
 }
 
 
--(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync {
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q {
     
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
@@ -599,25 +599,21 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         [result close];
         
-        if(!sync) {
-            [LoopingUtils runOnMainQueueAsync:^{
-                if(completeHandler)
-                    completeHandler(messages);
-            }];
-        } else {
-            if(completeHandler)
+        if(completeHandler)
+        {
+            if(sync)
                 completeHandler(messages);
+             else 
+                [q dispatchOnQueue:^{
+                    completeHandler(messages);
+                }];
         }
-       
-
     };
     
-    if(sync) {
-        [queue inDatabaseWithDealocing:block];
-    } else {
+    if(!sync)
         [queue inDatabase:block];
-    }
-    
+    else
+        [queue inDatabaseWithDealocing:block];
   
 }
 

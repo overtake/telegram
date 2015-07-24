@@ -114,10 +114,13 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.searchViewController viewWillAppear:animated];
+    
     [self.tableView.scrollView.contentView setFrameSize:self.view.frame.size];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
+        
     });
     
 }

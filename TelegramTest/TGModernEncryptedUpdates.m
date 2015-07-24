@@ -243,7 +243,7 @@
                     [SelfDestructionController addMessage:obj force:YES];
                 }];
                 
-            } forIds:storageMessages random:YES sync:YES];
+            } forIds:storageMessages random:YES sync:YES queue:_queue ? _queue : [ASQueue globalQueue]];
             
             return YES;
         }
