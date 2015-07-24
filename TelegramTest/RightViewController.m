@@ -295,6 +295,7 @@
     } else {
         
         [self.modalView removeFromSuperview];
+        [self.leftViewController updateForwardActionView];
       //  [self.navigationViewController.view disableSubViews];
         [self.modalView setFrame:self.view.bounds];
         
