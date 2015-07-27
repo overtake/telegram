@@ -337,6 +337,11 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                 [SettingsArchiver addSetting:SmartNotifications];
                 
             }
+            if(![defaults objectForKey:@"MarkedInputText"]) {
+                [defaults setObject:@"once" forKey:@"MarkedInputText"];
+                
+                [SettingsArchiver addSetting:MarkedInputText];    
+            }
             
         });
         

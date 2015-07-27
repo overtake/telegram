@@ -48,6 +48,7 @@
 @property (nonatomic,strong) ABPeoplePickerView *peoplePickerView;
 
 @property (weak) IBOutlet NSButton *statusBarIcon;
+@property (weak) IBOutlet NSButton *markedInputText;
 
 @property (weak) IBOutlet NSTabView *tabView;
 
@@ -174,7 +175,7 @@
     
     self.blocked_table_view.removeButton = self.remove_from_block_button;
     
-    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 90)];
+    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 60)];
     
     [self.security_settings_view setFrameOrigin:NSMakePoint(-5, self.security_settings_view.frame.size.height-70)];
     
@@ -249,6 +250,7 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     
     [self.auto_download_limit selectItemAtIndex:[self indexForAutoDowloadSize]];
     
+    [self.markedInputText setState:[SettingsArchiver checkMaskedSetting:MarkedInputText]];
     
     NSMenuItem *item = [self.documents_folder_button itemAtIndex:0];
     
@@ -376,6 +378,9 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 }
 - (IBAction)autoDownloadPrivateDocuments:(id)sender {
     [SettingsArchiver addOrRemoveSetting:AutoPrivateDocuments];
+}
+- (IBAction)checkMarkedInputtext:(id)sender {
+    [SettingsArchiver addOrRemoveSetting:MarkedInputText];
 }
 
 - (IBAction)soundEffectCheckbox:(id)sender {
