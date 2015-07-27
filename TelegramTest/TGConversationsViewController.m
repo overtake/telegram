@@ -106,7 +106,7 @@
         
     }];
     
-    [MessagesManager unreadBadgeCount];
+    [MessagesManager updateUnreadBadge];
     
     
 }
