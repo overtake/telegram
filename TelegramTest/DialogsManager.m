@@ -330,7 +330,7 @@
                     [self->list removeObject:dialog];
                     [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
                     
-                    [MessagesManager unreadBadgeCount];
+                    [MessagesManager updateUnreadBadge];
                     
                     
                     
@@ -406,7 +406,7 @@
         
         [dialog save];
         
-        [MessagesManager unreadBadgeCount];
+        [MessagesManager updateUnreadBadge];
         
         [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
         [[Storage manager] deleteMessagesInDialog:dialog completeHandler:block];

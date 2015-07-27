@@ -1017,7 +1017,8 @@ static int insertCount = 3;
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.tableView.scrollView.contentView setFrameSize:self.view.frame.size];
+    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
+
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];

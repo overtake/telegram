@@ -658,6 +658,8 @@
     if(self.searchMessagesView.isHidden)
         return;
     
+    if(self.historyController.prevState != ChatHistoryStateFull)
+        [self jumpToLastMessages];
     
     [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
         
