@@ -164,6 +164,7 @@ static const int bottomOffset = 58;
     
     self.tabController.selectedIndex = 1;
     
+
     [self.view.window makeFirstResponder:nil];
     
     [self updateSize];
@@ -249,9 +250,10 @@ static const int bottomOffset = 58;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
-    [self.conversationsViewController viewWillAppear:NO];
     
-  //  self.tabController.selectedIndex = self.tabController.selectedIndex;
+    [self.conversationsViewController viewWillAppear:NO];
+//    
+//    self.tabController.selectedIndex = self.tabController.selectedIndex;
 }
 
 
