@@ -8,7 +8,7 @@
 
 #import <MTProtoKit/MTKeychain.h>
 
-@interface TGKeychain : MTKeychain
+@interface TGKeychain : NSObject<MTKeychain>
 
 + (instancetype)unencryptedKeychainWithName:(NSString *)name;
 

@@ -479,7 +479,7 @@ static int MAX_WORKER_POLL = 5;
     return [[_keychain objectForKey:@"user_id" group:@"persistent"] intValue];
 }
 
--(MTKeychain *)keyChain {
+-(id<MTKeychain>)keyChain {
     return _context.keychain;
 }
 

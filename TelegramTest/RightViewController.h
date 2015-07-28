@@ -40,6 +40,7 @@
 #import "TGStickersSettingsViewController.h"
 #import "ComposeChooseGroupViewController.h"
 #import "TGSplitViewController.h"
+#import "CacheSettingsViewController.h"
 
 @class MainViewController;
 @class LeftViewController;
@@ -84,6 +85,8 @@
 @property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
 
 @property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
+
+@property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -143,5 +146,7 @@
 
 -(void)showChatExportLinkController:(TLChatFull *)chat;
 -(void)showStickerSettingsController;
+
+-(void)showCacheSettingsViewController;
 
 @end

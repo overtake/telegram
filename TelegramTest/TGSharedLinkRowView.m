@@ -85,24 +85,29 @@
     [super setItem:item];
     
     
-    [_textField setAttributedString:item.webpage.desc];
+    [_textField setHidden:item.webpage == nil];
+    [_imageView setHidden:item.webpage.imageObject == nil];
+    [_linkField setHidden:item.webpage == nil];
     
-    [_textField setFrameSize:item.webpage.descSize];
-    
-    [_textField setFrameOrigin:NSMakePoint(2, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
-    
-
-    
-    [_linkField setStringValue:item.webpage.webpage.url];
-    
-    
-    [_linkField setFrameOrigin:NSMakePoint(0, NSMinY(_textField.frame) - NSHeight(_linkField.frame))];
-    [_linkField setFrameSize:NSMakeSize(NSWidth(_containerView.frame), 20)];
-    
-    [_imageView setObject:item.webpage.imageObject];
-    
-    [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
-    
+    if(item.webpage) {
+        [_textField setAttributedString:item.webpage.desc];
+        
+        [_textField setFrameSize:item.webpage.descSize];
+        
+        [_textField setFrameOrigin:NSMakePoint(2, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
+        
+        
+        
+        [_linkField setStringValue:item.webpage.webpage.url];
+        
+        
+        [_linkField setFrameOrigin:NSMakePoint(0, NSMinY(_textField.frame) - NSHeight(_linkField.frame))];
+        [_linkField setFrameSize:NSMakeSize(NSWidth(_containerView.frame), 20)];
+        
+        [_imageView setObject:item.webpage.imageObject];
+        
+        [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
+    }
     
 }
 

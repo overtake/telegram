@@ -967,4 +967,18 @@
     [self.navigationViewController pushViewController:_stickersSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
+-(void)showCacheSettingsViewController {
+    if(self.navigationViewController.currentController == _cacheSettingsViewController)
+        return;
+    
+    if(!_cacheSettingsViewController) {
+        _cacheSettingsViewController = [[CacheSettingsViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    [self.navigationViewController pushViewController:_cacheSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    
+    
+    
+}
+
 @end

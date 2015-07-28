@@ -95,7 +95,7 @@
         }]];
         
         [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            [obj makeSizeByWidth:NSWidth(self.tableView.frame)];
+            [obj makeSizeByWidth:NSWidth(self.tableView.frame) - 30];
         }];
         
         [self.items addObjectsFromArray:filtred];
@@ -119,7 +119,7 @@
     
     if([self.tableView acceptMessageItem:message]) {
         [self.items insertObject:message atIndex:1];
-        [message makeSizeByWidth:NSWidth(self.tableView.frame)];
+        [message makeSizeByWidth:NSWidth(self.tableView.frame) - 30];
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
         
         [self.tableView checkCap];
@@ -159,7 +159,7 @@
     }]];
     
     [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        [obj makeSizeByWidth:NSWidth(self.tableView.frame)];
+        [obj makeSizeByWidth:NSWidth(self.tableView.frame) - 30];
     }];
     
     [self.items insertObjects:list atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, list.count)]];
@@ -209,7 +209,7 @@
                 
                 if([item isKindOfClass:[MessageTableItem class]]) {
                    // [self.tableView prepareItem:item];
-                    [item makeSizeByWidth:newSize.width];
+                    [item makeSizeByWidth:newSize.width - 30];
                     id view = [self.tableView viewAtColumn:0 row:i makeIfNecessary:NO];
                     
                     if(view)

@@ -206,7 +206,15 @@
     
     [self.tableView insert:stickers atIndex:self.tableView.list.count tableRedraw:NO];
    
+    GeneralSettingsRowItem *cache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [[Telegram rightViewController] showCacheSettingsViewController];
+        
+    } description:NSLocalizedString(@"Settings.Cache", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return nil;
+    }];
     
+    [self.tableView insert:cache atIndex:self.tableView.list.count tableRedraw:NO];
 
     
 //    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {

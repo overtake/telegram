@@ -20,7 +20,7 @@
 -(void)sendRequest:(RPCRequest *)request forDatacenter:(int)datacenterId;
 -(void)sendRandomRequest:(RPCRequest *)request;
 -(MTDatacenterAuthInfo *)authInfoForDatacenter:(int)dc_id;
--(MTKeychain *)keyChain;
+-(id<MTKeychain>)keyChain;
 -(void)successAuthForDatacenter:(int)dc_id;
 -(BOOL)isAuth;
 -(void)drop;

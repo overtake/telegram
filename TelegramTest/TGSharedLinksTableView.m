@@ -18,6 +18,23 @@
     // Drawing code here.
 }
 
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        [Notification addObserver:self selector:@selector(didChangeUpdateWebpage:) name:UPDATE_WEB_PAGES];
+    }
+    
+    return self;
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
+
+-(void)didChangeUpdateWebpage:(NSNotification *)notification
+{
+    
+}
+
 -(Class)rowViewClass {
     return [TGSharedLinkRowView class];
 }

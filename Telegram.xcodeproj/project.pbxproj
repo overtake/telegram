@@ -752,6 +752,7 @@
 		C2D825C41B664EC500434D37 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2D825C51B664ECA00434D37 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2D825C61B664ECA00434D37 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2260,6 +2261,8 @@
 		C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMenuItemPhoto.m; sourceTree = "<group>"; };
 		C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartBotSenderItem.h; sourceTree = "<group>"; };
 		C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartBotSenderItem.m; sourceTree = "<group>"; };
+		C2D825D41B67B22E00434D37 /* CacheSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheSettingsViewController.h; sourceTree = "<group>"; };
+		C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheSettingsViewController.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -4154,6 +4157,7 @@
 		C297955219EC29CA00BE893E /* general */ = {
 			isa = PBXGroup;
 			children = (
+				C2D825CF1B67B18100434D37 /* cache */,
 				C297955C19EC583800BE893E /* security */,
 				C297954F19EC267200BE893E /* GeneralSettingsViewController.h */,
 				C297955019EC267200BE893E /* GeneralSettingsViewController.m */,
@@ -4891,6 +4895,15 @@
 				C2D51C0B1B21FA5F009327C0 /* TGBotCommandsKeyboard.m */,
 			);
 			name = botcommands;
+			sourceTree = "<group>";
+		};
+		C2D825CF1B67B18100434D37 /* cache */ = {
+			isa = PBXGroup;
+			children = (
+				C2D825D41B67B22E00434D37 /* CacheSettingsViewController.h */,
+				C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */,
+			);
+			name = cache;
 			sourceTree = "<group>";
 		};
 		C2DE4FB21AD43EBC001EC26C /* h */ = {
@@ -5981,6 +5994,7 @@
 				C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */,
 				C233FB2B18B6126C008C9A96 /* NewConversationTableView.m in Sources */,
 				C2D4B8721AFCE8FA0035B4E4 /* YapDatabaseQuery.m in Sources */,
+				C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */,
 				C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */,
 				C2CBF5F21AF8DA5C006BF90A /* ClassStore.m in Sources */,
 				0AA0145E1831140D00901B7A /* NSAttributedString+Hyperlink.m in Sources */,
