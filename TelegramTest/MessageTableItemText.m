@@ -35,6 +35,18 @@
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
+    static NSMutableParagraphStyle *paragraph;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        paragraph = [[NSMutableParagraphStyle alloc] init];
+        [paragraph setLineSpacing:2];
+        //  [paragraph ]
+        
+    });
+    
+    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.textAttributed.range];
+    
     [self updateMessageFont];
     
     [SettingsArchiver addEventListener:self];
