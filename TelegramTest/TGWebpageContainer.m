@@ -208,13 +208,16 @@
             
             previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
             
-        } else if(self.webpage.webpage.embed_url.length > 0) {
+        } else if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
             
             TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];
             
             [embed setWebpage:self.webpage.webpage];
             
             [embed show:self.window animated:YES];
+            return;
+        } else if([self.webpage.webpage.type isEqualToString:@"video"]) {
+            open_link(self.webpage.webpage.url);
             return;
         }
         

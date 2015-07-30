@@ -73,7 +73,7 @@
             
             MessageTableItemText *item = ((MessageTableItemText *)self.item);
             
-            if(item.webpage.webpage.embed_url.length > 0)
+            if([item.webpage.webpage.embed_type isEqualToString:@"iframe"])
             {
                 TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];
                 
