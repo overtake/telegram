@@ -56,7 +56,7 @@
     }
     
     //LeftController
-    self.leftViewController = [[LeftViewController alloc] initWithFrame:NSMakeRect(archiver.origin.x, archiver.origin.y,archiver.size.width, archiver.size.height)];
+    self.leftViewController = [[LeftViewController alloc] initWithFrame:NSMakeRect(archiver.origin.x, archiver.origin.y,MIN(archiver.size.width,NSWidth(self.view.frame)), archiver.size.height)];
     
     self.leftViewController.archiver = archiver;
 

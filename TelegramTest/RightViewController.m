@@ -976,9 +976,18 @@
     }
     
     [self.navigationViewController pushViewController:_cacheSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+
+-(void)showNotificationSettingsViewController {
+    if(self.navigationViewController.currentController == _notificationSettingsViewController)
+        return;
     
+    if(!_notificationSettingsViewController) {
+        _notificationSettingsViewController = [[NotificationSettingsViewController alloc] initWithFrame:self.view.bounds];
+    }
     
-    
+    [self.navigationViewController pushViewController:_notificationSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 @end

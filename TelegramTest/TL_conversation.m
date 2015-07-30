@@ -172,6 +172,11 @@
     [self _changeMute:0 completeHandler:completeHandler];
 }
 
+- (void)mute:(dispatch_block_t)completeHandler {
+    [self _changeMute:365*24*60*60 completeHandler:completeHandler];
+}
+
+
 - (void)_changeMute:(int)until completeHandler:(dispatch_block_t)completeHandler {
     __block int mute_until = until == 0 ? 0 : [[MTNetwork instance] getTime] + until;
     

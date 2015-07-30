@@ -753,6 +753,9 @@
 		C2D825C51B664ECA00434D37 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C2D825C61B664ECA00434D37 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */; };
+		C2D825E01B690D7500434D37 /* NotificationSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825DF1B690D7500434D37 /* NotificationSettingsViewController.m */; };
+		C2D825E31B69155D00434D37 /* NotificationConversationRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */; };
+		C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -866,6 +869,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = D0CB05F71ADC4483005E298F;
 			remoteInfo = MtProtoKit;
+		};
+		C2D825DA1B690C5B00434D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0D2250B1B4D817B0085E26D;
+			remoteInfo = MtProtoKitDynamic;
+		};
+		C2D825DC1B690C5B00434D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0D225151B4D817B0085E26D;
+			remoteInfo = MtProtoKitDynamicTests;
 		};
 		C2E561021AF3726300B4CAF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2263,6 +2280,12 @@
 		C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartBotSenderItem.m; sourceTree = "<group>"; };
 		C2D825D41B67B22E00434D37 /* CacheSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheSettingsViewController.h; sourceTree = "<group>"; };
 		C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheSettingsViewController.m; sourceTree = "<group>"; };
+		C2D825DE1B690D7500434D37 /* NotificationSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationSettingsViewController.h; sourceTree = "<group>"; };
+		C2D825DF1B690D7500434D37 /* NotificationSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationSettingsViewController.m; sourceTree = "<group>"; };
+		C2D825E11B69155D00434D37 /* NotificationConversationRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationConversationRowItem.h; sourceTree = "<group>"; };
+		C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationConversationRowItem.m; sourceTree = "<group>"; };
+		C2D825E41B6915B500434D37 /* NotificationConversationRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationConversationRowView.h; sourceTree = "<group>"; };
+		C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationConversationRowView.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -4157,6 +4180,7 @@
 		C297955219EC29CA00BE893E /* general */ = {
 			isa = PBXGroup;
 			children = (
+				C2D825D71B690C5B00434D37 /* notifications */,
 				C2D825CF1B67B18100434D37 /* cache */,
 				C297955C19EC583800BE893E /* security */,
 				C297954F19EC267200BE893E /* GeneralSettingsViewController.h */,
@@ -4906,6 +4930,19 @@
 			name = cache;
 			sourceTree = "<group>";
 		};
+		C2D825D71B690C5B00434D37 /* notifications */ = {
+			isa = PBXGroup;
+			children = (
+				C2D825DE1B690D7500434D37 /* NotificationSettingsViewController.h */,
+				C2D825DF1B690D7500434D37 /* NotificationSettingsViewController.m */,
+				C2D825E11B69155D00434D37 /* NotificationConversationRowItem.h */,
+				C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */,
+				C2D825E41B6915B500434D37 /* NotificationConversationRowView.h */,
+				C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */,
+			);
+			name = notifications;
+			sourceTree = "<group>";
+		};
 		C2DE4FB21AD43EBC001EC26C /* h */ = {
 			isa = PBXGroup;
 			children = (
@@ -4984,6 +5021,8 @@
 			children = (
 				C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */,
 				C242376B1B28C467009B9C6F /* MtProtoKitMac.framework */,
+				C2D825DB1B690C5B00434D37 /* MtProtoKitDynamic.framework */,
+				C2D825DD1B690C5B00434D37 /* MtProtoKitDynamicTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5609,6 +5648,20 @@
 			remoteRef = C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C2D825DB1B690C5B00434D37 /* MtProtoKitDynamic.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MtProtoKitDynamic.framework;
+			remoteRef = C2D825DA1B690C5B00434D37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C2D825DD1B690C5B00434D37 /* MtProtoKitDynamicTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MtProtoKitDynamicTests.xctest;
+			remoteRef = C2D825DC1B690C5B00434D37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C2E561031AF3726300B4CAF0 /* libsqlcipher.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -6042,6 +6095,7 @@
 				C268C18E19F0519C007F836A /* POPCustomAnimation.mm in Sources */,
 				C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */,
 				0A241AAE18ACD39700C32F45 /* MessageTableCellVideoView.m in Sources */,
+				C2D825E31B69155D00434D37 /* NotificationConversationRowItem.m in Sources */,
 				0ACDB14118D09CC0009FE910 /* LoginButtonAndErrorView.m in Sources */,
 				C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */,
 				C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */,
@@ -6241,6 +6295,7 @@
 				0AB7927E182587E500B3E2A1 /* UploadOperation.m in Sources */,
 				0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */,
 				C268C13919EE9DF9007F836A /* AboutViewController.m in Sources */,
+				C2D825E01B690D7500434D37 /* NotificationSettingsViewController.m in Sources */,
 				C2CB5CF01B467D5A00CD61DF /* TGSplitViewController.m in Sources */,
 				C22019FC192CC82900C0E441 /* SelectUsersTableView.m in Sources */,
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
@@ -6300,6 +6355,7 @@
 				C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */,
 				C233FB2818B610E9008C9A96 /* NewConversationViewController.m in Sources */,
 				0A073FCF18BF65F500BAA928 /* TMNavigationBar.m in Sources */,
+				C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */,
 				C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */,
 				C281C180191AA139007B160F /* TMPreviewChatPicture.m in Sources */,
 				0A2F5AD8181A8FC6005045A5 /* NSContactsPopover.m in Sources */,

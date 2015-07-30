@@ -115,7 +115,9 @@
 
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
-        [SettingsArchiver addOrRemoveSetting:PushNotifications];
+        //[SettingsArchiver addOrRemoveSetting:PushNotifications];
+        
+        [[Telegram rightViewController] showNotificationSettingsViewController];
         
         
     } description:NSLocalizedString(@"Settings.MessageNotificationsAlert", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {

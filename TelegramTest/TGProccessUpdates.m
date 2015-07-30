@@ -23,7 +23,7 @@
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
 @property (nonatomic,strong) TGTimer *sequenceTimer;
-@property (nonatomic,assign) BOOL holdUpdates;
+@property (atomic,assign) BOOL holdUpdates;
 @property (nonatomic,strong) TGModernEncryptedUpdates *encryptedUpdates;
 
 

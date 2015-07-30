@@ -36,7 +36,8 @@ typedef enum {
     iCloudSynch = 1 << 19,
     BigFontSetting = 1 << 20,
     StatusBarIcon = 1 << 21,
-    SmartNotifications = 1 << 22
+    SmartNotifications = 1 << 22, 
+    MessagesNotificationPreview = 1 << 23
 } SettingsMask;
 
 

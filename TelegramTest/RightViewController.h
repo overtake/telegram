@@ -41,7 +41,7 @@
 #import "ComposeChooseGroupViewController.h"
 #import "TGSplitViewController.h"
 #import "CacheSettingsViewController.h"
-
+#import "NotificationSettingsViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -87,6 +87,7 @@
 @property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
 
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
+@property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -148,5 +149,5 @@
 -(void)showStickerSettingsController;
 
 -(void)showCacheSettingsViewController;
-
+-(void)showNotificationSettingsViewController;
 @end

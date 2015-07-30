@@ -100,7 +100,7 @@
         
         
         confirm(appName(), NSLocalizedString(@"Cache.ClearPhotoCache", nil), ^{
-                        
+            
             [self clearWithType:@"jpg"];
             
         }, nil);

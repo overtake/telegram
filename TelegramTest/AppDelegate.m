@@ -269,81 +269,82 @@ void exceptionHandler(NSException * exception)
     
 #ifdef TGDEBUG
     
-    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
-    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
-    
-    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
-        // close other proccess
-        {
-            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-            
-            
-            
-            daemonController.launchPath = updater_path;
-            
-            daemonController.startArguments = [NSArray arrayWithObjects:
-                                               @"--bundle_id=ru.keepcoder.Telegram",
-                                               @"--close_others=1",
-                                               nil];
-            
-            
-            [daemonController start];
-        }
-        
-        
-        
-        
-        // update application
-        {
-            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
-            
-            [updater itsHaveNewVersion:^(bool nVer){
-                
-                
-                if(nVer)
-                {
-                    confirm(appName(), @"New version avaiable, download?", ^{
-                        [updater startDownload:^(NSString *fpath) {
-                            
-                            NSLog(@"%@",fpath);
-                            
-                            [self.window setTitle:@"Proccessing..."];
-                            
-                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-                            
-                            daemonController.launchPath = updater_path;
-                            
-                            daemonController.startArguments = [NSArray arrayWithObjects:
-                                                               @"--bundle_id=ru.keepcoder.Telegram",
-                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
-                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
-                                                               nil];
-                            
-                            [daemonController setDaemonStoppedCallback:^{
-                                
-                                [self.window setTitle:appName()];
-                                
-                            }];
-                            
-                            [daemonController start];
-                            
-                            
-                        } progress:^(NSUInteger progress) {
-                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
-                        }];
-                        
-                    }, ^{
-                        
-                    });
-                    
-                }
-                
-            }];
-        }
-    }
-    
+//    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+//    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
+//    
+//    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
+//    
+//    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
+//        // close other proccess
+//        {
+//            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+//            
+//            
+//            
+//            daemonController.launchPath = updater_path;
+//            
+//            daemonController.startArguments = [NSArray arrayWithObjects:
+//                                               @"--bundle_id=ru.keepcoder.Telegram",
+//                                               @"--close_others=1",
+//                                               nil];
+//            
+//            
+//            [daemonController start];
+//
+//        }
+//        
+//        
+//        
+//        
+//        // update application
+//        {
+//            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
+//            
+//            [updater itsHaveNewVersion:^(bool nVer){
+//                
+//                
+//                if(nVer)
+//                {
+//                    confirm(appName(), @"New version avaiable, download?", ^{
+//                        [updater startDownload:^(NSString *fpath) {
+//                            
+//                            NSLog(@"%@",fpath);
+//                            
+//                            [self.window setTitle:@"Proccessing..."];
+//                            
+//                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+//                            
+//                            daemonController.launchPath = updater_path;
+//                            
+//                            daemonController.startArguments = [NSArray arrayWithObjects:
+//                                                               @"--bundle_id=ru.keepcoder.Telegram",
+//                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
+//                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
+//                                                               nil];
+//                            
+//                            [daemonController setDaemonStoppedCallback:^{
+//                                
+//                                [self.window setTitle:appName()];
+//                                
+//                            }];
+//                            
+//                            [daemonController start];
+//                            
+//                            
+//                        } progress:^(NSUInteger progress) {
+//                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
+//                        }];
+//                        
+//                    }, ^{
+//                        
+//                    });
+//                    
+//                }
+//                
+//            }];
+//        }
+//    }
+//    
     
 
     
@@ -813,6 +814,7 @@ void exceptionHandler(NSException * exception)
     [loginWindow makeKeyAndOrderFront:nil];
     [self releaseWindows];
     
+    
     self.loginWindow = loginWindow;
     
     
@@ -854,8 +856,10 @@ void exceptionHandler(NSException * exception)
                 [TGCache clear];
                 [TGModernTypingManager drop];
                 [SharedManager drop];
+                [[MTNetwork instance] startNetwork];
                 [[MTNetwork instance] drop];
                 [Telegram drop];
+                [TMViewController hidePasslock];
                 [MessageSender drop];
                 [Notification perform:LOGOUT_EVENT data:nil];
                 
