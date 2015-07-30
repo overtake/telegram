@@ -1761,6 +1761,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[NotificationSettingsViewController insertAll:]:NotificationSettingsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__32-[MessagesManager TGsetMessage:]_block_invoke:MessagesManager.m">
       </ContextState>
       <ContextState
@@ -2107,6 +2110,14 @@
       </ContextState>
       <ContextState
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView checkMentionsOrTags]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "rance">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController isHeaderMessage:prevItem:]:MessagesViewController.m">
@@ -2492,6 +2503,9 @@
          contextName = "__44-[PrivacySettingsViewController savePrivacy]_block_invoke:PrivacySettingsViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__48-[NotificationSettingsViewController insertAll:]_block_invoke:NotificationSettingsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke116:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -2791,6 +2805,9 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadVideoItem setDownloadState:]:DownloadVideoItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService processMessage:]:TGUpdateMessageService.m">

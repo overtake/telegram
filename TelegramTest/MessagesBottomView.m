@@ -1049,14 +1049,21 @@
     rect.origin.x += 100;
     
     
-    NSString *string = [self.inputMessageTextField string];
+    [TGMentionPopup close];
+    [TGHashtagPopup close];
+    [TGBotCommandsPopup close];
     
     NSRange range;
     
     NSString *search;
     
     NSRange selectedRange = self.inputMessageTextField.selectedRange;
-
+    
+    if(self.inputMessageTextField.string.length < selectedRange.location + 2)
+        return;
+        
+    
+    NSString *string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(selectedRange.location- 1, 2)];
     
     int type = 0;
     
@@ -1064,9 +1071,7 @@
     // hashtag = 2
     // botCommand = 3
     
-    BOOL isMention;
 
-    
     while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
         
         type = [[string substringWithRange:range] isEqualToString:@"@"] ? 1 : ([[string substringWithRange:range] isEqualToString:@"#"] ? 2 : 3);
@@ -1074,6 +1079,9 @@
         search = [string substringFromIndex:range.location + 1];
         
         NSRange space = [search rangeOfString:@" "];
+        
+        if(space.location == NSNotFound)
+            space = [search rangeOfString:@"\n"];
         
         if(space.location != NSNotFound)
             search = [search substringToIndex:space.location];
@@ -1090,12 +1098,11 @@
         
         string = [string substringFromIndex:range.location +1];
         
+        int bp = 0;
     }
     
     
-    [TGMentionPopup close];
-    [TGHashtagPopup close];
-    [TGBotCommandsPopup close];
+   
     
     if(search != nil && ![string hasPrefix:@" "]) {
         
