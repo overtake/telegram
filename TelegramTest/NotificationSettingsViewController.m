@@ -25,11 +25,13 @@
 #import "GeneralSettingsRowView.h"
 #import "GeneralSettingsBlockHeaderView.h"
 #import "TGSearchRowView.h"
-@interface NotificationSettingsViewController ()<TMTableViewDelegate,SettingsListener>
+@interface NotificationSettingsViewController ()<TMTableViewDelegate,SettingsListener,TMSearchTextFieldDelegate>
 @property (nonatomic,strong) TMTableView *tableView;
 
 @property (nonatomic,strong) TGSearchRowView *searchView;
 @property (nonatomic,strong) TGSearchRowItem *searchItem;
+
+@property (nonatomic,strong) NSArray *items;
 
 @end
 
@@ -48,15 +50,54 @@
     
     [self.searchView setXOffset:100];
     
+    [self.searchView setDelegate:self];
+    
     _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
     _tableView.tm_delegate = self;
     [self.view addSubview:_tableView.containerView];
     
 }
 
+-(void)searchFieldTextChange:(NSString *)searchString {
+    
+    NSArray *sorted = self.items;
+    
+    
+    if(self.tableView.count <= 5)
+    {
+        return;
+    }
+    
+    if(searchString.length > 0) {
+        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NotificationConversationRowItem *evaluatedObject, NSDictionary *bindings) {
+            
+            return evaluatedObject.conversation.type == DialogTypeChat ? [evaluatedObject.conversation.chat.title searchInStringByWordsSeparated:searchString] : [evaluatedObject.conversation.user.fullName searchInStringByWordsSeparated:searchString];
+            
+        }]];
+    }
+    
+    
+    
+    
+    NSRange range = NSMakeRange(5, self.tableView.list.count-5);
+    
+    NSArray *list = [self.tableView.list subarrayWithRange:range];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self.tableView removeItem:obj tableRedraw:NO];
+    }];
+    
+    [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.tableView.defaultAnimation];
+    
+    
+    [self.tableView insert:sorted startIndex:5 tableRedraw:YES];
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.searchView.searchField setStringValue:@""];
     
     [self configure];
     
@@ -70,7 +111,34 @@
     
     GeneralSettingsRowItem *resetAllNotifications = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
-        
+        confirm(appName(), NSLocalizedString(@"NotificationSettings.ResetAllNotificationsConfirm", nil), ^{
+            
+            [self showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_account_resetNotifySettings create] successHandler:^(id request, id response) {
+                
+                [self.tableView.list enumerateObjectsUsingBlock:^(NotificationConversationRowItem *obj, NSUInteger idx, BOOL *stop) {
+                    
+                    [obj.conversation updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
+                    
+                    TL_conversation *original = [[DialogsManager sharedManager] find:obj.conversation.peer_id];
+                    
+                    
+                    [original updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
+                    
+                }];
+                
+                
+                [self hideModalProgressWithSuccess];
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+                [self hideModalProgress];
+                
+            } timeout:10];
+            
+            
+        }, nil);
         
     } description:NSLocalizedString(@"NotificationSettings.ResetAllNotifications", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
         
@@ -126,10 +194,6 @@
     soundNotification.menu = menu;
 
     
-    
-   
-    
-    
     GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"NotificationSettings.Description", nil)];
     
     description.height = 82;
@@ -176,6 +240,10 @@
         [self.tableView addItem:[[NotificationConversationRowItem alloc] initWithObject:obj] tableRedraw:NO];
         
     }];
+    
+    if(all.count > 5)
+        _items = [self.tableView.list subarrayWithRange:NSMakeRange(5, self.tableView.list.count - 5)];
+    
     [self.tableView reloadData];
     
 }
@@ -186,6 +254,8 @@
     [self.tableView removeAllItems:NO];
     
     [self.tableView reloadData];
+    
+    _items = nil;
 }
 
 

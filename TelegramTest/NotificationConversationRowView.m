@@ -58,10 +58,14 @@
         [self addSubview:_notificationSwitch];
         
         
+        
+        
     }
     
     return self;
 }
+
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -82,12 +86,13 @@
 -(void)redrawRow {
     [super redrawRow];
     
+    
     NotificationConversationRowItem *item = (NotificationConversationRowItem *) [self rowItem];
     
     [_avatarImageView updateWithConversation:item.conversation];
     [_nameTextField updateWithConversation:item.conversation];
  
-    [_notificationSwitch setOn:!item.conversation.isMute];
+    [_notificationSwitch setOn:!item.conversation.isMute animated:NO];
     
 }
 

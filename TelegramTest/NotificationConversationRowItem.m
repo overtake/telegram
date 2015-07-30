@@ -13,11 +13,27 @@
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
         _conversation = object;
-
         
+        [Notification addObserver:self selector:@selector(didChangeNotifySettings:) name:PUSHNOTIFICATION_UPDATE];
+
     }
     
     return self;
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
+
+-(void)didChangeNotifySettings:(NSNotification *)notify
+{
+    int peer_id = [notify.userInfo[KEY_PEER_ID] intValue];
+    
+   if(peer_id == _conversation.peer_id)
+   {
+       _conversation.notify_settings = notify.userInfo[@"notify_settings"];
+       [self redrawRow];
+   }
 }
 
 -(NSUInteger)hash {

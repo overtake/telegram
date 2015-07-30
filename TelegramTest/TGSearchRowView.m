@@ -39,6 +39,11 @@
 
 -(void)redrawRow {
     self.searchField.delegate = self.rowItem.table;
+    
+    if(_delegate)
+    {
+        self.searchField.delegate = _delegate;
+    }
 }
 
 @end

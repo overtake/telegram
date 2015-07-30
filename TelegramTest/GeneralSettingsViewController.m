@@ -113,56 +113,56 @@
     
     [self.tableView insert:notificationsHeader atIndex:self.tableView.list.count tableRedraw:NO];
 
-    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         //[SettingsArchiver addOrRemoveSetting:PushNotifications];
         
         [[Telegram rightViewController] showNotificationSettingsViewController];
         
         
-    } description:NSLocalizedString(@"Settings.MessageNotificationsAlert", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
     
     [self.tableView insert:soundEffects atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
-        
-    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return NSLocalizedString([SettingsArchiver soundNotification], nil);
-    }];
-    
-    
-    
-    
-    
-    
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-    
-    NSArray *list = soundsList();
-    
-    for (int i = 0; i < list.count; i++) {
-        
-        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
-            
-            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
-                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-            else
-                [SettingsArchiver setSoundNotification:sender.title];
-            
-            [self.tableView reloadData];
-            
-        }];
-        
-        
-        
-        [menu addItem:item];
-    }
-    
-    soundNotification.menu = menu;
-    
-    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+//    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
+//        
+//    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return NSLocalizedString([SettingsArchiver soundNotification], nil);
+//    }];
+//    
+//    
+//    
+//    
+//    
+//    
+//    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+//    
+//    NSArray *list = soundsList();
+//    
+//    for (int i = 0; i < list.count; i++) {
+//        
+//        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
+//            
+//            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
+//                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+//            else
+//                [SettingsArchiver setSoundNotification:sender.title];
+//            
+//            [self.tableView reloadData];
+//            
+//        }];
+//        
+//        
+//        
+//        [menu addItem:item];
+//    }
+//    
+//    soundNotification.menu = menu;
+//    
+//    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     GeneralSettingsBlockHeaderItem *chatSettingsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.ChatSettingsHeader", nil)];
