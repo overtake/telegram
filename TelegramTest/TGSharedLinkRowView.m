@@ -82,6 +82,8 @@
                 [embed show:self.window animated:YES];
                 
                 
+            } else {
+                block();
             }
             
         };

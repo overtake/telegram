@@ -234,7 +234,7 @@
         for(NSUInteger i = 0; i < self.tableView.controller.items.count; i++) {
             MessageTableItem *item = self.tableView.controller.items[i];
             if([item isKindOfClass:[MessageTableItem class]])
-                [self.tableView prepareItem:item];
+                [item makeSizeByWidth:newSize.width - 30];
         }
     }
     
