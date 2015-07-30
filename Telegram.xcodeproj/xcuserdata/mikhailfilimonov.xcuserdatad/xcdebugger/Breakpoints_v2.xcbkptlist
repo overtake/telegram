@@ -180,12 +180,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MainViewController.m"
-            timestampString = "459436799.761897"
+            timestampString = "459953471.127015"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "-updateWindowMinSize"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGDownloadOperation.m"
+            timestampString = "459954098.088604"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "-load:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

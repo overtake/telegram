@@ -232,9 +232,9 @@
             
             [self load];
             
-        }  else {
-            _item.downloadState = DownloadStateCompleted;
+        }  else{
             part.request = nil;
+            
             [self cancel];
         }
         

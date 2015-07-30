@@ -55,6 +55,11 @@
         archiver.origin = NSMakePoint(0, 0);
     }
     
+    if(archiver.size.width == 0)
+    {
+        archiver.size = NSMakeSize(300, self.view.bounds.size.height);
+    }
+    
     //LeftController
     self.leftViewController = [[LeftViewController alloc] initWithFrame:NSMakeRect(archiver.origin.x, archiver.origin.y,MIN(archiver.size.width,NSWidth(self.view.frame)), archiver.size.height)];
     
