@@ -10,6 +10,7 @@
 #import "MessageTableItemText.h"
 #import "TGWebpageContainer.h"
 #import "POPCGUtils.h"
+#import "TGEmbedModalView.h"
 @interface TGSharedLinkRowView ()
 @property (nonatomic,strong) TGCTextView *textField;
 @property (nonatomic,strong) TMView *containerView;
@@ -66,7 +67,28 @@
         
         _imageView.cornerRadius = 4;
         
-        [_imageView setTapBlock:block];
+        
+        dispatch_block_t embed = ^{
+           
+            
+            MessageTableItemText *item = ((MessageTableItemText *)self.item);
+            
+            if(item.webpage.webpage.embed_url.length > 0)
+            {
+                TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];
+                
+                [embed setWebpage:item.webpage.webpage];
+                
+                [embed show:self.window animated:YES];
+                
+                
+            }
+            
+        };
+        
+        [_imageView setTapBlock:^{
+            embed();
+        }];
         
         [self.containerView addSubview:_imageView];
         

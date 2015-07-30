@@ -296,15 +296,17 @@
 }
 
 
+-(NSPredicate *)searchPredicateWithString:(NSString *)string {
+    return [NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string];
+}
 
 -(void)reloadWithString:(NSString *)string {
-    
     
     
     self.controller.inSearch = string.length != 0;
     
     
-    NSArray *f = [self.controller.defaultItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string]];
+    NSArray *f = [self.controller.defaultItems filteredArrayUsingPredicate:[self searchPredicateWithString:string]];
     
     if(string.length == 0) {
         f = self.controller.defaultItems;

@@ -14,6 +14,9 @@
 -(void)close:(BOOL)animated;
 
 
+-(void)modalViewDidShow;
+-(void)modalViewDidHide;
+
 @property (assign) BOOL acceptEvents;
 
 -(void)setContainerFrameSize:(NSSize)size;

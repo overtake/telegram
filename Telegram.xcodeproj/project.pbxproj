@@ -756,6 +756,8 @@
 		C2D825E01B690D7500434D37 /* NotificationSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825DF1B690D7500434D37 /* NotificationSettingsViewController.m */; };
 		C2D825E31B69155D00434D37 /* NotificationConversationRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */; };
 		C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */; };
+		C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */; };
+		C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D825ED1B6A711E00434D37 /* WebKit.framework */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2286,6 +2288,9 @@
 		C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationConversationRowItem.m; sourceTree = "<group>"; };
 		C2D825E41B6915B500434D37 /* NotificationConversationRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationConversationRowView.h; sourceTree = "<group>"; };
 		C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationConversationRowView.m; sourceTree = "<group>"; };
+		C2D825EA1B6A700300434D37 /* TGEmbedModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEmbedModalView.h; sourceTree = "<group>"; };
+		C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEmbedModalView.m; sourceTree = "<group>"; };
+		C2D825ED1B6A711E00434D37 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -2507,6 +2512,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */,
 				C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */,
 				C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
@@ -4153,6 +4159,8 @@
 		C2967B0D1A94B3FC003759B2 /* links-preview */ = {
 			isa = PBXGroup;
 			children = (
+				C2D825EA1B6A700300434D37 /* TGEmbedModalView.h */,
+				C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */,
 			);
 			name = "links-preview";
 			sourceTree = "<group>";
@@ -5117,6 +5125,7 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2D825ED1B6A711E00434D37 /* WebKit.framework */,
 				C2CB5DA41B4DB18700CD61DF /* Cocoa.framework */,
 				C2CB5DA11B4DB14F00CD61DF /* libstdc++.dylib */,
 				C2CBF6A11AFB81A8006BF90A /* QuickLook.framework */,
@@ -6194,6 +6203,7 @@
 				C274C3E81ACAB97D000DFDE4 /* TGNotifyViewController.m in Sources */,
 				0AB43BC318D8A4AC00FB805A /* CNGridView.m in Sources */,
 				0A6D098E19535E8500A9AC64 /* NSImageCategory.m in Sources */,
+				C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */,
 				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,
 				C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */,

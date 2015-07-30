@@ -50,8 +50,12 @@
     return MAX(item.webpage.descSize.height+30, 60);
 }
 
--(void)reloadWithString:(NSString *)string {
-    
+-(NSPredicate *)searchPredicateWithString:(NSString *)string {
+    return [NSPredicate predicateWithBlock:^BOOL(MessageTableItemText *evaluatedObject, NSDictionary *bindings) {
+        
+        return [evaluatedObject.webpage.webpage.title searchInStringByWordsSeparated:string] || [evaluatedObject.webpage.webpage.n_description searchInStringByWordsSeparated:string] || [evaluatedObject.webpage.webpage.site_name searchInStringByWordsSeparated:string];
+        
+    }];
 }
 
 - (void)prepareItem:(MessageTableItemText *)item {

@@ -96,8 +96,12 @@
         
     }
 
-
+    
+    [self modalViewDidShow];
+    
 }
+
+
 -(void)close:(BOOL)animated {
     
     if(animated) {
@@ -113,7 +117,14 @@
         [self removeFromSuperview];
     }
     
-   
+    [self modalViewDidHide];
+}
+
+-(void)modalViewDidShow {
+    
+}
+-(void)modalViewDidHide {
+    
 }
 
 
