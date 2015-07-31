@@ -737,9 +737,7 @@ static TMMediaController* currentController;
         controller = [[TMMediaController alloc] init];
         
         controller.listCacheHash = new std::map<NSUInteger, bool>();
-        [Notification addObserver:controller selector:@selector(didAddMedia:) name:MEDIA_RECEIVE];
-        
-        [TMMediaUserPictureController controller];
+      //  [Notification addObserver:controller selector:@selector(didAddMedia:) name:MEDIA_RECEIVE];
         
     });
     

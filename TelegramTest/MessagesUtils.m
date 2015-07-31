@@ -10,7 +10,8 @@
 #import "Extended.h"
 #import "TMAttributedString.h"
 #import "TMInAppLinks.h"
-
+#import "NSNumber+NumberFormatter.h"
+#import "TGDateUtils.h"
 @implementation MessagesUtils
 
 +(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
@@ -508,6 +509,77 @@
     return @"";
 }
 
+
++(NSDictionary *)conversationLastData:(TL_conversation *)conversation {
+    
+    
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    
+    NSAttributedString *messageText = [MessagesUtils conversationLastText:conversation.lastMessage conversation:conversation];
+    
+    int time = conversation.last_message_date;
+    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
+    
+    
+    NSMutableAttributedString *dateText = [[NSMutableAttributedString alloc] init];
+    [dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
+    [dateText setSelectionColor:GRAY_TEXT_COLOR forColor:NSColorFromRGB(0x333333)];
+    [dateText setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
+    
+    if(messageText.length > 0) {
+        NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
+        [dateText appendString:dateStr withColor:GRAY_TEXT_COLOR];
+        data[@"messageText"] = messageText;
+    } else {
+        [dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
+    }
+    
+   
+     data[@"dateText"] = dateText;
+    
+    NSSize dateSize;
+    
+    dateSize = [dateText size];
+    dateSize.width+=5;
+    dateSize.width = ceil(dateSize.width);
+    dateSize.height = ceil(dateSize.height);
+    
+    data[@"dateSize"] = [NSValue valueWithSize:dateSize];
+    
+    
+    
+    NSString *unreadText;
+    NSSize unreadTextSize;
+    
+    if(conversation.unread_count > 0) {
+        NSString *unreadTextCount;
+        
+        if(conversation.unread_count < 1000)
+            unreadTextCount = [NSString stringWithFormat:@"%d", conversation.unread_count];
+        else
+            unreadTextCount = [@(conversation.unread_count) prettyNumber];
+        
+        NSDictionary *attributes =@{
+                                    NSForegroundColorAttributeName: [NSColor whiteColor],
+                                    NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:10]
+                                    };
+        unreadText = unreadTextCount;
+        NSSize size = [unreadTextCount sizeWithAttributes:attributes];
+        size.width = ceil(size.width);
+        size.height = ceil(size.height);
+        unreadTextSize = size;
+        
+        
+        data[@"unreadText"] = unreadText;
+        
+        data[@"unreadTextSize"] = [NSValue valueWithSize:unreadTextSize];
+        
+    }
+    
+    
+    return data;
+    
+}
 
 
 @end

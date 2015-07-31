@@ -46,7 +46,6 @@
 
 
 -(void)update {
-    [super update];
     
     
     _messageText = [MessagesUtils conversationLastText:_message conversation:_conversation];

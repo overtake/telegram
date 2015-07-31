@@ -55,6 +55,7 @@ extern NSString *const BOT_COMMANDS;
 -(void)saveUpdateState:(TGUpdateState *)state;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
+-(NSArray *)issetMessages:(NSArray *)ids;
 -(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler;
 
 

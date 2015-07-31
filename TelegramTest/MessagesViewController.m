@@ -1683,7 +1683,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(NSMinY(rect) + NSHeight(rect) > NSHeight(self.table.scrollView.frame)) {
-            addAnimation = (rect.origin.y - 1) != (self.table.scrollView.documentOffset.y + NSHeight(self.table.scrollView.frame));
+            addAnimation = (rect.origin.y - 1) != (self.table.scrollView.documentOffset.y + NSHeight(self.table.scrollView.frame)) && (NSMaxY(rect) < self.table.scrollView.documentOffset.y);
             
             if(!addAnimation)
                 forceEnd = YES;

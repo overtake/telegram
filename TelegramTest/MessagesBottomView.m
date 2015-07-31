@@ -1059,11 +1059,22 @@
     
     NSRange selectedRange = self.inputMessageTextField.selectedRange;
     
-    if(self.inputMessageTextField.string.length < selectedRange.location + 2)
-        return;
-        
     
-    NSString *string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(selectedRange.location- 1, 2)];
+    NSString *string;
+    
+    
+    if(self.inputMessageTextField && self.inputMessageTextField.string.length == 0)
+        return;
+    
+    if(self.inputMessageTextField.string.length < selectedRange.location + 2)
+        string = [self.inputMessageTextField.string substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 1)];
+    
+    else {
+       string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(selectedRange.location- 1, 2)];
+    }
+    
+    
+    
     
     int type = 0;
     
@@ -1072,33 +1083,18 @@
     // botCommand = 3
     
 
-    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
+    if ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
         
         type = [[string substringWithRange:range] isEqualToString:@"@"] ? 1 : ([[string substringWithRange:range] isEqualToString:@"#"] ? 2 : 3);
         
-        search = [string substringFromIndex:range.location + 1];
-        
-        NSRange space = [search rangeOfString:@" "];
-        
-        if(space.location == NSNotFound)
-            space = [search rangeOfString:@"\n"];
-        
-        if(space.location != NSNotFound)
-            search = [search substringToIndex:space.location];
-        
-        
-        
-        if(search.length > 0) {
+        if(string.length == 1) {
+            search = string;
+        } else
+        {
+            if([string rangeOfString:@" "].location != NSNotFound || [string rangeOfString:@"\n"].location != NSNotFound)
+                search = [string substringToIndex:1];
             
-            if(selectedRange.location == range.location + search.length + 1)
-                break;
-            else
-                search = nil;
         }
-        
-        string = [string substringFromIndex:range.location +1];
-        
-        int bp = 0;
     }
     
     

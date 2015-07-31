@@ -26,7 +26,11 @@
     
     _tableView.tm_delegate = self;
     
+    _progress = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
     
+    [_progress setStyle:NSProgressIndicatorSpinningStyle];
+    
+    [self.view addSubview:_progress];
   
     [self setCenterBarViewText:NSLocalizedString(@"Settings.Cache", nil)];
     

@@ -19,30 +19,22 @@
 
 -(void)detectAndAddLinks:(URLFindType)urlType {
     
-    NSArray *linkLocations = [[self string] locationsOfLinks:urlType];
-    NSArray *links = [[self string] arrayOfLinks:linkLocations];
+    NSArray *linkLocations = [NSString textCheckingResultsForText:self.string highlightMentionsAndTags:urlType & URLFindTypeMentions highlightCommands:urlType & URLFindTypeBotCommands];// [[self string] locationsOfLinks:urlType];
     
     [self beginEditing];
-    int i = 0;
-    for( NSString *link in links ) {
-        if(link) {
-            id object = [linkLocations objectAtIndex:i];
-            if(object) {
-                NSRange range = [object range];
-                
-                if(range.location != NSNotFound) {
-                  //  NSURL *url = [NSURL URLWithString:link];
-                  //  if(url) {
-                        [self addAttribute:NSLinkAttributeName value:link range:range];
-                        [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                        [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-                        [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-                        
-                  //  }
-                }
-            }
+    for( NSValue *link in linkLocations ) {
+        NSRange range = [link rangeValue];
+        
+        if(range.location != NSNotFound) {
+            //  NSURL *url = [NSURL URLWithString:link];
+            //  if(url) {
+            [self addAttribute:NSLinkAttributeName value:[self.string substringWithRange:range] range:range];
+            [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+            [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+            
+            //  }
         }
-        i++;
     }
     [self endEditing];
     

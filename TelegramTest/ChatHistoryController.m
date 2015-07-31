@@ -258,16 +258,28 @@ static NSMutableArray *listeners;
         if(msgs.count == 0)
             return;
         
+        NSMutableDictionary *deleted = [[NSMutableDictionary alloc] init];
+        
         for (Class filterClass in filters) {
-            [filterClass removeItems:msgs];
+            
+            NSArray *r = [filterClass removeItems:msgs];
+            
+            deleted[NSStringFromClass(filterClass)] = r;
+            
         }
         
         [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [obj.controller deleteMessages:msgs];
-                
-            }];
+            NSArray * td = deleted[obj.filter.className];
+            
+            td = [td filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.peer_id == %d", obj.conversation.peer_id]];
+            
+            if(td.count > 0) {
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [obj.controller deleteMessages:msgs];
+                    
+                }];
+            }
 
         }];
         
@@ -706,13 +718,6 @@ static NSMutableArray *listeners;
                             
                             [SharedManager proccessGlobalResponse:response];
                             
-                            for (TL_localMessage *message in messages) {
-                                if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                                    [[Storage manager] insertMedia:message];
-                                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
-                                    [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
-                                }
-                            }
                             
                             NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
                             

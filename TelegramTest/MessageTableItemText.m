@@ -60,17 +60,17 @@
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
     
     
-    static NSMutableParagraphStyle *paragraph;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        paragraph = [[NSMutableParagraphStyle alloc] init];
-        
-    });
-    
-    [paragraph setLineSpacing:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 1 : 2];
-    
-    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.textAttributed.range];
+//    static NSMutableParagraphStyle *paragraph;
+//    
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        paragraph = [[NSMutableParagraphStyle alloc] init];
+//        
+//    });
+//    
+//    [paragraph setLineSpacing:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 1 : 2];
+//    
+//    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.textAttributed.range];
     
     if(self.blockWidth != 0)
         [self makeSizeByWidth:self.blockWidth];

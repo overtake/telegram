@@ -48,7 +48,7 @@ static ASQueue *queue;
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
-        
+      //  _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         
         
@@ -68,7 +68,7 @@ static ASQueue *queue;
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
-        
+       // _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         
         queue = q;
@@ -739,7 +739,7 @@ static ASQueue *queue;
                 }
                 
                 if(chat.dialog) {
-                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
+                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
                     
                     [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
                 }
@@ -760,7 +760,7 @@ static ASQueue *queue;
                 [params setState:EncryptedDiscarted];
                 [params save];
                 
-                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
+                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
                 
                 
                 [SecretChatAccepter removeChatId:chat.n_id];
@@ -985,21 +985,17 @@ static ASQueue *queue;
             [ids addObject:@(obj.n_id)];
         }];
         
-        if(ids.count > 0) {
-            [[Storage manager] messages:^(NSArray *res) {
-                if(res.count > 0) {
-                    [ids removeAllObjects];
-                    
-                    [res enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-                        [ids addObject:@(obj.n_id)];
-                    }];
-                    
-                    NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",ids]];
-                    
-                    [copy removeObjectsInArray:f];
-                }
-            } forIds:ids random:NO sync:YES queue:queue];
-        }
+//        if(ids.count > 0) {
+//            
+//            
+//            NSArray *res = [[Storage manager] issetMessages:ids];
+//            
+//            [ids removeAllObjects];
+//           
+//            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
+//            
+//            [copy removeObjectsInArray:f];
+//        }
     
         
         

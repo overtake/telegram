@@ -35,7 +35,7 @@ extern NSString *const MESSAGE_LIST_UPDATE_TOP; // список новых со�
 extern NSString *const MEDIA_RECEIVE;
 
 //extern NSString *const MESSAGES_CHANGE_DIALOG;
-
+extern NSString *const KEY_LAST_CONVRESATION_DATA;
 extern NSString *const DIALOG_UPDATE; // просто обновить содержимое диалога
 extern NSString *const DIALOG_TO_TOP; // надо поднять диалог на самый верх.
 extern NSString *const DIALOG_DELETE; // надо поднять диалог на самый верх.

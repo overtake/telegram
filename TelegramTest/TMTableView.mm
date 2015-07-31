@@ -587,7 +587,9 @@ static TMTableView *tableStatic;
 
 -(void)mouseDragged:(NSEvent *)theEvent
 {
-    [super mouseDragged:theEvent];
+    
+    if(![self.className isEqualToString:@"MessagesTableView"])
+        [super mouseDragged:theEvent];
     
     if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden)
         [self.scrollView mouseDragged:theEvent];

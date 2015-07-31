@@ -41,24 +41,32 @@ static NSMutableDictionary * messageKeys;
 
 
 
-+(void)removeItems:(NSArray *)messageIds {
++(NSArray *)removeItems:(NSArray *)messageIds {
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
     
     [ASQueue dispatchOnStageQueue:^{
-        [messageItems enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableArray *obj, BOOL *stop) {
+        
+        [messageIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            NSMutableDictionary *keys = [self messageKeys:[key intValue]];
+            TL_localMessage *msg = [[MessagesManager sharedManager] find:[obj intValue]];
             
-            [keys removeObjectsForKeys:messageIds];
-            
-            NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
-            
-            [obj removeObjectsInArray:f];
+            if(msg)
+            {
+                NSArray *f = [[self messageItems:msg.peer_id] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
+                
+                [items addObjectsFromArray:f];
+                
+                [[self messageItems:msg.peer_id] removeObjectsInArray:f];
+                
+                [[self messageKeys:msg.peer_id] removeObjectsForKeys:messageIds];
+            }
             
         }];
-    }];
+        
+    } synchronous:YES];
     
-    
-
+    return items;
     
 }
 

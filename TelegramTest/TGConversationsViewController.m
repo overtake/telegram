@@ -18,7 +18,7 @@
 #import "EmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
-
+#import "MessagesUtils.h"
 
 @interface TestView : TMView
 
@@ -82,6 +82,7 @@
     
     if(![TGPasslock isEnabled]) {
         [self initialize];
+       // [[MTNetwork instance] startNetwork];
     }
     
     
@@ -298,21 +299,42 @@
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
     
+    
+    NSArray *copy = [self.tableView.list copy];
+    
     [ASQueue dispatchOnStageQueue:^{
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
         NSArray *current = [[DialogsManager sharedManager] all];
         
-        for(TL_conversation *conversation in current) {
+        
+        [current enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
-            if(!conversation.isAddToList)
-                continue;
+            if(!obj.isAddToList)
+                return;
             
-            TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
+            
+            TGConversationTableItem *item;
+            
+            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.conversation.peer_id == %d",obj.peer_id]];
+            
+            if(f.count == 1) {
+                item = f[0];
+                
+                if(![item itemIsUpdated])
+                {
+                    [item needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj],@"isNotForReload":@(YES)}]];
+                }
+            } else {
+                item = [[TGConversationTableItem alloc] initWithConversation:obj];
+            }
+            
             
             [items addObject:item];
-        }
+            
+        }];
+        
         
         [ASQueue dispatchOnMainQueue:^{
             

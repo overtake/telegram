@@ -31,7 +31,7 @@
     dispatch_once(&onceToken, ^{
         controller = [[TMMediaUserPictureController alloc] init];
         controller.listCacheHash = new std::map<NSUInteger, bool>();
-        [Notification addObserver:controller selector:@selector(didChangeUserPicture:) name:USER_UPDATE_PHOTO];
+     //   [Notification addObserver:controller selector:@selector(didChangeUserPicture:) name:USER_UPDATE_PHOTO];
     });
     return controller;
 }

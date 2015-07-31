@@ -157,6 +157,7 @@
     return self.notify_settings.mute_until > [[MTNetwork instance] getTime];
 }
 
+
 - (BOOL) isAddToList {
     if(self.type == DialogTypeSecretChat)
         return YES;

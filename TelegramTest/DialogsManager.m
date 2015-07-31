@@ -12,6 +12,7 @@
 #import "PreviewObject.h"
 #import "SenderHeader.h"
 #import "MessagesBottomView.h"
+#import "MessagesUtils.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -65,7 +66,7 @@
         for (TL_conversation *dialog in updateDialogs.allValues) {
             [dialog save];
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
         }
         
         
@@ -212,7 +213,7 @@
             
             [dialog save];
             
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
             
             NSUInteger position = [self positionForConversation:dialog];
             
@@ -408,7 +409,7 @@
         
         [MessagesManager updateUnreadBadge];
         
-        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+        [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
         [[Storage manager] deleteMessagesInDialog:dialog completeHandler:block];
         
     };
@@ -509,7 +510,7 @@
            
             
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
         }
         
     }];
@@ -518,10 +519,19 @@
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
      [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog callback:^(NSArray *ids) {
+         
          if(ids.count > 0) {
-             [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-             [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog}];
+             
+             
+             [self.queue dispatchOnQueue:^{
+                 [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+             }];
+             
+             
          }
+         
+         
          
      }];
     
@@ -581,6 +591,8 @@
                 dialog.lastMessage = message;
                 
                 
+                [dialog save];
+                
             } else {
                 [self updateTop:message needUpdate:NO update_real_date:NO];
                 dialog = message.conversation;
@@ -612,25 +624,11 @@
         }
         
         
-        
-        BOOL checkSort = [self resortAndCheck];
-        
         [self add:last.allValues];
         
-        for (TL_conversation *dialog in last.allValues) {
-            [dialog save];
-            
-            if(checkSort) {
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog}];
-            }
-        }
-        
         [MessagesManager updateUnreadBadge];
-        
-       // if(!checkSort) {
+
         [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
-       // }
-        
         
     }];
     

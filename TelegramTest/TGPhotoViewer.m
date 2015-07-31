@@ -133,10 +133,6 @@ static const int controlsHeight = 75;
     [self.contentView addSubview:self.controls];
     
     
-    [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
-    [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
-    [Notification addObserver:self selector:@selector(didAddedPhoto:) name:USER_UPDATE_PHOTO];
-        
 }
 
 
@@ -481,7 +477,13 @@ static const int controlsHeight = 75;
     [self makeKeyAndOrderFront:self];
 }
 
+
 -(void)makeKeyAndOrderFront:(id)sender {
+    
+    
+    [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
+    [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
+    [Notification addObserver:self selector:@selector(didAddedPhoto:) name:USER_UPDATE_PHOTO];
     
      [self runAnimation:YES];
     
@@ -644,6 +646,7 @@ static const int controlsHeight = 75;
     
     if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
         [self orderOut:self];
+        [Notification removeObserver:self];
     }
     
     
