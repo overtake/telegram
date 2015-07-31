@@ -911,8 +911,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
          //[db beginTransaction];
         NSArray *msgs = [messages copy];
         
-        test_start_group(@"insert_messages");
-        
         for (TL_localMessage *message in msgs) {
             
             TL_localMessage *m = [message copy];
@@ -967,8 +965,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
         }
         
-        test_step_group(@"insert_messages");
-        test_release_group(@"insert_messages");
         if(completeHandler)
            dispatch_async(dispatch_get_main_queue(), ^{
                completeHandler();
