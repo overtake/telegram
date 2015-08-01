@@ -449,7 +449,9 @@
             [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
         }
         
+        
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
+        [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
 
@@ -510,8 +512,7 @@
            
             
             [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
-        }
+            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];        }
         
     }];
     
@@ -629,7 +630,7 @@
         [MessagesManager updateUnreadBadge];
 
         [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
-        
+        [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
     }];
     
 }

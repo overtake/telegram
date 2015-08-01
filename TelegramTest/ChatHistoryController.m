@@ -536,6 +536,10 @@ static NSMutableArray *listeners;
             return;
         }
         
+        if(self.conversation.peer_id == 46575809) {
+            int bp = 0;
+        }
+        
         
         self.proccessing = YES;
         
@@ -646,11 +650,13 @@ static NSMutableArray *listeners;
                         
                         
                         if(result.count < _selectLimit) {
-                            [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                             
-                            if(!next && (_min_id) == self.controller.conversation.top_message) {
+                            if(!next && (_min_id >= self.conversation.top_message)) {
                                 [self setState:ChatHistoryStateFull next:NO];
+                            } else {
+                                [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                             }
+                            
                         }
                         
                         
@@ -762,8 +768,15 @@ static NSMutableArray *listeners;
 -(void)setState:(ChatHistoryState)state next:(BOOL)next {
     if(next)
         _nextState = state;
-    else
-        _prevState = state;
+    else {
+         _prevState = state;
+        
+        if(_prevState == ChatHistoryStateRemote)
+        {
+            int bp = 0;
+        }
+    }
+    
 }
 
 

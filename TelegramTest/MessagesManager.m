@@ -107,7 +107,6 @@ static const int seconds_to_notify = 120;
          
         TL_conversation *conversation = message.conversation;
         
-        [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         

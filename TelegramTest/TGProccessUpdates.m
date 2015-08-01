@@ -1016,7 +1016,6 @@ static ASQueue *queue;
                 
                 if([response n_messages].count > 0) {
                     [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-                    [Notification perform:MESSAGE_LIST_RECEIVE object:[response n_messages]];
                 }
                 
                 

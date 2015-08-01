@@ -1399,7 +1399,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     if(hide) {
-        hide = self.historyController.prevState != ChatHistoryStateFull;
+        hide = self.historyController.prevState == ChatHistoryStateFull;
     }
     
     if(hide)

@@ -1063,15 +1063,24 @@
     NSString *string;
     
     
-    if(self.inputMessageTextField && self.inputMessageTextField.string.length == 0)
-        return;
-    
-    if(self.inputMessageTextField.string.length < selectedRange.location + 2)
-        string = [self.inputMessageTextField.string substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 1)];
-    
-    else {
-       string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(selectedRange.location- 1, 2)];
+    @try {
+        if(self.inputMessageTextField && self.inputMessageTextField.string.length == 0)
+            return;
+        
+        if(self.inputMessageTextField.string.length < selectedRange.location + 2)
+            string = [self.inputMessageTextField.string substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 1)];
+        
+        else {
+            string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 2)];
+        }
     }
+    @catch (NSException *exception) {
+        
+        int bp = 0;
+        
+    }
+    
+    
     
     
     
