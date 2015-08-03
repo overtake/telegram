@@ -14,7 +14,7 @@
     if(self = [super initWithObject:object]) {
         _conversation = object;
         
-        [Notification addObserver:self selector:@selector(didChangeNotifySettings:) name:PUSHNOTIFICATION_UPDATE];
+        [Notification addObserver:self selector:@selector(didChangeNotifySettings:) name:[Notification notificationNameByDialog:object action:@"notification"]];
 
     }
     
@@ -27,13 +27,8 @@
 
 -(void)didChangeNotifySettings:(NSNotification *)notify
 {
-    int peer_id = [notify.userInfo[KEY_PEER_ID] intValue];
-    
-   if(peer_id == _conversation.peer_id)
-   {
-       _conversation.notify_settings = notify.userInfo[@"notify_settings"];
-       [self redrawRow];
-   }
+    _conversation.notify_settings = notify.userInfo[@"notify_settings"];
+    [self redrawRow];
 }
 
 -(NSUInteger)hash {

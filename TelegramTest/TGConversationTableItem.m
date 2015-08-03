@@ -25,9 +25,11 @@
         [Notification addObserver:self selector:@selector(needUpdateMessage:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
         [Notification addObserver:self selector:@selector(needUpdateMessage:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
         [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:conversation action:@"typing"]];
+        
+        [Notification addObserver:self selector:@selector(didChangeNotifications:) name:[Notification notificationNameByDialog:conversation action:@"notification"]];
        
         [self needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}]];
-        
+    
         [self didChangeTyping:nil];
 
     }
@@ -35,9 +37,10 @@
     return self;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+-(void)didChangeNotifications:(NSNotification *)notification {
     [self performReload];
 }
+
 
 -(void)needUpdateMessage:(NSNotification *)notification {
     
@@ -108,10 +111,7 @@
 }
 
 -(void)clear {
-    if(self.class == [TGConversationTableItem class]) {
-        [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
-        [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
-    }
+    
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
@@ -121,10 +121,6 @@
     }
     
     _conversation = conversation;
-    
-    
-    [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
-    [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
 }
 
 

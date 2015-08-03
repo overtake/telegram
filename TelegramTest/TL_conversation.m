@@ -212,7 +212,8 @@
     self.notify_settings = notify_settings;
     
     [self save];
-    [Notification perform:PUSHNOTIFICATION_UPDATE data:@{KEY_PEER_ID: @(self.peer.peer_id), KEY_IS_MUTE: @(self.isMute),@"notify_settings":self.notify_settings}];
+    
+    [Notification perform:[Notification notificationNameByDialog:self action:@"notification"] data:@{@"notify_settings":self.notify_settings}];
 }
 
 
