@@ -48,12 +48,45 @@
     //    }
 }
 
+
 - (void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
     [Telegram leftViewController].archiver.size = newSize;
     
     [[Telegram leftViewController].archiver save];
+    
+    if([self inLiveResize]) {
+        NSRange visibleRows = [self.tableView rowsInRect:self.tableView.scrollView.contentView.bounds];
+        if(visibleRows.length > 0) {
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0];
+            
+            NSInteger count = visibleRows.location + visibleRows.length;
+            for(NSInteger i = visibleRows.location; i < count; i++) {
+                
+                TGConversationTableCell *view = [self.tableView viewAtColumn:0 row:i makeIfNecessary:NO];
+                
+                if([view isKindOfClass:[TGConversationTableCell class]])
+                    [view updateFrames];
+                else
+                    [view redrawRow];
+                
+            }
+            
+            [NSAnimationContext endGrouping];
+        }
+        
+        
+        
+        
+    } else {
+        
+    }
+}
+
+-(void)viewDidEndLiveResize {
+    [self.tableView reloadData];
 }
 
 - (void)scrollToPoint:(NSPoint)newOrigin {
@@ -111,6 +144,7 @@
     return self;
 }
 
+
 - (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend {
     [super selectRowIndexes:indexes byExtendingSelection:extend];
     
@@ -120,6 +154,11 @@
         [controll hideButton];
         self.swipeView = nil;
     }
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
 }
 
 - (BOOL)canSelectItem {

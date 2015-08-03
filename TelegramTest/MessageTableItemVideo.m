@@ -29,7 +29,7 @@
             
             [c setFont:TGSystemFont(13) forRange:c.range];
             
-            [c detectAndAddLinks];
+            [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
             
             _caption = c;
         }

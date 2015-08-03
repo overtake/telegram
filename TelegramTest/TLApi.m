@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.05.15..
+//  Auto created by Mikhail Filimonov on 24.07.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -137,8 +137,11 @@
 		NSInteger tl_count = [self.phone_numbers count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSString* obj = [self.phone_numbers objectAtIndex:i];
+            if([self.phone_numbers count] > i) {
+                NSString* obj = [self.phone_numbers objectAtIndex:i];
 			[stream writeString:obj];
+            }  else
+                break;
 		}
 	}
 	[stream writeString:self.message];
@@ -329,8 +332,8 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputUser* obj = [self.n_id objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputUser* obj = [self.n_id objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -391,8 +394,8 @@
 		NSInteger tl_count = [self.contacts count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputContact* obj = [self.contacts objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputContact* obj = [self.contacts objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeBool:self.replace];
@@ -440,8 +443,8 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputUser* obj = [self.n_id objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputUser* obj = [self.n_id objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -516,8 +519,11 @@
 		NSInteger tl_count = [self.export_card count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.export_card objectAtIndex:i];
+            if([self.export_card count] > i) {
+                NSNumber* obj = [self.export_card objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -538,8 +544,11 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.n_id objectAtIndex:i];
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -655,8 +664,11 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.n_id objectAtIndex:i];
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -692,43 +704,47 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id {
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
     obj.flags = flags;
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.message = message;
 	obj.random_id = random_id;
+	obj.reply_markup = reply_markup;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1696755930];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-61479243];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[stream writeString:self.message];
 	[stream writeLong:self.random_id];
+	if(self.flags & (1 << 2)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_sendMedia
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id {
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
     TLAPI_messages_sendMedia* obj = [[TLAPI_messages_sendMedia alloc] init];
     obj.flags = flags;
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.media = media;
 	obj.random_id = random_id;
+	obj.reply_markup = reply_markup;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:762913713];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-923703407];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) [stream writeInt:self.reply_to_msg_id];
 	[ClassStore TLSerialize:self.media stream:stream];
 	[stream writeLong:self.random_id];
+	if(self.flags & (1 << 2)) [ClassStore TLSerialize:self.reply_markup stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -750,8 +766,11 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.n_id objectAtIndex:i];
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	//Serialize ShortVector
@@ -760,8 +779,11 @@
 		NSInteger tl_count = [self.random_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.random_id objectAtIndex:i];
+            if([self.random_id count] > i) {
+                NSNumber* obj = [self.random_id objectAtIndex:i];
 			[stream writeLong:[obj longValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -782,8 +804,11 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.n_id objectAtIndex:i];
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -880,8 +905,8 @@
 		NSInteger tl_count = [self.users count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputUser* obj = [self.users objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	[stream writeString:self.title];
@@ -967,8 +992,8 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputPhoto* obj = [self.n_id objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputPhoto* obj = [self.n_id objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -1068,8 +1093,8 @@
 		NSInteger tl_count = [self.events count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputAppEvent* obj = [self.events objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputAppEvent* obj = [self.events objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -1142,8 +1167,8 @@
 		NSInteger tl_count = [self.contacts count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputUser* obj = [self.contacts objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputUser* obj = [self.contacts objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	//Serialize ShortVector
@@ -1152,8 +1177,11 @@
 		NSInteger tl_count = [self.random_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.random_id objectAtIndex:i];
+            if([self.random_id count] > i) {
+                NSNumber* obj = [self.random_id objectAtIndex:i];
 			[stream writeLong:[obj longValue]];
+            }  else
+                break;
 		}
 	}
 	[stream writeString:self.message];
@@ -1585,8 +1613,11 @@
 		NSInteger tl_count = [self.n_id count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			NSNumber* obj = [self.n_id objectAtIndex:i];
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
 			[stream writeInt:[obj intValue]];
+            }  else
+                break;
 		}
 	}
 	return [stream getOutput];
@@ -1663,8 +1694,8 @@
 		NSInteger tl_count = [self.rules count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-			TLInputPrivacyRule* obj = [self.rules objectAtIndex:i];
-			[ClassStore TLSerialize:obj stream:stream];
+            TLInputPrivacyRule* obj = [self.rules objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
 	return [stream getOutput];
@@ -1790,6 +1821,25 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:954152242];
 	[stream writeInt:self.period];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_importBotAuthorization
++(TLAPI_auth_importBotAuthorization*)createWithFlags:(int)flags api_id:(int)api_id api_hash:(NSString*)api_hash bot_auth_token:(NSString*)bot_auth_token {
+    TLAPI_auth_importBotAuthorization* obj = [[TLAPI_auth_importBotAuthorization alloc] init];
+    obj.flags = flags;
+	obj.api_id = api_id;
+	obj.api_hash = api_hash;
+	obj.bot_auth_token = bot_auth_token;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1738800940];
+	[stream writeInt:self.flags];
+	[stream writeInt:self.api_id];
+	[stream writeString:self.api_hash];
+	[stream writeString:self.bot_auth_token];
 	return [stream getOutput];
 }
 @end
@@ -1966,14 +2016,16 @@
 @end
 
 @implementation TLAPI_messages_installStickerSet
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset {
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled {
     TLAPI_messages_installStickerSet* obj = [[TLAPI_messages_installStickerSet alloc] init];
     obj.stickerset = stickerset;
+	obj.disabled = disabled;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-272893207];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2066793382];
 	[ClassStore TLSerialize:self.stickerset stream:stream];
+	[stream writeBool:self.disabled];
 	return [stream getOutput];
 }
 @end
@@ -1987,6 +2039,25 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-110209570];
 	[ClassStore TLSerialize:self.stickerset stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_startBot
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param {
+    TLAPI_messages_startBot* obj = [[TLAPI_messages_startBot alloc] init];
+    obj.bot = bot;
+	obj.chat_id = chat_id;
+	obj.random_id = random_id;
+	obj.start_param = start_param;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:457052156];
+	[ClassStore TLSerialize:self.bot stream:stream];
+	[stream writeInt:self.chat_id];
+	[stream writeLong:self.random_id];
+	[stream writeString:self.start_param];
 	return [stream getOutput];
 }
 @end

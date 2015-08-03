@@ -72,6 +72,8 @@ int maxChatUsers();
 
 +(void)initializeDatabase;
 
++(void)sendLogs;
+
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;
 

@@ -15,7 +15,7 @@
 -(void)_didDownloadImage:(DownloadItem *)item {
     __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
 
-    NSImage *image = renderedImage(imageOrigin, imageOrigin.size);
+    NSImage *image = renderedImage(imageOrigin, imageOrigin.size.width == 0 || imageOrigin.size.height ? self.imageSize : imageOrigin.size);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[AVACACHE]];
     

@@ -35,7 +35,7 @@ extern NSString *const MESSAGE_LIST_UPDATE_TOP; // список новых со�
 extern NSString *const MEDIA_RECEIVE;
 
 //extern NSString *const MESSAGES_CHANGE_DIALOG;
-
+extern NSString *const KEY_LAST_CONVRESATION_DATA;
 extern NSString *const DIALOG_UPDATE; // просто обновить содержимое диалога
 extern NSString *const DIALOG_TO_TOP; // надо поднять диалог на самый верх.
 extern NSString *const DIALOG_DELETE; // надо поднять диалог на самый верх.
@@ -45,7 +45,7 @@ extern NSString *const DIALOGS_NEED_FULL_RESORT; // надо полностью 
 extern NSString *const DIALOG_CREATE_NEW; // создан новй диалог, надо его отобразить сверху
 extern NSString *const DIALOGS_NEED_SHOW; // можно показать диалоги K
 extern NSString *const CONTACTS_MODIFIED; // контакты модифицированны
-
+extern NSString *const CONTACTS_SORT_CHANGED; // сортировка контактов обновлена
 extern NSString *const CONTACTS_NOT_REGISTRED_READY; // список неразеганных контактов
 
 extern NSString *const MODAL_VIEW_SHOW;
@@ -80,7 +80,7 @@ extern NSString *const UPDATE_NEW_AUTH;
 extern NSString *const UPDATE_WEB_PAGES;
 
 extern NSString *const UPDATE_READ_CONTENTS;
-
+extern NSString *const UPDATE_AUDIO_PLAYER_STATE;
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 

@@ -90,6 +90,31 @@ static CALAyerAnimationInstance *instance() {
     return instance;
 }
 
+- (void)removeAllSubviews {
+    while (self.subviews.count > 0) {
+        [self.subviews[0] removeFromSuperview];
+    }
+}
+
+- (id)superviewByClass:(NSString *)className {
+    NSView *superview = self.superview;
+    
+    if([superview.className isEqualToString:className])
+        return superview;
+    
+    while (superview) {
+        
+        superview = superview.superview;
+        
+        if([superview.className isEqualToString:className]) {
+            return superview;
+        }
+        
+    }
+    
+    return nil;
+}
+
 @end
 
 @implementation CALAyerAnimationInstance
@@ -121,9 +146,8 @@ static CALAyerAnimationInstance *instance() {
     }
 }
 
--(void)dealloc {
-    assert([NSThread isMainThread]);
-}
+
+
 
 
 @end

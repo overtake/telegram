@@ -17,7 +17,7 @@
 
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -33,6 +33,7 @@
     msg.dstate = state;
     msg.fakeId = fakeId;
     msg.randomId = randomId;
+    msg.reply_markup = reply_markup;
     return msg;
 }
 
@@ -102,7 +103,7 @@
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
-        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup state:DeliveryStateNormal];
     } else {
         return (TL_localMessage *) message;
     }
@@ -140,6 +141,8 @@
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
+    if(self.flags & (1 << 6))
+        [ClassStore TLSerialize:self.reply_markup stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
@@ -155,6 +158,8 @@
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
+    if(self.flags & (1 << 6))
+        self.reply_markup = [ClassStore TLDeserialize:stream];
 }
 
 -(int)peer_id {
@@ -187,18 +192,33 @@
 }
 
 
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    if((self = [TLClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[TLClassStore serialize:self] forKey:@"data"];
+}
 
 -(BOOL)n_out {
-    return (self.flags & TGOUTMESSAGE) == TGOUTMESSAGE;
+    return self.flags & TGOUTMESSAGE;
 }
 
 
 -(BOOL)unread {
-    return (self.flags & TGUNREADMESSAGE) == TGUNREADMESSAGE;
+    return self.flags & TGUNREADMESSAGE;
 }
 
 -(BOOL)readedContent {
     return (self.flags & TGREADEDCONTENT) == 0;
+}
+
+-(BOOL)isMentioned {
+    return self.flags & TGMENTIONMESSAGE;
 }
 
 -(void)setFlags:(int)flags {
@@ -223,25 +243,26 @@ DYNAMIC_PROPERTY(DDialog);
 
 - (TL_conversation *)conversation {
     
-    TL_conversation *dialog = [self getDDialog];
+    __block TL_conversation *dialog;
     
-    if(!dialog) {
-        dialog = [[DialogsManager sharedManager] find:self.peer_id];
-        [self setDDialog:dialog];
-    }
-    
-    if(!dialog) {
-        dialog = [[Storage manager] selectConversation:self.peer];
+    dialog = [self getDDialog];
         
-        if(!dialog)
-            dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
-        else
-            [[DialogsManager sharedManager] add:@[dialog]];
+        if(!dialog) {
+            dialog = [[DialogsManager sharedManager] find:self.peer_id];
+            [self setDDialog:dialog];
+        }
         
-        [self setDDialog:dialog];
-    }
-    
-    
+        if(!dialog) {
+            dialog = [[Storage manager] selectConversation:self.peer];
+            
+            if(!dialog)
+                dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
+            else
+                [[DialogsManager sharedManager] add:@[dialog]];
+            
+            [self setDDialog:dialog];
+        }
+
     
     return dialog;
 }
@@ -258,6 +279,11 @@ DYNAMIC_PROPERTY(DDialog);
     }
     
     if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+        if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
+            mask|=HistoryFilterAudioDocument;
+        }
+        
         mask|=HistoryFilterDocuments;
     }
     
@@ -271,6 +297,10 @@ DYNAMIC_PROPERTY(DDialog);
     
     if([self.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         mask|=HistoryFilterPhoto;
+    }
+    
+    if([self.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        mask|=HistoryFilterSharedLink;
     }
     
     return mask;
@@ -301,7 +331,7 @@ DYNAMIC_PROPERTY(DDialog);
 }
 
 -(id)copy {
-    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId state:self.dstate];
+    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup state:self.dstate];
 }
 
 

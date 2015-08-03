@@ -106,16 +106,7 @@
                                     <action selector="showAudioMiniPlayer:" target="QPE-Oq-DBa" id="Me0-8C-uW8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="LA8-TF-Ir0">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Leave from Chat..." id="Mor-AG-ZB5">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="clearChatHistory:" target="QPE-Oq-DBa" id="qTu-Ik-jyZ"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="tug-ay-m2u">
+                            <menuItem isSeparatorItem="YES" tag="2000" id="LA8-TF-Ir0">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Log Out" id="FJL-I9-FV9">

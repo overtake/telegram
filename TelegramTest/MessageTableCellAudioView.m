@@ -32,7 +32,7 @@
         weak();
         
         self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 37, 37)];
-        [self.playerButton setOpacityHover:YES];
+     //   [self.playerButton setOpacityHover:YES];
         [self.playerButton setBackgroundImage:image_VoicePlay() forControlState:BTRControlStateNormal];
     //    [self.playerButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [self.playerButton addBlock:^(BTRControlEvents events) {
@@ -104,7 +104,7 @@
         
         [self setProgressStyle:TMCircularProgressLightStyle];
         
-        [self setProgressFrameSize:NSMakeSize(35, 35)];
+        [self setProgressFrameSize:NSMakeSize(34, 34)];
         
         [self setProgressToView:self.playerButton];
         

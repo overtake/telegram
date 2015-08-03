@@ -34,8 +34,17 @@
     self = [super initWithQueue:queue];
     if(self) {
         [Notification addObserver:self selector:@selector(protocolUpdated:) name:PROTOCOL_UPDATED];
+        [Notification addObserver:self selector:@selector(userStatusChanged:) name:USER_STATUS];
     }
     return self;
+}
+
+-(void)userStatusChanged:(NSNotification *)notification
+{
+    [self.queue dispatchOnQueue:^{
+        [self sortAndNotify:YES];
+    }];
+    
 }
 
 - (void)protocolUpdated:(NSNotification *)notify {
@@ -44,9 +53,7 @@
 
 
 - (void) fullReload {
-    
-    int bp = 0;
-    
+        
     [self.queue dispatchOnQueue:^{
         [self->keys removeAllObjects];
         [self->list removeAllObjects];
@@ -92,10 +99,20 @@
     [self.queue dispatchOnQueue:^{
         [super add:all withCustomKey:key];
         
-        NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.fullName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-        
-        [self->list sortUsingDescriptors:@[descriptor]];
+        [self sortAndNotify:NO];
     }];
+}
+
+-(void)sortAndNotify:(BOOL)notify
+{
+    NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.lastSeenTime" ascending:NO];
+    
+    [self->list sortUsingDescriptors:@[descriptor]];
+    
+    if(notify)
+    {
+        [Notification perform:CONTACTS_SORT_CHANGED data:@{}];
+    }
 }
 
 

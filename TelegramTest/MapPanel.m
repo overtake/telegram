@@ -151,7 +151,7 @@
         } forControlEvents:BTRControlEventClick];
         
         
-        BTRButton *cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, (controlHeight - 17) / 2, 50, 20)];
+        BTRButton *cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, (controlHeight - 17) / 2, 60, 20)];
         
         [cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
         

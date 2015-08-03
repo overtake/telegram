@@ -21,9 +21,10 @@
 
 
 
-- (void) loadStored;
+- (void)loadStored;
 - (int) getOnlineCount:(int)chat_id;
-- (void)loadIfNeed:(int)chat_id;
-- (void)performLoad:(int)chat_id callback:(dispatch_block_t)callback;
+- (void)loadIfNeed:(int)chat_id force:(BOOL)force;
+- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback;
+- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback;
 - (FullChatMembersChecker *)fullChatMembersCheckerByChatId:(int)chatId;
 @end

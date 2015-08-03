@@ -61,23 +61,23 @@ static const NSMutableDictionary *cache;
 
 -(void)didDeletedMessages:(NSNotification *)notification {
     
-    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
-    
-    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
-        
-        TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
-        
-        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
-            
-            NSNumber *count = cache[[self primaryKey]][@(msg.peer_id)];
-            
-            if(count != nil) {
-                cache[[self primaryKey]][@(msg.peer_id)] = @([count intValue] - 1);
-            }
-        }
-        
-    }];
-    
+//    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+//    
+//    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
+//        
+//        TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
+//        
+//        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
+//            
+//            NSNumber *count = cache[[self primaryKey]][@(msg.peer_id)];
+//            
+//            if(count != nil) {
+//                cache[[self primaryKey]][@(msg.peer_id)] = @([count intValue] - 1);
+//            }
+//        }
+//        
+//    }];
+//    
 }
 
 
@@ -99,7 +99,7 @@ static const NSMutableDictionary *cache;
 
 - (void)didReceivedMedia:(NSNotification *)notify {
     PreviewObject *preview = notify.userInfo[KEY_PREVIEW_OBJECT];
-    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
+    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[(TL_localMessage *)preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
         int count = [cache[[self primaryKey]][@(preview.peerId)] intValue];
         count++;
         cache[[self primaryKey]][@(preview.peerId)] = @(count);

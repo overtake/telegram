@@ -32,11 +32,7 @@
 - (TMView *)view;
 - (void)setHidden:(BOOL)isHidden;
 
-- (void)viewWillAppear:(BOOL)animated;
-- (void)viewDidAppear:(BOOL)animated;
 
-- (void)viewWillDisappear:(BOOL)animated;
-- (void)viewDidDisappear:(BOOL)animated;
 
 - (void)setLeftNavigationBarView:(TMView *)leftNavigationBarView animated:(BOOL)animation;
 - (void)setRightNavigationBarView:(TMView *)rightNavigationBarView animated:(BOOL)animation;
@@ -87,8 +83,13 @@
 -(void)_didStackRemoved;
 
 -(BOOL)becomeFirstResponder;
+- (void)loadViewIfNeeded;
+- (void)loadView;
+- (void)viewWillAppear:(BOOL)animated;
+- (void)viewDidAppear:(BOOL)animated;
 
--(void)loadView;
+- (void)viewWillDisappear:(BOOL)animated;
+- (void)viewDidDisappear:(BOOL)animated;
 
 -(TMView *)standartLeftBarView;
 

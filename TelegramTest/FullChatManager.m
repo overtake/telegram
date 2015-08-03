@@ -134,12 +134,10 @@
 - (void)updateParticipantsNotification:(NSNotification *)notify {
     int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
     
-    [self.queue dispatchOnQueue:^{
-        FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
-        if(checker) {
-            [checker reloadParticipants];
-        }
-    }];
+    FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
+    if(checker) {
+        [checker reloadParticipants];
+    }
     
    
 }
@@ -148,7 +146,7 @@
     
     __block id object;
     
-    [self.queue dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         object = [self.membersCheker objectForKey:@(chatId)];
     } synchronous:YES];
     
@@ -168,43 +166,58 @@
 }
 
 - (void)loadChatFull {
-    [self.queue dispatchOnQueue:^{
-        NSArray *array =[[ChatsManager sharedManager] all];
-        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
-        for(TLChat *chat in array) {
-            if([chat isKindOfClass:[TL_chat class]]) {
-                if(![self find:chat.n_id]) {
-                    [needToLoad addObject:@(chat.n_id)];
-                }
-            }
-        }
-        
-        MTLog(@"need to load full chats%@", needToLoad);
-        [self loadFullChats:needToLoad];
-    }];
+//    [self.queue dispatchOnQueue:^{
+//        NSArray *array =[[ChatsManager sharedManager] all];
+//        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
+//        for(TLChat *chat in array) {
+//            if([chat isKindOfClass:[TL_chat class]]) {
+//                if(![self find:chat.n_id]) {
+//                    [needToLoad addObject:@(chat.n_id)];
+//                }
+//            }
+//        }
+//        
+//        MTLog(@"need to load full chats%@", needToLoad);
+//        [self loadFullChats:needToLoad];
+//    }];
 }
 
 - (void)loadFullChats:(NSArray *)array {
     for(NSNumber *number in array) {
         int chat_id = [number intValue];
-        [self loadFullChatByChatId:chat_id];
+        [self loadFullChatByChatId:chat_id force:NO];
     }
 }
 
-- (void) loadIfNeed:(int)chat_id {
+- (void) loadIfNeed:(int)chat_id force:(BOOL)force {
     if(!self.isLoad)
         return;
     
     TLChatFull *chat = [self find:chat_id];
-    if(!chat || chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime])
-        [self loadFullChatByChatId:chat_id];
+    if(!chat || (chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime]) || force || chat.class == [TL_chatFull_old29 class])
+        [self loadFullChatByChatId:chat_id force:force];
 }
 
-- (void)performLoad:(int)chat_id callback:(dispatch_block_t)callback {
-    [self loadFullChatByChatId:chat_id callback:callback];
+- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:NO callback:callback];
 }
 
-- (void)loadFullChatByChatId:(int)chat_id callback:(dispatch_block_t)callback {
+- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:force callback:callback];
+}
+
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
+    
+    TLChatFull *fullChat = [self find:chat_id];
+    
+    if(fullChat ) {
+        if(callback != nil)
+            callback(fullChat);
+        if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
+                return;
+        }
+        
+    }
     
         
     [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
@@ -217,41 +230,45 @@
             [conversation save];
         }
         
-        
         [SharedManager proccessGlobalResponse:result];
         
         [self.queue dispatchOnQueue:^{
             
-            [self add:[[NSArray alloc] initWithObjects:[result full_chat], nil]];
+            [self add:@[[result full_chat]]];
+            
+            TLChatFull *current = [self find:chat_id];
+            
+            
+            
+            [current setLastLayerUpdated:YES];
             
             [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
             
             
-            [LoopingUtils runOnMainQueueAsync:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(callback)
-                    callback();
+                    callback([result full_chat]);
             }];
+
         }];
-        
-       
-        
+
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
         if(callback)
-            callback();
+            callback(nil);
     }];
     
 }
 
-- (void)loadFullChatByChatId:(int)chat_id {
-    [self loadFullChatByChatId:chat_id callback:nil];
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force {
+    [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 
 - (int)getOnlineCount:(int)chat_id {
     
     __block int count;
     
-    [self.queue dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
@@ -284,18 +301,13 @@
                 currentChat.chat_photo = newChatFull.chat_photo;
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
-                
-                //            if(currentChat.notify_settings.mute_until != newChatFull.notify_settings.mute_until) {
-                //                currentChat.notify_settings = newChatFull.notify_settings;
-                //
-                //                [[PushNotificationsManager sharedManager] set:currentChat.notify_settings.mute_until forPeer:-currentChat.n_id save:YES];
-                //            }
-                
+                currentChat.bot_info = newChatFull.bot_info;
+
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
                 currentChat = newChatFull;
-                
-                //            [[PushNotificationsManager sharedManager] set:currentChat.notify_settings.mute_until forPeer:-currentChat.n_id save:NO];
+                if(currentChat.lastUpdateTime == 0)
+                    currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
             NSArray *copy = [currentChat.participants.participants copy];

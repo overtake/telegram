@@ -17,4 +17,10 @@
     return self.expires ? self.expires : self.was_online;
 }
 
+-(id)photo_small {
+    
+    
+    return nil;
+}
+
 @end

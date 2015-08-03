@@ -12,8 +12,9 @@
 #import "EmojiButton.h"
 #import "NSString+Extended.h"
 #import "MessagesBottomView.h"
+#import "TGStickerPackEmojiController.h"
 #define EMOJI_IMAGE(img) image_test#img
-#define EMOJI_COUNT_PER_ROW 11
+#define EMOJI_COUNT_PER_ROW 10
 
 
 
@@ -117,6 +118,8 @@
 
 
 - (void)setEmoji:(NSString *)string atIndex:(int)index {
+    
+    
     EmojiButton *button = [self.subviews objectAtIndex:index];
     if(string) {
         [button setHidden:NO];
@@ -150,7 +153,7 @@
 @property (nonatomic, strong) TMView *bottomView;
 @property (nonatomic, strong) NSArray *segments;
 @property (nonatomic, strong) NSMutableArray *userEmoji;
-@property (nonatomic, strong) TGAllStickersTableView *stickersTableView;
+@property (nonatomic, strong) TGStickerPackEmojiController *stickersTableView;
 
 @end
 
@@ -174,7 +177,7 @@
     static EmojiViewController *controller;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 240)];
+        controller = [[EmojiViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 300)];
     });
     return controller;
 }
@@ -187,7 +190,7 @@
         
         self.userEmoji = [Storage emoji];
         
-        NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕" componentsSeparatedByString:@" "] mutableCopy];
+        NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 😢 😪 😥 😰 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎" componentsSeparatedByString:@" "] mutableCopy];
         
         
         [self.userEmoji enumerateObjectsUsingBlock:^(NSString *emoji, NSUInteger idx, BOOL *stop) {
@@ -201,12 +204,12 @@
         if(floor(NSAppKitVersionNumber) >= 1347 ) {
             emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 🚶 🏃 💃 👫 👬 👭 💏 💑 👪 👨‍👩‍👧 👨‍👩‍👧‍👦 👨‍👩‍👦‍👦 👨‍👩‍👧‍👧 👩‍👩‍👦 👩‍👩‍👧 👩‍👩‍👧‍👦 👩‍👩‍👦‍👦 👩‍👩‍👧‍👧 👨‍👨‍👦 👨‍👨‍👧 👨‍👨‍👧‍👦 👨‍👨‍👦‍👦 👨‍👨‍👧‍👧 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
         } else {
-            emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 ☝️ 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 🚶 🏃 💃 👫 👪 👬 👭 💏 💑 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
+            emoji2 = @"😄 😃 😀 😊 ☺️ 😉 😍 😘 😚 😗 😙 😜 😝 😛 😳 😁 😔 😌 😒 😞 😣 😢 😂 😭 😪 😥 😰 😅 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎 😴 😵 😲 😟 😦 😧 😈 👿 😮 😬 😐 😕 😯 😶 😇 😏 😑 👲 👳 👮 👷 💂 👶 👦 👧 👨 👩 👴 👵 👱 👼 👸 😺 😸 😻 😽 😼 🙀 😿 😹 😾 👹 👺 🙈 🙉 🙊 💀 👽 💩 🔥 ✨ 🌟 💫 💥 💢 💦 💧 💤 💨 👂 👀 👃 👅 👄 👍 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 ☝️ 👇 👉 👈 🙌 🙏 👏 💪 🚶 🏃 💃 👫 👪 👬 👭 💏 💑 👯 🙆 🙅 💁 🙋 💆 💇 💅 👰 🙎 🙍 🙇 🎩 👑 👒 👟 👞 👡 👠 👢 👕 👔 👚 👗 🎽 👖 👘 👙 💼 👜 👝 👛 👓 🎀 🌂 💄 💛 💙 💜 💚 ❤️ 💔 💗 💓 💕 💖 💞 💘 💌 💋 💍 💎 👤 👥 💬 👣 💭";
         }
         
        
         
-        NSString *emoji3 = @"🐶 🐺 🐱 🐭 🐹 🐰 🐸 🐯 🐨 🐻 🐷 🐽 🐮 🐗 🐵 🐒 🐴 🐑 🐘 🐼 🐧 🐦 🐤 🐥 🐣 🐔 🐍 🐢 🐛 🐝 🐜 🐞 🐌 🐙 🐚 🐠 🐟 🐬 🐳 🐋 🐄 🐏 🐀 🐃 🐅 🐇 🐉 🐎 🐐 🐓 🐕 🐖 🐁 🐂 🐲 🐡 🐊 🐫 🐪 🐆 🐈 🐩 🐾 💐 🌸 🌷 🍀 🌹 🌻 🌺 🍁 🍃 🍂 🌿 🌾 🍄 🌵 🌴 🌲 🌳 🌰 🌱 🌼 🌐 🌞 🌝 🌚 🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘 🌜🌛 🌙 🌍 🌎 🌏 🌋 🌌 🌠 ⭐️ ☀️ ⛅️ ☁️ ⚡️ ☔️ ❄️ ⛄️ 🌀 🌁 🌈 🌊";
+        NSString *emoji3 = @"🐶 🐺 🐱 🐭 🐹 🐰 🐸 🐯 🐨 🐻 🐷 🐽 🐮 🐗 🐵 🐒 🐴 🐑 🐘 🐼 🐧 🐦 🐤 🐥 🐣 🐔 🐍 🐢 🐛 🐝 🐜 🐞 🐌 🐙 🐚 🐠 🐟 🐬 🐳 🐋 🐄 🐏 🐀 🐃 🐅 🐇 🐉 🐎 🐐 🐓 🐕 🐖 🐁 🐂 🐲 🐡 🐊 🐫 🐪 🐆 🐈 🐩 🐾 💐 🌸 🌷 🍀 🌹 🌵 🌻 🌺 🍁 🍃 🍂 🌿 🌾 🍄 🌵 🌴 🌲 🌳 🌰 🌱 🌼 🌐 🌞 🌝 🌚 🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘 🌜🌛 🌙 🌍 🌎 🌏 🌋 🌌 🌠 ⭐️ ☀️ ⛅️ ☁️ ⚡️ ☔️ ❄️ ⛄️ 🌀 🌁 🌈 🌊";
         
         NSString *emoji4 = @"🎍 💝 🎎 🎒 🎓 🎏 🎆 🎇 🎐 🎑 🎃 👻 🎅 🎄 🎁 🎋 🎉 🎊 🎈 🎌 🔮 🎥 📷 📹 📼 💿 📀 💽 💾 💻 📱 ☎️ 📞 📟 📠 📡 📺 📻 🔊 🔉 🔈 🔇 🔔 🔕 📢 📣 ⏳ ⌛️ ⏰ ⌚️ 🔓 🔒 🔏 🔐 🔑 🔎 💡 🔦 🔆 🔅 🔌 🔋 🔍 🛁 🛀 🚿 🚽 🔧 🔩 🔨 🚪 🚬 💣 🔫 🔪 💊 💉 💰 💴 💵 💷 💶 💳 💸 📲 📧 📥 📤 ✉️ 📩 📨 📯 📫 📪 📬 📭 📮 📦 📝 📄 📃 📑 📊 📈 📉 📜 📋 📅 📆 📇 📁 📂 ✂️ 📌 📎 ✒️ ✏️ 📏 📐 📕 📗 📘 📙 📓 📔 📒 📚 📖 🔖 📛 🔬 🔭 📰 🎨 🎬 🎤 🎧 🎼 🎵 🎶 🎹 🎻 🎺 🎷 🎸 👾 🎮 🃏 🎴 🀄️ 🎲 🎯 🏈 🏀 ⚽️ ⚾️ 🎾 🎱 🏉 🎳 ⛳️ 🚵 🚴 🏁 🏇 🏆 🎿 🏂 🏊 🏄 🎣 ☕️ 🍵 🍶 🍼 🍺 🍻 🍸 🍹 🍷 🍴 🍕 🍔 🍟 🍗 🍖 🍝 🍛 🍤 🍱 🍣 🍥 🍙 🍘 🍚 🍜 🍲 🍢 🍡 🍳 🍞 🍩 🍮 🍦 🍨 🍧 🎂 🍰 🍪 🍫 🍬 🍭 🍯 🍎 🍏 🍊 🍋 🍒 🍇 🍉 🍓 🍑 🍈 🍌 🍐 🍍 🍠 🍆 🍅 🌽";
         
@@ -220,19 +223,19 @@
 }
 
 +(void)reloadStickers {
-    [[self instance].stickersTableView load:YES];
+    [[self instance].stickersTableView.stickers load:YES];
 }
 
 +(NSArray *)allStickers {
-    return [[self instance].stickersTableView allStickers];
+    return [[self instance].stickersTableView.stickers allStickers];
 }
 
 +(NSArray *)allSets {
-    return [[self instance].stickersTableView sets];
+    return [[self instance].stickersTableView.stickers sets];
 }
 
 +(void)loadStickersIfNeeded {
-   [[self instance].stickersTableView load:NO];
+   [[self instance].stickersTableView.stickers load:NO];
 }
 
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji {
@@ -290,12 +293,12 @@
     [self.view addSubview:self.bottomView];
     
     
-    self.stickersTableView = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
+    self.stickersTableView = [[TGStickerPackEmojiController alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
     
     
-    [self.view addSubview:self.stickersTableView.containerView];
+    [self.view addSubview:self.stickersTableView];
     
-    [self.stickersTableView.containerView setHidden:YES];
+    [self.stickersTableView setHidden:YES];
 
     
     self.tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
@@ -409,12 +412,13 @@
     [self.tableView scrollToBeginningOfDocument:nil];
     
     if(self.currentButton.index == 7) {
-        [self.stickersTableView load:NO];
+        [self.stickersTableView reload];
+        
     }
     
     
     [self.tableView.containerView setHidden:self.currentButton.index == 7];
-    [self.stickersTableView.containerView setHidden:self.currentButton.index != 7];
+    [self.stickersTableView setHidden:self.currentButton.index != 7];
     
     
 }
@@ -447,11 +451,14 @@
         cell.controller = self;
     }
     
-    
     NSArray *currentArray = self.segments[MIN(self.currentButton.index - 1, 5)];
+    
+    
     long startPos = row * EMOJI_COUNT_PER_ROW;
     for(long i = 0; i < EMOJI_COUNT_PER_ROW; i++) {
         NSString *emoji;
+        
+        
         if(startPos + i < currentArray.count) {
             emoji = currentArray[startPos + i];
         }

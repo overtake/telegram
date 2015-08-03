@@ -125,6 +125,7 @@
                     if(res) {
                          _saveTime = [[MTNetwork instance] getTime];
                         [TMViewController hidePasslock];
+                        [[Telegram rightViewController] becomeFirstResponder];
                     }
                     
                     return res;

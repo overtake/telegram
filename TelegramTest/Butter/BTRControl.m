@@ -173,9 +173,6 @@ static void BTRControlCommonInit(BTRControl *self) {
 	[self contentForControlState:state].titleFont = font;
 }
 
-- (void)setTitleAlignment:(NSTextAlignment)alignment {
-    [[self contentForControlState:BTRControlStateNormal] setTitleAlignment:alignment];
-}
 
 - (NSCursor *)cursorForControlState:(BTRControlState)state {
 	return [self contentForControlState:state].cursor;
@@ -580,9 +577,6 @@ static void BTRControlCommonInit(BTRControl *self) {
 	[self controlContentChanged];
 }
 
-- (void)setTitleAlignment:(NSTextAlignment)alignment {
-    [_attributedTitle setAlignment:alignment range:_attributedTitle.range];
-}
 
 - (void)setTitleColor:(NSColor *)titleColor {
 	if (titleColor) {

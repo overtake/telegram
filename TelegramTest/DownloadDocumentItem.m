@@ -32,7 +32,7 @@
         NSString *old_path = self.path;
         
         
-        self.path = mediaFilePath([self.object media]);
+        self.path = mediaFilePath([(TL_localMessage *)self.object media]);
         
         NSError *error = nil;
         
@@ -42,49 +42,22 @@
             [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
         
-        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[self.object media]).document file_path:self.path];
+        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[(TL_localMessage *)self.object media]).document file_path:self.path];
         
         
-        if([document.mime_type hasPrefix:@"audio/"]) {
+         TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
+        
+        if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
             
-            NSString *id3fileName;
+            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+            NSDictionary *tags = audioTags(asset);
             
-            if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
-                
-                AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
-                
-                NSArray *metadata = [asset metadataForFormat:@"org.id3"];
-                
-                NSString *songName;
-                NSString *artistName;
-                
-                for (AVMutableMetadataItem *metaItem in metadata) {
-                    if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
-                        artistName = (NSString *) metaItem.value;
-                    } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
-                        songName = (NSString *) metaItem.value;
-                    }
-                }
-                
-                if(songName && artistName)
-                    id3fileName = [NSString stringWithFormat:@"%@ - %@",artistName,songName];
-                else
-                    id3fileName = document.file_name;
-                
-                
-                
-                //AVMetadataIdentifierID3MetadataTitleDescription - song name
-                //AVMetadataIdentifierID3MetadataLeadPerformer - artist name
-            } else
-                id3fileName = document.file_name;
-            
-            TL_documentAttributeFilename *attr = (TL_documentAttributeFilename *) [document attributeWithClass:[TL_documentAttributeFilename class]];
-            
-            attr.file_name = id3fileName;
+            attr.title = tags[@"songName"];
+            attr.performer = tags[@"artist"];
             
         }
         
-        ((TLMessageMedia *)[self.object media]).document = document;
+        ((TLMessageMedia *)[(TL_localMessage *)self.object media]).document = document;
         
         [[Storage manager] updateMessages:@[self.object]];
         

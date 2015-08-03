@@ -67,7 +67,7 @@
         TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:@""];
         
         
-        [TGCache cacheImage:renderedImage(image, maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
+        [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
         
@@ -106,7 +106,7 @@
         if(strongSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId];
+            request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {

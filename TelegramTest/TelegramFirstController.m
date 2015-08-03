@@ -40,8 +40,15 @@
     
     [main.submenu removeItem:[main.submenu itemWithTag:1000]];
     
+  
+    main = [menu itemAtIndex:1];
+    [main.submenu removeItemAtIndex:1];
+    
 #endif
     
+    
+    
+
     
 }
 
@@ -173,9 +180,9 @@
 
 
 - (IBAction)showAudioMiniPlayer:(id)sender {
-    
+#ifdef TGDEBUG
     [TGAudioPlayerWindow show:[Telegram conversation]];
-    
+#endif
 }
 
 

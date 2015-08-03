@@ -46,7 +46,7 @@
         
         NSImage *img = image_AddSharedContact();
         
-        self.addImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(9, 8, img.size.width, img.size.height)];
+        self.addImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(9, 7, img.size.width, img.size.height)];
         
         self.addImageView.image = img;
         
@@ -123,7 +123,7 @@
     
     [self setFrameSize:NSMakeSize( self.textLayer.frame.size.width+60, self.frame.size.height)];
     [self.containerView setFrameSize:NSMakeSize(self.textLayer.frame.size.width+38, self.containerView.frame.size.height)];
-    [self.textLayer setFrameOrigin:NSMakePoint(25, 4)];
+    [self.textLayer setFrameOrigin:NSMakePoint(25, 2)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect

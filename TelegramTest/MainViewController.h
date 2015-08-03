@@ -11,7 +11,7 @@
 #import "LeftViewController.h"
 #import "RightViewController.h"
 #import "SettingsWindowController.h"
-@interface MainViewController : TMViewController<NSSplitViewDelegate>
+@interface MainViewController : TMViewController
 @property (nonatomic, strong) SettingsWindowController *settingsWindowController;
 @property (nonatomic, strong) LeftViewController *leftViewController;
 @property (nonatomic, strong) RightViewController *rightViewController;
@@ -28,8 +28,4 @@
 
 -(BOOL)isSingleLayout;
 
--(void)singleLayout;
--(void)multiLayout;
--(void)layout;
--(void)checkLayout;
 @end

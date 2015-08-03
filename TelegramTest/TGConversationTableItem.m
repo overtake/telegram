@@ -11,7 +11,7 @@
 #import "TGDateUtils.h"
 #import "NSNumber+NumberFormatter.h"
 @interface TGConversationTableItem ()
-@property (nonatomic,strong) TL_localMessage *message;
+@property (nonatomic,strong) TL_localMessage *checkMessage;
 @end
 
 @implementation TGConversationTableItem
@@ -19,21 +19,17 @@
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         
-        _conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
+        self.conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
         
         
-        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
-        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
-        [Notification addObserver:self selector:@selector(needUpdateItem:) name:[Notification notificationNameByDialog:self.conversation action:@"typing"]];
-
-        [conversation addObserver:self forKeyPath:@"dstate" options:0 context:NULL];
-        [conversation addObserver:self forKeyPath:@"notify_settings" options:0 context:NULL];
-        
-        
+        [Notification addObserver:self selector:@selector(needUpdateMessage:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
+        [Notification addObserver:self selector:@selector(needUpdateMessage:) name:[Notification notificationNameByDialog:conversation action:@"unread_count"]];
         [Notification addObserver:self selector:@selector(didChangeTyping:) name:[Notification notificationNameByDialog:conversation action:@"typing"]];
-       
-        [self update];
         
+        [Notification addObserver:self selector:@selector(didChangeNotifications:) name:[Notification notificationNameByDialog:conversation action:@"notification"]];
+       
+        [self needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}]];
+    
         [self didChangeTyping:nil];
 
     }
@@ -41,16 +37,28 @@
     return self;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+-(void)didChangeNotifications:(NSNotification *)notification {
+    [self performReload];
+}
+
+
+-(void)needUpdateMessage:(NSNotification *)notification {
     
-    [ASQueue dispatchOnMainQueue:^{
-        
-        [self update];
-        
+    _checkMessage = self.conversation.lastMessage;
+    
+    _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
+    _dateText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateText"];
+    _dateSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateSize"] sizeValue];
+    _unreadText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadText"];
+    _unreadTextSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadTextSize"] sizeValue];
+    
+    BOOL isNotForReload = [notification.userInfo[@"isNotForReload"] boolValue];
+    if(!isNotForReload)
         [self performReload];
-        
-    }];
-    
+}
+
+-(BOOL)itemIsUpdated {
+    return _checkMessage == self.conversation.lastMessage;
 }
 
 -(void)didChangeTyping:(NSNotification *)notify {
@@ -90,83 +98,32 @@
 }
 
 
--(void)needUpdateItem:(NSNotification *)notification {
-    
-    [self update];
-    
-    [self performReload];
-}
-
 -(void)performReload {
-    
-    [ASQueue dispatchOnMainQueue:^{
-        [self redrawRow];
-    }];
-    
+    [self redrawRow];
 }
 
 -(void)dealloc {
-//    [_conversation removeObserver:self forKeyPath:@"lastMessage" context:NULL];
-//    [_conversation removeObserver:self forKeyPath:@"lastMessage.flags" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"dstate" context:NULL];
-    [_conversation removeObserver:self forKeyPath:@"notify_settings" context:NULL];
-//    [_conversation removeObserver:self forKeyPath:@"unread_count" context:NULL];
-    
-    
+
+    [self clear];
+ 
     [Notification removeObserver:self];
+    
 }
 
--(void)update {
-    
-    assert(_conversation == [[DialogsManager sharedManager] find:_conversation.peer_id]);
-    
-    _messageText = [MessagesUtils conversationLastText:_conversation.lastMessage conversation:_conversation];
-    
-    int time = self.conversation.last_message_date;
-    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
-    
-    
-    _dateText = [[NSMutableAttributedString alloc] init];
-    [_dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
-    [_dateText setSelectionColor:GRAY_TEXT_COLOR forColor:NSColorFromRGB(0x333333)];
-    [_dateText setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
-    
-    if(self.messageText.length > 0) {
-        NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
-        [_dateText appendString:dateStr withColor:GRAY_TEXT_COLOR];
-    } else {
-        [_dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
-    }
-    
-    _dateSize = [_dateText size];
-    _dateSize.width+=5;
-    _dateSize.width = ceil(_dateSize.width);
-    _dateSize.height = ceil(_dateSize.height);
-    
-    
-    if(_conversation.unread_count > 0) {
-        NSString *unreadTextCount;
-        
-        if(self.conversation.unread_count < 1000)
-            unreadTextCount = [NSString stringWithFormat:@"%d", self.conversation.unread_count];
-        else
-            unreadTextCount = [@(self.conversation.unread_count) prettyNumber];
-        
-        NSDictionary *attributes =@{
-                                    NSForegroundColorAttributeName: [NSColor whiteColor],
-                                    NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:10]
-                                    };
-        _unreadText = unreadTextCount;
-        NSSize size = [unreadTextCount sizeWithAttributes:attributes];
-        size.width = ceil(size.width);
-        size.height = ceil(size.height);
-        _unreadTextSize = size;
-        
-    } else {
-        _unreadText = nil;
-    }
+-(void)clear {
     
 }
+
+-(void)setConversation:(TL_conversation *)conversation {
+    
+    if(_conversation) {
+        [self clear];
+    }
+    
+    _conversation = conversation;
+}
+
+
 
 
 -(TL_localMessage *)message {

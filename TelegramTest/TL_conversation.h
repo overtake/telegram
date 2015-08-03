@@ -75,6 +75,7 @@ typedef enum {
 - (TLChat *) chat;
 - (TL_encryptedChat *) encryptedChat;
 - (TLUser *) user;
+- (TLChatFull *)fullChat;
 
 - (NSUInteger)cacheHash;
 - (NSString *)cacheKey;

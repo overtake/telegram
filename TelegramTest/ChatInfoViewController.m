@@ -162,6 +162,9 @@
         weakify();
         
         [cancelButton setTapBlock:^{
+            
+            [strongSelf.headerView.nameTextField setChat:nil];
+            [strongSelf.headerView.nameTextField setChat:self.chat];
             strongSelf.type = ChatInfoViewControllerNormal;
             [self buildRightView];
         }];
@@ -180,20 +183,22 @@
 }
 
 - (void)save {
+    
+    
     dispatch_block_t block = ^{
         self.type = ChatInfoViewControllerNormal;
         [self buildRightView];
     };
     
-    if(![_headerView.title isEqualToString:self.chat.title]) {
+    if(![_headerView.title isEqualToString:self.chat.title] && _headerView.title.length > 0) {
         [RPCRequest sendRequest:[TLAPI_messages_editChatTitle createWithChat_id:self.chat.n_id title:_headerView.title] successHandler:^(RPCRequest *request, id response) {
             block();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             block();
         }];
-        return;
+    } else {
+        NSBeep();
     }
-    block();
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -311,7 +316,7 @@
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^{
+        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^(TLChatFull *fullChat) {
             item.isBlocking = NO;
             [item redrawRow];
         }];

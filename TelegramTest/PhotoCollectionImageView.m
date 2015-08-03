@@ -60,11 +60,11 @@
         return;
     }
     
-    if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
+    if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"jpg"));
         
         [[TGPhotoViewer viewer] show:obj.previewObject conversation:[Telegram rightViewController].collectionViewController.conversation];
-    } else if([[obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
+    } else if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
         [self checkAction];
     }
     
@@ -245,7 +245,7 @@ static NSImage *playVideoImage() {
 
 
 -(BOOL)isset:(PhotoCollectionImageObject *)object {
-    NSString *path = mediaFilePath([object.previewObject.media media]);
+    NSString *path = mediaFilePath([(TL_localMessage *)object.previewObject.media media]);
     return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:[(TL_localMessage *)object.previewObject.media media].video.size];
 }
 

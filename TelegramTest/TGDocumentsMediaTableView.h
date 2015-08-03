@@ -11,6 +11,12 @@
 @interface TGDocumentsMediaTableView : MessagesTableView
 @property (nonatomic,assign) BOOL isProgress;
 
+-(Class)rowViewClass;
+-(Class)historyFilter;
+-(BOOL)acceptMessageItem:(MessageTableItem *)item;
+-(int)heightWithItem:(MessageTableItem *)item;
+-(void)prepareItem:(MessageTableItem *)item;
+
 -(void)setConversation:(TL_conversation *)conversation;
 
 -(BOOL)isNeedCap;

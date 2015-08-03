@@ -12,7 +12,7 @@
 #import "TGConversationsTableView.h"
 @class ConversationTableItemView;
 
-@interface TGSwipeTableControll : NSControl
+@interface TGSwipeTableControll : TGView
 - (id)initWithFrame:(NSRect)frameRect itemView:(TGConversationTableCell *)itemView;
 - (void)showButton;
 - (void)hideButton;

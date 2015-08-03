@@ -13,7 +13,8 @@
 #import "TGWindowArchiver.h"
 
 #import "TGConversationsViewController.h"
-@interface LeftViewController : TMViewController<TMSearchTextFieldDelegate>
+#import "TGSplitViewController.h"
+@interface LeftViewController : TGSplitViewController<TMSearchTextFieldDelegate,TMNavagationDelegate>
 
 
 @property (nonatomic,strong) TGWindowArchiver *archiver;

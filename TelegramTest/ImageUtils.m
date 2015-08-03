@@ -185,14 +185,31 @@ CACHE_IMAGE(WebpageTwitterIcon);
 CACHE_IMAGE(WebpageInstagramVideoPlay);
 
 
-CACHE_IMAGE(MiniPlayerPrev);
-CACHE_IMAGE(MiniPlayerPlay);
-CACHE_IMAGE(MiniPlayerNext);
-CACHE_IMAGE(MiniPlayerPause);
-CACHE_IMAGE(MiniPlayerClose);
-CACHE_IMAGE(MiniPlayerStop);
+CACHE_IMAGE(AudioPlayerBack);
+CACHE_IMAGE(AudioPlayerPlay);
+CACHE_IMAGE(AudioPlayerNext);
+CACHE_IMAGE(AudioPlayerPause);
+CACHE_IMAGE(AudioPlayerClose);
+CACHE_IMAGE(AudioPlayerStop);
 CACHE_IMAGE(MiniPlayerDefaultCover);
-CACHE_IMAGE(MiniPlayerPlaylist);
+CACHE_IMAGE(AudioPlayerList);
+CACHE_IMAGE(AudioPlayerListActive);
+CACHE_IMAGE(MusicStandartCover);
+
+CACHE_IMAGE(botCommand);
+CACHE_IMAGE(botKeyboard);
+CACHE_IMAGE(botKeyboardActive);
+CACHE_IMAGE(SearchMessages);
+
+CACHE_IMAGE(AudioPlayerPin);
+CACHE_IMAGE(AudioPlayerPinActive);
+
+
+CACHE_IMAGE(SearchUpDisabled);
+CACHE_IMAGE(SearchDownDisabled);
+CACHE_IMAGE(SearchUp);
+CACHE_IMAGE(SearchDown);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -762,8 +779,16 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         layer = [CALayer layer];
     }
     
+    @try {
+        [CATransaction begin];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
     
-    [CATransaction begin];
     
     NSImage *image = nil;
     @autoreleasepool {
@@ -807,7 +832,17 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         }
     }
     
-    [CATransaction commit];
+    @try {
+        [CATransaction commit];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+    
+    
     
     return image;
 }
@@ -825,6 +860,46 @@ NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
     [target unlockFocus];
     
     return target;
+}
+
+NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size) {
+    
+    if(!oldImage)
+    return oldImage;
+    
+    CALayer *layer = [CALayer layer];
+    NSImage *image = nil;
+    @autoreleasepool {
+        CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
+        
+        size.width *= displayScale;
+        size.height *= displayScale;
+        
+        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
+        
+        if(source != NULL) {
+            CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
+            CFRelease(source);
+            
+            [layer setContents:(__bridge id)(maskRef)];
+            [layer setFrame:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setBounds:NSMakeRect(0, 0, size.width, size.height)];
+            [layer setMasksToBounds:YES];
+            [layer setCornerRadius:cornerRadius];
+            
+            CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, [[NSColorSpace genericRGBColorSpace] CGColorSpace], kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
+            [layer renderInContext:context];
+            
+            CGImageRef cgImage = CGBitmapContextCreateImage(context);
+            CGContextRelease(context);
+            
+            image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(size.width * 0.5, size.height * 0.5)];
+            CGImageRelease(cgImage);
+            CGImageRelease(maskRef);
+        }
+    }
+    
+    return image;
 }
 
 @end

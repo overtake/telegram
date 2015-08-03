@@ -574,4 +574,25 @@ static TMTableView *tableStatic;
     self.containerView.wantsLayer = YES;
 }
 
+-(void)mouseDown:(NSEvent *)theEvent
+{
+    
+    [super mouseDown:theEvent];
+    
+    [TMTableView setCurrent:self];
+    
+    if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden )
+         [self.scrollView mouseDown:theEvent];
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent
+{
+    
+    if(![self.className isEqualToString:@"MessagesTableView"])
+        [super mouseDragged:theEvent];
+    
+    if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden)
+        [self.scrollView mouseDragged:theEvent];
+}
+
 @end

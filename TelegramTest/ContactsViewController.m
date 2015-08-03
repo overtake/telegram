@@ -238,13 +238,26 @@
     
     self.firstView = [[ContactFirstView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), 40)];
     
-    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:YES];
-    
-    
-    [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
-    
-   
+}
 
+-(void)onContactsSortChanged:(NSNotification *)notification {
+    [self.tableView.list sortUsingComparator:^NSComparisonResult(ContactUserItem *obj1, ContactUserItem *obj2) {
+        
+        if([obj1 isKindOfClass:[ContactFirstItem class]] )
+        {
+            return NSOrderedAscending;
+        } else if([obj2 isKindOfClass:[ContactFirstItem class]] )
+        {
+            return NSOrderedDescending;
+        }
+        
+        NSComparisonResult result = [@(obj1.user.lastSeenTime) compare:@(obj2.user.lastSeenTime)];
+        
+        return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+        
+    }];
+    
+    [self.tableView reloadData];
 }
 
 -(void)didChangedController:(TMViewController *)controller {
@@ -291,9 +304,20 @@
     [[Telegram rightViewController].navigationViewController addDelegate:self];
     
     [self willChangedController:[Telegram rightViewController].navigationViewController.currentController];
+    
+    [Notification addObserver:self selector:@selector(onContactsSortChanged:) name:CONTACTS_SORT_CHANGED];
+    [Notification addObserver:self selector:@selector(contactsLoaded:) name:CONTACTS_MODIFIED];
+    
+    [self contactsLoaded:nil];
 }
 
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [Notification removeObserver:self];
+}
 
 -(void)contactsLoaded:(NSNotification *)notify {
     
@@ -342,10 +366,6 @@
     self.tableView.defaultAnimation = animation;
 }
 
-
-- (void)dealloc {
-    [Notification removeObserver:self];
-}
 
 - (void) setHidden:(BOOL)isHidden {
     [super setHidden:isHidden];

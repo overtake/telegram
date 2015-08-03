@@ -16,8 +16,10 @@
 #import "PhotoVideoHistoryFilter.h"
 #import "PhotoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
+#import "SharedLinksHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "MP3HistoryFilter.h"
 #import "TGTimer.h"
 #import "TGProccessUpdates.h"
 @interface ChatHistoryController ()
@@ -29,7 +31,7 @@
 @property (atomic)  dispatch_semaphore_t semaphore;
 @property (atomic,assign) int requestCounter;
 @property (nonatomic,strong) HistoryFilter *h_filter;
-
+@property (atomic,assign) BOOL proccessing;
 @end
 
 @implementation ChatHistoryController
@@ -55,9 +57,6 @@ static NSMutableArray *listeners;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
         
-        
-        assert([NSThread isMainThread]);
-        
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
@@ -70,7 +69,8 @@ static NSMutableArray *listeners;
             [filters addObject:[DocumentHistoryFilter class]];
             [filters addObject:[VideoHistoryFilter class]];
             [filters addObject:[AudioHistoryFilter class]];
-            
+            [filters addObject:[MP3HistoryFilter class]];
+            [filters addObject:[SharedLinksHistoryFilter class]];
             listeners = [[NSMutableArray alloc] init];
         });
         
@@ -116,8 +116,8 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-        NSMutableArray *filterItems = [filterClass messageItems];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys];
+        NSMutableArray *filterItems = [filterClass messageItems:self.conversation.peer_id];
+        NSMutableDictionary *filterKeys = [filterClass messageKeys:self.conversation.peer_id];
         
         const int max = 300;
         
@@ -209,7 +209,7 @@ static NSMutableArray *listeners;
                 int pos = (int) [items indexOfObject:accepted[0]];
                 
                 
-                NSRange range = NSMakeRange(pos, accepted.count);
+                NSRange range = NSMakeRange(pos+1, accepted.count);
                 
                 
                 accepted = [accepted mutableCopy];
@@ -248,48 +248,78 @@ static NSMutableArray *listeners;
 
 -(void)notificationDeleteMessage:(NSNotification *)notification {
     
-    self.isProccessing = YES;
     
     [queue dispatchOnQueue:^{
+        
+        self.proccessing = YES;
         
         NSArray *msgs = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
         
         if(msgs.count == 0)
             return;
         
+        NSMutableDictionary *deleted = [[NSMutableDictionary alloc] init];
+        
         for (Class filterClass in filters) {
-            [filterClass removeItems:msgs];
+            
+            NSArray *r = [filterClass removeItems:msgs];
+            
+            deleted[NSStringFromClass(filterClass)] = r;
+            
         }
         
         [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [obj.controller deleteMessages:msgs];
-                
-            }];
+            NSArray * td = deleted[obj.filter.className];
+            
+            td = [td filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.peer_id == %d", obj.conversation.peer_id]];
+            
+            if(td.count > 0) {
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [obj.controller deleteMessages:msgs];
+                    
+                }];
+            }
 
         }];
         
-        [ASQueue dispatchOnMainQueue:^{
-            self.isProccessing = NO;
-        }];
+        self.proccessing = NO;
         
     }];
     
 }
 
--(void)setIsProccessing:(BOOL)isProccessing {
-    self->_isProccessing = isProccessing;
+-(void)setProccessing:(BOOL)isProccessing {
     
-    [self.controller updateLoading];
+    [ASQueue dispatchOnStageQueue:^{
+        _proccessing = isProccessing;
+    }];
+    
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [self.controller updateLoading];
+    }];
+}
+
+-(BOOL)isProccessing {
+    
+    
+    __block BOOL isProccessing = YES;
+    
+    
+    isProccessing = _proccessing;
+        
+    
+    return isProccessing;
 }
 
 -(void)notificationFlushHistory:(NSNotification *)notification {
     
-    self.isProccessing = YES;
+    
     
     [queue dispatchOnQueue:^{
         
+        self.proccessing = YES;
         
         TL_conversation *conversation = [notification.userInfo objectForKey:KEY_DIALOG];
         
@@ -310,7 +340,8 @@ static NSMutableArray *listeners;
             
         }];
         
-        self.isProccessing = NO;
+         self.proccessing = NO;
+        
     }];
     
 }
@@ -365,7 +396,7 @@ static NSMutableArray *listeners;
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
                         if([obj isFiltredAccepted:message.filterType]) {
-                            [obj.controller receivedMessage:tableItem position:position itsSelf:NO];
+                            [obj.controller receivedMessage:tableItem position:position+1 itsSelf:NO];
                         }
                     
                     }];
@@ -391,11 +422,11 @@ static NSMutableArray *listeners;
     
     for (Class filterClass in filters) {
         
-        NSMutableArray *filterItems = [filterClass messageItems];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys];
-        
-        
-        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+       [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            
+            NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
+            NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];
             
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
             
@@ -438,86 +469,12 @@ static NSMutableArray *listeners;
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
    
+    
+    self.proccessing = NO;
+    
    [[ASQueue mainQueue] dispatchOnQueue:^{
         
-       long fwd_group_random = 0;
-        
-        NSMutableArray *fwd = [[NSMutableArray alloc] init];
-        
-        dispatch_block_t fwd_block = ^ {
-            ForwardSenterItem *sender = [[ForwardSenterItem alloc] init];
-            MessageTableItem *msg = fwd[0];
-            sender.conversation = msg.message.conversation;
-            
-            NSMutableArray *fakes = [[NSMutableArray alloc] init];
-            NSMutableArray *ids = [[NSMutableArray alloc] init];
-            [fwd enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@([obj.message n_id])];
-                [fakes insertObject:obj.message atIndex:0];
-            }];
-            
-            sender.msg_ids = ids;
-            
-            sender.fakes = fakes;
-            
-            
-           
-            
-            sender.state = msg.message.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
-            
-            [sender setTableItems:fwd];
-            
-            if(msg.message.dstate == DeliveryStatePending) {
-                [msg.messageSender send];
-            }
-            
-            [fwd removeAllObjects];
-            
-        };
-        
-
-        for (int i = (int) result.count - 1; i >= 0; i --) {
-            
-            
-            MessageTableItem *item = result[i];
-            
-             if((item.message.dstate == DeliveryStateError || item.message.dstate == DeliveryStatePending) && !item.messageSender) {
-                
-                
-                if(item.message.dstate == DeliveryStatePending && item.message.fwd_from_id != 0) {
-                
-                    if(fwd_group_random != 0 && fwd_group_random != item.message.randomId)
-                        fwd_block();
-                    
-                    [fwd addObject:item];
-                    
-                    fwd_group_random = item.message.randomId;
-                    
-                    continue;
-                }
-                
-                if(fwd.count > 0) {
-                    fwd_block();
-                }
-                
-                
-                
-                item.messageSender = [SenderItem senderForMessage:item.message];
-                item.messageSender.state = item.message.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
-                item.messageSender.tableItem = item;
-                
-                if(item.message.dstate == DeliveryStatePending) {
-                    [item.messageSender send];
-                }
-            }
-        }
-
-        
-        if(fwd.count > 0)
-            fwd_block();
-        
-        self.isProccessing = NO;
-        if(selectHandler)
+       if(selectHandler)
             selectHandler(result,range);
     }];
     
@@ -535,8 +492,8 @@ static NSMutableArray *listeners;
     [queue dispatchOnQueue:^{
     
         _h_filter = filter;
-        messageKeys = [filter messageKeys];
-        messageItems = [filter messageItems];
+        messageKeys = [filter messageKeys:self.conversation.peer_id];
+        messageItems = [filter messageItems:self.conversation.peer_id];
         _requestCounter = 0;
         
         _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
@@ -551,7 +508,7 @@ static NSMutableArray *listeners;
         if(items.count > 0) {
             MessageTableItem *item = items[0];
             
-            if(self.filter.class == HistoryFilter.class && item.message.n_id != self.controller.conversation.top_message) {
+            if(self.filter.class == HistoryFilter.class && (item.message.n_id != self.controller.conversation.top_message && item.message.n_id < TGMINFAKEID)) {
                 [[self.filter class] removeAllItems:self.controller.conversation.peer.peer_id];
             }
         }
@@ -579,8 +536,12 @@ static NSMutableArray *listeners;
             return;
         }
         
+        if(self.conversation.peer_id == 46575809) {
+            int bp = 0;
+        }
         
-        self.isProccessing = YES;
+        
+        self.proccessing = YES;
         
         
         BOOL notify = NO;
@@ -635,8 +596,10 @@ static NSMutableArray *listeners;
                 
                 if(!next) {
                     state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
                 } else {
-                    state = self.filter.class == HistoryFilter.class || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = (self.filter.class == HistoryFilter.class && (_max_id == 0 ? _min_id >= _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
                 }
                 
                 [self setState:state next:next];
@@ -687,11 +650,13 @@ static NSMutableArray *listeners;
                         
                         
                         if(result.count < _selectLimit) {
-                            [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                             
-                            if(!next && (_min_id) == self.controller.conversation.top_message) {
+                            if(!next && (_min_id >= self.conversation.top_message)) {
                                 [self setState:ChatHistoryStateFull next:NO];
+                            } else {
+                                [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                             }
+                            
                         }
                         
                         
@@ -732,40 +697,33 @@ static NSMutableArray *listeners;
                             }
                             
                             
-                            if(!next) {
-                                
-                                TL_localMessage *last;
-                                if(messages.count > 0)
-                                    last = messages[0];
-                                
-                                ChatHistoryState old_state = _prevState;
-                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-                                [self setState:new_state next:next];
-                                
-                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
-                                    NSMutableArray *copy = [messages mutableCopy];
-                                    
-                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
-                                        if(obj.n_id <= self.controller.conversation.sync_message_id)
-                                            [copy removeObject:obj];
-                                    }];
-                                    
-                                    messages = copy;
-                                }
-                                
-                            }
+//                            if(!next) {
+//                                
+//                                TL_localMessage *last;
+//                                if(messages.count > 0)
+//                                    last = messages[0];
+//                                
+//                                ChatHistoryState old_state = _prevState;
+//                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id < self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+//                                [self setState:new_state next:next];
+//                                
+//                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
+//                                    NSMutableArray *copy = [messages mutableCopy];
+//                                    
+//                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
+//                                        if(obj.n_id < self.controller.conversation.sync_message_id)
+//                                            [copy removeObject:obj];
+//                                    }];
+//                                    
+//                                    messages = copy;
+//                                }
+//                                
+//                            }
                             
                             
                             
                             [SharedManager proccessGlobalResponse:response];
                             
-                            for (TL_localMessage *message in messages) {
-                                if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                                    [[Storage manager] insertMedia:message];
-                                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
-                                    [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
-                                }
-                            }
                             
                             NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
                             
@@ -810,8 +768,15 @@ static NSMutableArray *listeners;
 -(void)setState:(ChatHistoryState)state next:(BOOL)next {
     if(next)
         _nextState = state;
-    else
-        _prevState = state;
+    else {
+         _prevState = state;
+        
+        if(_prevState == ChatHistoryStateRemote)
+        {
+            int bp = 0;
+        }
+    }
+    
 }
 
 
@@ -872,15 +837,8 @@ static NSMutableArray *listeners;
 
 -(NSArray *)selectAllItems {
 
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.message.peer_id == %d",self.controller.conversation.peer.peer_id]];
-    
-    NSArray *memory = [messageItems
-                       filteredArrayUsingPredicate:predicate];
-    
-    memory = [self sortItems:memory];
-    
-    
+        
+    NSArray *memory = [self sortItems:messageItems];
    
     
     return memory;
@@ -889,7 +847,8 @@ static NSMutableArray *listeners;
 
 -(NSArray *)sortItems:(NSArray *)sort {
     return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
-        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+        
+        return (obj1.message.date < obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedDescending : (obj1.message.date > obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
     }];
 }
 
@@ -1040,6 +999,7 @@ static NSMutableArray *listeners;
     if(sender.state == MessageSendingStateSent) {
         
         void (^checkItem)(MessageTableItem *checkItem) = ^(MessageTableItem *checkItem) {
+            
             
             
             [queue dispatchOnQueue:^{

@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.05.15.
+//  Auto created by Mikhail Filimonov on 24.07.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -305,8 +305,9 @@
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSString* message;
 @property long random_id;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
@@ -315,8 +316,9 @@
 @property int reply_to_msg_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
@@ -773,6 +775,15 @@
 +(TLAPI_account_updateDeviceLocked*)createWithPeriod:(int)period;
 @end
 
+@interface TLAPI_auth_importBotAuthorization : TLApiObject
+@property int flags;
+@property int api_id;
+@property (nonatomic, strong) NSString* api_hash;
+@property (nonatomic, strong) NSString* bot_auth_token;
+
++(TLAPI_auth_importBotAuthorization*)createWithFlags:(int)flags api_id:(int)api_id api_hash:(NSString*)api_hash bot_auth_token:(NSString*)bot_auth_token;
+@end
+
 @interface TLAPI_messages_getWebPagePreview : TLApiObject
 @property (nonatomic, strong) NSString* message;
 
@@ -854,13 +865,23 @@
 
 @interface TLAPI_messages_installStickerSet : TLApiObject
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
+@property Boolean disabled;
 
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled;
 @end
 
 @interface TLAPI_messages_uninstallStickerSet : TLApiObject
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
 
 +(TLAPI_messages_uninstallStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset;
+@end
+
+@interface TLAPI_messages_startBot : TLApiObject
+@property (nonatomic, strong) TLInputUser* bot;
+@property int chat_id;
+@property long random_id;
+@property (nonatomic, strong) NSString* start_param;
+
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
 @end
 

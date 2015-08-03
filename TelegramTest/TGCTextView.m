@@ -706,42 +706,52 @@
 
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
+    
+   
+    
     if([self mouse:location inRect:self.bounds]) {
         
-        CFArrayRef lines = CTFrameGetLines(CTFrame);
         
-        
-        CGPoint origins[CFArrayGetCount(lines)];
-        CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
-        
-        int line = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
-        
-        CTLineRef lineRef = CFArrayGetValueAtIndex(lines, line);
-        
-        CGFloat ascent,descent,leading;
-        
-        int width = CTLineGetTypographicBounds(lineRef, &ascent, &descent, &leading);
-        
-        if( (NSMinX(self.frame) + width) > location.x && location.x > NSMinX(self.frame)) {
-            NSRange range;
-            
-            int position = (int) CTLineGetStringIndexForPosition(lineRef, location);
-            
-            NSString *link;
-            
-            if(position < 0)
-                position = 0;
-            if(position >= self.attributedString.length)
-                position = (int)self.attributedString.length - 1;
+        @try {
+            CFArrayRef lines = CTFrameGetLines(CTFrame);
             
             
-            NSDictionary *attrs = [self.attributedString attributesAtIndex:position effectiveRange:&range];
-            link = [attrs objectForKey:NSLinkAttributeName];
+            CGPoint origins[CFArrayGetCount(lines)];
+            CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
             
-            *hitTest = YES;
+            int line = [self lineIndex:origins count:(int)CFArrayGetCount(lines) location:location];
             
-            return link;
+            CTLineRef lineRef = CFArrayGetValueAtIndex(lines, line);
+            
+            CGFloat ascent,descent,leading;
+            
+            int width = CTLineGetTypographicBounds(lineRef, &ascent, &descent, &leading);
+            
+            if( (NSMinX(self.frame) + width) > location.x) { // && location.x > NSMinX(self.frame)
+                NSRange range;
+                
+                int position = (int) CTLineGetStringIndexForPosition(lineRef, location);
+                
+                NSString *link;
+                
+                if(position < 0)
+                    position = 0;
+                if(position >= self.attributedString.length)
+                    position = (int)self.attributedString.length - 1;
+                
+                
+                NSDictionary *attrs = [self.attributedString attributesAtIndex:position effectiveRange:&range];
+                link = [attrs objectForKey:NSLinkAttributeName];
+                
+                *hitTest = YES;
+                
+                return link;
+            }
         }
+        @catch (NSException *exception) {
+            return nil;
+        }
+        
     }
     
     return nil;
@@ -764,8 +774,8 @@
                 if(_isEditable)
                     [[NSCursor IBeamCursor] set];
             }
-            if(_isEditable)
-                 return;
+           // if(_isEditable)
+            return;
         }
     }
     
@@ -784,14 +794,14 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if(self.selectRange.location == NSNotFound) {
+    if(self.selectRange.location == NSNotFound || !_isEditable) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest;
         NSString *link = [self linkAtPoint:location hitTest:&hitTest];
         
         if(link) {
-            open_link(link);
+            [self open_link:link];
         } else if(![self _checkClickCount:theEvent]) {
             [super mouseUp:theEvent];
         }
@@ -800,10 +810,11 @@
     }
     
     
-    
-    
-    
     [[NSCursor arrowCursor] set];
+}
+
+-(void)open_link:(NSString *)link {
+    open_link(link);
 }
 
 

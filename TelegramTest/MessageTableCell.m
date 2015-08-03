@@ -26,6 +26,15 @@
 
 - (void)setItem:(MessageTableItem *)item {
     self->_item = item;
+    
+    if(item.message.dstate != DeliveryStateNormal && item.messageSender == nil) {
+        item.messageSender = [SenderItem senderForMessage:item.message];
+        
+        if(item.messageSender.state == MessageStateWaitSend) {
+            [item.messageSender send];
+        }
+    }
+    
 }
 
 - (void)resizeAndRedraw {
@@ -150,7 +159,7 @@
         
         BOOL accept = ![self mouseInText:theEvent];;
         
-        if(accept)
+        if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
             [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
     }
     

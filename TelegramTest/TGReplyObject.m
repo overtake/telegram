@@ -44,7 +44,9 @@
 //        }
         
         
-        NSString *name = replyMessage.fwd_from_id != 0 ? replyMessage.fromFwdUser.fullName : replyMessage.fromUser.fullName;
+        //NSString *name = replyMessage.fwd_from_id != 0 ? replyMessage.fromFwdUser.fullName : replyMessage.fromUser.fullName;
+        
+        NSString *name = replyMessage.fromUser.fullName;
         
         NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
         
@@ -66,7 +68,7 @@
             [replyText appendString:[str fixEmoji] withColor:TEXT_COLOR];
             
         } else {
-            [replyText appendString:[MessagesUtils mediaMessage:replyMessage] withColor:GRAY_TEXT_COLOR];
+            [replyText appendString:[[MessagesUtils mediaMessage:replyMessage] fixEmoji] withColor:GRAY_TEXT_COLOR];
         }
         
         

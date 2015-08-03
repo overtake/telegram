@@ -15,9 +15,9 @@
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
 #import <MtProtoKit/MTLogging.h>
-
 #import "ImageUtils.h"
 #import "POP.h"
+
 #import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"
@@ -32,8 +32,8 @@
 #import "TL_localMessage.h"
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"
-
-
+#import "TL_messageActionBotDescription.h"
+#import "TLUserStatusCategory.h"
 #import "TLClassStore.h"
 #import "UsersManager.h"
 #import "DialogsManager.h"

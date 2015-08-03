@@ -98,7 +98,7 @@
             if(strongSelf.conversation.type == DialogTypeBroadcast) {
                 request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
             } else {
-                request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId];
+                request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
             }
             
             

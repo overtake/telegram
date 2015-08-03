@@ -18,7 +18,7 @@
 #import "TGOpusAudioPlayerAU.h"
 #import "StickersPanelView.h"
 #import "NSMenuItemCategory.h"
-
+#import "TGPhotoViewer.h"
 
 @interface DocumentThumbImageView()
 @property (nonatomic, strong) NSImage *originImage;
@@ -124,6 +124,9 @@ static CAAnimation *ani() {
 
 @property (nonatomic, strong) TGAudioPlayer *player;
 
+@property (nonatomic,assign) NSPoint startDragLocation;
+
+
 
 @end
 
@@ -196,8 +199,9 @@ static NSImage *attachBackgroundThumb() {
         [self.attachButton addBlock:^(BTRControlEvents events) {
             
             
+            [weakSelf mouseDown:[NSApp currentEvent]];
+            
             if(weakSelf.isEditable) {
-                [weakSelf mouseDown:[NSApp currentEvent]];
                 return;
             }
             if(weakSelf.item.state == DocumentStateDownloaded) {
@@ -208,6 +212,15 @@ static NSImage *attachBackgroundThumb() {
             }
             
         } forControlEvents:BTRControlEventLeftClick];
+        
+        [self.attachButton addBlock:^(BTRControlEvents events) {
+            
+            
+            [weakSelf mouseDown:[NSApp currentEvent]];
+            
+            
+        } forControlEvents:BTRControlEventMouseDownInside];
+
         
         
         [self.containerView addSubview:self.attachButton];
@@ -487,6 +500,7 @@ static NSImage *attachBackgroundThumb() {
     
     [self setProgressFrameSize:NSMakeSize(48, 48)];
     
+    
     if(item.isHasThumb) {
         [self.attachButton setBackgroundImage:attachBackgroundThumb() forControlState:BTRControlStateNormal];
         self.thumbView.image = nil;
@@ -612,10 +626,63 @@ static NSImage *attachBackgroundThumb() {
 }
 
 - (void)open {
+    
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
-    [[TMMediaController controller] show:item];
+    if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
+        [[TGPhotoViewer viewer] show:previewObject];
+    } else {
+        TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
+        [[TMMediaController controller] show:item];
+    }
+    
+}
+
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([_attachButton mouse:_startDragLocation inRect:_attachButton.frame])
+        return;
+    
+    if(self.isEditable)
+        [super mouseDown:theEvent];
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
+    
+    if(![_attachButton mouse:_startDragLocation inRect:_attachButton.frame])
+        return;
+    
+    NSPoint eventLocation = [_attachButton convertPoint: [theEvent locationInWindow] fromView: nil];
+    
+    if([_attachButton hitTest:eventLocation]) {
+        NSPoint dragPosition = NSMakePoint(80, 8);
+        
+        NSString *path = mediaFilePath(self.item.message.media);
+        
+        
+        NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];
+        
+        
+        [pasteBrd declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,nil] owner:self];
+        
+        
+        NSImage *dragImage = self.item.isHasThumb ? [self.thumbView.image copy] : _attachButton.backgroundImageView.image;
+        
+        dragImage = cropCenterWithSize(dragImage,self.thumbView.frame.size);
+        
+        dragImage = imageWithRoundCorners(dragImage,4,dragImage.size);
+        
+        [pasteBrd setPropertyList:@[path] forType:NSFilenamesPboardType];
+        
+        [pasteBrd setString:path forType:NSStringPboardType];
+        
+        [self dragImage:dragImage at:dragPosition offset:NSZeroSize event:theEvent pasteboard:pasteBrd source:self slideBack:NO];
+    }
+    
 }
 
 

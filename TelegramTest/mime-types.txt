@@ -46,6 +46,7 @@ exe:application/octet-stream
 fif:application/fractals
 flr:x-world/x-vrml
 gif:image/gif
+GIF:image/gif
 gtar:application/x-gtar
 gz:application/x-gzip
 h:text/plain
@@ -87,6 +88,7 @@ mov:video/quicktime
 movie:video/x-sgi-movie
 mp2:video/mpeg
 mp3:audio/mpeg
+m4a:audio/mpeg
 mpa:video/mpeg
 mpe:video/mpeg
 mpeg:video/mpeg

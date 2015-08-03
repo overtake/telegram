@@ -14,6 +14,7 @@
 - (id)init {
     self = [super init];
     if(self) {
+        
     }
     return self;
 }
@@ -35,7 +36,10 @@
         ELog(@"set text font");
         return NSZeroSize;
     }
+    
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.string attributes:@{NSFontAttributeName: self->_textFont}];
+    
+    
     
     NSSize size = [attributedString size];
     
@@ -43,8 +47,6 @@
     size.height = ceil(size.height);
     return size;
 }
-
-
 
 - (void)sizeToFit {
     NSSize size = [self size];

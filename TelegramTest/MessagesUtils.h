@@ -21,5 +21,7 @@
 
 +(NSString *)muteUntil:(int)mute_until;
 
++(NSDictionary *)conversationLastData:(TL_conversation *)conversation;
+
 
 @end

@@ -949,26 +949,7 @@
     
     __block NSString *text = self;
     
-    NSArray *links = [self locationsOfLinks];
-    
-    BOOL (^checkInLinksRange)(NSRange emojiRange) = ^BOOL (NSRange emojiRange)
-    {
-        __block BOOL res = NO;
-        
-        [links enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            NSRange linkRange = [obj range];
-            
-            if((linkRange.location <= emojiRange.location && (linkRange.location+linkRange.length) >= (emojiRange.location + emojiRange.length))) {
-                res = YES;
-            }
-            
-        }];
-        
-        return res;
-    };
-
-    
+   
     [replaces enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         
         

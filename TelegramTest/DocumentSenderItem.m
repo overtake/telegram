@@ -54,33 +54,6 @@
         
         [attrs addObject:filenameAttr];
         
-        if([_mimeType hasPrefix:@"audio/"]) {
-            AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
-
-            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration)]];
-            
-            if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
-                
-                NSArray *metadata = [asset metadataForFormat:@"org.id3"];
-                
-                NSString *songName;
-                NSString *artistName;
-                
-                for (AVMutableMetadataItem *metaItem in metadata) {
-                    if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
-                        artistName = (NSString *) metaItem.value;
-                    } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
-                        songName = (NSString *) metaItem.value;
-                    }
-                }
-                
-                if(songName && artistName)
-                    filenameAttr.file_name = [NSString stringWithFormat:@"%@ - %@",artistName,songName];
- 
-                
-            }
-
-        }
         
         
         
@@ -88,12 +61,87 @@
         __block NSImage *thumbImage;
         __block NSString *thumbName;
         
-        dispatch_block_t thumbBlock = ^ {
-            if(![[self.filePath pathExtension] isEqualToString:@"mp3"]) {
-                thumbImage = previewImageForDocument(self.filePath);
+        
+        
+        if([_mimeType hasPrefix:@"audio/"]) {
+            AVURLAsset* asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+            
+            NSArray *k = [NSArray arrayWithObjects:@"commonMetadata", nil];
+            
+            dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+            
+            __block  NSImage *artworkImage;
+            
+            [asset loadValuesAsynchronouslyForKeys:k completionHandler: ^{
+                NSArray *artworks = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata
+                                                                   withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+                
+                for (AVMetadataItem *i in artworks)
+                {
+                    NSString *keySpace = i.keySpace;
+                    NSImage *im = nil;
+                    
+                    id value;
+                    if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
+                    {
+                        value = i.value;
+                    }
+                    else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
+                        value = i.value;
+                    }
+                    
+                    if([value isKindOfClass:[NSDictionary class]]) {
+                        value = [value objectForKey:@"data"];
+                    }
+                    
+                    if([value isKindOfClass:[NSData class]]) {
+                        value = value;
+                    } else
+                        value = nil;
+                    
+                    if(value)
+                        im = [[NSImage alloc] initWithData:[value copyWithZone:nil]];
+                    
+                    
+                    if (im)
+                    {
+                        artworkImage = im;
+                    }
+                }
+                
+                dispatch_semaphore_signal(sema);
+                
+                
+            }];
+            
+            dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+            
+            
+            if(artworkImage)
+            {
+                thumbImage = strongResize(artworkImage, 90);
+                thumbData = jpegNormalizedData(thumbImage);
+                thumbName = @"cover.jpg";
             }
-            thumbData = jpegNormalizedData(thumbImage);
-            thumbName = @"thumb.jpg";
+            
+            NSDictionary *tags = audioTags(asset);
+            
+            NSString *songName = tags[@"songName"];
+            NSString *artistName = tags[@"artist"];
+
+            
+            [attrs addObject:[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration) title:songName performer:artistName]];
+            
+        }
+        
+        
+        dispatch_block_t thumbBlock = ^ {
+            if(!thumbImage) {
+                thumbImage = previewImageForDocument(self.filePath);
+                
+                thumbData = jpegNormalizedData(thumbImage);
+                thumbName = @"thumb.jpg";
+            }
         };
         
         if([self.filePath hasSuffix:@"webp"] && fileSize(self.filePath) < 128000) {
@@ -237,7 +285,7 @@
     if(self.conversation.type == DialogTypeBroadcast) {
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId];
+        request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
     }
     
     

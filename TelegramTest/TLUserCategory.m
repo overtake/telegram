@@ -20,6 +20,8 @@
 */
 
 
+
+
 static NSArray *serviceNumbers;
 
 +(void)initialize {
@@ -54,18 +56,37 @@ DYNAMIC_PROPERTY(DType);
     int type;
     
     
-    if([self isKindOfClass:[TL_userContact class]])
-        type = TLUserTypeContact;
-    else if([self isKindOfClass:[TL_userDeleted class]])
-        type = TLUserTypeDeleted;
-    else if([self isKindOfClass:[TL_userEmpty class]])
-        type = TLUserTypeEmpty;
-    else if([self isKindOfClass:[TL_userForeign class]])
-        type = TLUserTypeForeign;
-    else if([self isKindOfClass:[TL_userSelf class]])
-        type = TLUserTypeSelf;
-    else
-        type = TLUserTypeRequest;
+    if(self.class == [TL_user class])
+    {
+        if(self.flags & TGUSERFLAGSELF) {
+            type = TLUserTypeSelf;
+        } else if(self.flags & TGUSERFLAGCONTACT) {
+            type = TLUserTypeContact;
+        } else if(self.flags & TGUSERFLAGMUTUAL) {
+            type = TLUserTypeContact;
+        } else if(self.flags & TGUSERFLAGDELETED) {
+            type = TLUserTypeDeleted;
+        } else if(self.flags & (1 << 4)) {
+            type = TLUserTypeRequest;
+        } else
+            type = TLUserTypeForeign;
+        
+        
+    } else {
+        if([self isKindOfClass:[TL_userContact class]])
+            type = TLUserTypeContact;
+        else if([self isKindOfClass:[TL_userDeleted class]])
+            type = TLUserTypeDeleted;
+        else if([self isKindOfClass:[TL_userEmpty class]])
+            type = TLUserTypeEmpty;
+        else if([self isKindOfClass:[TL_userForeign class]])
+            type = TLUserTypeForeign;
+        else if([self isKindOfClass:[TL_userSelf class]])
+            type = TLUserTypeSelf;
+        else
+            type = TLUserTypeRequest;
+    }
+    
     [self setType:type];
     
     return type;
@@ -78,6 +99,20 @@ Online
     return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
 }
 
+-(BOOL)isBot {
+    return (self.flags & TGUSERFLAGBOT) == TGUSERFLAGBOT;
+}
+
+DYNAMIC_PROPERTY(FULLUPDATETIME)
+
+-(BOOL)needFullUpdate {
+    return [[self getFULLUPDATETIME] intValue] + 150 < [[MTNetwork instance] getTime];
+}
+
+-(void)fullUpdated {
+    [self setFULLUPDATETIME:@([[MTNetwork instance] getTime])];
+}
+
 - (BOOL)isBlocked {
     return [[BlockedUsersManager sharedManager] isBlocked:self.n_id];
 }
@@ -87,6 +122,11 @@ Online
 }
 
 - (NSString *)lastSeen {
+    
+    
+    if([self isBot]) {
+       return NSLocalizedString(@"LastSeen.Bot", nil);
+    }
     
     if(self.n_id == 777000) {
         return NSLocalizedString(@"Service notifications", nil);
@@ -140,7 +180,11 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
 
 - (void) rebuildNames {
     
+    if(!self.last_name)
+        self.last_name = @"";
     
+    if(!self.first_name)
+        self.first_name = @"";
     
     
     //Fullname
@@ -438,6 +482,16 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
         
         NSString *string = self.lastSeen;
+        
+        if([self isBot]) {
+            if((self.flags & TGUSERFLAGREADHISTORY) == TGUSERFLAGREADHISTORY) {
+                string = NSLocalizedString(@"Bot.botCanReadAllMessages", nil);
+            } else {
+                string = NSLocalizedString(@"Bot.onlySeenMessagesWithSlash", nil);
+            }
+        }
+       
+        
         NSRange range;
         if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
             range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
@@ -505,6 +559,9 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
 
 
 - (TLInputUser *)inputUser {
+    
+    
+    
     switch (self.type) {
         case TLUserTypeContact:
             return [TL_inputUserContact createWithUser_id:self.n_id];
@@ -554,7 +611,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
     if([self isKindOfClass:[TL_userContact class]]) {
         return [TL_inputPeerContact createWithUser_id:self.n_id];
     }
-    return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash];
+    return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash]; 
 }
 
 - (TL_contact *)contact {

@@ -144,13 +144,16 @@ static const int navigationOffset = 48;
         return;
     
     
+    
     if([self.viewControllerStack indexOfObject:viewController] == NSNotFound) {
         [self.viewControllerStack addObject:viewController];
-        [viewController setNavigationViewController:self];
+        
     } else {
         [self.viewControllerStack removeObjectAtIndex:[self.viewControllerStack indexOfObject:viewController]];
         [self.viewControllerStack addObject:viewController];
     }
+    
+    [viewController setNavigationViewController:self];
     
     self.animationStyle = animated ? TMNavigationControllerStylePush : TMNavigationControllerStyleNone;
     self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -278,9 +281,7 @@ static const int navigationOffset = 48;
     
     self.currentController = newViewController;
     
-    
-    [[Telegram mainViewController] checkLayout];
-    
+        
     // Make view resize properly
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
@@ -313,17 +314,24 @@ static const int navigationOffset = 48;
     
 //
     
+    [newView.layer removeAllAnimations];
+    [oldView.layer removeAllAnimations];
+    
     if (!isAnimate) {
         // Add the new view
+        
+                
         [oldView removeFromSuperview];
         [newView removeFromSuperview];
         [newView.layer setOpacity:1];
+        
         
         [newView setHidden:NO];
         
         [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
-        [self.containerView addSubview:newView];
+        [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
+        
         
         [oldViewController viewDidDisappear:NO];
         [newViewController viewDidAppear:NO];
@@ -344,8 +352,7 @@ static const int navigationOffset = 48;
       //  [newView.layer setOpacity:0];
         
      
-        [newView.layer removeAllAnimations];
-        [oldView.layer removeAllAnimations];
+        
         
         
         [newView setHidden:NO];
@@ -570,87 +577,4 @@ static const int navigationOffset = 48;
 
 
 
-//_isLocked = YES;
-//TMView *oldView = self.currentView;
-//TMView *newView = currentView;
-//self.currentView = newView;
-//
-//[oldView setWantsLayer:YES];
-//[newView setWantsLayer:YES];
-//
-//[newView.layer setOpaque:YES];
-//[newView.layer setDrawsAsynchronously:YES];
-//[oldView.layer setOpaque:YES];
-//[oldView.layer setDrawsAsynchronously:YES];
-//
-//
-//if(currentController.isNavigationBarHidden) {
-//    [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height)];
-//} else {
-//    [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - self.nagivationBarView.bounds.size.height)];
-//}
-//
-//[self.containerView addSubview:newView];
-//
-//CGImageRef oldImage = [self imageOfView:oldView];
-//CGImageRef newImage = [self imageOfView:newView];
-//
-//[newView setHidden:YES];
-//
-//dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//    
-//    NSImage *image;
-//    NSSize size;
-//    
-//    if(oldImage && newImage) {
-//        size = NSMakeSize(self.view.bounds.size.width * 2, self.view.bounds.size.height);
-//        CGContextRef ctx = CGBitmapContextCreate(NULL, size.width, size.height,
-//                                                 8, size.width * 4, CGImageGetColorSpace(oldImage),
-//                                                 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
-//        
-//        CGContextDrawImage(ctx, oldView.bounds, oldImage);
-//        CGContextDrawImage(ctx, CGRectMake(self.view.bounds.size.width, 0, newView.bounds.size.width, newView.bounds.size.height), newImage);
-//        
-//        CGImageRef result = CGBitmapContextCreateImage(ctx);
-//        
-//        image = [[NSImage alloc] initWithCGImage:result size:size];
-//        CGContextRelease(ctx);
-//        CGImageRelease(result);
-//    }
-//    
-//    if(oldImage)
-//        CGImageRelease(oldImage);
-//    
-//    
-//    if(newImage)
-//        CGImageRelease(newImage);
-//    
-//    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.cacheImageView setFrameSize:size];
-//        self.cacheImageView.image = image;
-//        [self.cacheImageView setHidden:NO];
-//        [newView setHidden:NO];
-//        
-//        [oldView removeFromSuperview];
-//        float duration = 0.3;
-//        
-//        POPBasicAnimation *positionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-//        positionAnimation.toValue = @(0);
-//        positionAnimation.duration = duration;
-//        positionAnimation.toValue = @(-self.view.frame.size.width);
-//        positionAnimation.completionBlock = ^(POPAnimation *anim, BOOL finish) {
-//            [self.cacheImageView setHidden:YES];
-//            self.cacheImageView.image = nil;
-//            
-//            [oldController viewDidDisappear:NO];
-//            [self.currentController viewDidAppear:NO];
-//            
-//            _isLocked = NO;
-//        };
-//        
-//        [self.cacheImageView.layer pop_addAnimation:positionAnimation forKey:@"position"];
-//    });
-//    
-//});
 @end

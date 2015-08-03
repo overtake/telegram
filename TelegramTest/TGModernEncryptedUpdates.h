@@ -10,6 +10,8 @@
 
 @interface TGModernEncryptedUpdates : NSObject
 
+@property (nonatomic,strong) ASQueue *queue;
+
 -(void)proccessUpdate:(TLEncryptedMessage *)update;
 
 

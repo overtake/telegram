@@ -22,7 +22,7 @@
         
         _previewObject = previewObject;
         
-        _url = [NSURL fileURLWithPath:mediaFilePath(((TL_messageMediaVideo *)[_previewObject.media media]))];
+        _url = [NSURL fileURLWithPath:mediaFilePath(((TL_messageMediaVideo *)[(TL_localMessage *)_previewObject.media media]))];
         
     }
     return self;

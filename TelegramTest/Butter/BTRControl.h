@@ -139,8 +139,6 @@ extern NSString * const BTRControlStateCursorKey;
 - (NSCursor *)cursorForControlState:(BTRControlState)state;
 - (void)setCursor:(NSCursor *)cursor forControlState:(BTRControlState)state;
 
-- (void)setTitleAlignment:(NSTextAlignment)aligment;
-
 
 @end
 
@@ -154,8 +152,6 @@ extern NSString * const BTRControlStateCursorKey;
 @property (nonatomic, strong) NSImage *backgroundImage;
 @property (nonatomic, strong) NSCursor *cursor;
 
-
-- (void)setTitleAlignment:(NSTextAlignment)aligment;
 // Any setter on a BTRControlContent subclass should always call the
 // -controlContentChanged method in order to notify the control of the
 // change. TODO: See if there is a way to monitor all properties for

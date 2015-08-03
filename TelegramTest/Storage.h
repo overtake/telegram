@@ -18,6 +18,7 @@
 #import "TGSecretInAction.h"
 
 #import "TGSecretAction.h"
+#import "ASQueue.h"
 
 @interface Storage : NSObject
 {
@@ -33,6 +34,7 @@ extern NSString *const SOCIAL_DESC_COLLECTION;
 extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
+extern NSString *const BOT_COMMANDS;
 -(void)drop:(void (^)())completeHandler;
 
 
@@ -51,8 +53,9 @@ extern NSString *const ATTACHMENTS;
 
 -(TGUpdateState *)updateState;
 -(void)saveUpdateState:(TGUpdateState *)state;
--(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random;
--(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync;
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
+-(NSArray *)issetMessages:(NSArray *)ids;
 -(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler;
 
 
@@ -63,6 +66,9 @@ extern NSString *const ATTACHMENTS;
 
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
+
+-(TL_localMessage *)lastMessage:(int)peer_id from_id:(int)from_id;
+
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 
@@ -140,7 +146,7 @@ extern NSString *const ATTACHMENTS;
 
 -(void)markAllInDialog:(TL_conversation *)dialog;
 
--(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id;
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id completeHandler:(void (^)(NSArray * ids))completeHandler;
 
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 

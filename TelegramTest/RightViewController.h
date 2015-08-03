@@ -38,7 +38,19 @@
 #import "TGPasswordEmailViewController.h"
 #import "ChatExportLinkViewController.h"
 #import "TGStickersSettingsViewController.h"
-@interface RightViewController : TMViewController
+#import "ComposeChooseGroupViewController.h"
+#import "TGSplitViewController.h"
+#import "CacheSettingsViewController.h"
+#import "NotificationSettingsViewController.h"
+@class MainViewController;
+@class LeftViewController;
+
+@interface RightViewController : TGSplitViewController
+
+
+@property (nonatomic,strong) MainViewController *mainViewController;
+@property (nonatomic,strong) LeftViewController *leftViewController;
+
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) UserInfoViewController *userInfoViewController;
@@ -72,6 +84,11 @@
 @property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
 @property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
 
+@property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
+
+@property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
+@property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
+
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
 - (BOOL)isActiveDialog;
@@ -88,6 +105,7 @@
 - (void)showComposeWithAction:(ComposeAction *)composeAction;
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
+- (void)showComposeAddUserToGroup:(ComposeAction *)composeAction;
 - (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation;
 - (void)showUserInfoPage:(TLUser *)user;
 - (void)showCollectionPage:(TL_conversation *)conversation;
@@ -130,4 +148,6 @@
 -(void)showChatExportLinkController:(TLChatFull *)chat;
 -(void)showStickerSettingsController;
 
+-(void)showCacheSettingsViewController;
+-(void)showNotificationSettingsViewController;
 @end

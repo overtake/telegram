@@ -34,12 +34,12 @@
         [self.lastSeenUpdater invalidate];
         [self.lastSeenRequest cancelRequest];
         
-        self.lastSeenUpdater = [[TGTimer alloc] initWithTimeout:300 repeat:YES completion:^{
-            [self statusUpdater];
-        } queue:self.queue.nativeQueue];
-        
-        [self.lastSeenUpdater start];
-        [self statusUpdater];
+//        self.lastSeenUpdater = [[TGTimer alloc] initWithTimeout:300 repeat:YES completion:^{
+//            [self statusUpdater];
+//        } queue:self.queue.nativeQueue];
+//        
+//        [self.lastSeenUpdater start];
+      //  [self statusUpdater];
     }];
 }
 
@@ -51,6 +51,8 @@
         if(user.lastSeenUpdate + 300 < [[MTNetwork instance] getTime]) {
             if(user.type == TLUserTypeForeign || user.type == TLUserTypeRequest) {
                 [needUsersUpdate addObject:user.inputUser];
+                if(needUsersUpdate.count >= 100)
+                    break;
             }
         }
     }
@@ -126,10 +128,18 @@
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
         
         
-        fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.fullName CONTAINS[c] %@ AND self.n_id IN %@ AND self.username.length != 0",userName,uids]];
+        fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
+            
+            return evaluatedObject.username.length > 0 && [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            
+        }]];
     } else {
         
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@ AND self.username.length != 0",uids]];
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
+            
+            return evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            
+        }]];
         
         fullName = @[];
         

@@ -17,6 +17,7 @@
 
 -(TL_localMessage *)message;
 
+
 @property (nonatomic,strong,readonly) NSMutableAttributedString *messageText;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *dateText;
 @property (nonatomic,strong,readonly) NSString *selectText;
@@ -30,6 +31,9 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation;
 
+-(BOOL)itemIsUpdated;
+
+-(void)needUpdateMessage:(NSNotification *)notification;
 
 -(void)update;
 -(void)performReload;

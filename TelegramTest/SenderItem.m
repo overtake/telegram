@@ -17,7 +17,7 @@
 @implementation SenderItem
 
 
-
+static NSMutableDictionary *senders;
 
 - (id)initWithTempPath:(NSData *)temp_path_to_file path_to_file:(NSString *)path_to_file forConversation:(TL_conversation *)conversation {    if(self = [super init]) {
         [NSException raise:@"Fatal error" format:@"Can't use (%@) this class for send message with data",NSStringFromClass([self class])];
@@ -41,6 +41,7 @@
 
 
 
+
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         self.conversation = conversation;
@@ -53,72 +54,96 @@
     if(self = [super init]) {
         self.state = MessageStateWaitSend;
         self.listeners = [[NSMutableArray alloc] init];
+        
+        
+        
     }
     
     return self;
 }
 
+-(void)setMessage:(TL_localMessage *)message {
+    _message = message;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        senders[@(_message.randomId)] = self;
+        
+    }];
+}
+
 + (id)senderForMessage:(TL_localMessage *)msg {
     
-    SenderItem *item;
+     __block SenderItem *item;
     
-    if(![msg isKindOfClass:[TL_destructMessage class]]) {
-        if([msg.media isKindOfClass:[TL_messageMediaEmpty class]]) {
-            item = [[MessageSenderItem alloc] init];
-        } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-            item = [[ImageSenderItem alloc] init];
-        } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
-            item = [[VideoSenderItem alloc] init];
-        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
-            
-            item = [[DocumentSenderItem alloc] init];
-            
-            if([msg.media.document isSticker] && [msg.media.document isExist]) {
-                item = [[StickerSenderItem alloc] init];
-            }
-            
-            
-            
-        } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
-            item = [[AudioSenderItem alloc] init];
-        } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {
-            item = [[ShareContactSenterItem alloc] init];
-        }
+    [ASQueue dispatchOnStageQueue:^{
         
-        if(msg.fwd_from_id != 0) {
-            item = [[ForwardSenterItem alloc] init];
-            
-            ((ForwardSenterItem *)item).fakes = @[msg];
-            ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([msg n_id])];
-        }
+        item = senders[@(msg.randomId)];
         
-    } else {
-        if(msg.class == [TL_destructMessage class]) {
-            if([msg.media isKindOfClass:[TL_messageMediaEmpty class]])
-                item = [[MessageSenderSecretItem alloc] init];
-            else {
-               
-                item = [[FileSecretSenderItem alloc] init];
-                
-                if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-                    [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
+        if(!item) {
+            if(![msg isKindOfClass:[TL_destructMessage class]]) {
+                if([msg.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+                    item = [[MessageSenderItem alloc] init];
+                } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                    item = [[ImageSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                    [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
+                    item = [[VideoSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
-                    [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
+                    
+                    item = [[DocumentSenderItem alloc] init];
+                    
+                    if([msg.media.document isSticker] && [msg.media.document isExist]) {
+                        item = [[StickerSenderItem alloc] init];
+                    }
+                    
+                    
+                    
                 } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
-                    [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
+                    item = [[AudioSenderItem alloc] init];
+                } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {
+                    item = [[ShareContactSenterItem alloc] init];
                 }
+                
+                if(msg.fwd_from_id != 0) {
+                    item = [[ForwardSenterItem alloc] init];
+                    
+                    ((ForwardSenterItem *)item).fakes = @[msg];
+                    ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([msg n_id])];
+                }
+                
+            } else {
+                if(msg.class == [TL_destructMessage class]) {
+                    if([msg.media isKindOfClass:[TL_messageMediaEmpty class]])
+                        item = [[MessageSenderSecretItem alloc] init];
+                    else {
+                        
+                        item = [[FileSecretSenderItem alloc] init];
+                        
+                        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                            [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
+                        } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
+                            [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
+                        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                            [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
+                        } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                            [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
+                        }
+                    }
+                    
+                } 
+                
             }
-
-        } 
+            
+            
+            item.conversation = msg.conversation;
+            item.message = msg;
+            
+            item.state = msg.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
+        }
         
-    }
+    } synchronous:YES];
     
     
-    item.conversation = msg.conversation;
-    item.message = msg;
-   
     
     return item;
 }
@@ -131,6 +156,7 @@ static NSMutableArray *waiting;
     dispatch_once(&onceToken, ^{
         waiting = [[NSMutableArray alloc] init];
         queue = [[NSMutableArray alloc] init];
+        senders = [[NSMutableDictionary alloc] init];
     });
 }
 
@@ -266,6 +292,16 @@ static NSMutableArray *waiting;
      }];
 }
 
+-(void)enumerateEventListeners:(void (^)(id<SenderListener> listener, NSUInteger idx, BOOL *stop))enumerator {
+    [ASQueue dispatchOnStageQueue:^{
+        NSArray *copy = [self.listeners copy];
+        
+        [copy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            enumerator(obj,idx,stop);
+        }];
+    }];
+}
+
 -(void)removeAllListeners {
     [self notifyAllListeners:@selector(onRemovedListener:)];
     
@@ -300,6 +336,11 @@ static NSMutableArray *waiting;
 
 -(void)dealloc {
     [self removeAllListeners];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        [senders removeObjectForKey:@(_message.randomId)];
+    } synchronous:YES];
+    
 }
 
 

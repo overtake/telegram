@@ -20,7 +20,7 @@
 
 @interface SearchSelectItem : NSObject
 @property (nonatomic,assign) BOOL isCurrent;
-@property (nonatomic,strong) MessageTableItem *item;
+@property (nonatomic,weak) MessageTableItem *item;
 @property (nonatomic,strong,readonly) NSMutableArray *marks;
 @end
 
@@ -39,6 +39,9 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
+
+
+
 
 -(void)setConversation:(TL_conversation *)conversation;
 -(TL_conversation *)conversation;
@@ -60,7 +63,7 @@ typedef enum {
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
-
+- (void)jumpToLastMessages;
 - (void)saveInputText;
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;
@@ -68,7 +71,7 @@ typedef enum {
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId;
-
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated selectText:(NSString *)text;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;
@@ -92,7 +95,7 @@ typedef enum {
 - (void)resendItem:(MessageTableItem *)item;
 
 
-
+-(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot;
 
 -(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
@@ -133,7 +136,7 @@ typedef enum {
 //- (void)hideConnectionController:(BOOL)animated;
 
 -(void)showSearchBox;
-
+-(BOOL)searchBoxIsVisible;
 
 -(NSArray *)messageList;
 

@@ -102,7 +102,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
         _queue = [[ASQueue alloc] initWithName:"mtnetwork"];
         
         
-        
         [_queue dispatchOnQueue:^{
             
             [self moveAndEncryptKeychain];
@@ -235,11 +234,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(TGKeychain *)nKeychain {
     
     
-    if( [[NSProcessInfo processInfo].environment[@"debug"] boolValue]) {
-        
-        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-        
-    }
+
     
 #ifndef TGDEBUG
     
@@ -342,9 +337,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     _datacenterCount = 5;
     
     
-    NSString *address = isTestServer() ? @"149.154.175.10" : @"149.154.175.50";
+    NSString *address = isTestServer() ? @"149.154.175.10" : @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
+    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 1 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO]]]];
     
     
     if(!isTestServer()) {
@@ -357,7 +352,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
         };
         
-        _executeTimer = [[TGTimer alloc] initWithTimeout:60*60 repeat:YES completion:^{
+        _executeTimer = [[TGTimer alloc] initWithTimeout:15*60 repeat:YES completion:^{
             execute();
         } queue:_queue.nativeQueue];
         
@@ -375,6 +370,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
          [self initConnectionWithId:_masterDatacenter];
+        
+         [_datacenterWatchdog execute:nil];
     });
 }
 
@@ -482,7 +479,7 @@ static int MAX_WORKER_POLL = 5;
     return [[_keychain objectForKey:@"user_id" group:@"persistent"] intValue];
 }
 
--(MTKeychain *)keyChain {
+-(id<MTKeychain>)keyChain {
     return _context.keychain;
 }
 

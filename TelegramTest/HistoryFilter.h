@@ -22,7 +22,9 @@ typedef enum {
     HistoryFilterDocuments = 1 << 6,
     HistoryFilterText = 1 << 7,
     HistoryFilterContact = 1 << 8,
-    HistoryFilterSearch = 1 << 9
+    HistoryFilterSearch = 1 << 9,
+    HistoryFilterAudioDocument = 1 << 10,
+    HistoryFilterSharedLink = 1 << 11
 } HistoryFilterType;
 
 @property (nonatomic,weak) ChatHistoryController *controller;
@@ -30,14 +32,17 @@ typedef enum {
 
 -(id)initWithController:(ChatHistoryController *)controller;
 
-- (NSMutableDictionary *)messageKeys;
-- (NSMutableArray *)messageItems;
-+ (NSMutableDictionary *)messageKeys;
-+ (NSMutableArray *)messageItems;
+- (NSMutableDictionary *)messageKeys:(int)peer_id;
+- (NSMutableArray *)messageItems:(int)peer_id;
 
-+(void)removeItems:(NSArray *)messageIds;
++ (NSMutableDictionary *)messageKeys:(int)peer_id;
++ (NSMutableArray *)messageItems:(int)peer_id;
+
++(NSArray *)removeItems:(NSArray *)messageIds;
 
 +(void)removeAllItems:(int)peerId;
+
++(NSArray *)items:(NSArray *)messageIds;
 
 -(int)type;
 +(int)type;

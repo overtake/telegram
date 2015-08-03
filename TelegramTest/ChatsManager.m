@@ -28,9 +28,6 @@
     
     [self.queue dispatchOnQueue:^{
         
-        int bp = 0;
-        
-        
         for (id obj in all) {
             if([obj isKindOfClass:[TL_chatEmpty class]])
                 continue;
@@ -38,7 +35,7 @@
             if([obj isKindOfClass:[TLChat class]]) {
                 TLChat *newChat = (TLChat *)obj;
                 
-                [[FullChatManager sharedManager] loadIfNeed:newChat.n_id];
+            //    [[FullChatManager sharedManager] loadIfNeed:newChat.n_id force:NO];
                 
                 TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {

@@ -11,14 +11,15 @@
 #import "TGImageObject.h"
 typedef enum {
     MessageTableItemServiceMessageAction,
-    MessageTableItemServiceMessageDate
+    MessageTableItemServiceMessageDate,
+    MessagetableitemServiceMessageDescription
 } MessageTableItemServiceMessageType;
 
 @interface MessageTableItemServiceMessage : MessageTableItem
 
 - (id) initWithDate:(int)date;
 
-@property (nonatomic, strong) NSAttributedString *messageAttributedString;
+@property (nonatomic, strong) NSMutableAttributedString *messageAttributedString;
 
 @property (nonatomic) MessageTableItemServiceMessageType type;
 
@@ -26,6 +27,6 @@ typedef enum {
 @property (nonatomic) NSSize photoSize;
 @property (nonatomic, strong) TLFileLocation *photoLocation;
 @property (nonatomic, strong) NSImage *cachePhoto;
-
+@property (nonatomic, assign) NSSize textSize;
 @property (nonatomic,strong) TGImageObject *imageObject;
 @end

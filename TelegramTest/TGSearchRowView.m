@@ -15,7 +15,6 @@
         
         _searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 10, NSWidth(frameRect) - 20, 30)];
         
-        _searchField.autoresizingMask = NSViewWidthSizable ;
         
         [self addSubview:_searchField];
         
@@ -24,12 +23,27 @@
     return self;
 }
 
+-(void)setXOffset:(int)xOffset {
+    _xOffset = xOffset;
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_searchField setFrame:NSMakeRect(_xOffset, NSMinY(_searchField.frame), newSize.width - MAX(_xOffset, 10)*2, NSHeight(_searchField.frame))];
+}
+
 -(BOOL)becomeFirstResponder {
     return [_searchField becomeFirstResponder];
 }
 
 -(void)redrawRow {
     self.searchField.delegate = self.rowItem.table;
+    
+    if(_delegate)
+    {
+        self.searchField.delegate = _delegate;
+    }
 }
 
 @end

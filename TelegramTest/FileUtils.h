@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <AVFoundation/AVFoundation.h>
 
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
@@ -27,6 +27,7 @@ extern NSString *const TGImagePType;
 extern NSString *const TGImportCardPrefix;
 extern NSString *const TLUserNamePrefix;
 extern NSString *const TLHashTagPrefix;
+extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
 unsigned long fileSize(NSString *path);
@@ -41,9 +42,9 @@ void alert(NSString *text, NSString *info);
 void alert_bad_files(NSArray *bad_files);
 void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void));
 
+NSString* md5sum(NSString *fp);
 
-
-
+NSDictionary *getUrlVars(NSString *url);
 NSString *mediaFilePath(TLMessageMedia *media);
 NSString *documentPath(TLDocument *document);
 NSString* dp();
@@ -60,13 +61,13 @@ void open_card(NSString *link);
 NSString *exportPath(long randomId,NSString *extension);
 
 
-
+void determinateURLLink(NSString *link);
 
 
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
-void open_user_by_name(NSString * userName);
+void open_user_by_name(NSDictionary * userName);
 
 void join_group_by_hash(NSString * hash);
 
@@ -78,4 +79,7 @@ NSData *passwordHash(NSString *password, NSData *salt);
 + (void) fillAppByUrl:(NSURL*)url bundle:(NSString**)bundle name:(NSString**)name version:(NSString**)version icon:(NSImage**)icon;
 
 +(NSArray *)appsForFileUrl:(NSString *)file;
+
+NSDictionary *audioTags(AVURLAsset *asset);
+
 @end

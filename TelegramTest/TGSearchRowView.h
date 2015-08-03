@@ -10,4 +10,8 @@
 #import "TGSearchRowItem.h"
 @interface TGSearchRowView : TMRowView
 @property (nonatomic,strong,readonly) TMSearchTextField *searchField;
+@property(nonatomic,assign) int xOffset;
+
+@property (nonatomic,weak) id <TMSearchTextFieldDelegate> delegate;
+
 @end

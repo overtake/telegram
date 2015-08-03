@@ -17,7 +17,7 @@
 #import <MtProtoKit/MTEncryption.h>
 #import "NSData+Extensions.h"
 #import "TGStickerPackModalView.h"
-
+#import "ComposeActionAddUserToGroupBehavior.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -48,6 +48,9 @@ NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TGStickerPackPrefix = @"tg://addstickers?set=";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
+NSString *const TLBotCommandPrefix = @"/";
+
+
 
 
 
@@ -226,24 +229,30 @@ void alert_bad_files(NSArray *bad_files) {
 
 void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelBlock)(void)) {
     
-    NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
-        if([result intValue] == 1000)
-            block();
-        else if(cancelBlock)
-            cancelBlock();
+    [ASQueue dispatchOnMainQueue:^{
+        NSAlert *alert = [NSAlert alertWithMessageText:text ? text : @"" informativeText:info ? info : @"" block:^(id result) {
+            if([result intValue] == 1000)
+                block();
+            else if(cancelBlock)
+                cancelBlock();
+        }];
+        [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];
+        [alert show];
     }];
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];
-    [alert show];
+    
 }
 
 void alert(NSString *text, NSString *info) {
     
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert setAlertStyle:NSInformationalAlertStyle];
-    [alert setMessageText:text.length > 0 ? text : appName()];
-    [alert setInformativeText:info];
-    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    [ASQueue dispatchOnMainQueue:^{
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert setMessageText:text.length > 0 ? text : appName()];
+        [alert setInformativeText:info];
+        [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    }];
+    
 }
 
 + (NSString *)dataMD5:(NSData *)data {
@@ -256,7 +265,23 @@ void alert(NSString *text, NSString *info) {
 
 
 
-
+NSDictionary *getUrlVars(NSString *url) {
+    
+    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
+    
+    if([url rangeOfString:@"?"].location == NSNotFound) {
+        return @{@"domain":url,@"showProfile":@(1)};
+    }
+    
+    NSArray *hashes = [[url substringFromIndex:[url rangeOfString:@"?"].location + 1] componentsSeparatedByString:@"&"];;
+    
+    for (int i = 0; i < hashes.count; i++) {
+        
+        NSArray *hash = [hashes[i] componentsSeparatedByString:@"="];
+        d[hash[0]] = hash[1];
+    }
+    return d;
+}
 
 
 /*
@@ -469,20 +494,49 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
         
         [TMViewController hideModalProgress];
         
-    }];
+    } timeout:5];
     
 }
 
-void open_user_by_name(NSString * userName) {
+void open_user_by_name(NSDictionary *params) {
     
-    TLUser *user = [UsersManager findUserByName:userName];
+    __block TLUser *user = [UsersManager findUserByName:params[@"domain"]];
     
-    if(user) {
+    dispatch_block_t showConversation = ^ {
+        
+        if(user.isBot && params[@"start"]) {
+            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+            [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
+        } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
+            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
+        } else if(params[@"open_profile"]) {
+            [[Telegram rightViewController] showUserInfoPage:user];
+        } else {
+            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+        }
+    };
+    
+    dispatch_block_t showInfo = ^ {
         [[Telegram rightViewController] showUserInfoPage:user];
+    };
+    
+    dispatch_block_t perform = ^ {
+      
+        if(params[@"showProfile"])
+            showInfo();
+        else
+            showConversation();
+        
+    };
+    
+    if(user) {        
+        
+        perform();
+        
     } else {
         [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:params[@"domain"]] successHandler:^(RPCRequest *request, TLUser *response) {
             
             [TMViewController hideModalProgress];
             
@@ -492,7 +546,10 @@ void open_user_by_name(NSString * userName) {
                     
                     [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:YES];
                     
-                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:response.n_id]];
+                    user = [[UsersManager sharedManager] find:response.n_id];
+                    
+                    perform();
+                    
                 } else {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }
@@ -517,11 +574,43 @@ void open_user_by_name(NSString * userName) {
     
 }
 
-
-
+void determinateURLLink(NSString *link) {
+    
+    
+    if([link hasPrefix:TGImportCardPrefix]) {
+        open_user_by_name(getUrlVars(link));
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+    if([link hasPrefix:TGJoinGroupPrefix]) {
+        join_group_by_hash([link substringFromIndex:TGJoinGroupPrefix.length]);
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+    if([link hasPrefix:TGStickerPackPrefix]) {
+        add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[link substringFromIndex:TGStickerPackPrefix.length]]);
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+}
 
 void open_link(NSString *link) {
     
+    
+    if([link hasPrefix:@"USER_PROFILE:"]) {
+        
+        TLUser *user = [[UsersManager sharedManager] find:[[link substringFromIndex:@"USER_PROFILE:".length] intValue]];
+        
+        [[Telegram rightViewController] showUserInfoPage:user];
+        
+        return;
+    }
     
     if([link hasPrefix:TGImportCardPrefix]) {
         
@@ -532,7 +621,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLUserNamePrefix]) {
-        open_user_by_name([link substringFromIndex:TLUserNamePrefix.length]);
+        open_user_by_name(@{@"domain":[link substringFromIndex:TLUserNamePrefix.length],@"open_profile":@(1)});
         return;
     }
     
@@ -560,9 +649,15 @@ void open_link(NSString *link) {
     }
     
     
+    if([link hasPrefix:TLBotCommandPrefix]) {
+        [[Telegram rightViewController].messagesViewController sendMessage:link forConversation:[Telegram conversation]];
+        return;
+    }
+    
     
     
     NSRange checkRange = [link rangeOfString:@"telegram.me/"];
+    
     
     if(checkRange.location != NSNotFound) {
         
@@ -580,7 +675,18 @@ void open_link(NSString *link) {
                 add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[name substringFromIndex:stickerPrefix.length]]);
                 return;
             } else if([name rangeOfString:@"/"].location == NSNotFound) {
-                open_user_by_name(name);
+                
+                NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
+                
+                if([name rangeOfString:@"?"].location != NSNotFound) {
+                    NSDictionary *vars = getUrlVars(name);
+                    
+                    user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                   
+                    [user addEntriesFromDictionary:vars];
+                }
+                
+                open_user_by_name(user);
                 return;
             }
             
@@ -588,6 +694,9 @@ void open_link(NSString *link) {
             
             
         }
+    } else if([link hasPrefix:@"tg://"]) {
+        determinateURLLink(link);
+        return;
     }
     
     NSArray *schemes = urlSchemes();
@@ -698,7 +807,22 @@ BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
 }
 
 
-
+BOOL unzip(NSString * zipFile, NSString * destination)
+{
+    
+    NSTask *unzip = [[NSTask alloc] init];
+    [unzip setLaunchPath:@"/usr/bin/unzip"];
+    [unzip setArguments:[NSArray arrayWithObjects:@"-u", @"-d",
+                         destination, zipFile, nil]];
+    
+    NSPipe *aPipe = [[NSPipe alloc] init];
+    [unzip setStandardOutput:aPipe];
+    
+    [unzip launch];
+    [unzip waitUntilExit];
+    
+    return true;
+}
 
 
 NSString *exportPath(long randomId, NSString *extension) {
@@ -713,6 +837,37 @@ NSString *exportPath(long randomId, NSString *extension) {
     
     
     return [NSString stringWithFormat:@"%@/%lu.%@",exportDirectory,randomId,extension];
+}
+
+NSString* md5sum(NSString *fp)
+{
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/sbin/md5"];
+    [task setArguments:@[fp]];
+    
+    NSPipe *outPipe = [[NSPipe alloc] init];
+    [task setStandardOutput:outPipe];
+    
+    [task launch];
+    NSData *data = [[outPipe fileHandleForReading] readDataToEndOfFile];
+    [task waitUntilExit];
+    
+    if ([task terminationStatus] != 0) {
+        NSLog(@"NSString + MD5 : error");
+        return nil;
+    }
+    
+    NSString *str = [[NSString alloc] initWithData:data
+                                          encoding:NSUTF8StringEncoding];
+    
+    @try {
+        str = [[str substringFromIndex:[str rangeOfString:@"="].location + 1] trim];
+    }
+    @catch (NSException *exception) {
+        str = nil;
+    }
+    
+    return str;
 }
 
 
@@ -865,6 +1020,58 @@ NSData *passwordHash(NSString *password, NSData *currentSalt) {
     [hashData appendData:currentSalt];
     
     return  MTSha256(hashData);
+}
+
+NSDictionary *audioTags(AVURLAsset *asset) {
+    
+    __block NSString *artistName = @"";
+    __block NSString *songName = @"";
+    
+    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
+        
+        
+        
+        [asset.availableMetadataFormats enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSArray *metadata = [asset metadataForFormat:obj];
+            
+            for (AVMutableMetadataItem *metaItem in metadata) {
+                
+                NSLog(@"%@",metaItem.identifier);
+                
+                if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataLeadPerformer]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataIdentifierID3MetadataTitleDescription]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataiTunesMetadataKeyArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataiTunesMetadataKeySongName]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataQuickTimeUserDataKeyArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataQuickTimeUserDataKeyTrackName]) {
+                    songName = (NSString *)metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataCommonIdentifierArtist]) {
+                    artistName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier isEqualToString:AVMetadataCommonIdentifierTitle]) {
+                    songName = (NSString *) metaItem.value;
+                } else if([metaItem.identifier hasSuffix:@"wrt"]) {
+                    artistName = (NSString *)metaItem.value;
+                } else if([metaItem.identifier hasSuffix:@"nam"]) {
+                    songName = (NSString *)metaItem.value;
+                }
+                
+            }
+            
+            if(artistName.length > 0 && songName.length > 0)
+                *stop = YES;
+            
+        }];
+        
+        
+    }
+    
+    return @{@"artist":[artistName trim],@"songName":[songName trim]};
 }
 
 

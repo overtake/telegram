@@ -21,6 +21,7 @@
 @property (nonatomic,strong) NSAttributedString *title;
 @property (nonatomic,strong) TGMessagesStickerImageObject *imageObject;
 @property (nonatomic,strong) TLInputStickerSet *inputSet;
+@property (nonatomic,strong) TL_stickerSet *set;
 @end
 
 
@@ -48,7 +49,7 @@
         
         NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
         
-        TL_stickerSet *set = object[@"set"];
+        _set = object[@"set"];
         
         NSArray *stickers = object[@"stickers"];
         
@@ -72,7 +73,7 @@
             _imageObject.imageSize = strongsize(NSMakeSize(sticker.thumb.w, sticker.thumb.h), 35);
         }
         
-        NSRange range = [attrs appendString:set.title withColor:TEXT_COLOR];
+        NSRange range = [attrs appendString:_set.title withColor:TEXT_COLOR];
         
         [attrs setFont:TGSystemMediumFont(13) forRange:range];
         
@@ -152,8 +153,7 @@
     _imageView.object = item.imageObject;
     
     
-     [_removeButton setHidden:[item.inputSet isKindOfClass:[TL_inputStickerSetEmpty class]]];
-    
+    [_removeButton setHidden:(item.set.flags & (1 << 2)) == (1 << 2)];
     
 }
 
@@ -224,7 +224,7 @@
                     if(f.count == 1)
                         set = f[0];
                     else
-                        set = [TL_stickerSet createWithN_id:0 access_hash:0 title:@"Great Minds" short_name:@""];
+                        set = [TL_stickerSet createWithFlags:4 n_id:0 access_hash:0 title:@"Great Minds" short_name:@"" n_count:0 n_hash:0];
                     
                     [packs setObject:@{@"stickers":p,@"set":set} forKey:@(attr.stickerset.n_id)];
                 }

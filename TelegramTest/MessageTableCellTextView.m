@@ -215,6 +215,8 @@
     animation.duration = anim.duration;
     [self.textView pop_addAnimation:animation forKey:@"background"];
     
+    [self.webpageContainerView.descriptionField pop_addAnimation:animation forKey:@"background"];
+    
 }
 
 

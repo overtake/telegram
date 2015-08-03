@@ -89,7 +89,7 @@
     
     
     
-    [self detectAndAddLinks];
+    [self detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
     
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
     
@@ -190,11 +190,11 @@
         
        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
            
-           [context setDuration:0.2];
+           [context setDuration:0.1];
            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
            [[self.containerView animator] setFrameSize:layoutSize];
            
-           future();
+         //  future();
        
        } completionHandler:^{
            [self setString:@""];
@@ -395,7 +395,7 @@
     BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
 //    MTLog(@"log %lu", (unsigned long)flags);
     //numpad enter fix
-    if (self.hasMarkedText)
+    if (self.hasMarkedText && [SettingsArchiver checkMaskedSetting:MarkedInputText])
         return NO;
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;

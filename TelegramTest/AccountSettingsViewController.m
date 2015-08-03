@@ -498,15 +498,10 @@ typedef enum {
     
     int height = defaultY + NSHeight(self.defaultView.frame);
     
-    if([Telegram isSingleLayout]) {
-        
-        height+=NSHeight(self.topContainer.frame);
-        
-    }
     
     [self.topContainer setFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.topContainer.frame))];
     
-    [self.scrollView setFrame:NSMakeRect(0, [Telegram isSingleLayout] ? 0 : NSHeight(self.topContainer.frame), NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.view.frame))];
+    [self.scrollView setFrame:NSMakeRect(0, NSHeight(self.topContainer.frame), NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.view.frame))];
     
     [self.scrollView.documentView setFrameSize:NSMakeSize(NSWidth(self.scrollView.frame), height)];
     

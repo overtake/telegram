@@ -11,7 +11,7 @@
 #import "NS(Attributed)String+Geometrics.h"
 #import "ImageUtils.h"
 #import "TGDateUtils.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @implementation MessageTableItemServiceMessage
 
 - (id) initWithDate:(int)date {
@@ -40,16 +40,23 @@
     return self;
 }
 
-- (id)initWithObject:(TLMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.messageAttributedString = [MessagesUtils serviceAttributedMessage:object forAction:object.action];
+        self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
+        [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
         self.type = MessageTableItemServiceMessageAction;
         
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.alignment = NSCenterTextAlignment;
+        if([object.action isKindOfClass:[TL_messageActionBotDescription class]]) {
+            self.type = MessagetableitemServiceMessageDescription;
+        } else {
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            paragraphStyle.alignment = NSCenterTextAlignment;
+            
+            [((NSMutableAttributedString *)self.messageAttributedString) addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:self.messageAttributedString.range];
+        }
         
-        [((NSMutableAttributedString *)self.messageAttributedString) addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:self.messageAttributedString.range];
+      
         
         
         if(object.action.photo) {
@@ -75,14 +82,25 @@
             self.imageObject.imageSize = self.photoSize;
         }
         
-        NSSize size = [self.messageAttributedString sizeForTextFieldForWidth:400];
-        
-        self.blockSize = size;
-        size.height += 16;
-        size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;
-        self.viewSize = size;
+        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
     }
     return self;
+}
+
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    
+    NSSize size = [self.messageAttributedString sizeForTextFieldForWidth:width];
+    
+    _textSize = size;
+    
+    size.width = width;
+    size.height += 10;
+    size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;
+    self.blockSize = size;
+    
+    return YES;
 }
 
 

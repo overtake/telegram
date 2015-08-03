@@ -102,18 +102,9 @@
                                     <action selector="showMedia:" target="89" id="116"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Audio" keyEquivalent="u" id="YeF-9t-pel">
+                            <menuItem title="Show Audio" tag="2000" keyEquivalent="u" id="YeF-9t-pel">
                                 <connections>
                                     <action selector="showAudioMiniPlayer:" target="89" id="JDP-G8-29Q"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="26">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Chat verlaten..." id="27">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="clearChatHistory:" target="89" id="109"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="28">

@@ -110,7 +110,7 @@
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
         
-        if([[obj.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
+        if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
             TLPhoto *photo = [((TL_localMessage *)[obj media]) media].photo;
             
             

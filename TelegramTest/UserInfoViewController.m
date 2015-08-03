@@ -82,7 +82,7 @@
     [flippedClipView setAutoresizesSubviews:YES];
     [flippedClipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
-    self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 600)];
+    self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 700)];
     [self.containerView setAutoresizingMask:NSViewWidthSizable];
     
     self.normalContainer = [[UserInfoContainerView alloc] initWithFrame:self.containerView.bounds];
@@ -373,6 +373,7 @@
     
     self.normalContainer.layer.opacity = 1;
     self.normalContainer.controller = self;
+    
     
     [self.normalContainer setUser:user];
     

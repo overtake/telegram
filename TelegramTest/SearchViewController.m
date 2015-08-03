@@ -275,8 +275,14 @@ typedef enum {
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
     if(![[Telegram rightViewController] isModalViewActive]) {
-        return ![Telegram rightViewController].navigationViewController.isLocked;
+        
+        BOOL res = ![Telegram rightViewController].navigationViewController.isLocked;
+        
+        
+        return res;
     }
+    
+    
     
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
@@ -311,7 +317,7 @@ typedef enum {
             TMViewController *controller = [[Telegram leftViewController] currentTabController];
             
             if([controller isKindOfClass:[StandartViewController class]]) {
-                [(StandartViewController *)controller searchByString:@""];
+              //  [(StandartViewController *)controller searchByString:@""];
             }
             
         }
@@ -1006,6 +1012,18 @@ static int insertCount = 3;
   
     
   
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
+
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+        
+    });
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

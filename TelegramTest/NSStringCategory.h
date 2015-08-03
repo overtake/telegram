@@ -17,7 +17,7 @@
 
 + (NSString *) md5String:(NSString *)string;
 
-+ (NSString *) sizeToTransformedValue:(int)value;
++ (NSString *) sizeToTransformedValue:(NSUInteger)value;
 + (NSString *) durationTransformedValue:(int) elapsedSeconds;
 + (NSString *) sizeToTransformedValuePretty:(int)value;
 

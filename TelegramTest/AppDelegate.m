@@ -50,6 +50,7 @@
 #import "MessageInputGrowingTextView.h"
 #import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
+#import "TGUpdater.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -86,80 +87,7 @@
     NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
     if(url) {
         
-        if([[url absoluteString] hasPrefix:TGImportCardPrefix]) {
-            open_user_by_name([[url absoluteString] substringFromIndex:TGImportCardPrefix.length]);
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        if([[url absoluteString] hasPrefix:TGJoinGroupPrefix]) {
-            join_group_by_hash([[url absoluteString] substringFromIndex:TGJoinGroupPrefix.length]);
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        if([[url absoluteString] hasPrefix:TGStickerPackPrefix]) {
-            add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[[url absoluteString] substringFromIndex:TGStickerPackPrefix.length]]);
-            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-            [self.mainWindow deminiaturize:self];
-            return;
-        }
-        
-        
-        
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        NSString *absoluteString = [url absoluteString];
-        NSRange range = [absoluteString rangeOfString:@"?"];
-        if(range.length == 1) {
-            NSString *query = [absoluteString substringFromIndex:range.location+1];
-            for (NSString *param in [query componentsSeparatedByString:@"&"]) {
-                NSArray *elts = [param componentsSeparatedByString:@"="];
-                if([elts count] < 2)
-                    continue;
-                [params setObject:[elts objectAtIndex:1] forKey:[elts objectAtIndex:0]];
-            }
-        }
-        
-        if(range.location > 12) {
-            NSString *method = [absoluteString substringWithRange:NSMakeRange(11, range.location-11)];
-            
-            if([method isEqualToString:@"msg"]) {
-                
-                NSString *number = [params objectForKey:@"to"];
-                NSString *msg = [params objectForKey:@"msg"];
-                
-                if(msg) {
-                    msg = [[msg trim] URLDecode];
-                }
-                if(!number) {
-                    [self.telegram.firstController newMessage:[[NSMenuItem alloc] initWithTitle:@"lol" action:@selector(newMessage:) keyEquivalent:@""]];
-                    return;
-                }
-                
-                if([number hasPrefix:@"+"] && number.length > 1)
-                    number = [number substringFromIndex:1];
-                
-                NSArray *users = [[UsersManager sharedManager] all];
-                TLUser *searchUser = nil;
-                for(TLUser *user in users) {
-                    if([user.phone isEqualToString:number]) {
-                        searchUser = user;
-                        break;
-                    }
-                }
-                
-                TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:searchUser.n_id];
-                
-                if(searchUser) {
-                    [[Telegram rightViewController] showByDialog:dialog sender:self];
-                    if(msg) {
-                        [[[Telegram rightViewController] messagesViewController] setStringValueToTextField:msg];
-                    }
-                }
-            }
-        }
+        determinateURLLink([url absoluteString]);
     }
 }
 
@@ -187,6 +115,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
+    
     
 #else 
     
@@ -338,6 +267,88 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
+#ifdef TGDEBUG
+    
+//    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+//    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
+//    
+//    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
+//    
+//    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
+//        // close other proccess
+//        {
+//            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+//            
+//            
+//            
+//            daemonController.launchPath = updater_path;
+//            
+//            daemonController.startArguments = [NSArray arrayWithObjects:
+//                                               @"--bundle_id=ru.keepcoder.Telegram",
+//                                               @"--close_others=1",
+//                                               nil];
+//            
+//            
+//            [daemonController start];
+//
+//        }
+//        
+//        
+//        
+//        
+//        // update application
+//        {
+//            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
+//            
+//            [updater itsHaveNewVersion:^(bool nVer){
+//                
+//                
+//                if(nVer)
+//                {
+//                    confirm(appName(), @"New version avaiable, download?", ^{
+//                        [updater startDownload:^(NSString *fpath) {
+//                            
+//                            NSLog(@"%@",fpath);
+//                            
+//                            [self.window setTitle:@"Proccessing..."];
+//                            
+//                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
+//                            
+//                            daemonController.launchPath = updater_path;
+//                            
+//                            daemonController.startArguments = [NSArray arrayWithObjects:
+//                                                               @"--bundle_id=ru.keepcoder.Telegram",
+//                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
+//                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
+//                                                               nil];
+//                            
+//                            [daemonController setDaemonStoppedCallback:^{
+//                                
+//                                [self.window setTitle:appName()];
+//                                
+//                            }];
+//                            
+//                            [daemonController start];
+//                            
+//                            
+//                        } progress:^(NSUInteger progress) {
+//                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
+//                        }];
+//                        
+//                    }, ^{
+//                        
+//                    });
+//                    
+//                }
+//                
+//            }];
+//        }
+//    }
+//    
+    
+
+    
+#endif
     
  //   if([[MTNetwork instance] isAuth]) {
         [self initializeMainWindow];
@@ -348,7 +359,6 @@ void exceptionHandler(NSException * exception)
  //   }
 
 }
-
 
 
 - (void)initializeUpdater {
@@ -794,7 +804,7 @@ void exceptionHandler(NSException * exception)
     [(MainViewController *)mainWindow.rootViewController updateWindowMinSize];
     
     
-    [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
+  //  [[Telegram rightViewController] addFirstControllerAfterLoadMainController:[[Telegram mainViewController] isSingleLayout] ? [Telegram leftViewController] : nil];
 
     
 }
@@ -803,6 +813,7 @@ void exceptionHandler(NSException * exception)
     LoginWindow *loginWindow = [[LoginWindow alloc] init];
     [loginWindow makeKeyAndOrderFront:nil];
     [self releaseWindows];
+    
     
     self.loginWindow = loginWindow;
     
@@ -834,24 +845,30 @@ void exceptionHandler(NSException * exception)
 - (void)logoutWithForce:(BOOL)force {
     
     dispatch_block_t block = ^ {
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [TMViewController hideModalProgress];
+            
+            [TGAudioPlayerWindow hide];
+            
+            [[Storage manager] drop:^{
                 
+                [TGCache clear];
+                [TGModernTypingManager drop];
+                [SharedManager drop];
+                [[MTNetwork instance] startNetwork];
+                [[MTNetwork instance] drop];
+                [Telegram drop];
+                [TMViewController hidePasslock];
+                [MessageSender drop];
+                [Notification perform:LOGOUT_EVENT data:nil];
+                
+                [MessagesManager updateUnreadBadge];
+                
+                [self initializeLoginWindow];
+            }];
+        }];  
         
-        [TMViewController hideModalProgress];
-        
-        [[Storage manager] drop:^{
-            
-            [TGCache clear];
-            [TGModernTypingManager drop];
-            [SharedManager drop];
-            [[MTNetwork instance] drop];
-            [Telegram drop];
-            [MessageSender drop];
-            [Notification perform:LOGOUT_EVENT data:nil];
-            
-            [MessagesManager updateUnreadBadge];
-            
-            [self initializeLoginWindow];
-        }];
     };
     
     if([[MTNetwork instance] isAuth] && !force) {

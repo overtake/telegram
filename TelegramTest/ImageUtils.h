@@ -178,14 +178,29 @@ CACHE_IMAGE(WebpageInstagramVideoPlay);
 
 
 
-CACHE_IMAGE(MiniPlayerPrev);
-CACHE_IMAGE(MiniPlayerPlay);
-CACHE_IMAGE(MiniPlayerNext);
-CACHE_IMAGE(MiniPlayerPause);
-CACHE_IMAGE(MiniPlayerClose);
-CACHE_IMAGE(MiniPlayerStop);
+CACHE_IMAGE(AudioPlayerBack);
+CACHE_IMAGE(AudioPlayerPlay);
+CACHE_IMAGE(AudioPlayerNext);
+CACHE_IMAGE(AudioPlayerPause);
+CACHE_IMAGE(AudioPlayerClose);
+CACHE_IMAGE(AudioPlayerStop);
 CACHE_IMAGE(MiniPlayerDefaultCover);
-CACHE_IMAGE(MiniPlayerPlaylist);
+CACHE_IMAGE(AudioPlayerList);
+CACHE_IMAGE(AudioPlayerListActive);
+CACHE_IMAGE(MusicStandartCover);
+
+CACHE_IMAGE(botCommand);
+CACHE_IMAGE(botKeyboard);
+CACHE_IMAGE(botKeyboardActive);
+CACHE_IMAGE(SearchMessages);
+
+CACHE_IMAGE(AudioPlayerPin);
+CACHE_IMAGE(AudioPlayerPinActive);
+
+CACHE_IMAGE(SearchUpDisabled);
+CACHE_IMAGE(SearchDownDisabled);
+CACHE_IMAGE(SearchUp);
+CACHE_IMAGE(SearchDown);
 @interface ImageUtils : NSObject
 
 
@@ -208,7 +223,7 @@ NSImage *prettysize(NSImage *img);
 NSImage *imageFromFile(NSString *filePath);
 NSSize resizeToMaxCorner(NSSize from, float size);
 NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize);
-
+NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size);
 NSImage *TGIdenticonImage(NSData *data, CGSize size);
 
 NSImageView *imageViewWithImage(NSImage *image);

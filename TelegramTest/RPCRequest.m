@@ -9,7 +9,7 @@
 #import "RPCRequest.h"
 #import "CMath.h"
 #import "MTNetwork.h"
-
+#import "RpcErrorParser.h"
 @implementation RPCRequest
 
 - (id)init {
@@ -86,6 +86,15 @@
 }
 
 
++ (id)sendRequest:(id)object forDc:(int)dc_id successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler queue:(dispatch_queue_t)queue {
+    
+    RPCRequest *request = [self sendRequest:object forDc:dc_id successHandler:successHandler errorHandler:errorHandler];
+    
+    request.queue = queue;
+    
+    return request;
+}
+
 
 
 + (id)sendPollRequest:(id)object successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler {
@@ -113,9 +122,11 @@
 }
 
 - (void)completeHandler {
+    
     if(!self.queue) {
         self.queue = dispatch_get_main_queue();
     }
+    
     
     dispatch_block_t block = ^{
         if(self.response) {
@@ -126,20 +137,15 @@
         } else {
             if(self.errorHandler != nil) {
                 
-                
                 if( self.error.error_code == 401)
                 {
-                    
                     if(![self.error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
                         
                         [[Telegram delegate] logoutWithForce:YES];
                         
                     }
-                } else if( self.error.error_code == 303 && [self.error.error_msg hasPrefix:@"PHONE_MIGRATE"]) {
+                } else if( self.error.error_code == 303 && ([self.error.error_msg hasPrefix:@"PHONE_MIGRATE"] || [self.error.error_msg hasPrefix:@"NETWORK_MIGRATE"] || [self.error.error_msg hasPrefix:@"USER_MIGRATE"])) {
                     
-                    [[MTNetwork instance] setDatacenter:self.error.resultId];
-                    [[MTNetwork instance] initConnectionWithId:self.error.resultId];
-                } else if([self.error.error_msg hasPrefix:@"USER_MIGRATE"]) {
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
                 } else {
@@ -169,5 +175,7 @@
         block();
     }
 }
+
+
 
 @end

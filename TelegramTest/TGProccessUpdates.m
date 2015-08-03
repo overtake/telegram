@@ -18,11 +18,12 @@
 #import "MessagesUtils.h"
 #import "TGDateUtils.h"
 #import "TGModernEncryptedUpdates.h"
+#import "FullUsersManager.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
 @property (nonatomic,strong) TGTimer *sequenceTimer;
-@property (nonatomic,assign) BOOL holdUpdates;
+@property (atomic,assign) BOOL holdUpdates;
 @property (nonatomic,strong) TGModernEncryptedUpdates *encryptedUpdates;
 
 
@@ -47,13 +48,16 @@ static ASQueue *queue;
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
-        
+      //  _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
+        
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             queue = [[ASQueue alloc] initWithName:"UpdatesQueue"];
         });
+        
+        [_encryptedUpdates setQueue:queue];
     }
     return self;
 }
@@ -64,7 +68,7 @@ static ASQueue *queue;
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
-        
+       // _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         
         queue = q;
@@ -383,7 +387,7 @@ static ASQueue *queue;
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStateNormal];
         
          if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
              [self failSequence];
@@ -401,7 +405,7 @@ static ASQueue *queue;
             return NO;
         }
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStateNormal];
         
         if(message.n_out) {
             message.from_id = [UsersManager currentUserId];
@@ -618,7 +622,7 @@ static ASQueue *queue;
             [conversation save];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -656,15 +660,16 @@ static ASQueue *queue;
         TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
-        if(!fullChat) {
-            [[FullChatManager sharedManager] loadIfNeed:chatParticipants.chat_id];
-            return;
+        
+        [[FullChatManager sharedManager] loadIfNeed:chatParticipants.chat_id force:YES];
+        
+        if(fullChat) {
+            fullChat.participants = chatParticipants;
+            [[Storage manager] insertFullChat:fullChat completeHandler:nil];
+            
+            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
         }
         
-        fullChat.participants = chatParticipants;
-        [[Storage manager] insertFullChat:fullChat completeHandler:nil];
-        
-        [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
         return;
     }
     
@@ -734,7 +739,7 @@ static ASQueue *queue;
                 }
                 
                 if(chat.dialog) {
-                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
+                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
                     
                     [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
                 }
@@ -755,7 +760,7 @@ static ASQueue *queue;
                 [params setState:EncryptedDiscarted];
                 [params save];
                 
-                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog}];
+                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
                 
                 
                 [SecretChatAccepter removeChatId:chat.n_id];
@@ -840,7 +845,7 @@ static ASQueue *queue;
         
         NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -850,6 +855,11 @@ static ASQueue *queue;
     if([update isKindOfClass:[TL_updateContactRegistered class]]) {
         
         TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
+        
+        if(!user) {
+            [self failSequence];
+            return;
+        }
         
         NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
         
@@ -975,21 +985,17 @@ static ASQueue *queue;
             [ids addObject:@(obj.n_id)];
         }];
         
-        if(ids.count > 0) {
-            [[Storage manager] messages:^(NSArray *res) {
-                if(res.count > 0) {
-                    [ids removeAllObjects];
-                    
-                    [res enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-                        [ids addObject:@(obj.n_id)];
-                    }];
-                    
-                    NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",ids]];
-                    
-                    [copy removeObjectsInArray:f];
-                }
-            } forIds:ids random:NO sync:YES];
-        }
+//        if(ids.count > 0) {
+//            
+//            
+//            NSArray *res = [[Storage manager] issetMessages:ids];
+//            
+//            [ids removeAllObjects];
+//           
+//            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
+//            
+//            [copy removeObjectsInArray:f];
+//        }
     
         
         
@@ -1010,7 +1016,6 @@ static ASQueue *queue;
                 
                 if([response n_messages].count > 0) {
                     [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-                    [Notification perform:MESSAGE_LIST_RECEIVE object:[response n_messages]];
                 }
                 
                 

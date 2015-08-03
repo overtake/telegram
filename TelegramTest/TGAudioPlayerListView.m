@@ -9,10 +9,10 @@
 #import "TGAudioPlayerListView.h"
 #import "TGAudioRowView.h"
 #import "ChatHistoryController.h"
-#import "DocumentHistoryFilter.h"
+#import "MP3HistoryFilter.h"
 #import "MessageTableItemAudioDocument.h"
 #import "NSString+Extended.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TGAudioSearchRowItem : TMRowItem
 
 @end
@@ -125,8 +125,10 @@ static long h_r_l;
         [_emptyTextField setTextColor:GRAY_TEXT_COLOR];
         
         
+        NSSize size = [[_emptyTextField cell] cellSizeForBounds:NSMakeRect(0, 0, NSWidth(self.frame) - 40, NSHeight(self.frame))];
+
         
-        [_emptyTextField setFrameSize:[_emptyTextField sizeThatFits:NSMakeSize(NSWidth(self.frame) - 40, NSHeight(self.frame))]];
+        [_emptyTextField setFrameSize:size];
         
         [_emptyTextField setCenterByView:self];
         
@@ -138,17 +140,34 @@ static long h_r_l;
 }
 
 
+-(void)onShow {
+    
+    __block int selectedIdx = -1;
+    
+    [_fullItems enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
+        obj.isSelected = [obj hash] == _selectedId;
+        
+        if(obj.isSelected)
+        {
+            selectedIdx = (int) idx;
+        }
+        
+    }];
 
+    
+    if(!NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+        [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
+}
 
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? 40 : 60;
+    return row == 0 ? 40 : 50;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;
 }
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return row == 0 ? _searchRow : [_tableView cacheViewForClass:[TGAudioRowView class] identifier:NSStringFromClass([TGAudioRowView class]) withSize:NSMakeSize(NSWidth(self.frame), 60)];
+    return row == 0 ? _searchRow : [_tableView cacheViewForClass:[TGAudioRowView class] identifier:NSStringFromClass([TGAudioRowView class]) withSize:NSMakeSize(NSWidth(self.frame), 50)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGAudioRowItem *) item {
     
@@ -184,7 +203,7 @@ static long h_r_l;
     if(_conversation) {
         _list = @[];
         _fullItems = [[NSMutableArray alloc] init];
-        _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
+        _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[MP3HistoryFilter class]];
         [_searchRow.searchField setStringValue:@""];
         [_tableView insert:[[TGAudioSearchRowItem alloc] init] atIndex:0 tableRedraw:YES];
         
@@ -231,6 +250,9 @@ static long h_r_l;
             
             [self check];
             
+            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1) {
+                [self selectNext];
+            }
             
             [self loadNext];
             
@@ -239,20 +261,62 @@ static long h_r_l;
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.searchRow.searchField becomeFirstResponder];
+}
+
+
+
 -(void)check {
     [_emptyTextField setHidden:_tableView.count > 1 || _searchRow.searchField.stringValue.length > 0];
     [_tableView.containerView setHidden:!_emptyTextField.isHidden];
 }
 
+
 -(void)setSelectedId:(long)messageId {
     _selectedId = messageId;
     
+    __block TGAudioRowItem *selectedRow = nil;
+    __block int selectedIdx = -1;
+    
     [_fullItems enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
-            obj.isSelected = [obj hash] == messageId;
+        obj.isSelected = [obj hash] == messageId;
+        
+        if(obj.isSelected)
+        {
+            selectedRow = obj;
+            selectedIdx = (int) idx;
+        }
+        
     }];
+    
+    if(_fullItems.count > 1 && selectedIdx != -1)
+    {
+        
+        NSUInteger startIdx = MAX(selectedIdx-1,0);
+        NSUInteger length = MIN(3, _fullItems.count - selectedIdx);
+        
+        NSArray *dif = [_fullItems subarrayWithRange:NSMakeRange(startIdx, length)];
+        
+        
+        [dif enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj != selectedRow)
+            {
+                if(!obj.document.isset)
+                {
+                    [obj.document startDownload:NO force:YES];
+                }
+            }
+            
+        }];
+    }
     
     [self.tableView redrawAll];
     
+    if(NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+        [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
+
 }
 
 -(void)reloadData {
@@ -314,7 +378,7 @@ static long h_r_l;
         
         if(self.searchRow.searchField.stringValue.length > 0) {
             accept = [item.trackName searchInStringByWordsSeparated:self.searchRow.searchField.stringValue];
-            pos = 0;
+            pos = _fullItems.count-1;
         }
         
         _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
@@ -328,7 +392,7 @@ static long h_r_l;
 
 
 -(void)resort {
-    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:NO]]];
+    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.n_id" ascending:YES]]];
 }
 
 -(NSUInteger)posAsItem:(TGAudioRowItem *)item {
@@ -387,20 +451,22 @@ static long h_r_l;
 
 - (void) searchFieldTextChange:(NSString*)searchString {
     
-    NSArray *items = _fullItems;
-    
-    if(searchString.length > 0) {
-       items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TGAudioRowItem *evaluatedObject, NSDictionary *bindings) {
-            
-            return [evaluatedObject.trackName searchInStringByWordsSeparated:searchString];
-            
-        }]];
+    if(_fullItems.count > 0) {
+        NSArray *items = _fullItems;
+        
+        if(searchString.length > 0) {
+            items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TGAudioRowItem *evaluatedObject, NSDictionary *bindings) {
+                
+                return [evaluatedObject.trackName searchInStringByWordsSeparated:searchString];
+                
+            }]];
+        }
+        
+        
+        [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
+        
+        [_tableView insert:items startIndex:1 tableRedraw:YES];
     }
-
-    
-    [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
-    
-    [_tableView insert:items startIndex:1 tableRedraw:YES];
     
 }
 

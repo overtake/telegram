@@ -20,10 +20,10 @@
 #import "TGAudioPlayerWindow.h"
 #define OFFSET 75.0f
 
-@interface MessageTablecellAudioDocumentView()
+@interface MessageTablecellAudioDocumentView()<TGAudioPlayerWindowDelegate>
 
 
-
+@property (nonatomic,assign) TGAudioPlayerState audioState;
 @end
 
 @implementation MessageTablecellAudioDocumentView
@@ -46,52 +46,24 @@
         
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
-            if(weakSelf.item.state == AudioStateWaitPlaying) {
-                if(weakSelf.item.isset) {
-                    
-                    [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-                    [TGAudioPlayerWindow setCurrentItem:weakSelf.item];
-                    
-                //    weakSelf.currentTime = 0;
-                 //   [weakSelf setNeedsDisplay:YES];
-                 //   [weakSelf play:0];
-                } else {
-                    if([weakSelf.item canDownload])
-                        [weakSelf startDownload:YES];
-                }
-                return;
-            }
+            [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+            [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
             
-            if(weakSelf.item.state == AudioStatePaused) {
-                weakSelf.item.state = AudioStatePlaying;
-                weakSelf.cellState = weakSelf.cellState;
-                [globalAudioPlayer() reset];
-                [weakSelf startTimer];
-                return;
-            }
-            
-            if(weakSelf.item.state == AudioStatePlaying) {
-                weakSelf.item.state = AudioStatePaused;
-                weakSelf.cellState = weakSelf.cellState;
-                [weakSelf.progressTimer invalidate];
-                weakSelf.progressTimer = nil;
-                [weakSelf pause];
-                return;
-            }
             
         } forControlEvents:BTRControlEventClick];
         
         [self.containerView addSubview:self.playerButton];
         
-        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 23, 100, 20)];
+        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 30, 100, 23)];
         [self.durationView setEnabled:NO];
         [self.durationView setBordered:NO];
         [self.durationView setEditable:NO];
         [self.durationView setDrawsBackground:NO];
         [self.durationView setStringValue:@"00:00 / 00:00"];
-        [self.durationView sizeToFit];
+        
         [[self.durationView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView sizeToFit];
         [self.durationView setTextColor:DARK_BLACK];
         [self.containerView addSubview:self.durationView];
         
@@ -115,8 +87,33 @@
         
         [self setProgressToView:self.playerButton];
         
+        [TGAudioPlayerWindow addEventListener:self];
+        
     }
     return self;
+}
+
+-(void)dealloc {
+    [TGAudioPlayerWindow removeEventListener:self];
+}
+
+-(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerState)state {
+    
+    if(item.message.n_id != self.item.message.n_id)
+    {
+        self.audioState = TGAudioPlayerStatePaused;
+    } else {
+        self.audioState = state;
+    }
+    
+    
+    
+}
+
+-(void)setAudioState:(TGAudioPlayerState)audioState {
+    _audioState = audioState;
+    
+    [self updateCellState];
 }
 
 -(float)progressWidth {
@@ -130,6 +127,10 @@
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
     [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width , NSHeight(self.durationView.frame))];
+}
+
+-(void)drawRect:(NSRect)dirtyRect {
+    
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -147,29 +148,23 @@
         [self.playerButton setBackgroundImage:grayBackground() forControlState:BTRControlStateNormal];
     }
     
-    
-    
-    // [self.playerButton setHidden:self.item.state != AudioStateWaitPlaying || self.item.state != AudioStatePaused || self.item.state != AudioStatePlaying];
-    
-    
-    switch (self.item.state) {
-        case AudioStateWaitPlaying:
+    switch (self.audioState) {
+        case TGAudioPlayerStatePaused:
             [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
             break;
             
-        case AudioStatePaused:
-            [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStatePlaying:
+        case TGAudioPlayerStatePlaying:
             [self.playerButton setImage:image_DownloadPauseIconWhite() forControlState:BTRControlStateNormal];
             break;
-            
-        default:
-            [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
+        case TGAudioPlayerStateForcePaused: default :
+            [self.playerButton setImage:playImage() forControlState:BTRControlStateNormal];
             break;
     }
     
+    if(self.cellState == CellStateDownloading || self.cellState == CellStateNeedDownload || self.cellState == CellStateDownloading)
+    {
+        [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
+    }
     
     [self setNeedsDisplay:YES];
     
@@ -238,6 +233,12 @@
     
     item.cellView = self;
     
+    if([TGAudioPlayerWindow currentItem].message.n_id == item.message.n_id)
+        _audioState = [TGAudioPlayerWindow playerState];
+     else
+        _audioState = TGAudioPlayerStatePaused;
+    
+    
     self.acceptTimeChanger = NO;
     
     [self updateDownloadState];
@@ -247,7 +248,7 @@
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y - 2)];
+    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y )];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

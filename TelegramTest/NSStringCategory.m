@@ -51,7 +51,7 @@
     return formattedTime;
 }
 
-+ (NSString *) sizeToTransformedValue:(int)value {
++ (NSString *) sizeToTransformedValue:(NSUInteger)value {
     double convertedValue = value / 1.0;
     int multiplyFactor = 0;
 

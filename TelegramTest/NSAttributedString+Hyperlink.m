@@ -1,5 +1,5 @@
 #import "NSAttributedString+Hyperlink.h"
-#import "NSString+FindURLs.h"
+
 
 
 @implementation NSMutableAttributedString (Hyperlink)
@@ -17,69 +17,29 @@
 	return attrString;
 }
 
--(void)detectAndAddLinks {
+-(void)detectAndAddLinks:(URLFindType)urlType {
     
-    NSArray *linkLocations = [[self string] locationsOfLinks];
-    NSArray *links = [[self string] arrayOfLinks:linkLocations];
+    NSArray *linkLocations = [NSString textCheckingResultsForText:self.string highlightMentionsAndTags:urlType & URLFindTypeMentions highlightCommands:urlType & URLFindTypeBotCommands];// [[self string] locationsOfLinks:urlType];
     
     [self beginEditing];
-    int i = 0;
-    for( NSString *link in links ) {
-        if(link) {
-            id object = [linkLocations objectAtIndex:i];
-            if(object) {
-                NSRange range = [object range];
-                
-                if(range.location != NSNotFound) {
-                  //  NSURL *url = [NSURL URLWithString:link];
-                  //  if(url) {
-                        [self addAttribute:NSLinkAttributeName value:link range:range];
-                        [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                        [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-                        [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-                        
-                  //  }
-                }
-            }
+    for( NSValue *link in linkLocations ) {
+        NSRange range = [link rangeValue];
+        
+        if(range.location != NSNotFound) {
+            //  NSURL *url = [NSURL URLWithString:link];
+            //  if(url) {
+            [self addAttribute:NSLinkAttributeName value:[self.string substringWithRange:range] range:range];
+            [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+            [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+            
+            //  }
         }
-        i++;
     }
     [self endEditing];
     
 }
 
--(void)detectExternalLinks {
-    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
-    
-    
-    NSArray *linkLocations = [detect matchesInString:[self string] options:0 range:NSMakeRange(0, [self length])];
-    
-    NSArray *links = [[self string] arrayOfLinks:linkLocations];
-    
-    [self beginEditing];
-    int i = 0;
-    for( NSString *link in links ) {
-        if(link) {
-            id object = [linkLocations objectAtIndex:i];
-            if(object) {
-                NSRange range = [object range];
-                
-                if(range.location != NSNotFound) {
-                    //  NSURL *url = [NSURL URLWithString:link];
-                    //  if(url) {
-                    [self addAttribute:NSLinkAttributeName value:link range:range];
-                    [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-                    [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-                    
-                    //  }
-                }
-            }
-        }
-        i++;
-    }
-    [self endEditing];
-}
 
 
 @end

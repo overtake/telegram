@@ -159,36 +159,86 @@
 
 
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation {
++(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation {
+    
+    __block NSString *message = msg;
     
     __block TL_localMessage *replyMessage;
     
     __block TLWebPage *webpage;
     
+    
+    __block TL_localMessage *keyboardMessage;
+    __block BOOL clear = YES;
+    __block BOOL removeKeyboard = NO;
+    
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSData *data = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-        if(data)
-            replyMessage = [TLClassStore deserialize:data];
+        replyMessage = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
+        
+        
+        keyboardMessage = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+        if(!keyboardMessage) {
+            clear = NO;
+        }
+        
+        [keyboardMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL *stop) {
+            
+            [obj.buttons enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+                
+                if([message isEqualToString:button.text]) {
+                    clear = NO;
+                    
+                    *stop = YES;
+                }
+                
+            }];
+            
+            
+        }];
+        
+        
+//        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
+//            
+//            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+//            
+//            removeKeyboard = YES;
+//        }
         
         [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-
+       
     }];
+    
+
+    
+    
+    
+    if(clear) {
+        keyboardMessage = nil;
+    }
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
         
         webpage = [Storage findWebpage:[message webpageLink]];
     }
     
+    if(!replyMessage && keyboardMessage.peer_id < 0 && !clear) {
+        replyMessage = keyboardMessage;
+    }
+    
     int reply_to_msg_id = replyMessage.n_id;
     
-    int flags = TGOUTUNREADMESSAGE;
+    
+    int flags = TGOUTMESSAGE;
+    
+    if(!conversation.user.isBot)
+        flags|=TGUNREADMESSAGE;
     
     if(reply_to_msg_id > 0)
         flags|=TGREPLYMESSAGE;
     
     
-    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() state:DeliveryStatePending];
+    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStatePending];
     
     if(webpage)
     {
@@ -201,17 +251,20 @@
         [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];
     }
     
-    if(replyMessage)
-    {
-        
-        if(conversation.peer_id == [Telegram conversation].peer_id) {
+    
+    if(conversation.peer_id == [Telegram conversation].peer_id) {
+        if(replyMessage || removeKeyboard) {
             [ASQueue dispatchOnMainQueue:^{
                 
-                [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
+                if(replyMessage) {
+                    [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
+                }
+                
             }];
         }
         
     }
+    
     
     return  outMessage;
 }

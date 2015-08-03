@@ -106,8 +106,18 @@
         SEL proccessMethod = NSSelectorFromString([NSString stringWithFormat:@"proccess%dLayer:params:conversation:encryptedMessage:",layer]);
         
         IMP imp = [self methodForSelector:proccessMethod];
+        
+        id des;
+        
+        @try {
+            des = [DeserializeClass parseObject:decrypted];
+        }
+        @catch (NSException *exception) {
+            [params discard];
+        }
+        
         void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
-        func(self, proccessMethod,[DeserializeClass parseObject:decrypted],params,chat.dialog, update);
+        func(self, proccessMethod,des,params,chat.dialog, update);
          
     }
     
@@ -233,7 +243,7 @@
                     [SelfDestructionController addMessage:obj force:YES];
                 }];
                 
-            } forIds:storageMessages random:YES sync:YES];
+            } forIds:storageMessages random:YES sync:YES queue:_queue ? _queue : [ASQueue globalQueue]];
             
             return YES;
         }
@@ -571,7 +581,7 @@ Class convertClass(NSString *c, int layer) {
         } else if([obj isKindOfClass:videoAttr]) {
             [attrs addObject:[TL_documentAttributeVideo createWithDuration:[[obj valueForKey:@"duration"] intValue] w:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
         } else if([obj isKindOfClass:audioAttr]) {
-            [attrs addObject:[TL_documentAttributeAudio createWithDuration:[[obj valueForKey:@"duration"] intValue]]];
+            [attrs addObject:[TL_documentAttributeAudio_old31 createWithDuration:[[obj valueForKey:@"duration"] intValue]]];
         } else if([obj isKindOfClass:animatedAttr]) {
             [attrs addObject:[TL_documentAttributeAnimated create]];
         }

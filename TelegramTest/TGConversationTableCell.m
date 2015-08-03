@@ -94,6 +94,8 @@ static NSDictionary *attributes() {
 
 @property (nonatomic,strong) TMView *containerView;
 
+@property (nonatomic,assign) BOOL isActiveDragging;
+
 @end
 
 
@@ -103,9 +105,59 @@ static NSDictionary *attributes() {
 @implementation TGConversationTableCell
 
 
+-(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
+    
+    TL_conversation *conversation = [(TGConversationTableItem *)self.rowItem conversation];
+    
+    if(!conversation.canSendMessage)
+        return NSDragOperationNone;
+    
+    self.isActiveDragging = YES;
+    
+    NSPasteboard *pboard;
+    NSDragOperation sourceDragMask;
+    sourceDragMask = [sender draggingSourceOperationMask];
+    pboard = [sender draggingPasteboard];
+    
+    if ( ![pboard.name isEqualToString:TGImagePType] ) {
+        if (sourceDragMask) {
+            return NSDragOperationLink;
+        }
+    }
+    
+    return NSDragOperationNone;
+}
+
+
+-(void)draggingExited:(id<NSDraggingInfo>)sender {
+    
+    self.isActiveDragging = NO;
+}
+
+-(void)draggingEnded:(id<NSDraggingInfo>)sender {
+
+    self.isActiveDragging = NO;
+    
+}
+
+
+-(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
+    
+    TL_conversation *conversation = [(TGConversationTableItem *)self.rowItem conversation];
+    
+    [[Telegram rightViewController] showByDialog:conversation sender:self];
+    
+    [MessageSender sendDraggedFiles:sender dialog:conversation asDocument:NO];
+    
+    return YES;
+}
+
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+        
+        
+        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
         
        // self.wantsLayer = YES;
         
@@ -122,6 +174,9 @@ static NSDictionary *attributes() {
         
         
         [_nameTextField setFrameOrigin:NSMakePoint(68, 40)];
+        
+        [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         
         _nameTextField.wantsLayer = YES;
 
@@ -142,8 +197,6 @@ static NSDictionary *attributes() {
         [_dateField setFrameOrigin:NSMakePoint(0, 46)];
         
         _dateField.wantsLayer = YES;
-        
-        [_dateField setAutoresizingMask:NSViewMinXMargin];
         [_dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         
       
@@ -179,6 +232,12 @@ static NSDictionary *attributes() {
                  _swipe.layer.backgroundColor = color.CGColor;
             }
             
+            if(self.isActiveDragging)
+            {
+                [GRAY_BORDER_COLOR set];
+                NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
+            }
+            
          //
             
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0 && self.item.conversation.lastMessage.from_id != [UsersManager currentUserId])
@@ -197,24 +256,28 @@ static NSDictionary *attributes() {
     return self;
 }
 
-
-
+-(void)setIsActiveDragging:(BOOL)isActiveDragging {
+    _isActiveDragging = isActiveDragging;
+    
+    [_swipe.containerView setNeedsDisplay:YES];
+}
 
 -(void)setFrameSize:(NSSize)newSize {
+    
     [super setFrameSize:newSize];
     
-    [_swipe setFrameSize:newSize];
-    
-    [self updateFrames];
 }
 
 -(void)updateFrames {
+    
+     [_swipe setFrameSize:self.frame.size];
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
     [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
+
     
     NSValue *point = [self stateImage][@"point"];
     
@@ -348,6 +411,8 @@ static NSDictionary *attributes() {
         [_stateImageView removeFromSuperview];
         _stateImageView = nil;
     }
+    
+    
     
     [self updateFrames];
     

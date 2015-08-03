@@ -94,23 +94,24 @@
 -(void)mouseUp:(NSEvent *)theEvent {
     [super mouseUp:theEvent];
     
-    if([StickersPanelView hasSticker:self.item.message.media.document])
-    {
-        
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
-        
-        if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
+    if([self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
+        if([StickersPanelView hasSticker:self.item.message.media.document])
+        {
             
-            NSArray *check = [[EmojiViewController allSets] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
+            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
             
-            if(check.count == 0) {
-                 add_sticker_pack_by_name(attr.stickerset);
+            if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
+                
+                NSArray *check = [[EmojiViewController allSets] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
+                
+                if(check.count == 0) {
+                    add_sticker_pack_by_name(attr.stickerset);
+                }
+                
             }
             
         }
-        
     }
-    
 }
 
 -(void)setCellState:(CellState)cellState {

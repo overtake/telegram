@@ -18,6 +18,20 @@
 #import "EmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
+#import "MessagesUtils.h"
+
+@interface TestView : TMView
+
+@end
+
+@implementation TestView
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+}
+
+@end
+
 @interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
 @property (nonatomic, strong) DialogsHistoryController *history;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
@@ -29,8 +43,7 @@
 
 - (void)loadView {
     [super loadView];
-    
-    
+        
     _list = [[NSMutableArray alloc] init];
     
     
@@ -46,12 +59,11 @@
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset);
     
     self.tableView = [[TGConversationsTableView alloc] initWithFrame:tableRect];
-    
     self.tableView.tm_delegate = self;
     [self.view addSubview:self.tableView.containerView];
+        
     
     self.mainView = self.tableView.containerView;
-    
     
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
@@ -70,6 +82,7 @@
     
     if(![TGPasslock isEnabled]) {
         [self initialize];
+       // [[MTNetwork instance] startNetwork];
     }
     
     
@@ -94,10 +107,22 @@
         
     }];
     
-    [MessagesManager unreadBadgeCount];
+    [MessagesManager updateUnreadBadge];
     
     
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
+    [self.searchViewController viewWillAppear:animated];
+    
+    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+        
+    });
     
 }
 
@@ -111,10 +136,9 @@
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
 
-        
-        [EmojiViewController loadStickersIfNeeded];
-        
         [[MTNetwork instance] startNetwork];
+        
+        [EmojiViewController reloadStickers];
         
         [[BlockedUsersManager sharedManager] remoteLoad];
         
@@ -135,7 +159,11 @@
             
             [TGSecretAction dequeAllStorageActions];
             
-            [self loadhistory:100];
+            
+            dispatch_after_seconds(3, ^{
+                [self loadhistory:35];
+            });
+            
             
             
         } else if(_history.state != DialogsHistoryStateEnd) {
@@ -198,7 +226,7 @@
         [self insertAll:result];
         
         if(_history.state != DialogsHistoryStateEnd) {
-            dispatch_after_seconds(0.8, ^{
+            dispatch_after_seconds(5, ^{
                 [self loadhistory:limit];
             });
         }
@@ -271,21 +299,42 @@
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
     
+    
+    NSArray *copy = [self.tableView.list copy];
+    
     [ASQueue dispatchOnStageQueue:^{
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
         NSArray *current = [[DialogsManager sharedManager] all];
         
-        for(TL_conversation *conversation in current) {
+        
+        [current enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
-            if(!conversation.isAddToList)
-                continue;
+            if(!obj.isAddToList)
+                return;
             
-            TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
+            
+            TGConversationTableItem *item;
+            
+            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.conversation.peer_id == %d",obj.peer_id]];
+            
+            if(f.count == 1) {
+                item = f[0];
+                
+                if(![item itemIsUpdated])
+                {
+                    [item needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj],@"isNotForReload":@(YES)}]];
+                }
+            } else {
+                item = [[TGConversationTableItem alloc] initWithConversation:obj];
+            }
+            
             
             [items addObject:item];
-        }
+            
+        }];
+        
         
         [ASQueue dispatchOnMainQueue:^{
             
@@ -513,7 +562,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
     [TMTableView setCurrent:self.tableView];
 }
 

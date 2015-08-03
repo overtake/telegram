@@ -81,6 +81,9 @@
         return !(self.chat.type != TLChatTypeNormal || self.chat.left);
     }
     
+    if(self.type == DialogTypeUser && self.user.isBot)
+        return  !self.user.isBot || !self.user.isBlocked;
+    
     return YES;
 }
 
@@ -118,12 +121,15 @@
     }
     
     if(self.type == DialogTypeUser) {
-        if([[BlockedUsersManager sharedManager] isBlocked:self.peer.peer_id]) {
+        if(self.user.isBlocked) {
+            if(self.user.isBot)
+                return NSLocalizedString(@"RestartBot", nil);
             return NSLocalizedString(@"User.Blocked", nil);
         }
+        
     }
     
-    return @"";
+    return NSLocalizedString(@"Bot.Start", nil);
 }
 
 - (void)save {
@@ -151,6 +157,7 @@
     return self.notify_settings.mute_until > [[MTNetwork instance] getTime];
 }
 
+
 - (BOOL) isAddToList {
     if(self.type == DialogTypeSecretChat)
         return YES;
@@ -165,6 +172,11 @@
 - (void)unmute:(dispatch_block_t)completeHandler {
     [self _changeMute:0 completeHandler:completeHandler];
 }
+
+- (void)mute:(dispatch_block_t)completeHandler {
+    [self _changeMute:365*24*60*60 completeHandler:completeHandler];
+}
+
 
 - (void)_changeMute:(int)until completeHandler:(dispatch_block_t)completeHandler {
     __block int mute_until = until == 0 ? 0 : [[MTNetwork instance] getTime] + until;
@@ -200,7 +212,8 @@
     self.notify_settings = notify_settings;
     
     [self save];
-    [Notification perform:PUSHNOTIFICATION_UPDATE data:@{KEY_PEER_ID: @(self.peer.peer_id), KEY_IS_MUTE: @(self.isMute)}];
+    
+    [Notification perform:[Notification notificationNameByDialog:self action:@"notification"] data:@{@"notify_settings":self.notify_settings}];
 }
 
 
@@ -287,6 +300,10 @@ static void *kType;
         _p_chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
     }
     return _p_chat;
+}
+
+- (TLChatFull *)fullChat {
+    return [[FullChatManager sharedManager] find:[self chat].n_id];
 }
 
 

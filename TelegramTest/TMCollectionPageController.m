@@ -18,7 +18,7 @@
 #import "TGDocumentsMediaTableView.h"
 #import "DownloadVideoItem.h"
 #import "TGSharedMediaCap.h"
-
+#import "TGSharedLinksTableView.h"
 
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
@@ -32,6 +32,8 @@
 
 
 @property (nonatomic,strong) TGDocumentsMediaTableView *documentsTableView;
+@property (nonatomic,strong) TGSharedLinksTableView *sharedLinksTableView;
+
 
 @property (nonatomic,strong) TMTextField *centerTextField;
 @property (nonatomic,strong) TGSharedMediaCap *mediaCap;
@@ -156,6 +158,15 @@
     
   //  [self.actionsView setHidden:YES];
     
+    
+    
+    self.sharedLinksTableView = [[TGSharedLinksTableView alloc] initWithFrame:self.frameInit];
+    
+    
+    [self.view addSubview:self.sharedLinksTableView.containerView];
+    
+    [self.sharedLinksTableView.containerView setHidden:YES];
+    
 }
 
 -(void)showContextPopup {
@@ -181,6 +192,7 @@
     self.selectedItems = [[NSMutableArray alloc] init];
     
     [self.documentsTableView setEditable:isEditable animated:YES];
+    [self.sharedLinksTableView setEditable:isEditable animated:YES];
     [self reloadData];
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -188,7 +200,7 @@
         [[self.actionsView animator] setFrameOrigin:NSMakePoint(0, isEditable ? 0 : - NSHeight(self.actionsView.frame))];
         [[self.photoCollection.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
         [[self.documentsTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
-        
+        [[self.sharedLinksTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
         
     } completionHandler:^{
         
@@ -355,8 +367,22 @@ static const int maxWidth = 120;
 -(void)showFiles {
     [self.documentsTableView.containerView setHidden:NO];
     [self.photoCollection.containerView setHidden:YES];
+    [self.sharedLinksTableView.containerView setHidden:YES];
+    
     [self.documentsTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
+    [self checkCap];
+    [self setIsEditable:NO];
+}
+
+-(void)showSharedLinks {
+    [self.sharedLinksTableView.containerView setHidden:NO];
+    [self.photoCollection.containerView setHidden:YES];
+    [self.documentsTableView.containerView setHidden:YES];
+    
+    
+    [self.sharedLinksTableView setConversation:self.conversation];
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
     [self checkCap];
     [self setIsEditable:NO];
 }
@@ -364,6 +390,8 @@ static const int maxWidth = 120;
 -(void)showAllMedia {
     [self.documentsTableView.containerView setHidden:YES];
     [self.photoCollection.containerView setHidden:NO];
+    [self.sharedLinksTableView.containerView setHidden:YES];
+    
     [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
     [self checkCap];
     [self setIsEditable:NO];
@@ -704,6 +732,10 @@ static const int maxWidth = 120;
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
         [self showFiles];
+    }]];
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks",nil) withBlock:^(id sender) {
+        [self showSharedLinks];
     }]];
     
 //    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {

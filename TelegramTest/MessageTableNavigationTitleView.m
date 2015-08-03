@@ -22,6 +22,8 @@
 
 @property (nonatomic,strong) TMView *container;
 
+@property (nonatomic,strong) BTRButton *searchButton;
+
 
 
 @end
@@ -63,6 +65,22 @@
         //[self.statusTextField setBackgroundColor:NSColorFromRGB(0x000000)];
         
         [self.container addSubview:self.statusTextField];
+        
+        _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width +10, image_SearchMessages().size.height+10)];
+        
+        [_searchButton addBlock:^(BTRControlEvents events) {
+            
+            if(![[Telegram rightViewController].messagesViewController searchBoxIsVisible]) {
+                [[Telegram rightViewController].messagesViewController showSearchBox];
+            }
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [_searchButton setImage:image_SearchMessages() forControlState:BTRControlStateNormal];
+        
+        [_searchButton setToolTip:@"cmd+f"];
+        
+        [self.container addSubview:_searchButton];
         
         [self addSubview:self.container];
         
@@ -123,10 +141,11 @@
         
 
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 20, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(10, self.bounds.size.height - self.nameTextField.bounds.size.height - 4, self.bounds.size.width - 40, self.nameTextField.bounds.size.height)];
     
 
-    [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 20, self.statusTextField.frame.size.height)];
+    [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 40, self.statusTextField.frame.size.height)];
+    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
     
 
 }

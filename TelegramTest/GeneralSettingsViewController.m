@@ -113,57 +113,56 @@
     
     [self.tableView insert:notificationsHeader atIndex:self.tableView.list.count tableRedraw:NO];
 
-    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
-        [SettingsArchiver addOrRemoveSetting:PushNotifications];
+        //[SettingsArchiver addOrRemoveSetting:PushNotifications];
+        
+        [[Telegram rightViewController] showNotificationSettingsViewController];
         
         
-    } description:NSLocalizedString(@"Settings.MessageNotificationsAlert", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
     
     [self.tableView insert:soundEffects atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
-        
-    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return NSLocalizedString([SettingsArchiver soundNotification], nil);
-    }];
-    
-    
-    
-    
-    
-    
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-    
-    NSArray *list = soundsList();
-    
-    for (int i = 0; i < list.count; i++) {
-        
-        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
-            
-            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
-                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-            else
-                [SettingsArchiver setSoundNotification:sender.title];
-            
-            [self.tableView reloadData];
-            
-        }];
-        
-        
-        
-        [menu addItem:item];
-        if(i == 0) {
-            [menu addItem:[NSMenuItem separatorItem]];
-        }
-    }
-    
-    soundNotification.menu = menu;
-    
-    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+//    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
+//        
+//    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return NSLocalizedString([SettingsArchiver soundNotification], nil);
+//    }];
+//    
+//    
+//    
+//    
+//    
+//    
+//    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+//    
+//    NSArray *list = soundsList();
+//    
+//    for (int i = 0; i < list.count; i++) {
+//        
+//        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
+//            
+//            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
+//                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+//            else
+//                [SettingsArchiver setSoundNotification:sender.title];
+//            
+//            [self.tableView reloadData];
+//            
+//        }];
+//        
+//        
+//        
+//        [menu addItem:item];
+//    }
+//    
+//    soundNotification.menu = menu;
+//    
+//    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     GeneralSettingsBlockHeaderItem *chatSettingsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.ChatSettingsHeader", nil)];
@@ -209,7 +208,15 @@
     
     [self.tableView insert:stickers atIndex:self.tableView.list.count tableRedraw:NO];
    
+    GeneralSettingsRowItem *cache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [[Telegram rightViewController] showCacheSettingsViewController];
+        
+    } description:NSLocalizedString(@"Settings.Cache", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return nil;
+    }];
     
+    [self.tableView insert:cache atIndex:self.tableView.list.count tableRedraw:NO];
 
     
 //    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
@@ -241,43 +248,8 @@
         
         
         confirm(appName(), @"Are You sure to send logs developer? Please, don't press 'ok', if you not have problems with application", ^{
-            __block TLUser *user = [UsersManager findUserByName:@"vihor"];
             
-            dispatch_block_t performBlock = ^ {
-                
-                [[Telegram rightViewController] showByDialog:user.dialog sender:self];
-                
-                NSArray *files = TGGetLogFilePaths();
-                
-                [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    [[Telegram rightViewController].messagesViewController sendDocument:obj forConversation:user.dialog];
-                }];
-                
-            };
-            
-            if(user) {
-                performBlock();
-            } else {
-                
-                [self showModalProgress];
-                
-                [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:@"vihor" limit:1] successHandler:^(RPCRequest *request, TL_contacts_contacts *response) {
-                    
-                    if(response.users.count == 1) {
-                        
-                        [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
-                        
-                        user = response.users[0];
-                        
-                        performBlock();
-                    }
-                    
-                    [self hideModalProgress];
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [self hideModalProgress];
-                }];
-            }
+            [Telegram sendLogs];
 
         }, ^{
             

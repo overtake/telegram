@@ -34,6 +34,7 @@
         [self.textButton sizeToFit];
         [self.textButton setFrameOrigin:NSMakePoint(0, 12)]; // 10
         [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[self.textButton cell] setTruncatesLastVisibleLine:YES];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textButton];
         
@@ -169,6 +170,9 @@
     [super setNeedsDisplay:flag];
 }
 
+-(void)sizeToFit {
+    [self setFrameSize:self.frame.size];
+}
 
 - (void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
@@ -178,7 +182,7 @@
     
     [self.textButton sizeToFit];
     
-    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), NSHeight(self.textButton.frame))];
+    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), 22)];
     
     
     [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

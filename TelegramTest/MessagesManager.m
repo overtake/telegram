@@ -27,7 +27,7 @@
 @interface MessagesManager ()
 @property (nonatomic,strong) NSMutableDictionary *messages;
 @property (nonatomic,strong) NSMutableDictionary *messages_with_random_ids;
-
+@property (nonatomic,strong) NSMutableOrderedSet *orderedMessages;
 @property (nonatomic,strong) NSMutableDictionary *supportMessages;
 
 @property (nonatomic,strong) NSMutableDictionary *lastNotificationTimes;
@@ -44,6 +44,7 @@
         self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
         self.supportMessages = [[NSMutableDictionary alloc] init];
         self.lastNotificationTimes = [[NSMutableDictionary alloc] init];
+        self.orderedMessages = [[NSMutableOrderedSet alloc] init];
     }
     return self;
 }
@@ -106,7 +107,6 @@ static const int seconds_to_notify = 120;
          
         TL_conversation *conversation = message.conversation;
         
-        [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         
@@ -327,6 +327,8 @@ static const int seconds_to_notify = 120;
     self->keys = [[NSMutableDictionary alloc] init];
     self->list = [[NSMutableArray alloc] init];
     self.messages = [[NSMutableDictionary alloc] init];
+    self.orderedMessages = [[NSMutableOrderedSet alloc] init];
+    self.messages_with_random_ids = [[NSMutableDictionary alloc] init];
     _unread_count = 0;
 }
 
@@ -390,27 +392,36 @@ static const int seconds_to_notify = 120;
 }
 
 
--(NSArray *)markAllInDialog:(TL_conversation *)dialog {
-    return [self markAllInConversation:dialog max_id:dialog.top_message];
+-(void)markAllInDialog:(TL_conversation *)dialog callback:(void (^)(NSArray *ids))callback {
+    [self markAllInConversation:dialog max_id:dialog.top_message callback:callback];
 }
 
 
--(NSArray *)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id {
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id  callback:(void (^)(NSArray *ids))callback{
     
+    dispatch_queue_t queue = dispatch_get_current_queue();
     
     [self.queue dispatchOnQueue:^{
-        NSArray *copy = [[self.messages allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"peer_id == %d AND self.n_id <= %d AND self.unread == YES",conversation.peer.peer_id,max_id]];
         
+        [[Storage manager] markAllInConversation:conversation max_id:max_id completeHandler:^(NSArray *ids) {
+            
+            [ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_localMessage *message = self.messages[obj];
+                 message.flags&=~TGUNREADMESSAGE;
+                
+            }];
+            
+            dispatch_async(queue, ^{
+                callback(ids);
+            });
+            
+            
+        }];
         
-        for (TL_localMessage *msg in copy) {
-            msg.flags&=~TGUNREADMESSAGE;
-        }
-        
-    } synchronous:YES];
+    }];
     
     
-    
-    return [[Storage manager] markAllInConversation:conversation max_id:max_id];
 }
 
 -(void)readMessagesContent:(NSArray *)msg_ids {
@@ -419,17 +430,19 @@ static const int seconds_to_notify = 120;
         return;
     
     [self.queue dispatchOnQueue:^{
-        NSArray *copy = [[self.messages allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN (%@)",msg_ids]];
         
-         for (TL_localMessage *msg in copy) {
-            msg.flags&=~TGREADEDCONTENT;
-        }
+        [msg_ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            TL_localMessage *message = self.messages[obj];
+            message.flags&=~TGREADEDCONTENT;
+            
+        }];
         
         [[Storage manager] readMessagesContent:msg_ids];
         
         [Notification perform:UPDATE_READ_CONTENTS data:@{KEY_MESSAGE_ID_LIST:msg_ids}];
         
-    } synchronous:NO];
+    }];
     
     
     

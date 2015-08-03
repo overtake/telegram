@@ -203,4 +203,17 @@ static NSMutableDictionary *cached;
     return params;
 }
 
+-(void)discard {
+
+    [RPCRequest sendRequest:[TLAPI_messages_discardEncryption createWithChat_id:_n_id] successHandler:^(RPCRequest *request, id response) {
+        
+        self.state = EncryptedDiscarted;
+        
+        [self save];
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+    }];
+}
+
 @end

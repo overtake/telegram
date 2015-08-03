@@ -15,7 +15,7 @@
 #import "NSMenuItemCategory.h"
 #import "MessageReplyContainer.h"
 #import "POPCGUtils.h"
-
+#import "MessagesBottomView.h"
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -305,7 +305,7 @@ NSImage *selectCheckActiveImage() {
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Delete", nil)];
     
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Ignore", nil)];
-    [alert beginSheetModalForWindow:[NSApp mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
+    [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
     
 
 }
@@ -507,7 +507,7 @@ static BOOL dragAction = NO;
     NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     if(NSPointInRect(pos, self.rightView.frame)) {
-        if(self.messagesViewController.state != MessagesViewControllerStateEditable) {
+        if(self.messagesViewController.bottomView.stateBottom == MessagesBottomViewNormalState) {
             [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
             [self mouseDown:theEvent];
             
@@ -617,7 +617,7 @@ static BOOL dragAction = NO;
     
     
    
-    
+    [self.progressView setCurrentProgress:0];
         
     self.stateLayer.container = self;
     
@@ -963,7 +963,7 @@ static int offsetEditable = 30;
     
     [ASQueue dispatchOnMainQueue:^{
         if(item == self.item.messageSender) {
-            [self uploadProgressHandler:item animated:NO];
+            [self uploadProgressHandler:item animated:YES];
             [self updateCellState];
         }
     }];
@@ -1084,6 +1084,14 @@ static int offsetEditable = 30;
     
     _replyContainer.messageField.layer.backgroundColor = (__bridge CGColorRef)(value);
     [_replyContainer.messageField setNeedsDisplay:YES];
+}
+
+-(void)dealloc {
+    [self.item.downloadListener setCompleteHandler:nil];
+    [self.item.downloadListener setProgressHandler:nil];
+    [self.item.downloadListener setErrorHandler:nil];
+    
+    [self.item.messageSender removeEventListener:self];
 }
 
 @end

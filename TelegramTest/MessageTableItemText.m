@@ -35,14 +35,15 @@
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
+    
+    
     [self updateMessageFont];
     
     [SettingsArchiver addEventListener:self];
     
     
     
-    [self.textAttributed detectAndAddLinks];
-    
+    [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
     
     
     [self updateWebPage];
@@ -57,7 +58,22 @@
 
 -(void)updateMessageFont {
     [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
-    [self makeSizeByWidth:self.blockWidth];
+    
+    
+//    static NSMutableParagraphStyle *paragraph;
+//    
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        paragraph = [[NSMutableParagraphStyle alloc] init];
+//        
+//    });
+//    
+//    [paragraph setLineSpacing:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 1 : 2];
+//    
+//    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.textAttributed.range];
+    
+    if(self.blockWidth != 0)
+        [self makeSizeByWidth:self.blockWidth];
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
@@ -101,8 +117,8 @@
         
         _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage]; // its only youtube.
         
-        
-        [self makeSizeByWidth:self.blockWidth];
+        if(self.blockWidth != 0)
+            [self makeSizeByWidth:self.blockWidth];
         
         
     } else if([self isWebPagePending]) {

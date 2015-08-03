@@ -137,7 +137,7 @@
     
     self.currentAction = self.currentAction;
     self.tableView.exceptions = self.filter;
-    [self.tableView ready];
+    [self.tableView readyContacts];
     
     weakify();
     [self.tableView setMultipleCallback:^(NSArray *contacts) {
@@ -657,7 +657,7 @@
                 
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
-        [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^{
+        [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
             [[Telegram sharedInstance] showMessagesFromDialog:((TL_localMessage *)response.message).conversation sender:self];
         }];
         

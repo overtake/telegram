@@ -7,9 +7,10 @@
 //
 
 #import "MessageTableCellUnreadMarkView.h"
-
+#import "SpacemanBlocks.h"
 @interface MessageTableCellUnreadMarkView ()
 @property (nonatomic,strong) TMTextField *textField;
+@property (nonatomic,strong) SMDelayedBlockHandle internalId;
 @end
 
 @implementation MessageTableCellUnreadMarkView
@@ -35,13 +36,18 @@
 
 - (void)setItem:(MessageTableItemUnreadMark *)item {
     [super setItem:item];
+    
     [self.textField setStringValue:item.text];
     
     
     if(item.removeType == RemoveUnreadMarkAfterSecondsType) {
-        dispatch_after_seconds(5, ^{
+        
+        cancel_delayed_block(_internalId);
+        
+        _internalId = perform_block_after_delay(5,  ^{
             [self.messagesViewController deleteItem:self.item];
         });
+        
     }
 }
 

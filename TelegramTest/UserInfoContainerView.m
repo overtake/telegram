@@ -24,6 +24,8 @@
 #import "TMMediaController.h"
 #import "TMSharedMediaButton.h"
 #import "TMMenuPopover.h"
+#import "FullUsersManager.h"
+#import "ComposeActionAddUserToGroupBehavior.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -40,16 +42,17 @@
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
-
-
-
+@property (nonatomic, strong) UserInfoShortButtonView *addToGroupButton;
+@property (nonatomic, strong) UserInfoShortButtonView *helpBotButton;
 
 @property (nonatomic, strong) UserInfoShortButtonView *encryptedKeyButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setTTLButton;
 @property (nonatomic, strong) UserInfoShortButtonView *deleteSecretChatButton;
 
+
 @property (nonatomic, strong) UserInfoParamsView *phoneView;
 @property (nonatomic, strong) UserInfoParamsView *userNameView;
+@property (nonatomic, strong) UserInfoParamsView *botInfoView;
 
 @property (nonatomic, strong) UserInfoShortButtonView *notificationView;
 
@@ -113,7 +116,27 @@
         
 
         self.shareContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShareContact", nil) tapBlock:^{
-            [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+            
+            if(weakSelf.user.isBot) {
+                
+                
+                [TMViewController showModalProgress];
+                
+                NSPasteboard* cb = [NSPasteboard generalPasteboard];
+                
+                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+                [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.user.username] forType:NSStringPboardType];
+                
+                dispatch_after_seconds(0.2, ^{
+                    
+                    [TMViewController hideModalProgressWithSuccess];
+                    
+                });
+                
+            } else {
+                [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+            }
+            
         }];
         
         
@@ -123,6 +146,12 @@
             
             BlockedHandler handlerBlock = ^(BOOL result) {
                 self.blockContact.locked = NO;
+                
+                if(!self.user.isBlocked)
+                {
+                    [[Telegram rightViewController] navigationGoBack];
+                    [[Telegram rightViewController].messagesViewController sendMessage:@"/start" forConversation:[Telegram conversation]];
+                }
             };
             
             if(self.user.isBlocked) {
@@ -134,6 +163,21 @@
 
             
         }];
+        
+        self.addToGroupButton =[UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.AddToGroup", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
+            
+        }];
+        
+        self.helpBotButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Bot.Help", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showByDialog:self.user.dialog sender:self];
+            
+            [[Telegram rightViewController].messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
+            
+        }];
+
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
@@ -183,6 +227,12 @@
         [self.filesMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.filesMediaButton];
         
+        [self.addToGroupButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.addToGroupButton];
+
+        [self.helpBotButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.helpBotButton];
+
         
         [self.blockContact.textButton setTextColor:[NSColor redColor]];
         [self.blockContact setFrameSize:NSMakeSize(offsetRight, 42)];
@@ -261,6 +311,14 @@
         [self.userNameView setHeader:NSLocalizedString(@"Profile.username", nil)];
         
         [self addSubview:self.userNameView];
+        
+        self.botInfoView = [[UserInfoParamsView alloc] initWithFrame:NSMakeRect(100, 0, offsetRight, 61)];
+        
+        [self.botInfoView setHeader:NSLocalizedString(@"Profile.botInfo", nil)];
+        
+        [self addSubview:self.botInfoView];
+        
+        
         
          weakify();
         
@@ -353,6 +411,11 @@
 -(void)updateBlockedText {
     [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"Profile.UnblockContact", nil) : NSLocalizedString(@"Profile.BlockContact", nil)];
     
+    if(self.user.isBot)
+    {
+        [self.blockContact.textButton setStringValue:self.user.isBlocked ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"StopBot", nil)];
+    }
+    
     [self.blockContact sizeToFit];
 }
 
@@ -418,10 +481,29 @@
 }
 
 - (void)buildPage {
-    float offset = self.bounds.size.height - 187;
+    float offset = self.bounds.size.height - 145;
     
-   
+    [self.phoneView setHidden:self.user.isBot];
+    
+    
+    [self.botInfoView setHidden:!self.user.isBot || self.botInfoView.string.length == 0];
+    
+    
+    if(self.botInfoView.isHidden)
+    {
+        offset-=42;
+    } else {
+        offset-=NSHeight(self.botInfoView.frame);
+    }
+    
+    [self.botInfoView setFrameOrigin:NSMakePoint(100, offset)];
+    
     [self.phoneView setFrameOrigin:NSMakePoint(100, offset)];
+    
+    if(self.botInfoView.isHidden && self.user.isBot) {
+        offset+=62;
+    }
+    
     
    
     [self.userNameView setHidden:self.user.username.length == 0];
@@ -432,6 +514,7 @@
         [self.userNameView setFrameOrigin:NSMakePoint(100, offset)];
     }
     
+    [self.addToGroupButton setHidden:YES];
    
     if(!self.controller.isSecretProfile) {
         offset -= 62;
@@ -440,19 +523,36 @@
         [self.sendMessageButton setHidden:NO];
         
         
+        [self.addToGroupButton setHidden:!self.user.isBot || (self.user.flags & TGBOTGROUPBLOCKED)];
+        if(self.user.isBot && !self.addToGroupButton.isHidden) {
+            offset-=NSHeight(self.sendMessageButton.frame);
+            
+            [self.addToGroupButton setFrameOrigin:NSMakePoint(100, offset)];
+        }
         
         
         [self.setProfilePhotoButton setHidden:self.user.type != TLUserTypeSelf];
         [self.importContacts setHidden:self.user.type != TLUserTypeSelf];
         
         
-        if(self.user.type == TLUserTypeContact || self.user.type == TLUserTypeSelf) {
+        if(self.user.type == TLUserTypeContact || self.user.type == TLUserTypeSelf || self.user.isBot) {
+            
+            [self.shareContactButton.textButton setStringValue:NSLocalizedString(self.user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil)];
+            [self.shareContactButton sizeToFit];
+            
             offset -= self.shareContactButton.bounds.size.height;
             [self.shareContactButton setFrameOrigin:NSMakePoint(100, offset)];
             [self.shareContactButton setHidden:NO];
         } else {
             [self.shareContactButton setHidden:YES];
         }
+        
+        if(!self.helpBotButton.isHidden) {
+            
+            offset-=NSHeight(self.helpBotButton.frame);
+            [self.helpBotButton setFrameOrigin:NSMakePoint(100, offset)];
+        }
+        
     } else {
         [self.sendMessageButton setHidden:YES];
         [self.blockContact setHidden:YES];
@@ -461,7 +561,7 @@
         [self.importContacts setHidden:YES];
     }
 
-    if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile) {
+    if(self.user.type != TLUserTypeSelf && !self.controller.isSecretProfile && ![self.user isBot]) {
         
          offset -= self.shareContactButton.bounds.size.height;
         
@@ -541,13 +641,7 @@
         
     }
     
-//    offset-=self.notificationView.frame.size.height;
-    
-    
-    
-    
-//    self.navigationView;
-
+ 
 }
 
 - (NSImage *)createEncryptedImage  {
@@ -579,6 +673,7 @@
     
     [self.filesMediaButton setConversation:self.controller.conversation];
     
+    [self.helpBotButton setHidden:YES];
     
     NSSize size;
     
@@ -595,6 +690,31 @@
     
     [self.statusTextField setUser:self.user];
     [self.phoneView setString:self.user.phoneWithFormat ? self.user.phoneWithFormat : NSLocalizedString(@"User.Hidden", nil)];
+    
+    if(user.isBot) {
+        [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
+            
+            int h = [_botInfoView setString:userFull.bot_info.share_text];
+            
+            [_botInfoView setFrameSize:NSMakeSize(NSWidth(_botInfoView.frame), h+30)];
+            
+            __block BOOL canHelp = NO;
+            
+            [userFull.bot_info.commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
+                if([obj.command isEqualToString:@"help"]) {
+                    canHelp = YES;
+                    *stop = YES;
+                }
+            }];
+            
+            [_helpBotButton setHidden:!canHelp];
+            
+            [self buildPage];
+            
+        }];
+    }
+    
+    
     
     
     if(self.user.type != TLUserTypeSelf) {
@@ -615,6 +735,7 @@
     [self buildPage];
     
     [self updateBlockedText];
+    
 }
 
 - (void)TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {

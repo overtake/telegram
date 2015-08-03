@@ -33,8 +33,6 @@
 -(void)setFrameSize:(NSSize)newSize {
     
     
-    BOOL redraw = self.frame.size.width == 0;
-    
     
     [super setFrameSize:newSize];
     
@@ -42,9 +40,11 @@
         
     [self.controller.topButton setFrameOrigin:NSMakePoint(self.frame.size.width == 70 ? 15 : (self.controller.searchTextField.frame.origin.y + self.controller.searchTextField.frame.size.width+11), 9)];
     
-    NSView *topView = self.subviews[0];
+    TMView *topView = self.subviews[0];
     
-    [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width - DIALOG_BORDER_WIDTH, 48)];
+    
+    
+    [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width , 48)];
   
     
      if(newSize.width == 70)
@@ -74,13 +74,24 @@
     int topOffset = 48;
     
     
-    TMView *topView = [[TMView alloc] initWithFrame:NSMakeRect(0, self.view.bounds.size.height - topOffset, self.view.bounds.size.width - DIALOG_BORDER_WIDTH, topOffset)];
+    TMView *topView = [[TMView alloc] initWithFrame:NSMakeRect(0, self.view.bounds.size.height - topOffset, self.view.bounds.size.width , topOffset)];
     [topView setBackgroundColor:[NSColor whiteColor]];
     
     
     [topView setAutoresizesSubviews:YES];
     [topView setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
+    
+    dispatch_block_t block = ^{
+        [DIALOG_BORDER_COLOR setFill];
+        NSRectFill(NSMakeRect(NSWidth(topView.frame)-DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(topView.frame)));
+    };
+    
+    [topView setDrawBlock:block];
+    
     [self.view addSubview:topView];
+    
+    [self.view setAutoresizesSubviews:YES];
+    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
     
     self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , 205, 29)];
@@ -119,8 +130,7 @@
         
     } forControlEvents:BTRControlEventClick];
     
-    [self.view setAutoresizesSubviews:YES];
-    [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+
     
 
     if(!self.menuPopover) {
@@ -131,7 +141,6 @@
     _searchViewController = [[SearchViewController alloc] initWithFrame:self.view.bounds];
     
     self.searchView = _searchViewController.view;
-    
     
 }
 

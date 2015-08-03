@@ -52,8 +52,7 @@
 - (void)setLeftNavigationBarView:(TMView *)leftNavigationBarView animated:(BOOL)animation {
     self->_leftNavigationBarView = leftNavigationBarView;
     
-    if(self.navigationViewController && self.navigationViewController.currentController == self)
-        [self.navigationViewController.nagivationBarView setLeftView:leftNavigationBarView animated:animation];
+    [self.navigationViewController.nagivationBarView setLeftView:leftNavigationBarView animated:animation];
 }
 
 - (void)setRightNavigationBarView:(TMView *)rightNavigationBarView {
@@ -142,7 +141,7 @@
     self.leftNavigationBarView = [self standartLeftBarView];
     
     
-    if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController)
+    if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController && ![[Telegram rightViewController] isModalViewActive])
     {
         self.leftNavigationBarView = nil;
     }
@@ -464,6 +463,10 @@ static TGModalSetCaptionView *setCaptionView;
 - (void)loadView {
     self.view = [[TMView alloc] initWithFrame: self.frameInit];
 
+}
+
+- (void)loadViewIfNeeded {
+    [self view];
 }
 
 - (TMView *)view {

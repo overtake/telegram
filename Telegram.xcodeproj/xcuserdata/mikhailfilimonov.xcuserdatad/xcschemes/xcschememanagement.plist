@@ -6,38 +6,69 @@
 	<dict>
 		<key>AppStore.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<key>TGKeeper.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>2</integer>
 		</dict>
 		<key>TGShare copy.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>7</integer>
 		</dict>
 		<key>TGShare.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>6</integer>
 		</dict>
 		<key>Telegram.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>0</integer>
+		</dict>
+		<key>Updater.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>8</integer>
 		</dict>
 		<key>debug.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>C235369719CB1A100044978E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D0C1B4D65D000CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D1E1B4D65D200CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D301B4D68C800CD61DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2CB5D3D1B4D697700CD61DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

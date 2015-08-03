@@ -354,9 +354,7 @@
     
     [self.avatarImageView setChat:chat];
     [self.avatarImageView rebuild];
-    
-   
-    
+        
     [_mediaView setConversation:chat.dialog];
     [self.sharedMediaButton setConversation:chat.dialog];
     [self.filesMediaButton setConversation:chat.dialog];

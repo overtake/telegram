@@ -7,17 +7,27 @@
 //
 
 #import "SearchMessagesView.h"
-
+#import "SpacemanBlocks.h"
 @interface SearchMessagesView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) TMSearchTextField *searchField;
 @property (nonatomic,strong) TMTextButton *cancelButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
 
-@property (nonatomic,copy) void (^searchCallback)(NSString *search);
-@property (nonatomic,copy) dispatch_block_t nextCallback;
-@property (nonatomic,copy) dispatch_block_t prevCallback;
+@property (nonatomic,strong) NSProgressIndicator *progressIndicator;
+
+@property (nonatomic,copy) void (^goToMessage)(int msg_id, NSString *searchString);
 @property (nonatomic,copy) dispatch_block_t closeCallback;
+
+
+@property (nonatomic,strong) RPCRequest *request;
+
+@property (nonatomic,assign) BOOL locked;
+
+@property (nonatomic,strong) SMDelayedBlockHandle block;
+
+@property (nonatomic,strong) NSMutableArray *messages;
+@property (nonatomic,assign) int currentIdx;
 
 
 @end
@@ -47,38 +57,31 @@
         
         [self.cancelButton setTapBlock:^ {
             strongSelf.closeCallback();
+            [strongSelf.controller jumpToLastMessages];
+            [strongSelf.request cancelRequest];
+            strongSelf.request = nil;
         }];
         
         [self.cancelButton setCenterByView:self];
-        
-        int minX = NSMinX(self.searchField.frame) + NSWidth(self.searchField.frame);
-        int maxX = NSWidth(self.frame);
-        
-        int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;
-
-        [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame))];
-        
-        
-        self.cancelButton.autoresizingMask =   NSViewMinXMargin;
+        [self.cancelButton setFrameOrigin:NSMakePoint(NSMinX(self.cancelButton.frame), NSMinY(self.cancelButton.frame) + 1)];
+       
         
         [self addSubview:self.cancelButton];
         
-        NSImage *searchUp = [NSImage imageNamed:@"SearchUp"];
-        NSImage *searchDown = [NSImage imageNamed:@"SearchDown"];
         
         
-        self.prevButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, searchUp.size.width, searchUp.size.height)];
-        self.nextButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, searchDown.size.width, searchDown.size.height)];
+        self.prevButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_SearchUp().size.width, image_SearchUp().size.height)];
+        self.nextButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_SearchDown().size.width, image_SearchDown().size.height)];
         
-        [self.prevButton setBackgroundImage:searchUp forControlState:BTRControlStateNormal];
-        [self.nextButton setBackgroundImage:searchDown forControlState:BTRControlStateNormal];
+        [self.prevButton setBackgroundImage:image_SearchUp() forControlState:BTRControlStateNormal];
+        [self.nextButton setBackgroundImage:image_SearchDown() forControlState:BTRControlStateNormal];
         
         [self.prevButton addBlock:^(BTRControlEvents events) {
-            strongSelf.prevCallback();
+           [strongSelf prev];
         } forControlEvents:BTRControlEventClick];
         
         [self.nextButton addBlock:^(BTRControlEvents events) {
-            strongSelf.nextCallback();
+           [strongSelf next];
         } forControlEvents:BTRControlEventClick];
         
         
@@ -87,6 +90,17 @@
         
         [self.prevButton setFrameOrigin:NSMakePoint(23, NSMinY(self.prevButton.frame))];
         [self.nextButton setFrameOrigin:NSMakePoint(46, NSMinY(self.prevButton.frame))];
+        
+        self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(25, 0, 20, 20)];
+        
+        [self.progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+        
+        [self.progressIndicator setCenteredYByView:self];
+        
+        [self addSubview:_progressIndicator];
+        
+        _locked = YES;
+        self.locked = NO;
         
         [self addSubview:self.prevButton];
         [self addSubview:self.nextButton];
@@ -97,6 +111,19 @@
 }
 
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_searchField setFrameSize:NSMakeSize(newSize.width - 160, NSHeight(_searchField.frame))];
+    
+    int minX = NSMinX(self.searchField.frame) + NSWidth(self.searchField.frame);
+    int maxX = NSWidth(self.frame);
+    
+    int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;
+    
+    [self.cancelButton setFrameOrigin:NSMakePoint(minX + dif, NSMinY(self.cancelButton.frame) )];
+}
+
 -(BOOL)becomeFirstResponder {
     return [self.searchField becomeFirstResponder];
 }
@@ -106,13 +133,114 @@
 }
 
 -(void)searchFieldTextChange:(NSString *)searchString {
-    if(self.searchCallback != nil)
-        self.searchCallback(searchString);
+    
+    self.locked = YES;
+    
+    self.messages = [[NSMutableArray alloc] init];
+    
+    _currentIdx = -1;
+    
+    cancel_delayed_block(_block);
+    [_request cancelRequest];
+    
+    if(searchString.length > 0) {
+        _block = perform_block_after_delay(0.3,  ^{
+            
+            _block = nil;
+            
+            [self load:YES];
+            
+        });
+    } else {
+        self.locked = NO;
+    }
+    
+}
+
+-(void)load:(BOOL)first {
+    
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+        
+        
+        if(response.messages.count > 0) {
+            [self.messages addObjectsFromArray:response.messages];
+        }
+        
+        if([response isKindOfClass:[TL_messages_messagesSlice class]]) {
+           if(response.messages.count > 0)
+               [self load:NO];
+        }
+        if(first){
+            self.locked = NO;
+            [self next];
+        }
+        
+        [self updateSearchArrows];
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        self.locked = NO;
+    }];
+}
+
+-(void)updateSearchArrows {
+    [self.prevButton setBackgroundImage:self.messages.count == 0 ? image_SearchUpDisabled() : image_SearchUp() forControlState:BTRControlStateNormal];
+    
+    [self.nextButton setBackgroundImage:self.messages.count == 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
+    
+    
+}
+
+-(void)next {
+    
+    if(_messages.count == 0)
+        return;
+    
+    if(++_currentIdx == _messages.count)
+    {
+        _currentIdx = 0;
+    }
+    
+    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+}
+
+-(void)prev {
+    if(_messages.count == 0)
+        return;
+    
+    
+    if(--_currentIdx == -1)
+    {
+        _currentIdx = (int)_messages.count - 1;
+    }
+    
+    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+}
+
+-(void)setLocked:(BOOL)locked {
+    
+    if(_locked == locked)
+        return;
+    
+    
+    _locked = locked;
+    
+    if(_locked)
+    {
+        [self.progressIndicator startAnimation:self];
+    } else {
+        [self.progressIndicator stopAnimation:self];
+    }
+    
+    [self.progressIndicator setHidden:!locked];
+    [self.nextButton setHidden:locked];
+    [self.prevButton setHidden:locked];
 }
 
 -(void)searchFieldDidEnter {
-    if(self.nextCallback != nil)
-        self.nextCallback();
+    [self next];
+    
+    [self.searchField setSelectedRange:NSMakeRange(self.searchField.stringValue.length,0)];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -125,14 +253,23 @@
 
 
 
--(void)showSearchBox:(void (^)(NSString *search))callback next:(dispatch_block_t)nextCallback prevCallback:(dispatch_block_t)prevCallback closeCallback:(dispatch_block_t) closeCallback {
+-(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback {
     
-    self.searchCallback = callback;
-    self.nextCallback = nextCallback;
+    self.messages = nil;
+    self.currentIdx = -1;
+    [self.searchField setStringValue:@""];
     
-    self.prevCallback = prevCallback;
+    self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
+    [self setFrameSize:NSMakeSize([Telegram rightViewController].view.frame.size.width, NSHeight(self.frame))];
+    
+    [self updateSearchArrows];
+    
+}
+
+-(NSString *)currentString {
+    return self.searchField.stringValue;
 }
 
 - (void)drawRect:(NSRect)dirtyRect

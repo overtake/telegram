@@ -13,6 +13,10 @@
 #import "TGAudioPlayer.h"
 #import "TGTimer.h"
 #import "TGAudioPlayerListView.h"
+
+
+
+
 @interface TGAudioPlayerContainerView : TMView
 {
     NSTrackingArea *_trackingArea;
@@ -22,6 +26,8 @@
 
 @end
 
+#define MINI_PHEIGHT 103
+#define FULL_PHEIGHT 500
 
 @implementation TGAudioPlayerContainerView
 
@@ -51,10 +57,7 @@
 @end
 
 
-typedef enum {
-    TGAudioPlayerStatePlaying,
-    TGAudioPlayerStatePaused
-} TGAudioPlayerState;
+
 
 
 typedef enum {
@@ -75,16 +78,15 @@ typedef enum {
 
 
 @property (nonatomic,strong) BTRButton *closeButton;
+@property (nonatomic,strong) BTRButton *pinButton;
 @property (nonatomic,strong) BTRButton *playButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
 @property (nonatomic,strong) TGAudioProgressView *progressView;
 
 @property (nonatomic,strong) BTRButton *showPlayListButton;
-
-@property (nonatomic,strong) NSImageView *imageView;
-@property (nonatomic,strong) TMTextField *durationField;
-
+@property (nonatomic,strong) TMTextField *leftDurationField;
+@property (nonatomic,strong) TMTextField *rightDurationField;
 @property (nonatomic,strong) TMView *controlsContrainer;
 
 
@@ -98,14 +100,10 @@ typedef enum {
 
 @property (nonatomic,assign) BOOL mouseInWindow;
 
-
 @property (nonatomic,assign) TGAudioPlayerWindowState windowState;
 
 
-
-
-
-
+@property (nonatomic,strong) NSMutableArray *eventListeners;
 
 @end
 
@@ -125,30 +123,33 @@ typedef enum {
 -(void)initialize {
     
     
-    _windowContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([self.contentView bounds]), 44)];
+    _eventListeners = [[NSMutableArray alloc] init];
+    
+    _windowContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([self.contentView bounds]), MINI_PHEIGHT)];
     _windowContainerView.autoresizingMask = NSViewHeightSizable;
     
     _windowContainerView.isFlipped = YES;
-    _windowContainerView.backgroundColor = NSColorFromRGB(0xEEEEEE);
+    _windowContainerView.backgroundColor = NSColorFromRGB(0xf7f7f7);
     _windowContainerView.wantsLayer = YES;
     _windowContainerView.layer.cornerRadius = 4;
     
     [self.contentView addSubview:_windowContainerView];
     
+    weakify();
     
-    
-    _containerView = [[TGAudioPlayerContainerView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_windowContainerView.frame), 44)];
+    _containerView = [[TGAudioPlayerContainerView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_windowContainerView.frame), MINI_PHEIGHT)];
     _containerView.controller = self;
     _containerView.movableWindow = YES;
     
     [_windowContainerView addSubview:_containerView];
     
-    _controlsContrainer = [[TMView alloc] initWithFrame:NSMakeRect(75, 0, 165, NSHeight(_containerView.frame))];
+    _controlsContrainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame), NSHeight(_containerView.frame))];
+    
     
     [_containerView addSubview:_controlsContrainer];
     
     
-    _playListContainerView = [[TGAudioPlayerListView alloc] initWithFrame:NSMakeRect(0, 44, NSWidth(_windowContainerView.frame), 508 - NSHeight(_containerView.frame))];
+    _playListContainerView = [[TGAudioPlayerListView alloc] initWithFrame:NSMakeRect(0, MINI_PHEIGHT, NSWidth(_windowContainerView.frame), FULL_PHEIGHT - NSHeight(_containerView.frame))];
 
     _playListContainerView.backgroundColor = [NSColor whiteColor];
     
@@ -160,18 +161,7 @@ typedef enum {
     [_windowContainerView addSubview:_playListContainerView];
     
     
-    _closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(5, NSHeight(_containerView.frame) - image_MiniPlayerClose().size.height - 5, image_MiniPlayerClose().size.width, image_MiniPlayerClose().size.height)];
-    
-    [_closeButton setBackgroundImage:image_MiniPlayerClose() forControlState:BTRControlStateNormal];
-    
-    [_containerView addSubview:_closeButton];
-    
-    [_closeButton addBlock:^(BTRControlEvents events) {
-        
-        [TGAudioPlayerWindow hide];
-        
-    } forControlEvents:BTRControlEventMouseDownInside];
-    
+   
     
     
     
@@ -179,7 +169,7 @@ typedef enum {
     _prevButton = [[BTRButton alloc] init];
     _nextButton = [[BTRButton alloc] init];
     
-    weakify();
+    
     
     
     [_prevButton addBlock:^(BTRControlEvents events) {
@@ -197,33 +187,33 @@ typedef enum {
     } forControlEvents:BTRControlEventMouseDownInside];
     
     
-    [_playButton setBackgroundImage:image_MiniPlayerPlay() forControlState:BTRControlStateNormal];
+    [_playButton setBackgroundImage:image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
     
     
-    [_playButton setFrameSize:image_MiniPlayerPlay().size];
+    [_playButton setFrameSize:image_AudioPlayerPlay().size];
     
     [_playButton setCenterByView:_controlsContrainer];
 
     
-    [_prevButton setBackgroundImage:image_MiniPlayerPrev() forControlState:BTRControlStateNormal];
+    [_prevButton setBackgroundImage:image_AudioPlayerBack() forControlState:BTRControlStateNormal];
     
-    [_prevButton setFrameSize:image_MiniPlayerPrev().size];
+    [_prevButton setFrameSize:image_AudioPlayerBack().size];
     
-    [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame) - NSWidth(_prevButton.frame), NSMinY(_playButton.frame))];
-    
-    
-    [_nextButton setBackgroundImage:image_MiniPlayerNext() forControlState:BTRControlStateNormal];
-    
-    [_nextButton setFrameSize:image_MiniPlayerNext().size];
-    
-    [_nextButton setFrameOrigin:NSMakePoint(NSMaxX(_playButton.frame), NSMinY(_playButton.frame))];
+    [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame) - NSWidth(_prevButton.frame) - 25, NSMinY(_playButton.frame))];
     
     
+    [_nextButton setBackgroundImage:image_AudioPlayerNext() forControlState:BTRControlStateNormal];
+    
+    [_nextButton setFrameSize:image_AudioPlayerNext().size];
+    
+    [_nextButton setFrameOrigin:NSMakePoint(NSMaxX(_playButton.frame) + 25, NSMinY(_playButton.frame))];
     
     
-    [_nextButton setFrameOrigin:NSMakePoint(NSMinX(_nextButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_nextButton.frame) - 0)];
-    [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_prevButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_prevButton.frame) - 0)];
-    [_playButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_playButton.frame) - 0)];
+    
+    
+    [_nextButton setFrameOrigin:NSMakePoint(NSMinX(_nextButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_nextButton.frame) - 20)];
+    [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_prevButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_prevButton.frame) - 20)];
+    [_playButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame), NSHeight(_controlsContrainer.frame) - NSHeight(_playButton.frame) - 15)];
     
     [_controlsContrainer addSubview:_nextButton];
     [_controlsContrainer addSubview:_prevButton];
@@ -231,11 +221,14 @@ typedef enum {
     
     
     
-    _progressView = [[TGAudioProgressView alloc] initWithFrame:NSMakeRect(0, 3, 165, 10)];
+    _progressView = [[TGAudioProgressView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame), 10)];
     
     [_progressView setProgressCallback:^(float progress) {
         
-        if(globalAudioPlayer()) {
+        if(!strongSelf.currentItem)
+            return;
+        
+        if(globalAudioPlayer() && globalAudioPlayer().delegate == self && (self.currentItem.downloadItem == nil || self.currentItem.downloadItem.downloadState == DownloadStateCompleted)) {
             strongSelf.currentTime = globalAudioPlayer().duration * (progress/100);
             
             if(strongSelf.playerState == TGAudioPlayerStatePlaying) {
@@ -247,34 +240,43 @@ typedef enum {
     
     [_controlsContrainer addSubview:_progressView];
     
-    _imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(22, 0, 45, NSHeight(_containerView.frame))];
-    
-    NSImage *thumbImage = image_MiniPlayerDefaultCover();
-    
-    _imageView.image = thumbImage;
-    
-    [_containerView addSubview:_imageView];
     
     
-    _durationField = [TMTextField defaultTextField];
+    _leftDurationField = [TMTextField defaultTextField];
     
-    [_durationField setStringValue:@"-0:03"];
+    [_leftDurationField setStringValue:@"0:00"];
     
     
-    [_durationField setFont:TGSystemFont(10)];
-    [_durationField setTextColor:NSColorFromRGB(0x7F7F7F)];
+    [_leftDurationField setFont:TGSystemFont(13)];
+    [_leftDurationField setTextColor:NSColorFromRGB(0x7F7F7F)];
     
-    [_durationField setFrame:NSMakeRect(NSMaxX(_controlsContrainer.frame) + 1, 5, 35, 12)];
+    [_leftDurationField setFrame:NSMakeRect(10, 10, 50, 18)];
     
-    [_containerView addSubview:_durationField];
+    [_containerView addSubview:_leftDurationField];
+
     
-    _nameContainer = [[TMView alloc] initWithFrame:NSMakeRect(75, 13, NSWidth(_controlsContrainer.frame), 31)];
     
-    [_nameContainer setHidden:YES];
+    _rightDurationField = [TMTextField defaultTextField];
     
-    _nameContainer.backgroundColor = NSColorFromRGB(0xEEEEEE);
+    [_rightDurationField setStringValue:@"0:00"];
+    
+    
+    [_rightDurationField setFont:TGSystemFont(13)];
+    [_rightDurationField setTextColor:NSColorFromRGB(0x7F7F7F)];
+    
+    [_rightDurationField setFrame:NSMakeRect(NSMaxX(_containerView.frame) - 50, 10, 50, 18)];
+    
+    [_containerView addSubview:_rightDurationField];
+    
+    
+    _nameContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 10, NSWidth(_containerView.frame) - 100, 40)];
+    [_nameContainer setCenteredXByView:_containerView];
+    
+    
+    _nameContainer.backgroundColor = NSColorFromRGB(0xf7f7f7);
     
     _nameTextField = [TMTextField defaultTextField];
+    [_nameTextField setAlignment:NSCenterTextAlignment];
     _nameTextField.wantsLayer = YES;
     _nameTextField.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
     
@@ -284,9 +286,41 @@ typedef enum {
     
     
     
+    
+    
+    _closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(15, NSHeight(_containerView.frame) - 20, image_AudioPlayerClose().size.width, image_AudioPlayerClose().size.height)];
+    
+    [_closeButton setBackgroundImage:image_AudioPlayerClose() forControlState:BTRControlStateNormal];
+    
+    [_containerView addSubview:_closeButton];
+    
+    [_closeButton addBlock:^(BTRControlEvents events) {
+        
+        [TGAudioPlayerWindow hide];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    
+    
+    _pinButton = [[BTRButton alloc] initWithFrame:NSMakeRect(35, NSHeight(_containerView.frame) - 20, image_AudioPlayerPin().size.width, image_AudioPlayerPin().size.height)];
+    
+    [_pinButton setBackgroundImage:image_AudioPlayerPin() forControlState:BTRControlStateNormal];
+    
+    [_containerView addSubview:_pinButton];
+    
+    [_pinButton addBlock:^(BTRControlEvents events) {
+        
+        [strongSelf setLevel:self.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
+        
+        [strongSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    
+    
     _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - 30, NSHeight(_containerView.frame) - 30, 25, 25)];
     
-    [_showPlayListButton setImage:image_MiniPlayerPlaylist() forControlState:BTRControlStateNormal];
+    [_showPlayListButton setImage:image_AudioPlayerList() forControlState:BTRControlStateNormal];
     
     [_showPlayListButton addBlock:^(BTRControlEvents events) {
         
@@ -297,6 +331,7 @@ typedef enum {
     [_containerView addSubview:_showPlayListButton];
     
 }
+
 
 
 -(void)playOrPause {
@@ -310,7 +345,6 @@ typedef enum {
     if(self.playerState == TGAudioPlayerStatePlaying) {
         [self pause];
     } else {
-        
         [self play:self.currentTime];
     }
 }
@@ -322,11 +356,17 @@ typedef enum {
 -(void)setWindowState:(TGAudioPlayerWindowState)windowState {
     _windowState = windowState;
     
-    [self updateWindowWithHeight:_windowState == TGAudioPlayerWindowStateMini ? 44 : 508 animate:YES];
+    if(_windowState == TGAudioPlayerWindowStatePlayList) {
+        [_playListContainerView onShow];
+    }
+    
+    [self updateWindowWithHeight:_windowState == TGAudioPlayerWindowStateMini ? MINI_PHEIGHT : FULL_PHEIGHT animate:YES];
 }
 
 
 -(void)updateWindowWithHeight:(float)height animate:(BOOL)animate {
+    
+    [self.showPlayListButton setImage:_windowState == TGAudioPlayerWindowStateMini ? image_AudioPlayerList() : image_AudioPlayerListActive() forControlState:BTRControlStateNormal];
     
     NSRect frame = [self frame];
     
@@ -397,41 +437,65 @@ typedef enum {
 
 -(void)setMouseInWindow:(BOOL)mouseInWindow {
     _mouseInWindow = mouseInWindow;
-    [_nameContainer setHidden:mouseInWindow || !_currentItem];
     [_progressView setShowDivider:mouseInWindow];
     if(mouseInWindow) {
-        [self makeKeyAndOrderFront:self];
+       // [self makeKeyAndOrderFront:self];
     }
     [self playAnimationForName];
 }
 
 +(void)show:(TL_conversation *)conversation {
-    
     [[self instance] show:conversation];
     
     [[self instance] makeKeyAndOrderFront:nil];
     
 }
 
++(MessageTableItemAudioDocument *)currentItem {
+    return [self instance].currentItem;
+}
+
 +(void)hide {
     [[self instance] orderOut:nil];
+    [self instance]->_windowState = TGAudioPlayerWindowStateMini;
+    [[self instance] updateWindowWithHeight:MINI_PHEIGHT animate:NO];
 }
 
 
 -(void)show:(TL_conversation *)conversation {
+    
+    if([self isVisible] && _conversation == conversation)
+        return;
+    
     _conversation = conversation;
-    [_playListContainerView setConversation:_conversation];
     [self updateWithItem:nil];
-    [self setFrameOrigin:[NSEvent mouseLocation]];
+    _currentItem = nil;
+    [_playListContainerView setConversation:_conversation];
+    if(![self isVisible])
+    {
+        
+        NSScreen *screen = [NSScreen mainScreen];
+        [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
+                                         roundf((screen.frame.size.height - self.frame.size.height) / 2))];
+    }
 }
 
-
++(TGAudioPlayerState)playerState {
+    return [[self instance] playerState];
+}
 
 -(void)updateWithItem:(MessageTableItemAudioDocument *)item {
     
-    [_nameTextField setStringValue:[item fileName]];
+    [_nameTextField setAttributedStringValue:item.id3AttributedStringHeader];
     [_nameTextField sizeToFit];
-    [_nameTextField setFrameOrigin:NSMakePoint(0, NSHeight(_nameContainer.frame) - NSHeight(_nameTextField.frame) - 5)];
+    [_progressView setDownloadProgress:0];
+    
+    if(NSWidth(_nameTextField.frame) < NSWidth(_nameContainer.frame))
+    {
+        [_nameTextField setFrameSize:NSMakeSize(NSWidth(_nameContainer.frame), NSHeight(_nameTextField.frame))];
+    }
+    
+    [_nameTextField setFrameOrigin:NSMakePoint(0, 0)];
     
     [self playAnimationForName];
     
@@ -439,10 +503,6 @@ typedef enum {
     
     [_playListContainerView setSelectedId:_currentItem.message.randomId];
     
-    
-    NSImage *thumbImage = image_MiniPlayerDefaultCover(); // previewImageForDocument(item.path);
-    
-    _imageView.image = thumbImage;
 }
 
 
@@ -471,13 +531,16 @@ typedef enum {
 -(void)setPlayerState:(TGAudioPlayerState)playerState {
     _playerState = playerState;
     
-    [_playButton setBackgroundImage:playerState == TGAudioPlayerStatePlaying ? image_MiniPlayerPause() : image_MiniPlayerPlay() forControlState:BTRControlStateNormal];
+    [self notifyAllListeners];
+    
+    [_playButton setBackgroundImage:playerState == TGAudioPlayerStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
 }
 
 -(void)setCurrentTime:(NSTimeInterval)currentTime {
     _currentTime = currentTime;
     [self.progressView setCurrentProgress:(self.currentTime/globalAudioPlayer().duration) * 100];
-    [_durationField setStringValue:[NSString stringWithFormat:@"-%@",[NSString durationTransformedValue:globalAudioPlayer().duration - self.currentTime]]];
+    [_rightDurationField setStringValue:[NSString stringWithFormat:@"-%@",[NSString durationTransformedValue:globalAudioPlayer().duration - self.currentTime]]];
+    [_leftDurationField setStringValue:[NSString stringWithFormat:@"%@",[NSString durationTransformedValue:self.currentTime]]];
 }
 
 -(void)play:(NSTimeInterval)fromPosition {
@@ -485,6 +548,8 @@ typedef enum {
     self.playerState = TGAudioPlayerStatePlaying;
     
     [globalAudioPlayer() stop];
+    if(globalAudioPlayer().delegate != self)
+        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[_currentItem path]]);
     
     if(globalAudioPlayer()) {
@@ -507,6 +572,12 @@ typedef enum {
     if(!_progressTimer) {
         _progressTimer = [[TGTimer alloc] initWithTimeout:1.0f/60.0f repeat:YES completion:^{
             
+            if(globalAudioPlayer() == nil)
+            {
+                [_progressTimer invalidate];
+                _progressTimer = nil;
+            }
+            
             if(_currentItem.state != AudioStatePlaying) {
                 [_progressTimer invalidate];
                 _progressTimer = nil;
@@ -527,6 +598,7 @@ typedef enum {
     _progressTimer = nil;
     setGlobalAudioPlayer(nil);
     _currentItem.state = AudioStateWaitPlaying;
+    self.playerState = TGAudioPlayerStatePaused;
     self.currentTime = 0;
     [_progressView setCurrentProgress:0];
     
@@ -540,8 +612,50 @@ typedef enum {
     [_playListContainerView selectPrev];
 }
 
++(void)pause {
+    if([self instance].playerState == TGAudioPlayerStatePlaying)
+    {
+        [[self instance] pause];
+        [[self instance] setPlayerState:TGAudioPlayerStateForcePaused];
+    }
+    
+}
+
++(void)resume {
+    if([self instance].playerState == TGAudioPlayerStateForcePaused)
+        [[self instance] play:[self instance].currentTime];
+}
+
+
++(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [[self instance] addEventListener:delegate];
+}
++(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [[self instance] removeEventListener:delegate];
+}
+
+
+-(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    if([_eventListeners indexOfObject:delegate] == NSNotFound)
+    {
+        [_eventListeners addObject:delegate];
+    }
+}
+
+-(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
+    [_eventListeners removeObject:delegate];
+}
+
+-(void)notifyAllListeners {
+    [_eventListeners enumerateObjectsUsingBlock:^(id<TGAudioPlayerWindowDelegate> obj, NSUInteger idx, BOOL *stop) {
+        [obj playerDidChangedState:self.currentItem playerState:self.playerState];
+    }];
+}
+
+
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
-    [self nextTrack];
+    if(self.playerState == TGAudioPlayerStatePlaying)
+        [self nextTrack];
 }
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
     
@@ -562,7 +676,10 @@ typedef enum {
         return;
     }
     
+    [_currentItem.downloadItem removeEvent:_currentItem.secondDownloadListener];
+    
     _currentItem = audioItem;
+
     
     self.currentTime = 0;
     
@@ -624,12 +741,13 @@ typedef enum {
 }
 
 
+
 +(TGAudioPlayerWindow *)instance {
     static TGAudioPlayerWindow *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[TGAudioPlayerWindow alloc] initWithContentRect:NSMakeRect(100, 100, 280, 44) styleMask:NSBorderlessWindowMask | NSNonactivatingPanelMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
-        [instance setLevel:NSScreenSaverWindowLevel];
+        instance = [[TGAudioPlayerWindow alloc] initWithContentRect:NSMakeRect(100, 100, 350, MINI_PHEIGHT) styleMask:NSBorderlessWindowMask | NSNonactivatingPanelMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
+        [instance setLevel:NSNormalWindowLevel];
         [instance setOpaque:NO];
         [instance setAcceptsMouseMovedEvents:YES];
         [instance setHasShadow:YES];

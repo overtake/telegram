@@ -14,6 +14,7 @@
 #import "TGHashtagPopup.h"
 #import "NSString+FindURLs.h"
 #import "NSString+Extended.h"
+#import "TGBotCommandsPopup.h"
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -288,7 +289,6 @@ typedef enum {
 -(NSPoint)textContainerOrigin {
     
     if([self numberOfLines] < 10) {
-        [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         
         int yOffset = [self.string getEmojiFromString:NO].count > 0 ? 0 : 1;
@@ -392,7 +392,7 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility]) {
+    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]) {
         
         
         if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
@@ -400,9 +400,11 @@ typedef enum {
             if(theEvent.keyCode == 125) {
                 [TGMentionPopup selectNext];
                 [TGHashtagPopup selectNext];
+                [TGBotCommandsPopup selectNext];
             } else {
                 [TGMentionPopup selectPrev];
                 [TGHashtagPopup selectPrev];
+                [TGBotCommandsPopup selectPrev];
             }
             
             return;
@@ -417,7 +419,7 @@ typedef enum {
                 
                 [TGMentionPopup performSelected];
                 [TGHashtagPopup performSelected];
-                
+                [TGBotCommandsPopup performSelected];
                 return;
             }
             

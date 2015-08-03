@@ -10,7 +10,8 @@
 #import "Extended.h"
 #import "TMAttributedString.h"
 #import "TMInAppLinks.h"
-
+#import "NSNumber+NumberFormatter.h"
+#import "TGDateUtils.h"
 @implementation MessagesUtils
 
 +(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
@@ -40,7 +41,7 @@
         } else {
             text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.LeftGroup", nil), [user fullName]];
         }
-    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
+    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]] || [action isKindOfClass:[TL_messageActionBotDescription class]]) {
         text = action.title;
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
         
@@ -214,10 +215,14 @@
                 msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
                 
             }
+            
+            
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
             
         }
+        
+        
         
         if(chatUserNameString)
             [messageText appendString:chatUserNameString withColor:DARK_BLACK];
@@ -236,6 +241,8 @@
         }
         
         msgText = [msgText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+        
+        msgText = [msgText fixEmoji];
         
         if(msgText) {
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
@@ -317,7 +324,7 @@
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
         }
-    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]]) {
+    } else if([action isKindOfClass:[TL_messageActionEncryptedChat class]] || [action isKindOfClass:[TL_messageActionBotDescription class]]) {
         actionText = action.title;
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
@@ -330,6 +337,28 @@
     
     static float size = 11.5;
     
+    if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
+        
+        attributedString = [[NSMutableAttributedString alloc] init];
+        
+        NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
+        [attributedString setFont:TGSystemMediumFont(13) forRange:range];
+        
+        [attributedString setAlignment:NSCenterTextAlignment range:range];
+        
+        [attributedString appendString:@"\n\n"];
+        
+        range = [attributedString appendString:actionText withColor:TEXT_COLOR];
+        
+        [attributedString setFont:TGSystemFont(13) forRange:range];
+        
+        [attributedString setAlignment:NSLeftTextAlignment range:range];
+        
+        return attributedString;
+    }
+    
+    
+    
     NSRange start;
     //  if(user != [UsersManager currentUser]) {
     start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
@@ -340,6 +369,8 @@
     //        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
     //        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
     //    }
+    
+    
     
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
@@ -478,6 +509,77 @@
     return @"";
 }
 
+
++(NSDictionary *)conversationLastData:(TL_conversation *)conversation {
+    
+    
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    
+    NSAttributedString *messageText = [MessagesUtils conversationLastText:conversation.lastMessage conversation:conversation];
+    
+    int time = conversation.last_message_date;
+    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
+    
+    
+    NSMutableAttributedString *dateText = [[NSMutableAttributedString alloc] init];
+    [dateText setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
+    [dateText setSelectionColor:GRAY_TEXT_COLOR forColor:NSColorFromRGB(0x333333)];
+    [dateText setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
+    
+    if(messageText.length > 0) {
+        NSString *dateStr = [TGDateUtils stringForMessageListDate:time];
+        [dateText appendString:dateStr withColor:GRAY_TEXT_COLOR];
+        data[@"messageText"] = messageText;
+    } else {
+        [dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
+    }
+    
+   
+     data[@"dateText"] = dateText;
+    
+    NSSize dateSize;
+    
+    dateSize = [dateText size];
+    dateSize.width+=5;
+    dateSize.width = ceil(dateSize.width);
+    dateSize.height = ceil(dateSize.height);
+    
+    data[@"dateSize"] = [NSValue valueWithSize:dateSize];
+    
+    
+    
+    NSString *unreadText;
+    NSSize unreadTextSize;
+    
+    if(conversation.unread_count > 0) {
+        NSString *unreadTextCount;
+        
+        if(conversation.unread_count < 1000)
+            unreadTextCount = [NSString stringWithFormat:@"%d", conversation.unread_count];
+        else
+            unreadTextCount = [@(conversation.unread_count) prettyNumber];
+        
+        NSDictionary *attributes =@{
+                                    NSForegroundColorAttributeName: [NSColor whiteColor],
+                                    NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:10]
+                                    };
+        unreadText = unreadTextCount;
+        NSSize size = [unreadTextCount sizeWithAttributes:attributes];
+        size.width = ceil(size.width);
+        size.height = ceil(size.height);
+        unreadTextSize = size;
+        
+        
+        data[@"unreadText"] = unreadText;
+        
+        data[@"unreadTextSize"] = [NSValue valueWithSize:unreadTextSize];
+        
+    }
+    
+    
+    return data;
+    
+}
 
 
 @end

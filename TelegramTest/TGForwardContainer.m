@@ -42,16 +42,16 @@
         [self.namesField setStringValue:@"super test"];
         
         
-        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 15, NSWidth(frameRect), 20)];
+        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 13, NSWidth(frameRect), 20)];
         
-        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 20)];
+        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 19)];
         
         [self addSubview:self.descriptionField];
         [self addSubview:self.namesField];
         
         
         
-        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width - 10, NSHeight(self.frame) - image_CancelReply().size.height - 10, image_CancelReply().size.width + 10, image_CancelReply().size.height + 10)];
+        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width , NSHeight(self.frame) - image_CancelReply().size.height , image_CancelReply().size.width , image_CancelReply().size.height)];
         
         _deleteImageView.image = image_CancelReply();
         
