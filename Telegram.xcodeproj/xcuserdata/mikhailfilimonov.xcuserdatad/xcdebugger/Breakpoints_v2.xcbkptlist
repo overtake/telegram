@@ -99,22 +99,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/ClassStore.m"
-            timestampString = "453320575.625007"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "+TLSerialize:stream:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "TelegramTest/AddContactViewController.m"
             timestampString = "453394643.969903"
             startingColumnNumber = "9223372036854775807"
@@ -212,7 +196,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/TGModernEncryptedUpdates.m"
-                  timestampString = "460304208.494612"
+                  timestampString = "460304474.472297"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "643"
@@ -227,7 +211,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/TGModernEncryptedUpdates.m"
-                  timestampString = "460304208.495516"
+                  timestampString = "460304474.47261"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "643"
