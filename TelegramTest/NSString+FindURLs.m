@@ -263,7 +263,7 @@
                                 unichar mentionStartChar = [text characterAtIndex:mentionRange.location + 1];
                                 if (!(mentionRange.length <= 5 || (mentionStartChar >= '0' && mentionStartChar <= '9')))
                                 {
-                                    [results addObject:[NSValue valueWithRange:NSMakeRange(0, 0)]];
+                                    [results addObject:[NSValue valueWithRange:mentionRange]];
                                 }
                             }
                             mentionStart = -1;

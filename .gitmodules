@@ -1,9 +1,9 @@
-[submodule "MtProtoKit"]
-	path = MtProtoKit
-	url = https://github.com/iakovlev-peter/MtProtoKit.git
 [submodule "sqlcipher"]
 	path = sqlcipher
 	url = https://github.com/sqlcipher/sqlcipher.git
 [submodule "Signals"]
 	path = Signals
-	url = https://github.com/peter-iakovlev/Signals
+	url = https://github.com/peter-iakovlev/Signals.git
+[submodule "MtProtoKit"]
+	path = MtProtoKit
+	url = https://github.com/peter-iakovlev/MtProtoKit.git

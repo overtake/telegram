@@ -1397,10 +1397,10 @@ static NSTextAttachment *headerMediaIcon() {
     if(hide && (offset - self.table.scrollView.bounds.size.height) > SCROLLDOWNBUTTON_OFFSET) {
         hide = self.jumpToBottomButton.messagesCount == 0;
     }
-    
-    if(hide) {
-        hide = self.historyController.prevState == ChatHistoryStateFull;
-    }
+//    
+//    if(hide) {
+//        hide = self.historyController.prevState == ChatHistoryStateFull;
+//    }
     
     if(hide)
     {

@@ -312,7 +312,6 @@
 		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
 		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
 		C240B1BE1B6294F300912248 /* TGSharedLinkRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */; };
-		C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -592,7 +591,6 @@
 		C2CBF3C11AF38427006BF90A /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF3C01AF38427006BF90A /* ShareViewController.xib */; };
 		C2CBF3D11AF38801006BF90A /* TGShareLogicController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D01AF38801006BF90A /* TGShareLogicController.m */; };
 		C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */; };
-		C2CBF5D61AF7C5D2006BF90A /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */; };
 		C2CBF5E51AF7CB42006BF90A /* TGS_MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */; };
 		C2CBF5E81AF7CBD9006BF90A /* TGS_RPCRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */; };
 		C2CBF5F21AF8DA5C006BF90A /* ClassStore.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF5F11AF8DA5C006BF90A /* ClassStore.m */; };
@@ -758,6 +756,7 @@
 		C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E51B6915B500434D37 /* NotificationConversationRowView.m */; };
 		C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */; };
 		C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D825ED1B6A711E00434D37 /* WebKit.framework */; };
+		C2D826241B6FA8E800434D37 /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -858,30 +857,51 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C242376A1B28C467009B9C6F /* PBXContainerItemProxy */ = {
+		C2D825FD1B6F9E8300434D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D079AB971AF39B8000076F59;
-			remoteInfo = MtProtoKitMac;
+			remoteGlobalIDString = D0445DD81A7C2CA500267924;
+			remoteInfo = SSignalKit;
 		};
-		C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */ = {
+		C2D825FF1B6F9E8300434D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0445E5C1A7C446000267924;
+			remoteInfo = SSignalKitStatic;
+		};
+		C2D826011B6F9E8300434D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0445DE31A7C2CA500267924;
+			remoteInfo = SSignalKitTests;
+		};
+		C2D8261A1B6FA8A600434D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0CB05F71ADC4483005E298F;
 			remoteInfo = MtProtoKit;
 		};
-		C2D825DA1B690C5B00434D37 /* PBXContainerItemProxy */ = {
+		C2D8261C1B6FA8A600434D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D079AB971AF39B8000076F59;
+			remoteInfo = MtProtoKitMac;
+		};
+		C2D8261E1B6FA8A600434D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0D2250B1B4D817B0085E26D;
 			remoteInfo = MtProtoKitDynamic;
 		};
-		C2D825DC1B690C5B00434D37 /* PBXContainerItemProxy */ = {
+		C2D826201B6FA8A600434D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0D225151B4D817B0085E26D;
 			remoteInfo = MtProtoKitDynamicTests;
@@ -2291,6 +2311,8 @@
 		C2D825EA1B6A700300434D37 /* TGEmbedModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEmbedModalView.h; sourceTree = "<group>"; };
 		C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEmbedModalView.m; sourceTree = "<group>"; };
 		C2D825ED1B6A711E00434D37 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
+		C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSignalKit.xcodeproj; path = Signals/SSignalKit.xcodeproj; sourceTree = "<group>"; };
+		C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MtProtoKit.xcodeproj; path = MtProtoKit/MtProtoKit.xcodeproj; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -2371,7 +2393,6 @@
 		CE8454901822EE2000E73DF7 /* ChatsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsManager.m; sourceTree = "<group>"; };
 		CE84549818244F1600E73DF7 /* TelegramWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TelegramWindow.h; sourceTree = "<group>"; };
 		CE84549918244F1600E73DF7 /* TelegramWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TelegramWindow.m; sourceTree = "<group>"; };
-		CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MtProtoKit.xcodeproj; path = MtProtoKit/MtProtoKit.xcodeproj; sourceTree = "<group>"; };
 		CEA46CF9182A590B007209A6 /* TypingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypingController.h; sourceTree = "<group>"; };
 		CEA46CFA182A590B007209A6 /* TypingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypingController.m; sourceTree = "<group>"; };
 		CEA589411815704E00462DF0 /* SharedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedManager.h; sourceTree = "<group>"; };
@@ -2504,7 +2525,6 @@
 				C2CBF6171AF911A2006BF90A /* SystemConfiguration.framework in Frameworks */,
 				C2CBF60E1AF90882006BF90A /* libsqlite3.0.dylib in Frameworks */,
 				C2CBF60C1AF90878006BF90A /* libsqlcipher.a in Frameworks */,
-				C2CBF5D61AF7C5D2006BF90A /* MtProtoKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2512,8 +2532,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2D826241B6FA8E800434D37 /* MtProtoKit.framework in Frameworks */,
 				C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */,
-				C242376E1B28C476009B9C6F /* MtProtoKit.framework in Frameworks */,
 				C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
 				C274C42E1ACC5B3A000DFDE4 /* AVKit.framework in Frameworks */,
@@ -4951,6 +4971,27 @@
 			name = notifications;
 			sourceTree = "<group>";
 		};
+		C2D825F21B6F9E8200434D37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C2D825FE1B6F9E8300434D37 /* SSignalKit.framework */,
+				C2D826001B6F9E8300434D37 /* libSSignalKitStatic.a */,
+				C2D826021B6F9E8300434D37 /* SSignalKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C2D826141B6FA8A600434D37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */,
+				C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */,
+				C2D8261F1B6FA8A600434D37 /* MtProtoKitDynamic.framework */,
+				C2D826211B6FA8A600434D37 /* MtProtoKitDynamicTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		C2DE4FB21AD43EBC001EC26C /* h */ = {
 			isa = PBXGroup;
 			children = (
@@ -5024,17 +5065,6 @@
 			name = queuemanager;
 			sourceTree = "<group>";
 		};
-		CE8C04F718BCF6D200C663A7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */,
-				C242376B1B28C467009B9C6F /* MtProtoKitMac.framework */,
-				C2D825DB1B690C5B00434D37 /* MtProtoKitDynamic.framework */,
-				C2D825DD1B690C5B00434D37 /* MtProtoKitDynamicTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CEAE5D1C181C37D800C17645 /* managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -5098,8 +5128,9 @@
 		CEB09E4F17DAFC240055F150 = {
 			isa = PBXGroup;
 			children = (
+				C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */,
+				C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */,
 				C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */,
-				CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */,
 				C2D4B7681AFCE8F80035B4E4 /* YapDatabase */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
 				CEAE5D57181ECDE900C17645 /* sql */,
@@ -5625,12 +5656,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = CE8C04F718BCF6D200C663A7 /* Products */;
-					ProjectRef = CE8C04F618BCF6D200C663A7 /* MtProtoKit.xcodeproj */;
+					ProductGroup = C2D826141B6FA8A600434D37 /* Products */;
+					ProjectRef = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
 				},
 				{
 					ProductGroup = C2E560FE1AF3726300B4CAF0 /* Products */;
 					ProjectRef = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+				},
+				{
+					ProductGroup = C2D825F21B6F9E8200434D37 /* Products */;
+					ProjectRef = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -5643,32 +5678,53 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C242376B1B28C467009B9C6F /* MtProtoKitMac.framework */ = {
+		C2D825FE1B6F9E8300434D37 /* SSignalKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = MtProtoKitMac.framework;
-			remoteRef = C242376A1B28C467009B9C6F /* PBXContainerItemProxy */;
+			path = SSignalKit.framework;
+			remoteRef = C2D825FD1B6F9E8300434D37 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2CBF3D81AF38F6F006BF90A /* MtProtoKit.framework */ = {
+		C2D826001B6F9E8300434D37 /* libSSignalKitStatic.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSignalKitStatic.a;
+			remoteRef = C2D825FF1B6F9E8300434D37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C2D826021B6F9E8300434D37 /* SSignalKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SSignalKitTests.xctest;
+			remoteRef = C2D826011B6F9E8300434D37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = MtProtoKit.framework;
-			remoteRef = C2CBF3D71AF38F6F006BF90A /* PBXContainerItemProxy */;
+			remoteRef = C2D8261A1B6FA8A600434D37 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2D825DB1B690C5B00434D37 /* MtProtoKitDynamic.framework */ = {
+		C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MtProtoKitMac.framework;
+			remoteRef = C2D8261C1B6FA8A600434D37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C2D8261F1B6FA8A600434D37 /* MtProtoKitDynamic.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = MtProtoKitDynamic.framework;
-			remoteRef = C2D825DA1B690C5B00434D37 /* PBXContainerItemProxy */;
+			remoteRef = C2D8261E1B6FA8A600434D37 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2D825DD1B690C5B00434D37 /* MtProtoKitDynamicTests.xctest */ = {
+		C2D826211B6FA8A600434D37 /* MtProtoKitDynamicTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = MtProtoKitDynamicTests.xctest;
-			remoteRef = C2D825DC1B690C5B00434D37 /* PBXContainerItemProxy */;
+			remoteRef = C2D826201B6FA8A600434D37 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C2E561031AF3726300B4CAF0 /* libsqlcipher.a */ = {
