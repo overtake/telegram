@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
@@ -28,6 +28,7 @@
                 <outlet property="file_size_limit_desc" destination="e9T-qT-TvO" id="phU-sF-5OR"/>
                 <outlet property="launch_on_startup" destination="N7k-He-UVX" id="g1t-sG-xcQ"/>
                 <outlet property="log_out_button" destination="7UH-rj-e4p" id="GxY-v1-vet"/>
+                <outlet property="markedInputText" destination="9Pt-fD-IF5" id="aw6-0T-LLs"/>
                 <outlet property="open_links_in_background" destination="4Xz-Dy-e8a" id="UJL-JS-Kbq"/>
                 <outlet property="other_desc" destination="nSZ-tq-yZo" id="Xkx-fD-yn4"/>
                 <outlet property="remove_from_block_button" destination="qoI-jc-Nyd" id="pdB-PD-c9B"/>
@@ -253,11 +254,11 @@
             </subviews>
         </customView>
         <customView appearanceType="aqua" id="E0K-fY-XQW">
-            <rect key="frame" x="0.0" y="5" width="630" height="441"/>
+            <rect key="frame" x="0.0" y="-4" width="630" height="467"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Myt-Vp-xFz">
-                    <rect key="frame" x="116" y="374" width="124" height="17"/>
+                    <rect key="frame" x="116" y="400" width="124" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Videos:" id="QDo-nT-8HN">
                         <font key="font" metaFont="system"/>
@@ -266,7 +267,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BGL-fI-MsQ">
-                    <rect key="frame" x="80" y="404" width="160" height="17"/>
+                    <rect key="frame" x="80" y="430" width="160" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Auto download:" id="OBc-OI-YtS">
                         <font key="font" metaFont="system"/>
@@ -275,7 +276,7 @@
                     </textFieldCell>
                 </textField>
                 <button id="kUB-Am-aTf">
-                    <rect key="frame" x="253" y="373" width="86" height="18"/>
+                    <rect key="frame" x="253" y="399" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tij-ww-D1J">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -286,7 +287,7 @@
                     </connections>
                 </button>
                 <button id="tyo-Ik-9xp">
-                    <rect key="frame" x="337" y="373" width="142" height="18"/>
+                    <rect key="frame" x="337" y="399" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="JYl-Sp-6HT">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -297,7 +298,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="tfT-ro-Gpg">
-                    <rect key="frame" x="112" y="325" width="128" height="16"/>
+                    <rect key="frame" x="112" y="351" width="128" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Voice messages:" id="hdr-zW-NW0">
                         <font key="font" metaFont="system"/>
@@ -306,7 +307,7 @@
                     </textFieldCell>
                 </textField>
                 <button id="Qdv-uC-Qwc">
-                    <rect key="frame" x="253" y="323" width="86" height="18"/>
+                    <rect key="frame" x="253" y="349" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="AEz-IQ-WMb">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -317,7 +318,7 @@
                     </connections>
                 </button>
                 <button id="ocI-YA-GBk">
-                    <rect key="frame" x="337" y="323" width="142" height="18"/>
+                    <rect key="frame" x="337" y="349" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="21Q-aN-ca9">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -328,7 +329,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e9T-qT-TvO">
-                    <rect key="frame" x="25" y="284" width="215" height="17"/>
+                    <rect key="frame" x="25" y="310" width="215" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="File size limit:" id="WG9-y9-hfH">
                         <font key="font" metaFont="system"/>
@@ -337,7 +338,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eAW-Ny-dot">
-                    <rect key="frame" x="112" y="349" width="128" height="17"/>
+                    <rect key="frame" x="112" y="375" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Documents:" id="T6o-FZ-gEq">
                         <font key="font" metaFont="system"/>
@@ -346,7 +347,7 @@
                     </textFieldCell>
                 </textField>
                 <button id="p93-k3-eDL">
-                    <rect key="frame" x="253" y="348" width="86" height="18"/>
+                    <rect key="frame" x="253" y="374" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Groupsqw" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eiv-VL-cO1">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -357,7 +358,7 @@
                     </connections>
                 </button>
                 <button id="Ekc-0j-nDV">
-                    <rect key="frame" x="337" y="348" width="142" height="18"/>
+                    <rect key="frame" x="337" y="374" width="142" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Private chats" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9dQ-J0-KVx">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -368,7 +369,7 @@
                     </connections>
                 </button>
                 <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="fRN-gj-wwt">
-                    <rect key="frame" x="255" y="210" width="118" height="42"/>
+                    <rect key="frame" x="255" y="236" width="118" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     <size key="cellSize" width="84" height="18"/>
@@ -394,7 +395,7 @@
                     </connections>
                 </matrix>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="h7G-oj-hEs">
-                    <rect key="frame" x="112" y="235" width="128" height="17"/>
+                    <rect key="frame" x="112" y="261" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Send message:" id="sMg-YW-G1e">
                         <font key="font" metaFont="system"/>
@@ -403,7 +404,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" id="r4o-zX-lDn">
-                    <rect key="frame" x="252" y="173" width="255" height="26"/>
+                    <rect key="frame" x="252" y="199" width="255" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="cjv-nE-rfP">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -421,7 +422,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Vhh-ee-HNm">
-                    <rect key="frame" x="80" y="147" width="160" height="17"/>
+                    <rect key="frame" x="80" y="173" width="160" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sound notification:" id="Twf-XP-Sm8">
                         <font key="font" metaFont="system"/>
@@ -430,7 +431,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nSZ-tq-yZo">
-                    <rect key="frame" x="195" y="94" width="44" height="17"/>
+                    <rect key="frame" x="195" y="120" width="44" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Other:" id="NmL-O9-uRW">
                         <font key="font" metaFont="system"/>
@@ -439,7 +440,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" id="qcy-kN-GFS">
-                    <rect key="frame" x="252" y="142" width="255" height="26"/>
+                    <rect key="frame" x="252" y="168" width="255" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="GfT-ex-Y4W">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -451,7 +452,7 @@
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" id="Kx6-7a-HZg">
-                    <rect key="frame" x="253" y="278" width="88" height="26"/>
+                    <rect key="frame" x="253" y="304" width="88" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="100 MB" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="By6-T2-wXl" id="fK7-cH-1d1">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -470,21 +471,21 @@
                     </connections>
                 </popUpButton>
                 <box appearanceType="aqua" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="Rcm-7J-T9R">
-                    <rect key="frame" x="68" y="267" width="483" height="5"/>
+                    <rect key="frame" x="68" y="293" width="483" height="5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <box appearanceType="aqua" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="xY5-Oj-zu6">
-                    <rect key="frame" x="68" y="127" width="483" height="5"/>
+                    <rect key="frame" x="68" y="153" width="483" height="5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="6av-g3-c2i">
-                    <rect key="frame" x="6" y="179" width="233" height="17"/>
+                    <rect key="frame" x="6" y="205" width="233" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Save documents to:" id="Z4Q-99-Bnj">
                         <font key="font" metaFont="system"/>
@@ -493,7 +494,7 @@
                     </textFieldCell>
                 </textField>
                 <button id="I4j-XC-W57">
-                    <rect key="frame" x="252" y="93" width="152" height="18"/>
+                    <rect key="frame" x="252" y="119" width="152" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Sound effects" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="LjB-RI-yv9">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -504,7 +505,7 @@
                     </connections>
                 </button>
                 <button id="4Xz-Dy-e8a">
-                    <rect key="frame" x="252" y="68" width="301" height="18"/>
+                    <rect key="frame" x="252" y="94" width="301" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Open links in background" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="K6j-hy-uPv">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -515,7 +516,7 @@
                     </connections>
                 </button>
                 <button id="N7k-He-UVX">
-                    <rect key="frame" x="252" y="43" width="301" height="18"/>
+                    <rect key="frame" x="252" y="69" width="301" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="iCloud contacts synchronization" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="X6k-h1-hgC">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -526,7 +527,7 @@
                     </connections>
                 </button>
                 <button id="yJN-im-AEu">
-                    <rect key="frame" x="252" y="18" width="301" height="18"/>
+                    <rect key="frame" x="252" y="44" width="301" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Status Bar Icon" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="iGt-bl-Fah">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -536,8 +537,19 @@
                         <action selector="changeStatusBarIcon:" target="-2" id="VoP-Sm-vJp"/>
                     </connections>
                 </button>
+                <button id="9Pt-fD-IF5">
+                    <rect key="frame" x="252" y="18" width="301" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Check marked input text" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="7Ao-hd-hhw">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="checkMarkedInputtext:" target="-2" id="9kl-Sf-5A0"/>
+                    </connections>
+                </button>
             </subviews>
-            <point key="canvasLocation" x="359" y="779.5"/>
+            <point key="canvasLocation" x="359" y="792.5"/>
         </customView>
     </objects>
     <resources>

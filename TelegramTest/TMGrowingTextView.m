@@ -395,7 +395,7 @@
     BOOL isEnter = (e.keyCode == 0x24); // VK_RETURN
 //    MTLog(@"log %lu", (unsigned long)flags);
     //numpad enter fix
-    if (self.hasMarkedText)
+    if (self.hasMarkedText && [SettingsArchiver checkMaskedSetting:MarkedInputText])
         return NO;
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;
