@@ -1394,14 +1394,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)fullChats:(void (^)(NSArray *chats))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         NSMutableArray *chats = [[NSMutableArray alloc] init];
-        //[db beginTransaction];
         FMResultSet *result = [db executeQuery:@"select * from chats_full_new"];
         while ([result next]) {
-            TLChatFull *fullChat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            TLChatFull *fullChat = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            
+            fullChat.lastUpdateTime = [result intForColumn:@"last_update_time"];
+            
             [chats addObject:fullChat];
         }
         [result close];
-        //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(chats);
         });
@@ -1411,7 +1412,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 -(void)insertFullChat:(TLChatFull *)fullChat completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into chats_full_new (n_id, last_update_time, serialized) values (?,?,?)",@(fullChat.n_id), @([[MTNetwork instance] getTime]), [TLClassStore serialize:fullChat]];
+        [db executeUpdate:@"insert or replace into chats_full_new (n_id, last_update_time, serialized) values (?,?,?)",@(fullChat.n_id), @(fullChat.lastUpdateTime), [TLClassStore serialize:fullChat]];
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler();

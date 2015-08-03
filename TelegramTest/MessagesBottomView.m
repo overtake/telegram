@@ -1059,31 +1059,9 @@
     
     NSRange selectedRange = self.inputMessageTextField.selectedRange;
     
-    
-    NSString *string;
-    
-    
-    @try {
-        if(self.inputMessageTextField && self.inputMessageTextField.string.length == 0)
-            return;
         
-        if(self.inputMessageTextField.string.length < selectedRange.location + 2)
-            string = [self.inputMessageTextField.string substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 1)];
-        
-        else {
-            string = [[self.inputMessageTextField string] substringWithRange:NSMakeRange(MAX(selectedRange.location - 1, 0), 2)];
-        }
-    }
-    @catch (NSException *exception) {
-        
-        int bp = 0;
-        
-    }
     
-    
-    
-    
-    
+    NSString *string = [self.inputMessageTextField string];
     
     int type = 0;
     
@@ -1092,18 +1070,32 @@
     // botCommand = 3
     
 
-    if ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
         
         type = [[string substringWithRange:range] isEqualToString:@"@"] ? 1 : ([[string substringWithRange:range] isEqualToString:@"#"] ? 2 : 3);
         
-        if(string.length == 1) {
-            search = string;
-        } else
-        {
-            if([string rangeOfString:@" "].location != NSNotFound || [string rangeOfString:@"\n"].location != NSNotFound)
-                search = [string substringToIndex:1];
+        search = [string substringFromIndex:range.location + 1];
+        
+        NSRange space = [search rangeOfString:@" "];
+        
+        if(space.location == NSNotFound)
+            space = [search rangeOfString:@"\n"];
+        
+        if(space.location != NSNotFound)
+            search = [search substringToIndex:space.location];
+        
+        
+        
+        if(search.length > 0) {
             
+            if(selectedRange.location == range.location + search.length + 1)
+                break;
+            else
+                search = nil;
         }
+        
+        string = [string substringFromIndex:range.location +1];
+        
     }
     
     
@@ -1130,7 +1122,7 @@
                 [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
         } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
-        } else if([self.inputMessageString isEqualToString:@"/"]) {
+        } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
                     

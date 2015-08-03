@@ -213,7 +213,7 @@
     if(fullChat ) {
         if(callback != nil)
             callback(fullChat);
-        if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) || !force) {
+        if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
                 return;
         }
         
@@ -306,7 +306,8 @@
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
                 currentChat = newChatFull;
-                currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
+                if(currentChat.lastUpdateTime == 0)
+                    currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
             NSArray *copy = [currentChat.participants.participants copy];

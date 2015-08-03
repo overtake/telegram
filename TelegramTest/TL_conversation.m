@@ -81,7 +81,7 @@
         return !(self.chat.type != TLChatTypeNormal || self.chat.left);
     }
     
-    if(self.type == DialogTypeUser)
+    if(self.type == DialogTypeUser && self.user.isBot)
         return  !self.user.isBot || !self.user.isBlocked;
     
     return YES;
