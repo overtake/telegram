@@ -244,8 +244,14 @@
 }
 
 -(void)searchByString:(NSString *)searchString {
-    [self.searchTextField becomeFirstResponder];
+    
     [self.searchTextField setStringValue:searchString];
+    
+    if(searchString.length > 0) {
+        [self.searchTextField becomeFirstResponder];
+    } else {
+        [self.searchTextField resignFirstResponder];
+    }
 }
 
 

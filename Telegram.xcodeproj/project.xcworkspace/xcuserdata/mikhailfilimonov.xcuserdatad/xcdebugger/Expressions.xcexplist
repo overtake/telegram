@@ -51,6 +51,9 @@
          contextName = "-[DeleteRandomMessagesSenderItem initWithConversation:random_ids:]:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView _checkClickCount:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -620,6 +623,9 @@
                value = "self.photoCollection.list">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates processUpdates:stateSeq:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__39-[MTNetwork sendRequest:forDatacenter:]_block_invoke:MTNetwork.m">
@@ -1918,6 +1924,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[NSString(NSString_FindURLs) textCheckingResultsForText:highlightMentionsAndTags:highlightCommands:]:NSString+FindURLs.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MTTcpTransport initWithDelegate:context:datacenterId:address:]:MTTcpTransport.m">
       </ContextState>
       <ContextState
@@ -2052,6 +2061,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates media:layer:file:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[Storage loadMessages:localMaxId:limit:next:maxDate:filterMask:completeHandler:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">

@@ -494,47 +494,49 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and destruct_time > %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",conversationId,next ? @"<=" : @">",currentDate,[[MTNetwork instance] getTime],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and destruct_time > %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %d",conversationId,next ? @"<=" : @">=",currentDate,[[MTNetwork instance] getTime],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         [self explainQuery:sql];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         
-        while ([result next]) {
-            
+        TL_localMessage *(^parseMessage)(FMResultSet *result) = ^TL_localMessage * (FMResultSet *result) {
             TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = -1;
             msg.message = [result stringForColumn:@"message_text"];
             msg.flags = [result intForColumn:@"flags"];
+            
+            return msg;
+        };
+        
+        NSMutableArray *ids = [[NSMutableArray alloc] init];
+        
+        while ([result next]) {
+            TL_localMessage *msg = parseMessage(result);
             [messages addObject:msg];
+            [ids addObject:@(msg.n_id)];
         }
         [result close];
         
         
-        //select serialized,flags,message_text from messages where destruct_time > 1432213513 and peer_id = 699140 and date <= 1432213513 and (filter_mask & 2 > 0) order by date DESC, n_id DESC limit 18;
-        
-      //  (@"history");
-        
         TL_localMessage *lastMessage = [messages lastObject];
         
         if(lastMessage) {
+            
+            
             
             NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
            
             int localCount = [db intForQuery:@"SELECT count(*) from messages where peer_id = ? and date = ?",@(lastMessage.peer_id),@(lastMessage.date)];
             if(selectedCount.count < localCount) {
                 
-                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where date = %d and n_id != %d and peer_id = %d order by n_id desc",lastMessage.date,lastMessage.n_id,lastMessage.peer_id];
+                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where date = %d and n_id NOT IN (%@) and peer_id = %d order by n_id desc",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
                 
                  FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
                  while ([result next]) {
-                    TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                     msg.flags = -1;
-                     msg.message = [result stringForColumn:@"message_text"];
-                     msg.flags = [result intForColumn:@"flags"];
-                     [messages addObject:msg];
+                    [messages addObject:parseMessage(result)];
                  }
                  [result close];
                 

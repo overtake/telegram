@@ -643,16 +643,13 @@ static NSMutableArray *listeners;
                         [self saveId:converted next:next];
                         
                         
-                        if(converted.count < _selectLimit) {
-                            
-                            if(!next && (_min_id >= self.conversation.top_message)) {
-                                [self setState:ChatHistoryStateFull next:NO];
-                            } else {
+                        if(!next && (_min_id >= self.conversation.top_message)) {
+                            [self setState:ChatHistoryStateFull next:next];
+                        } else {
+                            if(converted.count < _selectLimit) {
                                 [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                             }
-                            
                         }
-                        
                         
                         
                         [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
