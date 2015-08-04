@@ -1433,18 +1433,16 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     [self updateScrollBtn];
     
-    if([self.table.scrollView isNeedUpdateTop] &&
-       self.historyController.nextState != ChatHistoryStateFull) {
+    if([self.table.scrollView isNeedUpdateTop] && self.historyController.prevState != ChatHistoryStateFull) {
         
         [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
-        return;
+        
+    } else if([self.table.scrollView isNeedUpdateBottom] && self.historyController.nextState != ChatHistoryStateFull) {
+        
+        [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
     }
     
-    if(self.historyController.prevState == ChatHistoryStateFull || ![self.table.scrollView isNeedUpdateBottom])
-        return;
     
-    
-    [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
 }
 
 - (void) dealloc {
