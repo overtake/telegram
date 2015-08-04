@@ -50,6 +50,15 @@
     return self;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    
+    _contactNameSize = NSMakeSize(width - 250, 20);
+    
+    return YES;
+}
+
 -(NSString *)contactName {
     if(self->_contactName == nil)
         return @"";

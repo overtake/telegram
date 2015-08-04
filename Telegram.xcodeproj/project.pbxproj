@@ -4992,6 +4992,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		C2D8262F1B71011200434D37 /* modern */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = modern;
+			sourceTree = "<group>";
+		};
 		C2DE4FB21AD43EBC001EC26C /* h */ = {
 			isa = PBXGroup;
 			children = (
@@ -5392,6 +5399,7 @@
 		CEB2615B180C5B9B00378932 /* logic */ = {
 			isa = PBXGroup;
 			children = (
+				C2D8262F1B71011200434D37 /* modern */,
 				C2CB5D5C1B4D870D00CD61DF /* updater */,
 				C24F877C19FE92D700EC962E /* modernencryptedchats */,
 				C222775A190E734C002AA0F6 /* taskrequest */,

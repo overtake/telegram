@@ -203,7 +203,7 @@ static const int seconds_to_notify = 120;
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
             
-            if([TGPasslock isVisibility] || [message.to_id isSecret])
+            if([TGPasslock isVisibility] || [message.to_id isSecret] || ![SettingsArchiver checkMaskedSetting:MessagesNotificationPreview])
             {
                 title = appName();
                 subTitle = nil;

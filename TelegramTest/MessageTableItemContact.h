@@ -16,6 +16,7 @@
 @property (nonatomic, strong) TLUser *contactUser;
 @property (nonatomic, strong) NSString *contactText;
 @property (nonatomic, strong) NSString *contactName;
+@property (nonatomic, assign) NSSize contactNameSize;
 @property (nonatomic, strong) NSAttributedString *contactNumber;
 @property (nonatomic, strong) NSString *contactNumberString;
 

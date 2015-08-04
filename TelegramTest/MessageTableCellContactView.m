@@ -63,7 +63,7 @@
     [super setItem:item];
     
     self.titleTextButton.stringValue = item.contactName;
-    [self.titleTextButton sizeToFit];
+    [self.titleTextButton setFrameSize:item.contactNameSize];
     
     NSPoint point = self.phoneNumberTextView.frame.origin;
 

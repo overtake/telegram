@@ -30,7 +30,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_searchField setFrame:NSMakeRect(_xOffset, NSMinY(_searchField.frame), newSize.width - MAX(_xOffset, 10)*2, NSHeight(_searchField.frame))];
+    [_searchField setFrame:NSMakeRect(MAX(_xOffset, 10), NSMinY(_searchField.frame), newSize.width - MAX(_xOffset, 10)*2, NSHeight(_searchField.frame))];
 }
 
 -(BOOL)becomeFirstResponder {
