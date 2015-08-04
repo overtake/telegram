@@ -757,6 +757,9 @@
 		C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */; };
 		C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D825ED1B6A711E00434D37 /* WebKit.framework */; };
 		C2D826241B6FA8E800434D37 /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */; };
+		C2D8263B1B710E6400434D37 /* TGModernHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8263A1B710E6400434D37 /* TGModernHistoryController.m */; };
+		C2D8263F1B7110AB00434D37 /* TGConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8263E1B7110AB00434D37 /* TGConversation.m */; };
+		C2D826421B71155000434D37 /* TGDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826411B71155000434D37 /* TGDatabase.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2313,6 +2316,12 @@
 		C2D825ED1B6A711E00434D37 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSignalKit.xcodeproj; path = Signals/SSignalKit.xcodeproj; sourceTree = "<group>"; };
 		C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MtProtoKit.xcodeproj; path = MtProtoKit/MtProtoKit.xcodeproj; sourceTree = "<group>"; };
+		C2D826391B710E6400434D37 /* TGModernHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernHistoryController.h; sourceTree = "<group>"; };
+		C2D8263A1B710E6400434D37 /* TGModernHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernHistoryController.m; sourceTree = "<group>"; };
+		C2D8263D1B7110AB00434D37 /* TGConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGConversation.h; sourceTree = "<group>"; };
+		C2D8263E1B7110AB00434D37 /* TGConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConversation.m; sourceTree = "<group>"; };
+		C2D826401B71155000434D37 /* TGDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatabase.h; sourceTree = "<group>"; };
+		C2D826411B71155000434D37 /* TGDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabase.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -4995,6 +5004,12 @@
 		C2D8262F1B71011200434D37 /* modern */ = {
 			isa = PBXGroup;
 			children = (
+				C2D826391B710E6400434D37 /* TGModernHistoryController.h */,
+				C2D8263A1B710E6400434D37 /* TGModernHistoryController.m */,
+				C2D8263D1B7110AB00434D37 /* TGConversation.h */,
+				C2D8263E1B7110AB00434D37 /* TGConversation.m */,
+				C2D826401B71155000434D37 /* TGDatabase.h */,
+				C2D826411B71155000434D37 /* TGDatabase.m */,
 			);
 			name = modern;
 			sourceTree = "<group>";
@@ -6128,6 +6143,7 @@
 				CEB0A1E317DB03AA0055F150 /* AsyncSocket.m in Sources */,
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
 				C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */,
+				C2D826421B71155000434D37 /* TGDatabase.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
 				C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
@@ -6145,6 +6161,7 @@
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
 				C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */,
+				C2D8263F1B7110AB00434D37 /* TGConversation.m in Sources */,
 				C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */,
 				C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */,
 				C21C7B3818D769B100253A7A /* VideoSenderItem.m in Sources */,
@@ -6259,6 +6276,7 @@
 				CEB7ADF11812E31F005CB6A1 /* ImageCache.m in Sources */,
 				0A5F0FF818DC0F5C00CCFA60 /* ChatInfoNotificationView.m in Sources */,
 				0AC7F475185DA87A00F90558 /* TMTableView.mm in Sources */,
+				C2D8263B1B710E6400434D37 /* TGModernHistoryController.m in Sources */,
 				C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */,
 				C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */,
 				0ACDB13218CF28DC009FE910 /* NewLoginViewController.m in Sources */,
@@ -6879,8 +6897,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
-				OTHER_LDFLAGS = "";
-				"OTHER_LDFLAGS[arch=*]" = "";
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
@@ -6923,8 +6943,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
-				OTHER_LDFLAGS = "";
-				"OTHER_LDFLAGS[arch=*]" = "";
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;

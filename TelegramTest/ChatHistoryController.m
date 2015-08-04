@@ -980,13 +980,13 @@ static NSMutableArray *listeners;
                     
                     [self.controller.conversation save];
                     
-                    [messageItems removeObject:checkItem];
-                    [messageKeys removeObjectForKey:@(checkItem.message.n_id)];
-                    
-                    [self filterAndAdd:@[checkItem] isLates:YES];
-                    
-                    
-                }
+               }
+                
+                [messageItems removeObject:checkItem];
+                [messageKeys removeObjectForKey:@(checkItem.message.fakeId)];
+                
+                [self filterAndAdd:@[checkItem] isLates:YES];
+                
             } synchronous:YES];
             
             

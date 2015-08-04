@@ -2000,4 +2000,60 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
 }
 
+
+
+
++(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask {
+    
+    SSignal *signal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        
+        FMDatabaseQueue *queue = [Storage manager]->queue;
+        
+        NSMutableArray *messages = [[NSMutableArray alloc] init];
+        
+        [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+            
+            int currentDate = date;
+            
+            
+            if(localMaxId != 0 && currentDate == 0) {
+                currentDate = [db intForQuery:@"SELECT date FROM messages WHERE n_id=?",@(localMaxId)];
+                
+            }
+            
+            if(currentDate == 0)
+                currentDate = [[MTNetwork instance] getTime];
+            
+            NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where peer_id = %d and date %@ %d and destruct_time > %d and (filter_mask & %d > 0) order by date %@, n_id %@ limit %lu",cnv_id,next ? @"<=" : @">=",currentDate,[[MTNetwork instance] getTime],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+            
+            
+            FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+            
+            
+            while ([result next]) {
+                
+                TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                msg.flags = -1;
+                msg.message = [result stringForColumn:@"message_text"];
+                msg.flags = [result intForColumn:@"flags"];
+                [messages addObject:msg];
+            }
+            [result close];
+            
+
+            
+        }];
+        
+        [subscriber putNext:messages];
+        
+        return nil;
+    }];
+    
+    
+    return signal;
+    
+}
+
+
+
 @end

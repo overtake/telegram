@@ -19,7 +19,7 @@
 
 #import "TGSecretAction.h"
 #import "ASQueue.h"
-
+#import <SSignalKit/SSignalKit.h>
 @interface Storage : NSObject
 {
  //   FMDatabase *db;
@@ -222,6 +222,14 @@ extern NSString *const BOT_COMMANDS;
 +(TLWebPage *)findWebpage:(NSString *)link;
 
 -(void)readMessagesContent:(NSArray *)messages;
+
+
+
+
+
+
+// signal requests
++(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
 
 
 @end

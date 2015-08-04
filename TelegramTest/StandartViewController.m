@@ -244,6 +244,7 @@
 }
 
 -(void)searchByString:(NSString *)searchString {
+    [self.searchTextField becomeFirstResponder];
     [self.searchTextField setStringValue:searchString];
 }
 

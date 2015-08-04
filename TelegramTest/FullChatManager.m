@@ -139,8 +139,6 @@
         [checker reloadParticipants];
     }
     
-    [self loadFullChatByChatId:chat_id force:YES];
-    
    
 }
 

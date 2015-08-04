@@ -656,6 +656,7 @@ static int insertCount = 3;
 
 - (void)searchByString:(NSString *)searchString {
     
+    
     [self.tableView.containerView setHidden:NO];
     
     if(searchString.length == 0) {
