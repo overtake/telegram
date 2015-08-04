@@ -52,7 +52,7 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 
 - (void)initialize {
     self.auto_download_limit_size = DownloadLimitSize10;
-    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications | iCloudSynch | StatusBarIcon;
+    self.mask = SendEnter | OnlineFocused | SoundEffects | AutoGroupAudio | AutoPrivateAudio | AutoPrivatePhoto | AutoGroupPhoto | PushNotifications | iCloudSynch | StatusBarIcon | MessagesNotificationPreview | MarkedInputText;
     self.documents_folder = dp();
     self.defaultSoundNotification = @"DefaultSoundName";
 
@@ -341,6 +341,12 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                 [defaults setObject:@"once" forKey:@"MarkedInputText"];
                 
                 [SettingsArchiver addSetting:MarkedInputText];    
+            }
+            
+            if(![defaults objectForKey:@"MessagesPreview"]) {
+                [defaults setObject:@"once" forKey:@"MessagesPreview"];
+                
+                [SettingsArchiver addSetting:MessagesNotificationPreview];
             }
             
         });

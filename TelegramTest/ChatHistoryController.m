@@ -530,14 +530,8 @@ static NSMutableArray *listeners;
         
         
         
-       
-        
         if([self checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
             return;
-        }
-        
-        if(self.conversation.peer_id == 46575809) {
-            int bp = 0;
         }
         
         
@@ -649,7 +643,7 @@ static NSMutableArray *listeners;
                         [self saveId:converted next:next];
                         
                         
-                        if(result.count < _selectLimit) {
+                        if(converted.count < _selectLimit) {
                             
                             if(!next && (_min_id >= self.conversation.top_message)) {
                                 [self setState:ChatHistoryStateFull next:NO];
@@ -695,31 +689,6 @@ static NSMutableArray *listeners;
                                 self.controller.conversation.sync_message_id = sync_message.n_id;
                                 [self.controller.conversation save];
                             }
-                            
-                            
-//                            if(!next) {
-//                                
-//                                TL_localMessage *last;
-//                                if(messages.count > 0)
-//                                    last = messages[0];
-//                                
-//                                ChatHistoryState old_state = _prevState;
-//                                ChatHistoryState new_state = self.filter.class == HistoryFilter.class && (last && (last.n_id < self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) ) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-//                                [self setState:new_state next:next];
-//                                
-//                                if(old_state != new_state && new_state == ChatHistoryStateLocal) {
-//                                    NSMutableArray *copy = [messages mutableCopy];
-//                                    
-//                                    [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
-//                                        if(obj.n_id < self.controller.conversation.sync_message_id)
-//                                            [copy removeObject:obj];
-//                                    }];
-//                                    
-//                                    messages = copy;
-//                                }
-//                                
-//                            }
-                            
                             
                             
                             [SharedManager proccessGlobalResponse:response];
