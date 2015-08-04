@@ -101,6 +101,21 @@ static ASQueue *queue;
     
 }
 
+/*
+ -(void)processUpdates:(NSArray *)updates stateSeq:(int)stateSeq {
+ 
+ 
+ 
+ 
+ for(TLUpdate *update in updates) {
+ 
+ [self addStatefullUpdate:update seq:stateSeq pts:[update pts] date:[update date] qts:[update qts] pts_count:[update pts_count]];
+ }
+ 
+ 
+ }
+ */
+
 -(void)processUpdates:(NSArray *)updates stateSeq:(int)stateSeq {
     
     int statePts = 0;
@@ -116,19 +131,15 @@ static ASQueue *queue;
             if ([update qts] > stateQts)
                 stateQts = [update qts];
         } else {
-            int updatePts = [update pts];
-            if (updatePts > statePts)
-                statePts = updatePts;
-            int updatePts_count = [update pts_count];
-            if (updatePts_count > statePts_count)
-                statePts_count = updatePts_count;
+            if ([update pts] > statePts)
+                statePts = [update pts];
+            
+            statePts_count+= [update pts_count];
         }
         
     }
     
-   
     [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts pts_count:statePts_count];
-    
     
 }
 
@@ -985,17 +996,17 @@ static ASQueue *queue;
             [ids addObject:@(obj.n_id)];
         }];
         
-//        if(ids.count > 0) {
-//            
-//            
-//            NSArray *res = [[Storage manager] issetMessages:ids];
-//            
-//            [ids removeAllObjects];
-//           
-//            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
-//            
-//            [copy removeObjectsInArray:f];
-//        }
+        if(ids.count > 0) {
+            
+            
+            NSArray *res = [[Storage manager] issetMessages:ids];
+            
+            [ids removeAllObjects];
+           
+            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
+            
+            [copy removeObjectsInArray:f];
+        }
     
         
         
