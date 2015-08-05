@@ -11,12 +11,20 @@
 #import "TGWebpageContainer.h"
 #import "POPCGUtils.h"
 #import "TGEmbedModalView.h"
+#import "TGSharedLinksTableView.h"
 @interface TGSharedLinkRowView ()
 @property (nonatomic,strong) TGCTextView *textField;
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMTextField *linkField;
 @property (nonatomic,strong) TGImageView *imageView;
+
+@property (nonatomic,assign,getter=isEditable,readonly) BOOL editable;
+
+@property (nonatomic,strong) BTRButton *selectButton;
+
 @end
+
+#define s_lox 30
 
 @implementation TGSharedLinkRowView
 
@@ -94,6 +102,21 @@
         
         [self.containerView addSubview:_imageView];
         
+        
+        
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((60 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+        [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
+        [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
+        
+        [self.selectButton setUserInteractionEnabled:NO];
+        
+        [self.selectButton setHidden:YES];
+        [self.containerView addSubview:self.selectButton];
+
+        
     }
     
     return self;
@@ -102,7 +125,22 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     [_containerView setFrame:NSMakeRect(12, 0, newSize.width - 24, newSize.height)];
+    [self.selectButton setCenteredYByView:self.containerView];
 }
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    if(self.isEditable) {
+        
+        TGDocumentsMediaTableView *table = (TGDocumentsMediaTableView *) self.item.table;
+        
+        [table setSelected:![table isSelectedItem:self.item] forItem:self.item];
+        
+        [self setSelected:[table isSelectedItem:self.item]];
+    } else {
+        [super mouseDown:theEvent];
+    }
+}
+
 
 -(void)setItem:(MessageTableItemText *)item {
     
@@ -118,16 +156,14 @@
         
         [_textField setFrameSize:item.webpage.descSize];
         
-        [_textField setFrameOrigin:NSMakePoint(2, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
+        [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox  : 2, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
         
         
         
         [_linkField setStringValue:item.webpage.webpage.url];
         
         
-        [_linkField setFrameOrigin:NSMakePoint(0, NSMinY(_textField.frame) - NSHeight(_linkField.frame))];
-        [_linkField setFrameSize:NSMakeSize(NSWidth(_containerView.frame), 20)];
-        
+         [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 : 0 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (self.isEditable ? s_lox : 5), NSHeight(self.linkField.frame))];
         [_imageView setObject:item.webpage.imageObject];
         
         [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
@@ -137,6 +173,50 @@
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {
     
+    [self.selectButton setSelected:self.isSelected];
+    
+    _editable = editable;
+    
+    if(animated) {
+        
+        [self.selectButton setHidden:NO];
+        
+        [self.selectButton setAlphaValue:1];
+        
+        if(editable){
+            [self.selectButton setAlphaValue:0];
+        }
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            
+            [context setDuration:0.2];
+            
+            
+            [[self.textField animator] setFrameOrigin:NSMakePoint(editable ? s_lox : 2, NSMinY(self.textField.frame))];
+            [[self.linkField animator] setFrame:NSMakeRect(editable ? s_lox-2 : 0 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (editable ? s_lox : 5), NSHeight(self.linkField.frame))];
+            [[self.selectButton animator] setFrameOrigin:NSMakePoint(self.isEditable ? 0 : -NSWidth(self.selectButton.frame), NSMinY(self.selectButton.frame))];
+            
+            [[self.selectButton animator] setAlphaValue:editable ? 1 : 0];
+            
+        } completionHandler:^{
+            [self setItem:self.item];
+        }];
+        
+  
+        
+        
+    } else {
+        [self setItem:self.item];
+    }
+    
+}
+
+-(void)setSelected:(BOOL)selected {
+    [self.selectButton setSelected:selected];
+}
+
+-(BOOL)isSelected {
+    return [(TGSharedLinksTableView *)self.item.table isSelectedItem:self.item];
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {

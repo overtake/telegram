@@ -849,6 +849,13 @@ static const int maxWidth = 120;
             }];
             
             
+        } if(![strongSelf.sharedLinksTableView.containerView isHidden]) {
+            count = strongSelf.sharedLinksTableView.selectedItems.count;
+            
+            [strongSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+            }];
         } else {
             
             count = strongSelf.selectedItems.count;

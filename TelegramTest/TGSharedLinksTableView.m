@@ -47,7 +47,7 @@
 }
 
 -(int)heightWithItem:(MessageTableItemText *)item {
-    return MAX(item.webpage.descSize.height+30, 60);
+    return MAX(item.webpage.descSize.height+30, 70);
 }
 
 -(NSPredicate *)searchPredicateWithString:(NSString *)string {

@@ -220,7 +220,7 @@
         NSError *error = nil;
         static NSDataDetector *dataDetector = nil;
         if (dataDetector == nil)
-            dataDetector = [NSDataDetector dataDetectorWithTypes:(int)(NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber) error:&error];
+            dataDetector = [NSDataDetector dataDetectorWithTypes:(int)(NSTextCheckingTypeLink) error:&error];
         
         NSMutableArray *results = [[NSMutableArray alloc] init];
         [dataDetector enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:^(NSTextCheckingResult *match, __unused NSMatchingFlags flags, __unused BOOL *stop)
