@@ -646,8 +646,7 @@ static NSImage *attachBackgroundThumb() {
     if([_attachButton mouse:_startDragLocation inRect:_attachButton.frame])
         return;
     
-    if(self.isEditable)
-        [super mouseDown:theEvent];
+    [super mouseDown:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {

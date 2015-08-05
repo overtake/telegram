@@ -323,10 +323,9 @@ static NSImage *playImage() {
     _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
     
     if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
-    return;
+        return;
     
-    if(self.isEditable)
-        [super mouseDown:theEvent];
+    [super mouseDown:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
