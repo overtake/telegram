@@ -15,7 +15,7 @@
 @interface TGSharedLinkRowView ()
 @property (nonatomic,strong) TGCTextView *textField;
 @property (nonatomic,strong) TMView *containerView;
-@property (nonatomic,strong) TMTextField *linkField;
+@property (nonatomic,strong) TMHyperlinkTextField *linkField;
 @property (nonatomic,strong) TGImageView *imageView;
 
 @property (nonatomic,assign,getter=isEditable,readonly) BOOL editable;
@@ -56,7 +56,8 @@
         [_containerView addSubview:_textField];
         
                 
-        _linkField = [TMTextField defaultTextField];
+        _linkField = [TMHyperlinkTextField defaultTextField];
+        
         
         [_linkField setFont:TGSystemFont(13)];
         [_linkField setTextColor:LINK_COLOR];
@@ -201,6 +202,9 @@ static NSImage *sharedLinkCapImage() {
     [_textField setHidden:item.webpage == nil];
     
     
+    [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox - 60 : 65), 20)];
+    [_imageContainerView setFrame:NSMakeRect(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
+   
     if(item.webpage) {
         [_textField setAttributedString:item.webpage.desc];
         
@@ -212,22 +216,17 @@ static NSImage *sharedLinkCapImage() {
         
         [_linkField setStringValue:item.webpage.webpage.url];
         
+        [_imageView setObject:item.webpage.imageObject];
         
-        [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox - 60 : 65), 20)];
-        
-        
-        if(!item.webpage.imageObject)
-            self.imageView.image = sharedLinkCapImage();
-        else
-            [_imageView setObject:item.webpage.imageObject];
-        
-        [_imageContainerView setFrame:NSMakeRect(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
     } else {
         [_linkField setAttributedStringValue:item.allAttributedLinks];
         [_linkField setFrameSize:item.allAttributedLinksSize];
         
         [_linkField setCenteredYByView:_linkField.superview];
+         self.imageView.image = sharedLinkCapImage();
     }
+    
+    
     
     [_domainTextField setHidden:item.webpage.imageObject != nil];
     
@@ -240,8 +239,6 @@ static NSImage *sharedLinkCapImage() {
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {
     
     [self.selectButton setSelected:self.isSelected];
-    
-    _editable = editable;
     
     if(animated) {
         
@@ -276,6 +273,10 @@ static NSImage *sharedLinkCapImage() {
         [self setItem:self.item];
     }
     
+}
+
+-(BOOL)isEditable {
+    return [(TGSharedLinksTableView *)self.item.table isEditable];
 }
 
 -(void)setSelected:(BOOL)selected {

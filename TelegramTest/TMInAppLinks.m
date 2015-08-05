@@ -23,9 +23,11 @@
             int user_id = [[params objectAtIndex:1] intValue];
             
             [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:[[[UsersManager sharedManager] find:user_id] dialog] sender:self];
-            
+            return;
         }
     }
+    
+    open_link(url);
 }
 
 @end

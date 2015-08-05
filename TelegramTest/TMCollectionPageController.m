@@ -196,8 +196,8 @@
     
     self.selectedItems = [[NSMutableArray alloc] init];
     
-    [self.documentsTableView setEditable:isEditable animated:YES];
-    [self.sharedLinksTableView setEditable:isEditable animated:YES];
+    [self.documentsTableView setEditable:isEditable animated:NO];
+    [self.sharedLinksTableView setEditable:isEditable animated:NO];
     [self reloadData];
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
