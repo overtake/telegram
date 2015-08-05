@@ -383,7 +383,7 @@ static const int controlsHeight = 75;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         
-        [context setDuration:0.2];
+        [context setDuration:0.1];
         
         [[self.background animator] setAlphaValue:nextAlpha];
         [[self.controls animator] setAlphaValue:nextAlpha];
