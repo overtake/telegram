@@ -37,7 +37,7 @@
     if(self.items.count <= 1)
         return;
     
-    NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
+    NSArray *items = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         

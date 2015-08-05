@@ -469,7 +469,7 @@
 }
 
 -(NSArray *)items {
-    return self.controller.items;
+    return self.controller.defaultItems;
 }
 
 -(NSUInteger)indexOfItem:(NSObject *)item {

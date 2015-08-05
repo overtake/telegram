@@ -375,7 +375,7 @@
     
     NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
     
-    return  [detect matchesInString:self options:NSMatchingAnchored range:NSMakeRange(0, [self length])].count > 0;
+    return  [detect matchesInString:self options:0 range:NSMakeRange(0, [self length])].count > 0;
     
 }
 

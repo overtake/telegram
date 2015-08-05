@@ -64,7 +64,7 @@
         
         
         if(idx != _links.count - 1)
-            [attr appendString:@"\n"];
+            [attr appendString:@"\n\n"];
         
     }];
     

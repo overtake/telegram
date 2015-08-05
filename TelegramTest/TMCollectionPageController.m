@@ -146,6 +146,16 @@
     
     [self.documentsTableView.containerView setHidden:YES];
     
+    
+    self.sharedLinksTableView = [[TGSharedLinksTableView alloc] initWithFrame:self.frameInit];
+    
+    
+    [self.view addSubview:self.sharedLinksTableView.containerView];
+    
+    [self.sharedLinksTableView.containerView setHidden:YES];
+    
+    
+    
     self.mediaCap = [[TGSharedMediaCap alloc] initWithFrame:self.view.bounds cap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];
     
     
@@ -160,12 +170,7 @@
     
     
     
-    self.sharedLinksTableView = [[TGSharedLinksTableView alloc] initWithFrame:self.frameInit];
-    
-    
-    [self.view addSubview:self.sharedLinksTableView.containerView];
-    
-    [self.sharedLinksTableView.containerView setHidden:YES];
+   
     
 }
 
@@ -663,10 +668,14 @@ static const int maxWidth = 120;
 }
 
 -(void)checkCap {
-    if([self.photoCollection.containerView isHidden]) {
+    if(![self.documentsTableView.containerView isHidden]) {
         [self.mediaCap setHidden:![self.documentsTableView isNeedCap]];
         [self.mediaCap updateCap:image_NoFiles() text:NSLocalizedString(@"SharedMedia.NoFiles", nil)];
         [self.mediaCap setProgress:self.documentsTableView.isProgress];
+    } else if(![self.sharedLinksTableView.containerView isHidden]) {
+        [self.mediaCap setHidden:![self.sharedLinksTableView isNeedCap]];
+        [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedLinks", nil)];
+        [self.mediaCap setProgress:self.isProgress];
     } else {
         [self.mediaCap setHidden:self.photoCollection.count != 0];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];

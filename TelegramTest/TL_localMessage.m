@@ -13,6 +13,7 @@
 
 @interface TL_localMessage ()
 @property (nonatomic,strong) NSUserNotification *notification;
+@property (nonatomic,assign) int type;
 @end
 
 @implementation TL_localMessage
@@ -268,42 +269,47 @@ DYNAMIC_PROPERTY(DDialog);
 }
 
 -(int)filterType {
-    int mask = HistoryFilterNone;
-    
-    if([self.media isKindOfClass:[TL_messageMediaEmpty class]]) {
-        mask|=HistoryFilterText;
-    }
-    
-    if([self.media isKindOfClass:[TL_messageMediaAudio class]]) {
-        mask|=HistoryFilterAudio;
-    }
-    
-    if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
-        TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
-        if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
-            mask|=HistoryFilterAudioDocument;
+    if(_type == 0)
+    {
+        int mask = HistoryFilterNone;
+        
+        if([self.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+            mask|=HistoryFilterText;
         }
         
-        mask|=HistoryFilterDocuments;
+        if([self.media isKindOfClass:[TL_messageMediaAudio class]]) {
+            mask|=HistoryFilterAudio;
+        }
+        
+        if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+            if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
+                mask|=HistoryFilterAudioDocument;
+            }
+            
+            mask|=HistoryFilterDocuments;
+        }
+        
+        if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
+            mask|=HistoryFilterVideo;
+        }
+        
+        if([self.media isKindOfClass:[TL_messageMediaContact class]]) {
+            mask|=HistoryFilterContact;
+        }
+        
+        if([self.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+            mask|=HistoryFilterPhoto;
+        }
+        
+        if([self.message isStringWithUrl]) {
+            mask|=HistoryFilterSharedLink;
+        }
+        
+        _type = mask;
     }
     
-    if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
-        mask|=HistoryFilterVideo;
-    }
-    
-    if([self.media isKindOfClass:[TL_messageMediaContact class]]) {
-        mask|=HistoryFilterContact;
-    }
-    
-    if([self.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        mask|=HistoryFilterPhoto;
-    }
-    
-    if([self.message isStringWithUrl]) {
-        mask|=HistoryFilterSharedLink;
-    }
-    
-    return mask;
+    return _type;
     
 }
 
