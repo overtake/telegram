@@ -28,4 +28,6 @@
 
 -(NSArray *)selectedItems;
 
+-(NSArray *)items;
+
 @end

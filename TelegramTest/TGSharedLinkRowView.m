@@ -149,7 +149,6 @@
     
     [_textField setHidden:item.webpage == nil];
     [_imageView setHidden:item.webpage.imageObject == nil];
-    [_linkField setHidden:item.webpage == nil];
     
     if(item.webpage) {
         [_textField setAttributedString:item.webpage.desc];
@@ -163,10 +162,15 @@
         [_linkField setStringValue:item.webpage.webpage.url];
         
         
-         [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 : 0 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (self.isEditable ? s_lox : 5), NSHeight(self.linkField.frame))];
+         [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 : 0 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox : 5), 20)];
         [_imageView setObject:item.webpage.imageObject];
         
         [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
+    } else {
+        [_linkField setAttributedStringValue:item.allAttributedLinks];
+        [_linkField setFrameSize:item.allAttributedLinksSize];
+        
+        [_linkField setCenteredYByView:_linkField.superview];
     }
     
 }

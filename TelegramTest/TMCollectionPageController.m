@@ -414,7 +414,7 @@ static const int maxWidth = 120;
     [self showAllMedia];
     
     [self.documentsTableView setConversation:conversation];
-    
+    [self.sharedLinksTableView setConversation:conversation];
     
     [self.items removeAllObjects];
     

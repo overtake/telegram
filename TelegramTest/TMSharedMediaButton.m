@@ -99,7 +99,7 @@ static const NSMutableDictionary *cache;
 
 - (void)didReceivedMedia:(NSNotification *)notify {
     PreviewObject *preview = notify.userInfo[KEY_PREVIEW_OBJECT];
-    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[(TL_localMessage *)preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
+    if(cache[[self primaryKey]][@(preview.peerId)] != nil && [[(TL_localMessage *)preview.media media] isKindOfClass:[TL_messageMediaPhoto class]] && self.type == TMSharedMediaPhotoVideoType) {
         int count = [cache[[self primaryKey]][@(preview.peerId)] intValue];
         count++;
         cache[[self primaryKey]][@(preview.peerId)] = @(count);
@@ -143,7 +143,7 @@ static const NSMutableDictionary *cache;
     //self.count = [[Storage manager] countOfMedia:peer_id];
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:self.isFiles ? [TL_inputMessagesFilterDocument create] : [TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:self.type == TMSharedMediaDocumentsType ? [TL_inputMessagesFilterDocument create] : self.type == TMSharedMediaPhotoVideoType ? [TL_inputMessagesFilterPhotoVideo create] : [TL_inputMessagesFilterUrl create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
         [self setLocked:NO];
         
@@ -162,7 +162,7 @@ static const NSMutableDictionary *cache;
 }
 
 -(NSString *)primaryKey {
-    return self.isFiles ? @"files" : @"photo-video";
+    return [NSString stringWithFormat:@"key-%d",self.type];
 }
 
 -(void)rebuild {

@@ -210,13 +210,34 @@
             [[Telegram rightViewController].collectionViewController showFiles];
         }];
         
-        self.filesMediaButton.isFiles = YES;
+        
         
         [self.filesMediaButton setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
         
         [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
         
         [self addSubview:self.filesMediaButton];
+        
+        
+        
+        self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            
+            [[Telegram rightViewController].collectionViewController showSharedLinks];
+        }];
+        
+        
+        
+        [self.sharedLinksButton setFrameSize:NSMakeSize(self.filesMediaButton.bounds.size.width, 42)];
+        
+        [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.sharedLinksButton.frame.origin.x, self.sharedLinksButton.frame.origin.y -42)];
+        
+        [self addSubview:self.sharedLinksButton];
+        
+        self.sharedMediaButton.type = TMSharedMediaPhotoVideoType;
+        self.filesMediaButton.type = TMSharedMediaDocumentsType;
+        self.sharedLinksButton.type = TMSharedMediaSharedLinksType;
                 
         _notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
             
@@ -251,12 +272,12 @@
 //
 //        }];
         
-        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.filesMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
 
         [self addSubview:self.notificationView];
         
-        self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
+        self.sharedLinksButton.textButton.textColor = self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
         
         
 
@@ -358,6 +379,7 @@
     [_mediaView setConversation:chat.dialog];
     [self.sharedMediaButton setConversation:chat.dialog];
     [self.filesMediaButton setConversation:chat.dialog];
+    [self.sharedLinksButton setConversation:chat.dialog];
     
     [self.nameTextField setChat:chat];
     
@@ -376,8 +398,9 @@
   
     [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
     
+    [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.filesMediaButton.frame.origin.x, self.filesMediaButton.frame.origin.y -42)];
 
-    [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.filesMediaButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+    [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
     
 
     

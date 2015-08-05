@@ -25,6 +25,11 @@
     return links;  
 }
 
+-(NSArray *)locationsOfLinks {
+    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
+    return [detect matchesInString:self options:0 range:NSMakeRange(0, [self length])];
+}
+
 - (NSArray *)locationsOfLinks:(URLFindType)findType
 {
    
@@ -361,6 +366,16 @@
     NSArray *arrayOfLinks = [self arrayOfLinks:[detect matchesInString:self options:0 range:NSMakeRange(0, [self length])]];
     
     return arrayOfLinks.count > 0 ? arrayOfLinks[0] : nil;
+    
+}
+
+
+- (BOOL)isStringWithUrl
+{
+    
+    NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:1ULL << 5 error:nil];
+    
+    return  [detect matchesInString:self options:NSMatchingAnchored range:NSMakeRange(0, [self length])].count > 0;
     
 }
 

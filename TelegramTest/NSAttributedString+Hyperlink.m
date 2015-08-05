@@ -17,7 +17,9 @@
 	return attrString;
 }
 
--(void)detectAndAddLinks:(URLFindType)urlType {
+-(NSArray *)detectAndAddLinks:(URLFindType)urlType {
+    
+    NSMutableArray *urls = [[NSMutableArray alloc] init];
     
     NSArray *linkLocations = [NSString textCheckingResultsForText:self.string highlightMentionsAndTags:urlType & URLFindTypeMentions highlightCommands:urlType & URLFindTypeBotCommands];// [[self string] locationsOfLinks:urlType];
     
@@ -26,17 +28,23 @@
         NSRange range = [link rangeValue];
         
         if(range.location != NSNotFound) {
-            //  NSURL *url = [NSURL URLWithString:link];
-            //  if(url) {
-            [self addAttribute:NSLinkAttributeName value:[self.string substringWithRange:range] range:range];
+            
+            NSString *sublink = [self.string substringWithRange:range];
+            
+            [self addAttribute:NSLinkAttributeName value:sublink range:range];
             [self addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
             [self addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
             [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
             
-            //  }
+            
+            if(![sublink hasPrefix:@"@"] && ![sublink hasPrefix:@"#"] && ![sublink hasPrefix:@"/"]) {
+                [urls addObject:sublink];
+            }
         }
     }
     [self endEditing];
+    
+    return urls;
     
 }
 

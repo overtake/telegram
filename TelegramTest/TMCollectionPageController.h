@@ -20,6 +20,7 @@
 
 -(void)showAllMedia;
 -(void)showFiles;
+-(void)showSharedLinks;
 -(void)checkCap;
 
 @property (nonatomic,assign) BOOL isEditable;

@@ -19,8 +19,9 @@ typedef enum {
 - (NSArray *)arrayOfLinks:(NSArray *)results;
 - (NSArray *)locationsOfLinks:(URLFindType)findType;
 - (NSArray *)locationsOfHashtags;
+- (NSArray *)locationsOfLinks;
 - (NSString *)webpageLink;
-
+- (BOOL)isStringWithUrl;
 + (NSArray *)textCheckingResultsForText:(NSString *)text highlightMentionsAndTags:(bool)highlightMentionsAndTags highlightCommands:(bool)highlightCommands;
 
 

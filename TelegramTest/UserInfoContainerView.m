@@ -39,6 +39,7 @@
 
 @property (nonatomic, strong) TMSharedMediaButton *filesMediaButton;
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
+@property (nonatomic, strong) TMSharedMediaButton *sharedLinksButton;
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
@@ -194,8 +195,19 @@
         }];
         
         
-        self.filesMediaButton.isFiles = YES;
+        self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
+            [[Telegram rightViewController].collectionViewController showSharedLinks];
+            
+        }];
         
+        
+        
+        
+        self.sharedMediaButton.type = TMSharedMediaPhotoVideoType;
+        self.filesMediaButton.type = TMSharedMediaDocumentsType;
+        self.sharedLinksButton.type = TMSharedMediaSharedLinksType;
 //        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
 //           
 //            [[NewContactsManager sharedManager] syncContacts:^{
@@ -223,6 +235,9 @@
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sharedMediaButton];
+        
+        [self.sharedLinksButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.sharedLinksButton];
         
         [self.filesMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.filesMediaButton];
@@ -387,7 +402,7 @@
         [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
         
         
-        self.filesMediaButton.textButton.textColor = self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
+        self.sharedLinksButton.textButton.textColor = self.filesMediaButton.textButton.textColor = self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
         
         
         [Notification addObserver:self selector:@selector(didChangedBlockedUsers:) name:USER_BLOCK];
@@ -586,9 +601,17 @@
         
         [self.filesMediaButton setHidden:NO];
         
+        
+        offset-=NSHeight(self.sharedLinksButton.frame);
+        
+        [self.sharedLinksButton setFrameOrigin:NSMakePoint(100, offset)];
+        
+        [self.sharedLinksButton setHidden:NO];
+        
     } else {
         [self.sharedMediaButton setHidden:YES];
         [self.filesMediaButton setHidden:YES];
+        [self.sharedLinksButton setHidden:YES];
     }
     
     
@@ -672,6 +695,8 @@
     [self.sharedMediaButton setConversation:self.controller.conversation];
     
     [self.filesMediaButton setConversation:self.controller.conversation];
+    
+    [self.sharedLinksButton setConversation:self.controller.conversation];
     
     [self.helpBotButton setHidden:YES];
     

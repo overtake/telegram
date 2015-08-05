@@ -43,7 +43,35 @@
     
     
     
-    [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+    _links = [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+    
+    
+    if(_links.count > 0)
+    {
+        
+    }
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    
+    [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+        NSRange range = [attr appendString:obj];
+        
+        [attr addAttribute:NSLinkAttributeName value:obj range:range];
+        [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+        [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+        [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+        
+        
+        if(idx != _links.count - 1)
+            [attr appendString:@"\n"];
+        
+    }];
+    
+    [attr addAttribute:NSFontAttributeName value:TGSystemFont(13) range:attr.range];
+    
+    _allAttributedLinks = [attr copy];
+    
     
     
     [self updateWebPage];
@@ -95,6 +123,7 @@
     }
 
 
+    _allAttributedLinksSize = [_allAttributedLinks sizeForTextFieldForWidth:width];
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     _textSize.width = width;

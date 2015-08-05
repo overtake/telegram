@@ -107,25 +107,25 @@
     [self.tableView insert:autoAudioDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
 
     
-    GeneralSettingsBlockHeaderItem *notificationsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.MessageNotificationsHeader", nil)];
-    
-    notificationsHeader.height = 61;
-    
-    [self.tableView insert:notificationsHeader atIndex:self.tableView.list.count tableRedraw:NO];
-
-    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
-        
-        //[SettingsArchiver addOrRemoveSetting:PushNotifications];
-        
-        [[Telegram rightViewController] showNotificationSettingsViewController];
-        
-        
-    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
-    }];
-    
-    [self.tableView insert:soundEffects atIndex:self.tableView.list.count tableRedraw:NO];
-    
+//    GeneralSettingsBlockHeaderItem *notificationsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.MessageNotificationsHeader", nil)];
+//    
+//    notificationsHeader.height = 61;
+//    
+//    [self.tableView insert:notificationsHeader atIndex:self.tableView.list.count tableRedraw:NO];
+//
+//    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+//        
+//        //[SettingsArchiver addOrRemoveSetting:PushNotifications];
+//        
+//        [[Telegram rightViewController] showNotificationSettingsViewController];
+//        
+//        
+//    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
+//    }];
+//    
+//    [self.tableView insert:soundEffects atIndex:self.tableView.list.count tableRedraw:NO];
+//    
     
 //    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
 //        

@@ -9,7 +9,7 @@
 #import "TL_localMessage.h"
 #import "TL_localMessageService.h"
 #import "HistoryFilter.h"
-
+#import "NSString+FindURLs.h"
 
 @interface TL_localMessage ()
 @property (nonatomic,strong) NSUserNotification *notification;
@@ -299,7 +299,7 @@ DYNAMIC_PROPERTY(DDialog);
         mask|=HistoryFilterPhoto;
     }
     
-    if([self.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+    if([self.message isStringWithUrl]) {
         mask|=HistoryFilterSharedLink;
     }
     

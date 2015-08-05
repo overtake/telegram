@@ -468,6 +468,14 @@
     return 60;
 }
 
+-(NSArray *)items {
+    return self.controller.items;
+}
+
+-(NSUInteger)indexOfItem:(NSObject *)item {
+    return [self.controller.items indexOfObject:item];
+}
+
 - (void) addScrollEvent {
     id clipView = [[self enclosingScrollView] contentView];
     [[NSNotificationCenter defaultCenter] addObserver:self

@@ -20,7 +20,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [Notification addObserver:self selector:@selector(didChangeUpdateWebpage:) name:UPDATE_WEB_PAGES];
+        [Notification addObserver:self selector:@selector(didChangeUpdateWebpage:) name:UPDATE_WEB_PAGE_ITEMS];
     }
     
     return self;
@@ -32,6 +32,28 @@
 
 -(void)didChangeUpdateWebpage:(NSNotification *)notification
 {
+    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    
+    if(self.items.count <= 1)
+        return;
+    
+    NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj updateWebPage];
+        
+        NSUInteger index = [self indexOfItem:obj];
+        
+        if(index != NSNotFound) {
+            [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            
+            [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+        
+    }];
+    
     
 }
 
@@ -43,11 +65,11 @@
 }
 
 -(BOOL)acceptMessageItem:(MessageTableItem *)item {
-    return [item isKindOfClass:[MessageTableItemText class]] && ((MessageTableItemText *)item).webpage != nil;
+    return [item isKindOfClass:[MessageTableItemText class]];
 }
 
 -(int)heightWithItem:(MessageTableItemText *)item {
-    return MAX(item.webpage.descSize.height+30, 70);
+    return item.webpage ? MAX(item.webpage.descSize.height+30, 70) : item.allAttributedLinksSize.height + 20;
 }
 
 -(NSPredicate *)searchPredicateWithString:(NSString *)string {

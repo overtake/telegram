@@ -140,6 +140,11 @@
       </ContextState>
       <ContextState
          contextName = "__41-[TMSharedMediaButton loadCount:peer_id:]_block_invoke:TMSharedMediaButton.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.type">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke262:TGPasswosdMainViewController.m">

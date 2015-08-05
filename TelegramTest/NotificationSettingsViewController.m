@@ -63,7 +63,7 @@
     NSArray *sorted = self.items;
     
     
-    if(self.tableView.count <= 5)
+    if(self.tableView.count < 5)
     {
         return;
     }
