@@ -22,6 +22,10 @@
 
 @property (nonatomic,strong) BTRButton *selectButton;
 
+@property (nonatomic,strong) TMTextField *domainTextField;
+
+@property (nonatomic,strong) TMView *imageContainerView;
+
 @end
 
 #define s_lox 30
@@ -35,6 +39,7 @@
     [DIALOG_BORDER_COLOR set];
     
     NSRectFill(NSMakeRect(12, 0, NSWidth(dirtyRect) - 24, 1));
+
 }
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
@@ -71,7 +76,7 @@
         
         
         
-        _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
+        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
         _imageView.cornerRadius = 4;
         
@@ -100,11 +105,22 @@
             embed();
         }];
         
-        [self.containerView addSubview:_imageView];
+        
+        self.imageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
+        
+        [self.imageContainerView addSubview:_imageView];
         
         
+        [self.containerView addSubview:self.imageContainerView];
         
-        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((60 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        _domainTextField = [TMTextField defaultTextField];
+        
+        [_domainTextField setFont:TGSystemFont(20)];
+        [_domainTextField setTextColor:[NSColor whiteColor]];
+        
+        [_imageView addSubview:_domainTextField];
+        
+        self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(-image_ComposeCheckActive().size.width, 0, image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
         
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
@@ -120,6 +136,23 @@
     }
     
     return self;
+}
+
+static NSImage *sharedLinkCapImage() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0xf1f1f1) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        
+        [image unlockFocus];
+    });
+    return image;
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -141,37 +174,66 @@
     }
 }
 
+-(NSString *)firstDomainCharacter {
+    
+    MessageTableItemText *item = (MessageTableItemText *)self.item;
+    
+    NSString *url;
+    
+    if(item.webpage)
+        url = item.webpage.webpage.url;
+     else
+         if(item.links.count > 0)
+             url = item.links[0];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
+    
+    return [[components.host substringToIndex:1] uppercaseString];
+}
+
 
 -(void)setItem:(MessageTableItemText *)item {
     
     [super setItem:item];
     
     
+    
+    
     [_textField setHidden:item.webpage == nil];
-    [_imageView setHidden:item.webpage.imageObject == nil];
+    
     
     if(item.webpage) {
         [_textField setAttributedString:item.webpage.desc];
         
         [_textField setFrameSize:item.webpage.descSize];
         
-        [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox  : 2, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
+        [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
         
         
         
         [_linkField setStringValue:item.webpage.webpage.url];
         
         
-         [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 : 0 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox : 5), 20)];
-        [_imageView setObject:item.webpage.imageObject];
+        [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox - 60 : 65), 20)];
         
-        [_imageView setFrame:NSMakeRect(NSWidth(self.containerView.frame) - 50, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
+        
+        if(!item.webpage.imageObject)
+            self.imageView.image = sharedLinkCapImage();
+        else
+            [_imageView setObject:item.webpage.imageObject];
+        
+        [_imageContainerView setFrame:NSMakeRect(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
     } else {
         [_linkField setAttributedStringValue:item.allAttributedLinks];
         [_linkField setFrameSize:item.allAttributedLinksSize];
         
         [_linkField setCenteredYByView:_linkField.superview];
     }
+    
+    [_domainTextField setHidden:item.webpage.imageObject != nil];
+    
+    [_domainTextField setStringValue:[self firstDomainCharacter]];
+    [_domainTextField sizeToFit];
+    [_domainTextField setCenterByView:_imageView];
     
 }
 
@@ -196,8 +258,9 @@
             [context setDuration:0.2];
             
             
-            [[self.textField animator] setFrameOrigin:NSMakePoint(editable ? s_lox : 2, NSMinY(self.textField.frame))];
-            [[self.linkField animator] setFrame:NSMakeRect(editable ? s_lox-2 : 0 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (editable ? s_lox : 5), NSHeight(self.linkField.frame))];
+            [[self.textField animator] setFrameOrigin:NSMakePoint(editable ? s_lox + 60 : 62, NSMinY(self.textField.frame))];
+            [[self.imageContainerView animator] setFrameOrigin:NSMakePoint(editable ? s_lox : 0, NSMinY(self.imageContainerView.frame))];
+            [[self.linkField animator] setFrame:NSMakeRect(editable ? s_lox-2 + 60 : 60 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (editable ? s_lox : 5), NSHeight(self.linkField.frame))];
             [[self.selectButton animator] setFrameOrigin:NSMakePoint(self.isEditable ? 0 : -NSWidth(self.selectButton.frame), NSMinY(self.selectButton.frame))];
             
             [[self.selectButton animator] setAlphaValue:editable ? 1 : 0];
