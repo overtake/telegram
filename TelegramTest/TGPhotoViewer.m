@@ -68,6 +68,13 @@
     return [self viewer].isVisibility;
 }
 
++(void)increaseZoom {
+    [[self viewer].photoContainer increaseZoom];
+}
++(void)decreaseZoom {
+    [[self viewer].photoContainer decreaseZoom];
+}
+
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen {
     if(self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag screen:screen]) {
         
@@ -596,7 +603,8 @@ static const int controlsHeight = 75;
         
         [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
             
-            [self insertObjects:previewObjects];
+            if(previewObjects.count > 0)
+                [self insertObjects:previewObjects];
             
             _waitRequest = NO;
         }];

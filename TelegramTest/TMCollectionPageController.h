@@ -23,7 +23,9 @@
 -(void)showSharedLinks;
 -(void)checkCap;
 
-@property (nonatomic,assign) BOOL isEditable;
+-(void)setIsEditable:(BOOL)isEditable animated:(BOOL)animated;
+
+@property (nonatomic,assign,readonly) BOOL isEditable;
 
 - (void)setSectedMessagesCount:(NSUInteger)count;
 

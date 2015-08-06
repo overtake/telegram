@@ -24,5 +24,6 @@
 -(BOOL)ifVideoFullScreenPlayingNeedToogle;
 
 -(BOOL)isInImageContainer:(NSEvent *)event;
-
+-(void)increaseZoom;
+-(void)decreaseZoom;
 @end

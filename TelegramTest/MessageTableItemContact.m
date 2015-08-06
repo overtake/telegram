@@ -54,7 +54,7 @@
     [super makeSizeByWidth:width];
     
     
-    _contactNameSize = NSMakeSize(width - 250, 20);
+    _contactNameSize = NSMakeSize(width - 100, 20);
     
     return YES;
 }

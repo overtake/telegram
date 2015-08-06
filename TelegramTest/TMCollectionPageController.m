@@ -120,7 +120,7 @@
     
     [selectRightButton setTapBlock:^ {
         
-        strongSelf.isEditable = !strongSelf.isEditable;
+        [strongSelf setIsEditable:!strongSelf.isEditable animated:YES];
         
     }];
     
@@ -183,7 +183,7 @@
 }
 
 
--(void)setIsEditable:(BOOL)isEditable {
+-(void)setIsEditable:(BOOL)isEditable animated:(BOOL)animated {
     _isEditable = isEditable;
     
      TMTextButton *btn = (TMTextButton *)self.rightNavigationBarView;
@@ -196,8 +196,8 @@
     
     self.selectedItems = [[NSMutableArray alloc] init];
     
-    [self.documentsTableView setEditable:isEditable animated:NO];
-    [self.sharedLinksTableView setEditable:isEditable animated:NO];
+    [self.documentsTableView setEditable:isEditable animated:animated];
+    [self.sharedLinksTableView setEditable:isEditable animated:animated];
     [self reloadData];
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -377,7 +377,7 @@ static const int maxWidth = 120;
     [self.documentsTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
     [self checkCap];
-    [self setIsEditable:NO];
+    [self setIsEditable:NO animated:NO];
 }
 
 -(void)showSharedLinks {
@@ -389,7 +389,7 @@ static const int maxWidth = 120;
     [self.sharedLinksTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
     [self checkCap];
-    [self setIsEditable:NO];
+    [self setIsEditable:NO animated:NO];
 }
 
 -(void)showAllMedia {
@@ -399,7 +399,7 @@ static const int maxWidth = 120;
     
     [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
     [self checkCap];
-    [self setIsEditable:NO];
+    [self setIsEditable:NO animated:NO];
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
@@ -410,7 +410,7 @@ static const int maxWidth = 120;
     self.selectedItems = [[NSMutableArray alloc] init];
    
     
-    self.isEditable = NO;
+    [self setIsEditable:NO animated:NO];
     
     [self setSectedMessagesCount:0];
    
@@ -808,6 +808,12 @@ static const int maxWidth = 120;
             }];
             
             
+        } if(![strongSelf.sharedLinksTableView.containerView isHidden]) {
+            
+            [strongSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+            }];
         } else {
             
             [strongSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
@@ -821,7 +827,7 @@ static const int maxWidth = 120;
         
        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
         
-        strongSelf.isEditable = NO;
+        [strongSelf setIsEditable:NO animated:YES];
         
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
@@ -880,7 +886,7 @@ static const int maxWidth = 120;
         
         [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.conversation messagesCount:count];
         
-        strongSelf.isEditable = NO;
+        [strongSelf setIsEditable:NO animated:YES];
         
     }];
     

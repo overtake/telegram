@@ -16,6 +16,62 @@
 #import "MessageCellDescriptionView.h"
 
 
+@interface TGZoomableImage : TGPVImageView
+@property (nonatomic,assign) NSPoint startPoint;
+@property (nonatomic,assign) BOOL isDragged;
+@end
+
+@implementation TGZoomableImage
+
+
+-(void)mouseDown:(NSEvent *)theEvent {
+   
+    _startPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    _isDragged = NO;
+}
+
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    _startPoint = NSZeroPoint;
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    [super mouseDragged:theEvent];
+    
+    if(_startPoint.x == 0 || _startPoint.y == 0)
+        return;
+    
+    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame))
+    {
+        
+        NSPoint currentPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        
+        NSPoint addXY = NSMakePoint(currentPoint.x - _startPoint.x, currentPoint.y - _startPoint.y);
+        
+        
+        NSPoint next = NSMakePoint(self.frame.origin.x+addXY.x, self.frame.origin.y+addXY.y);
+        
+        [self setFrameOrigin:next];
+        
+        _isDragged = YES;
+        
+    }
+    
+}
+
+-(void)setFrameOrigin:(NSPoint)newOrigin {
+    [super setFrameOrigin:NSMakePoint(MIN(MAX(newOrigin.x,NSWidth(self.superview.frame) - NSWidth(self.frame)),0), MIN(MAX(newOrigin.y,NSHeight(self.superview.frame) - NSHeight(self.frame)),0))];
+}
+
+-(void)setObject:(ImageObject *)object {
+    [super setObject:object];
+    
+    _isDragged = NO;
+}
+
+@end
+
 
 @interface TGVideoPlayer : AVPlayerView
 @end
@@ -28,7 +84,7 @@
 
 
 @interface TGPVContainer ()
-@property (nonatomic,strong) TGImageView *imageView;
+@property (nonatomic,strong) TGZoomableImage *imageView;
 @property (nonatomic,strong) TMNameTextField *userNameTextField;
 @property (nonatomic,strong) TMTextField *dateTextField;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
@@ -37,7 +93,20 @@
 
 @property (nonatomic,strong) MessageCellDescriptionView *photoCaptionView;
 
+@property (nonatomic,strong) BTRButton *increaseZoomButton;
+@property (nonatomic,strong) BTRButton *decreaseZoomButton;
+
+@property (nonatomic,assign) int currentIncrease;
+
+
+
+
+@property (nonatomic,strong) TMView *imageContainerView;
 @end
+
+
+#define ZOOM_PERCENT 0.30
+#define ZOOM_COUNT 6
 
 @implementation TGPVContainer
 
@@ -56,12 +125,12 @@
 }
 
 -(BOOL)isInImageContainer:(NSEvent *)theEvent {
-    return [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame];
+    return [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageContainerView.frame];
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
     
-    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame])
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageContainerView.frame])
         [TGPhotoViewer nextItem];
     else
         [[TGPhotoViewer viewer] hide];
@@ -73,36 +142,101 @@
    
  //   self.layer.cornerRadius = 6;
 
-    self.imageView = [[TGPVImageView alloc] initWithFrame:NSMakeRect(0, bottomHeight, 0, 0)];
- //   [self.imageView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    self.imageView = [[TGZoomableImage alloc] initWithFrame:NSMakeRect(0, bottomHeight, 0, 0)];
     
- //   self.imageView.cornerRadius = 6;
     
     _photoCaptionView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
     
-    [self addSubview:self.imageView];
     
     
+    _imageContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
+    [_imageContainerView addSubview:self.imageView];
     
-//    self.userNameTextField = [TMNameTextField defaultTextField];
-//    [self.userNameTextField setSelector:@selector(titleForMessage)];
-//    
-//    [self.userNameTextField setFrameOrigin:NSMakePoint(0, 30)];
-//    [self.userNameTextField setFrameSize:NSMakeSize(NSWidth(self.frame), 25)];
-//    [self.userNameTextField setAutoresizingMask:NSViewWidthSizable];
-//    
-//    [self addSubview:self.userNameTextField];
-//    
-//    self.dateTextField = [TMTextField defaultTextField];
-//    [self.dateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
-//    [self.dateTextField setAlignment:NSCenterTextAlignment];
-//    [self.dateTextField setFrameOrigin:NSMakePoint(0, 15)];
-//    [self.dateTextField setFrameSize:NSMakeSize(NSWidth(self.frame), 20)];
-//    [self.dateTextField setAutoresizingMask:NSViewWidthSizable];
-//    
-//    [self addSubview:self.dateTextField];
+    [self addSubview:_imageContainerView];
+    
+    _increaseZoomButton = [[BTRButton alloc] initWithFrame:NSMakeRect(100, 100, 30, 30)];
+    
+    weak();
+    
+    [_increaseZoomButton addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf increaseZoom];
+        
+    } forControlEvents:BTRControlEventClick];
+    
+    [_increaseZoomButton setBackgroundColor:[NSColor redColor]];
+    
+  //   [self addSubview:_increaseZoomButton];
+    
+    _decreaseZoomButton = [[BTRButton alloc] initWithFrame:NSMakeRect(140, 100, 30, 30)];
+    
+    [_decreaseZoomButton addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf decreaseZoom];
+        
+    } forControlEvents:BTRControlEventClick];
+    
+    [_decreaseZoomButton setBackgroundColor:[NSColor redColor]];
+    
+  //  [self addSubview:_decreaseZoomButton];
+    
 }
 
+-(void)increaseZoom {
+    self.currentIncrease++;
+}
+-(void)decreaseZoom {
+    self.currentIncrease--;
+}
+
+
+-(void)setCurrentIncrease:(int)currentIncrease {
+    
+    int n = MAX(MIN(ZOOM_COUNT,currentIncrease),0);
+    
+    if(n == _currentIncrease || _imageContainerView.isHidden)
+        return;
+    
+    _currentIncrease = n;
+    
+    
+    if(_currentIncrease > 0)
+    {
+        NSSize size = self.currentViewerItem.imageObject.imageSize;
+        
+        size.width+= roundf((size.width * ZOOM_PERCENT) * _currentIncrease);
+        size.height+= roundf((size.height *  ZOOM_PERCENT) * _currentIncrease);
+        
+        
+        NSSize maxSize = [self maxSize];
+        
+        NSSize difSize = NSMakeSize(NSWidth(_imageView.frame),NSHeight(_imageView.frame));
+        
+        [_imageView setFrameSize:size];
+        [_imageContainerView setFrameSize:NSMakeSize(MIN(maxSize.width,size.width), MIN(maxSize.height,size.height))];
+        [self setFrameSize:NSMakeSize(_imageContainerView.frame.size.width, maxSize.height)];
+        
+        
+        difSize.width = NSWidth(_imageView.frame) - difSize.width;
+        difSize.height = NSHeight(_imageView.frame) - difSize.height;
+        
+        
+        if(!_imageView.isDragged)
+        {
+            [_imageView setCenterByView:_imageContainerView];
+        } else {
+            [_imageView setFrameOrigin:NSMakePoint(NSMinX(_imageView.frame) - difSize.width/2, NSMinY(_imageView.frame) - difSize.height/2)];
+        }
+        
+        [self updateContainerOrigin];
+        
+        [_imageContainerView setCenterByView:self];
+    } else {
+        [self setCurrentViewerItem:_currentViewerItem animated:NO];
+    }
+    
+    
+}
 
 
 -(NSSize)maxSize {
@@ -176,9 +310,18 @@ static const int bottomHeight = 60;
 }
 
 
+-(void)updateContainerOrigin {
+    float x = (self.superview.bounds.size.width - self.bounds.size.width) / 2;
+    float y = (self.superview.bounds.size.height - self.bounds.size.height + 75) / 2;
+    
+    [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
+}
+
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     
     _currentViewerItem = currentViewerItem;
+    
+    _currentIncrease = 0;
     
     self.imageView.object = currentViewerItem.imageObject;
     
@@ -209,19 +352,8 @@ static const int bottomHeight = 60;
         
     [self setFrameSize:NSMakeSize(containerSize.width, [self maxSize].height)];
     
+    [self updateContainerOrigin];
     
-    
-    float x = (self.superview.bounds.size.width - self.bounds.size.width) / 2;
-    float y = (self.superview.bounds.size.height - self.bounds.size.height + 75) / 2;
-    
-    [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
-    
-    
-    
-        
-  //  [self setCenterByView:self.superview];
-    
-   
     
     NSAttributedString *caption = [self caption];
     
@@ -245,9 +377,12 @@ static const int bottomHeight = 60;
     }
     
     [self.imageView setFrameSize:NSMakeSize(size.width , size.height )];
+    [self.imageView setFrameOrigin:NSZeroPoint];
+    
+    [self.imageContainerView setFrameSize:self.imageView.frame.size];
     
     
-    [self.imageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - size.width) / 2) , roundf((self.bounds.size.height - size.height + c_s.height + 10 ) / 2) )];
+    [self.imageContainerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - NSWidth(self.imageView.frame)) / 2) , roundf((self.bounds.size.height - NSHeight(self.imageView.frame) + c_s.height + 10 ) / 2) )];
     
     
     if(caption) {
@@ -255,7 +390,7 @@ static const int bottomHeight = 60;
     }
   
     
-    [self.imageView setHidden:[currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+    [self.imageContainerView setHidden:[currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
     
     if([currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {

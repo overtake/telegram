@@ -117,7 +117,7 @@
             
             [RPCRequest sendRequest:[TLAPI_account_resetNotifySettings create] successHandler:^(id request, id response) {
                 
-                [self.tableView.list enumerateObjectsUsingBlock:^(NotificationConversationRowItem *obj, NSUInteger idx, BOOL *stop) {
+                [self.items enumerateObjectsUsingBlock:^(NotificationConversationRowItem *obj, NSUInteger idx, BOOL *stop) {
                     
                     [obj.conversation updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
                     

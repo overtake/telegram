@@ -38,7 +38,7 @@
     
     [DIALOG_BORDER_COLOR set];
     
-    NSRectFill(NSMakeRect(12, 0, NSWidth(dirtyRect) - 24, 1));
+    NSRectFill(NSMakeRect(72, 0, NSWidth(dirtyRect) - 24, 1));
 
 }
 
@@ -57,8 +57,8 @@
         
                 
         _linkField = [TMHyperlinkTextField defaultTextField];
-        
-        
+        [[_linkField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[_linkField cell] setTruncatesLastVisibleLine:YES];
         [_linkField setFont:TGSystemFont(13)];
         [_linkField setTextColor:LINK_COLOR];
         
@@ -202,7 +202,7 @@ static NSImage *sharedLinkCapImage() {
     [_textField setHidden:item.webpage == nil];
     
     
-    [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 0, NSWidth(_containerView.frame) - (self.isEditable ? s_lox - 60 : 65), 20)];
+    [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 5, NSWidth(_containerView.frame) - (self.isEditable ? s_lox + 60 : 65), 20)];
     [_imageContainerView setFrame:NSMakeRect(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
    
     if(item.webpage) {
@@ -223,9 +223,11 @@ static NSImage *sharedLinkCapImage() {
         [_linkField setFrameSize:item.allAttributedLinksSize];
         
         [_linkField setCenteredYByView:_linkField.superview];
-         self.imageView.image = sharedLinkCapImage();
+        
     }
     
+    if(!item.webpage.imageObject)
+         self.imageView.image = sharedLinkCapImage();
     
     
     [_domainTextField setHidden:item.webpage.imageObject != nil];
@@ -257,7 +259,7 @@ static NSImage *sharedLinkCapImage() {
             
             [[self.textField animator] setFrameOrigin:NSMakePoint(editable ? s_lox + 60 : 62, NSMinY(self.textField.frame))];
             [[self.imageContainerView animator] setFrameOrigin:NSMakePoint(editable ? s_lox : 0, NSMinY(self.imageContainerView.frame))];
-            [[self.linkField animator] setFrame:NSMakeRect(editable ? s_lox-2 + 60 : 60 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (editable ? s_lox : 5), NSHeight(self.linkField.frame))];
+            [[self.linkField animator] setFrame:NSMakeRect(editable ? s_lox-2 + 60 : 60 , NSMinY(self.linkField.frame), NSWidth(_containerView.frame) - (self.isEditable ? s_lox + 60 : 65), NSHeight(self.linkField.frame))];
             [[self.selectButton animator] setFrameOrigin:NSMakePoint(self.isEditable ? 0 : -NSWidth(self.selectButton.frame), NSMinY(self.selectButton.frame))];
             
             [[self.selectButton animator] setAlphaValue:editable ? 1 : 0];

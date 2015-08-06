@@ -77,12 +77,6 @@
 }
 
 
--(void)mouseUp:(NSEvent *)theEvent {
-  //  if(theEvent.clickCount == 2)
-    //    return;
-    
-    [super mouseUp:theEvent];
-}
 
 - (void) drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -146,7 +140,7 @@
     
 }
 
--(void)mouseDown:(NSEvent*)theEvent {
+-(void)mouseUp:(NSEvent*)theEvent {
     
     
     if(_movableWindow)
@@ -157,7 +151,7 @@
     else {
        // if(theEvent.clickCount == 2)
          //   return;
-        [super mouseDown:theEvent];
+        [super mouseUp:theEvent];
     }
     
 }
