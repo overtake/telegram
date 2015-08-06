@@ -69,7 +69,7 @@
 }
 
 -(int)heightWithItem:(MessageTableItemText *)item {
-    return item.webpage ? MAX(item.webpage.descSize.height+30, 60) : MAX(item.allAttributedLinksSize.height + 20, 60);
+    return item.webpage ? MAX(item.webpage.descSize.height+30, 60) : MAX(item.allAttributedLinksSize.height + 10, 60);
 }
 
 -(NSPredicate *)searchPredicateWithString:(NSString *)string {

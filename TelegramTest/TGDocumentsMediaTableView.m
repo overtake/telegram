@@ -335,6 +335,7 @@
     _editable = editable;
     
     
+    
     self.selectedItems = [[NSMutableArray alloc] init];
     
     [self.controller.items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {

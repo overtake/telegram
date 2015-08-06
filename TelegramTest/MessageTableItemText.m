@@ -64,7 +64,7 @@
         
         
         if(idx != _links.count - 1)
-            [attr appendString:@"\n\n"];
+            [attr appendString:@"\n"];
         
     }];
     
@@ -123,7 +123,7 @@
     }
 
 
-    _allAttributedLinksSize = [_allAttributedLinks sizeForTextFieldForWidth:width];
+    _allAttributedLinksSize = [_allAttributedLinks coreTextSizeForTextFieldForWidth:width];
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     _textSize.width = width;

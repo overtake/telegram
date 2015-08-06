@@ -707,7 +707,8 @@
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
     
-   
+   if(_disableLinks)
+       return nil;
     
     if([self mouse:location inRect:self.bounds]) {
         
@@ -794,7 +795,9 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if(self.selectRange.location == NSNotFound || !_isEditable) {
+    
+    
+    if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest;

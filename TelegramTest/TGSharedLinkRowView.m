@@ -52,8 +52,9 @@
         
         _textField = [[TGCTextView alloc] initWithFrame:self.bounds];
         
-        [_textField setEditable:YES];
+        [_textField setEditable:NO];
         [_containerView addSubview:_textField];
+        
         
                 
         _linkField = [TMHyperlinkTextField defaultTextField];
@@ -64,14 +65,9 @@
         
         [_linkField setFrameSize:NSMakeSize(0, 20)];
         dispatch_block_t block = ^{
-            open_link(_linkField.stringValue);
+            
         };
         
-        [_linkField setClickBlock:^{
-           
-            block();
-            
-        }];
         
         [_containerView addSubview:_linkField];
         
@@ -102,9 +98,6 @@
             
         };
         
-        [_imageView setTapBlock:^{
-            embed();
-        }];
         
         
         self.imageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
@@ -160,6 +153,13 @@ static NSImage *sharedLinkCapImage() {
     [super setFrameSize:newSize];
     [_containerView setFrame:NSMakeRect(12, 0, newSize.width - 24, newSize.height)];
     [self.selectButton setCenteredYByView:self.containerView];
+    
+    [_imageContainerView setFrameOrigin:NSMakePoint(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5)];
+    
+    if(newSize.height < 80)
+    {
+        [_imageContainerView setCenteredYByView:_imageContainerView.superview];
+    }
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -171,7 +171,9 @@ static NSImage *sharedLinkCapImage() {
         
         [self setSelected:[table isSelectedItem:self.item]];
     } else {
-        [super mouseDown:theEvent];
+        if(((MessageTableItemText *)self.item).webpage != nil) {
+            open_link(_linkField.stringValue);
+        }
     }
 }
 
@@ -197,14 +199,14 @@ static NSImage *sharedLinkCapImage() {
     [super setItem:item];
     
     
+    [_linkField setHidden:item.webpage == nil];
     
     
-    [_textField setHidden:item.webpage == nil];
+    [_linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 5, NSWidth(_containerView.frame) - (self.isEditable ? s_lox + 60 : 65), 20)];
     
     
-    [self.linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 5, NSWidth(_containerView.frame) - (self.isEditable ? s_lox + 60 : 65), 20)];
-    [_imageContainerView setFrame:NSMakeRect(self.isEditable ? s_lox : 0, NSHeight(self.containerView.frame) - 50 - 5, 50, 50)];
-   
+    
+    
     if(item.webpage) {
         [_textField setAttributedString:item.webpage.desc];
         
@@ -212,17 +214,16 @@ static NSImage *sharedLinkCapImage() {
         
         [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
         
-        
-        
         [_linkField setStringValue:item.webpage.webpage.url];
         
         [_imageView setObject:item.webpage.imageObject];
         
     } else {
-        [_linkField setAttributedStringValue:item.allAttributedLinks];
-        [_linkField setFrameSize:item.allAttributedLinksSize];
+        [_textField setAttributedString:item.allAttributedLinks];
+        [_textField setFrameSize:item.allAttributedLinksSize];
         
-        [_linkField setCenteredYByView:_linkField.superview];
+        [_textField setCenteredYByView:_textField.superview];
+        [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSMinY(_textField.frame))];
         
     }
     
@@ -241,6 +242,8 @@ static NSImage *sharedLinkCapImage() {
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {
     
     [self.selectButton setSelected:self.isSelected];
+    
+    [_textField setDisableLinks:editable];
     
     if(animated) {
         

@@ -25,7 +25,7 @@
 @property (nonatomic,assign,setter=setEditable:) BOOL isEditable;
 
 @property (nonatomic,assign,readonly) NSRange selectRange;
-
+@property (nonatomic,assign) BOOL disableLinks;
 
 @property (nonatomic,strong) NSColor *selectColor;
 @property (nonatomic,strong) NSColor *backgroundColor;
