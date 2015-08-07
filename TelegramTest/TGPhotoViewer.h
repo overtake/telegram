@@ -39,6 +39,7 @@
 
 +(BOOL)isVisibility;
 
+
 +(void)increaseZoom;
 +(void)decreaseZoom;
 @end

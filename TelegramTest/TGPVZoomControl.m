@@ -43,8 +43,6 @@
         
         
         
-        
-        
         _decreaseZoomButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect)/2, NSHeight(frameRect))];
         [_decreaseZoomButton setImage:image_ZoomOut() forControlState:BTRControlStateNormal];
         

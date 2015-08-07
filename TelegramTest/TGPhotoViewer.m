@@ -604,6 +604,8 @@ static const int controlsHeight = 75;
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
+     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+    
     if( (_currentItemId + 15 ) >= [self listCount] && !_waitRequest) {
         
         _waitRequest = YES;
