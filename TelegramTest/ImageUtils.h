@@ -201,6 +201,9 @@ CACHE_IMAGE(SearchUpDisabled);
 CACHE_IMAGE(SearchDownDisabled);
 CACHE_IMAGE(SearchUp);
 CACHE_IMAGE(SearchDown);
+
+CACHE_IMAGE(ZoomIn);
+CACHE_IMAGE(ZoomOut);
 @interface ImageUtils : NSObject
 
 

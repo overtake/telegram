@@ -760,6 +760,7 @@
 		C2D8263B1B710E6400434D37 /* TGModernHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8263A1B710E6400434D37 /* TGModernHistoryController.m */; };
 		C2D8263F1B7110AB00434D37 /* TGConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8263E1B7110AB00434D37 /* TGConversation.m */; };
 		C2D826421B71155000434D37 /* TGDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826411B71155000434D37 /* TGDatabase.m */; };
+		C2D826491B74FD5D00434D37 /* TGPVZoomControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2322,6 +2323,8 @@
 		C2D8263E1B7110AB00434D37 /* TGConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConversation.m; sourceTree = "<group>"; };
 		C2D826401B71155000434D37 /* TGDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatabase.h; sourceTree = "<group>"; };
 		C2D826411B71155000434D37 /* TGDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabase.m; sourceTree = "<group>"; };
+		C2D826471B74FD5D00434D37 /* TGPVZoomControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVZoomControl.h; sourceTree = "<group>"; };
+		C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVZoomControl.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -3926,6 +3929,8 @@
 				C26976B31A10E2110047E2C3 /* TGPVContainer.m */,
 				C2C6D9671A124F70001EF8A2 /* TGPVControls.h */,
 				C2C6D9681A124F70001EF8A2 /* TGPVControls.m */,
+				C2D826471B74FD5D00434D37 /* TGPVZoomControl.h */,
+				C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -6329,6 +6334,7 @@
 				0AAAE57218C78E4400A2F9F1 /* UserInfoParamsView.m in Sources */,
 				C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */,
 				C2AA4F0E18A8EDCB00E20C68 /* NSObject+TGLock.m in Sources */,
+				C2D826491B74FD5D00434D37 /* TGPVZoomControl.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,

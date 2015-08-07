@@ -15,10 +15,14 @@
 
 - (void)setCenterByView:(NSView *)view {
     
-    float x = (view.bounds.size.width - self.bounds.size.width) / 2;
-    float y = (view.bounds.size.height - self.bounds.size.height) / 2;
+    float x = roundf((view.bounds.size.width - self.bounds.size.width) / 2);
+    float y = roundf((view.bounds.size.height - self.bounds.size.height) / 2);
     
-    [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
+    
+    x+= (view.bounds.size.width * self.layer.anchorPoint.x);
+    y+= (view.bounds.size.height * self.layer.anchorPoint.y);
+    
+    [self setFrameOrigin:NSMakePoint(x,y)];
 }
 
 - (void)setCenteredXByView:(NSView *)view {

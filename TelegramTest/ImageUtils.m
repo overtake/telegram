@@ -210,6 +210,9 @@ CACHE_IMAGE(SearchDownDisabled);
 CACHE_IMAGE(SearchUp);
 CACHE_IMAGE(SearchDown);
 
+
+CACHE_IMAGE(ZoomIn);
+CACHE_IMAGE(ZoomOut);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

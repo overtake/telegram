@@ -16,6 +16,7 @@
 #import "TGPVUserBehavior.h"
 #import "TGPVEmptyBehavior.h"
 #import "TGCache.h"
+#import "TGPVZoomControl.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
@@ -33,6 +34,8 @@
 
 @property (nonatomic,assign) BOOL waitRequest;
 @property (nonatomic,assign) int totalCount;
+
+@property (nonatomic,strong) TGPVZoomControl *zoomControl;
 
 @end
 
@@ -140,6 +143,11 @@ static const int controlsHeight = 75;
     [self.contentView addSubview:self.controls];
     
     
+    self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(100, 16, 200, controlsHeight)];
+    
+    
+    
+    [self.contentView addSubview:self.zoomControl];
 }
 
 

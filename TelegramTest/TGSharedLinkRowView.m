@@ -188,9 +188,15 @@ static NSImage *sharedLinkCapImage() {
      else
          if(item.links.count > 0)
              url = item.links[0];
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
     
-    return [[components.host substringToIndex:1] uppercaseString];
+    if(url != nil)
+    {
+        NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
+        
+        return [[components.host substringToIndex:1] uppercaseString];
+    }
+   
+    return @"L";
 }
 
 

@@ -23,8 +23,21 @@
 }
 
 
-- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)finished {
-    [self animationDidStop:nil finished:finished];
+- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)flag {
+    CALayer *layer = _layer;
+    
+    if (flag)
+    {
+        if (_opacityOnCompletion != nil)
+            layer.opacity = [_opacityOnCompletion floatValue];
+    }
+    if (_removeLayerOnCompletion)
+        [layer removeFromSuperlayer];
+    
+    if (_completion)
+        _completion(flag);
+    
+    _completion = nil;
 }
 
 

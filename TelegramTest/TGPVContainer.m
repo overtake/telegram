@@ -47,16 +47,37 @@
         NSPoint currentPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         
-        NSPoint addXY = NSMakePoint(currentPoint.x - _startPoint.x, currentPoint.y - _startPoint.y);
+        NSSize addXY = NSMakeSize(currentPoint.x - _startPoint.x, currentPoint.y - _startPoint.y);
         
+        [self addSizeToScroll:addXY];
         
-        NSPoint next = NSMakePoint(self.frame.origin.x+addXY.x, self.frame.origin.y+addXY.y);
-        
-        [self setFrameOrigin:next];
-        
-        _isDragged = YES;
+       
         
     }
+    
+}
+
+-(void)addSizeToScroll:(NSSize)size {
+    
+    [self setFrameOrigin:NSMakePoint(NSMinX(self.frame) + size.width, NSMinY(self.frame) + size.height)];
+    
+     _isDragged = YES;
+}
+
+-(void)scrollWheel:(NSEvent *)event {
+    [super scrollWheel:event];
+    
+    
+    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame))
+    {
+        BOOL isInverted = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue];
+        
+        NSSize addXY = NSMakeSize(isInverted ?  [event scrollingDeltaX] : -[event scrollingDeltaX], isInverted ?  -[event scrollingDeltaY] : [event scrollingDeltaY]);
+        
+        [self addSizeToScroll:addXY];
+        
+    }
+    
     
 }
 
@@ -93,8 +114,7 @@
 
 @property (nonatomic,strong) MessageCellDescriptionView *photoCaptionView;
 
-@property (nonatomic,strong) BTRButton *increaseZoomButton;
-@property (nonatomic,strong) BTRButton *decreaseZoomButton;
+
 
 @property (nonatomic,assign) int currentIncrease;
 
@@ -106,7 +126,7 @@
 
 
 #define ZOOM_PERCENT 0.30
-#define ZOOM_COUNT 6
+#define ZOOM_COUNT 10
 
 @implementation TGPVContainer
 
@@ -154,29 +174,7 @@
     
     [self addSubview:_imageContainerView];
     
-    _increaseZoomButton = [[BTRButton alloc] initWithFrame:NSMakeRect(100, 100, 30, 30)];
-    
-    weak();
-    
-    [_increaseZoomButton addBlock:^(BTRControlEvents events) {
-        
-        [weakSelf increaseZoom];
-        
-    } forControlEvents:BTRControlEventClick];
-    
-    [_increaseZoomButton setBackgroundColor:[NSColor redColor]];
-    
-  //   [self addSubview:_increaseZoomButton];
-    
-    _decreaseZoomButton = [[BTRButton alloc] initWithFrame:NSMakeRect(140, 100, 30, 30)];
-    
-    [_decreaseZoomButton addBlock:^(BTRControlEvents events) {
-        
-        [weakSelf decreaseZoom];
-        
-    } forControlEvents:BTRControlEventClick];
-    
-    [_decreaseZoomButton setBackgroundColor:[NSColor redColor]];
+   
     
   //  [self addSubview:_decreaseZoomButton];
     
@@ -238,6 +236,116 @@
     
 }
 
+
+/*
+ -(void)setCurrentIncrease:(int)currentIncrease {
+ 
+ int n = MAX(MIN(ZOOM_COUNT,currentIncrease),0);
+ 
+ if(n == _currentIncrease || _imageContainerView.isHidden)
+ return;
+ 
+ _currentIncrease = n;
+ 
+ 
+ if(_currentIncrease > 0)
+ {
+ NSSize size = self.currentViewerItem.imageObject.imageSize;
+ 
+ size.width+= roundf((size.width * ZOOM_PERCENT) * _currentIncrease);
+ size.height+= roundf((size.height *  ZOOM_PERCENT) * _currentIncrease);
+ 
+ 
+ NSSize maxSize = [self maxSize];
+ 
+ NSSize difSize = NSMakeSize(NSWidth(_imageView.frame),NSHeight(_imageView.frame));
+ 
+ [_imageView setFrameSize:size];
+ 
+ 
+ 
+ NSSize containerSize = NSMakeSize(MIN(maxSize.width,size.width), MIN(maxSize.height,size.height));
+ 
+ NSPoint containerPoint = NSMakePoint(roundf((containerSize.width - containerSize.width) / 2), ((maxSize.height - containerSize.height) / 2));
+ 
+ 
+ 
+ 
+ 
+ [self setFrameSize:NSMakeSize(containerSize.width, maxSize.height)];
+ [self updateContainerOrigin];
+ 
+ // self.backgroundColor = [NSColor redColor];
+ 
+ [_imageContainerView setCenterByView:self];
+ 
+ _imageContainerView.layer.backgroundColor = [NSColor blueColor].CGColor;
+ 
+ {
+ 
+ 
+ if(_imageContainerView.layer.anchorPoint.x == 0) {
+ _imageContainerView.layer.anchorPoint = NSMakePoint(0.5, 0.5);
+ CGPoint point = _imageContainerView.layer.position;
+ 
+ point.x += roundf(_imageContainerView.frame.size.width / 2);
+ point.y += roundf(_imageContainerView.frame.size.height / 2);
+ 
+ _imageContainerView.layer.position = point;
+ }
+ 
+ POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
+ anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+ anim.fromValue = [NSValue valueWithSize:_imageContainerView.frame.size];
+ anim.toValue = [NSValue valueWithSize:containerSize];
+ anim.duration = 0.1;
+ anim.removedOnCompletion = YES;
+ 
+ [anim setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
+ [_imageContainerView setFrame:NSMakeRect(containerPoint.x, containerPoint.y, containerSize.width, containerSize.height)];
+ }];
+ 
+ [_imageContainerView.layer pop_addAnimation:anim forKey:@"scale"];
+ }
+ 
+ 
+ 
+ {
+ POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+ anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+ anim.fromValue = [NSValue valueWithPoint:_imageContainerView.frame.origin];
+ anim.toValue = [NSValue valueWithPoint:containerPoint];
+ anim.removedOnCompletion = YES;
+ 
+ 
+ //    [_imageContainerView.layer pop_addAnimation:anim forKey:@"position"];
+ }
+ 
+ 
+ //  [_imageContainerView setFrameSize:NSMakeSize(MIN(maxSize.width,size.width), MIN(maxSize.height,size.height))];
+ 
+ 
+ difSize.width = NSWidth(_imageView.frame) - difSize.width;
+ difSize.height = NSHeight(_imageView.frame) - difSize.height;
+ 
+ 
+ if(!_imageView.isDragged)
+ {
+ [_imageView setCenterByView:_imageContainerView];
+ } else {
+ [_imageView setFrameOrigin:NSMakePoint(NSMinX(_imageView.frame) - difSize.width/2, NSMinY(_imageView.frame) - difSize.height/2)];
+ }
+ 
+ [self updateContainerOrigin];
+ 
+ // [_imageContainerView setCenterByView:self];
+ } else {
+ [self setCurrentViewerItem:_currentViewerItem animated:NO];
+ }
+ 
+ 
+ }
+ */
 
 -(NSSize)maxSize {
     NSRect screenFrame = [NSScreen mainScreen].frame;

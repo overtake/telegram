@@ -19,6 +19,9 @@
 @property (nonatomic,strong) BTRButton *moreButton;
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
+
+
+
 @end
 
 
@@ -134,6 +137,7 @@
         [self addSubview:self.moreButton];
         [self addSubview:self.closeButton];
         
+      
     }
     
     return self;
