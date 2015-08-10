@@ -448,12 +448,12 @@ void exceptionHandler(NSException * exception)
                 return [[NSEvent alloc] init];
             }
             
-            if(incomingEvent.keyCode == 24) {
+            if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
                 [TGPhotoViewer increaseZoom];
                 return [[NSEvent alloc] init];
             }
             
-            if(incomingEvent.keyCode == 27) {
+            if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
                 [TGPhotoViewer decreaseZoom];
                 return [[NSEvent alloc] init];
             }
