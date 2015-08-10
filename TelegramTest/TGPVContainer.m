@@ -70,9 +70,8 @@
     
     if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame))
     {
-        BOOL isInverted = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue];
         
-        NSSize addXY = NSMakeSize(isInverted ?  [event scrollingDeltaX] : -[event scrollingDeltaX], isInverted ?  -[event scrollingDeltaY] : [event scrollingDeltaY]);
+        NSSize addXY = NSMakeSize([event scrollingDeltaX], -[event scrollingDeltaY]);
         
         [self addSizeToScroll:addXY];
         
@@ -229,9 +228,18 @@
         [self updateContainerOrigin];
         
         [_imageContainerView setCenterByView:self];
+        
+        
+        
+        if(!_photoCaptionView.isHidden)
+        {
+            [_photoCaptionView setFrameOrigin:NSMakePoint(roundf((self.frame.size.width - _photoCaptionView.frame.size.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame) ,0))];
+        }
+        
     } else {
         [self setCurrentViewerItem:_currentViewerItem animated:NO];
     }
+    
     
     
 }
