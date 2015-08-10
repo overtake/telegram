@@ -174,8 +174,30 @@
     [self addSubview:_imageContainerView];
     
    
-    
+    [self setAcceptsTouchEvents:YES];
   //  [self addSubview:_decreaseZoomButton];
+    
+}
+
+
+- (void)touchesBeganWithEvent:(NSEvent *)event {
+    
+}
+- (void)touchesMovedWithEvent:(NSEvent *)event {
+    
+}
+- (void)touchesEndedWithEvent:(NSEvent *)event {
+    
+}
+- (void)touchesCancelledWithEvent:(NSEvent *)event  {
+    
+}
+
+-(BOOL)becomeFirstResponder {
+    
+    [self.window makeFirstResponder:self];
+    
+    return [super becomeFirstResponder];
     
 }
 

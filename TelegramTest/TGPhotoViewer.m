@@ -597,7 +597,6 @@ static const int controlsHeight = 75;
     _currentItem = [self itemAtIndex:currentItemId];
     
     
-    
 
     [self.controls setCurrentPosition:[self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
     
