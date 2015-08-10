@@ -788,6 +788,8 @@
     if(!self.smilePopover.isShown) {
         [self.smilePopover showRelativeToRect:frame ofView:self.smileButton preferredEdge:CGRectMaxYEdge];
         [[EmojiViewController instance] showPopovers];
+    } else {
+         [[EmojiViewController instance] close];
     }
 }
 
