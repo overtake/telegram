@@ -197,6 +197,8 @@
     _currentIncrease = n;
     
     
+    [_photoCaptionView setHidden:_currentIncrease > 0];
+    
     if(_currentIncrease > 0)
     {
         NSSize size = self.currentViewerItem.imageObject.imageSize;
@@ -207,9 +209,13 @@
         
         NSSize maxSize = [self maxSize];
         
+        
+       
         NSSize difSize = NSMakeSize(NSWidth(_imageView.frame),NSHeight(_imageView.frame));
         
         [_imageView setFrameSize:size];
+        
+        
         [_imageContainerView setFrameSize:NSMakeSize(MIN(maxSize.width,size.width), MIN(maxSize.height,size.height))];
         [self setFrameSize:NSMakeSize(_imageContainerView.frame.size.width, maxSize.height)];
         
@@ -230,11 +236,6 @@
         [_imageContainerView setCenterByView:self];
         
         
-        
-        if(!_photoCaptionView.isHidden)
-        {
-            [_photoCaptionView setFrameOrigin:NSMakePoint(roundf((self.frame.size.width - _photoCaptionView.frame.size.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame) ,0))];
-        }
         
     } else {
         [self setCurrentViewerItem:_currentViewerItem animated:NO];
@@ -502,7 +503,7 @@ static const int bottomHeight = 60;
     
     
     if(caption) {
-        [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageView.frame) ,0) , c_s.width, c_s.height)];
+        [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageContainerView.frame) ,0) , c_s.width, c_s.height)];
     }
   
     
