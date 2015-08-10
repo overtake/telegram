@@ -64,18 +64,24 @@
     [TGCache removeAllCachedImages:@[PVCACHE]];
 
     [[NSApp mainWindow] makeFirstResponder:nil];
+    
+    viewer = nil;
 }
 
 
+-(void)dealloc {
+    
+}
+
 +(BOOL)isVisibility {
-    return [self viewer].isVisibility;
+    return viewer.isVisibility;
 }
 
 +(void)increaseZoom {
-    [[self viewer].photoContainer increaseZoom];
+    [viewer.photoContainer increaseZoom];
 }
 +(void)decreaseZoom {
-    [[self viewer].photoContainer decreaseZoom];
+    [viewer.photoContainer decreaseZoom];
 }
 
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen {
@@ -91,7 +97,6 @@ static const int controlsHeight = 75;
 
 - (void)initialize {
     
-    
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
 
@@ -106,15 +111,15 @@ static const int controlsHeight = 75;
     self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
     
-    weakify();
     
-    [self.background setCallback:^ {
-        
+    weak();
+    
+    [self.background setCallback:^{
         NSEvent *currentEvent = [NSApp currentEvent];
         
         NSPoint location = [currentEvent locationInWindow];
         
-        NSPoint containerPoint = strongSelf.photoContainer.frame.origin;
+        NSPoint containerPoint = weakSelf.photoContainer.frame.origin;
         
         if(location.x > containerPoint.x)
             [[TGPhotoViewer viewer] hide];
@@ -148,6 +153,8 @@ static const int controlsHeight = 75;
     
     
     [self.contentView addSubview:self.zoomControl];
+    
+    
 }
 
 
@@ -263,11 +270,11 @@ static const int controlsHeight = 75;
 }
 
 +(id)behavior {
-    return [[self viewer] behavior];
+    return  [viewer behavior];
 }
 
 +(void)deleteItem:(TGPhotoViewerItem *)item {
-    [[self viewer] deleteItem:item];
+    [viewer deleteItem:item];
 }
 
 -(void)resort {
@@ -334,21 +341,22 @@ static const int controlsHeight = 75;
 
 
 +(TGPhotoViewerItem *)currentItem {
-    return [[self viewer] currentItem];
+    return [viewer currentItem];
 }
 
 
+static TGPhotoViewer *viewer;
+
 +(TGPhotoViewer *)viewer {
-    static TGPhotoViewer *viewer;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+   
+    if(!viewer)
+    {
         viewer = [[TGPhotoViewer alloc] initWithContentRect:[NSScreen mainScreen].frame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
         [viewer setLevel:NSScreenSaverWindowLevel];
         [viewer setOpaque:NO];
         viewer.backgroundColor = [NSColor clearColor];
-    });
-
+        
+    }
     return viewer;
     
 }
@@ -580,11 +588,11 @@ static const int controlsHeight = 75;
 }
 
 +(void)prevItem {
-    [[self viewer] prevItem];
+    [viewer prevItem];
 }
 
 +(void)nextItem {
-    [[self viewer] nextItem];
+    [viewer nextItem];
 }
 
 -(void)setCurrentItemId:(NSInteger)currentItemId {

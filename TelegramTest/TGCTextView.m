@@ -564,6 +564,11 @@
     return -1;
 }
 
+-(void)dealloc {
+    if(CTFrame)
+        CFRelease(CTFrame);
+}
+
 -(BOOL)indexIsSelected:(int)index {
     return self.selectRange.location <= index && (self.selectRange.location + self.selectRange.length) > index;
 }
