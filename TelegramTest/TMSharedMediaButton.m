@@ -34,7 +34,9 @@ static const NSMutableDictionary *cache;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         cache = [[NSMutableDictionary alloc] init];
-        cache[@"files"] = [[NSMutableDictionary alloc] init];
+        cache[@"key-0"] = [[NSMutableDictionary alloc] init];
+        cache[@"key-1"] = [[NSMutableDictionary alloc] init];
+        cache[@"key-2"] = [[NSMutableDictionary alloc] init];
         cache[@"photo-video"] = [[NSMutableDictionary alloc] init];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
         [Notification addObserver: [TMSharedMediaButton reserved] selector:@selector(didDeletedMessages:) name:MESSAGE_DELETE_EVENT];

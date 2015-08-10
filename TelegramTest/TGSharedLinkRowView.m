@@ -193,7 +193,7 @@ static NSImage *sharedLinkCapImage() {
     {
         
         if(![url hasPrefix:@"http://"] || ![url hasPrefix:@"https://"] | ![url hasPrefix:@"ftp://"])
-            return [url substringToIndex:1];
+            return [[url substringToIndex:1] uppercaseString];
         
         NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
         
