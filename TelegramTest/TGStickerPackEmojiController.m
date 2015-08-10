@@ -152,6 +152,10 @@
     
 }
 
+-(void)removeAllItems {
+    [_stickers removeAllItems:NO];
+    [_stickers reloadData];
+}
 
 
 -(void)reload {

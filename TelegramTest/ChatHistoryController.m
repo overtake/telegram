@@ -979,10 +979,13 @@ static NSMutableArray *listeners;
                     
                }
                 
-                [messageItems removeObject:checkItem];
-                [messageKeys removeObjectForKey:@(checkItem.message.fakeId)];
+                if(![checkItem.message isKindOfClass:[TL_destructMessage class]]) {
+                    [messageItems removeObject:checkItem];
+                    [messageKeys removeObjectForKey:@(checkItem.message.fakeId)];
+                    
+                    [self filterAndAdd:@[checkItem] isLates:YES];
+                }
                 
-                [self filterAndAdd:@[checkItem] isLates:YES];
                 
             } synchronous:YES];
             

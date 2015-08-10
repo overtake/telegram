@@ -472,6 +472,25 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 
+TL_localMessage *parseMessage(FMResultSet *result) {
+    @try {
+        
+        TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+        msg.flags = -1;
+        msg.message = [result stringForColumn:@"message_text"];
+        msg.flags = [result intForColumn:@"flags"];
+        
+        return msg;
+
+    }
+    @catch (NSException *exception) {
+        
+    }
+    
+    
+    return nil;
+}
+
 -(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
     
     
@@ -501,21 +520,15 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         
-        TL_localMessage *(^parseMessage)(FMResultSet *result) = ^TL_localMessage * (FMResultSet *result) {
-            TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            msg.flags = -1;
-            msg.message = [result stringForColumn:@"message_text"];
-            msg.flags = [result intForColumn:@"flags"];
-            
-            return msg;
-        };
-        
         NSMutableArray *ids = [[NSMutableArray alloc] init];
         
         while ([result next]) {
             TL_localMessage *msg = parseMessage(result);
-            [messages addObject:msg];
-            [ids addObject:@(msg.n_id)];
+            if(msg) {
+                [messages addObject:msg];
+                [ids addObject:@(msg.n_id)];
+            }
+            
         }
         [result close];
         
@@ -536,7 +549,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                  FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
                  while ([result next]) {
-                    [messages addObject:parseMessage(result)];
+                     TL_localMessage *msg = parseMessage(result);
+                     if(msg)
+                         [messages addObject:msg];
                  }
                  [result close];
                 
@@ -1065,10 +1080,17 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         id serializedMessage =[[result resultDictionary] objectForKey:@"serialized_message"];
         TL_localMessage *message;
         if(![serializedMessage isKindOfClass:[NSNull class]]) {
-            message = [TLClassStore deserialize:serializedMessage];
-            message.flags = -1;
-            message.message = [result stringForColumn:@"message_text"];
-            message.flags = [result intForColumn:@"flags"];
+           
+            @try {
+                message = [TLClassStore deserialize:serializedMessage];
+                message.flags = -1;
+                message.message = [result stringForColumn:@"message_text"];
+                message.flags = [result intForColumn:@"flags"];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
             if(message)
                 [messages addObject:message];
         }

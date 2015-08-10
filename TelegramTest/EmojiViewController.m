@@ -386,6 +386,7 @@
 
 - (void)close {
     [[Telegram rightViewController].messagesViewController.bottomView.smilePopover close];
+    [self.stickersTableView removeAllItems];
 }
 
 - (void)bottomButtonClick:(EmojiBottomButton *)button {
@@ -413,7 +414,8 @@
     
     if(self.currentButton.index == 7) {
         [self.stickersTableView reload];
-        
+    } else {
+        [self.stickersTableView removeAllItems];
     }
     
     

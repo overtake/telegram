@@ -773,7 +773,9 @@
         [self.smilePopover setHoverView:self.smileButton];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
+            [[EmojiViewController instance] close];
         }];
+        
     }
     
     [emojiViewController setInsertEmoji:^(NSString *emoji) {
