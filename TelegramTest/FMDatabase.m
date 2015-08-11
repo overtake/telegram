@@ -2,7 +2,7 @@
 #import "unistd.h"
 #import <objc/runtime.h>
 
-#define DBLog(fmt, ...) //MTLog((@"db %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define DBLog(fmt, ...) MTLog((@"db %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 
 @interface FMDatabase ()
 

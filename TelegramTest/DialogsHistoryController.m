@@ -113,7 +113,7 @@
         [MessagesManager updateUnreadBadge];
         
         
-        if(dialogs.dialogs.count < limit) {
+        if(converted.count < limit) {
             self.state = DialogsHistoryStateEnd;
         } 
         

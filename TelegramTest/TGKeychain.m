@@ -180,10 +180,10 @@ static NSMutableDictionary *keychains()
         
         if(sc) {
             
-            [sc performSelector:@selector(dbSetKey:) withObject:pass];
-            
             if(save) {
                 [sc performSelector:@selector(dbRekey:) withObject:pass];
+            } else {
+                [sc performSelector:@selector(dbSetKey:) withObject:pass];
             }
         }
         

@@ -92,17 +92,35 @@ static NSString *yap_path;
 }
 
 
-static NSString *encryptionKey = @"";
+static NSString *basekey = @"1oi1h2i3ufhkj21h3fkj";
+
+static NSString *encryptionKey = @"1oi1h2i3ufhkj21h3fkj";
 
 
 +(void)dbSetKey:(NSString *)key {
     
+    encryptionKey = key;
+    
+    if(key.length == 0)
+    {
+        encryptionKey = basekey;
+    }
+    
     [Storage manager];
     
-    encryptionKey = key;
+    [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
+        [db setKey:key];
+    }];
 }
 
 +(void)dbRekey:(NSString *)rekey {
+    
+    if(rekey.length == 0)
+    {
+        rekey = basekey;
+    }
+    
+    encryptionKey = rekey;
     
     [[Storage manager] dbRekey:encryptionKey];
     
@@ -113,6 +131,8 @@ static NSString *encryptionKey = @"";
     [queue inDatabase:^(FMDatabase *db) {
         
         [db rekey:rekey];
+        
+        [db setKey:rekey];
         
     }];
 }
@@ -156,32 +176,34 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 -(void)open:(void (^)())completeHandler {
     
     
-    NSString *dbName = @"t143.sqlite"; // 61
+    [self createAndCheckDatabase:@"t143.sqlite"];
     
-    self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],dbName]];
+    
+    self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],@"encrypted.sqlite"]];
     
     __block BOOL res = NO;
     
+    
     [[Storage yap] flushMemoryWithFlags:YapDatabaseConnectionFlushMemoryFlags_All];
 
-     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
-        
-        res = [db setKey:encryptionKey];
-        
-     }];
     
-    
-    NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
-    
-    if(![oldName isEqualToString:dbName]) {
-        [SettingsArchiver setSupportUserId:0];
-        [SettingsArchiver removeSetting:BlockedContactsSynchronized];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+//    
+//    
+//    NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
+//    
+//    if(![oldName isEqualToString:dbName]) {
+//        [SettingsArchiver setSupportUserId:0];
+//        [SettingsArchiver removeSetting:BlockedContactsSynchronized];
+//        
+//        [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
     
     [queue inDatabase:^(FMDatabase *db) {
+        
+        
+        
+        res = [db setKey:encryptionKey];
         
         [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
         
@@ -305,48 +327,49 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 
 //
-//-(void) createAndCheckDatabase
-//{
-//    BOOL success;
-//    
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    
-//    NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],@"encrypted.sqlite"];
-//    
-//    success = [fileManager fileExistsAtPath:dbPath];
-//    
-//    if (success) return;
-//
-//    NSString *databasePathFromApp = dbPath;
-//    
-//    [fileManager copyItemAtPath:databasePathFromApp toPath:dbPath error:nil]; // Make a copy of the file in the Documents folder
-//    
-//    // Set the new encrypted database path to be in the Documents Folder
-//    NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
-//    
-//    // SQL Query. NOTE THAT DATABASE IS THE FULL PATH NOT ONLY THE NAME
-//    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
-//    
-//    sqlite3 *unencrypted_DB;
-//    if (sqlite3_open([dbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
-//        
-//        // Attach empty encrypted database to unencrypted database
-//        sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
-//        
-//        // export database
-//        sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
-//        
-//        // Detach encrypted database
-//        sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
-//        
-//        sqlite3_close(unencrypted_DB);
-//    }
-//    else {
-//        sqlite3_close(unencrypted_DB);
-//        NSAssert1(NO, @"Failed to open database with message '%s'.", sqlite3_errmsg(unencrypted_DB));
-//    }
-//    
-//}
+-(void) createAndCheckDatabase:(NSString *)dbName
+{
+    BOOL success;
+    
+    NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],dbName];
+    
+    success = [fileManager fileExistsAtPath:encryptedDatabasePath];
+    
+    if (success) return;
+
+    
+    // Set the new encrypted database path to be in the Documents Folder
+    
+    // SQL Query. NOTE THAT DATABASE IS THE FULL PATH NOT ONLY THE NAME
+    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
+    
+    sqlite3 *unencrypted_DB;
+    if (sqlite3_open([dbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
+        
+        // Attach empty encrypted database to unencrypted database
+        sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
+        
+        // export database
+        sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
+        
+        // Detach encrypted database
+        sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
+        
+        sqlite3_close(unencrypted_DB);
+    }
+    else {
+        sqlite3_close(unencrypted_DB);
+        NSAssert1(NO, @"Failed to open database with message '%s'.", sqlite3_errmsg(unencrypted_DB));
+    }
+    
+    [fileManager removeItemAtPath:dbPath error:nil];
+    
+}
 //
 
 -(void)drop:(void (^)())completeHandler {
@@ -358,7 +381,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [transaction removeAllObjectsInAllCollections];
         }];
         
-        encryptionKey = @"";
+        encryptionKey = basekey;
         [self open:completeHandler];
     }];
     

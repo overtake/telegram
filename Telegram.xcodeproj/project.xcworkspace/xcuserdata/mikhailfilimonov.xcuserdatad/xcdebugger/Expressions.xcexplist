@@ -1742,12 +1742,20 @@
       </ContextState>
       <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke:DialogsHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "offset">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TMButton drawRect:]:TMButton.m">
       </ContextState>
       <ContextState
          contextName = "__35-[MessageSenderItem performRequest]_block_invoke:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSharedLinksTableView didChangeUpdateWebpage:]:TGSharedLinksTableView.m">
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke_3:UsersManager.m">
@@ -1803,6 +1811,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TMInAppLinks parseUrlAndDo:]:TMInAppLinks.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[PrivacyViewController loadDeleteAccountTimer]_block_invoke:PrivacyViewController.m">
       </ContextState>
       <ContextState
@@ -1831,6 +1842,9 @@
                value = "self.view.window">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_localMessage filterType]:TL_localMessage.m">
       </ContextState>
       <ContextState
          contextName = "__24-[TGCTextView drawRect:]_block_invoke:TGCTextView.m">
@@ -2074,6 +2088,9 @@
                value = "messages">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSharedLinksTableView heightWithItem:]:TGSharedLinksTableView.m">
       </ContextState>
       <ContextState
          contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">
@@ -2379,6 +2396,9 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadPhotoCollectionItem initWithObject:size:]:DownloadPhotoCollectionItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__59-[SharedLinksHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:SharedLinksHistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemWebPage updateWebPage]:MessageTableItemWebPage.m">

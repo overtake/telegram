@@ -228,6 +228,10 @@ static NSImage *sharedLinkCapImage() {
         
         [_imageView setObject:item.webpage.imageObject];
         
+        if(_textField.attributedString.string.length == 0) {
+            [_linkField setCenteredYByView:_linkField.superview];
+        }
+        
     } else {
         [_textField setAttributedString:item.allAttributedLinks];
         [_textField setFrameSize:item.allAttributedLinksSize];

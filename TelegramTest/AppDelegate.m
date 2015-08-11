@@ -257,8 +257,6 @@ void exceptionHandler(NSException * exception)
     
     [SharedManager sharedManager];
     
-    [Storage manager];
-        
     
     [self initializeUpdater];
     [self initializeKeyDownHandler];
