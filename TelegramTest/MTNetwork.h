@@ -40,6 +40,9 @@
 
 -(void)update;
 
++(void)pause;
++(void)resume;
+
 -(MTQueue *)queue;
 
 -(void)updatePasscode:(NSData *)md5Hash;

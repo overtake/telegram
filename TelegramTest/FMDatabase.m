@@ -2,8 +2,8 @@
 #import "unistd.h"
 #import <objc/runtime.h>
 
-#define DBLog(fmt, ...) MTLog((@"db %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
-
+#define DBLog(fmt, ...) //MTLog((@"db %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define EDBLog(fmt, ...) MTLog((@"db %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 @interface FMDatabase ()
 
 - (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args;
@@ -96,7 +96,7 @@
     
     int err = sqlite3_open([self sqlitePath], &_db );
     if(err != SQLITE_OK) {
-        DBLog(@"error opening!: %d", err);
+        EDBLog(@"error opening!: %d", err);
         return NO;
     }
     
@@ -107,7 +107,7 @@
 - (BOOL)openWithFlags:(int)flags {
     int err = sqlite3_open_v2([self sqlitePath], &_db, flags, NULL /* Name of VFS module to use */);
     if(err != SQLITE_OK) {
-        DBLog(@"error opening!: %d", err);
+        EDBLog(@"error opening!: %d", err);
         return NO;
     }
     return YES;
@@ -139,8 +139,8 @@
             usleep(20);
             
             if (_busyRetryTimeout && (numberOfRetries++ > _busyRetryTimeout)) {
-                DBLog(@"%s:%d", __FUNCTION__, __LINE__);
-                DBLog(@"Database busy, unable to close");
+                EDBLog(@"%s:%d", __FUNCTION__, __LINE__);
+                EDBLog(@"Database busy, unable to close");
                 return NO;
             }
             
@@ -148,19 +148,27 @@
                 triedFinalizingOpenStatements = YES;
                 sqlite3_stmt *pStmt;
                 while ((pStmt = sqlite3_next_stmt(_db, 0x00)) !=0) {
-                    DBLog(@"Closing leaked statement");
+                    EDBLog(@"Closing leaked statement");
                     sqlite3_finalize(pStmt);
                 }
             }
         }
         else if (SQLITE_OK != rc) {
-            DBLog(@"error closing!: %d", rc);
+            EDBLog(@"error closing!: %d", rc);
         }
     }
     while (retry);
     
     _db = nil;
     return YES;
+}
+
+- (void)updatePath:(NSString *)path {
+    
+    [self close];
+    _databasePath = [path copy];
+    [self open];
+    
 }
 
 - (void)clearCachedStatements {
@@ -241,8 +249,8 @@
     int rc = sqlite3_rekey(_db, [keyData bytes], (int)[keyData length]);
     
     if (rc != SQLITE_OK) {
-        DBLog(@"error on rekey: %d", rc);
-        DBLog(@"%@", [self lastErrorMessage]);
+        EDBLog(@"error on rekey: %d", rc);
+        EDBLog(@"%@", [self lastErrorMessage]);
     }
     
     return (rc == SQLITE_OK);
@@ -316,7 +324,7 @@
 }
 
 - (void)warnInUse {
-    DBLog(@"The FMDatabase %@ is currently in use.", self);
+    EDBLog(@"The FMDatabase %@ is currently in use.", self);
     
 #ifndef NS_BLOCK_ASSERTIONS
     if (_crashOnErrors) {
@@ -330,7 +338,7 @@
     
     if (!_db) {
             
-        DBLog(@"The FMDatabase %@ is not open.", self);
+        EDBLog(@"The FMDatabase %@ is not open.", self);
         
     #ifndef NS_BLOCK_ASSERTIONS
         if (_crashOnErrors) {
@@ -620,8 +628,8 @@
                 usleep(20);
                 
                 if (_busyRetryTimeout && (numberOfRetries++ > _busyRetryTimeout)) {
-                    DBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
-                    DBLog(@"Database busy");
+                    EDBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
+                    EDBLog(@"Database busy");
                     sqlite3_finalize(pStmt);
                     _isExecutingStatement = NO;
                     return nil;
@@ -630,9 +638,9 @@
             else if (SQLITE_OK != rc) {
                 
                 if (_logsErrors) {
-                    DBLog(@"DB Error: %d \"%@\"", [self lastErrorCode], [self lastErrorMessage]);
-                    DBLog(@"DB Query: %@", sql);
-                    DBLog(@"DB Path: %@", _databasePath);
+                    EDBLog(@"DB Error: %d \"%@\"", [self lastErrorCode], [self lastErrorMessage]);
+                    EDBLog(@"DB Query: %@", sql);
+                    EDBLog(@"DB Path: %@", _databasePath);
 #ifndef NS_BLOCK_ASSERTIONS
                     if (_crashOnErrors) {
                         abort();
@@ -673,7 +681,7 @@
                 idx++;
             }
             else {
-                DBLog(@"Could not find index for %@", dictionaryKey);
+                EDBLog(@"Could not find index for %@", dictionaryKey);
             }
         }
     }
@@ -694,10 +702,10 @@
             
             if (_traceExecution) {
                 if ([obj isKindOfClass:[NSData class]]) {
-                    DBLog(@"data: %ld bytes", (unsigned long)[(NSData*)obj length]);
+                    EDBLog(@"data: %ld bytes", (unsigned long)[(NSData*)obj length]);
                 }
                 else {
-                    DBLog(@"obj: %@", obj);
+                    EDBLog(@"obj: %@", obj);
                 }
             }
             
@@ -708,7 +716,7 @@
     }
     
     if (idx != queryCount) {
-        DBLog(@"Error: the bind count is not correct for the # of variables (executeQuery)");
+        EDBLog(@"Error: the bind count is not correct for the # of variables (executeQuery)");
         sqlite3_finalize(pStmt);
         _isExecutingStatement = NO;
         return nil;
@@ -817,8 +825,8 @@
                 usleep(20);
                 
                 if (_busyRetryTimeout && (numberOfRetries++ > _busyRetryTimeout)) {
-                    DBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
-                    DBLog(@"Database busy");
+                    EDBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
+                    EDBLog(@"Database busy");
                     sqlite3_finalize(pStmt);
                     _isExecutingStatement = NO;
                     return NO;
@@ -827,9 +835,9 @@
             else if (SQLITE_OK != rc) {
                 
                 if (_logsErrors) {
-                    DBLog(@"DB Error: %d \"%@\"", [self lastErrorCode], [self lastErrorMessage]);
-                    DBLog(@"DB Query: %@", sql);
-                    DBLog(@"DB Path: %@", _databasePath);
+                    EDBLog(@"DB Error: %d \"%@\"", [self lastErrorCode], [self lastErrorMessage]);
+                    EDBLog(@"DB Query: %@", sql);
+                    EDBLog(@"DB Path: %@", _databasePath);
 #ifndef NS_BLOCK_ASSERTIONS
                     if (_crashOnErrors) {
                         abort();
@@ -876,7 +884,7 @@
                 idx++;
             }
             else {
-                DBLog(@"Could not find index for %@", dictionaryKey);
+                EDBLog(@"Could not find index for %@", dictionaryKey);
             }
         }
     }
@@ -897,10 +905,10 @@
             
             if (_traceExecution) {
                 if ([obj isKindOfClass:[NSData class]]) {
-                    DBLog(@"data: %ld bytes", (unsigned long)[(NSData*)obj length]);
+                    EDBLog(@"data: %ld bytes", (unsigned long)[(NSData*)obj length]);
                 }
                 else {
-                    DBLog(@"obj: %@", obj);
+                    EDBLog(@"obj: %@", obj);
                 }
             }
             
@@ -912,7 +920,7 @@
     
     
     if (idx != queryCount) {
-        DBLog(@"Error: the bind count (%d) is not correct for the # of variables in the query (%d) (%@) (executeUpdate)", idx, queryCount, sql);
+        EDBLog(@"Error: the bind count (%d) is not correct for the # of variables in the query (%d) (%@) (executeUpdate)", idx, queryCount, sql);
         sqlite3_finalize(pStmt);
         _isExecutingStatement = NO;
         return NO;
@@ -934,14 +942,14 @@
             if (SQLITE_LOCKED == rc) {
                 rc = sqlite3_reset(pStmt);
                 if (rc != SQLITE_LOCKED) {
-                    DBLog(@"Unexpected result from sqlite3_reset (%d) eu", rc);
+                    EDBLog(@"Unexpected result from sqlite3_reset (%d) eu", rc);
                 }
             }
             usleep(20);
             
             if (_busyRetryTimeout && (numberOfRetries++ > _busyRetryTimeout)) {
-                DBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
-                DBLog(@"Database busy");
+                EDBLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [self databasePath]);
+                EDBLog(@"Database busy");
                 retry = NO;
             }
         }
@@ -950,22 +958,22 @@
         }
         else if (SQLITE_ERROR == rc) {
             if (_logsErrors) {
-                DBLog(@"Error calling sqlite3_step (%d: %s) SQLITE_ERROR", rc, sqlite3_errmsg(_db));
-                DBLog(@"DB Query: %@", sql);
+                EDBLog(@"Error calling sqlite3_step (%d: %s) SQLITE_ERROR", rc, sqlite3_errmsg(_db));
+                EDBLog(@"DB Query: %@", sql);
             }
         }
         else if (SQLITE_MISUSE == rc) {
             // uh oh.
             if (_logsErrors) {
-                DBLog(@"Error calling sqlite3_step (%d: %s) SQLITE_MISUSE", rc, sqlite3_errmsg(_db));
-                DBLog(@"DB Query: %@", sql);
+                EDBLog(@"Error calling sqlite3_step (%d: %s) SQLITE_MISUSE", rc, sqlite3_errmsg(_db));
+                EDBLog(@"DB Query: %@", sql);
             }
         }
         else {
             // wtf?
             if (_logsErrors) {
-                DBLog(@"Unknown error calling sqlite3_step (%d: %s) eu", rc, sqlite3_errmsg(_db));
-                DBLog(@"DB Query: %@", sql);
+                EDBLog(@"Unknown error calling sqlite3_step (%d: %s) eu", rc, sqlite3_errmsg(_db));
+                EDBLog(@"DB Query: %@", sql);
             }
         }
         
@@ -1000,8 +1008,8 @@
     
     if (closeErrorCode != SQLITE_OK) {
         if (_logsErrors) {
-            DBLog(@"Unknown error finalizing or resetting statement (%d: %s)", closeErrorCode, sqlite3_errmsg(_db));
-            DBLog(@"DB Query: %@", sql);
+            EDBLog(@"Unknown error finalizing or resetting statement (%d: %s)", closeErrorCode, sqlite3_errmsg(_db));
+            EDBLog(@"DB Query: %@", sql);
         }
     }
     
@@ -1014,7 +1022,7 @@
     va_list args;
     va_start(args, sql);
     
-     DBLog(@"%@",sql);
+    DBLog(@"%@",sql);
     
     BOOL result = [self executeUpdate:sql error:nil withArgumentsInArray:nil orDictionary:nil orVAList:args];
     

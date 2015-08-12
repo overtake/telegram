@@ -2207,7 +2207,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [MessagesManager updateUnreadBadge];
         
-    ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"peer":self.conversation.peer}];
+    ReadHistroryTask *task = [[ReadHistroryTask alloc] initWithParams:@{@"conversation":self.conversation}];
     
     [TMTaskRequest addTask:task];
     

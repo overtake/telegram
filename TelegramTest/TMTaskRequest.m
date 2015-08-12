@@ -10,11 +10,18 @@
 
 @interface TMTaskRequest ()
 @property (nonatomic,strong) NSMutableArray *tasks;
+
 @end
 
 
 @implementation TMTaskRequest
 
+
+static ASQueue *queue;
+
+ASQueue *taskQueue() {
+    return queue;
+}
 
 -(void)addTask:(id<ITaskRequest>)task {
     if(task && [_tasks indexOfObject:task] == NSNotFound) {
@@ -31,13 +38,13 @@
 
 
 -(void)didCompleteTaskRequest:(id)task {
-    [ASQueue dispatchOnStageQueue:^{
+    [taskQueue() dispatchOnQueue:^{
         [self removeTask:task];
     }];
 }
 
 -(void)didStartTaskRequest:(id<ITaskRequest>)task {
-    [ASQueue dispatchOnStageQueue:^{
+    [taskQueue() dispatchOnQueue:^{
         [[Storage manager] insertTask:task];
     }];
 }
@@ -48,21 +55,25 @@
 
 
 +(void)addTask:(id<ITaskRequest>)task {
-    [ASQueue dispatchOnStageQueue:^{
+    [taskQueue() dispatchOnQueue:^{
         [[TMTaskRequest instance] addTask:task];
     }];
 }
 
 +(void)executeAll {
-    [[Storage manager] selectTasks:^(NSArray *tasks) {
-        [tasks enumerateObjectsUsingBlock:^(id<ITaskRequest> obj, NSUInteger idx, BOOL *stop) {
-            [TMTaskRequest addTask:obj];
+    
+    [taskQueue() dispatchOnQueue:^{
+        [[Storage manager] selectTasks:^(NSArray *tasks) {
+            [tasks enumerateObjectsUsingBlock:^(id<ITaskRequest> obj, NSUInteger idx, BOOL *stop) {
+                [TMTaskRequest addTask:obj];
+            }];
         }];
     }];
+    
 }
 
 +(void)removeTask:(id<ITaskRequest>)task {
-    [ASQueue dispatchOnStageQueue:^{
+    [taskQueue() dispatchOnQueue:^{
         [[TMTaskRequest instance] removeTask:task];
     }];
 }
@@ -77,7 +88,7 @@
         
         instance = [[[self class] alloc] init];
         instance.tasks = [[NSMutableArray alloc] init];
-        
+        queue = [[ASQueue alloc] initWithName:"taskQueue"];
       
     });
     return instance;

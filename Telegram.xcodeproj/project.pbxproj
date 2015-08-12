@@ -405,6 +405,7 @@
 		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */; };
 		C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976B31A10E2110047E2C3 /* TGPVContainer.m */; };
+		C26E80201B7B91A9003CC483 /* TGDatabaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */; };
 		C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */; };
 		C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA71A56BEFE001D1AE2 /* SecretLayer20.m */; };
 		C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EAE1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m */; };
@@ -861,23 +862,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C2D825FD1B6F9E8300434D37 /* PBXContainerItemProxy */ = {
+		C26E80161B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0445DD81A7C2CA500267924;
 			remoteInfo = SSignalKit;
 		};
-		C2D825FF1B6F9E8300434D37 /* PBXContainerItemProxy */ = {
+		C26E80181B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0445E5C1A7C446000267924;
 			remoteInfo = SSignalKitStatic;
 		};
-		C2D826011B6F9E8300434D37 /* PBXContainerItemProxy */ = {
+		C26E801A1B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0445DE31A7C2CA500267924;
 			remoteInfo = SSignalKitTests;
@@ -1783,6 +1784,9 @@
 		C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewer.m; sourceTree = "<group>"; };
 		C26976B21A10E2110047E2C3 /* TGPVContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVContainer.h; sourceTree = "<group>"; };
 		C26976B31A10E2110047E2C3 /* TGPVContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVContainer.m; sourceTree = "<group>"; };
+		C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSignalKit.xcodeproj; path = Signals/SSignalKit.xcodeproj; sourceTree = "<group>"; };
+		C26E801E1B7B91A9003CC483 /* TGDatabaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatabaseRequest.h; sourceTree = "<group>"; };
+		C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabaseRequest.m; sourceTree = "<group>"; };
 		C26F7E9C1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C26F7E9D1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C26F7E9E1A4B1EEB001D1AE2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2315,7 +2319,6 @@
 		C2D825EA1B6A700300434D37 /* TGEmbedModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEmbedModalView.h; sourceTree = "<group>"; };
 		C2D825EB1B6A700300434D37 /* TGEmbedModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEmbedModalView.m; sourceTree = "<group>"; };
 		C2D825ED1B6A711E00434D37 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
-		C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSignalKit.xcodeproj; path = Signals/SSignalKit.xcodeproj; sourceTree = "<group>"; };
 		C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MtProtoKit.xcodeproj; path = MtProtoKit/MtProtoKit.xcodeproj; sourceTree = "<group>"; };
 		C2D826391B710E6400434D37 /* TGModernHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernHistoryController.h; sourceTree = "<group>"; };
 		C2D8263A1B710E6400434D37 /* TGModernHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernHistoryController.m; sourceTree = "<group>"; };
@@ -3935,6 +3938,16 @@
 			name = elements;
 			sourceTree = "<group>";
 		};
+		C26E80111B7B748A003CC483 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C26E80171B7B748A003CC483 /* SSignalKit.framework */,
+				C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */,
+				C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		C26F7E9F1A4C32BA001D1AE2 /* emoji */ = {
 			isa = PBXGroup;
 			children = (
@@ -4985,16 +4998,6 @@
 			name = notifications;
 			sourceTree = "<group>";
 		};
-		C2D825F21B6F9E8200434D37 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C2D825FE1B6F9E8300434D37 /* SSignalKit.framework */,
-				C2D826001B6F9E8300434D37 /* libSSignalKitStatic.a */,
-				C2D826021B6F9E8300434D37 /* SSignalKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		C2D826141B6FA8A600434D37 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -5015,6 +5018,8 @@
 				C2D8263E1B7110AB00434D37 /* TGConversation.m */,
 				C2D826401B71155000434D37 /* TGDatabase.h */,
 				C2D826411B71155000434D37 /* TGDatabase.m */,
+				C26E801E1B7B91A9003CC483 /* TGDatabaseRequest.h */,
+				C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */,
 			);
 			name = modern;
 			sourceTree = "<group>";
@@ -5155,8 +5160,8 @@
 		CEB09E4F17DAFC240055F150 = {
 			isa = PBXGroup;
 			children = (
+				C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */,
 				C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */,
-				C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */,
 				C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */,
 				C2D4B7681AFCE8F80035B4E4 /* YapDatabase */,
 				C2AA4EBB18A8ECC800E20C68 /* external */,
@@ -5692,8 +5697,8 @@
 					ProjectRef = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
 				},
 				{
-					ProductGroup = C2D825F21B6F9E8200434D37 /* Products */;
-					ProjectRef = C2D825F11B6F9E8200434D37 /* SSignalKit.xcodeproj */;
+					ProductGroup = C26E80111B7B748A003CC483 /* Products */;
+					ProjectRef = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -5706,25 +5711,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C2D825FE1B6F9E8300434D37 /* SSignalKit.framework */ = {
+		C26E80171B7B748A003CC483 /* SSignalKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SSignalKit.framework;
-			remoteRef = C2D825FD1B6F9E8300434D37 /* PBXContainerItemProxy */;
+			remoteRef = C26E80161B7B748A003CC483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2D826001B6F9E8300434D37 /* libSSignalKitStatic.a */ = {
+		C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libSSignalKitStatic.a;
-			remoteRef = C2D825FF1B6F9E8300434D37 /* PBXContainerItemProxy */;
+			remoteRef = C26E80181B7B748A003CC483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2D826021B6F9E8300434D37 /* SSignalKitTests.xctest */ = {
+		C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = SSignalKitTests.xctest;
-			remoteRef = C2D826011B6F9E8300434D37 /* PBXContainerItemProxy */;
+			remoteRef = C26E801A1B7B748A003CC483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */ = {
@@ -6406,6 +6411,7 @@
 				C248F3D719BE070D00BF658E /* audio-in.c in Sources */,
 				0A0B09BC18B1823700F3FE1B /* TMImageUtils.m in Sources */,
 				C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */,
+				C26E80201B7B91A9003CC483 /* TGDatabaseRequest.m in Sources */,
 				0A241AA018AB2F5900C32F45 /* MessageTableCellPhotoView.m in Sources */,
 				C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */,
 				C2D51B9F1B17A6BD009327C0 /* TGHelpPopup.m in Sources */,

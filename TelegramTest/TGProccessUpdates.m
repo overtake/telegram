@@ -515,7 +515,7 @@ static ASQueue *queue;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-    }];
+    } timeout:0 queue:queue.nativeQueue];
     
     if(completionHandler == nil) {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);

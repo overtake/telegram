@@ -34,20 +34,46 @@ NSString *const ATTACHMENTS = @"attachments";
 NSString *const BOT_COMMANDS = @"bot_commands_v2";
 -(id)init {
     if(self = [super init]) {
-        [self open:nil];
+        [self open:nil queue:nil];
     }
     return self;
 }
 
 
+static ASQueue *keyQueue;
+static Storage *instance;
+
+
++(void)initialize {
+    keyQueue = [[ASQueue alloc] initWithName:"dbKeyQueue"];
+}
+
 +(Storage *)manager {
-    static Storage *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[[self class] alloc] init];
-    });
+   
+    [keyQueue dispatchOnQueue:^{
+        
+        if(!instance)
+            instance = [[[self class] alloc] init];
+        
+    } synchronous:YES];
+    
     return instance;
 
+}
+
++(void)initManagerWithCallback:(dispatch_block_t)callback {
+    [keyQueue dispatchOnQueue:^{
+        if(!instance)
+            instance = [[self alloc] initWithCallback:callback];
+    }];
+}
+
+-(id)initWithCallback:(dispatch_block_t)callback {
+    if(self = [super init]) {
+        [self open:callback queue:dispatch_get_current_queue()];
+    }
+    
+    return self;
 }
 
 static YapDatabaseConnection *y_connection;
@@ -59,7 +85,7 @@ static NSString *yap_path;
     
     dispatch_once(&yapToken, ^{
         
-        yap_path = [NSString stringWithFormat:@"%@/yap_store-%@",[self path], [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"]];
+        yap_path = [NSString stringWithFormat:@"%@/yap_store-%@",[self path], @"t143.sqlite"];
         
         y_db = [[YapDatabase alloc] initWithPath:yap_path];
         y_connection = [y_db newConnection];
@@ -67,18 +93,6 @@ static NSString *yap_path;
     
     return y_connection;
 }
-
-+(void)reyap {
-    
-    YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
-    
-    options.corruptAction = YapDatabaseCorruptAction_Delete;
-    
-    y_db = [[YapDatabase alloc] initWithPath:yap_path serializer:NULL deserializer:NULL preSanitizer:NULL postSanitizer:NULL options:options];
-    y_connection = [y_db newConnection];
-   
-}
-
 +(NSString *)path {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
@@ -99,43 +113,83 @@ static NSString *encryptionKey = @"1oi1h2i3ufhkj21h3fkj";
 
 +(void)dbSetKey:(NSString *)key {
     
-    encryptionKey = key;
-    
-    if(key.length == 0)
-    {
-        encryptionKey = basekey;
-    }
-    
-    [Storage manager];
-    
-    [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
-        [db setKey:key];
-    }];
-}
+    [keyQueue dispatchOnQueue:^{
+        encryptionKey = key;
+        
+        if(key.length == 0)
+        {
+            encryptionKey = basekey;
+        }
+        
+        if(instance) {
+            [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
+                [db setKey:key];
+            }];
+        }
 
-+(void)dbRekey:(NSString *)rekey {
-    
-    if(rekey.length == 0)
-    {
-        rekey = basekey;
-    }
-    
-    encryptionKey = rekey;
-    
-    [[Storage manager] dbRekey:encryptionKey];
+    }];
     
 }
 
--(void)dbRekey:(NSString *)rekey {
++(void)dbRekey:(NSString *)rekey completionHandler:(dispatch_block_t)completionHandler {
     
-    [queue inDatabase:^(FMDatabase *db) {
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [keyQueue dispatchOnQueue:^{
         
-        [db rekey:rekey];
+        NSString *o_key = encryptionKey;
+       
+        encryptionKey = rekey.length == 0 ? basekey : rekey;
         
-        [db setKey:rekey];
-        
+        if(instance)
+            [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
+                
+                [MTNetwork pause];
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [TMViewController showModalProgress];
+                }];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                
+                NSString *path = [[self path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+                
+                NSString *backup = [[self path] stringByAppendingPathComponent:@"pass_code_backup.sqlite"];
+                
+                [fileManager removeItemAtPath:backup error:nil];
+                
+                const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", backup, encryptionKey] UTF8String];
+                
+                sqlite3_exec(db.sqliteHandle, sqlQ, NULL, NULL, NULL);
+                
+                sqlite3_exec(db.sqliteHandle, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
+                
+                
+                
+                [db close];
+                
+                [fileManager removeItemAtPath:path error:nil];
+                [fileManager moveItemAtPath:backup toPath:path error:nil];
+                
+                
+                [db open];
+                
+                [db setKey:encryptionKey];
+                
+                [MTNetwork resume];
+                
+                dispatch_async(dqueue, completionHandler);
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [TMViewController hideModalProgress];
+                }];
+                
+                
+            }];
     }];
+    
 }
+
 
 static NSString *kEmoji = @"kEmojiNew";
 
@@ -173,13 +227,18 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 
 
 
--(void)open:(void (^)())completeHandler {
+-(void)open:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
+    
+    if(!dqueue)
+        dqueue = dispatch_get_current_queue();
     
     
-    [self createAndCheckDatabase:@"t143.sqlite"];
+    NSString *dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
     
     
-    self->queue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@",[Storage path],@"encrypted.sqlite"]];
+    
+    self->queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+
     
     __block BOOL res = NO;
     
@@ -187,20 +246,13 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     [[Storage yap] flushMemoryWithFlags:YapDatabaseConnectionFlushMemoryFlags_All];
 
     
-//    
-//    
-//    NSString *oldName = [[NSUserDefaults standardUserDefaults] objectForKey:@"db_name"];
-//    
-//    if(![oldName isEqualToString:dbName]) {
-//        [SettingsArchiver setSupportUserId:0];
-//        [SettingsArchiver removeSetting:BlockedContactsSynchronized];
-//        
-//        [[NSUserDefaults standardUserDefaults] setObject:dbName forKey:@"db_name"];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//    }
-    
     [queue inDatabase:^(FMDatabase *db) {
         
+        [db close];
+        
+        [self createAndCheckDatabase:@"t143.sqlite"];
+        
+        [db open];
         
         
         res = [db setKey:encryptionKey];
@@ -222,7 +274,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         //dialogs indexes
         {
-            [db executeUpdate:@"CREATE INDEX if not exists select_conv_idx ON dialogs(top_message,last_real_message_date)"];
+            [db executeUpdate:@"CREATE INDEX if not exists c_l_idx ON dialogs(last_real_message_date)"];
 
         }
         
@@ -239,8 +291,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists contacts (user_id INTEGER PRIMARY KEY,mutual integer)"];
         
-        
-        [db executeUpdate:@"CREATE INDEX if not exists user_id_index ON contacts(user_id)"];
         
         [db executeUpdate:@"create table if not exists chats_full_new (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)"];
         
@@ -283,39 +333,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         if([db hadError]) {
             [self drop:^{
-                [self open:completeHandler];
+                [self open:completeHandler queue:dqueue];
             }];
             return;
         }
         
         
-        [db makeFunctionNamed:@"searchText" maximumArguments:2 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **aargv) {
-            
-            if (sqlite3_value_type(aargv[0]) == SQLITE_TEXT) {
-                
-                @autoreleasepool {
-                    
-                    const char *c = (const char *)sqlite3_value_text(aargv[0]);
-                    
-                    NSString *s = [NSString stringWithUTF8String:c];
-                    
-                    
-                    const char *cSearch = (const char *)sqlite3_value_text(aargv[1]);
-                    
-                    NSString *search = [NSString stringWithUTF8String:cSearch];
-                    
-                    BOOL result = [s rangeOfString:search options:NSCaseInsensitiveSearch].location != NSNotFound;
-                    
-                    
-                    sqlite3_result_int(context, result);
-                }
-            } else {
-                sqlite3_result_null(context);
-            }
-        }];
         
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dqueue, ^{
             if(completeHandler) completeHandler();
         });
         
@@ -329,29 +354,36 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 //
 -(void) createAndCheckDatabase:(NSString *)dbName
 {
-    BOOL success;
-    
     NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
 
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],dbName];
+    NSString *copyDbPath = [NSString stringWithFormat:@"%@/%@",[Storage path],@"cp_db_p"];
     
-    success = [fileManager fileExistsAtPath:encryptedDatabasePath];
+    BOOL success = [fileManager fileExistsAtPath:encryptedDatabasePath] && fileSize(encryptedDatabasePath) > 0 && ![fileManager fileExistsAtPath:copyDbPath];
     
-    if (success) return;
+    if (success) {
+        [fileManager removeItemAtPath:dbPath error:nil];
+        return;
+    } else {
+        [fileManager removeItemAtPath:encryptedDatabasePath error:nil];
+    }
+    
+    [fileManager copyItemAtPath:dbPath toPath:copyDbPath error:nil];
 
     
-    // Set the new encrypted database path to be in the Documents Folder
-    
-    // SQL Query. NOTE THAT DATABASE IS THE FULL PATH NOT ONLY THE NAME
     const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
     
     sqlite3 *unencrypted_DB;
-    if (sqlite3_open([dbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
+    if (sqlite3_open([copyDbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
+
         
-        // Attach empty encrypted database to unencrypted database
+        [ASQueue dispatchOnMainQueue:^{
+            [TMViewController showModalProgress];
+        }];
+        
         sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
         
         // export database
@@ -361,18 +393,28 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
         
         sqlite3_close(unencrypted_DB);
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [TMViewController hideModalProgress];
+        }];
     }
     else {
         sqlite3_close(unencrypted_DB);
         NSAssert1(NO, @"Failed to open database with message '%s'.", sqlite3_errmsg(unencrypted_DB));
     }
     
+    [fileManager removeItemAtPath:copyDbPath error:nil];
     [fileManager removeItemAtPath:dbPath error:nil];
     
 }
 //
 
+
 -(void)drop:(void (^)())completeHandler {
+    [self drop:completeHandler queue:dispatch_get_current_queue()];
+}
+
+-(void)drop:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
     [self->queue inDatabase:^(FMDatabase *db) {
         [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
         
@@ -382,7 +424,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }];
         
         encryptionKey = basekey;
-        [self open:completeHandler];
+        [self open:completeHandler queue:dqueue];
     }];
     
    
@@ -1167,13 +1209,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         
         
-        
         FMResultSet *result = [db executeQuery:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",@(limit),@(offset)];
         
         
-        
         [self parseDialogs:result dialogs:dialogs messages:messages];
-        
+
         
         [result close];
         
@@ -1591,6 +1631,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
      [queue inDatabase:^(FMDatabase *db) {
          
          NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from sharedmedia where peer_id = %d and message_id %@ %ld order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
+         
+         [self explainQuery:sql];
 
          FMResultSet *result = [db executeQueryWithFormat:sql,nil];
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
@@ -1787,6 +1829,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 -(void)selectTasks:(void (^)(NSArray *tasks))completeHandler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    
     [queue inDatabase:^(FMDatabase *db) {
         NSMutableArray *tasks = [[NSMutableArray alloc] init];
         FMResultSet *result = [db executeQuery:@"select * from tasks"];
@@ -1814,7 +1860,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [tasks addObject:task];
         }
         [result close];
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dqueue, ^{
             if(completeHandler) completeHandler(tasks);
         });
 

@@ -205,15 +205,15 @@ static NSMutableDictionary * messageKeys;
     int source_id = next ? _controller.max_id : _controller.min_id;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
     
-    
- /*
-  [[Storage requestMessagesWithDate:maxDate localMaxId:source_id limit:_controller.selectLimit cnv_id:_controller.conversation.peer_id next:next filter:self.type] startWithNext:^(NSMutableArray *messages) {
-  
-  callback(messages);
-  
-  }];
-  */
-
+//    
+// 
+//  [[Storage requestMessagesWithDate:maxDate localMaxId:source_id limit:_controller.selectLimit cnv_id:_controller.conversation.peer_id next:next filter:self.type] startWithNext:^(NSMutableArray *messages) {
+//  
+//  callback(messages);
+//  
+//  }];
+////  
+////
     [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type] completeHandler:^(NSArray *result) {
         
         

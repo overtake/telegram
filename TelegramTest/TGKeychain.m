@@ -160,19 +160,21 @@ static NSMutableDictionary *keychains()
     _passcodeHash = [part1 dataWithData:part2];
     
     
-    if(save) {
-        [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            [self _storeKeychain:obj];
-            
-        }];
-    }
-
-    [self cleanup];
+    dispatch_block_t block = ^{
+        if(save) {
+            [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                [self _storeKeychain:obj];
+                
+            }];
+        }
+        
+        [self cleanup];
+        
+        [self loadIfNeeded];
+    };
     
-    [self loadIfNeeded];
-    
-    if(!_isNeedPasscode) {
+ //   if(!_isNeedPasscode) {
         
         NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
         
@@ -181,14 +183,15 @@ static NSMutableDictionary *keychains()
         if(sc) {
             
             if(save) {
-                [sc performSelector:@selector(dbRekey:) withObject:pass];
+                [Storage dbRekey:pass completionHandler:block];
             } else {
                 [sc performSelector:@selector(dbSetKey:) withObject:pass];
+                block();
             }
         }
         
       
-    }
+  //  }
     
     
     

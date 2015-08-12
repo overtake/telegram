@@ -39,9 +39,10 @@ extern NSString *const BOT_COMMANDS;
 
 
 +(void)dbSetKey:(NSString *)key;
-+(void)dbRekey:(NSString *)rekey;
++(void)dbRekey:(NSString *)rekey completionHandler:(dispatch_block_t)completionHandler;
 
 +(Storage *)manager;
++(void)initManagerWithCallback:(dispatch_block_t)callback;
 +(YapDatabaseConnection *)yap;
 
 +(NSString *)path;
@@ -116,7 +117,6 @@ extern NSString *const BOT_COMMANDS;
 - (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler;
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler;
 - (void)users:(void (^)(NSArray *result))completeHandler;
-- (void)updateLastSeen:(TLUser *)user;
 
 
 -(void)insertContacst:(NSArray *)contacts;
@@ -169,17 +169,6 @@ extern NSString *const BOT_COMMANDS;
 
 - (void) removeContact:(TLContact *) contact ;
 - (void) insertContact:(TLContact *) contact;
-
-//-(void)notifySettings:(void (^)(NSDictionary *))completeHandler;
-//-(void)addNotifySetting:(int)peer_id mute_until:(int)mute_until;
-
-//-(void)selfDestructorFor:(int)chat_id max_id:(int)max_id completeHandler:(void (^)(Destructor *destructor))completeHandler;
-//
-//-(void)selfDestructors:(int)chat_id completeHandler:(void (^)(NSArray *destructors))completeHandler;
-//-(void)selfDestructors:(void (^)(NSArray *destructors))completeHandler;
-//
-//-(void)insertDestructor:(Destructor *)destructor;
-//-(void)updateDestructTime:(int)time forMessages:(NSArray *)msgIds;
 
 -(void)insertBlockedUsers:(NSArray *)users;
 -(void)deleteBlockedUsers:(NSArray *)users;

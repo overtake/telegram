@@ -143,23 +143,34 @@ static NSString *kDefaultDatacenter = @"default_dc";
                         } synchronous:YES];
                         
                         if(acceptHash) {
-                                                        
-                            [_queue dispatchOnQueue:^{
-                                
-                                [self startWithKeychain:_keychain];
-                                [self initConnectionWithId:_masterDatacenter];
-                                
-                                
-                            }];
                             
-                             [Telegram initializeDatabase];
                             
-                            if(![self isAuth]) {
-                                [[Telegram delegate] logoutWithForce:YES];
-                            } else {
-                                [TGPasslock appIncomeActive];
-                            }
-                        } 
+                                [_queue dispatchOnQueue:^{
+                                    
+                                    [Storage initManagerWithCallback:^{
+                                    
+                                        [self startWithKeychain:_keychain];
+                                        [self initConnectionWithId:_masterDatacenter];
+                                        
+                                        
+                                        [ASQueue dispatchOnMainQueue:^{
+                                            [Telegram initializeDatabase];
+                                            
+                                            if(![self isAuth]) {
+                                                [[Telegram delegate] logoutWithForce:YES];
+                                            } else {
+                                                [TGPasslock appIncomeActive];
+                                            }
+                                        }];
+                                        
+                                    }];
+                                }];
+                                
+                            
+
+                            
+                            
+                        }
                         
                         
                         return acceptHash;
@@ -378,6 +389,13 @@ static NSString *kDefaultDatacenter = @"default_dc";
 -(void)update {
     [_mtProto pause];
     [_mtProto resume];
+}
+
++(void)pause {
+    [[self instance]->_mtProto pause];
+}
++(void)resume {
+    [[self instance]->_mtProto resume];
 }
 
 static int MAX_WORKER_POLL = 5;

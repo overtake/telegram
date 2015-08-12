@@ -12,6 +12,13 @@
 @interface TGDatabase : NSObject
 
 
-+(SSignal *)requestMessagesWith:(int)date limit:(int)limit;
++(void)dbSetKey:(NSString *)key;
++(void)dbRekey:(NSString *)key;
+
++(SSignal *)initialize;
+
+
++(SSignal *)conversationsWithOffset:(NSUInteger)offset;
+
 
 @end

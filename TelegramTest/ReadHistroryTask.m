@@ -9,7 +9,6 @@
 #import "ReadHistroryTask.h"
 #import "TMTaskRequest.h"
 @interface ReadHistroryTask ()
-@property (nonatomic,strong) TLPeer *peer;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
 
@@ -30,7 +29,7 @@
 -(id)initWithParams:(NSDictionary *)params {
     if(self = [super init]) {
         _params = params;
-        _peer = [_params objectForKey:@"peer"];
+        _conversation = [_params objectForKey:@"conversation"];
         _taskId = [TMTaskRequest futureTaskId];
     }
     
@@ -39,9 +38,6 @@
 
 -(void)execute {
     
-    if(!_conversation) {
-        _conversation = [[Storage manager] selectConversation:_peer];
-    }
     
     if(_conversation) {
         
@@ -77,17 +73,22 @@
             if(history.offset > 0) {
                 [self loop:history.offset];
             } else {
+                [ASQueue dispatchOnMainQueue:^{
+                    if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
+                        [_delegate didCompleteTaskRequest:self];
+                    }
+                }];
+                
+            }
+        } else {
+            [ASQueue dispatchOnMainQueue:^{
                 if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
                     [_delegate didCompleteTaskRequest:self];
                 }
-            }
-        } else {
-            if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
-                [_delegate didCompleteTaskRequest:self];
-            }
+            }];
         }
         
-    } errorHandler:nil];
+    } errorHandler:nil timeout:0 queue:taskQueue().nativeQueue];
     
 
 }
