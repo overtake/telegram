@@ -122,15 +122,6 @@
     return self;
 }
 
--(void)loadBroadcastList:(dispatch_block_t)callback {
-    [self.queue dispatchOnQueue:^{
-        [self add:[[Storage manager] broadcastList]];
-        
-        if(callback)
-            callback();
-    }];
-}
-
 
 -(void)save:(id)object {
     // [[Storage manager] insertBroadcast:object];

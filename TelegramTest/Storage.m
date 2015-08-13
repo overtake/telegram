@@ -106,90 +106,6 @@ static NSString *yap_path;
 }
 
 
-static NSString *basekey = @"1oi1h2i3ufhkj21h3fkj";
-
-static NSString *encryptionKey = @"1oi1h2i3ufhkj21h3fkj";
-
-
-+(void)dbSetKey:(NSString *)key {
-    
-    [keyQueue dispatchOnQueue:^{
-        encryptionKey = key;
-        
-        if(key.length == 0)
-        {
-            encryptionKey = basekey;
-        }
-        
-        if(instance) {
-            [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
-                [db setKey:key];
-            }];
-        }
-
-    }];
-    
-}
-
-+(void)dbRekey:(NSString *)rekey completionHandler:(dispatch_block_t)completionHandler {
-    
-    dispatch_queue_t dqueue = dispatch_get_current_queue();
-    
-    [keyQueue dispatchOnQueue:^{
-        
-        NSString *o_key = encryptionKey;
-       
-        encryptionKey = rekey.length == 0 ? basekey : rekey;
-        
-        if(instance)
-            [[Storage manager]->queue inDatabase:^(FMDatabase *db) {
-                
-                [MTNetwork pause];
-                
-                [ASQueue dispatchOnMainQueue:^{
-                    [TMViewController showModalProgress];
-                }];
-                
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                
-                NSString *path = [[self path] stringByAppendingPathComponent:@"encrypted.sqlite"];
-                
-                NSString *backup = [[self path] stringByAppendingPathComponent:@"pass_code_backup.sqlite"];
-                
-                [fileManager removeItemAtPath:backup error:nil];
-                
-                const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", backup, encryptionKey] UTF8String];
-                
-                sqlite3_exec(db.sqliteHandle, sqlQ, NULL, NULL, NULL);
-                
-                sqlite3_exec(db.sqliteHandle, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
-                
-                
-                
-                [db close];
-                
-                [fileManager removeItemAtPath:path error:nil];
-                [fileManager moveItemAtPath:backup toPath:path error:nil];
-                
-                
-                [db open];
-                
-                [db setKey:encryptionKey];
-                
-                [MTNetwork resume];
-                
-                dispatch_async(dqueue, completionHandler);
-                
-                [ASQueue dispatchOnMainQueue:^{
-                    [TMViewController hideModalProgress];
-                }];
-                
-                
-            }];
-    }];
-    
-}
-
 
 static NSString *kEmoji = @"kEmojiNew";
 
@@ -255,7 +171,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db open];
         
         
-        res = [db setKey:encryptionKey];
+        res = [db setKey:[MTNetwork encryptionKey]];
+        
         
         [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
         
@@ -302,7 +219,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [db executeUpdate:@"create table if not exists sharedmedia (message_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer)"];
         
         
-        [db executeUpdate:@"CREATE INDEX if not exists sm_peer_idx ON sharedmedia(peer_id)"];
+        [db executeUpdate:@"CREATE INDEX if not exists sm_peer_message_idx ON sharedmedia(peer_id,message_id)"];
         
         
         
@@ -371,18 +288,23 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [fileManager removeItemAtPath:encryptedDatabasePath error:nil];
     }
     
-    [fileManager copyItemAtPath:dbPath toPath:copyDbPath error:nil];
+    if([fileManager fileExistsAtPath:dbPath])
+        [fileManager copyItemAtPath:dbPath toPath:copyDbPath error:nil];
 
     
-    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
+    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, [MTNetwork encryptionKey]] UTF8String];
     
     sqlite3 *unencrypted_DB;
+
     if (sqlite3_open([copyDbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
 
+        if(fileSize(dbPath) > 0) {
+            [ASQueue dispatchOnMainQueue:^{
+                [TMViewController showModalProgressWithDescription:NSLocalizedString(@"DatabaseOptimizing",nil)];
+            }];
+        }
         
-        [ASQueue dispatchOnMainQueue:^{
-            [TMViewController showModalProgress];
-        }];
+        
         
         sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
         
@@ -394,9 +316,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         sqlite3_close(unencrypted_DB);
         
-        [ASQueue dispatchOnMainQueue:^{
-            [TMViewController hideModalProgress];
-        }];
+        if(fileSize(dbPath) > 0) {
+            [ASQueue dispatchOnMainQueue:^{
+                [TMViewController hideModalProgress];
+            }];
+        }
+        
     }
     else {
         sqlite3_close(unencrypted_DB);
@@ -409,9 +334,21 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
 }
 //
 
++(void)open:(void (^)())completeHandler {
+    [[self manager] open:completeHandler queue:dispatch_get_current_queue()];
+}
 
 -(void)drop:(void (^)())completeHandler {
     [self drop:completeHandler queue:dispatch_get_current_queue()];
+}
+
+
++(void)drop {
+    [[NSFileManager defaultManager] removeItemAtPath:[[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"] error:nil];
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        [transaction removeAllObjectsInAllCollections];
+    }];
 }
 
 -(void)drop:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
@@ -423,7 +360,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [transaction removeAllObjectsInAllCollections];
         }];
         
-        encryptionKey = basekey;
         [self open:completeHandler queue:dqueue];
     }];
     
@@ -1324,7 +1260,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
         NSMutableArray *users = [[NSMutableArray alloc] init];
         
+        
         FMResultSet *result = [db executeQuery:@"select * from users"];
+        
         
         while ([result next]) {
             TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
@@ -1336,6 +1274,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         
         [result close];
+        
         
         if(completeHandler) {
             completeHandler(users);
@@ -1929,11 +1868,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(NSArray *)broadcastList {
+-(void)broadcastList:(void (^)(NSArray *list))completeHandler  {
     
     NSMutableArray *list = [[NSMutableArray alloc] init];
     
-    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+    [queue inDatabase:^(FMDatabase *db) {
         
         FMResultSet *result = [db executeQuery:@"select * from broadcasts where 1=1 order by date"];
         while ([result next]) {
@@ -1944,10 +1883,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
          [result close];
         
+        if(completeHandler)
+            completeHandler(list);
+        
     }];
     
-    
-    return list;
     
 }
 
@@ -2048,7 +1988,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)addSupportMessages:(NSArray *)messages {
     [queue inDatabase:^(FMDatabase *db) {
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            [db executeUpdate:@"insert into support_messages (n_id,serialized) values (?,?)",@(obj.n_id),[TLClassStore serialize:obj]];
+            [db executeUpdate:@"insert or replace into support_messages (n_id,serialized) values (?,?)",@(obj.n_id),[TLClassStore serialize:obj]];
         }];
     }];
 }

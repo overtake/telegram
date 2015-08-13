@@ -16,7 +16,6 @@
 @interface BroadcastManager : SharedManager
 
 - (BroadcastMemberChecker *)broadcastMembersCheckerById:(int)broadcastId;
--(void)loadBroadcastList:(dispatch_block_t)callback;
 
 
 @end

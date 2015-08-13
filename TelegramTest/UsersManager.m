@@ -295,7 +295,8 @@
     currentUser.status.was_online = status.was_online;
     currentUser.status.expires = status.expires;
     
-    [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
+    if(result)
+        [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
     
     return result;
 }

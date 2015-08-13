@@ -194,7 +194,6 @@
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
     
-    
 
     
   //  CGContextSetFillColorWithColor(context, self.layer.backgroundColor);
@@ -224,11 +223,13 @@
     if(CTFrame)
         CFRelease(CTFrame);
     
+
+    
     CTFrame = CTFramesetterCreateFrame(framesetter,
-                                                CFRangeMake(0, 0), path, NULL);
+                                       CFRangeMake(0, 0), path, NULL);
     
     
-   CGContextSaveGState(context);
+    CGContextSaveGState(context);
     
     CTFrameDraw(CTFrame, context);
     

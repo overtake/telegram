@@ -36,10 +36,8 @@ extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
 -(void)drop:(void (^)())completeHandler;
-
-
-+(void)dbSetKey:(NSString *)key;
-+(void)dbRekey:(NSString *)rekey completionHandler:(dispatch_block_t)completionHandler;
++(void)drop;
++(void)open:(void (^)())completeHandler;
 
 +(Storage *)manager;
 +(void)initManagerWithCallback:(dispatch_block_t)callback;
@@ -89,7 +87,7 @@ extern NSString *const BOT_COMMANDS;
 
 -(void)insertBroadcast:(TL_broadcast *)broadcast;
 -(void)deleteBroadcast:(TL_broadcast *)broadcast;
--(NSArray *)broadcastList;
+-(void)broadcastList:(void (^)(NSArray *list))completeHandler;
 
 
 -(void)deleteDialog:(TL_conversation *)dialog completeHandler:(void (^)(void))completeHandler;

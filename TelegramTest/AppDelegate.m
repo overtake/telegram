@@ -859,13 +859,17 @@ void exceptionHandler(NSException * exception)
             
             [TGAudioPlayerWindow hide];
             
-            [[Storage manager] drop:^{
+            
+            [[MTNetwork instance] drop];
+            
+            [Storage drop];
+            
+            [Storage open:^{
                 
                 [TGCache clear];
                 [TGModernTypingManager drop];
                 [SharedManager drop];
                 [[MTNetwork instance] startNetwork];
-                [[MTNetwork instance] drop];
                 [Telegram drop];
                 [TMViewController hidePasslock];
                 [MessageSender drop];

@@ -35,7 +35,7 @@
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
-    
+    [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
     [self updateMessageFont];
     

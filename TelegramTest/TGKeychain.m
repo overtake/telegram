@@ -38,7 +38,7 @@ static NSMutableDictionary *keychains()
 @interface TGKeychain ()
 {
     NSString *_name;
-    bool _encrypted;
+    
     NSData *_aesKey;
     NSData *_aesIv;
     NSData *_passcodeHash;
@@ -66,6 +66,11 @@ static NSMutableDictionary *keychains()
         keychain = [[TGKeychain alloc] initWithName:name encrypted:false];
         [keychains() setObject:keychain forKey:name];
     }
+    
+    keychain->_encrypted = false;
+    [keychain cleanup];
+    [keychain loadIfNeeded];
+    
     TG_SYNCHRONIZED_END(_keychains);
     
     return keychain;
@@ -84,6 +89,11 @@ static NSMutableDictionary *keychains()
         keychain = [[TGKeychain alloc] initWithName:name encrypted:true];
         [keychains() setObject:keychain forKey:name];
     }
+    
+    keychain->_encrypted = true;
+    [keychain cleanup];
+    [keychain loadIfNeeded];
+    
     TG_SYNCHRONIZED_END(_keychains);
     
     return keychain;
@@ -120,8 +130,6 @@ static NSMutableDictionary *keychains()
 
 -(void)loadIfNeeded {
     
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
-    
     [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         [self _loadKeychainIfNeeded:obj];
@@ -131,7 +139,6 @@ static NSMutableDictionary *keychains()
 
 -(void)cleanup {
     
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
     
     [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -140,12 +147,17 @@ static NSMutableDictionary *keychains()
     }];
 }
 
++(void)initialize {
+    groups = @[@"persistent",@"primes",@"temp"];
+}
+
+static NSArray *groups;
+
 -(BOOL)updatePasscodeHash:(NSData *)md5Hash save:(BOOL)save {
     
     if(!md5Hash)
         md5Hash = [[NSData alloc] initWithEmptyBytes:32];
     
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
     
     NSData *part1 = [md5Hash subdataWithRange:NSMakeRange(0, 16)];
     
@@ -160,39 +172,13 @@ static NSMutableDictionary *keychains()
     _passcodeHash = [part1 dataWithData:part2];
     
     
-    dispatch_block_t block = ^{
-        if(save) {
-            [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                [self _storeKeychain:obj];
-                
-            }];
-        }
-        
-        [self cleanup];
-        
-        [self loadIfNeeded];
-    };
+    if(save) {
+        [self storeAllKeychain];
+    }
     
- //   if(!_isNeedPasscode) {
-        
-        NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
-        
-        Class sc = NSClassFromString(@"Storage");
-        
-        if(sc) {
-            
-            if(save) {
-                [Storage dbRekey:pass completionHandler:block];
-            } else {
-                [sc performSelector:@selector(dbSetKey:) withObject:pass];
-                block();
-            }
-        }
-        
-      
-  //  }
+    [self cleanup];
     
+    [self loadIfNeeded];
     
     
     return !_isNeedPasscode;
@@ -333,6 +319,14 @@ static NSMutableDictionary *keychains()
         if (_dictByGroup[group] == nil)
             _dictByGroup[group] = [[NSMutableDictionary alloc] init];
     }
+}
+
+-(void)storeAllKeychain {
+    [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [self _storeKeychain:obj];
+        
+    }];
 }
 
 - (void)_storeKeychain:(NSString *)group

@@ -105,9 +105,11 @@
 
 -(void)sortAndNotify:(BOOL)notify
 {
+    
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.lastSeenTime" ascending:NO];
     
     [self->list sortUsingDescriptors:@[descriptor]];
+    
     
     if(notify)
     {

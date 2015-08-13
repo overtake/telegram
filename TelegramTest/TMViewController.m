@@ -204,6 +204,12 @@ static TGModalSetCaptionView *setCaptionView;
     
 }
 
++(void)showModalProgressWithDescription:(NSString *)description {
+    [self showModalProgress];
+    
+    [progressView setDescription:description];
+}
+
 +(void)hideModalProgress {
     
     //  progressView.layer.opacity = 0.8;

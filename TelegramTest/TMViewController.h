@@ -39,7 +39,7 @@
 
 - (void)rightButtonAction;
 
-
++(void)showModalProgressWithDescription:(NSString *)description;
 +(void)showModalProgress;
 +(void)hideModalProgress;
 

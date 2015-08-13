@@ -20,6 +20,12 @@
 static ASQueue *queue;
 
 ASQueue *taskQueue() {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[ASQueue alloc] initWithName:"taskQueue"];
+    });
+    
     return queue;
 }
 
@@ -88,7 +94,7 @@ ASQueue *taskQueue() {
         
         instance = [[[self class] alloc] init];
         instance.tasks = [[NSMutableArray alloc] init];
-        queue = [[ASQueue alloc] initWithName:"taskQueue"];
+        
       
     });
     return instance;

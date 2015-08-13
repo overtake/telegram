@@ -383,7 +383,7 @@
     self.isCodeExpired = NO;
     
     
-
+    [TMViewController showModalProgress];
     
     [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:5 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         
@@ -404,6 +404,8 @@
         
         [self performSMSCodeTextFieldShowAnimation];
         
+         [TMViewController hideModalProgressWithSuccess];
+        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if(error.error_code == PHONE_MIGRATE_X) {
             [self getSMSCodeSendRequest];
@@ -411,6 +413,8 @@
             if([error.error_msg isEqualToString:@"PHONE_NUMBER_INVALID"]) {
                 error.error_msg = NSLocalizedString(@"Login.InvalidPhoneNumber", nil);
             }
+            
+             [TMViewController hideModalProgress];
             
             [self.getSMSCodeView loadingSuccess];
             [self.getSMSCodeView showErrorWithText:error.error_msg];

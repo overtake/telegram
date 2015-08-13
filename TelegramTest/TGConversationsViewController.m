@@ -80,7 +80,7 @@
     
     [MTNetwork instance];
     
-    if(![TGPasslock isEnabled]) {
+    if(![TGPasslock isEnabled] && [[MTNetwork instance] isAuth]) {
         [self initialize];
        // [[MTNetwork instance] startNetwork];
     }
@@ -90,20 +90,27 @@
 
 -(void)initialize {
     
+    
     [[Storage manager] users:^(NSArray *result) {
-        
         
         
         [[UsersManager sharedManager] addFromDB:result];
         
-        [[BroadcastManager sharedManager] loadBroadcastList:^{
+        [[Storage manager] broadcastList:^(NSArray *broadcasts) {
+            
+            [[BroadcastManager sharedManager] add:broadcasts];
+            
             
             [[Storage manager] loadChats:^(NSArray *chats) {
+                
+                
+                
                 [[ChatsManager sharedManager] add:chats];
                 
-                    [self initConversations];
+                [self initConversations];
             }];
         }];
+        
         
     }];
     
@@ -132,10 +139,8 @@
     [SecretChatAccepter instance];
     
   
-    
     [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
         
-
         [[MTNetwork instance] startNetwork];
         
         [EmojiViewController reloadStickers];
@@ -144,9 +149,11 @@
         
         if(result.count != 0 || _history.state == DialogsHistoryStateEnd) {
             
+            
             [TMTaskRequest executeAll];
             
             [self insertAll:result];
+            
             
             [Notification perform:APP_RUN object:nil];
             

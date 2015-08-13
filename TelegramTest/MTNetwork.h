@@ -43,6 +43,8 @@
 +(void)pause;
 +(void)resume;
 
++(NSString *)encryptionKey;
+
 -(MTQueue *)queue;
 
 -(void)updatePasscode:(NSData *)md5Hash;

@@ -18,6 +18,7 @@
 #import "SSKeychain.h"
 #import "TGTLSerialization.h"
 #import "TGPasslock.h"
+#import <Security/SecRandom.h>
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -212,7 +213,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
-    
+    NSString * ndirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
 
     BOOL isset = NO;
     
@@ -235,6 +236,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
         }
         
     }
+    
 
 }
 
@@ -242,22 +244,35 @@ static NSString *kDefaultDatacenter = @"default_dc";
     return [_mtProto messageServiceQueue];
 }
 
+
+//        NSString * ndirectory = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+//
+//        if([[NSFileManager defaultManager] fileExistsAtPath:ndirectory]) {
+//
+//            TGKeychain *keychain = [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+//
+//            keychain->_encrypted = YES;
+//
+//            [keychain storeAllKeychain];
+//
+//            [[NSFileManager defaultManager] removeItemAtPath:ndirectory error:nil];
+//
+//        }
+
+
 -(TGKeychain *)nKeychain {
     
-    
+
 
     
 #ifndef TGDEBUG
     
-   // if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
-    //    return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-   // else
-        return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
-#else 
+    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
+        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
     
-//    if([[UsersManager currentUser].username isEqualToString:@"vihor"] && !isTestServer()) {
-//        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-//    }
+    return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+    
+#else
     
     if(isTestServer())  {
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
@@ -467,10 +482,21 @@ static int MAX_WORKER_POLL = 5;
     
     [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
     
+    
+    uint8_t secKey[32];
+    SecRandomCopyBytes(kSecRandomDefault, 32, secKey);
+    
+    [_keychain setObject:[[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding] forKey:@"encryptionKey" group:@"persistent"];
+    
+    
     [self.updateService drop];
     [self setDatacenter:1];
     
     [self initConnectionWithId:_masterDatacenter];
+}
+
++(NSString *)encryptionKey {
+    return [[self instance]->_keychain objectForKey:@"encryptionKey" group:@"persistent"];
 }
 
 -(int)getTime {
@@ -486,6 +512,7 @@ static int MAX_WORKER_POLL = 5;
     _masterDatacenter = dc_id;
     
     [_keychain setObject:@(dc_id) forKey:@"dc_id" group:@"persistent"];
+    
 }
 
 -(void)setUserId:(int)userId {

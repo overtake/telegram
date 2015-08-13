@@ -500,7 +500,7 @@ static NSMutableArray *listeners;
         _max_id =  0;
         
         _maxDate = [[MTNetwork instance] getTime];
-        _minDate = self.controller.conversation.last_marked_date;
+        _minDate = self.controller.conversation.last_marked_date+1;
         
         
         NSArray *items = [self selectAllItems];
