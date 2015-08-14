@@ -130,10 +130,23 @@
     
     [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
         
+        NSRange range = [self checkAndReturnEntityRange:obj];
+        
         if([obj isKindOfClass:[TL_messageEntityBold class]]) {
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:[self checkAndReturnEntityRange:obj]];
+            
+            NSString *link = [self.message.message substringWithRange:range];
+            
+            range = [self.textAttributed.string rangeOfString:link];
+            
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
         } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:[self checkAndReturnEntityRange:obj]];
+            
+            NSString *link = [self.message.message substringWithRange:range];
+            
+            range = [self.textAttributed.string rangeOfString:link];
+
+            
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
         }
         
     }];

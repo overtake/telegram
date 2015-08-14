@@ -87,8 +87,8 @@
         [self.textField setFrameSize:item.textSize];
         
        
-        
-        [self.textField setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
+    
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth([Telegram rightViewController].view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
                 
         if(item.photo) {
             [self.photoImageView setHidden:NO];
