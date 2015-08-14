@@ -262,6 +262,7 @@
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
     [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
+    [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -497,6 +498,26 @@
     
     
     
+}
+
+-(void)messageTableItemsEntitiesUpdate:(NSNotification *)notification {
+    
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    
+    NSArray *items = [HistoryFilter items:@[@(message.n_id)]];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        
+        NSUInteger index = [self indexOfObject:obj];
+        
+        [obj updateEntities];
+        
+        if(index != NSNotFound) {
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+    }];
 }
 
 
@@ -1602,7 +1623,7 @@ static NSTextAttachment *headerMediaIcon() {
    // [CATransaction begin];
     StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
     if([controller isKindOfClass:[StandartViewController class]] && controller.isSearchActive && forceEnd) {
-        [(StandartViewController *)controller searchByString:@""];
+        [(StandartViewController *)controller hideSearchViewControllerWithConversationUsed:self.conversation];
     }
     
     NSRect prevRect;

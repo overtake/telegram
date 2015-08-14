@@ -83,6 +83,7 @@
 -(void)_didStackRemoved;
 
 -(BOOL)becomeFirstResponder;
+-(BOOL)resignFirstResponder;
 - (void)loadViewIfNeeded;
 - (void)loadView;
 - (void)viewWillAppear:(BOOL)animated;

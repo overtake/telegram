@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 24.07.15.
+//  Auto created by Mikhail Filimonov on 13.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -172,9 +172,6 @@
 @end
 	
 @interface TLmessages_Messages : TLObject
-@end
-	
-@interface TLmessages_Message : TLObject
 @end
 	
 @interface TLmessages_SentMessage : TLObject
@@ -387,6 +384,12 @@
 @interface TLReplyMarkup : TLObject
 @end
 	
+@interface TLhelp_AppChangelog : TLObject
+@end
+	
+@interface TLMessageEntity : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -476,9 +479,9 @@
 
 	
 @interface TLInputPeer()
+@property int chat_id;
 @property int user_id;
 @property long access_hash;
-@property int chat_id;
 @end
 
 @interface TL_inputPeerEmpty : TLInputPeer<NSCoding>
@@ -487,14 +490,11 @@
 @interface TL_inputPeerSelf : TLInputPeer<NSCoding>
 +(TL_inputPeerSelf*)create;
 @end
-@interface TL_inputPeerContact : TLInputPeer<NSCoding>
-+(TL_inputPeerContact*)createWithUser_id:(int)user_id;
-@end
-@interface TL_inputPeerForeign : TLInputPeer<NSCoding>
-+(TL_inputPeerForeign*)createWithUser_id:(int)user_id access_hash:(long)access_hash;
-@end
 @interface TL_inputPeerChat : TLInputPeer<NSCoding>
 +(TL_inputPeerChat*)createWithChat_id:(int)chat_id;
+@end
+@interface TL_inputPeerUser : TLInputPeer<NSCoding>
++(TL_inputPeerUser*)createWithUser_id:(int)user_id access_hash:(long)access_hash;
 @end
 	
 @interface TLInputUser()
@@ -508,11 +508,8 @@
 @interface TL_inputUserSelf : TLInputUser<NSCoding>
 +(TL_inputUserSelf*)create;
 @end
-@interface TL_inputUserContact : TLInputUser<NSCoding>
-+(TL_inputUserContact*)createWithUser_id:(int)user_id;
-@end
-@interface TL_inputUserForeign : TLInputUser<NSCoding>
-+(TL_inputUserForeign*)createWithUser_id:(int)user_id access_hash:(long)access_hash;
+@interface TL_inputUser : TLInputUser<NSCoding>
++(TL_inputUser*)createWithUser_id:(int)user_id access_hash:(long)access_hash;
 @end
 	
 @interface TLInputContact()
@@ -928,6 +925,7 @@
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) TLMessageMedia* media;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
+@property (nonatomic, strong) NSMutableArray* entities;
 @property (nonatomic, strong) TLMessageAction* action;
 @end
 
@@ -935,10 +933,13 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup;
++(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
 +(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
+@end
+@interface TL_message_old32 : TLMessage<NSCoding>
++(TL_message_old32*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 	
 @interface TLMessageMedia()
@@ -1045,17 +1046,20 @@
 @interface TLPhoto()
 @property long n_id;
 @property long access_hash;
-@property int user_id;
 @property int date;
-@property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSMutableArray* sizes;
+@property int user_id;
+@property (nonatomic, strong) TLGeoPoint* geo;
 @end
 
 @interface TL_photoEmpty : TLPhoto<NSCoding>
 +(TL_photoEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_photo : TLPhoto<NSCoding>
-+(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes;
++(TL_photo*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date sizes:(NSMutableArray*)sizes;
+@end
+@interface TL_photo_old31 : TLPhoto<NSCoding>
++(TL_photo_old31*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date geo:(TLGeoPoint*)geo sizes:(NSMutableArray*)sizes;
 @end
 	
 @interface TLPhotoSize()
@@ -1080,21 +1084,25 @@
 @interface TLVideo()
 @property long n_id;
 @property long access_hash;
-@property int user_id;
 @property int date;
 @property int duration;
+@property (nonatomic, strong) NSString* mime_type;
 @property int size;
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
 @property int w;
 @property int h;
+@property int user_id;
 @end
 
 @interface TL_videoEmpty : TLVideo<NSCoding>
 +(TL_videoEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_video : TLVideo<NSCoding>
-+(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
++(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
+@end
+@interface TL_video_old29 : TLVideo<NSCoding>
++(TL_video_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
 @end
 	
 @interface TLGeoPoint()
@@ -1380,18 +1388,11 @@
 +(TL_messages_messagesSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
-@interface TLmessages_Message()
-
-@end
-
-@interface TL_messages_messageEmpty : TLmessages_Message<NSCoding>
-+(TL_messages_messageEmpty*)create;
-@end
-	
 @interface TLmessages_SentMessage()
 @property int n_id;
 @property int date;
 @property (nonatomic, strong) TLMessageMedia* media;
+@property (nonatomic, strong) NSMutableArray* entities;
 @property int pts;
 @property int pts_count;
 @property (nonatomic, strong) NSMutableArray* links;
@@ -1399,7 +1400,7 @@
 @end
 
 @interface TL_messages_sentMessage : TLmessages_SentMessage<NSCoding>
-+(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count;
++(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_messages_sentMessageLink : TLmessages_SentMessage<NSCoding>
 +(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
@@ -1640,6 +1641,7 @@
 @property int fwd_from_id;
 @property int fwd_date;
 @property int reply_to_msg_id;
+@property (nonatomic, strong) NSMutableArray* entities;
 @property int from_id;
 @property int chat_id;
 @property (nonatomic, strong) TLUpdate* update;
@@ -1654,10 +1656,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1974,19 +1976,22 @@
 @interface TLAudio()
 @property long n_id;
 @property long access_hash;
-@property int user_id;
 @property int date;
 @property int duration;
 @property (nonatomic, strong) NSString* mime_type;
 @property int size;
 @property int dc_id;
+@property int user_id;
 @end
 
 @interface TL_audioEmpty : TLAudio<NSCoding>
 +(TL_audioEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_audio : TLAudio<NSCoding>
-+(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
++(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
+@end
+@interface TL_audio_old29 : TLAudio<NSCoding>
++(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
 @end
 	
 @interface TLDocument()
@@ -2499,6 +2504,58 @@
 @end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup<NSCoding>
 +(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows;
+@end
+	
+@interface TLhelp_AppChangelog()
+@property (nonatomic, strong) NSString* text;
+@end
+
+@interface TL_help_appChangelogEmpty : TLhelp_AppChangelog<NSCoding>
++(TL_help_appChangelogEmpty*)create;
+@end
+@interface TL_help_appChangelog : TLhelp_AppChangelog<NSCoding>
++(TL_help_appChangelog*)createWithText:(NSString*)text;
+@end
+	
+@interface TLMessageEntity()
+@property int offset;
+@property int length;
+@property (nonatomic, strong) NSString* language;
+@property (nonatomic, strong) NSString* url;
+@end
+
+@interface TL_messageEntityUnknown : TLMessageEntity<NSCoding>
++(TL_messageEntityUnknown*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityMention : TLMessageEntity<NSCoding>
++(TL_messageEntityMention*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityHashtag : TLMessageEntity<NSCoding>
++(TL_messageEntityHashtag*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityBotCommand : TLMessageEntity<NSCoding>
++(TL_messageEntityBotCommand*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityUrl : TLMessageEntity<NSCoding>
++(TL_messageEntityUrl*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityEmail : TLMessageEntity<NSCoding>
++(TL_messageEntityEmail*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityBold : TLMessageEntity<NSCoding>
++(TL_messageEntityBold*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityItalic : TLMessageEntity<NSCoding>
++(TL_messageEntityItalic*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityCode : TLMessageEntity<NSCoding>
++(TL_messageEntityCode*)createWithOffset:(int)offset length:(int)length;
+@end
+@interface TL_messageEntityPre : TLMessageEntity<NSCoding>
++(TL_messageEntityPre*)createWithOffset:(int)offset length:(int)length language:(NSString*)language;
+@end
+@interface TL_messageEntityTextUrl : TLMessageEntity<NSCoding>
++(TL_messageEntityTextUrl*)createWithOffset:(int)offset length:(int)length url:(NSString*)url;
 @end
 	
 @interface TLProtoMessage()

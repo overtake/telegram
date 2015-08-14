@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 24.07.15.
+//  Auto created by Mikhail Filimonov on 13.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -306,8 +306,9 @@
 @property (nonatomic, strong) NSString* message;
 @property long random_id;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
+@property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
@@ -465,10 +466,10 @@
 @interface TLAPI_photos_getUserPhotos : TLApiObject
 @property (nonatomic, strong) TLInputUser* user_id;
 @property int offset;
-@property int max_id;
+@property long max_id;
 @property int limit;
 
-+(TLAPI_photos_getUserPhotos*)createWithUser_id:(TLInputUser*)user_id offset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_photos_getUserPhotos*)createWithUser_id:(TLInputUser*)user_id offset:(int)offset max_id:(long)max_id limit:(int)limit;
 @end
 
 @interface TLAPI_messages_forwardMessage : TLApiObject
@@ -883,5 +884,14 @@
 @property (nonatomic, strong) NSString* start_param;
 
 +(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
+@end
+
+@interface TLAPI_help_getAppChangelog : TLApiObject
+@property (nonatomic, strong) NSString* device_model;
+@property (nonatomic, strong) NSString* system_version;
+@property (nonatomic, strong) NSString* app_version;
+@property (nonatomic, strong) NSString* lang_code;
+
++(TLAPI_help_getAppChangelog*)createWithDevice_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version lang_code:(NSString*)lang_code;
 @end
 

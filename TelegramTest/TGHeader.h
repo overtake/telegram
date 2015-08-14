@@ -64,6 +64,8 @@
 #define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
 #define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
 #define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+#define TGSystemItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
+#define TGSystemBoldItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
 #define MAX_FILE_SIZE 1500000000

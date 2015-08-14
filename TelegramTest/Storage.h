@@ -35,6 +35,7 @@ extern NSString *const REPLAY_COLLECTION;
 extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
+extern NSString *const RECENT_SEARCH;
 -(void)drop:(void (^)())completeHandler;
 +(void)drop;
 +(void)open:(void (^)())completeHandler;
@@ -211,7 +212,7 @@ extern NSString *const BOT_COMMANDS;
 -(void)readMessagesContent:(NSArray *)messages;
 
 
-
+-(void)conversationsWithIds:(NSArray *)ids  completeHandler:(void (^)(NSArray *list))completeHandler;
 
 
 

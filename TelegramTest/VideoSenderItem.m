@@ -53,7 +53,7 @@
         }
         
 
-        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:duration size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
+        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:duration mime_type:mimetypefromExtension([path_for_file pathExtension]) size:0 thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 

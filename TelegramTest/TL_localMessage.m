@@ -18,7 +18,7 @@
 
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -35,6 +35,7 @@
     msg.fakeId = fakeId;
     msg.randomId = randomId;
     msg.reply_markup = reply_markup;
+    msg.entities = entities;
     return msg;
 }
 
@@ -104,7 +105,7 @@
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
-        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup state:DeliveryStateNormal];
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities state:DeliveryStateNormal];
     } else {
         return (TL_localMessage *) message;
     }
@@ -144,6 +145,16 @@
     [stream writeLong:self.randomId];
     if(self.flags & (1 << 6))
         [ClassStore TLSerialize:self.reply_markup stream:stream];
+    if(self.flags & (1 << 7)) {//Serialize FullVector
+        [stream writeInt:0x1cb5c415];
+        {
+            NSInteger tl_count = [self.entities count];
+            [stream writeInt:(int)tl_count];
+            for(int i = 0; i < (int)tl_count; i++) {
+                TLMessageEntity* obj = [self.entities objectAtIndex:i];
+                [ClassStore TLSerialize:obj stream:stream];
+            }
+        }}
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
@@ -161,6 +172,20 @@
     self.randomId = [stream readLong];
     if(self.flags & (1 << 6))
         self.reply_markup = [ClassStore TLDeserialize:stream];
+    if(self.flags & (1 << 7)) {//UNS FullVector
+        [stream readInt];
+        {
+            if(!self.entities)
+                self.entities = [[NSMutableArray alloc] init];
+            int count = [stream readInt];
+            for(int i = 0; i < count; i++) {
+                TLMessageEntity* obj = [ClassStore TLDeserialize:stream];
+                if(obj != nil && [obj isKindOfClass:[TLMessageEntity class]])
+                    [self.entities addObject:obj];
+                else
+                    break;
+            }
+        }}
 }
 
 -(int)peer_id {
@@ -336,8 +361,16 @@ DYNAMIC_PROPERTY(DDialog);
     
 }
 
+
+-(void)setEntities:(NSMutableArray*)entities
+{
+    [super setEntities:entities];
+    
+    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
+}
+
 -(id)copy {
-    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup state:self.dstate];
+    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities state:self.dstate];
 }
 
 

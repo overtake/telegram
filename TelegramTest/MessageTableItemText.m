@@ -37,19 +37,60 @@
     
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
-    [self updateMessageFont];
+    [self updateEntities];
     
     [SettingsArchiver addEventListener:self];
     
     
     
-    _links = [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+    [self updateWebPage];
     
     
-    if(_links.count > 0)
+  //  [self makeSizeByWidth:280];
+    
+    return self;
+}
+
+
+-(void)updateLinkAttributesByMessageEntities {
+    
+    [self.textAttributed removeAttribute:NSLinkAttributeName range:self.textAttributed.range];
+    
+    _links = [[NSArray alloc] init];
+    
+    NSMutableArray *links = [NSMutableArray array];
+    
+    if(self.message.entities.count > 0)
     {
         
+        [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
+            
+            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]]) {
+                
+                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (self.message.conversation.user.isBot || self.message.conversation.type != DialogTypeChat) )
+                    return;
+                    
+                NSRange range = [self checkAndReturnEntityRange:obj];
+                
+                NSString *link = [self.message.message substringWithRange:range];
+                
+                range = [self.textAttributed.string rangeOfString:link];
+                
+                if(range.location != NSNotFound) {
+                    [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
+                    [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                }
+                
+            }
+
+        }];
+        
+    } else {
+        links = (NSMutableArray *) [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || self.message.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
     }
+    
+    
+    _links = links;
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
@@ -74,19 +115,43 @@
     
     
     
-    [self updateWebPage];
+}
+
+-(void)updateEntities {
+    [self updateLinkAttributesByMessageEntities];
+    [self updateFontAttributesByEntities];
+}
+
+-(void)updateFontAttributesByEntities {
+    [self.textAttributed removeAttribute:NSFontAttributeName range:self.textAttributed.range];
+    
+    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
     
     
-  //  [self makeSizeByWidth:280];
-    
-    return self;
+    [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj isKindOfClass:[TL_messageEntityBold class]]) {
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:[self checkAndReturnEntityRange:obj]];
+        } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:[self checkAndReturnEntityRange:obj]];
+        }
+        
+    }];
 }
 
 
+-(NSRange)checkAndReturnEntityRange:(TLMessageEntity *)obj {
+    
+    int location = MIN((int)self.message.message.length, obj.offset);
+    
+    int length = ((int)self.message.message.length - (location + obj.length)) >= 0 ? obj.length : 0;
+    
+    return NSMakeRange(location, length);
+}
 
 -(void)updateMessageFont {
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
-    
+   
+    [self updateFontAttributesByEntities];
     
 //    static NSMutableParagraphStyle *paragraph;
 //    

@@ -463,7 +463,12 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 -(BOOL)becomeFirstResponder {
+    
     return [TGPasslock isVisibility] ? [passlockView becomeFirstResponder] : [self.view becomeFirstResponder];
+}
+
+-(BOOL)resignFirstResponder {
+    return [self.view resignFirstResponder];
 }
 
 - (void)loadView {

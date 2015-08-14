@@ -16,6 +16,7 @@
 #import "MessageCellDescriptionView.h"
 
 
+
 @interface TGZoomableImage : TGPVImageView
 @property (nonatomic,assign) NSPoint startPoint;
 @property (nonatomic,assign) BOOL isDragged;
@@ -33,6 +34,7 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     _startPoint = NSZeroPoint;
+    [super mouseUp:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
@@ -173,8 +175,6 @@
     
     [self addSubview:_imageContainerView];
     
-   
-    [self setAcceptsTouchEvents:YES];
   //  [self addSubview:_decreaseZoomButton];
     
 }
@@ -548,7 +548,12 @@ static const int bottomHeight = 60;
             
             AVPlayer *player = [AVPlayer playerWithURL:url];
             _videoPlayerView.player = player;
-            [player play];
+            
+            if(player.status == AVPlayerStatusReadyToPlay &&
+               player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                [player play];
+            }
+            
         }
         
         

@@ -45,7 +45,12 @@
 }
 
 -(BOOL)resignFirstResponder {
-    return [super resignFirstResponder];
+    
+    BOOL res = [super resignFirstResponder];
+    
+    [self.searchDelegate searchFieldDidResign];
+                
+    return res;
 }
 
 - (BOOL)becomeFirstResponder {
@@ -205,9 +210,6 @@ const static int textFieldXOffset = 30;
         [self.cancelButton setTarget:self selector:@selector(cancelButtonClick)];
         [self addSubview:self.cancelButton];
         [self.containerView setWantsLayer:YES];
-      
-        
-        [self.textField becomeFirstResponder];
     }
     
     return self;
@@ -233,8 +235,15 @@ const static int textFieldXOffset = 30;
     
     success = [[NSApp mainWindow] makeFirstResponder:nil];
     
+    [self centerPosition:YES];
     
     return success;
+}
+
+-(BOOL)isFirstResponder {
+    id responder = [self.window firstResponder];
+    
+    return [responder isKindOfClass:[NSTextView class]] && [[responder superview] superview] == self.textField;
 }
 
 -(void)setSelectedRange:(NSRange)range {
@@ -408,12 +417,21 @@ static float duration = 0.1;
 //    if(self.)
  //   [self centerPosition:YES];
 //    [self setNeedsDisplay:YES];
+    if([self.delegate respondsToSelector:@selector(searchFieldBlur)])
+        [self.delegate searchFieldBlur];
 }
 
 - (void) searchFieldFocus {
     self.isActive = YES;
     [self leftPosition:YES];
 //    [self setNeedsDisplay:YES];
+    if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
+        [self.delegate searchFieldFocus];
+}
+
+- (void) searchFieldDidResign {
+    if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
+        [self.delegate searchFieldFocus];
 }
 
 - (void) mouseEntered:(NSEvent *)theEvent {

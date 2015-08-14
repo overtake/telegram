@@ -47,6 +47,7 @@
 }
 
 
+
 -(void)orderOut:(id)sender {
     
      [self runAnimation:NO];
@@ -148,7 +149,7 @@ static const int controlsHeight = 75;
     [self.contentView addSubview:self.controls];
     
     
-    self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(100, 16, 200, controlsHeight)];
+    self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
     
     

@@ -32,6 +32,7 @@ NSString *const REPLAY_COLLECTION = @"replay_collection_v2";
 NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
 NSString *const BOT_COMMANDS = @"bot_commands_v2";
+NSString *const RECENT_SEARCH = @"recent_search";
 -(id)init {
     if(self = [super init]) {
         [self open:nil queue:nil];
@@ -303,7 +304,6 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
                 [TMViewController showModalProgressWithDescription:NSLocalizedString(@"DatabaseOptimizing",nil)];
             }];
         }
-        
         
         
         sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
@@ -1080,7 +1080,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         id serializedMessage =[[result resultDictionary] objectForKey:@"serialized_message"];
         TL_localMessage *message;
-        if(![serializedMessage isKindOfClass:[NSNull class]]) {
+        if(![serializedMessage isKindOfClass:[NSNull class]] && serializedMessage != nil) {
            
             @try {
                 message = [TLClassStore deserialize:serializedMessage];
@@ -2016,6 +2016,31 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
+-(void)conversationsWithIds:(NSArray *)ids  completeHandler:(void (^)(NSArray *list))completeHandler {
+    
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from dialogs where peer_id IN (%@)",[ids componentsJoinedByString:@","]];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+        
+        [self parseDialogs:result dialogs:dialogs messages:nil];
+        
+        [result close];
+
+        
+        dispatch_async(dqueue, ^{
+            completeHandler(dialogs);
+        });
+        
+    }];
+}
+
 +(TLWebPage *)findWebpage:(NSString *)link {
     
     __block TLWebPage *webpage;
@@ -2086,6 +2111,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     return signal;
     
 }
+
+
 
 
 

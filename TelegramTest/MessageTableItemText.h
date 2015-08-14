@@ -26,7 +26,7 @@
 -(void)updateMessageFont;
 
 -(void)updateWebPage;
-
+-(void)updateEntities;
 
 -(BOOL)isWebPage;
 

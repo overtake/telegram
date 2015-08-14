@@ -213,7 +213,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
-    NSString * ndirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
 
     BOOL isset = NO;
     
@@ -465,38 +464,62 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)drop {
     
-    [_context removeAllAuthTokens];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDefaultDatacenter];
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    [_queue dispatchOnQueue:^{
+        [_context removeAllAuthTokens];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDefaultDatacenter];
+        NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+        
+        
+        NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+        NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+        
+        NSString * mtkeychain = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+        
+        [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
+        
+        [SSKeychain deletePasswordForService:@"Telegram" account:@"authkeys"];
+        
+        [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
+        
+        
+        [self updateEncryptionKey];
+        
+        
+        [self.updateService drop];
+        [self setDatacenter:1];
+        
+        [self initConnectionWithId:_masterDatacenter];
+    } synchronous:YES];
     
     
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-    
-    NSString * mtkeychain = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
-    
-    [SSKeychain deletePasswordForService:@"Telegram" account:@"authkeys"];
-    
-    [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
-    
-    
+}
+
+-(NSString *)updateEncryptionKey {
     uint8_t secKey[32];
     SecRandomCopyBytes(kSecRandomDefault, 32, secKey);
     
-    [_keychain setObject:[[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding] forKey:@"encryptionKey" group:@"persistent"];
+    NSString *key = [[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding];
     
+    [_keychain setObject:key forKey:@"encryptionKey" group:@"persistent"];
     
-    [self.updateService drop];
-    [self setDatacenter:1];
-    
-    [self initConnectionWithId:_masterDatacenter];
+    return key;
 }
 
 +(NSString *)encryptionKey {
-    return [[self instance]->_keychain objectForKey:@"encryptionKey" group:@"persistent"];
+    
+    __block NSString *key;
+    
+    [[self instance]->_queue dispatchOnQueue:^{
+        
+        key = [[self instance]->_keychain objectForKey:@"encryptionKey" group:@"persistent"];
+        
+        if(!key)
+            key = [[self instance] updateEncryptionKey];
+        
+    } synchronous:YES];
+    
+    return key;
 }
 
 -(int)getTime {

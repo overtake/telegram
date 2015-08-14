@@ -273,6 +273,10 @@ static const int bottomOffset = 58;
     return [[self currentTabController] becomeFirstResponder];
 }
 
+-(BOOL)resignFirstResponder {
+    return [[self currentTabController] resignFirstResponder];
+}
+
 - (NSResponder *)firstResponder {
     return self.searchTextField;
 }

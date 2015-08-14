@@ -10,11 +10,12 @@
 #import "ComposeActionGroupBehavior.h"
 #import "ComposeActionSecretChatBehavior.h"
 #import "ComposeActionBroadcastBehavior.h"
-
+#import "TGRecentSearchTableView.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
 @property (nonatomic,strong) TMMenuPopover *menuPopover;
+@property (nonatomic,strong) TGRecentSearchTableView *recentTableView;
 @end
 
 @interface ExtendView : TMView
@@ -142,6 +143,11 @@
     
     self.searchView = _searchViewController.view;
     
+    
+    _recentTableView = [[TGRecentSearchTableView alloc] initWithFrame:self.view.bounds];
+    
+    [_recentTableView loadRecentSearchItems];
+    
 }
 
 -(BOOL)becomeFirstResponder {
@@ -224,10 +230,6 @@
     return theMenu;
 }
 
-- (void) searchFieldBlur {}
-- (void) searchFieldFocus {}
-
-
 -(BOOL)isSearchActive {
     return self.searchView.superview != nil;
 }
@@ -254,14 +256,88 @@
     }
 }
 
+-(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
+    
+    [self searchByString:@""];
+    
+    // add to recent
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        
+        NSMutableArray *peerIds = [transaction objectForKey:@"peerIds" inCollection:RECENT_SEARCH];
+        
+        if(!peerIds)
+        {
+            peerIds = [[NSMutableArray alloc] init];
+        }
+        
+        [peerIds removeObject:@(conversation.peer_id)];
+        
+        [peerIds insertObject:@(conversation.peer_id) atIndex:0];
+        
+        [transaction setObject:peerIds forKey:@"peerIds" inCollection:RECENT_SEARCH];
+        
+    }];
+    
+    
+}
+
+-(BOOL)showRecentSearchItems {
+    
+    
+    BOOL canShow = [self.recentTableView loadRecentSearchItems];
+    
+    if(canShow) {
+        [self.mainView removeFromSuperview];
+        [self.searchView removeFromSuperview];
+        
+        NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 48);
+        
+        [self.recentTableView.containerView setFrame:tableRect];
+        
+        [self.view addSubview:self.recentTableView.containerView];
+    }
+    
+    return canShow;
+}
+
+-(void)hideRecentSearchItems {
+    [self hideSearch:self.searchTextField.stringValue.length == 0];
+}
+
+-(void)searchFieldFocus {
+    [self showRecentSearchItems];
+}
+
+-(void)searchFieldBlur {
+    [self hideRecentSearchItems];
+}
+
+-(void)searchFieldDidResign {
+    [self hideRecentSearchItems];
+}
+
+-(BOOL)resignFirstResponder {
+    
+    [self.searchTextField endEditing];
+    
+    return YES;
+}
 
 -(void)hideSearch:(BOOL)hide {
+    
+    if(hide && [self.searchTextField isFirstResponder]) {
+        if([self showRecentSearchItems])
+            return;
+    }
    
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 48);
     
     
     [self.searchView setFrame:tableRect];
     [self.mainView setFrame:tableRect];
+    
+    [self.recentTableView.containerView removeFromSuperview];
     
     if(hide) {
         [self.searchView removeFromSuperview];

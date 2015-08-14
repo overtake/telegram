@@ -560,24 +560,8 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
 
 - (TLInputUser *)inputUser {
     
+    return [TL_inputUser createWithUser_id:self.n_id access_hash:self.access_hash];
     
-    
-    switch (self.type) {
-        case TLUserTypeContact:
-            return [TL_inputUserContact createWithUser_id:self.n_id];
-        case TLUserTypeDeleted:
-            return [TL_inputUserEmpty create];
-        case TLUserTypeEmpty:
-            return [TL_inputUserEmpty create];
-        case TLUserTypeForeign:
-            return [TL_inputUserForeign createWithUser_id:self.n_id access_hash:self.access_hash];
-        case TLUserTypeRequest:
-            return [TL_inputUserForeign createWithUser_id:self.n_id access_hash:self.access_hash];
-        case TLUserTypeSelf:
-            return [TL_inputUserSelf create];
-        default:
-            return [TL_inputUserEmpty create];
-    }
 }
 
 -(id)copy {
@@ -608,10 +592,8 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
 }
 
 -(TLInputPeer *)inputPeer {
-    if([self isKindOfClass:[TL_userContact class]]) {
-        return [TL_inputPeerContact createWithUser_id:self.n_id];
-    }
-    return [TL_inputPeerForeign createWithUser_id:self.n_id access_hash:self.access_hash]; 
+
+    return [TL_inputPeerUser createWithUser_id:self.n_id access_hash:self.access_hash];
 }
 
 - (TL_contact *)contact {

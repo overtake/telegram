@@ -515,6 +515,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemText updateLinkAttributesByMessageEntities]:MessageTableItemText.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
          <PersistentStrings>
             <PersistentString
@@ -1187,6 +1190,9 @@
       </ContextState>
       <ContextState
          contextName = "__23-[TMTypingObject check]_block_invoke:TMTypingObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemText checkAndReturnEntityRange:]:MessageTableItemText.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogsManager updateTop:needUpdate:update_real_date:]:DialogsManager.m">
@@ -2300,6 +2306,14 @@
             </PersistentString>
             <PersistentString
                value = "NSHeight(self.frame)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__61-[MessageTableItemText updateLinkAttributesByMessageEntities]_block_invoke:MessageTableItemText.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

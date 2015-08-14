@@ -7,7 +7,7 @@
 //
 
 #import "TLClassStore.h"
-
+#import "TL_localMessage_old32.h"
 
 @implementation TLClassStore
 
@@ -26,7 +26,7 @@
     
     [self.cs_classes setObject:[TL_messageActionEncryptedChat class] forKey:[NSNumber numberWithInt:1]];
     [self.cs_classes setObject:[TL_peerSecret class] forKey:[NSNumber numberWithInt:2]];
-    [self.cs_classes setObject:[TL_localMessage class] forKey:[NSNumber numberWithInt:3]];
+    [self.cs_classes setObject:[TL_localMessage_old32 class] forKey:[NSNumber numberWithInt:3]];
     [self.cs_classes setObject:[TL_destructMessage class] forKey:[NSNumber numberWithInt:4]];
     [self.cs_classes setObject:[TL_conversation class] forKey:[NSNumber numberWithInt:5]];
     
@@ -38,6 +38,7 @@
     [self.cs_classes setObject:[TL_messageActionSetMessageTTL class] forKey:[NSNumber numberWithInt:11]];
     [self.cs_classes setObject:[TL_secretServiceMessage class] forKey:[NSNumber numberWithInt:12]];
     [self.cs_classes setObject:[TL_messageActionBotDescription class] forKey:[NSNumber numberWithInt:13]];
+    [self.cs_classes setObject:[TL_localMessage class] forKey:[NSNumber numberWithInt:14]];
     
     
     for(NSNumber* number in [self.cs_classes allKeys]) {

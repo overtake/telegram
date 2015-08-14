@@ -48,6 +48,8 @@
 
 @property (nonatomic,strong,readonly) TGReplyObject *replyObject;
 
+
+
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;
 

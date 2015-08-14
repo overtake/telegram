@@ -56,7 +56,7 @@
         flags|=[self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
         
         
-        request = [TLAPI_messages_sendMessage createWithFlags:flags peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+        request = [TLAPI_messages_sendMessage createWithFlags:flags peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:nil];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;
@@ -72,9 +72,11 @@
             self.message.n_id = response.n_id;
             self.message.date = response.date;
             self.message.media = response.media;
-            
+            self.message.entities = response.entities;
             
         }
+        
+       
         
         self.message.dstate = DeliveryStateNormal;
         
@@ -82,9 +84,15 @@
         
         self.state = MessageSendingStateSent;
         
+        
+        
         if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
         {
             [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+        }
+        
+        if(self.message.entities.count > 0) {
+             [Notification perform:UPDATE_MESSAGE_ENTITIES data:@{KEY_MESSAGE:self.message}];
         }
 
         
