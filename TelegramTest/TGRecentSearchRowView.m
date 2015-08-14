@@ -20,7 +20,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _textField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(60, 0, 200, 20)];
+        _textField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(60, 0, frameRect.size.width - 70, 20)];
         _imageView = [TMAvatarImageView standartMessageTableAvatar];
         
         
@@ -86,6 +86,8 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
+    
+    [_textField setFrameSize:NSMakeSize(newSize.width - 70, NSHeight(_textField.frame))];
 }
 
 -(void)redrawRow {
