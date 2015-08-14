@@ -28,6 +28,11 @@
 - (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    
+   
+    
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
     NSString *message = [[object.message trim] fixEmoji];
@@ -75,6 +80,10 @@
                 NSString *link = [self.message.message substringWithRange:range];
                 
                 range = [self.textAttributed.string rangeOfString:link];
+                
+                if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
+                    link = obj.url;
+                }
                 
                 if(range.location != NSNotFound) {
                     [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];

@@ -383,6 +383,8 @@ static float duration = 0.1;
     if(![self isTextFieldInFocus:self.textField]) {
         [self centerPosition:YES];
     }
+    
+    [self endEditing];
 }
 
 - (BOOL)isTextFieldInFocus:(NSTextField *)textField {

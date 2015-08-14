@@ -31,7 +31,7 @@
     return self;
 }
 
-#define MAX_RECENT_ITEMS 3
+#define MAX_RECENT_ITEMS 20
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
