@@ -507,7 +507,7 @@ void exceptionHandler(NSException * exception)
         } else if(incomingEvent.keyCode == 53) {
             
             
-            if([((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
+            if([responder isKindOfClass:[NSTextView class]] && [((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
                 [[Telegram leftViewController] resignFirstResponder];
                 return [[NSEvent alloc] init];
             }
