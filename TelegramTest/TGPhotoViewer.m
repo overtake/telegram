@@ -50,8 +50,8 @@
 
 -(void)orderOut:(id)sender {
     
-     [self runAnimation:NO];
-    
+    [self runAnimation:NO];
+    [Notification removeObserver:self];
     [super orderOut:sender];
    
     [_photoContainer setCurrentViewerItem:nil animated:NO];
@@ -672,7 +672,7 @@ static TGPhotoViewer *viewer;
     
     if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
         [self orderOut:self];
-        [Notification removeObserver:self];
+        
     }
     
     
