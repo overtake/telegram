@@ -146,7 +146,6 @@
     
     _recentTableView = [[TGRecentSearchTableView alloc] initWithFrame:self.view.bounds];
     
-    [_recentTableView loadRecentSearchItems];
     
 }
 
