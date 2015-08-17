@@ -84,10 +84,14 @@
                 if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
                     link = obj.url;
                 }
+                if([obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityUrl class]])
+                    [links addObject:link];
                 
                 if(range.location != NSNotFound) {
                     [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
                     [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                    
+                   
                 }
                 
             }
