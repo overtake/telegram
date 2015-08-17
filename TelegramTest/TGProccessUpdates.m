@@ -583,12 +583,12 @@ static ASQueue *queue;
     
     
     if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:NO];
         return;
     }
     
     if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id];
+        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:YES];
         return;
     }
     

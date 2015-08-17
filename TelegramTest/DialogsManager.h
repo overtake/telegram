@@ -26,7 +26,7 @@
 - (void) insertDialog:(TL_conversation *)dialog;
 - (void) markAllMessagesAsRead:(TL_conversation *)dialog;
 
-- (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id;
+- (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out;
 
 - (void)deleteDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 - (void)clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block;

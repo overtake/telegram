@@ -803,7 +803,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id completeHandler:(void (^)(NSArray * ids))completeHandler {
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler {
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     
@@ -811,8 +811,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
+        int flags = n_out ? 3 : 1;
         
-        FMResultSet *result = [db executeQuery:@"select n_id from messages where n_id <= ? and peer_id = ? and flags & 1 = 1",@(max_id),@(conversation.peer.peer_id)];
+        
+        FMResultSet *result = [db executeQuery:@"select n_id from messages where n_id <= ? and peer_id = ? and flags & ? = ?",@(max_id),@(conversation.peer.peer_id),@(flags),@(flags)];
         
         while ([result next]) {
             

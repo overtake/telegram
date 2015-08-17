@@ -393,17 +393,17 @@ static const int seconds_to_notify = 120;
 
 
 -(void)markAllInDialog:(TL_conversation *)dialog callback:(void (^)(NSArray *ids))callback {
-    [self markAllInConversation:dialog max_id:dialog.top_message callback:callback];
+    [self markAllInConversation:dialog max_id:dialog.top_message out:NO callback:callback];
 }
 
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id  callback:(void (^)(NSArray *ids))callback{
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out callback:(void (^)(NSArray *ids))callback{
     
     dispatch_queue_t queue = dispatch_get_current_queue();
     
     [self.queue dispatchOnQueue:^{
         
-        [[Storage manager] markAllInConversation:conversation max_id:max_id completeHandler:^(NSArray *ids) {
+        [[Storage manager] markAllInConversation:conversation max_id:max_id out:n_out completeHandler:^(NSArray *ids) {
             
             [ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 

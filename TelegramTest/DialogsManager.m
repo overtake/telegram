@@ -538,11 +538,11 @@
     
 }
 
-- (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id {
+- (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:peer.peer_id];
     
-    [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id callback:^(NSArray *ids) {
+    [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id out:n_out callback:^(NSArray *ids) {
         if(ids.count > 0) {
             [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
         }

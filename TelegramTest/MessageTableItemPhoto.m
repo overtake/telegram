@@ -69,7 +69,7 @@
                 
                 [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
                 
-                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
+                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
                 
                 _caption = c;
             }

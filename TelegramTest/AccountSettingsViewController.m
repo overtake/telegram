@@ -502,7 +502,7 @@ typedef enum {
     [self.lastNameView.textView setStringValue:[UsersManager currentUser].last_name];
     
     
-    int height = defaultY + NSHeight(self.defaultView.frame);
+    int height = defaultY + NSHeight(self.defaultView.frame) + 43;
     
     
     [self.topContainer setFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.topContainer.frame))];

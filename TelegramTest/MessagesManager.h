@@ -23,7 +23,7 @@
 -(void)TGsetMessage:(TLMessage *)message;
 
 -(void)markAllInDialog:(TLDialog*)dialog callback:(void (^)(NSArray *ids))callback;
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id callback:(void (^)(NSArray *ids))callback;
+-(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out callback:(void (^)(NSArray *ids))callback;
 
 -(void)readMessagesContent:(NSArray *)msg_ids;
 
