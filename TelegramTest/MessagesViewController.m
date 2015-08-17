@@ -70,6 +70,7 @@
 #import "StartBotSenderItem.h"
 #import "TGHelpPopup.h"
 #import "TGAudioPlayerWindow.h"
+#import "MessagesUtils.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -2215,16 +2216,16 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     
      [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
-         if(ids.count > 0) {
-             [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-         }
-    }];
+         
+     }];
     
     
     
     self.conversation.unread_count = 0;
     
     [self.conversation save];
+    
+    [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation]}];
     
     [MessagesManager updateUnreadBadge];
         

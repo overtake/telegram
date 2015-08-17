@@ -2016,29 +2016,27 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
--(void)conversationsWithIds:(NSArray *)ids  completeHandler:(void (^)(NSArray *list))completeHandler {
+-(NSArray *)conversationsWithIds:(NSArray *)ids {
     
+    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
     
-    dispatch_queue_t dqueue = dispatch_get_current_queue();
-    
-    [queue inDatabase:^(FMDatabase *db) {
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         NSString *sql = [NSString stringWithFormat:@"select * from dialogs where peer_id IN (%@)",[ids componentsJoinedByString:@","]];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
-        NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+        
         
         [self parseDialogs:result dialogs:dialogs messages:nil];
         
         [result close];
 
         
-        dispatch_async(dqueue, ^{
-            completeHandler(dialogs);
-        });
         
     }];
+    
+    return dialogs;
 }
 
 +(TLWebPage *)findWebpage:(NSString *)link {

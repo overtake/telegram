@@ -54,22 +54,20 @@
     
     [self removeAllItems:NO];
     [self reloadData];
+
     
-    [[Storage manager] conversationsWithIds:peerIds completeHandler:^(NSArray *list) {
+    
+    [[[Storage manager] conversationsWithIds:peerIds] enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
         
-        [list enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
-            
-            TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
-            
-            [self addItem:item tableRedraw:NO];
-            
-        }];
+        TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
         
-        [self reloadData];
+        [self addItem:item tableRedraw:NO];
         
     }];
     
-    return peerIds.count > 0;
+    [self reloadData];
+    
+    return self.count > 0;
     
 }
 
@@ -113,23 +111,21 @@
         }
     };
     
+    
+    rm();
+    
     if(next_peer_id != 0) {
-        [[Storage manager] conversationsWithIds:@[@(next_peer_id)] completeHandler:^(NSArray *list) {
+        
+        NSArray *list = [[Storage manager] conversationsWithIds:@[@(next_peer_id)]];
+        
+        if(list.count == 1) {
+            self.defaultAnimation = NSTableViewAnimationEffectFade;
+            [self addItem:[[TGRecentSearchRowItem alloc] initWithObject:list[0]] tableRedraw:YES];
+            self.defaultAnimation = NSTableViewAnimationEffectNone;
             
-            rm();
-            
-            if(list.count == 1) {
-                self.defaultAnimation = NSTableViewAnimationEffectFade;
-                [self addItem:[[TGRecentSearchRowItem alloc] initWithObject:list[0]] tableRedraw:YES];
-                self.defaultAnimation = NSTableViewAnimationEffectNone;
-                
-            }
-            
-        }];
-    } else
-        rm();
-    
-    
+        }
+        
+    }
     return YES;
 }
 

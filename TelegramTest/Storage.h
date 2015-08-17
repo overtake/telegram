@@ -212,7 +212,7 @@ extern NSString *const RECENT_SEARCH;
 -(void)readMessagesContent:(NSArray *)messages;
 
 
--(void)conversationsWithIds:(NSArray *)ids  completeHandler:(void (^)(NSArray *list))completeHandler;
+-(NSArray *)conversationsWithIds:(NSArray *)ids;
 
 
 

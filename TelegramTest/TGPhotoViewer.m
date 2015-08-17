@@ -71,7 +71,7 @@
 
 
 -(void)dealloc {
-    
+    [Notification removeObserver:self];
 }
 
 +(BOOL)isVisibility {
