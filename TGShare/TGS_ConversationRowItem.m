@@ -11,6 +11,9 @@
 #import "TMAttributedString.h"
 #import "TGS_MTNetwork.h"
 #import "TGDateUtils.h"
+
+
+
 @implementation TGS_ConversationRowItem
 
 -(id)initWithConversation:(TLDialog *)conversation user:(TLUser *)user {
@@ -36,6 +39,13 @@
 
 -(void)configure {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    
+    if(!_user.first_name)
+        _user.first_name = @"";
+    
+    if(!_user.last_name)
+        _user.last_name = @"";
     
     [attr appendString:_user ? [NSString stringWithFormat:@"%@ %@",_user.first_name, _user.last_name] : _chat.title withColor:NSColorFromRGB(0x000000)];
     

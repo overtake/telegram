@@ -171,8 +171,8 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db open];
         
-        
-        res = [db setKey:[MTNetwork encryptionKey]];
+                
+        res = [db setKey:encryptionKey];
         
         
         [db executeUpdate:@"create table if not exists messages (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)"];
@@ -269,6 +269,14 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
    
 }
 
+static NSString *encryptionKey;
+
++(void)updateEncryptionKey:(NSString *)key {
+    encryptionKey = key;
+    
+    
+}
+
 //
 -(void) createAndCheckDatabase:(NSString *)dbName
 {
@@ -293,7 +301,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         [fileManager copyItemAtPath:dbPath toPath:copyDbPath error:nil];
 
     
-    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, [MTNetwork encryptionKey]] UTF8String];
+    const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
     
     sqlite3 *unencrypted_DB;
 

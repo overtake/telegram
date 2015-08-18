@@ -900,7 +900,7 @@
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
         
        
-        if(self.dialog.type == DialogTypeUser)
+        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
         {
             [self.encryptedStateTextField setTextColor:[NSColor redColor]];
         }

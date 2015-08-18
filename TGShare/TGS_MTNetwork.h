@@ -21,7 +21,7 @@
 -(void)sendRequest:(TGS_RPCRequest *)request forDatacenter:(int)datacenterId;
 -(void)sendRandomRequest:(TGS_RPCRequest *)request;
 -(MTDatacenterAuthInfo *)authInfoForDatacenter:(int)dc_id;
--(MTKeychain *)keyChain;
+-(id<MTKeychain>)keyChain;
 -(void)successAuthForDatacenter:(int)dc_id;
 -(BOOL)isAuth;
 -(int)getTime;

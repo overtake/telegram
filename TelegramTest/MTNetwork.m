@@ -148,6 +148,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
                             
                                 [_queue dispatchOnQueue:^{
                                     
+                                    [self updateStorageEncryptionKey];
+                                    
                                     [Storage initManagerWithCallback:^{
                                     
                                         [self startWithKeychain:_keychain];
@@ -188,6 +190,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 
             } else {
+                
+                [self updateStorageEncryptionKey];
+                
                 [self startWithKeychain:_keychain];
                 
                 if(![self isAuth]) {
@@ -333,9 +338,20 @@ static NSString *kDefaultDatacenter = @"default_dc";
    
 }
 
+-(void)updateStorageEncryptionKey {
+    
+    NSString *key = [_keychain objectForKey:@"encryptionKey" group:@"persistent"];
+    
+    if(!key)
+        [self updateEncryptionKey];
+     else
+        [Storage updateEncryptionKey:key];
+}
+
 -(void)startWithKeychain:(TGKeychain *)keychain {
     
     [_context setKeychain:keychain];
+    
     
     
     [_context addChangeListener:self];
@@ -482,14 +498,14 @@ static int MAX_WORKER_POLL = 5;
         
         [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
         
+         [self.updateService drop];
+        [self setDatacenter:2];
+        
         
         [self updateEncryptionKey];
         
-        
-        [self.updateService drop];
-        [self setDatacenter:1];
-        
         [self initConnectionWithId:_masterDatacenter];
+        
     } synchronous:YES];
     
     
@@ -503,24 +519,12 @@ static int MAX_WORKER_POLL = 5;
     
     [_keychain setObject:key forKey:@"encryptionKey" group:@"persistent"];
     
+    [Storage updateEncryptionKey:key];
+    
     return key;
 }
 
-+(NSString *)encryptionKey {
-    
-    __block NSString *key;
-    
-    [[self instance]->_queue dispatchOnQueue:^{
-        
-        key = [[self instance]->_keychain objectForKey:@"encryptionKey" group:@"persistent"];
-        
-        if(!key)
-            key = [[self instance] updateEncryptionKey];
-        
-    } synchronous:YES];
-    
-    return key;
-}
+
 
 -(int)getTime {
     

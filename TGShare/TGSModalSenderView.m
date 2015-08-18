@@ -200,7 +200,7 @@
    
     _cs_count++;
     
-    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long()] successHandler:^(id request, TLUpdates *response) {
+    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long() reply_markup:nil] successHandler:^(id request, TLUpdates *response) {
         
         _sent_count++;
         
@@ -289,7 +289,7 @@
         [self updateProgress:30];
     }];
     
-    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMessage createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 message:message random_id:rand_long()] successHandler:^(TGS_RPCRequest *request, id response) {
+    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMessage createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 message:message random_id:rand_long() reply_markup:nil entities:nil] successHandler:^(TGS_RPCRequest *request, id response) {
         
         _cs_count++;
         
@@ -315,15 +315,8 @@
         input = [TL_inputPeerChat createWithChat_id:rowItem.chat.n_id];
     } else {
         
-        if([rowItem.user isKindOfClass:[TL_userContact class]]) {
-            input = [TL_inputPeerContact createWithUser_id:rowItem.user.n_id];
-        } else if([rowItem.user isKindOfClass:[TL_userDeleted class]] || [rowItem.user isKindOfClass:[TL_userEmpty class]]) {
-            input = [TL_inputPeerEmpty create];
-        } else if([rowItem.user isKindOfClass:[TL_userForeign class]] || [rowItem.user isKindOfClass:[TL_userRequest class]]) {
-            input = [TL_inputPeerForeign createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
-        } else if([rowItem.user isKindOfClass:[TL_userSelf class]]) {
-            input = [TL_inputPeerSelf create];
-        }
+        return [TL_inputUser createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
+        
     }
     if(!input)
         return [TL_inputPeerEmpty create];

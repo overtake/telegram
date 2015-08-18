@@ -654,6 +654,10 @@ static int insertCount = 3;
     
 }
 
+-(int)selectedPeerId {
+    return ((SearchItem *)self.tableView.selectedItem).conversation.peer_id;
+}
+
 - (void)searchByString:(NSString *)searchString {
     
     

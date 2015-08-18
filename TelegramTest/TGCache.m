@@ -8,7 +8,6 @@
 
 #import "TGCache.h"
 #import "ASQueue.h"
-#import "EMInMemoryImageCache.h"
 @interface TGCacheRecord : NSObject
 
 @property (nonatomic) NSTimeInterval date;
@@ -49,8 +48,6 @@
 
 @property (nonatomic,strong) ASQueue *queue;
 
-@property (nonatomic,strong) EMInMemoryImageCache *emCache;
-
 
 @end
 
@@ -87,7 +84,6 @@ NSString *const AVACACHE = @"AVACACHE";
                 
             }];
             
-            _emCache = [[EMInMemoryImageCache alloc] initWithMaxResidentSize:100*1024*1024];
             
         } synchronous:YES];
         
@@ -221,10 +217,6 @@ NSString *const AVACACHE = @"AVACACHE";
         }
         
         
-        [_emCache setImageDataWithSize:image.size generator:^(uint8_t *memory, NSUInteger bytesPerRow) {
-            
-            
-        } forKey:[NSString stringWithFormat:@"%@_%@",key,obj]];
         
          _groupMemoryTaken[obj] = @([_groupMemoryTaken[obj] integerValue] + size);
         

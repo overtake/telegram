@@ -28,11 +28,6 @@
 - (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    
-   
-    
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
     NSString *message = [[object.message trim] fixEmoji];
@@ -59,6 +54,8 @@
 
 -(void)updateLinkAttributesByMessageEntities {
     
+  
+    
     [self.textAttributed removeAttribute:NSLinkAttributeName range:self.textAttributed.range];
     
     _links = [[NSArray alloc] init];
@@ -68,30 +65,39 @@
     if(self.message.entities.count > 0)
     {
         
+        __block NSRange nextRange = NSMakeRange(0, self.textAttributed.string.length);
+                
         [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
             
             if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]]) {
                 
                 if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (self.message.conversation.user.isBot || self.message.conversation.type != DialogTypeChat) )
                     return;
-                    
+                
+                
+                
+                
                 NSRange range = [self checkAndReturnEntityRange:obj];
                 
                 NSString *link = [self.message.message substringWithRange:range];
                 
-                range = [self.textAttributed.string rangeOfString:link];
+        
+                range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
                 
-                if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
-                    link = obj.url;
-                }
-                if([obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityUrl class]])
-                    [links addObject:link];
+                
+                nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
                 
                 if(range.location != NSNotFound) {
+                    
+                    if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
+                        link = obj.url;
+                    }
+                    if([obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityUrl class]])
+                        [links addObject:link];
+                    
+                    
                     [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
                     [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    
-                   
                 }
                 
             }

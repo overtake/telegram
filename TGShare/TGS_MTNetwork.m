@@ -295,10 +295,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     _datacenterCount = 5;
     
     
-    NSString *address = @"149.154.175.50";
+    NSString *address =  @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:1 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443]]]];
-    
+    [_context setSeedAddressSetForDatacenterWithId:2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO]]]];
     
 }
 
@@ -379,7 +378,7 @@ static int MAX_WORKER_POLL = 5;
     return [[_keychain objectForKey:@"user_id" group:@"persistent"] intValue];
 }
 
--(MTKeychain *)keyChain {
+-(id<MTKeychain>)keyChain {
     return _context.keychain;
 }
 

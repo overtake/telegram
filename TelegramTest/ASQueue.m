@@ -194,6 +194,8 @@
 
 -(void)alertUserWithCrash:(NSException *)crash {
     
+#ifdef TGDEBUG
+    
     [ASQueue dispatchOnMainQueue:^{
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setAlertStyle:NSInformationalAlertStyle];
@@ -206,10 +208,14 @@
         [alert addButtonWithTitle:@"Ignore ;("];
         [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(crash)];
     }];
+    
+#endif
    
 }
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+    
+    #ifdef TGDEBUG
     
     if(returnCode == 1000) {
         NSException *crash = (__bridge NSException *)(contextInfo);
@@ -217,6 +223,8 @@
     } else if(returnCode == 1001) {
         [Telegram sendLogs];
     }
+    
+    #endif
     
 }
 

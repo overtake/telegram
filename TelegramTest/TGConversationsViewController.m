@@ -77,8 +77,7 @@
     [self addScrollEvent];
     
     
-    
-    [MTNetwork instance];
+
     
     if(![TGPasslock isEnabled] && [[MTNetwork instance] isAuth]) {
         [self initialize];

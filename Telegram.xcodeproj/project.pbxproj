@@ -410,6 +410,7 @@
 		C26E802A1B7E00A1003CC483 /* TGRecentSearchRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E80291B7E00A1003CC483 /* TGRecentSearchRowItem.m */; };
 		C26E802D1B7E00C3003CC483 /* TGRecentSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E802C1B7E00C3003CC483 /* TGRecentSearchRowView.m */; };
 		C26E80301B7E106B003CC483 /* TGRecentSearchTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E802F1B7E106B003CC483 /* TGRecentSearchTableView.m */; };
+		C26E80341B8369B1003CC483 /* MtProtoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D8261B1B6FA8A600434D37 /* MtProtoKit.framework */; };
 		C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA11A4C32DB001D1AE2 /* TGAllStickersTableView.m */; };
 		C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EA71A56BEFE001D1AE2 /* SecretLayer20.m */; };
 		C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26F7EAE1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m */; };
@@ -751,10 +752,6 @@
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
 		C2D7C5B11B2B4FAF0042DC01 /* TGMenuItemPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */; };
 		C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */; };
-		C2D825C31B664EC500434D37 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D825C41B664EC500434D37 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2D825C51B664ECA00434D37 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2D825C61B664ECA00434D37 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */; };
 		C2D825E01B690D7500434D37 /* NotificationSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825DF1B690D7500434D37 /* NotificationSettingsViewController.m */; };
 		C2D825E31B69155D00434D37 /* NotificationConversationRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825E21B69155D00434D37 /* NotificationConversationRowItem.m */; };
@@ -766,6 +763,10 @@
 		C2D8263F1B7110AB00434D37 /* TGConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8263E1B7110AB00434D37 /* TGConversation.m */; };
 		C2D826421B71155000434D37 /* TGDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826411B71155000434D37 /* TGDatabase.m */; };
 		C2D826491B74FD5D00434D37 /* TGPVZoomControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */; };
+		C2D8CFB61B83DA6600080775 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D8CFB71B83DA6600080775 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2D8CFB81B83DA7000080775 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2D8CFB91B83DA7000080775 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -931,8 +932,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2D825C31B664EC500434D37 /* Sparkle.framework in Copy Files (6 items) */,
-				C2D825C41B664EC500434D37 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2D8CFB61B83DA6600080775 /* Sparkle.framework in Copy Files (6 items) */,
+				C2D8CFB71B83DA6600080775 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2542,6 +2543,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C26E80341B8369B1003CC483 /* MtProtoKit.framework in Frameworks */,
 				C2CBF6A21AFB81A8006BF90A /* QuickLook.framework in Frameworks */,
 				C2CBF6851AFB6FE6006BF90A /* QuartzCore.framework in Frameworks */,
 				C2CBF6831AFB6F33006BF90A /* AVFoundation.framework in Frameworks */,
@@ -2596,8 +2598,8 @@
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
-				C2D825C51B664ECA00434D37 /* Sparkle.framework in Frameworks */,
-				C2D825C61B664ECA00434D37 /* HockeySDK.framework in Frameworks */,
+				C2D8CFB81B83DA7000080775 /* Sparkle.framework in Frameworks */,
+				C2D8CFB91B83DA7000080775 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5650,7 +5652,7 @@
 						DevelopmentTeam = 6N38VWS5BX;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
@@ -5670,7 +5672,7 @@
 								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Mac = {
 								enabled = 0;
@@ -6762,9 +6764,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -6792,7 +6794,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -6808,7 +6810,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -6833,7 +6836,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9b5f6bc3-32b1-4737-bbea-c772320d3813";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -6905,6 +6908,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6951,6 +6955,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

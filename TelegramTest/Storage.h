@@ -214,7 +214,7 @@ extern NSString *const RECENT_SEARCH;
 
 -(NSArray *)conversationsWithIds:(NSArray *)ids;
 
-
++(void)updateEncryptionKey:(NSString *)key;
 
 // signal requests
 +(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;

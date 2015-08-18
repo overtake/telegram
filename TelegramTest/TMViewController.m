@@ -447,6 +447,8 @@ static TGModalSetCaptionView *setCaptionView;
     [passlockView.layer pop_addAnimation:anim forKey:@"fade"];
     
     [TGPasslock setVisibility:NO];
+    
+    [[Telegram rightViewController].navigationViewController.currentController viewWillAppear:NO];
 }
 
 -(void)showPasslock:(passlockCallback)callback {

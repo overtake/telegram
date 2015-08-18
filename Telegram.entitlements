@@ -6,6 +6,8 @@
 	<true/>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array/>
 	<key>com.apple.security.device.camera</key>
 	<true/>
 	<key>com.apple.security.device.microphone</key>
@@ -20,5 +22,9 @@
 	<true/>
 	<key>com.apple.security.personal-information.location</key>
 	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)ru.keepcoder.Telegram</string>
+	</array>
 </dict>
 </plist>
