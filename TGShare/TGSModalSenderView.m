@@ -77,8 +77,15 @@
         [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
         
         
+        weak();
+        
         [_cancelButton addBlock:^(BTRControlEvents events) {
+            
+            [weakSelf cleanup];
+            
             [ShareViewController close];
+            
+            
         } forControlEvents:BTRControlEventClick];
         
         
