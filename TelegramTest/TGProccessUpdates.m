@@ -186,20 +186,14 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
             TL_updateShortChatMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
-                [self failSequence];
-                return;
-            }
+            
             [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
             
         }
         
         if([update isKindOfClass:[TL_updateShortMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
-            if(![[UsersManager sharedManager] find:shortMessage.user_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
-                [self failSequence];
-                return;
-            }
+            
             [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
             
         }
@@ -393,7 +387,7 @@ static ASQueue *queue;
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:[shortMessage from_id]] || ![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
             [self failSequence];
             return NO;
         }
@@ -411,7 +405,7 @@ static ASQueue *queue;
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:[shortMessage user_id]]) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
             [self failSequence];
             return NO;
         }
@@ -429,7 +423,15 @@ static ASQueue *queue;
             return NO;
         }
         
-        [MessagesManager addAndUpdateMessage:message];
+        
+        
+        NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),message.fromUser.fullName];
+        
+        TL_localMessageService *msg = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[message from_id] to_id:message.to_id date:[shortMessage date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        
+        [MessagesManager addAndUpdateMessage:msg];
+        
+        //[MessagesManager addAndUpdateMessage:message];
     }
     
     if([container.update isKindOfClass:[NSArray class]]) {

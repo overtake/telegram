@@ -814,7 +814,7 @@ static NSMutableArray *listeners;
 -(NSArray *)sortItems:(NSArray *)sort {
     return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
         
-        return (obj1.message.date < obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedDescending : (obj1.message.date > obj2.message.date && (obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+        return (obj1.message.date < obj2.message.date && ((obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) || (obj1.message.dstate == DeliveryStateNormal && obj2.message.dstate == DeliveryStateNormal)) ? NSOrderedDescending : (obj1.message.date > obj2.message.date && ((obj1.message.n_id < TGMINFAKEID && obj2.message.n_id < TGMINFAKEID) || (obj1.message.dstate == DeliveryStateNormal && obj2.message.dstate == DeliveryStateNormal)) ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
     }];
 }
 
