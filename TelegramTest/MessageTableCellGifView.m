@@ -91,6 +91,11 @@ static NSImage *playImage() {
     return self;
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    if(![self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame])
+        [super mouseDown:theEvent];
+}
+
 -(void)checkOperation {
     [super checkOperation];
     self.needOpenAfterDownload = YES;
