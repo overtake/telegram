@@ -602,11 +602,13 @@
         [self.filesMediaButton setHidden:NO];
         
         
-        offset-=NSHeight(self.sharedLinksButton.frame);
-        
-        [self.sharedLinksButton setFrameOrigin:NSMakePoint(100, offset)];
-        
-        [self.sharedLinksButton setHidden:NO];
+        if(!self.controller.isSecretProfile) {
+            offset-=NSHeight(self.sharedLinksButton.frame);
+            
+            [self.sharedLinksButton setFrameOrigin:NSMakePoint(100, offset)];
+            
+            [self.sharedLinksButton setHidden:NO];
+        }
         
     } else {
         [self.sharedMediaButton setHidden:YES];
