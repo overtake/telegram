@@ -11,8 +11,8 @@
 #import "ImageUtils.h"
 #import "NSViewCategory.h"
 #import "TGLinearProgressView.h"
-
-
+#import "BTRButton.h"
+#import "ShareViewController.h"
 
 @interface TGSModalSenderView ()
 {
@@ -32,7 +32,7 @@
 @property (nonatomic,strong) NSTextField *sharingTextField;
 
 
-
+@property (nonatomic,strong) BTRButton *cancelButton;
 @end
 
 @implementation TGSModalSenderView
@@ -68,6 +68,31 @@
         [self addSubview:_containerView];
         
         
+        _cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame), 50)];
+        
+        _cancelButton.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        [_cancelButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+        
+        [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+        
+        
+        [_cancelButton addBlock:^(BTRControlEvents events) {
+            [ShareViewController close];
+        } forControlEvents:BTRControlEventClick];
+        
+        
+        TMView *topSeparator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, NSWidth(_containerView.frame), DIALOG_BORDER_WIDTH)];
+        
+        topSeparator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+        
+        
+        [self.containerView addSubview:_cancelButton];
+        
+        [self.containerView addSubview:topSeparator];
+        
+        
         _sharingTextField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame) - 20, 20)];
         
         [_sharingTextField setCenterByView:_containerView];
@@ -94,6 +119,9 @@
         [_containerView addSubview:_progressView];
         
         
+        
+        
+        
     }
     
     return self;
@@ -115,14 +143,13 @@
     _ts_count = (int) obj.attachments.count * (int) rowItems.count;
     
     
-    if(obj.attachments.count == 0 && obj.attributedContentText.length > 0) {
+    if(obj.attributedContentText.length > 0) {
         
-        _ts_count = 1 * (int) rowItems.count;
+        _ts_count+= 1 * (int) rowItems.count;
         
         [_rowItems enumerateObjectsUsingBlock:^(id rowItem, NSUInteger idx, BOOL *stop) {
             [self sendAsMessage:obj.attributedContentText.string rowItem:rowItem];
         }];
-         return;
     }
     
     
@@ -315,7 +342,7 @@
         input = [TL_inputPeerChat createWithChat_id:rowItem.chat.n_id];
     } else {
         
-        return [TL_inputUser createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
+        return [TL_inputPeerUser createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
         
     }
     if(!input)
