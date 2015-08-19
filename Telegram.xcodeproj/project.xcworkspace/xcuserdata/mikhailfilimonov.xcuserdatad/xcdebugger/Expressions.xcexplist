@@ -93,6 +93,14 @@
          contextName = "-[TGPhotoViewerItem isEqual:]:TGPhotoViewerItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellServiceMessage setItem:]:MessageTableCellServiceMessage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.textSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGWebpageArticle initWithWebPage:]:TGWebpageArticle.m">
          <PersistentStrings>
             <PersistentString
@@ -955,6 +963,9 @@
                value = "i">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__44-[TGSModalSenderView sendAsMessage:rowItem:]_block_invoke257:TGSModalSenderView.m">
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController scrollViewDocumentOffsetChangingNotificationHandler:]:TMCollectionPageController.m">
@@ -2609,6 +2620,9 @@
       </ContextState>
       <ContextState
          contextName = "__48-[NotificationSettingsViewController insertAll:]_block_invoke:NotificationSettingsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSModalSenderView inputPeer:]:TGSModalSenderView.m">
       </ContextState>
       <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke116:NewContactsManager.m">

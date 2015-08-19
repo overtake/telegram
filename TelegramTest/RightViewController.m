@@ -687,8 +687,8 @@
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)
         return;
     
-    if(chat.type != TLChatTypeNormal)
-        return;
+    //if(chat.type != TLChatTypeNormal)
+    //    return;
     
     
     [self hideModalView:YES animation:NO];

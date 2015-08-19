@@ -324,7 +324,7 @@
     [self.normalNavigationCenterView setTapBlock:^{
         switch (strongSelf.conversation.type) {
             case DialogTypeChat:
-                if(strongSelf.conversation.chat.type == TLChatTypeNormal && !strongSelf.conversation.chat.left)
+              //  if(strongSelf.conversation.chat.type == TLChatTypeNormal && !strongSelf.conversation.chat.left)
                     [[Telegram rightViewController] showChatInfoPage:strongSelf.conversation.chat];
                 break;
                 

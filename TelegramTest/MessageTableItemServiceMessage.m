@@ -44,6 +44,8 @@
     self = [super initWithObject:object];
     if(self) {
         self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
+        
+        
         [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
         self.type = MessageTableItemServiceMessageAction;
         
@@ -91,7 +93,7 @@
     [super makeSizeByWidth:width];
     
     
-    NSSize size = [self.messageAttributedString sizeForTextFieldForWidth:width];
+    NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
     
     _textSize = size;
     
