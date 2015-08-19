@@ -259,12 +259,14 @@
     
     
     
+    if(self.searchViewController.selectedPeerId != conversation.peer_id)
+        return;
+    
     [self searchByString:@""];
     
     // add to recent
     
-    if(self.searchViewController.selectedPeerId != conversation.peer_id)
-        return;
+    
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         
