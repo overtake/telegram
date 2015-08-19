@@ -424,14 +424,7 @@ static ASQueue *queue;
         }
         
         
-        
-        NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),message.fromUser.fullName];
-        
-        TL_localMessageService *msg = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[message from_id] to_id:message.to_id date:[shortMessage date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
-        
-        [MessagesManager addAndUpdateMessage:msg];
-        
-        //[MessagesManager addAndUpdateMessage:message];
+        [MessagesManager addAndUpdateMessage:message];
     }
     
     if([container.update isKindOfClass:[NSArray class]]) {
