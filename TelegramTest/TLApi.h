@@ -237,19 +237,19 @@
 
 @interface TLAPI_messages_getDialogs : TLApiObject
 @property int offset;
-@property int max_id;
 @property int limit;
 
-+(TLAPI_messages_getDialogs*)createWithOffset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_messages_getDialogs*)createWithOffset:(int)offset limit:(int)limit;
 @end
 
 @interface TLAPI_messages_getHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int offset;
 @property int max_id;
+@property int min_id;
 @property int limit;
 
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset:(int)offset max_id:(int)max_id min_id:(int)min_id limit:(int)limit;
 @end
 
 @interface TLAPI_messages_search : TLApiObject
@@ -337,38 +337,38 @@
 @end
 
 @interface TLAPI_messages_getFullChat : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 
-+(TLAPI_messages_getFullChat*)createWithChat_id:(int)chat_id;
++(TLAPI_messages_getFullChat*)createWithChat_id:(TLInputChat*)chat_id;
 @end
 
 @interface TLAPI_messages_editChatTitle : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 @property (nonatomic, strong) NSString* title;
 
-+(TLAPI_messages_editChatTitle*)createWithChat_id:(int)chat_id title:(NSString*)title;
++(TLAPI_messages_editChatTitle*)createWithChat_id:(TLInputChat*)chat_id title:(NSString*)title;
 @end
 
 @interface TLAPI_messages_editChatPhoto : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 @property (nonatomic, strong) TLInputChatPhoto* photo;
 
-+(TLAPI_messages_editChatPhoto*)createWithChat_id:(int)chat_id photo:(TLInputChatPhoto*)photo;
++(TLAPI_messages_editChatPhoto*)createWithChat_id:(TLInputChat*)chat_id photo:(TLInputChatPhoto*)photo;
 @end
 
 @interface TLAPI_messages_addChatUser : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 @property (nonatomic, strong) TLInputUser* user_id;
 @property int fwd_limit;
 
-+(TLAPI_messages_addChatUser*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id fwd_limit:(int)fwd_limit;
++(TLAPI_messages_addChatUser*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id fwd_limit:(int)fwd_limit;
 @end
 
 @interface TLAPI_messages_deleteChatUser : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 @property (nonatomic, strong) TLInputUser* user_id;
 
-+(TLAPI_messages_deleteChatUser*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id;
++(TLAPI_messages_deleteChatUser*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id;
 @end
 
 @interface TLAPI_messages_createChat : TLApiObject
@@ -487,102 +487,6 @@
 @property (nonatomic, strong) TLInputMedia* media;
 
 +(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media;
-@end
-
-@interface TLAPI_geochats_getLocated : TLApiObject
-@property (nonatomic, strong) TLInputGeoPoint* geo_point;
-@property int radius;
-@property int limit;
-
-+(TLAPI_geochats_getLocated*)createWithGeo_point:(TLInputGeoPoint*)geo_point radius:(int)radius limit:(int)limit;
-@end
-
-@interface TLAPI_geochats_getRecents : TLApiObject
-@property int offset;
-@property int limit;
-
-+(TLAPI_geochats_getRecents*)createWithOffset:(int)offset limit:(int)limit;
-@end
-
-@interface TLAPI_geochats_checkin : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-
-+(TLAPI_geochats_checkin*)createWithPeer:(TLInputGeoChat*)peer;
-@end
-
-@interface TLAPI_geochats_getFullChat : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-
-+(TLAPI_geochats_getFullChat*)createWithPeer:(TLInputGeoChat*)peer;
-@end
-
-@interface TLAPI_geochats_editChatTitle : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property (nonatomic, strong) NSString* title;
-@property (nonatomic, strong) NSString* address;
-
-+(TLAPI_geochats_editChatTitle*)createWithPeer:(TLInputGeoChat*)peer title:(NSString*)title address:(NSString*)address;
-@end
-
-@interface TLAPI_geochats_editChatPhoto : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property (nonatomic, strong) TLInputChatPhoto* photo;
-
-+(TLAPI_geochats_editChatPhoto*)createWithPeer:(TLInputGeoChat*)peer photo:(TLInputChatPhoto*)photo;
-@end
-
-@interface TLAPI_geochats_search : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property (nonatomic, strong) NSString* q;
-@property (nonatomic, strong) TLMessagesFilter* filter;
-@property int min_date;
-@property int max_date;
-@property int offset;
-@property int max_id;
-@property int limit;
-
-+(TLAPI_geochats_search*)createWithPeer:(TLInputGeoChat*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
-@end
-
-@interface TLAPI_geochats_getHistory : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property int offset;
-@property int max_id;
-@property int limit;
-
-+(TLAPI_geochats_getHistory*)createWithPeer:(TLInputGeoChat*)peer offset:(int)offset max_id:(int)max_id limit:(int)limit;
-@end
-
-@interface TLAPI_geochats_setTyping : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property Boolean typing;
-
-+(TLAPI_geochats_setTyping*)createWithPeer:(TLInputGeoChat*)peer typing:(Boolean)typing;
-@end
-
-@interface TLAPI_geochats_sendMessage : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property (nonatomic, strong) NSString* message;
-@property long random_id;
-
-+(TLAPI_geochats_sendMessage*)createWithPeer:(TLInputGeoChat*)peer message:(NSString*)message random_id:(long)random_id;
-@end
-
-@interface TLAPI_geochats_sendMedia : TLApiObject
-@property (nonatomic, strong) TLInputGeoChat* peer;
-@property (nonatomic, strong) TLInputMedia* media;
-@property long random_id;
-
-+(TLAPI_geochats_sendMedia*)createWithPeer:(TLInputGeoChat*)peer media:(TLInputMedia*)media random_id:(long)random_id;
-@end
-
-@interface TLAPI_geochats_createGeoChat : TLApiObject
-@property (nonatomic, strong) NSString* title;
-@property (nonatomic, strong) TLInputGeoPoint* geo_point;
-@property (nonatomic, strong) NSString* address;
-@property (nonatomic, strong) NSString* venue;
-
-+(TLAPI_geochats_createGeoChat*)createWithTitle:(NSString*)title geo_point:(TLInputGeoPoint*)geo_point address:(NSString*)address venue:(NSString*)venue;
 @end
 
 @interface TLAPI_messages_getDhConfig : TLApiObject
@@ -841,9 +745,9 @@
 @end
 
 @interface TLAPI_messages_exportChatInvite : TLApiObject
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 
-+(TLAPI_messages_exportChatInvite*)createWithChat_id:(int)chat_id;
++(TLAPI_messages_exportChatInvite*)createWithChat_id:(TLInputChat*)chat_id;
 @end
 
 @interface TLAPI_messages_checkChatInvite : TLApiObject
@@ -879,11 +783,11 @@
 
 @interface TLAPI_messages_startBot : TLApiObject
 @property (nonatomic, strong) TLInputUser* bot;
-@property int chat_id;
+@property (nonatomic, strong) TLInputChat* chat_id;
 @property long random_id;
 @property (nonatomic, strong) NSString* start_param;
 
-+(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(TLInputChat*)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
 @end
 
 @interface TLAPI_help_getAppChangelog : TLApiObject
@@ -893,5 +797,27 @@
 @property (nonatomic, strong) NSString* lang_code;
 
 +(TLAPI_help_getAppChangelog*)createWithDevice_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version lang_code:(NSString*)lang_code;
+@end
+
+@interface TLAPI_messages_getChannelDialogs : TLApiObject
+@property int offset;
+@property int limit;
+
++(TLAPI_messages_getChannelDialogs*)createWithOffset:(int)offset limit:(int)limit;
+@end
+
+@interface TLAPI_messages_getImportantHistory : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int max_id;
+@property int min_id;
+@property int limit;
+
++(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id min_id:(int)min_id limit:(int)limit;
+@end
+
+@interface TLAPI_messages_createChannel : TLApiObject
+@property (nonatomic, strong) NSString* title;
+
++(TLAPI_messages_createChannel*)createWithTitle:(NSString*)title;
 @end
 

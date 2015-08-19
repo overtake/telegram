@@ -150,9 +150,6 @@
 @interface TLContactStatus : TLObject
 @end
 	
-@interface TLChatLocated : TLObject
-@end
-	
 @interface TLcontacts_Link : TLObject
 @end
 	
@@ -223,21 +220,6 @@
 @end
 	
 @interface TLhelp_InviteText : TLObject
-@end
-	
-@interface TLInputGeoChat : TLObject
-@end
-	
-@interface TLGeoChatMessage : TLObject
-@end
-	
-@interface TLgeochats_StatedMessage : TLObject
-@end
-	
-@interface TLgeochats_Located : TLObject
-@end
-	
-@interface TLgeochats_Messages : TLObject
 @end
 	
 @interface TLEncryptedChat : TLObject
@@ -390,6 +372,12 @@
 @interface TLMessageEntity : TLObject
 @end
 	
+@interface TLInputChat : TLObject
+@end
+	
+@interface TLMessageGroup : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -482,6 +470,7 @@
 @property int chat_id;
 @property int user_id;
 @property long access_hash;
+@property int channel_id;
 @end
 
 @interface TL_inputPeerEmpty : TLInputPeer<NSCoding>
@@ -495,6 +484,9 @@
 @end
 @interface TL_inputPeerUser : TLInputPeer<NSCoding>
 +(TL_inputPeerUser*)createWithUser_id:(int)user_id access_hash:(long)access_hash;
+@end
+@interface TL_inputPeerChannel : TLInputPeer<NSCoding>
++(TL_inputPeerChannel*)createWithChannel_id:(int)channel_id access_hash:(long)access_hash;
 @end
 	
 @interface TLInputUser()
@@ -703,6 +695,7 @@
 @interface TLPeer()
 @property int user_id;
 @property int chat_id;
+@property int channel_id;
 @end
 
 @interface TL_peerUser : TLPeer<NSCoding>
@@ -710,6 +703,9 @@
 @end
 @interface TL_peerChat : TLPeer<NSCoding>
 +(TL_peerChat*)createWithChat_id:(int)chat_id;
+@end
+@interface TL_peerChannel : TLPeer<NSCoding>
++(TL_peerChannel*)createWithChannel_id:(int)channel_id;
 @end
 	
 @interface TLstorage_FileType()
@@ -842,10 +838,6 @@
 @property Boolean left;
 @property int version;
 @property long access_hash;
-@property (nonatomic, strong) NSString* address;
-@property (nonatomic, strong) NSString* venue;
-@property (nonatomic, strong) TLGeoPoint* geo;
-@property Boolean checked_in;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
@@ -857,8 +849,8 @@
 @interface TL_chatForbidden : TLChat<NSCoding>
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date;
 @end
-@interface TL_geoChat : TLChat<NSCoding>
-+(TL_geoChat*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title address:(NSString*)address venue:(NSString*)venue geo:(TLGeoPoint*)geo photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date checked_in:(Boolean)checked_in version:(int)version;
+@interface TL_channel : TLChat<NSCoding>
++(TL_channel*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 	
 @interface TLChatFull()
@@ -872,6 +864,9 @@
 
 @interface TL_chatFull : TLChatFull<NSCoding>
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
+@end
+@interface TL_channelFull : TLChatFull<NSCoding>
++(TL_channelFull*)createWithN_id:(int)n_id chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -996,7 +991,6 @@
 @property (nonatomic, strong) NSMutableArray* users;
 @property (nonatomic, strong) TLPhoto* photo;
 @property int user_id;
-@property (nonatomic, strong) NSString* address;
 @property int inviter_id;
 @end
 
@@ -1021,14 +1015,11 @@
 @interface TL_messageActionChatDeleteUser : TLMessageAction<NSCoding>
 +(TL_messageActionChatDeleteUser*)createWithUser_id:(int)user_id;
 @end
-@interface TL_messageActionGeoChatCreate : TLMessageAction<NSCoding>
-+(TL_messageActionGeoChatCreate*)createWithTitle:(NSString*)title address:(NSString*)address;
-@end
-@interface TL_messageActionGeoChatCheckin : TLMessageAction<NSCoding>
-+(TL_messageActionGeoChatCheckin*)create;
-@end
 @interface TL_messageActionChatJoinedByLink : TLMessageAction<NSCoding>
 +(TL_messageActionChatJoinedByLink*)createWithInviter_id:(int)inviter_id;
+@end
+@interface TL_messageActionChannelCreate : TLMessageAction<NSCoding>
++(TL_messageActionChannelCreate*)createWithTitle:(NSString*)title;
 @end
 	
 @interface TLDialog()
@@ -1037,10 +1028,15 @@
 @property int read_inbox_max_id;
 @property int unread_count;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
+@property int unread_important_count;
+@property int pts;
 @end
 
 @interface TL_dialog : TLDialog<NSCoding>
 +(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings;
+@end
+@interface TL_dialogChannel : TLDialog<NSCoding>
++(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
 @end
 	
 @interface TLPhoto()
@@ -1157,7 +1153,7 @@
 @end
 	
 @interface TLInputNotifyPeer()
-@property (nonatomic, strong) TLInputGeoChat* peer;
+@property (nonatomic, strong) TLInputPeer* peer;
 @end
 
 @interface TL_inputNotifyPeer : TLInputNotifyPeer<NSCoding>
@@ -1171,9 +1167,6 @@
 @end
 @interface TL_inputNotifyAll : TLInputNotifyPeer<NSCoding>
 +(TL_inputNotifyAll*)create;
-@end
-@interface TL_inputNotifyGeoChatPeer : TLInputNotifyPeer<NSCoding>
-+(TL_inputNotifyGeoChatPeer*)createWithPeer:(TLInputGeoChat*)peer;
 @end
 	
 @interface TLInputPeerNotifyEvents()
@@ -1296,15 +1289,6 @@
 +(TL_contactStatus*)createWithUser_id:(int)user_id status:(TLUserStatus*)status;
 @end
 	
-@interface TLChatLocated()
-@property int chat_id;
-@property int distance;
-@end
-
-@interface TL_chatLocated : TLChatLocated<NSCoding>
-+(TL_chatLocated*)createWithChat_id:(int)chat_id distance:(int)distance;
-@end
-	
 @interface TLcontacts_Link()
 @property (nonatomic, strong) TLContactLink* my_link;
 @property (nonatomic, strong) TLContactLink* foreign_link;
@@ -1379,6 +1363,7 @@
 @property (nonatomic, strong) NSMutableArray* chats;
 @property (nonatomic, strong) NSMutableArray* users;
 @property int n_count;
+@property (nonatomic, strong) NSMutableArray* collapsed;
 @end
 
 @interface TL_messages_messages : TLmessages_Messages<NSCoding>
@@ -1386,6 +1371,9 @@
 @end
 @interface TL_messages_messagesSlice : TLmessages_Messages<NSCoding>
 +(TL_messages_messagesSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
+@end
+@interface TL_messages_collapsedSlice : TLmessages_Messages<NSCoding>
++(TL_messages_collapsedSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages collapsed:(NSMutableArray*)collapsed chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLmessages_SentMessage()
@@ -1467,7 +1455,7 @@
 @end
 	
 @interface TLUpdate()
-@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) TLMessage* message;
 @property int pts;
 @property int pts_count;
 @property int n_id;
@@ -1544,9 +1532,6 @@
 @interface TL_updateNewAuthorization : TLUpdate<NSCoding>
 +(TL_updateNewAuthorization*)createWithAuth_key_id:(long)auth_key_id date:(int)date device:(NSString*)device location:(NSString*)location;
 @end
-@interface TL_updateNewGeoChatMessage : TLUpdate<NSCoding>
-+(TL_updateNewGeoChatMessage*)createWithMessage:(TLGeoChatMessage*)message;
-@end
 @interface TL_updateNewEncryptedMessage : TLUpdate<NSCoding>
 +(TL_updateNewEncryptedMessage*)createWithMessage:(TLEncryptedMessage*)message qts:(int)qts;
 @end
@@ -1594,6 +1579,9 @@
 @end
 @interface TL_updateReadMessagesContents : TLUpdate<NSCoding>
 +(TL_updateReadMessagesContents*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateNewChannelMessage : TLUpdate<NSCoding>
++(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 	
 @interface TLupdates_State()
@@ -1769,71 +1757,6 @@
 
 @interface TL_help_inviteText : TLhelp_InviteText<NSCoding>
 +(TL_help_inviteText*)createWithMessage:(NSString*)message;
-@end
-	
-@interface TLInputGeoChat()
-@property int chat_id;
-@property long access_hash;
-@end
-
-@interface TL_inputGeoChat : TLInputGeoChat<NSCoding>
-+(TL_inputGeoChat*)createWithChat_id:(int)chat_id access_hash:(long)access_hash;
-@end
-	
-@interface TLGeoChatMessage()
-@property int chat_id;
-@property int n_id;
-@property int from_id;
-@property int date;
-@property (nonatomic, strong) NSString* message;
-@property (nonatomic, strong) TLMessageMedia* media;
-@property (nonatomic, strong) TLMessageAction* action;
-@end
-
-@interface TL_geoChatMessageEmpty : TLGeoChatMessage<NSCoding>
-+(TL_geoChatMessageEmpty*)createWithChat_id:(int)chat_id n_id:(int)n_id;
-@end
-@interface TL_geoChatMessage : TLGeoChatMessage<NSCoding>
-+(TL_geoChatMessage*)createWithChat_id:(int)chat_id n_id:(int)n_id from_id:(int)from_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media;
-@end
-@interface TL_geoChatMessageService : TLGeoChatMessage<NSCoding>
-+(TL_geoChatMessageService*)createWithChat_id:(int)chat_id n_id:(int)n_id from_id:(int)from_id date:(int)date action:(TLMessageAction*)action;
-@end
-	
-@interface TLgeochats_StatedMessage()
-@property (nonatomic, strong) TLGeoChatMessage* message;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int seq;
-@end
-
-@interface TL_geochats_statedMessage : TLgeochats_StatedMessage<NSCoding>
-+(TL_geochats_statedMessage*)createWithMessage:(TLGeoChatMessage*)message chats:(NSMutableArray*)chats users:(NSMutableArray*)users seq:(int)seq;
-@end
-	
-@interface TLgeochats_Located()
-@property (nonatomic, strong) NSMutableArray* results;
-@property (nonatomic, strong) NSMutableArray* messages;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@end
-
-@interface TL_geochats_located : TLgeochats_Located<NSCoding>
-+(TL_geochats_located*)createWithResults:(NSMutableArray*)results messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
-@end
-	
-@interface TLgeochats_Messages()
-@property (nonatomic, strong) NSMutableArray* messages;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@property int n_count;
-@end
-
-@interface TL_geochats_messages : TLgeochats_Messages<NSCoding>
-+(TL_geochats_messages*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
-@end
-@interface TL_geochats_messagesSlice : TLgeochats_Messages<NSCoding>
-+(TL_geochats_messagesSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLEncryptedChat()
@@ -2296,6 +2219,7 @@
 @property int embed_height;
 @property int duration;
 @property (nonatomic, strong) NSString* author;
+@property (nonatomic, strong) TLDocument* document;
 @end
 
 @interface TL_webPageEmpty : TLWebPage<NSCoding>
@@ -2305,7 +2229,7 @@
 +(TL_webPagePending*)createWithN_id:(long)n_id date:(int)date;
 @end
 @interface TL_webPage : TLWebPage<NSCoding>
-+(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author;
++(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author document:(TLDocument*)document;
 @end
 @interface TL_webPage_old34 : TLWebPage<NSCoding>
 +(TL_webPage_old34*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author;
@@ -2559,6 +2483,32 @@
 @end
 @interface TL_messageEntityTextUrl : TLMessageEntity<NSCoding>
 +(TL_messageEntityTextUrl*)createWithOffset:(int)offset length:(int)length url:(NSString*)url;
+@end
+	
+@interface TLInputChat()
+@property int chat_id;
+@property int channel_id;
+@property long access_hash;
+@end
+
+@interface TL_inputChatEmpty : TLInputChat<NSCoding>
++(TL_inputChatEmpty*)create;
+@end
+@interface TL_inputChat : TLInputChat<NSCoding>
++(TL_inputChat*)createWithChat_id:(int)chat_id;
+@end
+@interface TL_inputChannel : TLInputChat<NSCoding>
++(TL_inputChannel*)createWithChannel_id:(int)channel_id access_hash:(long)access_hash;
+@end
+	
+@interface TLMessageGroup()
+@property int min_id;
+@property int max_id;
+@property int n_count;
+@end
+
+@interface TL_messageGroup : TLMessageGroup<NSCoding>
++(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count;
 @end
 	
 @interface TLProtoMessage()
