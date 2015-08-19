@@ -1910,6 +1910,17 @@
          contextName = "-[TGWebpageObject initWithWebPage:]:TGWebpageObject.m">
       </ContextState>
       <ContextState
+         contextName = "-[Storage createAndCheckDatabase:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "encryptionKey">
+            </PersistentString>
+            <PersistentString
+               value = "encryptedDatabasePath">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__42-[MessageTableCellStickerView contextMenu]_block_invoke73:MessageTableCellStickerView.m">
       </ContextState>
       <ContextState

@@ -314,15 +314,15 @@ static NSString *encryptionKey;
         }
         
         
-        sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
+       int res = sqlite3_exec(unencrypted_DB, sqlQ, NULL, NULL, NULL);
         
         // export database
-        sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
+        res = sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
         
         // Detach encrypted database
-        sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
+        res = sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
         
-        sqlite3_close(unencrypted_DB);
+        res = sqlite3_close(unencrypted_DB);
         
         if(fileSize(dbPath) > 0) {
             [ASQueue dispatchOnMainQueue:^{

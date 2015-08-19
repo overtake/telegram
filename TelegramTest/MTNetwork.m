@@ -340,7 +340,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 -(void)updateStorageEncryptionKey {
     
-    NSString *key = [_keychain objectForKey:@"encryptionKey" group:@"persistent"];
+    NSString *key = [_keychain objectForKey:@"e_key" group:@"persistent"];
     
     if(!key)
         [self updateEncryptionKey];
@@ -515,9 +515,9 @@ static int MAX_WORKER_POLL = 5;
     uint8_t secKey[32];
     SecRandomCopyBytes(kSecRandomDefault, 32, secKey);
     
-    NSString *key = [[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding];
+    NSString *key = [[[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding] md5];
     
-    [_keychain setObject:key forKey:@"encryptionKey" group:@"persistent"];
+    [_keychain setObject:key forKey:@"e_key" group:@"persistent"];
     
     [Storage updateEncryptionKey:key];
     

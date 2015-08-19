@@ -93,9 +93,9 @@
 
 static void TGTelegramLoggingFunction(NSString *format, va_list args)
 {
-#ifdef TGDEBUG
+//#ifdef TGDEBUG
     TGLogv(format, args);
-#endif
+//#endif
 }
 
 
