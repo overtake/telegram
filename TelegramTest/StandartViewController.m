@@ -11,6 +11,7 @@
 #import "ComposeActionSecretChatBehavior.h"
 #import "ComposeActionBroadcastBehavior.h"
 #import "TGRecentSearchTableView.h"
+#import "ComposeActionCreateChannelBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -172,6 +173,23 @@
 
 +(NSMenu *)attachMenu {
     NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    
+    NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
+        
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
+        
+        [[Telegram rightViewController] showComposeCreateChannel:action];
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        
+    }];
+    
+    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewGroup"]];
+    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewGroupActive"]];
+    [theMenu addItem:createChannel];
+    
     
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
         

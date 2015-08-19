@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 13.08.15.
+//  Auto created by Mikhail Filimonov on 19.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -16903,6 +16903,168 @@
 -(TL_webPage *)copy {
     
     TL_webPage *objc = [[TL_webPage alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.url = self.url;
+    objc.display_url = self.display_url;
+    objc.type = self.type;
+    objc.site_name = self.site_name;
+    objc.title = self.title;
+    objc.n_description = self.n_description;
+    objc.photo = [self.photo copy];
+    objc.embed_url = self.embed_url;
+    objc.embed_type = self.embed_type;
+    objc.embed_width = self.embed_width;
+    objc.embed_height = self.embed_height;
+    objc.duration = self.duration;
+    objc.author = self.author;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+        
+-(void)setType:(NSString*)type
+{
+    [super setType:type];
+            
+    if(self.type == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
+-(void)setSite_name:(NSString*)site_name
+{
+    [super setSite_name:site_name];
+            
+    if(self.site_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
+}        
+-(void)setTitle:(NSString*)title
+{
+    [super setTitle:title];
+            
+    if(self.title == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}        
+-(void)setN_description:(NSString*)n_description
+{
+    [super setN_description:n_description];
+            
+    if(self.n_description == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}        
+-(void)setPhoto:(TLPhoto*)photo
+{
+    [super setPhoto:photo];
+            
+    if(self.photo == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
+}        
+-(void)setEmbed_url:(NSString*)embed_url
+{
+    [super setEmbed_url:embed_url];
+            
+    if(self.embed_url == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
+}        
+-(void)setEmbed_type:(NSString*)embed_type
+{
+    [super setEmbed_type:embed_type];
+            
+    if(self.embed_type == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
+}        
+-(void)setEmbed_width:(int)embed_width
+{
+    [super setEmbed_width:embed_width];
+            
+    if(self.embed_width == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}        
+-(void)setEmbed_height:(int)embed_height
+{
+    [super setEmbed_height:embed_height];
+            
+    if(self.embed_height == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}        
+-(void)setDuration:(int)duration
+{
+    [super setDuration:duration];
+            
+    if(self.duration == 0)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
+}        
+-(void)setAuthor:(NSString*)author
+{
+    [super setAuthor:author];
+            
+    if(self.author == nil)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
+}
+        
+@end
+
+@implementation TL_webPage_old34
++(TL_webPage_old34*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author {
+	TL_webPage_old34* obj = [[TL_webPage_old34 alloc] init];
+	obj.flags = flags;
+	obj.n_id = n_id;
+	obj.url = url;
+	obj.display_url = display_url;
+	obj.type = type;
+	obj.site_name = site_name;
+	obj.title = title;
+	obj.n_description = n_description;
+	obj.photo = photo;
+	obj.embed_url = embed_url;
+	obj.embed_type = embed_type;
+	obj.embed_width = embed_width;
+	obj.embed_height = embed_height;
+	obj.duration = duration;
+	obj.author = author;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeLong:self.n_id];
+	[stream writeString:self.url];
+	[stream writeString:self.display_url];
+	if(self.flags & (1 << 0)) {[stream writeString:self.type];}
+	if(self.flags & (1 << 1)) {[stream writeString:self.site_name];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.title];}
+	if(self.flags & (1 << 3)) {[stream writeString:self.n_description];}
+	if(self.flags & (1 << 4)) {[ClassStore TLSerialize:self.photo stream:stream];}
+	if(self.flags & (1 << 5)) {[stream writeString:self.embed_url];}
+	if(self.flags & (1 << 5)) {[stream writeString:self.embed_type];}
+	if(self.flags & (1 << 6)) {[stream writeInt:self.embed_width];}
+	if(self.flags & (1 << 6)) {[stream writeInt:self.embed_height];}
+	if(self.flags & (1 << 7)) {[stream writeInt:self.duration];}
+	if(self.flags & (1 << 8)) {[stream writeString:self.author];}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
+	self.n_id = [stream readLong];
+	self.url = [stream readString];
+	self.display_url = [stream readString];
+	if(self.flags & (1 << 0)) {self.type = [stream readString];}
+	if(self.flags & (1 << 1)) {self.site_name = [stream readString];}
+	if(self.flags & (1 << 2)) {self.title = [stream readString];}
+	if(self.flags & (1 << 3)) {self.n_description = [stream readString];}
+	if(self.flags & (1 << 4)) {self.photo = [ClassStore TLDeserialize:stream];}
+	if(self.flags & (1 << 5)) {self.embed_url = [stream readString];}
+	if(self.flags & (1 << 5)) {self.embed_type = [stream readString];}
+	if(self.flags & (1 << 6)) {self.embed_width = [stream readInt];}
+	if(self.flags & (1 << 6)) {self.embed_height = [stream readInt];}
+	if(self.flags & (1 << 7)) {self.duration = [stream readInt];}
+	if(self.flags & (1 << 8)) {self.author = [stream readString];}
+}
+        
+-(TL_webPage_old34 *)copy {
+    
+    TL_webPage_old34 *objc = [[TL_webPage_old34 alloc] init];
     
     objc.flags = self.flags;
     objc.n_id = self.n_id;

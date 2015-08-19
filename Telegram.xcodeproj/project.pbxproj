@@ -764,6 +764,8 @@
 		C2D826421B71155000434D37 /* TGDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826411B71155000434D37 /* TGDatabase.m */; };
 		C2D826491B74FD5D00434D37 /* TGPVZoomControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */; };
 		C2D8CFBF1B84B79500080775 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C2D8CFC31B84D3E200080775 /* ComposeActionCreateChannelBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8CFC21B84D3E200080775 /* ComposeActionCreateChannelBehavior.m */; };
+		C2D8CFC61B84D73D00080775 /* ComposeCreateChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D8CFC51B84D73D00080775 /* ComposeCreateChannelViewController.m */; };
 		C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9313F1991140F00668F86 /* TGWindowArchiver.m */; };
 		C2DE4FAB1AD08C34001EC26C /* TGWebpageArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */; };
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
@@ -2344,6 +2346,10 @@
 		C2D826411B71155000434D37 /* TGDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabase.m; sourceTree = "<group>"; };
 		C2D826471B74FD5D00434D37 /* TGPVZoomControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVZoomControl.h; sourceTree = "<group>"; };
 		C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVZoomControl.m; sourceTree = "<group>"; };
+		C2D8CFC11B84D3E200080775 /* ComposeActionCreateChannelBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCreateChannelBehavior.h; sourceTree = "<group>"; };
+		C2D8CFC21B84D3E200080775 /* ComposeActionCreateChannelBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionCreateChannelBehavior.m; sourceTree = "<group>"; };
+		C2D8CFC41B84D73D00080775 /* ComposeCreateChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeCreateChannelViewController.h; sourceTree = "<group>"; };
+		C2D8CFC51B84D73D00080775 /* ComposeCreateChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeCreateChannelViewController.m; sourceTree = "<group>"; };
 		C2D9313E1991140F00668F86 /* TGWindowArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWindowArchiver.h; sourceTree = "<group>"; };
 		C2D9313F1991140F00668F86 /* TGWindowArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWindowArchiver.m; sourceTree = "<group>"; };
 		C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageArticle.h; sourceTree = "<group>"; };
@@ -3509,6 +3515,7 @@
 		C21D484619AF3C0E000F06E1 /* compose */ = {
 			isa = PBXGroup;
 			children = (
+				C2D8CFC01B84D2F300080775 /* channels */,
 				C226CC791B341CC80042C5D8 /* add_to_group */,
 				C2D51C021B21F02D009327C0 /* select_groups */,
 				C22019FD192CCB4000C0E441 /* select_users */,
@@ -3542,6 +3549,8 @@
 				C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */,
 				C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */,
 				C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */,
+				C2D8CFC11B84D3E200080775 /* ComposeActionCreateChannelBehavior.h */,
+				C2D8CFC21B84D3E200080775 /* ComposeActionCreateChannelBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -5047,6 +5056,15 @@
 			name = modern;
 			sourceTree = "<group>";
 		};
+		C2D8CFC01B84D2F300080775 /* channels */ = {
+			isa = PBXGroup;
+			children = (
+				C2D8CFC41B84D73D00080775 /* ComposeCreateChannelViewController.h */,
+				C2D8CFC51B84D73D00080775 /* ComposeCreateChannelViewController.m */,
+			);
+			name = channels;
+			sourceTree = "<group>";
+		};
 		C2DE4FB21AD43EBC001EC26C /* h */ = {
 			isa = PBXGroup;
 			children = (
@@ -6011,6 +6029,7 @@
 				C268C18819F0519C007F836A /* POPAnimationExtras.mm in Sources */,
 				CEB09E6F17DAFC250055F150 /* AppDelegate.m in Sources */,
 				0A59068018AA32C8002ED7BA /* BTRSecureTextField.m in Sources */,
+				C2D8CFC61B84D73D00080775 /* ComposeCreateChannelViewController.m in Sources */,
 				CEB26165180C928A00378932 /* RpcError.m in Sources */,
 				0A6D098D19535E8500A9AC64 /* NSEventCategory.m in Sources */,
 				C274C44D1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m in Sources */,
@@ -6152,6 +6171,7 @@
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
 				C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */,
 				C2D4B8681AFCE8F90035B4E4 /* YapDatabaseManager.m in Sources */,
+				C2D8CFC31B84D3E200080775 /* ComposeActionCreateChannelBehavior.m in Sources */,
 				0ADA319C19469D16002BAEDB /* EmojiViewController.m in Sources */,
 				C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */,
 				C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */,

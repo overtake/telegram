@@ -42,6 +42,7 @@
 #import "TGSplitViewController.h"
 #import "CacheSettingsViewController.h"
 #import "NotificationSettingsViewController.h"
+#import "ComposeCreateChannelViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -88,6 +89,7 @@
 
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
+@property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -150,4 +152,7 @@
 
 -(void)showCacheSettingsViewController;
 -(void)showNotificationSettingsViewController;
+
+-(void)showComposeCreateChannel:(ComposeAction *)action;
+
 @end

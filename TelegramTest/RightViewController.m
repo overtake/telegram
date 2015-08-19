@@ -654,6 +654,23 @@
     [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
+-(void)showComposeCreateChannel:(ComposeAction *)composeAction {
+    if(self.navigationViewController.currentController == self.composeCreateChannelViewController && self.composeCreateChannelViewController.action == composeAction)
+        return;
+    
+    if(!self.composeCreateChannelViewController)
+    {
+        self.composeCreateChannelViewController = [[ComposeCreateChannelViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.composeCreateChannelViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeCreateChannelViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
 
 -(void)showComposeBroadcastList:(ComposeAction *)composeAction {
     if(self.navigationViewController.currentController == self.composeBroadcastListViewController && self.composeBroadcastListViewController.action == composeAction)
