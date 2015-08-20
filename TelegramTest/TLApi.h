@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.08.15.
+//  Auto created by Mikhail Filimonov on 20.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -813,6 +813,13 @@
 @property int limit;
 
 +(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id min_id:(int)min_id limit:(int)limit;
+@end
+
+@interface TLAPI_messages_readChannelHistory : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int max_id;
+
++(TLAPI_messages_readChannelHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id;
 @end
 
 @interface TLAPI_messages_createChannel : TLApiObject

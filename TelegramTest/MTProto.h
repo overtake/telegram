@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.08.15.
+//  Auto created by Mikhail Filimonov on 20.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1582,6 +1582,9 @@
 @end
 @interface TL_updateNewChannelMessage : TLUpdate<NSCoding>
 +(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateReadChannelInbox : TLUpdate<NSCoding>
++(TL_updateReadChannelInbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id;
 @end
 	
 @interface TLupdates_State()

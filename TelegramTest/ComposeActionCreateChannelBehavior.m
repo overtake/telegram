@@ -51,17 +51,7 @@
 
 
 -(void)createChannel {
-    NSArray *selected = self.action.result.multiObjects;
-    
-    
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for(SelectUserItem* item in selected) {
-        if(item.user.type != TLUserTypeSelf) {
-            [array addObject:[item.user inputUser]];
-        }
-        
-    }
-    
+   
     self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel  createWithTitle:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         

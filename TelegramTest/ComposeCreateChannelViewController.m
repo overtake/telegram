@@ -210,6 +210,8 @@
     
     [self.doneButton setDisable:self.headerView.textView.stringValue.length == 0];
     
+    self.action.result = [[ComposeResult alloc] init];
+    
     self.action.result.singleObject = self.headerView.chat.title;
 }
 

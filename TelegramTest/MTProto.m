@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.08.15.
+//  Auto created by Mikhail Filimonov on 20.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4203,7 +4203,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
-	[stream writeInt:self.from_id];
+	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
 	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_from_id];}
 	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
@@ -4226,7 +4226,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
-	self.from_id = [stream readInt];
+	if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [stream readInt];}
 	if(self.flags & (1 << 2)) {self.fwd_date = [stream readInt];}
@@ -4286,6 +4286,12 @@
 
         
         
+-(void)setFrom_id:(int)from_id
+{
+    [super setFrom_id:from_id];
+            
+    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
+}        
 -(void)setFwd_from_id:(int)fwd_from_id
 {
     [super setFwd_from_id:fwd_from_id];
@@ -4333,7 +4339,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
-	[stream writeInt:self.from_id];
+	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
 	[stream writeInt:self.date];
 	[ClassStore TLSerialize:self.action stream:stream];
@@ -4341,7 +4347,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
-	self.from_id = [stream readInt];
+	if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
 	self.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
@@ -4375,7 +4381,13 @@
 }
 
         
-
+        
+-(void)setFrom_id:(int)from_id
+{
+    [super setFrom_id:from_id];
+            
+    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
+}
         
 @end
 
@@ -10653,6 +10665,50 @@
     objc.message = [self.message copy];
     objc.pts = self.pts;
     objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_updateReadChannelInbox
++(TL_updateReadChannelInbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id {
+	TL_updateReadChannelInbox* obj = [[TL_updateReadChannelInbox alloc] init];
+	obj.peer = peer;
+	obj.max_id = max_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.max_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.peer = [ClassStore TLDeserialize:stream];
+	self.max_id = [stream readInt];
+}
+        
+-(TL_updateReadChannelInbox *)copy {
+    
+    TL_updateReadChannelInbox *objc = [[TL_updateReadChannelInbox alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.max_id = self.max_id;
     
     return objc;
 }

@@ -220,6 +220,7 @@
 		C20A5E691B86159B007F4B49 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C20A5E6A1B8615A0007F4B49 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C20A5E6B1B8615A0007F4B49 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */; };
 		C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5E19D7069C008844F2 /* TGActor.m */; };
 		C20A7E6219D706D0008844F2 /* ASActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E6119D706D0008844F2 /* ASActor.m */; };
@@ -1392,6 +1393,8 @@
 		C2082B7219C1E1C4000005E2 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C20932221938BABF00DFF3EC /* AudioHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHistoryFilter.h; sourceTree = "<group>"; };
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
+		C20A5E6F1B86290C007F4B49 /* TGWebpageGifObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageGifObject.h; sourceTree = "<group>"; };
+		C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageGifObject.m; sourceTree = "<group>"; };
 		C20A7E5A19D7064D008844F2 /* TGDatacenterWatchdogActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatacenterWatchdogActor.h; sourceTree = "<group>"; };
 		C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatacenterWatchdogActor.m; sourceTree = "<group>"; };
 		C20A7E5D19D7069C008844F2 /* TGActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGActor.h; sourceTree = "<group>"; };
@@ -4183,6 +4186,8 @@
 				C274C4491ACD9FF5000DFDE4 /* TGWebpageStandartObject.m */,
 				C2DE4FA91AD08C34001EC26C /* TGWebpageArticle.h */,
 				C2DE4FAA1AD08C34001EC26C /* TGWebpageArticle.m */,
+				C20A5E6F1B86290C007F4B49 /* TGWebpageGifObject.h */,
+				C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */,
 			);
 			name = objects;
 			sourceTree = "<group>";
@@ -6639,6 +6644,7 @@
 				C2AA5D35187597680026EA1F /* LoopingUtils.m in Sources */,
 				C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */,
 				0A613C1A18AD7E49004096DD /* MessageTableCellGeoView.m in Sources */,
+				C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */,
 				C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */,
 				0A9EDC5C1897BA0E0037E1BC /* RBLShadowedTextFieldCell.m in Sources */,
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,

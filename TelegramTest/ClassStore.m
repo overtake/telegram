@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 19.08.15.
+    //  Created by keepcoder on 20.08.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -207,8 +207,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:935395612]];
    [cs_classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
    [cs_classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
-   [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-260565816]];
-   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:495384334]];
+   [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-91422930]];
+   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1066691065]];
    [cs_classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
    [cs_classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:1032643901]];
    [cs_classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:1540298357]];
@@ -480,6 +480,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_collapsedSlice class] forKey:[NSNumber numberWithInt:-2127950005]];
    [cs_classes setObject:[TL_messageActionChannelCreate class] forKey:[NSNumber numberWithInt:-1781355374]];
    [cs_classes setObject:[TL_updateNewChannelMessage class] forKey:[NSNumber numberWithInt:1656358105]];
+   [cs_classes setObject:[TL_updateReadChannelInbox class] forKey:[NSNumber numberWithInt:-2017952899]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];
