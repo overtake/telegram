@@ -485,6 +485,14 @@
          contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesBottomView checkBotKeyboard:animated:forceShow:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.inputMessageTextField.containerView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[MTDiscoverConnectionSignals discoverSchemeWithContext:addressList:media:]:MTDiscoverConnectionSignals.m">
       </ContextState>
       <ContextState

@@ -1498,6 +1498,8 @@
     [self updateTextFieldContainer];
     
     [self.inputMessageTextField textDidChange:nil];
+    
+    [_botKeyboard setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame), NSHeight(_botKeyboard.frame))];
 }
 
 

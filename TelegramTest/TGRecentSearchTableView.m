@@ -36,8 +36,9 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_border setFrameSize:NSMakeSize(DIALOG_BORDER_WIDTH, NSHeight(self.containerView.frame))];
+    [_border setFrame:NSMakeRect(NSWidth(self.containerView.frame) - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, NSHeight(self.containerView.frame))];
 }
+
 
 -(BOOL)loadRecentSearchItems {
     
