@@ -55,18 +55,17 @@
     self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel  createWithTitle:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
-        return;
-        if(response.updates.count > 1) {
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
-            
-            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
-                [self.delegate behaviorDidEndRequest:response];
-                
-                [[Telegram rightViewController] clearStack];
-                
-                [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
-            }];
-        }
+//        if(response.updates.count > 1) {
+//            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
+//            
+//            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+//                [self.delegate behaviorDidEndRequest:response];
+//                
+//                [[Telegram rightViewController] clearStack];
+//                
+//                [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
+//            }];
+//        }
         
         
         

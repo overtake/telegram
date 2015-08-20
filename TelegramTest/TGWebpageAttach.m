@@ -135,6 +135,8 @@
             desc = _webpage.n_description;
         if(!desc)
             desc = _webpage.author;
+        if(!desc && _webpage.document)
+            desc = NSLocalizedString(@"WebAttach.Document", nil);
         
         [_stateField setTextColor:GRAY_TEXT_COLOR];
     }

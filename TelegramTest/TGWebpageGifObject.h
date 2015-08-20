@@ -7,7 +7,14 @@
 //
 
 #import "ComposeViewController.h"
+#import "TGWebpageObject.h"
+@interface TGWebpageGifObject : TGWebpageObject
 
-@interface TGWebpageGifObject : ComposeViewController
 
+@property (nonatomic,strong,readonly) DownloadEventListener *downloadListener;
+@property (nonatomic,strong,readonly) DownloadItem *downloadItem;
+
+- (void)startDownload:(BOOL)cancel force:(BOOL)force;
+-(NSString *)path;
+-(BOOL)isset;
 @end

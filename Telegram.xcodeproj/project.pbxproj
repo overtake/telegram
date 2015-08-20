@@ -221,6 +221,8 @@
 		C20A5E6A1B8615A0007F4B49 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C20A5E6B1B8615A0007F4B49 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
+		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
+		C20A5E8F1B86404D007F4B49 /* DownloadCacheDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */; };
 		C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */; };
 		C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5E19D7069C008844F2 /* TGActor.m */; };
 		C20A7E6219D706D0008844F2 /* ASActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E6119D706D0008844F2 /* ASActor.m */; };
@@ -1395,6 +1397,10 @@
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
 		C20A5E6F1B86290C007F4B49 /* TGWebpageGifObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageGifObject.h; sourceTree = "<group>"; };
 		C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageGifObject.m; sourceTree = "<group>"; };
+		C20A5E811B863979007F4B49 /* TGWebpageGifContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageGifContainer.h; sourceTree = "<group>"; };
+		C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageGifContainer.m; sourceTree = "<group>"; };
+		C20A5E8D1B86404D007F4B49 /* DownloadCacheDocumentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadCacheDocumentItem.h; sourceTree = "<group>"; };
+		C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadCacheDocumentItem.m; sourceTree = "<group>"; };
 		C20A7E5A19D7064D008844F2 /* TGDatacenterWatchdogActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatacenterWatchdogActor.h; sourceTree = "<group>"; };
 		C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatacenterWatchdogActor.m; sourceTree = "<group>"; };
 		C20A7E5D19D7069C008844F2 /* TGActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGActor.h; sourceTree = "<group>"; };
@@ -3819,6 +3825,8 @@
 				C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */,
 				C2CBF6AB1AFB84DB006BF90A /* TGDownloadItem.h */,
 				C2CBF6AC1AFB84DB006BF90A /* TGDownloadItem.m */,
+				C20A5E8D1B86404D007F4B49 /* DownloadCacheDocumentItem.h */,
+				C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */,
 			);
 			name = download_items;
 			sourceTree = "<group>";
@@ -4167,6 +4175,8 @@
 				C274C44C1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m */,
 				C2DE4FAC1AD08C47001EC26C /* TGWebpageArticleContainer.h */,
 				C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */,
+				C20A5E811B863979007F4B49 /* TGWebpageGifContainer.h */,
+				C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -6086,6 +6096,7 @@
 				0A9EDC571897BA0E0037E1BC /* RBLExpandingContainerView.m in Sources */,
 				C271525A19B637D200841C8A /* ComposeViewController.m in Sources */,
 				C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */,
+				C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
@@ -6329,6 +6340,7 @@
 				C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */,
 				C2D4B8731AFCE8FA0035B4E4 /* YapMurmurHash.m in Sources */,
 				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
+				C20A5E8F1B86404D007F4B49 /* DownloadCacheDocumentItem.m in Sources */,
 				0AA3F3A218BCD61600D383F1 /* UserInfoViewController.m in Sources */,
 				C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */,
 				C26F7EA21A4C32DB001D1AE2 /* TGAllStickersTableView.m in Sources */,

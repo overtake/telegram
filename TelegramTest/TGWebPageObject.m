@@ -13,6 +13,7 @@
 #import "TGWebpageTWObject.h"
 #import "TGWebpageStandartObject.h"
 #import "TGWebpageArticle.h"
+#import "TGWebpageGifObject.h"
 #import "NSAttributedString+Hyperlink.h"
 @implementation TGWebpageObject
 
@@ -218,9 +219,14 @@ NSImage *placeholder() {
     
     
     
-    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"] || [webpage.type isEqualToString:@"document"])
+    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
     {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
+    }
+    
+    if([webpage.type isEqualToString:@"document"]) {
+        if([webpage.document.mime_type isEqualToString:@"image/gif"])
+            return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
     
     return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
