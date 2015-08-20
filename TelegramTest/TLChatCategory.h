@@ -26,8 +26,10 @@ typedef enum {
 -(TL_conversation *)dialog;
 
 -(TLChatFull *)chatFull;
-
+-(TLInputChat *)input;
 - (NSAttributedString *)statusAttributedString;
 - (NSAttributedString *)statusForMessagesHeaderView;
 - (NSAttributedString *)statusForSearchTableView;
+
+
 @end

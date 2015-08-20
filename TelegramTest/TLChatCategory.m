@@ -172,4 +172,8 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return attributedString;
 }
 
+-(TLInputChat *)input {
+    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
+}
+
 @end

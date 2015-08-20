@@ -86,6 +86,14 @@
 
 -(void)loadremote:(int)offset limit:(int)limit callback:(void (^)(NSArray *))callback  {
     
+//    [RPCRequest sendRequest:[TLAPI_messages_getChannelDialogs createWithOffset:0 limit:100] successHandler:^(id request, id response) {
+//    
+//        int bp = 0;
+//        
+//    } errorHandler:^(id request, RpcError *error) {
+//        
+//    }];
+    
     [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:offset limit:limit]successHandler:^(RPCRequest *request, id response) {
         
         TL_messages_dialogs *dialogs = response;

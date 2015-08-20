@@ -2720,9 +2720,10 @@ static NSTextAttachment *headerMediaIcon() {
             [self.messages insertObject:item atIndex:nRow];
             
             
-            [self isHeaderMessage:item prevItem:[self.messages objectAtIndex:nRow+1]];
+            [self isHeaderMessage:item prevItem:[self.messages objectAtIndex:MIN(self.messages.count-1,nRow+1)]];
             
-            [self.table moveRowAtIndex:row toIndex:nRow];
+            if(row != nRow)
+                [self.table moveRowAtIndex:row toIndex:nRow];
             
             [self.table noteHeightOfRowsWithIndexesChanged:set];
             
@@ -3561,7 +3562,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)leaveOrReturn:(TL_conversation *)dialog {
     TLInputUser *input = [[UsersManager currentUser] inputUser];
     
-    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:[TL_inputChat createWithChat_id:dialog.chat.n_id] user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:[TL_inputChat createWithChat_id:dialog.chat.n_id] user_id:input];
+    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.input user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.input user_id:input];
     
     
     if(dialog.chat.left) {

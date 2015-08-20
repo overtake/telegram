@@ -576,6 +576,13 @@ static ASQueue *queue;
         return [MessagesManager addAndUpdateMessage:message];
     }
     
+    if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
+        TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
+        
+        
+        return [MessagesManager addAndUpdateMessage:message];
+    }
+    
     
     if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
         [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:NO];

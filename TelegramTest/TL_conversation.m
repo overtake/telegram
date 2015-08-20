@@ -223,6 +223,10 @@
         // if([self.peer isKindOfClass:[TL_peerSecret class]]) {
         //  TLEncryptedChat *chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
         //}
+        
+        if([self.peer isKindOfClass:[TL_peerChannel class]])
+            return [TL_inputPeerChannel createWithChannel_id:self.peer.channel_id access_hash:self.chat.access_hash];
+        
         input = [TL_inputPeerChat createWithChat_id:self.peer.chat_id];
     } else {
         TLUser *user = [[UsersManager sharedManager] find:self.peer.user_id];
