@@ -77,6 +77,10 @@ static NSMutableDictionary *keychains()
 }
 
 
+NSString * serviceName() {
+    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] ? @"telegram-test-server" : @"Telegram";
+}
+
 + (instancetype)keychainWithName:(NSString *)name
 {
     if (name == nil)
@@ -200,7 +204,7 @@ static NSArray *groups;
 {
     
     if(_encrypted) {
-        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Telegram" account:@"authkeys"]];
+        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:serviceName() account:@"authkeys"]];
     }
     
     
@@ -375,7 +379,7 @@ static NSArray *groups;
 }
 
 -(void)saveKeychain {
-    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:@"Telegram" account:@"authkeys"];
+    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:serviceName() account:@"authkeys"];
 }
 
 - (void)setObject:(id)object forKey:(id<NSCopying>)aKey group:(NSString *)group

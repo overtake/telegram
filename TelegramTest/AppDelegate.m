@@ -863,10 +863,11 @@ void exceptionHandler(NSException * exception)
             [TGAudioPlayerWindow hide];
             
             
-            [[MTNetwork instance] drop];
-            
             [Storage drop];
             
+            [[MTNetwork instance] drop];
+            
+
             [Storage open:^{
                 
                 [TGCache clear];

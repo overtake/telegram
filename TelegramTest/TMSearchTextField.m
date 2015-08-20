@@ -419,6 +419,8 @@ static float duration = 0.1;
 //    if(self.)
  //   [self centerPosition:YES];
 //    [self setNeedsDisplay:YES];
+    
+    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
     if([self.delegate respondsToSelector:@selector(searchFieldBlur)])
         [self.delegate searchFieldBlur];
 }
@@ -427,11 +429,14 @@ static float duration = 0.1;
     self.isActive = YES;
     [self leftPosition:YES];
 //    [self setNeedsDisplay:YES];
+     [self.cancelButton setHidden:NO];
+    
     if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
         [self.delegate searchFieldFocus];
 }
 
 - (void) searchFieldDidResign {
+    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
     if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
         [self.delegate searchFieldFocus];
 }

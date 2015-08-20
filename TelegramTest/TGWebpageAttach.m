@@ -154,7 +154,7 @@
 }
 
 -(void)dealloc {
-    assert([NSThread isMainThread]);
+    //assert([NSThread isMainThread]);
     remove_global_dispatcher(_internalId);
     [Notification removeObserver:self];
 }

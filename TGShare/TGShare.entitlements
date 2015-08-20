@@ -10,7 +10,6 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)ru.keepcoder.Telegram.TGShare</string>
 		<string>$(AppIdentifierPrefix)ru.keepcoder.Telegram</string>
 	</array>
 </dict>

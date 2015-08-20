@@ -273,8 +273,6 @@ static NSString *encryptionKey;
 
 +(void)updateEncryptionKey:(NSString *)key {
     encryptionKey = key;
-    
-    
 }
 
 //

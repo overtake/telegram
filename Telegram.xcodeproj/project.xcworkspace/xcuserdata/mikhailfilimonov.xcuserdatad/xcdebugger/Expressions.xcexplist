@@ -93,6 +93,14 @@
          contextName = "-[TGPhotoViewerItem isEqual:]:TGPhotoViewerItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellServiceMessage setItem:]:MessageTableCellServiceMessage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.textSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGWebpageArticle initWithWebPage:]:TGWebpageArticle.m">
          <PersistentStrings>
             <PersistentString
@@ -503,6 +511,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__17-[MTNetwork drop]_block_invoke:MTNetwork.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_masterDatacenter">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -957,6 +973,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__44-[TGSModalSenderView sendAsMessage:rowItem:]_block_invoke257:TGSModalSenderView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController scrollViewDocumentOffsetChangingNotificationHandler:]:TMCollectionPageController.m">
          <PersistentStrings>
             <PersistentString
@@ -971,6 +990,9 @@
                value = "removed">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGKeychain _storeKeychain:]:TGKeychain.m">
       </ContextState>
       <ContextState
          contextName = "__46-[PhotoCollectionImageObject initDownloadItem]_block_invoke:PhotoCollectionImageObject.m">
@@ -1741,6 +1763,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__22-[Storage open:queue:]_block_invoke_2:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "encryptionKey">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">
@@ -2609,6 +2639,9 @@
       </ContextState>
       <ContextState
          contextName = "__48-[NotificationSettingsViewController insertAll:]_block_invoke:NotificationSettingsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSModalSenderView inputPeer:]:TGSModalSenderView.m">
       </ContextState>
       <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke116:NewContactsManager.m">
