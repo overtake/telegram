@@ -48,7 +48,7 @@
     
     SelectChatItem *item = members[0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:item.chat.n_id user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:[TL_inputChat createWithChat_id:item.chat.n_id] user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
         [item.chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
             [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(item.chat.n_id)}];

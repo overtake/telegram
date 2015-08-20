@@ -220,7 +220,7 @@
     }
     
         
-    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
+    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:[TL_inputChat createWithChat_id:chat_id]] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
         
         if([result isKindOfClass:[TL_messages_chatFull class]]) {
             TL_conversation *conversation = [[DialogsManager sharedManager] findByChatId:chat_id];

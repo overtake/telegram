@@ -273,7 +273,7 @@ static ShareViewController *shareViewController;
     
     _isLocked = YES;
     
-    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:(int)_items.count max_id:0 limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
+    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:(int)_items.count limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
         
         
         NSMutableArray *items = [[NSMutableArray alloc] init];

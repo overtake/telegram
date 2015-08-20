@@ -237,7 +237,7 @@ static NSMutableDictionary * messageKeys;
   //  NSLog(@"start %@ : %@",self,[NSThread currentThread]);
     
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id min_id:0 limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
         if(callback) {
             callback(response);
