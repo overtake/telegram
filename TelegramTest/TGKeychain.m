@@ -78,7 +78,7 @@ static NSMutableDictionary *keychains()
 
 
 NSString * serviceName() {
-    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] ? @"telegram-test-server" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] ? @"telegram-test-server" : @"Telegram";
 }
 
 + (instancetype)keychainWithName:(NSString *)name
