@@ -515,6 +515,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__17-[MTNetwork drop]_block_invoke:MTNetwork.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_masterDatacenter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PhotoCollectionImageView checkAction]:PhotoCollectionImageView.m">
          <PersistentStrings>
             <PersistentString
@@ -982,6 +990,9 @@
                value = "removed">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGKeychain _storeKeychain:]:TGKeychain.m">
       </ContextState>
       <ContextState
          contextName = "__46-[PhotoCollectionImageObject initDownloadItem]_block_invoke:PhotoCollectionImageObject.m">
@@ -1752,6 +1763,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__22-[Storage open:queue:]_block_invoke_2:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "encryptionKey">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__30-[TMAudioRecorder stopRecord:]_block_invoke:TMAudioRecorder.m">

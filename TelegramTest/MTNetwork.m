@@ -494,12 +494,15 @@ static int MAX_WORKER_POLL = 5;
         
         [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
         
-        [SSKeychain deletePasswordForService:@"Telegram" account:@"authkeys"];
+        [SSKeychain deletePasswordForService:appName() account:@"authkeys"];
+        
+        [_keychain cleanup];
+        [_keychain loadIfNeeded];
         
         [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
         
-         [self.updateService drop];
-        [self setDatacenter:2];
+        [self.updateService drop];
+        [self setDatacenter:isTestServer() ? 1 : 2];
         
         
         [self updateEncryptionKey];

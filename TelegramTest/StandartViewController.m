@@ -312,7 +312,8 @@
 }
 
 -(void)searchFieldFocus {
-    [self showRecentSearchItems];
+    if(self.searchTextField.stringValue.length == 0)
+        [self showRecentSearchItems];
 }
 
 -(void)searchFieldBlur {
