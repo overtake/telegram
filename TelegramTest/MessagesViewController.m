@@ -2720,9 +2720,10 @@ static NSTextAttachment *headerMediaIcon() {
             [self.messages insertObject:item atIndex:nRow];
             
             
-            [self isHeaderMessage:item prevItem:[self.messages objectAtIndex:nRow+1]];
+            [self isHeaderMessage:item prevItem:[self.messages objectAtIndex:MIN(self.messages.count-1,nRow+1)]];
             
-            [self.table moveRowAtIndex:row toIndex:nRow];
+            if(row != nRow)
+                [self.table moveRowAtIndex:row toIndex:nRow];
             
             [self.table noteHeightOfRowsWithIndexesChanged:set];
             
