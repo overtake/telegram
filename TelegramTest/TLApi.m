@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.08.15..
+//  Auto created by Mikhail Filimonov on 21.08.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1943,6 +1943,23 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-641966126];
 	[stream writeString:self.title];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_updates_getChannelDifference
++(TLAPI_updates_getChannelDifference*)createWithPeer:(TLInputPeer*)peer pts:(int)pts limit:(int)limit {
+    TLAPI_updates_getChannelDifference* obj = [[TLAPI_updates_getChannelDifference alloc] init];
+    obj.peer = peer;
+	obj.pts = pts;
+	obj.limit = limit;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1181724569];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.pts];
+	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end

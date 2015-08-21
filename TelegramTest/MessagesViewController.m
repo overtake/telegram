@@ -339,7 +339,8 @@
                 
             case DialogTypeBroadcast:
                  [[Telegram rightViewController] showBroadcastInfoPage:strongSelf.conversation.broadcast];
-                
+            case DialogTypeChannel:
+                [[Telegram rightViewController] showChannelInfoPage:strongSelf.conversation.chat];
             default:
                 break;
         }
@@ -3568,7 +3569,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(dialog.chat.left) {
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
-            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
+            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id isChannel:NO callback:nil];
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             

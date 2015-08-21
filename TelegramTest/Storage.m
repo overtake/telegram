@@ -186,6 +186,18 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [db executeUpdate:@"CREATE INDEX if not exists peer_flags_idx ON messages(peer_id,flags)"];
         }
         
+        [db executeUpdate:@"create table if not exists channel_messages (n_id blob primary key, flags integer, from_id integer, channel_id integer, date integer, serialized blob, random_id integer, filter_mask integer, fake_id integer, dstate integer)"];
+        
+        
+        // channel messages indexes
+        {
+            [db executeUpdate:@"CREATE INDEX if not exists select_messages_idx ON channel_messages(channel_id,date)"];
+            [db executeUpdate:@"CREATE INDEX if not exists peer_idx ON channel_messages(channel_id)"];
+            [db executeUpdate:@"CREATE INDEX if not exists date_idx ON channel_messages(date)"];
+            [db executeUpdate:@"CREATE INDEX if not exists random_idx ON channel_messages(random_id)"];
+            [db executeUpdate:@"CREATE INDEX if not exists peer_flags_idx ON channel_messages(channel_id,flags)"];
+        }
+        
         
         [db executeUpdate:@"create table if not exists dialogs (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
         
@@ -247,6 +259,9 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         
         [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
+        
+        
+        [db executeUpdate:@"create table if not exists channel_updates (n_id INTEGER PRIMARY KEY, pts integer)"];
         
         
         if([db hadError]) {
@@ -498,7 +513,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     return nil;
 }
 
--(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler {
+-(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask {
     
     
      __block NSMutableArray *messages = [[NSMutableArray alloc] init];
@@ -584,9 +599,96 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [[MessagesManager sharedManager] addSupportMessages:support];
     
-    if(completeHandler)
-        completeHandler(messages);
+    return messages;
 
+}
+
+
+-(NSArray *)loadChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask {
+    
+    
+    __block NSMutableArray *messages = [[NSMutableArray alloc] init];
+    
+    
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        int currentDate = maxDate;
+        
+        
+        if(localMaxId != 0 && currentDate == 0) {
+            currentDate = [db intForQuery:@"SELECT date FROM channel_messages WHERE n_id=?",@(localMaxId)];
+            
+        }
+        
+        
+        if(currentDate == 0)
+            currentDate = [[MTNetwork instance] getTime];
+        
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where channel_id = %d and date %@ %d  and (filter_mask & %d > 0) order by date %@ limit %d",conversationId,next ? @"<=" : @">=",currentDate,mask, next ? @"DESC" : @"ASC",limit];
+
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        NSMutableArray *ids = [[NSMutableArray alloc] init];
+        
+        while ([result next]) {
+            TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            msg.flags = [result intForColumn:@"flags"];
+            
+            if(msg) {
+                [messages addObject:msg];
+                [ids addObject:@(msg.n_id)];
+            }
+            
+        }
+        [result close];
+        
+        
+        TL_localMessage *lastMessage = [messages lastObject];
+        
+        if(lastMessage) {
+            
+            NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
+            
+            int localCount = [db intForQuery:@"SELECT count(*) from channel_messages where channel_id = ? and date = ?",@(lastMessage.peer_id),@(lastMessage.date)];
+            if(selectedCount.count < localCount) {
+                
+                NSString *sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where date = %d and n_id NOT IN (%@) and channel_id = %d order by n_id desc",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
+                
+                FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+                
+                while ([result next]) {
+                    TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                    msg.flags = [result intForColumn:@"flags"];
+                    if(msg)
+                        [messages addObject:msg];
+                }
+                [result close];
+                
+            }
+        }
+        
+        
+    }];
+    
+    
+    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_msg_id != 0"]];
+    
+    NSMutableArray *supportIds = [[NSMutableArray alloc] init];
+    
+    [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        [supportIds addObject:@([obj reply_to_msg_id])];
+        
+    }];
+    
+    
+    NSArray *support = [self selectSupportMessages:supportIds];
+    
+    [[MessagesManager sharedManager] addSupportMessages:support];
+    
+    
+    return messages;
 }
 
 
@@ -774,8 +876,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler {
-    [self insertMessages:@[message] completeHandler:completeHandler];
+-(void)insertMessage:(TLMessage *)message {
+    [self insertMessages:@[message]];
 }
 
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds {
@@ -861,12 +963,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSString *mark = [messages componentsJoinedByString:@","];
         
         
+         NSMutableArray *ids = [[NSMutableArray alloc] init];
+        
         
         NSString *sql = [NSString stringWithFormat:@"select n_id from messages where random_id IN (%@)",mark];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
-        NSMutableArray *ids = [[NSMutableArray alloc] init];
+       
         
         while ([result next]) {
             
@@ -875,6 +979,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [result close];
         
+
         NSString *sids = [ids componentsJoinedByString:@","];
         
         
@@ -882,6 +987,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db executeUpdateWithFormat:sql,nil];
         
         sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE message_id IN (%@)",sids];
+        [db executeUpdateWithFormat:sql,nil];
+        
+        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE random_id IN (%@)",sids];
         [db executeUpdateWithFormat:sql,nil];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -913,11 +1021,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         [db beginTransaction];
+        
+        
         NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE peer_id = %d",dialog.peer.peer_id];
+        [db executeUpdateWithFormat:sql,nil];
+        
+        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE channel_id  = %d",dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
         
         sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE peer_id  =%d",dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
+        
+        
         
         
         if(dialog.type == DialogTypeSecretChat)
@@ -931,11 +1046,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)insertMessages:(NSArray *)messages completeHandler:(dispatch_block_t)completeHandler {
+-(void)insertMessages:(NSArray *)messages {
     
     [queue inDatabase:^(FMDatabase *db) {
          //[db beginTransaction];
         NSArray *msgs = [messages copy];
+        
+        
         
         for (TL_localMessage *message in msgs) {
             
@@ -950,6 +1067,19 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             int peer_id = [message peer_id];
             
             int mask = message.filterType;
+            
+            
+            dispatch_block_t clearWithFakeId = ^{
+                if(message.n_id < TGMINFAKEID) {
+                    
+                    NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE fake_id = %d",message.fakeId];
+                    [db executeUpdateWithFormat:sql,nil];
+                    
+                    sql = [NSString stringWithFormat:@"delete from channel_messages WHERE fake_id = %d",message.fakeId];
+                    [db executeUpdateWithFormat:sql,nil];
+                    
+                }
+            };
             
             
             void (^insertBlock)(NSString *tableName) = ^(NSString *tableName) {
@@ -973,28 +1103,43 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             };
             
             
-            if(message.n_id < TGMINFAKEID) {
+            dispatch_block_t insertChannelMessageBlock = ^ {
                 
-                NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE n_id = %d",message.fakeId];
-                [db executeUpdateWithFormat:sql,nil];
                 
-            }
-           
-           insertBlock(@"messages");
+                
+                NSMutableData *data = [[NSMutableData alloc] init];
+                
+                int msgId = message.n_id;
+                int channelId = message.to_id.channel_id;
+                [data appendBytes:&msgId length:4];
+                [data appendBytes:&channelId length:4];
+                
+                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into channel_messages (n_id,date,from_id,flags,channel_id,serialized, filter_mask,fake_id,dstate,random_id) values (?,?,?,?,?,?,?,?,?,?)"],
+                 data,
+                 @(message.date),
+                 @(message.from_id),
+                 @(message.flags),
+                 @(peer_id),
+                 [TLClassStore serialize:message],
+                 @(mask),
+                 @(message.fakeId),
+                 @(message.dstate),
+                 @(message.randomId)
+                 ];
+                
+            };
             
-            if([message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
-             //   [Telegram saveHashTags:message.message peer_id:message.peer_id];
-                
-            }
             
+            clearWithFakeId();
+            
+            if(![message.peer isKindOfClass:[TL_peerChannel class]])
+                 insertBlock(@"messages");
+            else
+                 insertChannelMessageBlock();
             
             
         }
-        
-        if(completeHandler)
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completeHandler();
-           });
+
     }];
 }
 
@@ -1069,6 +1214,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             dialog.peer = [TL_peerChat createWithChat_id:-[result intForColumn:@"peer_id"]];
         } else if(type == DialogTypeBroadcast) {
             dialog.peer = [TL_peerBroadcast createWithChat_id:[result intForColumn:@"peer_id"]];
+        } else if(type == DialogTypeChannel) {
+            dialog.peer = [TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]];
         }
         
         
@@ -2064,7 +2211,40 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
+-(void)addOrUpdateChannelWithPts:(int)channel_id pts:(int)pts {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db executeUpdate:@"insert or replace into channel_updates (n_id, pts) values (?,?)",@(channel_id),@(pts)];
+        
+    }];
+}
+-(void)removeChannelUpdate:(int)channel_id {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db executeUpdate:@"delete from channel_updates where n_id = ?",@(channel_id)];
+        
+    }];
+}
 
+-(NSDictionary *)channelUpdates {
+    
+    NSMutableDictionary *channels = [[NSMutableDictionary alloc] init];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        FMResultSet *result = [db executeQuery:@"select * from channel_updates"];
+        
+        while ([result next]) {
+            channels[@([result intForColumn:@"n_id"])] = @([result intForColumn:@"pts"]);
+        }
+        
+        [result close];
+        
+    }];
+    
+    return channels;
+    
+}
 
 
 +(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask {
@@ -2118,6 +2298,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
+
+
+/*
+ 
+ channel storage procedures
+ 
+ */
+ 
+ 
 
 
 

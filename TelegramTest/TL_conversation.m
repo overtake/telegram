@@ -220,14 +220,9 @@
 -(id)inputPeer {
     id input;
     if(self.peer.chat_id != 0) {
-        // if([self.peer isKindOfClass:[TL_peerSecret class]]) {
-        //  TLEncryptedChat *chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
-        //}
-        
-        if([self.peer isKindOfClass:[TL_peerChannel class]])
-            return [TL_inputPeerChannel createWithChannel_id:self.peer.channel_id access_hash:self.chat.access_hash];
-        
         input = [TL_inputPeerChat createWithChat_id:self.peer.chat_id];
+    } else if([self.peer isKindOfClass:[TL_peerChannel class]]) {
+            return [TL_inputPeerChannel createWithChannel_id:self.peer.channel_id access_hash:self.chat.access_hash];
     } else {
         TLUser *user = [[UsersManager sharedManager] find:self.peer.user_id];
         input = [user inputPeer];
@@ -272,16 +267,18 @@ static void *kType;
         return [typeNumber intValue];
     } else {
         DialogType type = DialogTypeUser;
-        if(self.peer.chat_id) {
-            if(self.peer.class == [TL_peerChat class])
-                type = DialogTypeChat;
-            else if(self.peer.class == [TL_peerSecret class])
-                type = DialogTypeSecretChat;
-            else
-                type = DialogTypeBroadcast;
-            
-            
-        }
+        
+        if(self.peer.class == [TL_peerUser class])
+            type = DialogTypeUser;
+        else if(self.peer.class == [TL_peerChat class])
+            type = DialogTypeChat;
+        else if(self.peer.class == [TL_peerSecret class])
+            type = DialogTypeSecretChat;
+        else if(self.peer.class == [TL_peerChannel class])
+            type = DialogTypeChannel;
+        else if(self.peer.class == [TL_peerBroadcast class])
+            type = DialogTypeBroadcast;
+        
         
         objc_setAssociatedObject(self, kType, [NSNumber numberWithInt:type], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         return type;
@@ -300,8 +297,8 @@ static void *kType;
 
 - (TLChat *) chat {
     
-    if(!_p_chat && self.peer.chat_id != 0) {
-        _p_chat = [[ChatsManager sharedManager] find:self.peer.chat_id];
+    if(!_p_chat && (self.peer.chat_id != 0 || self.peer.channel_id != 0)) {
+        _p_chat = [[ChatsManager sharedManager] find:self.peer.chat_id == 0 ? self.peer.channel_id : self.peer.chat_id];
     }
     return _p_chat;
 }

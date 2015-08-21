@@ -23,8 +23,8 @@
 
 - (void)loadStored;
 - (int) getOnlineCount:(int)chat_id;
-- (void)loadIfNeed:(int)chat_id force:(BOOL)force;
-- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback;
-- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback;
+- (void)loadIfNeed:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel;
+- (void)performLoad:(int)chat_id isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback;
+- (void)performLoad:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback;
 - (FullChatMembersChecker *)fullChatMembersCheckerByChatId:(int)chatId;
 @end

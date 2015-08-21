@@ -32,8 +32,13 @@ DYNAMIC_PROPERTY(DDialog);
     if(!dialog) {
         dialog = [[Storage manager] selectConversation:[TL_peerChat createWithChat_id:self.n_id]];
         
-        if(!dialog)
-            dialog = [[DialogsManager sharedManager] createDialogForChat:self];
+        if(!dialog) {
+            if([self isKindOfClass:[TL_channel class]])
+                dialog = [[DialogsManager sharedManager] createDialogForChannel:self];
+            else
+                dialog = [[DialogsManager sharedManager] createDialogForChat:self];
+        }
+        
         else
             [[DialogsManager sharedManager] add:@[dialog]];
         

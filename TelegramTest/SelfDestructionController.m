@@ -129,7 +129,7 @@
         }
         
         if(tosave.count)
-            [[Storage manager] insertMessages:tosave  completeHandler:nil];
+            [[Storage manager] insertMessages:tosave];
     }];
     
 }

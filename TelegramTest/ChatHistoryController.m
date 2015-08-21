@@ -624,42 +624,38 @@ static NSMutableArray *listeners;
             if([self checkState:ChatHistoryStateLocal next:next]) {
                 
                 
-                [self.filter storageRequest:next callback:^(NSArray *result) {
+                NSArray *result = [self.filter storageRequest:next];
+                
+                [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
                     
-                    [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
-                        
-                       
-                        [[MessagesManager sharedManager] add:result];
-                        
-                        NSArray *items = [self.controller messageTableItemsFromMessages:result];
-                        
-                        
-                        NSArray *converted = [self filterAndAdd:items isLates:NO];
-                        
-                        
-                        converted = [self sortItems:converted];
-                        
-                        
-                        [self saveId:converted next:next];
-                        
-                        
-                        if(!next && (_min_id >= self.conversation.top_message)) {
-                            [self setState:ChatHistoryStateFull next:next];
-                        } else {
-                            if(converted.count < _selectLimit) {
-                                [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
-                            }
+                    
+                    [[MessagesManager sharedManager] add:result];
+                    
+                    NSArray *items = [self.controller messageTableItemsFromMessages:result];
+                    
+                    
+                    NSArray *converted = [self filterAndAdd:items isLates:NO];
+                    
+                    
+                    converted = [self sortItems:converted];
+                    
+                    
+                    [self saveId:converted next:next];
+                    
+                    
+                    if(!next && (_min_id >= self.conversation.top_message)) {
+                        [self setState:ChatHistoryStateFull next:next];
+                    } else {
+                        if(converted.count < _selectLimit) {
+                            [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                         }
-                        
-                        
-                        [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                        
-                    }];
+                    }
                     
-                     
+                    
+                    [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
                     
                 }];
-                
+
                 
                 
             } else if([self checkState:ChatHistoryStateRemote next:next]) {

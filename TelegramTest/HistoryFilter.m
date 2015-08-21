@@ -201,27 +201,15 @@ static NSMutableDictionary * messageKeys;
     
 }
 
--(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback {
+-(NSArray *)storageRequest:(BOOL)next {
     int source_id = next ? _controller.max_id : _controller.min_id;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
     
-//    
-// 
-//  [[Storage requestMessagesWithDate:maxDate localMaxId:source_id limit:_controller.selectLimit cnv_id:_controller.conversation.peer_id next:next filter:self.type] startWithNext:^(NSMutableArray *messages) {
-//  
-//  callback(messages);
-//  
-//  }];
-////  
-////
-    [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type] completeHandler:^(NSArray *result) {
-        
-        
-        if(callback && self != nil) {
-            callback(result);
-        }
-        
-    }];
+
+    if(_controller.conversation.type != DialogTypeChannel)
+        return [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
+    else
+        return [[Storage manager] loadChannelMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
     
 }
 
@@ -233,10 +221,7 @@ static NSMutableDictionary * messageKeys;
     
     if(!_controller)
         return;
-    
-  //  NSLog(@"start %@ : %@",self,[NSThread currentThread]);
-    
-    
+
     self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id min_id:0 limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
         if(callback) {

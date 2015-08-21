@@ -19,13 +19,14 @@
 #import "TGDateUtils.h"
 #import "TGModernEncryptedUpdates.h"
 #import "FullUsersManager.h"
+#import "TGUpdateChannels.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
 @property (nonatomic,strong) TGTimer *sequenceTimer;
 @property (atomic,assign) BOOL holdUpdates;
 @property (nonatomic,strong) TGModernEncryptedUpdates *encryptedUpdates;
-
+@property (nonatomic,strong) TGUpdateChannels *channelsUpdater;
 
 
 @end
@@ -70,6 +71,7 @@ static ASQueue *queue;
         _updateState = [[Storage manager] updateState];
        // _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
+        _channelsUpdater = [[TGUpdateChannels alloc] initWithQueue:q];
         
         queue = q;
     }
@@ -147,6 +149,43 @@ static ASQueue *queue;
     
     [queue dispatchOnQueue:^{
         
+        
+        static NSArray *channelUpdates;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class])];
+        });
+        
+        if([channelUpdates indexOfObject:[update className]] != NSNotFound)
+        {
+            [_channelsUpdater addUpdate:update];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updates class]]) {
+            
+            
+            [SharedManager proccessGlobalResponse:update];
+            
+            NSMutableArray *channel = [[NSMutableArray alloc] init];
+            
+            [[update updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                if([channelUpdates indexOfObject:[obj className]] != NSNotFound)
+                {
+                    [channel addObject:obj];
+                    [_channelsUpdater addUpdate:obj];
+                }
+                
+            }];
+            
+            [[update updates] removeObjectsInArray:channel];
+            
+            if([update updates].count == 0)
+                return;
+            
+        }
+        
         if([update isKindOfClass:[TL_messages_sentMessage class]] ||
            [update isKindOfClass:[TL_messages_affectedHistory class]]) {
             
@@ -178,8 +217,6 @@ static ASQueue *queue;
         }
         
         if([update isKindOfClass:[TL_updates class]]) {
-            
-            [SharedManager proccessGlobalResponse:update];
             [self processUpdates:[update updates] stateSeq:[update seq]];
         }
         
@@ -674,7 +711,7 @@ static ASQueue *queue;
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
         
-        [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
+        [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES isChannel:NO callback:nil];
         
         if(fullChat) {
             fullChat.participants = chatParticipants;
@@ -953,6 +990,7 @@ static ASQueue *queue;
     
     if(updateConnectionState)
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
+    
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:pts date:date qts:qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {

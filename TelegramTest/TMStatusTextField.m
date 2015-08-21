@@ -190,6 +190,29 @@
     }
 }
 
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    
+    switch (conversation.type) {
+            
+        case DialogTypeBroadcast:
+            [self setBroadcast:conversation.broadcast];
+            break;
+        case DialogTypeChat: case DialogTypeChannel:
+            [self setChat:conversation.chat];
+            break;
+        case DialogTypeSecretChat:
+            [self setUser:conversation.encryptedChat.peerUser];
+            break;
+        case DialogTypeUser:
+            [self setUser:conversation.user];
+        default:
+            break;
+            
+    }
+    
+}
+
 @end
 
 
@@ -252,5 +275,7 @@
     NSValue *value = [NSValue valueWithNonretainedObject:statusTextField];
     [self.list removeObject:value];
 }
+
+
 
 @end

@@ -55,23 +55,18 @@
     self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel  createWithTitle:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
-        if(response.updates.count > 1 && response.chats.count > 0) {
-            
+        if(response.chats.count > 0) {
             
             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)response.chats[0] n_id]];
             
-            [ASQueue dispatchOnMainQueue:^{
-                
+            [[FullChatManager sharedManager] performLoad:channel.n_id isChannel:YES callback:^(TLChatFull *fullChat) {
                 [self.delegate behaviorDidEndRequest:response];
                 
                 [[Telegram rightViewController] clearStack];
                 
                 [[Telegram sharedInstance] showMessagesFromDialog:channel.dialog sender:self];
             }];
-            
-            
-            
-
+        
         }
         
         

@@ -364,44 +364,50 @@
     
     TLChat *chat = self.controller.chat;
     
-    [self.statusTextField setChat:chat];
-    [self.statusTextField sizeToFit];
+    [[FullChatManager sharedManager]  performLoad:chat.n_id isChannel:[chat isKindOfClass:[TL_channel class]] callback:^(TLChatFull *fullChat) {
     
-    self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    if(!self.fullChat) {
-        MTLog(@"full chat is not loading");
-        return;
-    }
-    
-    [self.avatarImageView setChat:chat];
-    [self.avatarImageView rebuild];
+         self.fullChat = fullChat;
         
-    [_mediaView setConversation:chat.dialog];
-    [self.sharedMediaButton setConversation:chat.dialog];
-    [self.filesMediaButton setConversation:chat.dialog];
-    [self.sharedLinksButton setConversation:chat.dialog];
-    
-    [self.nameTextField setChat:chat];
-    
-    
-    [self buildNotificationsTitle];
-    
-    [self TMNameTextFieldDidChanged:self.nameTextField];
-    
-    
-    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
-    
-    
-    
-    [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
+        [self.statusTextField setChat:chat];
+        [self.statusTextField sizeToFit];
+        
+        if(!self.fullChat) {
+            MTLog(@"full chat is not loading");
+            return;
+        }
+        
+        [self.avatarImageView setChat:chat];
+        [self.avatarImageView rebuild];
+        
+        [_mediaView setConversation:chat.dialog];
+        [self.sharedMediaButton setConversation:chat.dialog];
+        [self.filesMediaButton setConversation:chat.dialog];
+        [self.sharedLinksButton setConversation:chat.dialog];
+        
+        [self.nameTextField setChat:chat];
+        
+        
+        [self buildNotificationsTitle];
+        
+        [self TMNameTextFieldDidChanged:self.nameTextField];
+        
+        
+        [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
+        
+        
+        
+        [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
+        
+        
+        [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
+        
+        [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.filesMediaButton.frame.origin.x, self.filesMediaButton.frame.origin.y -42)];
+        
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+        
 
-  
-    [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
-    
-    [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.filesMediaButton.frame.origin.x, self.filesMediaButton.frame.origin.y -42)];
-
-    [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
-    
+        
+    }];
 
     
 }

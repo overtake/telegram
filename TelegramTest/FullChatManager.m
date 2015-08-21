@@ -160,53 +160,28 @@
         self.isLoad = YES;
         if(self.loadHandler)
             self.loadHandler();
-        
-        [self loadChatFull];
     }];
 }
 
-- (void)loadChatFull {
-//    [self.queue dispatchOnQueue:^{
-//        NSArray *array =[[ChatsManager sharedManager] all];
-//        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
-//        for(TLChat *chat in array) {
-//            if([chat isKindOfClass:[TL_chat class]]) {
-//                if(![self find:chat.n_id]) {
-//                    [needToLoad addObject:@(chat.n_id)];
-//                }
-//            }
-//        }
-//        
-//        MTLog(@"need to load full chats%@", needToLoad);
-//        [self loadFullChats:needToLoad];
-//    }];
-}
 
-- (void)loadFullChats:(NSArray *)array {
-    for(NSNumber *number in array) {
-        int chat_id = [number intValue];
-        [self loadFullChatByChatId:chat_id force:NO];
-    }
-}
-
-- (void) loadIfNeed:(int)chat_id force:(BOOL)force {
+- (void) loadIfNeed:(int)chat_id force:(BOOL)force  isChannel:(BOOL)isChannel {
     if(!self.isLoad)
         return;
     
     TLChatFull *chat = [self find:chat_id];
     if(!chat || (chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime]) || force || chat.class == [TL_chatFull_old29 class])
-        [self loadFullChatByChatId:chat_id force:force];
+        [self loadFullChatByChatId:chat_id force:force isChannel:isChannel];
 }
 
-- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
-    [self loadFullChatByChatId:chat_id force:NO callback:callback];
+- (void)performLoad:(int)chat_id isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:NO isChannel:isChannel callback:callback];
 }
 
-- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
-    [self loadFullChatByChatId:chat_id force:force callback:callback];
+- (void)performLoad:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:force isChannel:isChannel callback:callback];
 }
 
-- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
     
     TLChatFull *fullChat = [self find:chat_id];
     
@@ -219,8 +194,10 @@
         
     }
     
+    TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
+    
         
-    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:[TL_inputChat createWithChat_id:chat_id]] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
+    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:isChannel ? [TL_inputChannel createWithChannel_id:chat.n_id access_hash:chat.access_hash] : [TL_inputChat createWithChat_id:chat_id]] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
         
         if([result isKindOfClass:[TL_messages_chatFull class]]) {
             TL_conversation *conversation = [[DialogsManager sharedManager] findByChatId:chat_id];
@@ -260,8 +237,8 @@
     
 }
 
-- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force {
-    [self loadFullChatByChatId:chat_id force:force callback:nil];
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel {
+    [self loadFullChatByChatId:chat_id force:force isChannel:isChannel callback:nil];
 }
 
 - (int)getOnlineCount:(int)chat_id {

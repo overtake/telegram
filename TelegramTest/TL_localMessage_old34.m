@@ -1,16 +1,14 @@
 //
-//  TL_localMessage_old32.m
+//  TL_localMessage_old34.m
 //  Telegram
 //
-//  Created by keepcoder on 13.08.15.
+//  Created by keepcoder on 21.08.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "TL_localMessage_old32.h"
+#import "TL_localMessage_old34.h"
 
-@implementation TL_localMessage_old32
-
-
+@implementation TL_localMessage_old34
 -(void)serialize:(SerializedData*)stream {
     [stream writeInt:self.flags];
     [stream writeInt:self.n_id];
@@ -27,6 +25,16 @@
     [stream writeLong:self.randomId];
     if(self.flags & (1 << 6))
         [ClassStore TLSerialize:self.reply_markup stream:stream];
+    if(self.flags & (1 << 7)) {//Serialize FullVector
+        [stream writeInt:0x1cb5c415];
+        {
+            NSInteger tl_count = [self.entities count];
+            [stream writeInt:(int)tl_count];
+            for(int i = 0; i < (int)tl_count; i++) {
+                TLMessageEntity* obj = [self.entities objectAtIndex:i];
+                [ClassStore TLSerialize:obj stream:stream];
+            }
+        }}
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
@@ -44,8 +52,19 @@
     self.randomId = [stream readLong];
     if(self.flags & (1 << 6))
         self.reply_markup = [ClassStore TLDeserialize:stream];
+    if(self.flags & (1 << 7)) {//UNS FullVector
+        [stream readInt];
+        {
+            if(!self.entities)
+                self.entities = [[NSMutableArray alloc] init];
+            int count = [stream readInt];
+            for(int i = 0; i < count; i++) {
+                TLMessageEntity* obj = [ClassStore TLDeserialize:stream];
+                if(obj != nil && [obj isKindOfClass:[TLMessageEntity class]])
+                    [self.entities addObject:obj];
+                else
+                    break;
+            }
+        }}
 }
-
-
-
 @end

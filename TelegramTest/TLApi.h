@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.08.15.
+//  Auto created by Mikhail Filimonov on 21.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -826,5 +826,13 @@
 @property (nonatomic, strong) NSString* title;
 
 +(TLAPI_messages_createChannel*)createWithTitle:(NSString*)title;
+@end
+
+@interface TLAPI_updates_getChannelDifference : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int pts;
+@property int limit;
+
++(TLAPI_updates_getChannelDifference*)createWithPeer:(TLInputPeer*)peer pts:(int)pts limit:(int)limit;
 @end
 

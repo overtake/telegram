@@ -146,10 +146,11 @@
 -(void)updateWithConversation:(TL_conversation *)conversation {
     
     switch (conversation.type) {
+        
         case DialogTypeBroadcast:
             [self setBroadcast:conversation.broadcast];
             break;
-        case DialogTypeChat:
+        case DialogTypeChat: case DialogTypeChannel:
             [self setChat:conversation.chat];
             break;
         case DialogTypeSecretChat:

@@ -22,7 +22,7 @@
 - (TL_conversation *)createDialogForUser:(TLUser *)user;
 - (TL_conversation *)createDialogForChat:(TLChat *)chat;
 - (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat;
-
+- (TL_conversation *)createDialogForChannel:(TLChat *)chat;
 - (void) insertDialog:(TL_conversation *)dialog;
 - (void) markAllMessagesAsRead:(TL_conversation *)dialog;
 

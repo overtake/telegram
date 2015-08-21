@@ -239,7 +239,7 @@
         
         
     } else if(self.dialog.type == DialogTypeChat) {
-        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated callback:^(TLChatFull * chatFull) {
+        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated isChannel:self.dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
             
             _chatFull = chatFull;
             

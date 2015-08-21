@@ -298,7 +298,7 @@ static const TGTwoColors colors[] = {
         case DialogTypeBroadcast:
             [self setBroadcast:conversation.broadcast];
             break;
-        case DialogTypeChat:
+        case DialogTypeChat: case DialogTypeChannel:
             [self setChat:conversation.chat];
             break;
         case DialogTypeSecretChat: case DialogTypeUser:

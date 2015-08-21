@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.08.15.
+//  Auto created by Mikhail Filimonov on 21.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -376,6 +376,9 @@
 @end
 	
 @interface TLMessageGroup : TLObject
+@end
+	
+@interface TLupdates_ChannelDifference : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -860,13 +863,16 @@
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @property (nonatomic, strong) NSMutableArray* bot_info;
+@property int read_inbox_max_id;
+@property int unread_count;
+@property int unread_important_count;
 @end
 
 @interface TL_chatFull : TLChatFull<NSCoding>
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -1363,6 +1369,8 @@
 @property (nonatomic, strong) NSMutableArray* chats;
 @property (nonatomic, strong) NSMutableArray* users;
 @property int n_count;
+@property int flags;
+@property int pts;
 @property (nonatomic, strong) NSMutableArray* collapsed;
 @end
 
@@ -1372,8 +1380,8 @@
 @interface TL_messages_messagesSlice : TLmessages_Messages<NSCoding>
 +(TL_messages_messagesSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
-@interface TL_messages_collapsedSlice : TLmessages_Messages<NSCoding>
-+(TL_messages_collapsedSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages collapsed:(NSMutableArray*)collapsed chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
+@interface TL_messages_channelMessages : TLmessages_Messages<NSCoding>
++(TL_messages_channelMessages*)createWithFlags:(int)flags pts:(int)pts n_count:(int)n_count messages:(NSMutableArray*)messages collapsed:(NSMutableArray*)collapsed chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLmessages_SentMessage()
@@ -2512,6 +2520,25 @@
 
 @interface TL_messageGroup : TLMessageGroup<NSCoding>
 +(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count;
+@end
+	
+@interface TLupdates_ChannelDifference()
+@property int pts;
+@property int flags;
+@property (nonatomic, strong) NSMutableArray* n_messages;
+@property (nonatomic, strong) NSMutableArray* updates;
+@property (nonatomic, strong) NSMutableArray* chats;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_updates_channelDifferenceEmpty : TLupdates_ChannelDifference<NSCoding>
++(TL_updates_channelDifferenceEmpty*)createWithPts:(int)pts;
+@end
+@interface TL_updates_channelDifferenceTooLong : TLupdates_ChannelDifference<NSCoding>
++(TL_updates_channelDifferenceTooLong*)createWithPts:(int)pts;
+@end
+@interface TL_updates_channelDifference : TLupdates_ChannelDifference<NSCoding>
++(TL_updates_channelDifference*)createWithFlags:(int)flags pts:(int)pts n_messages:(NSMutableArray*)n_messages updates:(NSMutableArray*)updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLProtoMessage()

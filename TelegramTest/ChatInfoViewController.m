@@ -316,7 +316,7 @@
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^(TLChatFull *fullChat) {
+        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id isChannel:[strongSelf.chat isKindOfClass:[TL_channel class]] callback:^(TLChatFull *fullChat) {
             item.isBlocking = NO;
             [item redrawRow];
         }];

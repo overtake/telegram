@@ -14,6 +14,7 @@
 @interface TL_localMessage ()
 @property (nonatomic,strong) NSUserNotification *notification;
 @property (nonatomic,assign) int type;
+@property (nonatomic,strong,readonly) TLChat *p_chat;
 @end
 
 @implementation TL_localMessage
@@ -121,8 +122,9 @@
     }
 }
 
+
 - (void)save:(BOOL)updateConversation {
-    [[Storage manager] insertMessage:self completeHandler:nil];
+    [[Storage manager] insertMessage:self];
     [[MessagesManager sharedManager] TGsetMessage:self];
     if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
@@ -131,15 +133,15 @@
 
 -(void)serialize:(SerializedData*)stream {
     [stream writeInt:self.flags];
-	[stream writeInt:self.n_id];
-	[stream writeInt:self.from_id];
-	[TLClassStore TLSerialize:self.to_id stream:stream];
+    [stream writeInt:self.n_id];
+    if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
+    [TLClassStore TLSerialize:self.to_id stream:stream];
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
-	[stream writeInt:self.date];
-	[stream writeString:self.message];
-	[TLClassStore TLSerialize:self.media stream:stream];
+    [stream writeInt:self.date];
+    [stream writeString:self.message];
+    [TLClassStore TLSerialize:self.media stream:stream];
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
@@ -158,15 +160,15 @@
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
-	self.n_id = [stream readInt];
-	self.from_id = [stream readInt];
-	self.to_id = [TLClassStore TLDeserialize:stream];
+    self.n_id = [stream readInt];
+    if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
+    self.to_id = [TLClassStore TLDeserialize:stream];
     if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
     if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
-	self.date = [stream readInt];
+    self.date = [stream readInt];
     self.message = [stream readString];
-	self.media = [TLClassStore TLDeserialize:stream];
+    self.media = [TLClassStore TLDeserialize:stream];
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
@@ -196,7 +198,9 @@
         else
             peer_id = -self.to_id.chat_id;
     }
-    else
+    else if(self.to_id.channel_id != 0) {
+        peer_id = -self.to_id.channel_id;
+    } else
         if([self n_out])
             peer_id = self.to_id.user_id;
         else
@@ -206,7 +210,7 @@
 
 -(TLPeer *)peer {
     
-    if([self.to_id chat_id] != 0)
+    if([self.to_id chat_id] != 0 || self.to_id.channel_id != 0)
         return self.to_id;
     else {
         if([self n_out])
@@ -215,6 +219,14 @@
             return [TL_peerUser createWithUser_id:self.from_id];
         
     }
+}
+
+- (TLChat *) chat {
+    
+    if(!_p_chat && (self.peer.chat_id != 0 || self.peer.channel_id != 0)) {
+        _p_chat = [[ChatsManager sharedManager] find:self.peer.chat_id == 0 ? self.peer.channel_id : self.peer.chat_id];
+    }
+    return _p_chat;
 }
 
 
@@ -247,22 +259,6 @@
     return self.flags & TGMENTIONMESSAGE;
 }
 
--(void)setFlags:(int)flags {
-    
-    int of = self.flags;
-    
-    BOOL o = [self unread];
-    
-    [super setFlags:flags];
-    
-    BOOL n = [self unread];
-    
-    if(of != -1 && o && o != n && [self userNotification]) {
-        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:[self userNotification]];
-        _notification = nil;
-    }
-    
-}
 
 
 DYNAMIC_PROPERTY(DDialog);

@@ -333,6 +333,8 @@
         
         actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
         
+    } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+         actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
     }
     
     static float size = 11.5;
@@ -356,6 +358,7 @@
         
         return attributedString;
     }
+    
     
     
     

@@ -121,6 +121,8 @@
     self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:rect];
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:rect];
     self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:rect];
+    self.channelInfoViewController = [[ChannelInfoViewController alloc] initWithFrame:rect];
+    
     
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:rect];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:rect];
@@ -1005,6 +1007,19 @@
     }
     
     [self.navigationViewController pushViewController:_notificationSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+
+-(void)showChannelInfoPage:(TLChat *)chat {
+    if(self.navigationViewController.currentController == self.channelInfoViewController && self.channelInfoViewController.chat.n_id != chat.n_id)
+        return;
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.channelInfoViewController setChat:chat];
+    
+    [self.navigationViewController pushViewController:self.channelInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
 }
 
 @end

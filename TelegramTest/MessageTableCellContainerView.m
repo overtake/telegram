@@ -672,7 +672,10 @@ static BOOL dragAction = NO;
         [self initHeader];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(77, item.viewSize.height - 24)];
-        [self.avatarImageView setUser:item.user];
+        if(item.message.from_id != 0)
+            [self.avatarImageView setUser:item.user];
+        else
+            [self.avatarImageView setChat:item.message.chat];
         [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
     } else {
         [self deallocHeader];

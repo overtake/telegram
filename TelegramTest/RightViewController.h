@@ -43,6 +43,7 @@
 #import "CacheSettingsViewController.h"
 #import "NotificationSettingsViewController.h"
 #import "ComposeCreateChannelViewController.h"
+#import "ChannelInfoViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -90,6 +91,7 @@
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
 @property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
+@property (nonatomic, strong) ChannelInfoViewController *channelInfoViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -154,5 +156,7 @@
 -(void)showNotificationSettingsViewController;
 
 -(void)showComposeCreateChannel:(ComposeAction *)action;
+
+-(void)showChannelInfoPage:(TLChat *)chat;
 
 @end

@@ -351,7 +351,7 @@ static const int seconds_to_notify = 120;
 
 -(void)addMessage:(TLMessage *)message  {
     [self TGsetMessage:message];
-    [[Storage manager] insertMessage:message  completeHandler:nil];
+    [[Storage manager] insertMessage:message];
 }
 
 -(void)TGsetMessage:(TL_localMessage *)message {

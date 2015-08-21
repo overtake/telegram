@@ -63,7 +63,8 @@ typedef enum {
     DialogTypeUser = 0,
     DialogTypeChat = 1,
     DialogTypeSecretChat = 2,
-    DialogTypeBroadcast = 3
+    DialogTypeBroadcast = 3,
+    DialogTypeChannel = 4
 } DialogType;
 
 -(id)inputPeer;

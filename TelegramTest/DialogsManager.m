@@ -126,6 +126,24 @@
 
 }
 
+- (TL_conversation *)createDialogForChannel:(TLChat *)chat {
+    
+    
+    __block TL_conversation *dialog;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0];
+        
+        
+        dialog.fake = YES;
+        [self add:@[dialog]];
+        
+    } synchronous:YES];
+    
+    return dialog;
+    
+}
+
 - (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat {
     
     __block TL_conversation *dialog;

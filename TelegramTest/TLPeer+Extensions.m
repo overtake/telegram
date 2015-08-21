@@ -11,7 +11,7 @@
 @implementation TLPeer (Extensions)
 
 - (int)peer_id {
-    return  self.chat_id != 0 ? ([self isSecret] || ([self isBroadcast]) ? self.chat_id : -self.chat_id) : self.user_id;
+    return  self.chat_id != 0 ? ([self isSecret] || ([self isBroadcast]) ? self.chat_id : -self.chat_id) : (self.channel_id != 0 ? -self.channel_id : self.user_id);
 }
 
 - (BOOL)isChat {
@@ -30,17 +30,17 @@
 
 
 -(TLPeer *)peerOut {
-    if(self.chat_id == 0)
+    if(self.chat_id == 0 && self.channel_id == 0)
         return [TL_peerUser createWithUser_id:self.user_id];
     else
         if([self isSecret] || [self isBroadcast]) return self;
     
-    return [TL_peerChat createWithChat_id:self.chat_id];
+    
+    if(self.chat_id != 0)
+        return [TL_peerChat createWithChat_id:self.chat_id];
+    else if(self.channel_id != 0)
+        return [TL_peerChannel createWithChannel_id:self.channel_id];
 }
 
-+(TLPeer *)peerForId:(int)peer_id {
-    if(peer_id < 0)
-        return [TL_peerChat createWithChat_id:-peer_id];
-    return [TL_peerUser createWithUser_id:peer_id];
-};
+
 @end

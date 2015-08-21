@@ -26,6 +26,7 @@
 #import "MessageTableHeaderItem.h"
 #import "MessageTableItemSocial.h"
 #import "TL_localMessage_old32.h"
+#import "TL_localMessage_old34.h"
 @interface MessageTableItem()
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
@@ -45,14 +46,13 @@
         self.isForwadedMessage = (self.message.fwd_from_id != 0 ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker] && ![self.message.media.document.mime_type isEqualToString:@"image/gif"])) && ([self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]] == nil);
         
         
-        self.isChat = self.message.conversation.type == DialogTypeChat;
+        self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
         _containerOffset = self.isForwadedMessage ? 129 : 79;
         
         if(self.message) {
            
             self.user = [[UsersManager sharedManager] find:object.from_id];
-            
             if(self.isForwadedMessage) {
                 self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from_id];
             }
@@ -74,6 +74,13 @@
     
     
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
+    
+    
+    if(self.message.from_id == 0)
+    {
+        name = self.message.conversation.chat.title;
+    }
+    
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineBreakMode = NSLineBreakByTruncatingTail;
     
@@ -197,7 +204,7 @@
     id objectReturn = nil;
 
     
-    if(object.class == [TL_localMessage_old32 class] || object.class == [TL_localMessage class] || object.class == [TL_destructMessage class]) {
+    if(object.class == [TL_localMessage_old34 class] || object.class == [TL_localMessage_old32 class] || object.class == [TL_localMessage class] || object.class == [TL_destructMessage class]) {
         TLMessage *message = object;
         
         

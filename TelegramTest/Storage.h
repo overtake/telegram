@@ -56,10 +56,10 @@ extern NSString *const RECENT_SEARCH;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
 -(NSArray *)issetMessages:(NSArray *)ids;
--(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler;
+-(void)insertMessage:(TLMessage *)message;
 
 
--(void)insertMessages:(NSArray *)messages completeHandler:(dispatch_block_t)completeHandler;
+-(void)insertMessages:(NSArray *)messages;
 
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
@@ -151,7 +151,10 @@ extern NSString *const RECENT_SEARCH;
 
 
 
--(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
+-(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
+-(NSArray *)loadChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
+
+
 -(TL_localMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
 
@@ -216,8 +219,17 @@ extern NSString *const RECENT_SEARCH;
 
 +(void)updateEncryptionKey:(NSString *)key;
 
+
+
+-(void)addOrUpdateChannelWithPts:(int)channel_id pts:(int)pts;
+-(void)removeChannelUpdate:(int)channel_id;
+-(NSDictionary *)channelUpdates;
+
 // signal requests
 +(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
+
+
+
 
 
 @end

@@ -80,7 +80,7 @@
         if(response.updates.count > 1) {
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
             
-            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id isChannel:NO callback:^(TLChatFull *fullChat) {
                 [self.delegate behaviorDidEndRequest:response];
                 
                 [[Telegram rightViewController] clearStack];

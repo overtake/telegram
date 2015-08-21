@@ -105,27 +105,8 @@
     self->_dialog = dialog;
     
     
-    
-    if(self.dialog.type == DialogTypeChat) {
-        TLChat *chat = self.dialog.chat;
-        [self.nameTextField setChat:chat];
-        [self.statusTextField setChat:chat];
-    } else if(self.dialog.type == DialogTypeSecretChat) {
-        TLUser *user = self.dialog.encryptedChat.peerUser;
-        [self.nameTextField setUser:user isEncrypted:YES];
-        [self.statusTextField setUser:user];
-    } else if(self.dialog.type == DialogTypeBroadcast) {
-        
-        TL_broadcast *broadcast = self.dialog.broadcast;
-        [self.nameTextField setBroadcast:broadcast];
-        
-        [self.statusTextField setBroadcast:broadcast];
-        
-    } else {
-        TLUser *user = self.dialog.user;
-        [self.nameTextField setUser:user isEncrypted:NO];
-        [self.statusTextField setUser:user];
-    }
+    [self.nameTextField updateWithConversation:self.dialog];
+    [self.statusTextField updateWithConversation:self.dialog];
     
     
     [self sizeToFit];

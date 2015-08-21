@@ -50,7 +50,7 @@ typedef enum {
 +(void)drop;
 
 
--(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback;
+-(NSArray *)storageRequest:(BOOL)next;
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
 
 @end
