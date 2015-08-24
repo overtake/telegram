@@ -209,6 +209,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         
         
+       [db executeUpdate:@"create table if not exists dialog_channels (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer)"];
+        
+        
+        
         [db executeUpdate:@"create table if not exists chats (n_id INTEGER PRIMARY KEY, serialized blob)"];
         
         
@@ -797,13 +801,21 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabase:^(FMDatabase *db) {
         
         TL_localMessage *message;
-        FMResultSet *result = [db executeQuery:@"select message_text,serialized,flags from messages where peer_id = ? ORDER BY date DESC LIMIT 1",@(peer_id)];
+        
+        
+        NSString *sql = [NSString stringWithFormat:@"select message_text,serialized,flags from messages where peer_id = %d ORDER BY date DESC, n_id DESC LIMIT 1",peer_id];
+        
+        if([peer isKindOfClass:[TL_peerChannel class]])
+            sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where channel_id = %d ORDER BY date DESC, n_id DESC LIMIT 1",peer_id];
+        
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         
         if([result next]) {
             message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            message.flags = -1;
-            message.message = [result stringForColumn:@"message_text"];
+            if(![peer isKindOfClass:[TL_peerChannel class]])
+                message.message = [result stringForColumn:@"message_text"];
             message.flags = [result intForColumn:@"flags"];
         }
         
@@ -989,7 +1001,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         sql = [NSString stringWithFormat:@"delete from sharedmedia WHERE message_id IN (%@)",sids];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE random_id IN (%@)",sids];
+        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE random_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
         dispatch_async(dispatch_get_main_queue(), ^{

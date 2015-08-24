@@ -2978,6 +2978,9 @@
                value = "_conversation">
             </PersistentString>
             <PersistentString
+               value = "self.controller.conversation.top_message">
+            </PersistentString>
+            <PersistentString
                value = "_conversation.top_message">
             </PersistentString>
          </PersistentStrings>
