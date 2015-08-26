@@ -56,9 +56,18 @@
     [self removeAllItems:NO];
     [self reloadData];
 
+    NSArray *conversations = [[Storage manager] conversationsWithIds:peerIds];
     
+    conversations = [conversations sortedArrayUsingComparator:^NSComparisonResult(TL_conversation *obj1, TL_conversation *obj2) {
+        
+        NSNumber *idx1 = @([peerIds indexOfObject:@(obj1.peer_id)]);
+        NSNumber *idx2 = @([peerIds indexOfObject:@(obj2.peer_id)]);
+        
+        return [idx1 compare:idx2];
+        
+    }];
     
-    [[[Storage manager] conversationsWithIds:peerIds] enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+    [conversations enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
         
         TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
         
