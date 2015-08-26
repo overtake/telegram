@@ -71,7 +71,7 @@
             
             if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]]) {
                 
-                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (self.message.conversation.user.isBot || self.message.conversation.type != DialogTypeChat) )
+                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat) )
                     return;
                 
                 
