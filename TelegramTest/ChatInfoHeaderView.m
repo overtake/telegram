@@ -159,7 +159,7 @@
                 
                 [TMViewController showModalProgress];
                 
-                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:[TL_inputChat createWithChat_id:_fullChat.n_id]] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.controller.chat.input] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
                     [TMViewController hideModalProgressWithSuccess];
                     
@@ -394,7 +394,8 @@
         
         [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
         
-        
+        if(ACCEPT_FEATURE)
+            [_exportChatInvite setHidden:NO];
         
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
         

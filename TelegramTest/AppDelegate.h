@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "TGInitializer.h"
 #import "NSContactsPopover.h"
 
 #ifdef TGDEBUG

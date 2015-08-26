@@ -16,8 +16,9 @@
 @property (nonatomic,strong,readonly) TLChat *p_chat;
 @end
 
+
 @implementation TL_conversation
-+(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id {
++(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage {
     TL_conversation *dialog = [[TL_conversation alloc] init];
     dialog.peer = peer;
     dialog.top_message = top_message;
@@ -30,15 +31,30 @@
     dialog.last_real_message_date = last_message_date;
     dialog.dstate = DeliveryStateNormal;
     dialog.sync_message_id = sync_message_id;
-    dialog.lastMessage = [[MessagesManager sharedManager] find:top_message];
+    dialog.lastMessage = lastMessage;
+
+    
+    dialog.read_inbox_max_id = read_inbox_max_id;
+    dialog.unread_important_count = unread_important_count;
     
     return dialog;
 }
 
+
++ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage pts:(int)pts {
+    
+    TL_conversation *conversation = [self createWithPeer:peer top_message:top_message unread_count:unread_count last_message_date:last_message_date notify_settings:notify_settings last_marked_message:last_marked_message top_message_fake:top_message_fake last_marked_date:last_marked_date sync_message_id:sync_message_id read_inbox_max_id:read_inbox_max_id unread_important_count:unread_important_count lastMessage:lastMessage];
+    
+    conversation.pts = pts;
+    
+    return conversation;
+    
+}
+
 -(void)serialize:(SerializedData*)stream {
     [TLClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.top_message];
-	[stream writeInt:self.unread_count];
+    [stream writeInt:self.top_message];
+    [stream writeInt:self.unread_count];
     [stream writeInt:self.last_message_date];
     [TLClassStore TLSerialize:self.notify_settings stream:stream];
     [stream writeInt:self.last_marked_message];
@@ -46,19 +62,23 @@
     [stream writeInt:self.last_marked_date];
     [stream writeInt:self.last_real_message_date];
     [stream writeInt:self.sync_message_id];
-
+    [stream writeInt:self.read_inbox_max_id];
+    [stream writeInt:self.unread_important_count];
+    
 }
 -(void)unserialize:(SerializedData*)stream {
     self.peer = [TLClassStore TLDeserialize:stream];
     self.top_message = [stream readInt];
-	self.unread_count = [stream readInt];
-	self.last_message_date = [stream readInt];
+    self.unread_count = [stream readInt];
+    self.last_message_date = [stream readInt];
     self.notify_settings = [TLClassStore TLDeserialize:stream];
     self.last_marked_message = [stream readInt];
     self.top_message_fake = [stream readInt];
     self.last_marked_date = [stream readInt];
     self.last_real_message_date = [stream readInt];
     self.sync_message_id = [stream readInt];
+    self.read_inbox_max_id = [stream readInt];
+    self.unread_important_count = [stream readInt];
 }
 
 -(void)setLast_message_date:(int)last_message_date {
@@ -307,6 +327,23 @@ static void *kType;
     return [[FullChatManager sharedManager] find:[self chat].n_id];
 }
 
+-(long)channel_top_message_id {
+    
+    NSMutableData *data = [NSMutableData data];
+    int msgId = self.top_message;
+    int channelId = self.peer.channel_id;
+    
+    [data appendBytes:&msgId length:4];
+    [data appendBytes:&channelId length:4];
+    
+    
+    long converted;
+    
+    [data getBytes:&converted length:8];
+    
+    
+    return converted;
+}
 
 - (TL_encryptedChat *) encryptedChat {
     return (TL_encryptedChat *)[self chat];

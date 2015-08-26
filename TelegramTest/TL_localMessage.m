@@ -292,7 +292,7 @@ DYNAMIC_PROPERTY(DDialog);
 -(int)filterType {
     if(_type == 0)
     {
-        int mask = HistoryFilterNone;
+        int mask = [self.to_id isKindOfClass:[TL_peerChannel class]] ? HistoryFilterChannelMessage : HistoryFilterNone;
         
         if([self.media isKindOfClass:[TL_messageMediaEmpty class]]) {
             mask|=HistoryFilterText;
@@ -365,9 +365,26 @@ DYNAMIC_PROPERTY(DDialog);
     if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
 }
 
+-(long)channelMsgId {
+    NSMutableData *data = [NSMutableData data];
+    int msgId = self.n_id;
+    int channelId = self.peer.channel_id;
+    
+    [data appendBytes:&msgId length:4];
+    [data appendBytes:&channelId length:4];
+    
+    long converted;
+    
+    [data getBytes:&converted length:8];
+    
+    return converted;
+}
+
 -(id)copy {
     return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities state:self.dstate];
 }
+
+
 
 
 @end

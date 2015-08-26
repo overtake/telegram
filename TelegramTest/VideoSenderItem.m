@@ -169,7 +169,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height caption:@""];
+                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:@""];
                     
                     block();
                 }];
@@ -177,7 +177,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:self.message.media.caption];
                 block();
             }
         }

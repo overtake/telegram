@@ -19,7 +19,7 @@
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [super init]) {
         
-        self.conversation = [[DialogsManager sharedManager] find:conversation.peer_id];
+        self.conversation = conversation;
         
         
         [Notification addObserver:self selector:@selector(needUpdateMessage:) name:[Notification notificationNameByDialog:conversation action:@"message"]];
@@ -45,6 +45,11 @@
 -(void)needUpdateMessage:(NSNotification *)notification {
     
     _checkMessage = self.conversation.lastMessage;
+    
+    assert(_checkMessage != nil);
+    
+    
+   
     
     _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
     _dateText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateText"];

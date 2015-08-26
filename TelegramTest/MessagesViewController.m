@@ -42,7 +42,6 @@
 #import "EncryptedKeyWindow.h"
 
 #import "ChatHistoryController.h"
-#import "OnlineNotificationManager.h"
 
 #import "TMBottomScrollView.h"
 #import "ReadHistroryTask.h"
@@ -52,6 +51,7 @@
 #import "DocumentHistoryFilter.h"
 #import "VideoHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "ChannelFilter.h"
 #import "NoMessagesView.h"
 #import "TMAudioRecorder.h"
 #import "MessagesTopInfoView.h"
@@ -874,7 +874,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     centerView = self.normalNavigationCenterView;
     
-    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class) {
+    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class && self.historyController.filter.class != ChannelFilter.class) {
         state = MessagesViewControllerStateFiltred;
     }
     
@@ -1140,12 +1140,15 @@ static NSTextAttachment *headerMediaIcon() {
     
     assert([NSThread isMainThread]);
     
+    if(self.conversation.type == DialogTypeChannel)
+        filter = ChannelFilter.class;
+    
     if(self.historyController.filter.class != filter || force) {
         self.ignoredCount = 0;
         self.historyController.filter = [[filter alloc] initWithController:self.historyController];
         [self flushMessages];
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
-        self.state = filter != HistoryFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
+        self.state = filter != HistoryFilter.class || filter != ChannelFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
     }
 }
 
@@ -1807,14 +1810,20 @@ static NSTextAttachment *headerMediaIcon() {
 - (void) deleteSelectedMessages {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     NSMutableArray *random = [[NSMutableArray alloc] init];
+    NSMutableArray *channelMessages = [[NSMutableArray alloc] init];
     for(MessageTableItem *item in self.selectedMessages) {
+       
         if(item.message.n_id && item.message.dstate == DeliveryStateNormal) {
-            [array addObject:@(item.message.n_id)];
+            if(![item.message.to_id isKindOfClass:[TL_peerChannel class]])
+                [array addObject:@(item.message.n_id)];
+            else
+                [channelMessages addObject:@(item.message.channelMsgId)];
         }
         
         if([item.message isKindOfClass:[TL_destructMessage class]]) {
             [random addObject:@(item.message.randomId)];
         }
+        
     }
     
     
@@ -1822,6 +1831,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     dispatch_block_t completeBlock = ^ {
+        [[Storage manager] deleteChannelMessages:channelMessages];
         [[Storage manager] deleteMessages:array completeHandler:nil];
         [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:array}];
         [self unSelectAll];

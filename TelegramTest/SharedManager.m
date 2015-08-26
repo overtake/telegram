@@ -156,8 +156,6 @@ static NSMutableArray *managers;
         
         [TL_localMessage convertReceivedMessages:[response messages]];
         
-        
-        [[MessagesManager sharedManager] add:[response messages]];
         [[Storage manager] insertMessages:[response messages]];
     }
    
@@ -165,7 +163,6 @@ static NSMutableArray *managers;
         
         [TL_localMessage convertReceivedMessages:[response n_messages]];
         
-        [[MessagesManager sharedManager] add:[response n_messages]];
         [[Storage manager] insertMessages:[response n_messages]];
     }
     

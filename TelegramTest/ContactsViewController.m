@@ -13,7 +13,6 @@
 
 #import "SelectUserItem.h"
 #import "SelectUserRowView.h"
-#import "NewConversationViewController.h"
 #import "RBLPopover.h"
 #import "TLPeer+Extensions.h"
 #import "AddContactViewController.h"

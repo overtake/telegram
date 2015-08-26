@@ -214,6 +214,11 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
                 
+            } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+                
+                
+                msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
+                
             }
             
             

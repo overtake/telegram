@@ -16,7 +16,7 @@
 #import "AudioHistoryFilter.h"
 #import "MP3HistoryFilter.h"
 #import "MessageTableItem.h"
-
+#import "SharedLinksHistoryFilter.h"
 
 
 @interface HistoryFilter ()
@@ -193,7 +193,7 @@ static NSMutableDictionary * messageKeys;
         [PhotoVideoHistoryFilter drop];
         [AudioHistoryFilter drop];
         [MP3HistoryFilter drop];
-        
+        [SharedLinksHistoryFilter drop];
     }];
     
     

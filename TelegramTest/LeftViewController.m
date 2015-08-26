@@ -8,7 +8,6 @@
 
 #import "LeftViewController.h"
 #import "SearchViewController.h"
-#import "NewConversationViewController.h"
 #import "RBLPopover.h"
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"

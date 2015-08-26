@@ -26,7 +26,6 @@
 #import "SelfDestructionController.h"
 #import "TGProccessUpdates.h"
 #import "TMMediaController.h"
-#import "DialogsHistoryController.h"
 #import "SettingsWindowController.h"
 #import "TGTimer.h"
 #import "NSString+Extended.h"
@@ -174,11 +173,11 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            TL_localMessage *msg = [[MessagesManager sharedManager] find:[[userInfo objectForKey:@"msg_id"] intValue]];
+            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue]];
             
             if(dialog.type == DialogTypeChat) {
-                if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
-                
+                if(msg)
+                    [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
             }
             
              [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];

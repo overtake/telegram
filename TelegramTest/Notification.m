@@ -155,7 +155,7 @@ NSString *const UNREAD_COUNT_CHANGED = @"TGUNREADCOUNTCHANGED";
 
 + (NSString *) notificationNameByDialog:(TL_conversation *)dialog
                                    action:(NSString *) action {
-    return [NSString stringWithFormat:@"%@_%d_%d_%d", action, dialog.type, dialog.peer.chat_id, dialog.peer.user_id];
+    return [NSString stringWithFormat:@"%@_%d_%d", action, dialog.type, dialog.peer_id];
 }
 
 + (NSString *)notificationForUser:(TLUser *)user action:(NSString *)action {

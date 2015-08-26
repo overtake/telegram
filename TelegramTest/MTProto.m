@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.08.15.
+//  Auto created by Mikhail Filimonov on 26.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -760,12 +760,13 @@
 @end
 
 @implementation TL_inputMediaUploadedVideo
-+(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption {
++(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption {
 	TL_inputMediaUploadedVideo* obj = [[TL_inputMediaUploadedVideo alloc] init];
 	obj.file = file;
 	obj.duration = duration;
 	obj.w = w;
 	obj.h = h;
+	obj.mime_type = mime_type;
 	obj.caption = caption;
 	return obj;
 }
@@ -774,6 +775,7 @@
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
+	[stream writeString:self.mime_type];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -781,6 +783,7 @@
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
+	self.mime_type = [stream readString];
 	self.caption = [stream readString];
 }
         
@@ -792,6 +795,7 @@
     objc.duration = self.duration;
     objc.w = self.w;
     objc.h = self.h;
+    objc.mime_type = self.mime_type;
     objc.caption = self.caption;
     
     return objc;
@@ -816,13 +820,14 @@
 @end
 
 @implementation TL_inputMediaUploadedThumbVideo
-+(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption {
++(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption {
 	TL_inputMediaUploadedThumbVideo* obj = [[TL_inputMediaUploadedThumbVideo alloc] init];
 	obj.file = file;
 	obj.thumb = thumb;
 	obj.duration = duration;
 	obj.w = w;
 	obj.h = h;
+	obj.mime_type = mime_type;
 	obj.caption = caption;
 	return obj;
 }
@@ -832,6 +837,7 @@
 	[stream writeInt:self.duration];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
+	[stream writeString:self.mime_type];
 	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -840,6 +846,7 @@
 	self.duration = [stream readInt];
 	self.w = [stream readInt];
 	self.h = [stream readInt];
+	self.mime_type = [stream readString];
 	self.caption = [stream readString];
 }
         
@@ -852,6 +859,7 @@
     objc.duration = self.duration;
     objc.w = self.w;
     objc.h = self.h;
+    objc.mime_type = self.mime_type;
     objc.caption = self.caption;
     
     return objc;
@@ -5398,10 +5406,11 @@
 @end
 
 @implementation TL_dialogChannel
-+(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts {
++(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts {
 	TL_dialogChannel* obj = [[TL_dialogChannel alloc] init];
 	obj.peer = peer;
 	obj.top_message = top_message;
+	obj.top_important_message = top_important_message;
 	obj.read_inbox_max_id = read_inbox_max_id;
 	obj.unread_count = unread_count;
 	obj.unread_important_count = unread_important_count;
@@ -5412,6 +5421,7 @@
 -(void)serialize:(SerializedData*)stream {
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.top_message];
+	[stream writeInt:self.top_important_message];
 	[stream writeInt:self.read_inbox_max_id];
 	[stream writeInt:self.unread_count];
 	[stream writeInt:self.unread_important_count];
@@ -5421,6 +5431,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
 	self.top_message = [stream readInt];
+	self.top_important_message = [stream readInt];
 	self.read_inbox_max_id = [stream readInt];
 	self.unread_count = [stream readInt];
 	self.unread_important_count = [stream readInt];
@@ -5434,6 +5445,7 @@
     
     objc.peer = [self.peer copy];
     objc.top_message = self.top_message;
+    objc.top_important_message = self.top_important_message;
     objc.read_inbox_max_id = self.read_inbox_max_id;
     objc.unread_count = self.unread_count;
     objc.unread_important_count = self.unread_important_count;
@@ -10643,6 +10655,46 @@
     objc.messages = [self.messages copy];
     objc.pts = self.pts;
     objc.pts_count = self.pts_count;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_updateChannelTooLong
++(TL_updateChannelTooLong*)createWithChannel_id:(int)channel_id {
+	TL_updateChannelTooLong* obj = [[TL_updateChannelTooLong alloc] init];
+	obj.channel_id = channel_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.channel_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.channel_id = [stream readInt];
+}
+        
+-(TL_updateChannelTooLong *)copy {
+    
+    TL_updateChannelTooLong *objc = [[TL_updateChannelTooLong alloc] init];
+    
+    objc.channel_id = self.channel_id;
     
     return objc;
 }

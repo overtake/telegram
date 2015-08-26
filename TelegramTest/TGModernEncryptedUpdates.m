@@ -220,30 +220,14 @@
             
             NSArray *items = [action valueForKey:@"random_ids"];
             
-            NSMutableArray *storageMessages = [[NSMutableArray alloc] init];
-            
-            [items enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                
-                
-                
-               TL_destructMessage *msg = (TL_destructMessage *) [[MessagesManager sharedManager] findWithRandomId:[obj longValue]];
-                if(msg) {
-                    [SelfDestructionController addMessage:msg force:YES];
-                } else {
-                    [storageMessages addObject:obj];
-                }
-                
-            }];
             
             [[Storage manager] messages:^(NSArray *result) {
-                
-                [[MessagesManager sharedManager] add:result];
                 
                 [result enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     [SelfDestructionController addMessage:obj force:YES];
                 }];
                 
-            } forIds:storageMessages random:YES sync:YES queue:_queue ? _queue : [ASQueue globalQueue]];
+            } forIds:items random:YES sync:NO queue:_queue ? _queue : [ASQueue globalQueue]];
             
             return YES;
         }

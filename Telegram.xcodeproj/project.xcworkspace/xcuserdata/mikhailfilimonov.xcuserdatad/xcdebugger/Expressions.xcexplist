@@ -136,6 +136,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__44-[TGChannelsLoader loadNext:result:onQueue:]_block_invoke_2:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__26-[Storage insertMessages:]_block_invoke646:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__40-[ChatHistoryController markAsReceived:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -577,6 +588,20 @@
             </PersistentString>
             <PersistentString
                value = "self.item.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[Storage allChannels:deliveryOnQueue:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "topMessage">
+            </PersistentString>
+            <PersistentString
+               value = "serializedMessage">
+            </PersistentString>
+            <PersistentString
+               value = "messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1642,6 +1667,9 @@
          contextName = "-[TL_outDocument unserialize:]:TL_outDocument.m">
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
@@ -1815,6 +1843,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke180:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__32-[NewLoginViewController signIn]_block_invoke227:NewLoginViewController.m">
       </ContextState>
       <ContextState
@@ -1919,6 +1950,14 @@
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke198:UsersManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGConversationTableItem needUpdateMessage:]:TGConversationTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__32-[MessagesManager TGsetMessage:]_block_invoke:MessagesManager.m">
@@ -2609,6 +2648,14 @@
          contextName = "__57-[MessagesManager notifyMessage:update_real_date:notify:]_block_invoke:MessagesManager.m">
       </ContextState>
       <ContextState
+         contextName = "__44-[TGChannelsLoader loadNext:result:onQueue:]_block_invoke:TGModernConversationHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -2948,6 +2995,17 @@
             </PersistentString>
             <PersistentString
                value = "conversation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelFilter remoteRequest:peer_id:callback:]:ChannelFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.controller.server_max_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.controller.server_min_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

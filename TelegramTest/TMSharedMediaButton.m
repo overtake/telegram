@@ -62,24 +62,7 @@ static const NSMutableDictionary *cache;
 }
 
 -(void)didDeletedMessages:(NSNotification *)notification {
-    
-//    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
-//    
-//    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
-//        
-//        TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
-//        
-//        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
-//            
-//            NSNumber *count = cache[[self primaryKey]][@(msg.peer_id)];
-//            
-//            if(count != nil) {
-//                cache[[self primaryKey]][@(msg.peer_id)] = @([count intValue] - 1);
-//            }
-//        }
-//        
-//    }];
-//    
+     
 }
 
 

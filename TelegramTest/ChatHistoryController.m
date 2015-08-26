@@ -22,6 +22,7 @@
 #import "MP3HistoryFilter.h"
 #import "TGTimer.h"
 #import "TGProccessUpdates.h"
+#import "ChannelFilter.h"
 @interface ChatHistoryController ()
 
 
@@ -71,6 +72,7 @@ static NSMutableArray *listeners;
             [filters addObject:[AudioHistoryFilter class]];
             [filters addObject:[MP3HistoryFilter class]];
             [filters addObject:[SharedLinksHistoryFilter class]];
+            [filters addObject:[ChannelFilter class]];
             listeners = [[NSMutableArray alloc] init];
         });
         
@@ -87,7 +89,13 @@ static NSMutableArray *listeners;
             self.semaphore = dispatch_semaphore_create(1);
             
             _selectLimit = 50;
-            [self setFilter:[[historyFilter alloc] initWithController:self]];
+            
+            Class hf = historyFilter;
+            
+            if(hf == HistoryFilter.class && _controller.conversation.type == DialogTypeChannel)
+                hf = ChannelFilter.class;
+            
+            [self setFilter:[[hf alloc] initWithController:self]];
             _need_save_to_db = YES;
         
 
@@ -499,6 +507,7 @@ static NSMutableArray *listeners;
         _start_min = _min_id = self.controller.conversation.last_marked_message == 0 ? self.controller.conversation.top_message : self.controller.conversation.last_marked_message;
         _max_id =  0;
         
+        
         _maxDate = [[MTNetwork instance] getTime];
         _minDate = self.controller.conversation.last_marked_date+1;
         
@@ -589,10 +598,10 @@ static NSMutableArray *listeners;
                 ChatHistoryState state;
                 
                 if(!next) {
-                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class) && ( _max_id == 0 || (_min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                     
                 } else {
-                    state = (self.filter.class == HistoryFilter.class && (_max_id == 0 ? _min_id >= _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    state = ((self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class) && (_max_id == 0 ? _min_id >= _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
                     
                 }
                 
@@ -603,7 +612,7 @@ static NSMutableArray *listeners;
                 notify = YES;
             
             
-            [self saveId:memory next:next];
+            [self saveMinAndMaxId];
             
             if((!next && _min_id == self.controller.conversation.top_message)) {
                 [self setState:ChatHistoryStateFull next:next];
@@ -640,7 +649,7 @@ static NSMutableArray *listeners;
                     converted = [self sortItems:converted];
                     
                     
-                    [self saveId:converted next:next];
+                    [self saveMinAndMaxId];
                     
                     
                     if(!next && (_min_id >= self.conversation.top_message)) {
@@ -691,7 +700,7 @@ static NSMutableArray *listeners;
                             
                             converted = [self sortItems:converted];
                             
-                            [self saveId:converted next:next];
+                            [self saveMinAndMaxId];
                             
                             
                             
@@ -730,35 +739,32 @@ static NSMutableArray *listeners;
 -(void)setState:(ChatHistoryState)state next:(BOOL)next {
     if(next)
         _nextState = state;
-    else {
+    else
          _prevState = state;
-        
-        if(_prevState == ChatHistoryStateRemote)
-        {
-            int bp = 0;
-        }
-    }
+    
     
 }
 
 
--(void)saveId:(NSArray *)source next:(BOOL)next {
+-(void)saveMinAndMaxId {
    
+    
+    NSArray *all = [self selectAllItems];
    
-    if(source.count > 0)  {
+    if(all.count > 0)  {
         
-        if(next || _start_min == _min_id) {
+        {
             BOOL localSaved = NO;
             BOOL serverSaved = NO;
-            for (int i = (int) source.count-1; i >= 0; i--) {
+            for (int i = (int) all.count-1; i >= 0; i--) {
                 if(!localSaved) {
-                    _max_id = [[(MessageTableItem *)source[i] message] n_id];
-                    _maxDate = [[(MessageTableItem *)source[i] message] date]-1;
+                    _max_id = [[(MessageTableItem *)all[i] message] n_id];
+                    _maxDate = [[(MessageTableItem *)all[i] message] date]-1;
                     localSaved = YES;
                 }
                 
-                if(!serverSaved && [[(MessageTableItem *)source[i] message] n_id] != 0 && [[(MessageTableItem *)source[i] message] n_id] < TGMINFAKEID) {
-                    _server_max_id = [[(MessageTableItem *)source[i] message] n_id];
+                if(!serverSaved && [[(MessageTableItem *)all[i] message] n_id] != 0 && [[(MessageTableItem *)all[i] message] n_id] < TGMINFAKEID) {
+                    _server_max_id = [[(MessageTableItem *)all[i] message] n_id];
                     serverSaved = YES;
                 }
                 
@@ -766,14 +772,13 @@ static NSMutableArray *listeners;
                     break;
                 
             }
-            
         }
-        
-        if(!next) {
+    
+        {
             BOOL localSaved = NO;
             BOOL serverSaved = NO;
             
-            for (MessageTableItem *item in source) {
+            for (MessageTableItem *item in all) {
                 if(!localSaved) {
                     _min_id = [item.message n_id];
                     _minDate = [item.message date]+1;
@@ -788,6 +793,7 @@ static NSMutableArray *listeners;
                 
             }
         }
+ 
         
     }
 
@@ -799,7 +805,7 @@ static NSMutableArray *listeners;
 
 -(NSArray *)selectAllItems {
 
-        
+    
     NSArray *memory = [self sortItems:messageItems];
    
     

@@ -8,7 +8,6 @@
 
 #import "TGConversationsViewController.h"
 #import "TGSecretAction.h"
-#import "DialogsHistoryController.h"
 #import "SearchViewController.h"
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
@@ -19,7 +18,7 @@
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
 #import "MessagesUtils.h"
-
+#import "TGModernConversationHistoryController.h"
 @interface TestView : TMView
 
 @end
@@ -32,8 +31,8 @@
 
 @end
 
-@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
-@property (nonatomic, strong) DialogsHistoryController *history;
+@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate,TGModernConversationHistoryControllerDelegate>
+@property (nonatomic, strong) TGModernConversationHistoryController *modernHistory;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *list;
 
@@ -47,12 +46,14 @@
     _list = [[NSMutableArray alloc] init];
     
     
+    
+    
     int topOffset = 48;
     
  //   self.view.wantsLayer = NO;
     
     
-    _history = [DialogsHistoryController sharedController];
+    
     
     self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts | SearchTypeGlobalUsers;
     
@@ -133,52 +134,47 @@
 }
 
 
+-(void)didLoadedConversations:(NSArray *)conversations withRange:(NSRange)range {
+    [self insertAll:conversations];
+}
+
+-(int)conversationsLoadingLimit {
+    return 100;
+}
+
 -(void)initConversations {
     
     [SecretChatAccepter instance];
     
-  
-    [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
-        
-        [[MTNetwork instance] startNetwork];
-        
-        [EmojiViewController reloadStickers];
-        
-        [[BlockedUsersManager sharedManager] remoteLoad];
-        
-        if(result.count != 0 || _history.state == DialogsHistoryStateEnd) {
-            
-            
-            [TMTaskRequest executeAll];
-            
-            [self insertAll:result];
-            
-            
-            [Notification perform:APP_RUN object:nil];
-            
-            [SelfDestructionController initialize];
-            
-            [TGModernTypingManager initialize];
-            
-            [[NewContactsManager sharedManager] fullReload];
-            [[FullChatManager sharedManager] loadStored];
-            
-            [TGSecretAction dequeAllStorageActions];
-            
-            
-            dispatch_after_seconds(3, ^{
-                [self loadhistory:35];
-            });
-            
-            
-            
-        } else if(_history.state != DialogsHistoryStateEnd) {
-            [self initConversations];
-        }
-        
-       
-        
-    } usersCallback:nil];
+   
+     [[MTNetwork instance] startNetwork];
+    
+    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[ASQueue globalQueue] delegate:self];
+    
+    
+    [self loadhistory:30];
+    
+    
+    [EmojiViewController reloadStickers];
+    
+    [[BlockedUsersManager sharedManager] remoteLoad];
+    
+    [TMTaskRequest executeAll];
+    
+    
+    
+    [Notification perform:APP_RUN object:nil];
+    
+    [SelfDestructionController initialize];
+    
+    [TGModernTypingManager initialize];
+    
+    [[NewContactsManager sharedManager] fullReload];
+    [[FullChatManager sharedManager] loadStored];
+    
+    [TGSecretAction dequeAllStorageActions];
+    
+    
     
     
     [MessagesManager updateUnreadBadge];
@@ -202,72 +198,57 @@
 }
 
 -(void)notificationLogout:(NSNotification *)notification {
-    [_history drop];
     [self.tableView removeAllItems:NO];
     [self.tableView reloadData];
 }
 
 - (void) scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
-    if(_history.isLoading || _history.state == DialogsHistoryStateEnd || ![self.tableView.scrollView isNeedUpdateBottom])
+    if(_modernHistory.isLoading || _modernHistory.state == TGModernCHStateFull || ![self.tableView.scrollView isNeedUpdateBottom])
         return;
     
-    static int limit = 30;
-    [self loadhistory:limit];
+     [_modernHistory requestNextConversation];
 }
 
 -(void)loadhistory:(int)limit  {
     
+    [_modernHistory requestNextConversation];
     
+    dispatch_after_seconds(5, ^{
+        [self loadhistory:limit];
+    });
     
-    int offset = (int) self.tableView.count;
-    
-    if(_history.state == DialogsHistoryStateNeedRemote) {
-        NSArray *filtred = [self.tableView.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.conversation.peer.class != %@ AND self.conversation.peer.class != %@",[TL_peerSecret class], [TL_peerBroadcast class]]];
-        
-        offset = (int) filtred.count;
-    }
-    
-    [_history next:offset limit:limit callback:^(NSArray *result) {
-        
-        [self insertAll:result];
-        
-        if(_history.state != DialogsHistoryStateEnd) {
-            dispatch_after_seconds(5, ^{
-                [self loadhistory:limit];
-            });
-        }
-        
-    } usersCallback:^(NSArray *users) {
-        
-    }];
 }
 
 -(void)insertAll:(NSArray *)all {
-    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
     
     for(TL_conversation *conversation in all) {
         if(!conversation.isAddToList)
             continue;
         
         TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
-        [dialogs addObject:item];
+        [items addObject:item];
     }
     
-    NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
-    
-    self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
-    
-    [self.tableView insert:dialogs startIndex:self.tableView.list.count tableRedraw:YES];
-    
-    self.tableView.defaultAnimation = animation;
-    
-    if(self.tableView.selectedItem  != self.selectedItem) {
+    [ASQueue dispatchOnMainQueue:^{
+        NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
         
-        if([self.tableView itemByHash:[self.selectedItem hash]]) {
-            [self.tableView cancelSelection];
-            [self.tableView setSelectedByHash:[self.selectedItem hash]];
+        self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+        
+        [self.tableView insert:items startIndex:self.tableView.list.count tableRedraw:YES];
+        
+        self.tableView.defaultAnimation = animation;
+        
+        if(self.tableView.selectedItem  != self.selectedItem) {
+            
+            if([self.tableView itemByHash:[self.selectedItem hash]]) {
+                [self.tableView cancelSelection];
+                [self.tableView setSelectedByHash:[self.selectedItem hash]];
+            }
         }
-    }
+    }];
+    
 }
 - (void)dealloc {
     [Notification removeObserver:self];

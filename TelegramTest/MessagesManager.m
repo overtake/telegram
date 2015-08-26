@@ -449,7 +449,7 @@ static const int seconds_to_notify = 120;
 }
 
 -(void)setUnread_count:(int)unread_count {
-    _unread_count = unread_count > 0 ? unread_count : 0;
+    _unread_count = MAX(0,unread_count);
 }
 
 +(void)updateUnreadBadge {

@@ -62,6 +62,7 @@ extern NSString *const RECENT_SEARCH;
 -(void)insertMessages:(NSArray *)messages;
 
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)deleteChannelMessages:(NSArray *)messages;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
 
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
@@ -228,8 +229,7 @@ extern NSString *const RECENT_SEARCH;
 // signal requests
 +(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
 
-
-
-
-
+-(void)insertChannels:(NSArray *)channels;
+-(void)insertChannels:(NSArray *)channels completionHandler:(dispatch_block_t)completionHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
+-(void)allChannels:(void (^)(NSArray *channels, NSArray *messages))completeHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
 @end

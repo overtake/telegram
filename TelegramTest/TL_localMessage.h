@@ -33,7 +33,7 @@ typedef enum {
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;
 +(void)convertReceivedMessages:(NSMutableArray *)messages;
 
-
+-(long)channelMsgId;
 -(int)peer_id;
 -(TLPeer *)peer;
 -(TLChat *)chat;

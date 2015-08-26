@@ -17,7 +17,8 @@
 #import <MtProtoKit/MTLogging.h>
 #import "ImageUtils.h"
 #import "POP.h"
-
+#import "ASQueue.h"
+#import "TGDispatcher.h"
 #import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"

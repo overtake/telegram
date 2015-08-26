@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.08.15.
+//  Auto created by Mikhail Filimonov on 26.08.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -543,8 +543,8 @@
 @property int duration;
 @property int w;
 @property int h;
-@property (nonatomic, strong) TLInputFile* thumb;
 @property (nonatomic, strong) NSString* mime_type;
+@property (nonatomic, strong) TLInputFile* thumb;
 @property (nonatomic, strong) NSMutableArray* attributes;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* address;
@@ -568,10 +568,10 @@
 +(TL_inputMediaContact*)createWithPhone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name;
 @end
 @interface TL_inputMediaUploadedVideo : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
++(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedThumbVideo : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
++(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption;
 @end
 @interface TL_inputMediaVideo : TLInputMedia<NSCoding>
 +(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption;
@@ -1034,6 +1034,7 @@
 @property int read_inbox_max_id;
 @property int unread_count;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
+@property int top_important_message;
 @property int unread_important_count;
 @property int pts;
 @end
@@ -1042,7 +1043,7 @@
 +(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings;
 @end
 @interface TL_dialogChannel : TLDialog<NSCoding>
-+(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
++(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
 @end
 	
 @interface TLPhoto()
@@ -1502,6 +1503,7 @@
 @property (nonatomic, strong) NSString* phone;
 @property int max_id;
 @property (nonatomic, strong) TLWebPage* webpage;
+@property int channel_id;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1587,6 +1589,9 @@
 @end
 @interface TL_updateReadMessagesContents : TLUpdate<NSCoding>
 +(TL_updateReadMessagesContents*)createWithMessages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateChannelTooLong : TLUpdate<NSCoding>
++(TL_updateChannelTooLong*)createWithChannel_id:(int)channel_id;
 @end
 @interface TL_updateNewChannelMessage : TLUpdate<NSCoding>
 +(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
