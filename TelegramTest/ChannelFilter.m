@@ -93,11 +93,20 @@ static NSMutableDictionary * messageKeys;
     }];
 }
 
+-(NSArray *)storageRequest:(BOOL)next {
+    int source_id = next ? self.controller.max_id : self.controller.min_id;
+    int maxDate = next ? self.controller.maxDate : self.controller.minDate;
+    
+    
+    return [[Storage manager] loadImportantChannelMessages:self.controller.conversation.peer_id localMaxId:source_id limit:(int)self.controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
+    
+}
+
 
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
     
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[self.controller.conversation inputPeer] offset:0 max_id:self.controller.server_max_id min_id:self.controller.server_min_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getImportantHistory createWithPeer:[self.controller.conversation inputPeer] max_id:self.controller.server_min_id min_id:0 limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
         if(callback) {
             callback(response);

@@ -65,7 +65,7 @@
     
     
     
-    if([self.message.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+    if([self.message.message.media isKindOfClass:[TL_messageMediaEmpty class]] || self.message.message.media == nil) {
        
         [self.messageField setAttributedStringValue:((MessageTableItemText *)self.message).textAttributed];
         

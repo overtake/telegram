@@ -200,66 +200,59 @@
     self.viewSize = NSMakeSize(blockSize.width, blockSize.height);
 }
 
-+ (id) messageItemFromObject:(TLMessage *)object {
++ (id) messageItemFromObject:(TL_localMessage *)message {
     id objectReturn = nil;
 
     
-    if(object.class == [TL_localMessage_old34 class] || object.class == [TL_localMessage_old32 class] || object.class == [TL_localMessage class] || object.class == [TL_destructMessage class]) {
-        TLMessage *message = object;
+    if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
         
         
-        
-        if([message.media isKindOfClass:[TL_messageMediaEmpty class]] || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
+        if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
             
-          //  Class socialClass = [MessageTableItem socialClass:message.message];
-            
-           // if(socialClass == [NSNull class])
-                objectReturn = [[MessageTableItemText alloc] initWithObject:object];
-          //  else
-           //     objectReturn = [[MessageTableItemSocial alloc] initWithObject:object socialClass:socialClass];
+          objectReturn = [[MessageTableItemText alloc] initWithObject:message];
             
         } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
             
-            object.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
-            objectReturn = [[MessageTableItemText alloc] initWithObject:object ];
+            message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
+            objectReturn = [[MessageTableItemText alloc] initWithObject:message ];
             
         } else if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
             
-            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:object ];
+            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message ];
             
         } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
 
-            objectReturn = [[MessageTableItemVideo alloc] initWithObject:object ];
+            objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
             
         } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
             
             TLDocument *document = message.media.document;
             
             if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                objectReturn = [[MessageTableItemGif alloc] initWithObject:object];
+                objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
             } else if([document.mime_type hasPrefix:@"audio/"]) {
-                 objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:object];
+                 objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
             } else if([document isSticker]) {
-                objectReturn = [[MessageTableItemSticker alloc] initWithObject:object];
+                objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
             } else {
-                 objectReturn = [[MessageTableItemDocument alloc] initWithObject:object];
+                 objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
             }
             
         } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
             
-            objectReturn = [[MessageTableItemContact alloc] initWithObject:object];
+            objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
             
         } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
             
-            objectReturn = [[MessageTableItemGeo alloc] initWithObject:object];
+            objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
             
         } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
             
-            objectReturn = [[MessageTableItemAudio alloc] initWithObject:object];
+            objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
             
         }
-    } else if([object isKindOfClass:[TL_localMessageService class]] || [object isKindOfClass:[TL_secretServiceMessage class]]) {
-        objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:object ];
+    } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
+        objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
     }
     
     

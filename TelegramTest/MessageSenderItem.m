@@ -64,15 +64,24 @@
         request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
     
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentMessage * response) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
         
-        if(self.conversation.type != DialogTypeBroadcast)  {
+        if(response.updates.count < 2)
+        {
+            [self cancel];
+            return;
+        }
+        
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+        
+        
+         if(self.conversation.type != DialogTypeBroadcast)  {
             
-            self.message.n_id = response.n_id;
-            self.message.date = response.date;
-            self.message.media = response.media;
-            self.message.entities = response.entities;
+            self.message.n_id = msg.n_id;
+            self.message.date = msg.date;
+            self.message.media = msg.media;
+            self.message.entities = msg.entities;
             
         }
         

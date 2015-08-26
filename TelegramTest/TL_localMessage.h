@@ -37,6 +37,7 @@ typedef enum {
 -(int)peer_id;
 -(TLPeer *)peer;
 -(TLChat *)chat;
+-(BOOL)isImportantMessage;
 
 -(BOOL)n_out;
 -(BOOL)unread;

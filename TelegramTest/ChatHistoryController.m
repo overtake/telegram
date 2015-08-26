@@ -680,7 +680,7 @@ static NSMutableArray *listeners;
                             
                             NSArray *messages = [[response messages] copy];
                             
-                            if(self.filter.class != HistoryFilter.class || !_need_save_to_db) {
+                            if((self.filter.class != HistoryFilter.class && self.filter.class != ChannelFilter.class) || !_need_save_to_db) {
                                 [[response messages] removeAllObjects];
                             }
                             

@@ -205,11 +205,8 @@ static NSMutableDictionary * messageKeys;
     int source_id = next ? _controller.max_id : _controller.min_id;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
     
+    return [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
 
-    if(_controller.conversation.type != DialogTypeChannel)
-        return [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
-    else
-        return [[Storage manager] loadChannelMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
     
 }
 

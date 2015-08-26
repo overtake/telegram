@@ -171,9 +171,6 @@
 @interface TLmessages_Messages : TLObject
 @end
 	
-@interface TLmessages_SentMessage : TLObject
-@end
-	
 @interface TLmessages_Chats : TLObject
 @end
 	
@@ -1385,24 +1382,6 @@
 +(TL_messages_channelMessages*)createWithFlags:(int)flags pts:(int)pts n_count:(int)n_count messages:(NSMutableArray*)messages collapsed:(NSMutableArray*)collapsed chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
-@interface TLmessages_SentMessage()
-@property int n_id;
-@property int date;
-@property (nonatomic, strong) TLMessageMedia* media;
-@property (nonatomic, strong) NSMutableArray* entities;
-@property int pts;
-@property int pts_count;
-@property (nonatomic, strong) NSMutableArray* links;
-@property int seq;
-@end
-
-@interface TL_messages_sentMessage : TLmessages_SentMessage<NSCoding>
-+(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities pts:(int)pts pts_count:(int)pts_count;
-@end
-@interface TL_messages_sentMessageLink : TLmessages_SentMessage<NSCoding>
-+(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq;
-@end
-	
 @interface TLmessages_Chats()
 @property (nonatomic, strong) NSMutableArray* chats;
 @end
@@ -1654,6 +1633,7 @@
 @property (nonatomic, strong) NSMutableArray* chats;
 @property int seq_start;
 @property int seq;
+@property (nonatomic, strong) TLMessageMedia* media;
 @end
 
 @interface TL_updatesTooLong : TLUpdates<NSCoding>
@@ -1673,6 +1653,9 @@
 @end
 @interface TL_updates : TLUpdates<NSCoding>
 +(TL_updates*)createWithUpdates:(NSMutableArray*)updates users:(NSMutableArray*)users chats:(NSMutableArray*)chats date:(int)date seq:(int)seq;
+@end
+@interface TL_updateShortSentMessage : TLUpdates<NSCoding>
++(TL_updateShortSentMessage*)createWithFlags:(int)flags n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities;
 @end
 	
 @interface TLphotos_Photos()

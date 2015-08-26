@@ -61,7 +61,7 @@
         
         NSMutableAttributedString *replyText = [[NSMutableAttributedString alloc] init];
         
-        if([replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]] || [replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        if((replyMessage.media == nil || [replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]]) || [replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             
             NSString *str = [replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             

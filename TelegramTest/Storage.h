@@ -153,7 +153,7 @@ extern NSString *const RECENT_SEARCH;
 
 
 -(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
--(NSArray *)loadChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
+-(NSArray *)loadImportantChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
 
 
 -(TL_localMessage *)messageById:(int)msgId;

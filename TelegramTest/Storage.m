@@ -619,7 +619,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(NSArray *)loadChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask {
+-(NSArray *)loadImportantChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask {
     
     
     __block NSMutableArray *messages = [[NSMutableArray alloc] init];
@@ -657,6 +657,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         [result close];
+        
+        
+        int localCount = [db intForQuery:@"SELECT count(*) from channel_messages where channel_id = ?",@(conversationId)];
+        
+        
         
         
         TL_localMessage *lastMessage = [messages lastObject];

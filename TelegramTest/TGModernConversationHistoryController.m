@@ -68,7 +68,7 @@ static const int limit = 1000;
         NSMutableArray *converted = [[NSMutableArray alloc] initWithCapacity:response.dialogs.count];
         
         
-        assert(response.dialogs.count == response.messages.count);
+   //     assert(response.dialogs.count == response.messages.count);
         
         
         [response.dialogs enumerateObjectsUsingBlock:^(TL_dialogChannel *channel, NSUInteger idx, BOOL *stop) {

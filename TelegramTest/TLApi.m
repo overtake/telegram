@@ -716,7 +716,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:233907088];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-91733382];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) {[stream writeInt:self.reply_to_msg_id];}

@@ -141,7 +141,7 @@
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
     [stream writeString:self.message];
-    [TLClassStore TLSerialize:self.media stream:stream];
+    if(self.flags & (1 << 9)) {[ClassStore TLSerialize:self.media stream:stream];}
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
@@ -168,7 +168,7 @@
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];
     self.message = [stream readString];
-    self.media = [TLClassStore TLDeserialize:stream];
+    if(self.flags & (1 << 9)) {self.media = [ClassStore TLDeserialize:stream];}
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
@@ -247,6 +247,10 @@
 }
 
 
+-(BOOL)isImportantMessage {
+    return self.flags & TGIMPORTANTMESSAGE;
+}
+
 -(BOOL)unread {
     return self.flags & TGUNREADMESSAGE;
 }
@@ -294,7 +298,7 @@ DYNAMIC_PROPERTY(DDialog);
     {
         int mask = [self.to_id isKindOfClass:[TL_peerChannel class]] ? HistoryFilterChannelMessage : HistoryFilterNone;
         
-        if([self.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+        if([self.media isKindOfClass:[TL_messageMediaEmpty class]] || self.media == nil) {
             mask|=HistoryFilterText;
         }
         
@@ -357,6 +361,19 @@ DYNAMIC_PROPERTY(DDialog);
     
 }
 
+-(void)setMedia:(TLMessageMedia*)media
+{
+    [super setMedia:media];
+    
+    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
+}
+
+-(void)setFrom_id:(int)from_id
+{
+    [super setFrom_id:from_id];
+    
+    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
+}
 
 -(void)setEntities:(NSMutableArray*)entities
 {

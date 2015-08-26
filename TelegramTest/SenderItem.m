@@ -82,7 +82,7 @@ static NSMutableDictionary *senders;
         
         if(!item) {
             if(![msg isKindOfClass:[TL_destructMessage class]]) {
-                if([msg.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+                if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil) {
                     item = [[MessageSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                     item = [[ImageSenderItem alloc] init];
@@ -113,7 +113,7 @@ static NSMutableDictionary *senders;
                 
             } else {
                 if(msg.class == [TL_destructMessage class]) {
-                    if([msg.media isKindOfClass:[TL_messageMediaEmpty class]])
+                    if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil)
                         item = [[MessageSenderSecretItem alloc] init];
                     else {
                         

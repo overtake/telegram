@@ -4230,7 +4230,7 @@
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	[stream writeInt:self.date];
 	[stream writeString:self.message];
-	[ClassStore TLSerialize:self.media stream:stream];
+	if(self.flags & (1 << 9)) {[ClassStore TLSerialize:self.media stream:stream];}
 	if(self.flags & (1 << 6)) {[ClassStore TLSerialize:self.reply_markup stream:stream];}
 	if(self.flags & (1 << 7)) {//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -4253,7 +4253,7 @@
 	if(self.flags & (1 << 3)) {self.reply_to_msg_id = [stream readInt];}
 	self.date = [stream readInt];
 	self.message = [stream readString];
-	self.media = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 9)) {self.media = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 6)) {self.reply_markup = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
@@ -4329,6 +4329,12 @@
     [super setReply_to_msg_id:reply_to_msg_id];
             
     if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
+}        
+-(void)setMedia:(TLMessageMedia*)media
+{
+    [super setMedia:media];
+            
+    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
 }        
 -(void)setReply_markup:(TLReplyMarkup*)reply_markup
 {
@@ -8536,178 +8542,6 @@
 @end
 
 
-@implementation TLmessages_SentMessage
-@end
-
-@implementation TL_messages_sentMessage
-+(TL_messages_sentMessage*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities pts:(int)pts pts_count:(int)pts_count {
-	TL_messages_sentMessage* obj = [[TL_messages_sentMessage alloc] init];
-	obj.n_id = n_id;
-	obj.date = date;
-	obj.media = media;
-	obj.entities = entities;
-	obj.pts = pts;
-	obj.pts_count = pts_count;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.n_id];
-	[stream writeInt:self.date];
-	[ClassStore TLSerialize:self.media stream:stream];
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.entities count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLMessageEntity* obj = [self.entities objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-	[stream writeInt:self.pts];
-	[stream writeInt:self.pts_count];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.date = [stream readInt];
-	self.media = [ClassStore TLDeserialize:stream];
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.entities)
-			self.entities = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLMessageEntity* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLMessageEntity class]])
-                 [self.entities addObject:obj];
-            else
-                break;
-		}
-	}
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-}
-        
--(TL_messages_sentMessage *)copy {
-    
-    TL_messages_sentMessage *objc = [[TL_messages_sentMessage alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.date = self.date;
-    objc.media = [self.media copy];
-    objc.entities = [self.entities copy];
-    objc.pts = self.pts;
-    objc.pts_count = self.pts_count;
-    
-    return objc;
-}
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-
-        
-
-        
-@end
-
-@implementation TL_messages_sentMessageLink
-+(TL_messages_sentMessageLink*)createWithN_id:(int)n_id date:(int)date media:(TLMessageMedia*)media pts:(int)pts pts_count:(int)pts_count links:(NSMutableArray*)links seq:(int)seq {
-	TL_messages_sentMessageLink* obj = [[TL_messages_sentMessageLink alloc] init];
-	obj.n_id = n_id;
-	obj.date = date;
-	obj.media = media;
-	obj.pts = pts;
-	obj.pts_count = pts_count;
-	obj.links = links;
-	obj.seq = seq;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.n_id];
-	[stream writeInt:self.date];
-	[ClassStore TLSerialize:self.media stream:stream];
-	[stream writeInt:self.pts];
-	[stream writeInt:self.pts_count];
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.links count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLcontacts_Link* obj = [self.links objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-	[stream writeInt:self.seq];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.date = [stream readInt];
-	self.media = [ClassStore TLDeserialize:stream];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.links)
-			self.links = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLcontacts_Link* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLcontacts_Link class]])
-                 [self.links addObject:obj];
-            else
-                break;
-		}
-	}
-	self.seq = [stream readInt];
-}
-        
--(TL_messages_sentMessageLink *)copy {
-    
-    TL_messages_sentMessageLink *objc = [[TL_messages_sentMessageLink alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.date = self.date;
-    objc.media = [self.media copy];
-    objc.pts = self.pts;
-    objc.pts_count = self.pts_count;
-    objc.links = [self.links copy];
-    objc.seq = self.seq;
-    
-    return objc;
-}
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-
-        
-
-        
-@end
-
-
 @implementation TLmessages_Chats
 @end
 
@@ -11846,6 +11680,104 @@
 
         
 
+        
+@end
+
+@implementation TL_updateShortSentMessage
++(TL_updateShortSentMessage*)createWithFlags:(int)flags n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities {
+	TL_updateShortSentMessage* obj = [[TL_updateShortSentMessage alloc] init];
+	obj.flags = flags;
+	obj.n_id = n_id;
+	obj.pts = pts;
+	obj.pts_count = pts_count;
+	obj.date = date;
+	obj.media = media;
+	obj.entities = entities;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeInt:self.n_id];
+	[stream writeInt:self.pts];
+	[stream writeInt:self.pts_count];
+	[stream writeInt:self.date];
+	if(self.flags & (1 << 9)) {[ClassStore TLSerialize:self.media stream:stream];}
+	if(self.flags & (1 << 7)) {//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.entities count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLMessageEntity* obj = [self.entities objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
+	self.n_id = [stream readInt];
+	self.pts = [stream readInt];
+	self.pts_count = [stream readInt];
+	self.date = [stream readInt];
+	if(self.flags & (1 << 9)) {self.media = [ClassStore TLDeserialize:stream];}
+	if(self.flags & (1 << 7)) {//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.entities)
+			self.entities = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLMessageEntity* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLMessageEntity class]])
+                 [self.entities addObject:obj];
+            else
+                break;
+		}
+	}}
+}
+        
+-(TL_updateShortSentMessage *)copy {
+    
+    TL_updateShortSentMessage *objc = [[TL_updateShortSentMessage alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
+    objc.date = self.date;
+    objc.media = [self.media copy];
+    objc.entities = [self.entities copy];
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+        
+-(void)setMedia:(TLMessageMedia*)media
+{
+    [super setMedia:media];
+            
+    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
+}        
+-(void)setEntities:(NSMutableArray*)entities
+{
+    [super setEntities:entities];
+            
+    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
+}
         
 @end
 

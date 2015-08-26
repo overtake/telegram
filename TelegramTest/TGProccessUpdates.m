@@ -186,8 +186,7 @@ static ASQueue *queue;
             
         }
         
-        if([update isKindOfClass:[TL_messages_sentMessage class]] ||
-           [update isKindOfClass:[TL_messages_affectedHistory class]]) {
+        if([update isKindOfClass:[TL_messages_affectedHistory class]]) {
             
             [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
             
