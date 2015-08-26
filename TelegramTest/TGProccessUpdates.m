@@ -869,7 +869,7 @@ static ASQueue *queue;
         
         NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
         
-        TL_localMessageService *message = [TL_localMessageService createWithN_id:0 flags:TGOUTMESSAGE from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        TL_localMessageService *message = [TL_localMessageService createWithN_id:0 flags:TGUNREADMESSAGE from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:message];
 
