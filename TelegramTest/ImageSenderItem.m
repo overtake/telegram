@@ -111,7 +111,7 @@
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
-            
+            [strongSelf updateMessageId:response];
             
             if(response.updates.count < 2)
             {

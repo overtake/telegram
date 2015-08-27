@@ -11,7 +11,6 @@
 #import "TGTimer.h"
 @interface TGUpdateChannels ()
 @property (nonatomic,strong) ASQueue *queue;
-@property (nonatomic,strong) NSMutableDictionary *channels;
 @property (nonatomic,strong) NSMutableDictionary *channelWaitingUpdates;
 @property (nonatomic,strong) NSMutableDictionary *channelWaitingTimers;
 
@@ -22,8 +21,6 @@
 -(id)initWithQueue:(ASQueue *)queue {
     if(self = [super init]) {
         _queue = queue;
-        
-        _channels = [[[Storage manager] channelUpdates] mutableCopy];
         _channelWaitingUpdates = [[NSMutableDictionary alloc] init];
         _channelWaitingTimers = [[NSMutableDictionary alloc] init];
     }
@@ -31,29 +28,12 @@
     return self;
 }
 
--(void)addChannel:(int)channel_id pts:(int)pts {
-    [_queue dispatchOnQueue:^{
-        _channels[@(channel_id)] = @(pts);
-        [[Storage manager] addOrUpdateChannelWithPts:channel_id pts:pts];
-    }];
-    
-}
-
--(void)removeChannel:(int)channel_id {
-    [_queue dispatchOnQueue:^{
-        [_channels removeObjectForKey:@(channel_id)];
-        [[Storage manager] removeChannelUpdate:channel_id];
-    }];
-    
-}
-
 -(int)ptsWithChannelId:(int)channel_id {
-    return MAX([_channels[@(channel_id)] intValue],1);
+    
+    return MAX(1,1);
 }
 
--(void)applyPtsWithChannelId:(int)channel_id pts:(int)pts {
-    [self addChannel:channel_id pts:pts];
-}
+
 
 -(int)channelIdWithUpdate:(id)update {
     
@@ -179,7 +159,6 @@
     }
     
     
-    [self applyPtsWithChannelId:statefulMessage.channel_id pts:statefulMessage.pts];
 }
 
 
@@ -197,15 +176,15 @@
     
     TL_channel *channel = [[ChatsManager sharedManager] find:channel_id];
     
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:channel_id access_hash:channel.access_hash] pts:[self ptsWithChannelId:channel_id] limit:100] successHandler:^(id request, id response) {
-        
-        int bp = 0;
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-        int err = 0;
-        
-    } timeout:0 queue:_queue.nativeQueue];
+//    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:channel_id access_hash:channel.access_hash] pts:[self ptsWithChannelId:channel_id] limit:100] successHandler:^(id request, id response) {
+//        
+//        int bp = 0;
+//        
+//    } errorHandler:^(id request, RpcError *error) {
+//        
+//        int err = 0;
+//        
+//    } timeout:0 queue:_queue.nativeQueue];
 }
 
 @end

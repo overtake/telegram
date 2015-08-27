@@ -64,25 +64,32 @@
         request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
     
-    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
+    self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_updateShortSentMessage *response) {
         
         
-        if(response.updates.count < 2)
-        {
-            [self cancel];
-            return;
+        [self updateMessageId:response];
+
+        if([response isKindOfClass:[TL_updates class]]) {
+            
+            NSArray *f = [response.updates filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                
+                return [evaluatedObject isKindOfClass:[TL_updateNewChannelMessage class]] || [evaluatedObject isKindOfClass:[TL_updateNewMessage class]];
+                
+            }]];
+            
+            if(f.count == 1)
+            {
+                response = (TL_updateShortSentMessage *) [f[0] message];
+            }
+            
+            
         }
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
-        
-        
-         if(self.conversation.type != DialogTypeBroadcast)  {
-            
-            self.message.n_id = msg.n_id;
-            self.message.date = msg.date;
-            self.message.media = msg.media;
-            self.message.entities = msg.entities;
-            
+        if(self.conversation.type != DialogTypeBroadcast)  {
+             self.message.n_id = response.n_id;
+             self.message.date = response.date;
+             self.message.media = response.media;
+             self.message.entities = response.entities;
         }
         
        

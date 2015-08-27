@@ -145,16 +145,20 @@ static ASQueue *queue;
     
 }
 
+static NSArray *channelUpdates;
+
+
+
 -(void)addUpdate:(id)update {
     
     [queue dispatchOnQueue:^{
         
-        
-        static NSArray *channelUpdates;
         static dispatch_once_t onceToken;
+        
         dispatch_once(&onceToken, ^{
             channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class])];
         });
+        
         
         if([channelUpdates indexOfObject:[update className]] != NSNotFound)
         {
@@ -164,25 +168,16 @@ static ASQueue *queue;
         
         if([update isKindOfClass:[TL_updates class]]) {
             
-            
             [SharedManager proccessGlobalResponse:update];
-            
-            NSMutableArray *channel = [[NSMutableArray alloc] init];
             
             [[update updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 if([channelUpdates indexOfObject:[obj className]] != NSNotFound)
                 {
-                    [channel addObject:obj];
                     [_channelsUpdater addUpdate:obj];
                 }
                 
             }];
-            
-            [[update updates] removeObjectsInArray:channel];
-            
-            if([update updates].count == 0)
-                return;
             
         }
         
@@ -216,7 +211,15 @@ static ASQueue *queue;
         }
         
         if([update isKindOfClass:[TL_updates class]]) {
-            [self processUpdates:[update updates] stateSeq:[update seq]];
+            
+            NSArray *updates = [[[update updates] copy] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                
+                return [channelUpdates indexOfObject:[evaluatedObject className]] == NSNotFound;
+                
+            }]];
+            
+            if(updates.count > 0)
+                [self processUpdates:updates stateSeq:[update seq]];
         }
         
         
@@ -583,14 +586,6 @@ static ASQueue *queue;
     }
     
     if([update isKindOfClass:[TL_updateMessageID class]]) {
-        
-        TL_localMessage *msg = [[MessagesManager sharedManager] findWithRandomId:[update random_id]];
-        
-        msg.n_id = [update n_id];
-        
-        if(msg) {
-            [[MessagesManager sharedManager] add:@[msg]];
-        }
         
         
         

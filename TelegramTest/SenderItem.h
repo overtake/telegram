@@ -70,5 +70,7 @@ typedef enum {
 -(void)cancel;
 -(void)resend;
 
+-(void)updateMessageId:(TLUpdates *)updates;
+
 
 @end

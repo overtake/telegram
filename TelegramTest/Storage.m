@@ -188,7 +188,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
         }
         
-        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer, channel_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer)"];
+        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer, channel_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer)"];
         
         
         // channel messages indexes
@@ -200,6 +200,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [db executeUpdate:@"CREATE INDEX if not exists cm_random_idx ON channel_messages(random_id)"];
             [db executeUpdate:@"CREATE INDEX if not exists cm_peer_flags_idx ON channel_messages(channel_id,flags)"];
             [db executeUpdate:@"CREATE INDEX if not exists cm_fake_idx ON channel_messages(fake_id)"];
+            [db executeUpdate:@"CREATE INDEX if not exists cm_pts_idx ON channel_messages(pts)"];
         }
         
         
@@ -636,11 +637,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         
-        
         if(currentDate == 0)
             currentDate = [[MTNetwork instance] getTime];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where channel_id = %d and date %@ %d  and (filter_mask & %d > 0) order by date %@ limit %d",conversationId,next ? @"<=" : @">=",currentDate,mask, next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where channel_id = %d and date %@ %d  and (filter_mask & %d > 0) and ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0) order by date %@ limit %d",conversationId,next ? @"<=" : @">=",currentDate,mask, next ? @"DESC" : @"ASC",limit];
 
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -657,10 +657,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         [result close];
-        
-        
-        int localCount = [db intForQuery:@"SELECT count(*) from channel_messages where channel_id = ?",@(conversationId)];
-        
         
         
         
@@ -1147,12 +1143,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             dispatch_block_t insertChannelMessageBlock = ^ {
                 
-                
-                
                 int isset = [db intForQuery:@"select count(*) from channel_messages where n_id = ?",@(message.channelMsgId)];
                 
                 if(isset == 0) {
-                    [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,channel_id,serialized, filter_mask,fake_id,dstate,random_id) values (?,?,?,?,?,?,?,?,?,?)"],
+                    [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,channel_id,serialized, filter_mask,fake_id,dstate,random_id,pts) values (?,?,?,?,?,?,?,?,?,?,?)"],
                      @(message.channelMsgId),
                      @(message.date),
                      @(message.from_id),
@@ -1162,11 +1156,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                      @(mask),
                      @(message.fakeId),
                      @(message.dstate),
-                     @(message.randomId)
+                     @(message.randomId),
+                     @(message.pts)
                      ];
                     
                 } else {
-                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?, channel_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(message.channelMsgId),nil];
+                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?, channel_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(message.pts),@(message.channelMsgId),nil];
 
                 }
                 

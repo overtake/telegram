@@ -12,8 +12,6 @@
 
 -(id)initWithQueue:(ASQueue *)queue;
 
--(void)addChannel:(int)channel_id pts:(int)pts;
--(void)removeChannel:(int)channel_id;
 
 -(void)addUpdate:(id)update;
 

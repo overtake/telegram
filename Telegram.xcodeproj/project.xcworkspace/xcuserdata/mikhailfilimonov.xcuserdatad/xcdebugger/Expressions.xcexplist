@@ -507,6 +507,12 @@
          contextName = "+[MTDiscoverConnectionSignals discoverSchemeWithContext:addressList:media:]:MTDiscoverConnectionSignals.m">
       </ContextState>
       <ContextState
+         contextName = "__61-[TGProccessUpdates uptodate:qts:date:updateConnectionState:]_block_invoke:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__48-[TGRecentSearchTableView loadRecentSearchItems]_block_invoke42:TGRecentSearchTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -790,6 +796,9 @@
             <PersistentString
                value = "self.historyController.prevState">
             </PersistentString>
+            <PersistentString
+               value = "prev">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -956,6 +965,9 @@
          contextName = "__95-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:successCallback:]_block_invoke314:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__26-[Storage insertMessages:]_block_invoke_2:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellDocumentView setItem:]:MessageTableCellDocumentView.m">
       </ContextState>
       <ContextState
@@ -1084,10 +1096,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__26-[Storage insertMessages:]_block_invoke652:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGMessagesStickerImageObject initDownloadItem]:TGMessagesStickerImageObject.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forConversation:]:ImageSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[Storage loadImportantChannelMessages:localMaxId:limit:next:maxDate:filterMask:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[PhotoTableItemView redrawRow]:PhotoTableItemView.m">
@@ -1206,6 +1229,9 @@
             </PersistentString>
             <PersistentString
                value = "self.table.scrollView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "_historyController.selectLimit">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1670,6 +1696,17 @@
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke:TGModernConversationHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__81-[Storage loadImportantChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+            <PersistentString
+               value = "msg.flags">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
@@ -1692,6 +1729,9 @@
                value = "item.path">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__48-[ChannelFilter remoteRequest:peer_id:callback:]_block_invoke:ChannelFilter.m">
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
@@ -2371,9 +2411,6 @@
          contextName = "-[MessagesViewController isHeaderMessage:prevItem:]:MessagesViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
-      </ContextState>
-      <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
       </ContextState>
       <ContextState
@@ -2603,6 +2640,9 @@
          contextName = "__32-[Storage insertSecretInAction:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "__71-[StandartViewController hideSearchViewControllerWithConversationUsed:]_block_invoke:StandartViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadPhotoCollectionItem initWithObject:size:]:DownloadPhotoCollectionItem.m">
       </ContextState>
       <ContextState
@@ -2656,6 +2696,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.message.date">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -2665,6 +2713,9 @@
       </ContextState>
       <ContextState
          contextName = "open_user_by_name:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "__30-[TGUpdateChannels addUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView downloadProgressHandler:]:MessageTableCellContainerView.m">
@@ -3005,12 +3056,21 @@
                value = "self.controller.server_max_id">
             </PersistentString>
             <PersistentString
+               value = "self.controller.max_id">
+            </PersistentString>
+            <PersistentString
                value = "self.controller.server_min_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.controller.min_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[Storage executeSaveConversation:db:]:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGRecentSearchTableView loadRecentSearchItems]:TGRecentSearchTableView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController deleteMessages:]:MessagesViewController.m">

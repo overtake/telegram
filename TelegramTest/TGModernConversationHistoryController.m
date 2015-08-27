@@ -75,7 +75,11 @@ static const int limit = 1000;
             
             NSArray *f = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d and self.peer_id == %d",channel.top_message, channel.peer.peer_id]];
             
+            
+            
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[f lastObject]];
+            
+            
             
             assert(msg != nil);
             

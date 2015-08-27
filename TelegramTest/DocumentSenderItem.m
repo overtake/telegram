@@ -292,6 +292,9 @@
     weakify();
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
+        
+        [strongSelf updateMessageId:response];
+        
         if(response.updates.count < 2)
         {
             [strongSelf cancel];

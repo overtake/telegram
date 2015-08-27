@@ -47,6 +47,8 @@
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
+        [self updateMessageId:response];
+        
         if(response.updates.count < 2)
         {
             [self cancel];

@@ -107,6 +107,7 @@
                 
                 [SharedManager proccessGlobalResponse:response];
                
+                [strongSelf updateMessageId:response];
                 
                 if(response.updates.count < 2)
                 {

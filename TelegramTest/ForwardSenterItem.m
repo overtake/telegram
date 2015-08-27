@@ -67,6 +67,7 @@
 }
 
 
+
 -(void)setTableItems:(NSArray *)tableItems {
     self->_tableItems = tableItems;
     for (MessageTableItem *item in tableItems) {
@@ -136,6 +137,10 @@
         self.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 
+}
+
+-(void)updateMessageId:(TLUpdates *)updates {
+    
 }
 
 @end

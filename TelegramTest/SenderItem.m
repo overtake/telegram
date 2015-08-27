@@ -376,4 +376,18 @@ static NSMutableArray *waiting;
 -(void)resend {
     
 }
+
+-(void)updateMessageId:(TLUpdates *)updates {
+    
+    if([updates isKindOfClass:[TL_updates class]]) {
+        NSArray *updateMessageIdUpdate = [[updates updates] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.className == %@",NSStringFromClass([TL_updateMessageID class])]];
+        
+        if(updateMessageIdUpdate.count > 0) {
+            self.message.n_id = [(TL_updateMessageID *)updateMessageIdUpdate[0] n_id];
+        }
+    }
+    
+   
+}
+
 @end

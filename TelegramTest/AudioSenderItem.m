@@ -78,6 +78,9 @@
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
+            
+            [weakSelf updateMessageId:response];
+            
             if(response.updates.count < 2)
             {
                 [weakSelf cancel];

@@ -17,8 +17,12 @@ typedef enum {
 } MessageOutState;
 
 +(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state;
+
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state pts:(int)pts;
+
 @property (nonatomic,assign) int fakeId;
 @property (nonatomic,assign) long randomId;
+@property (nonatomic,assign) int pts;
 @property (nonatomic,assign) DeliveryState dstate;
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 

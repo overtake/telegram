@@ -40,6 +40,18 @@
     return msg;
 }
 
+
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state pts:(int)pts {
+    
+    TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from_id:fwd_from_id fwd_date:fwd_date reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities state:state];
+    
+    msg.pts = pts;
+    
+    return msg;
+    
+    
+}
+
 -(id)init {
     if(self = [super init]) {
         _dstate = DeliveryStateNormal;
@@ -157,6 +169,8 @@
                 [ClassStore TLSerialize:obj stream:stream];
             }
         }}
+    
+    [stream writeInt:self.pts];
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
@@ -188,6 +202,8 @@
                     break;
             }
         }}
+    
+    self.pts = [stream readInt];
 }
 
 -(int)peer_id {

@@ -46,12 +46,8 @@
     
     _checkMessage = self.conversation.lastMessage;
     
-    assert(_checkMessage != nil);
     
-    
-   
-    
-    _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
+   _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
     _dateText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateText"];
     _dateSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateSize"] sizeValue];
     _unreadText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadText"];

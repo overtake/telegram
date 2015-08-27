@@ -2340,7 +2340,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
-    prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0);
+    prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0) || (isFirst && _historyController.conversation.type == DialogTypeChannel);
     
     if(!prev && isFirst) {
         _historyController.prevState = ChatHistoryStateFull;
@@ -2462,7 +2462,8 @@ static NSTextAttachment *headerMediaIcon() {
                 if(result.count < _historyController.selectLimit)
                     [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
                 
-               
+               if(isFirst && _historyController.prevState == ChatHistoryStateRemote)
+                   [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
                 
             }];
             
