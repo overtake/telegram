@@ -17,8 +17,8 @@
 #import "MP3HistoryFilter.h"
 #import "MessageTableItem.h"
 #import "SharedLinksHistoryFilter.h"
-
-
+#import "ChannelImportantFilter.h"
+#import "ChannelFilter.h"
 @interface HistoryFilter ()
 {
     BOOL _de_alloc;
@@ -194,6 +194,8 @@ static NSMutableDictionary * messageKeys;
         [AudioHistoryFilter drop];
         [MP3HistoryFilter drop];
         [SharedLinksHistoryFilter drop];
+        [ChannelImportantFilter drop];
+        [ChannelFilter drop];
     }];
     
     

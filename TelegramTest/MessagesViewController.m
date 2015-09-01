@@ -71,6 +71,7 @@
 #import "TGHelpPopup.h"
 #import "TGAudioPlayerWindow.h"
 #import "MessagesUtils.h"
+#import "ChannelImportantFilter.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1148,7 +1149,7 @@ static NSTextAttachment *headerMediaIcon() {
         self.historyController.filter = [[filter alloc] initWithController:self.historyController];
         [self flushMessages];
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
-        self.state = filter != HistoryFilter.class || filter != ChannelFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
+        self.state = filter != HistoryFilter.class && filter != ChannelFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
     }
 }
 
@@ -1334,6 +1335,16 @@ static NSTextAttachment *headerMediaIcon() {
         [self.topInfoView setFrameOrigin:newPoint];
     }
     
+}
+
+-(void)showOrHideChannelDiscussion {
+    
+    Class f = [self.historyController.filter isKindOfClass:[ChannelFilter class]] ? [ChannelImportantFilter class] : [ChannelFilter class];
+    
+    [self.historyController setFilter:[[f alloc] initWithController:self.historyController]];
+    
+    [self flushMessages];
+    [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
 }
 
 //- (void)showConnectionController:(BOOL)animated {
@@ -2177,6 +2188,9 @@ static NSTextAttachment *headerMediaIcon() {
         [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
         [self addScrollEvent];
         
+        if(self.conversation.type == DialogTypeChannel)
+            [self.historyController startChannelPolling];
+        
     }
 }
 
@@ -2340,7 +2354,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
-    prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0) || (isFirst && _historyController.conversation.type == DialogTypeChannel);
+    prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0);
     
     if(!prev && isFirst) {
         _historyController.prevState = ChatHistoryStateFull;
@@ -2462,9 +2476,6 @@ static NSTextAttachment *headerMediaIcon() {
                 if(result.count < _historyController.selectLimit)
                     [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
                 
-               if(isFirst && _historyController.prevState == ChatHistoryStateRemote)
-                   [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
-                
             }];
             
         } else {
@@ -2474,9 +2485,9 @@ static NSTextAttachment *headerMediaIcon() {
                 self.didUpdatedTable();
             }
             
-            if(prevResult.count < _historyController.selectLimit) {
-                [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
-            }
+//            if(prevResult.count < _historyController.selectLimit) {
+//                [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
+//            }
         }
         
     }];
@@ -3374,8 +3385,17 @@ static NSTextAttachment *headerMediaIcon() {
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;
     
-    
-    if(item.class == [MessageTableItemServiceMessage class]) {
+    if(item.message.hole != nil) {
+        
+        static NSString *const kRowIdentifier = @"holeItem";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        if(!cell) {
+            cell = [[MessageTableCellHoleView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+        
+    } else if(item.class == [MessageTableItemServiceMessage class]) {
         
         static NSString *const kRowIdentifier = @"service";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];

@@ -52,6 +52,8 @@
     
 }
 
+
+
 -(id)init {
     if(self = [super init]) {
         _dstate = DeliveryStateNormal;
@@ -264,7 +266,7 @@
 
 
 -(BOOL)isImportantMessage {
-    return self.flags & TGIMPORTANTMESSAGE;
+    return ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);
 }
 
 -(BOOL)unread {
@@ -399,9 +401,14 @@ DYNAMIC_PROPERTY(DDialog);
 }
 
 -(long)channelMsgId {
+    return channelMsgId(self.n_id,self.peer_id);
+}
+
+
+long channelMsgId(int msg_id, int peer_id) {
     NSMutableData *data = [NSMutableData data];
-    int msgId = self.n_id;
-    int channelId = self.peer.channel_id;
+    int msgId = msg_id;
+    int channelId = peer_id;
     
     [data appendBytes:&msgId length:4];
     [data appendBytes:&channelId length:4];
@@ -411,10 +418,11 @@ DYNAMIC_PROPERTY(DDialog);
     [data getBytes:&converted length:8];
     
     return converted;
+
 }
 
 -(id)copy {
-    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities state:self.dstate];
+    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities state:self.dstate pts:self.pts];
 }
 
 

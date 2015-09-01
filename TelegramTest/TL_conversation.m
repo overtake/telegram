@@ -331,7 +331,7 @@ static void *kType;
     
     NSMutableData *data = [NSMutableData data];
     int msgId = self.top_message;
-    int channelId = self.peer.channel_id;
+    int channelId = self.peer_id;
     
     [data appendBytes:&msgId length:4];
     [data appendBytes:&channelId length:4];

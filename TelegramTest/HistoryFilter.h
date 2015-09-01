@@ -28,7 +28,16 @@ typedef enum {
     HistoryFilterChannelMessage = 1 << 12
 } HistoryFilterType;
 
+typedef enum {
+    ChatHistoryStateCache = 0,
+    ChatHistoryStateLocal = 1,
+    ChatHistoryStateRemote = 2,
+    ChatHistoryStateFull = 3
+} ChatHistoryState;
+
 @property (nonatomic,weak) ChatHistoryController *controller;
+@property (nonatomic,strong) TGMessageHole *topHole;
+@property (nonatomic,strong) TGMessageHole *botHole;
 
 
 -(id)initWithController:(ChatHistoryController *)controller;
@@ -53,5 +62,12 @@ typedef enum {
 
 -(NSArray *)storageRequest:(BOOL)next;
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
+
+
+
+
+-(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
+-(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
+-(void)request:(BOOL)next callback:(void (^)(NSArray *response, ChatHistoryState state))callback;
 
 @end

@@ -19,6 +19,10 @@
     return array;
 }
 
+-(id)firstObject {
+    return self.count > 0 ? self[0] : nil;
+}
+
 @end
 
 @implementation NSMutableArray (Reverse)
@@ -35,6 +39,10 @@
         i++;
         j--;
     }
+}
+
+-(id)firstObject {
+    return self.count > 0 ? self[0] : nil;
 }
 
 @end

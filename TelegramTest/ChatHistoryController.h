@@ -11,16 +11,11 @@
 #import "SenderListener.h"
 
 #import "HistoryFilter.h"
-
+#import "TGHistoryResponse.h"
 @interface ChatHistoryController : NSObject<SenderListener>
 
 
-typedef enum {
-    ChatHistoryStateCache = 0,
-    ChatHistoryStateLocal = 1,
-    ChatHistoryStateRemote = 2,
-    ChatHistoryStateFull = 3
-} ChatHistoryState;
+
 
 @property (atomic,assign) ChatHistoryState nextState;
 @property (atomic,assign) ChatHistoryState prevState;
@@ -30,7 +25,7 @@ typedef enum {
 
 
 -(BOOL)isProccessing;
-
+-(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next;
 
 @property (nonatomic,assign) BOOL need_save_to_db;
 
@@ -76,6 +71,8 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 +(void)drop;
 -(void)drop:(BOOL)dropMemory;
+
+-(void)startChannelPolling;
 
 -(TL_conversation *)conversation;
 @end

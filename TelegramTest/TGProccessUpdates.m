@@ -597,6 +597,9 @@ static NSArray *channelUpdates;
     
     if([update isKindOfClass:[TL_updateNewMessage class]]) {
         
+        if([[update message] isKindOfClass:[TL_messageEmpty class]])
+            return;
+        
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
         
         if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {

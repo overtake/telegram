@@ -27,7 +27,7 @@
 - (void)setItem:(MessageTableItem *)item {
     self->_item = item;
     
-    if(item.message.dstate != DeliveryStateNormal && item.messageSender == nil) {
+    if(item.message && ( item.message.dstate != DeliveryStateNormal && item.messageSender == nil )) {
         item.messageSender = [SenderItem senderForMessage:item.message];
         item.messageSender.tableItem = item;
         

@@ -156,4 +156,7 @@ typedef enum {
 
 -(void)markAsNoWebpage;
 -(BOOL)noWebpage:(NSString *)message;
+
+-(void)showOrHideChannelDiscussion;
+
 @end

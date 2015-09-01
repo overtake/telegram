@@ -238,9 +238,13 @@
 		C20A5EED1B8CD8B9007F4B49 /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5EEB1B8CD8B8007F4B49 /* AddContactViewController.m */; };
 		C20A5EF01B8CD8CB007F4B49 /* TMBlueInputTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5EEF1B8CD8CB007F4B49 /* TMBlueInputTextField.m */; };
 		C20A5EF31B8CEE8E007F4B49 /* ChannelFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5EF21B8CEE8E007F4B49 /* ChannelFilter.m */; };
-		C20A5F261B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F251B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.m */; };
-		C20A5F321B8E2DA1007F4B49 /* MessageTableCellChannelCommonBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F311B8E2DA0007F4B49 /* MessageTableCellChannelCommonBadgeView.m */; };
 		C20A5F351B8F4579007F4B49 /* TGChannelsPolling.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F341B8F4579007F4B49 /* TGChannelsPolling.m */; };
+		C20A5F471B8F6863007F4B49 /* TGMessageHole.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F461B8F6863007F4B49 /* TGMessageHole.m */; };
+		C20A5F531B8F6CC3007F4B49 /* MessageTableItemHole.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F521B8F6CC3007F4B49 /* MessageTableItemHole.m */; };
+		C20A5F561B8F6CDD007F4B49 /* MessageTableCellHoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F551B8F6CDD007F4B49 /* MessageTableCellHoleView.m */; };
+		C20A5F591B8F8B2B007F4B49 /* TGHistoryResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F581B8F8B2B007F4B49 /* TGHistoryResponse.m */; };
+		C20A5F5C1B90D815007F4B49 /* TGMessageGroupHole.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F5B1B90D815007F4B49 /* TGMessageGroupHole.m */; };
+		C20A5F5F1B9330CD007F4B49 /* ChannelImportantFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5F5E1B9330CD007F4B49 /* ChannelImportantFilter.m */; };
 		C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */; };
 		C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E5E19D7069C008844F2 /* TGActor.m */; };
 		C20A7E6219D706D0008844F2 /* ASActor.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E6119D706D0008844F2 /* ASActor.m */; };
@@ -1439,12 +1443,20 @@
 		C20A5EEF1B8CD8CB007F4B49 /* TMBlueInputTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMBlueInputTextField.m; sourceTree = "<group>"; };
 		C20A5EF11B8CEE8E007F4B49 /* ChannelFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelFilter.h; sourceTree = "<group>"; };
 		C20A5EF21B8CEE8E007F4B49 /* ChannelFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelFilter.m; sourceTree = "<group>"; };
-		C20A5F241B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemChannelCommonBadge.h; sourceTree = "<group>"; };
-		C20A5F251B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemChannelCommonBadge.m; sourceTree = "<group>"; };
-		C20A5F301B8E2DA0007F4B49 /* MessageTableCellChannelCommonBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellChannelCommonBadgeView.h; sourceTree = "<group>"; };
-		C20A5F311B8E2DA0007F4B49 /* MessageTableCellChannelCommonBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellChannelCommonBadgeView.m; sourceTree = "<group>"; };
 		C20A5F331B8F4579007F4B49 /* TGChannelsPolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelsPolling.h; sourceTree = "<group>"; };
 		C20A5F341B8F4579007F4B49 /* TGChannelsPolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelsPolling.m; sourceTree = "<group>"; };
+		C20A5F451B8F6863007F4B49 /* TGMessageHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageHole.h; sourceTree = "<group>"; };
+		C20A5F461B8F6863007F4B49 /* TGMessageHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageHole.m; sourceTree = "<group>"; };
+		C20A5F511B8F6CC3007F4B49 /* MessageTableItemHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemHole.h; sourceTree = "<group>"; };
+		C20A5F521B8F6CC3007F4B49 /* MessageTableItemHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemHole.m; sourceTree = "<group>"; };
+		C20A5F541B8F6CDD007F4B49 /* MessageTableCellHoleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellHoleView.h; sourceTree = "<group>"; };
+		C20A5F551B8F6CDD007F4B49 /* MessageTableCellHoleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellHoleView.m; sourceTree = "<group>"; };
+		C20A5F571B8F8B2B007F4B49 /* TGHistoryResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHistoryResponse.h; sourceTree = "<group>"; };
+		C20A5F581B8F8B2B007F4B49 /* TGHistoryResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHistoryResponse.m; sourceTree = "<group>"; };
+		C20A5F5A1B90D815007F4B49 /* TGMessageGroupHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageGroupHole.h; sourceTree = "<group>"; };
+		C20A5F5B1B90D815007F4B49 /* TGMessageGroupHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageGroupHole.m; sourceTree = "<group>"; };
+		C20A5F5D1B9330CD007F4B49 /* ChannelImportantFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelImportantFilter.h; sourceTree = "<group>"; };
+		C20A5F5E1B9330CD007F4B49 /* ChannelImportantFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelImportantFilter.m; sourceTree = "<group>"; };
 		C20A7E5A19D7064D008844F2 /* TGDatacenterWatchdogActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatacenterWatchdogActor.h; sourceTree = "<group>"; };
 		C20A7E5B19D7064D008844F2 /* TGDatacenterWatchdogActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatacenterWatchdogActor.m; sourceTree = "<group>"; };
 		C20A7E5D19D7069C008844F2 /* TGActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGActor.h; sourceTree = "<group>"; };
@@ -2855,8 +2867,8 @@
 				C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */,
 				C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */,
 				C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */,
-				C20A5F241B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.h */,
-				C20A5F251B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.m */,
+				C20A5F511B8F6CC3007F4B49 /* MessageTableItemHole.h */,
+				C20A5F521B8F6CC3007F4B49 /* MessageTableItemHole.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -2894,8 +2906,8 @@
 				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
 				C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */,
 				C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */,
-				C20A5F301B8E2DA0007F4B49 /* MessageTableCellChannelCommonBadgeView.h */,
-				C20A5F311B8E2DA0007F4B49 /* MessageTableCellChannelCommonBadgeView.m */,
+				C20A5F541B8F6CDD007F4B49 /* MessageTableCellHoleView.h */,
+				C20A5F551B8F6CDD007F4B49 /* MessageTableCellHoleView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -5175,6 +5187,8 @@
 				C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */,
 				C20A5EF11B8CEE8E007F4B49 /* ChannelFilter.h */,
 				C20A5EF21B8CEE8E007F4B49 /* ChannelFilter.m */,
+				C20A5F5D1B9330CD007F4B49 /* ChannelImportantFilter.h */,
+				C20A5F5E1B9330CD007F4B49 /* ChannelImportantFilter.m */,
 			);
 			name = filter;
 			sourceTree = "<group>";
@@ -5518,6 +5532,10 @@
 			children = (
 				C297FBA418329F3500714B3C /* TGDcAuth.h */,
 				C297FBA518329F3500714B3C /* TGDcAuth.m */,
+				C20A5F451B8F6863007F4B49 /* TGMessageHole.h */,
+				C20A5F461B8F6863007F4B49 /* TGMessageHole.m */,
+				C20A5F5A1B90D815007F4B49 /* TGMessageGroupHole.h */,
+				C20A5F5B1B90D815007F4B49 /* TGMessageGroupHole.m */,
 			);
 			name = entities;
 			sourceTree = "<group>";
@@ -5589,6 +5607,8 @@
 				C222774118FE8BB3002AA0F6 /* ChatHistoryController.m */,
 				C20A5F331B8F4579007F4B49 /* TGChannelsPolling.h */,
 				C20A5F341B8F4579007F4B49 /* TGChannelsPolling.m */,
+				C20A5F571B8F8B2B007F4B49 /* TGHistoryResponse.h */,
+				C20A5F581B8F8B2B007F4B49 /* TGHistoryResponse.m */,
 			);
 			name = message_controllers;
 			sourceTree = "<group>";
@@ -6047,6 +6067,7 @@
 				C271523F19B0936C00841C8A /* TokenItem.m in Sources */,
 				0A59068218AA32C8002ED7BA /* BTRView.m in Sources */,
 				CEACBA81181FD76300AB11D1 /* Notification.m in Sources */,
+				C20A5F471B8F6863007F4B49 /* TGMessageHole.m in Sources */,
 				C2CB5CFC1B4AB43800CD61DF /* TGPVDocumentContainer.m in Sources */,
 				0A6D099219535E8500A9AC64 /* NSStringCategory.m in Sources */,
 				0AB8F2B61948778F0074E4E7 /* TMAudioRecorder.m in Sources */,
@@ -6409,6 +6430,7 @@
 				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,
 				C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */,
+				C20A5F561B8F6CDD007F4B49 /* MessageTableCellHoleView.m in Sources */,
 				0A7EB71B183A873D00F02E04 /* NSString+Extended.m in Sources */,
 				C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */,
 				0A241A9D18AB176B00C32F45 /* MessageTableCellTextView.m in Sources */,
@@ -6456,6 +6478,7 @@
 				C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,
 				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
+				C20A5F591B8F8B2B007F4B49 /* TGHistoryResponse.m in Sources */,
 				C2D4B86D1AFCE8FA0035B4E4 /* YapRowidSet.mm in Sources */,
 				C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */,
 				C2233DAC1A07F2460056594F /* YoutubeServiceDescription.m in Sources */,
@@ -6565,6 +6588,7 @@
 				C256E91418D21A96008FFA04 /* DownloadPhotoItem.m in Sources */,
 				0A59068618AA32C8002ED7BA /* NSView+BTRAdditions.m in Sources */,
 				C2CB5CEF1B467D5A00CD61DF /* TGSplitView.m in Sources */,
+				C20A5F5F1B9330CD007F4B49 /* ChannelImportantFilter.m in Sources */,
 				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
 				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */,
@@ -6575,6 +6599,7 @@
 				0A073FCF18BF65F500BAA928 /* TMNavigationBar.m in Sources */,
 				C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */,
 				C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */,
+				C20A5F531B8F6CC3007F4B49 /* MessageTableItemHole.m in Sources */,
 				C281C180191AA139007B160F /* TMPreviewChatPicture.m in Sources */,
 				C20A5ECF1B8B67D7007F4B49 /* TL_conversation_old34.m in Sources */,
 				0A2F5AD8181A8FC6005045A5 /* NSContactsPopover.m in Sources */,
@@ -6614,7 +6639,6 @@
 				0AA3F3A518BD2D0800D383F1 /* UserInfoContainerView.m in Sources */,
 				0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */,
 				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,
-				C20A5F261B8E2820007F4B49 /* MessageTableItemChannelCommonBadge.m in Sources */,
 				C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */,
 				C2D4B8771AFCE8FA0035B4E4 /* YapDatabaseConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
@@ -6708,7 +6732,6 @@
 				C20B228818E971D0007BCCD6 /* bitwise.c in Sources */,
 				C2D4B8791AFCE8FA0035B4E4 /* YapDatabaseTransaction.m in Sources */,
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
-				C20A5F321B8E2DA1007F4B49 /* MessageTableCellChannelCommonBadgeView.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,
 				C2AA5D35187597680026EA1F /* LoopingUtils.m in Sources */,
 				C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */,
@@ -6717,6 +6740,7 @@
 				C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */,
 				0A9EDC5C1897BA0E0037E1BC /* RBLShadowedTextFieldCell.m in Sources */,
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,
+				C20A5F5C1B90D815007F4B49 /* TGMessageGroupHole.m in Sources */,
 				C2D4B86C1AFCE8F90035B4E4 /* YapNull.m in Sources */,
 				C2200B7618F43B3300F28803 /* EncryptedKeyWindow.m in Sources */,
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,

@@ -20,6 +20,7 @@
 #import "MessageTableItemAudioDocument.h"
 #import "MessageTableItemServiceMessage.h"
 #import "MessageTableItemSticker.h"
+#import "MessageTableItemHole.h"
 #import "TGDateUtils.h"
 #import "PreviewObject.h"
 #import "NSString+Extended.h"
@@ -166,7 +167,7 @@
 - (NSSize)viewSize {
     NSSize viewSize = self._viewSize;
     
-    if(![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
+    if(!self.message.hole && ![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
         if(self.isHeaderMessage) {
             viewSize.height += 32;
             
@@ -251,6 +252,8 @@
             objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
             
         }
+    } else if(message.hole != nil) {
+        objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
     } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
         objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
     }

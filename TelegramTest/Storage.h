@@ -20,6 +20,8 @@
 #import "TGSecretAction.h"
 #import "ASQueue.h"
 #import <SSignalKit/SSignalKit.h>
+#import "TGMessageHole.h"
+#import "TGHistoryResponse.h"
 @interface Storage : NSObject
 {
  //   FMDatabase *db;
@@ -153,7 +155,7 @@ extern NSString *const RECENT_SEARCH;
 
 
 -(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
--(NSArray *)loadImportantChannelMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
+-(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important;
 
 
 -(TL_localMessage *)messageById:(int)msgId;
@@ -232,4 +234,9 @@ extern NSString *const RECENT_SEARCH;
 -(void)insertChannels:(NSArray *)channels;
 -(void)insertChannels:(NSArray *)channels completionHandler:(dispatch_block_t)completionHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
 -(void)allChannels:(void (^)(NSArray *channels, NSArray *messages))completeHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
+
+
+-(void)insertMessagesHole:(TGMessageHole *)hole;
+-(void)removeHole:(TGMessageHole *)hole;
+-(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
 @end

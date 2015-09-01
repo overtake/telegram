@@ -10,17 +10,20 @@
 
 @protocol TGChannelPollingDelegate <NSObject>
 
--(void)pollingDidSaidTooLong:(int)channel_id;
+-(void)pollingDidSaidTooLong:(int)pts;
 -(void)pollingReceivedUpdates:(id)updates endPts:(int)pts;
 
 @end
 
 @interface TGChannelsPolling : NSObject
 
-@property (nonatomic,weak) id <TGChannelPollingDelegate> deleagte;
+@property (nonatomic,weak) id <TGChannelPollingDelegate> delegate;
 
 -(id)initWithDelegate:(id <TGChannelPollingDelegate>)delegate withUpdatesLimit:(int)limit;
 
 -(void)setCurrentConversation:(TL_conversation *)conversation;
+
+-(void)start;
+-(void)stop;
 
 @end

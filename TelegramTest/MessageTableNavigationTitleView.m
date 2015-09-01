@@ -12,6 +12,7 @@
 #import "ImageUtils.h"
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
+#import "ITSwitch.h"
 @interface MessageTableNavigationTitleView()<TMTextFieldDelegate, TMSearchTextFieldDelegate>
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
@@ -24,7 +25,7 @@
 
 @property (nonatomic,strong) BTRButton *searchButton;
 
-
+@property (nonatomic,strong) ITSwitch *discussionSwitch;
 
 @end
 
@@ -84,6 +85,17 @@
         
         [self addSubview:self.container];
         
+        _discussionSwitch = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 30, 20)];
+        
+        [_discussionSwitch setDidChangeHandler:^(BOOL res){
+            
+            [[Telegram rightViewController].messagesViewController showOrHideChannelDiscussion];
+            
+            
+        }];
+        
+        [self.container addSubview:_discussionSwitch];
+        
     }
     return self;
 }
@@ -103,6 +115,8 @@
 
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
+    
+    [_discussionSwitch setHidden:dialog.type != DialogTypeChannel];
     
     
     [self.nameTextField updateWithConversation:self.dialog];
@@ -128,6 +142,9 @@
     [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 40, self.statusTextField.frame.size.height)];
     [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
     
+    
+    [_discussionSwitch setCenteredXByView:_discussionSwitch.superview];
+    [_discussionSwitch setFrameOrigin:NSMakePoint(NSMinX(_discussionSwitch.frame), 5)];
 
 }
 

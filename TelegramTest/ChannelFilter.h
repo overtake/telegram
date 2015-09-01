@@ -9,5 +9,5 @@
 #import "HistoryFilter.h"
 
 @interface ChannelFilter : HistoryFilter
-
+-(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
 @end

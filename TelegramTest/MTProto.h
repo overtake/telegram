@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 26.08.15.
+//  Auto created by Mikhail Filimonov on 01.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -372,10 +372,16 @@
 @interface TLInputChat : TLObject
 @end
 	
+@interface TLMessageRange : TLObject
+@end
+	
 @interface TLMessageGroup : TLObject
 @end
 	
 @interface TLupdates_ChannelDifference : TLObject
+@end
+	
+@interface TLChannelMessagesFilter : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -837,6 +843,7 @@
 @property int date;
 @property Boolean left;
 @property int version;
+@property int flags;
 @property long access_hash;
 @end
 
@@ -850,7 +857,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 	
 @interface TLChatFull()
@@ -1577,6 +1584,9 @@
 @end
 @interface TL_updateReadChannelInbox : TLUpdate<NSCoding>
 +(TL_updateReadChannelInbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id;
+@end
+@interface TL_updateDeleteChannelMessages : TLUpdate<NSCoding>
++(TL_updateDeleteChannelMessages*)createWithPeer:(TLPeer*)peer messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
 @end
 	
 @interface TLupdates_State()
@@ -2500,33 +2510,62 @@
 +(TL_inputChannel*)createWithChannel_id:(int)channel_id access_hash:(long)access_hash;
 @end
 	
+@interface TLMessageRange()
+@property int min_id;
+@property int max_id;
+@end
+
+@interface TL_messageRange : TLMessageRange<NSCoding>
++(TL_messageRange*)createWithMin_id:(int)min_id max_id:(int)max_id;
+@end
+	
 @interface TLMessageGroup()
 @property int min_id;
 @property int max_id;
 @property int n_count;
+@property int date;
 @end
 
 @interface TL_messageGroup : TLMessageGroup<NSCoding>
-+(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count;
++(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count date:(int)date;
 @end
 	
 @interface TLupdates_ChannelDifference()
-@property int pts;
 @property int flags;
-@property (nonatomic, strong) NSMutableArray* n_messages;
-@property (nonatomic, strong) NSMutableArray* updates;
+@property int pts;
+@property int timeout;
+@property int top_message;
+@property int top_important_message;
+@property int read_inbox_max_id;
+@property int unread_count;
+@property int unread_important_count;
+@property (nonatomic, strong) NSMutableArray* messages;
 @property (nonatomic, strong) NSMutableArray* chats;
 @property (nonatomic, strong) NSMutableArray* users;
+@property (nonatomic, strong) NSMutableArray* n_messages;
+@property (nonatomic, strong) NSMutableArray* other_updates;
 @end
 
 @interface TL_updates_channelDifferenceEmpty : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifferenceEmpty*)createWithPts:(int)pts;
++(TL_updates_channelDifferenceEmpty*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout;
 @end
 @interface TL_updates_channelDifferenceTooLong : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifferenceTooLong*)createWithPts:(int)pts;
++(TL_updates_channelDifferenceTooLong*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 @interface TL_updates_channelDifference : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifference*)createWithFlags:(int)flags pts:(int)pts n_messages:(NSMutableArray*)n_messages updates:(NSMutableArray*)updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
++(TL_updates_channelDifference*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout n_messages:(NSMutableArray*)n_messages other_updates:(NSMutableArray*)other_updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
+@end
+	
+@interface TLChannelMessagesFilter()
+@property int flags;
+@property (nonatomic, strong) NSMutableArray* ranges;
+@end
+
+@interface TL_channelMessagesFilterEmpty : TLChannelMessagesFilter<NSCoding>
++(TL_channelMessagesFilterEmpty*)create;
+@end
+@interface TL_channelMessagesFilter : TLChannelMessagesFilter<NSCoding>
++(TL_channelMessagesFilter*)createWithFlags:(int)flags ranges:(NSMutableArray*)ranges;
 @end
 	
 @interface TLProtoMessage()

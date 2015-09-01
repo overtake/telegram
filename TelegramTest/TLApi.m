@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 26.08.15..
+//  Auto created by Mikhail Filimonov on 01.09.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1947,17 +1947,46 @@
 }
 @end
 
+@implementation TLAPI_messages_deleteChannelMessages
++(TLAPI_messages_deleteChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id {
+    TLAPI_messages_deleteChannelMessages* obj = [[TLAPI_messages_deleteChannelMessages alloc] init];
+    obj.peer = peer;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1718245297];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
+			[stream writeInt:[obj intValue]];
+            }  else
+                break;
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
 @implementation TLAPI_updates_getChannelDifference
-+(TLAPI_updates_getChannelDifference*)createWithPeer:(TLInputPeer*)peer pts:(int)pts limit:(int)limit {
++(TLAPI_updates_getChannelDifference*)createWithPeer:(TLInputPeer*)peer filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit {
     TLAPI_updates_getChannelDifference* obj = [[TLAPI_updates_getChannelDifference alloc] init];
     obj.peer = peer;
+	obj.filter = filter;
 	obj.pts = pts;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1181724569];
+	SerializedData* stream = [ClassStore streamWithConstuctor:613086453];
 	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.filter stream:stream];
 	[stream writeInt:self.pts];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
