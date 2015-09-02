@@ -239,4 +239,7 @@ extern NSString *const RECENT_SEARCH;
 -(void)insertMessagesHole:(TGMessageHole *)hole;
 -(void)removeHole:(TGMessageHole *)hole;
 -(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
+
+-(int)lastSyncedMessageIdWithChannelId:(int)channel_id important:(BOOL)important;
+
 @end

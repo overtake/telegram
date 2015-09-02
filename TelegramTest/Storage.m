@@ -748,18 +748,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        [holes enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
-            
-            if((obj.min_id == 0 && obj.max_id >= max_id) || (obj.min_id != 0 && obj.min_id >= min && obj.max_id < max_id))
-                topHole = obj;
-            
-            // if( ((obj.min_id >=min || obj.min_id == 0) && (obj.min_id < max)) && obj.max_id > max)
-            
-            *stop = topHole != nil && botHole != nil;
-            
-        }];
-
-        
         
         
         // slice messages with hole
@@ -2578,6 +2566,29 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     
     return [holes copy];
+}
+
+-(int)lastSyncedMessageIdWithChannelId:(int)channel_id important:(BOOL)important {
+    
+    __block int max_id = 0;
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        int maxMsgId = [db intForQuery:@"select n_id from channel_messages where channel_id = ? order by date desc, n_id desc limit 1",@(channel_id)];
+        
+        
+        int holeMaxId = [db intForQuery:@"select max_id from message_holes where peer_id = ? and (type & 2) = 2 and max_id > ? and min_id <= ? ?",@(channel_id),@(maxMsgId),@(maxMsgId),important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @""];
+        
+        
+        if(holeMaxId != 0)
+            max_id = holeMaxId;
+        else
+            max_id = maxMsgId;
+        
+    }];
+    
+    
+    return max_id;
 }
 
 @end

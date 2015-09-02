@@ -95,14 +95,80 @@ static int pollingDelay = 5;
                 
             } else if([response isKindOfClass:[TL_updates_channelDifference class]]) {
                 
-                [_delegate pollingReceivedUpdates:response endPts:[response pts]];
                 
+                // updateMessageId;
+                
+                [[response other_updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    if([obj isKindOfClass:[TL_updateMessageID class]]) {
+                        [[Storage manager] updateMessageId:[(TL_updateMessageID *)obj random_id] msg_id:[(TL_updateMessageID *)obj n_id]];
+                    }
+                    
+                }];
+                
+                self.conversation.pts = [(TL_updates_channelDifference *)response pts];
+                
+                [self.conversation save];
+                
+                [TL_localMessage convertReceivedMessages:[response n_messages]];
+                
+                [[Storage manager] insertMessages:[response n_messages]];
+                
+                [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+                
+                                
             } else if([response isKindOfClass:[TL_updates_channelDifferenceTooLong class]]) {
-                [_delegate pollingDidSaidTooLong:[response pts]];
+                
+                _conversation.pts = [response pts];
+                
+                _conversation.top_message = [response top_message];
+                _conversation.read_inbox_max_id = [response read_inbox_max_id];
+                _conversation.unread_count = [response unread_count];
+                
+                [_conversation save];
+                
+                
+                __block TL_localMessage *topMsg;
+                __block TL_localMessage *minMsg;
+                
+                [[response messages] enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
+                    
+                    TL_localMessage *c = [TL_localMessage convertReceivedMessage:obj];
+                    
+                    if([response top_message] == c.n_id)
+                        topMsg = c;
+                    
+                    if(!minMsg || c.n_id < minMsg.n_id)
+                        minMsg = c;
+                    
+                }];
+                
+                {
+                    if(minMsg.n_id != topMsg.n_id) {
+                        TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:minMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id date:minMsg.date count:0];
+                        
+                        [[Storage manager] insertMessagesHole:hole];
+                    }
+                    
+                    int maxSyncedId = [[Storage manager] lastSyncedMessageIdWithChannelId:self.conversation.peer_id important:NO];
+                    
+                    TGMessageHole *longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:maxSyncedId max_id:minMsg.n_id date:minMsg.date count:0];
+                    
+                    [[Storage manager] insertMessagesHole:longHole];
+                    
+                }
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+                [_delegate pollingDidSaidTooLong];
             }
             
+            
+            
+            
+            
             if(!repeat && !_isStoped)
-                [self launchTimer:pollingDelay repeat:YES];
+                [self launchTimer:[response timeout] repeat:YES];
             
         } errorHandler:^(id request, RpcError *error) {
             

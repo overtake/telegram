@@ -113,13 +113,13 @@
             
             [strongSelf updateMessageId:response];
             
-            if(response.updates.count < 2)
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
             {
                 [strongSelf cancel];
                 return;
             }
-            
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
             
             [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:fileMD5(strongSelf.filePath)];
             

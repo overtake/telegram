@@ -81,13 +81,13 @@
             
             [weakSelf updateMessageId:response];
             
-            if(response.updates.count < 2)
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
             {
                 [weakSelf cancel];
                 return;
             }
-            
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
             
             
             if(weakSelf.conversation.type != DialogTypeBroadcast)  {

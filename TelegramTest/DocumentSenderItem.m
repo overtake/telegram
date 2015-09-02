@@ -295,13 +295,13 @@
         
         [strongSelf updateMessageId:response];
         
-        if(response.updates.count < 2)
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
+        
+        if(msg == nil)
         {
             [strongSelf cancel];
             return;
         }
-        
-        TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         if(strongSelf.conversation.type != DialogTypeBroadcast)  {
             

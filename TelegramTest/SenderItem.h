@@ -71,6 +71,6 @@ typedef enum {
 -(void)resend;
 
 -(void)updateMessageId:(TLUpdates *)updates;
-
+-(TL_updateNewMessage *)updateNewMessageWithUpdates:(TLUpdates *)updates;
 
 @end

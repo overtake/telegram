@@ -81,7 +81,7 @@ static TGChannelsPolling *channelPolling;
             [filters addObject:[ChannelImportantFilter class]];
             listeners = [[NSMutableArray alloc] init];
             
-            channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:5];
+            channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:3];
         });
         
         [channelPolling setDelegate:self];
@@ -129,12 +129,11 @@ static TGChannelsPolling *channelPolling;
     return self;
 }
 
--(void)pollingDidSaidTooLong:(int)pts {
+-(void)pollingDidSaidTooLong {
     
     
-    self.conversation.pts = pts;
-    
-    [self.conversation save];
+    // add new holes after receive too long update.
+   
     
     
     [self setState:ChatHistoryStateLocal next:NO];
@@ -143,7 +142,7 @@ static TGChannelsPolling *channelPolling;
     
     self.proccessing = YES;
     
-    [self.filter remoteRequest:YES hole:nil callback:^(id response, ChatHistoryState state) {
+    [self.filter request:YES callback:^(id response, ChatHistoryState state) {
         
         NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:response] isLates:NO];
         

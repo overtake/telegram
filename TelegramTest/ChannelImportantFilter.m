@@ -28,11 +28,11 @@ static NSMutableDictionary * messageKeys;
 
 
 -(int)type {
-    return HistoryFilterChannelMessage;
+    return HistoryFilterImportantChannelMessage;
 }
 
 +(int)type {
-    return HistoryFilterChannelMessage;
+    return HistoryFilterImportantChannelMessage;
 }
 
 

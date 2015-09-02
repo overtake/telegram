@@ -36,14 +36,13 @@
         [self updateMessageId:response];
         
         
-        if(response.updates.count < 2)
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
+        
+        if(msg == nil)
         {
             [self cancel];
             return;
         }
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
-        
         
         ((TL_localMessage *)self.message).n_id = msg.n_id;
         ((TL_localMessage *)self.message).date = msg.date;

@@ -91,12 +91,24 @@ static const int limit = 1000;
                 
             }];
             
+           
+            
+            
             
             if(f.count == 2) {
                 
+                if(minMsg.n_id != topMsg.n_id) {
+                    TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:minMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id date:minMsg.date count:0];
+                    
+                    [[Storage manager] insertMessagesHole:hole];
+                }
+                
+                // hole
+                
+                
                 // need create group hole
                 
-                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:topMsg.n_id max_id:minMsg.n_id+1 date:topMsg.date count:1];
+                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id+1 date:topMsg.date count:1];
                 
                 [[Storage manager] insertMessagesHole:groupHole];
                 

@@ -30,7 +30,7 @@
 
 -(int)ptsWithChannelId:(int)channel_id {
     
-    return MAX(1,1);
+    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],1);
 }
 
 
@@ -78,7 +78,7 @@
 
 -(void)addStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
     
-    if(statefulMessage.pts > 0 && [self ptsWithChannelId:statefulMessage.pts] + statefulMessage.pts_count == statefulMessage.pts )
+    if(statefulMessage.pts > 0 && [self ptsWithChannelId:statefulMessage.channel_id] + statefulMessage.pts_count == statefulMessage.pts )
     {
         [self proccessStatefullUpdate:statefulMessage];
         
@@ -153,6 +153,30 @@
     if([statefulMessage.update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)[statefulMessage update] message]];
+        
+        msg.conversation.pts = statefulMessage.pts;
+        [msg.conversation save];
+        
+        
+        int minId = [[Storage manager] lastSyncedMessageIdWithChannelId:msg.peer_id important:YES];
+        
+        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:INT32_MAX] lastObject];
+        
+        if(![msg isImportantMessage]) {
+            
+            if(!hole)
+                hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id+1 date:msg.date count:0];
+            
+            hole.max_id = msg.n_id+1;
+            hole.messagesCount++;
+            hole.date = msg.date;
+            
+            [[Storage manager] insertMessagesHole:hole];
+            
+        }
+        
+        
+        
         
         [MessagesManager addAndUpdateMessage:msg];
         

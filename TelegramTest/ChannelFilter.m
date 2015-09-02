@@ -259,7 +259,7 @@ static NSMutableDictionary * messageKeys;
         TGMessageGroupHole *slamHole = [[groups filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.max_id > %d AND self.min_id <= %d",obj.n_id,obj.n_id]] firstObject];
         
         if(slamHole != nil) {
-            if(slamHole.min_id == 0) {
+            
                 if([obj isImportantMessage]) {
                     
                     if(bottom) {
@@ -270,7 +270,6 @@ static NSMutableDictionary * messageKeys;
                 } else {
                     slamHole.messagesCount++;
                 }
-            }
         } else  if(![obj isImportantMessage]) {
             [groups addObject:[[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:bottom?INT32_MAX:obj.date count:1]];
         }

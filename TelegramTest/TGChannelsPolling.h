@@ -10,7 +10,8 @@
 
 @protocol TGChannelPollingDelegate <NSObject>
 
--(void)pollingDidSaidTooLong:(int)pts;
+-(void)pollingDidSaidTooLong;
+
 -(void)pollingReceivedUpdates:(id)updates endPts:(int)pts;
 
 @end

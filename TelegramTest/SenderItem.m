@@ -387,7 +387,23 @@ static NSMutableArray *waiting;
         }
     }
     
-   
+}
+
+-(TL_updateNewMessage *)updateNewMessageWithUpdates:(TLUpdates *)updates {
+    
+    __block id update;
+    
+    [updates.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if([obj isKindOfClass:[TL_updateNewMessage class]]) {
+            update = obj;
+            *stop = YES;
+        } 
+        
+    }];
+    
+    return update;
+    
 }
 
 @end

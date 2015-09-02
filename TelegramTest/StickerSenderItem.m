@@ -42,13 +42,13 @@
         
         [self updateMessageId:response];
         
-        if(response.updates.count < 2)
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
+        
+        if(msg == nil)
         {
             [self cancel];
             return;
         }
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             

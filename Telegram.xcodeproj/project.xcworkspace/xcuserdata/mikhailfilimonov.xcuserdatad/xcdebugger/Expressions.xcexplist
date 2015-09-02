@@ -20,6 +20,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChatHistoryController pollingDidSaidTooLongWithTopMessage:minMsg:]:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "topMsg">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGPhotoViewer show:user:]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
@@ -453,6 +461,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter fillGroupHoles:bottom:]:ChannelFilter.m">
+      </ContextState>
+      <ContextState
+         contextName = "__29-[Storage groupHole:min:max:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
@@ -1427,6 +1438,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateChannels addStatefullUpdate:]:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.pts">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTypingView redrawByArray:]:MessageTypingView.m">
@@ -1775,6 +1791,9 @@
                value = "removed">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">
@@ -2406,6 +2425,9 @@
             <PersistentString
                value = "topHole">
             </PersistentString>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -2791,6 +2813,9 @@
          contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke_3:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "__39-[ChannelFilter fillGroupHoles:bottom:]_block_invoke168:ChannelFilter.m">
+      </ContextState>
+      <ContextState
          contextName = "__34-[TGDocumentsController loadNext:]_block_invoke:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
@@ -2829,6 +2854,14 @@
       </ContextState>
       <ContextState
          contextName = "__71-[StandartViewController hideSearchViewControllerWithConversationUsed:]_block_invoke:StandartViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[ImageSenderItem performRequest]_block_invoke_2:ImageSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[DownloadPhotoCollectionItem initWithObject:size:]:DownloadPhotoCollectionItem.m">
@@ -2904,9 +2937,6 @@
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">
-      </ContextState>
-      <ContextState
-         contextName = "__30-[TGUpdateChannels addUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView downloadProgressHandler:]:MessageTableCellContainerView.m">
@@ -3401,6 +3431,9 @@
                value = "error">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke79:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[MainWindow windowWillResize:toSize:]:MainWindow.m">

@@ -71,16 +71,7 @@
 
         if([response isKindOfClass:[TL_updates class]]) {
             
-            NSArray *f = [response.updates filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                
-                return [evaluatedObject isKindOfClass:[TL_updateNewChannelMessage class]] || [evaluatedObject isKindOfClass:[TL_updateNewMessage class]];
-                
-            }]];
-            
-            if(f.count == 1)
-            {
-                response = (TL_updateShortSentMessage *) [f[0] message];
-            }
+            response = (TL_updateShortSentMessage *)[[self updateNewMessageWithUpdates:response] message];
             
             
         }
