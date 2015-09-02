@@ -587,9 +587,9 @@ static NSArray *channelUpdates;
     
     if([update isKindOfClass:[TL_updateMessageID class]]) {
         
-        
-        
         [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
+        
+        [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
         
         return;
         

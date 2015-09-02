@@ -162,20 +162,22 @@
         
         TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:INT32_MAX] lastObject];
         
-        if(![msg isImportantMessage]) {
-            
-            if(!hole)
-                hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id+1 date:msg.date count:0];
-            
-            hole.max_id = msg.n_id+1;
-            hole.messagesCount++;
-            hole.date = msg.date;
-            
-            [[Storage manager] insertMessagesHole:hole];
-            
+        if(hole.max_id != minId) {
+            if(![msg isImportantMessage]) {
+                
+                if(!hole)
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id+1 date:msg.date count:0];
+                
+                hole.max_id = msg.n_id+1;
+                hole.messagesCount++;
+                hole.date = msg.date;
+                
+                [[Storage manager] insertMessagesHole:hole];
+                
+                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+                
+            }
         }
-        
-        
         
         
         [MessagesManager addAndUpdateMessage:msg];

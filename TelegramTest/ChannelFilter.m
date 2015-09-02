@@ -114,7 +114,7 @@ static NSMutableDictionary * messageKeys;
     self.botHole = response.botHole;
     
     
-    *state = response.result.count == 0 || (self.botHole || self.topHole) ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    *state = response.result.count < self.controller.selectLimit || (self.botHole || self.topHole) ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
     return response.result;
     

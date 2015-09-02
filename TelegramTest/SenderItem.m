@@ -395,7 +395,7 @@ static NSMutableArray *waiting;
     
     [updates.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        if([obj isKindOfClass:[TL_updateNewMessage class]]) {
+        if([obj isKindOfClass:[TL_updateNewMessage class]] || [obj isKindOfClass:[TL_updateNewChannelMessage class]]) {
             update = obj;
             *stop = YES;
         } 

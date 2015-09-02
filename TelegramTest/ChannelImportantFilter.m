@@ -111,7 +111,7 @@ static NSMutableDictionary * messageKeys;
     TGHistoryResponse *response = [[Storage manager] loadChannelMessages:self.controller.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.controller.selectLimit filterMask:[self type] important:YES];
 
     
-    *state = [response.result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id > 0"]].count == 0 ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    *state = [response.result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id > 0"]].count < self.controller.selectLimit ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
     return response.result;
     
@@ -181,9 +181,7 @@ static NSMutableDictionary * messageKeys;
         
         TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:0];
         
-        TL_localMessageService *msg = [TL_localMessageService createWithN_id:hole.uniqueId flags:0 from_id:0 to_id:[TL_peerChannel createWithChannel_id:peer_id] date:obj.date action:[TL_messageActionEmpty create] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
-        
-        msg.hole = groupHole;
+        TL_localMessageService *msg = [TL_localMessageService createWithHole:groupHole];
         
         [messages addObject:msg];
         

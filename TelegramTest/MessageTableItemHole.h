@@ -13,4 +13,6 @@
 @property (nonatomic,strong,readonly) NSAttributedString *text;
 @property (nonatomic,assign,readonly) NSSize textSize;
 
+-(void)updateWithHole:(TGMessageHole *)hole;
+
 @end

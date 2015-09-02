@@ -13,6 +13,7 @@
 
 
 -(void)addSupportMessages:(NSArray *)supportMessages;
+
 -(TL_localMessage *)supportMessage:(int)n_id;
 
 -(TL_localMessage *)findWithRandomId:(long)random_id;
@@ -27,7 +28,7 @@
 
 -(void)readMessagesContent:(NSArray *)msg_ids;
 
-+ (void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
++(void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;
 +(void)addAndUpdateMessage:(TL_localMessage *)message;
 +(void)addAndUpdateMessage:(TL_localMessage *)message notify:(BOOL)notify;
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date;

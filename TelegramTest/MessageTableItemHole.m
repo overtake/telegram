@@ -16,17 +16,25 @@
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        
-        [attr appendString:object.hole.messagesCount != INT32_MAX ? [NSString stringWithFormat:@"+%d messages",object.hole.messagesCount] : @"new messages" withColor:TEXT_COLOR];
-        
-        _text = [attr copy];
-        
-        [self makeSizeByWidth:300];
+        [self updateWithHole:object.hole];
         
     }
     
     return self;
+}
+
+-(void)updateWithHole:(TGMessageHole *)hole {
+    
+    self.message.hole = hole;
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:self.message.hole.messagesCount != INT32_MAX ? [NSString stringWithFormat:@"+%d messages",self.message.hole.messagesCount] : @"new messages" withColor:TEXT_COLOR];
+    
+    _text = [attr copy];
+    
+    [self makeSizeByWidth:self.blockWidth];
+
 }
 
 

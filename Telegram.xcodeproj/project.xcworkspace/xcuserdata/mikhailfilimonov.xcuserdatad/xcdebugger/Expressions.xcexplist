@@ -971,6 +971,14 @@
          contextName = "+[EncryptedParams findAndCreate:]:EncryptedParams.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGUpdateChannels proccessStatefullUpdate:]:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "hole">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DocumentSenderItem initWithPath:forConversation:]:DocumentSenderItem.m">
          <PersistentStrings>
             <PersistentString

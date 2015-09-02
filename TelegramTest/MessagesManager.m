@@ -371,7 +371,6 @@ static const int seconds_to_notify = 120;
             m.randomId = message.randomId;
             m.fakeId = message.fakeId;
         } else {
-            [self.messages setObject:message forKey:@(message.n_id)];
             
             [self.messages_with_random_ids setObject:message forKey:@(message.randomId)];
         }

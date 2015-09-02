@@ -122,7 +122,7 @@ static TGChannelsPolling *channelPolling;
         
         [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
         
-                
+        [Notification addObserver:self selector:@selector(notificationUpdateMessageId:) name:MESSAGE_UPDATE_MESSAGE_ID];
         
     }
     
@@ -315,7 +315,7 @@ static TGChannelsPolling *channelPolling;
 
 
 - (BOOL)isFiltredAccepted:(int)filterType {
-    return  (self.filter.class == HistoryFilter.class || (filterType & [self.filter type]) > 0);
+    return  (filterType & [self.filter type]) > 0;
 }
 
 
@@ -486,6 +486,30 @@ static TGChannelsPolling *channelPolling;
     
 }
 
+-(void)notificationUpdateMessageId:(NSNotification *)notification {
+    
+    [queue dispatchOnQueue:^{
+        
+        [messageItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            int n_id = [notification.userInfo[KEY_MESSAGE_ID] intValue];
+            long random_id = [notification.userInfo[KEY_RANDOM_ID] longValue];
+            
+            if(obj.message.randomId == random_id) {
+                
+                [messageKeys removeObjectForKey:@(obj.message.n_id)];
+                [messageKeys setObject:obj forKey:@(n_id)];
+                
+                obj.message.n_id = n_id;
+                
+            }
+            
+        }];
+        
+    }];
+    
+}
+
 
 -(NSArray *)filterAndAdd:(NSArray *)items isLates:(BOOL)isLatest {
     
@@ -505,7 +529,7 @@ static TGChannelsPolling *channelPolling;
             
             //  здесь лучше бы подумать над условием, мб что нибудь в голову придет, пока так.
           
-            if( ((filterClass == HistoryFilter.class && self.filter.class == HistoryFilter.class) ||
+            if( ((filterClass == HistoryFilter.class && (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class || self.filter.class == ChannelImportantFilter.class)) ||
                  (filterClass == HistoryFilter.class && isLatest)) ||
                (filterClass != HistoryFilter.class && obj.message.filterType & [filterClass type]) > 0) {
                 

@@ -758,9 +758,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [groupHoles enumerateObjectsUsingBlock:^(TGMessageGroupHole *hole, NSUInteger idx, BOOL *stop) {
             
-            TL_localMessageService *msg = [TL_localMessageService createWithN_id:hole.uniqueId flags:0 from_id:0 to_id:[TL_peerChannel createWithChannel_id:-conversationId] date:hole.date action:[TL_messageActionEmpty create] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
-            
-            msg.hole = hole;
+            TL_localMessageService *msg = [TL_localMessageService createWithHole:hole];
             
             [messages addObject:msg];
         }];
@@ -2268,11 +2266,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 
 -(void)updateMessageId:(long)random_id msg_id:(int)n_id {
+    
     [queue inDatabase:^(FMDatabase *db) {
         
         [db executeUpdate:@"update sharedmedia set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
         
-        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(random_id),@(DeliveryStateNormal)];
+        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(DeliveryStateNormal),@(random_id)];
+        
+        int channel_id  = [db intForQuery:@"select channel_id from channgel_messages where random_id = ?",@(random_id)];
+      
+        [db executeUpdate:@"update channel_messages set n_id = (?), dstate = (?) where random_id = ?",@(channelMsgId(n_id,channel_id)),@(DeliveryStateNormal),@(random_id)];
+        
         
     }];
 }

@@ -265,6 +265,7 @@
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
     [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
+    [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -501,6 +502,36 @@
     
     
     
+}
+
+-(void)messageTableItemsHoleUpdate:(NSNotification *)notification {
+    
+    
+    if(self.historyController.filter.class == [ChannelImportantFilter class]) {
+        TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
+        
+        
+        NSArray *items = [HistoryFilter items:@[@(hole.uniqueId)]];
+        
+        MessageTableItemHole *item;
+        
+        if(items.count == 1) {
+            item = [items firstObject];
+            
+            NSUInteger index = [self indexOfObject:item];
+            
+            [item updateWithHole:hole];
+            
+            if(index != NSNotFound) {
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
+        } else {
+            
+            [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
+        }
+    }
+
 }
 
 -(void)messageTableItemsEntitiesUpdate:(NSNotification *)notification {
@@ -2375,7 +2406,7 @@ static NSTextAttachment *headerMediaIcon() {
        if(prevResult.count > 0) {
             MessageTableItem *item = prevResult[0];
             if(self.conversation.peer_id != item.message.peer_id)
-                return;
+                assert(NO);
         }
         
         

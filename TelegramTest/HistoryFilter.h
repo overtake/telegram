@@ -26,7 +26,7 @@ typedef enum {
     HistoryFilterAudioDocument = 1 << 10,
     HistoryFilterSharedLink = 1 << 11,
     HistoryFilterChannelMessage = 1 << 12,
-    HistoryFilterImportantChannelMessage = 1 << 12
+    HistoryFilterImportantChannelMessage = 1 << 13
 } HistoryFilterType;
 
 typedef enum {
