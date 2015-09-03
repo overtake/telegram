@@ -484,6 +484,7 @@
 		C28261E219926C62004AC73E /* TL_peerBroadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E119926C62004AC73E /* TL_peerBroadcast.m */; };
 		C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E8199291EF004AC73E /* TL_broadcast.m */; };
 		C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261EB1992974C004AC73E /* BroadcastManager.m */; };
+		C28C86771B98851300267C0B /* TGSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C28C86761B98851300267C0B /* TGSKeychain.m */; };
 		C291C7BC1836C39900ABBB50 /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7B91836C39900ABBB50 /* Background.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BB1836C39900ABBB50 /* LBProgressBar.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
@@ -1950,6 +1951,8 @@
 		C28261E8199291EF004AC73E /* TL_broadcast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_broadcast.m; sourceTree = "<group>"; };
 		C28261EA1992974C004AC73E /* BroadcastManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastManager.h; sourceTree = "<group>"; };
 		C28261EB1992974C004AC73E /* BroadcastManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastManager.m; sourceTree = "<group>"; };
+		C28C86751B98851300267C0B /* TGSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSKeychain.h; sourceTree = "<group>"; };
+		C28C86761B98851300267C0B /* TGSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSKeychain.m; sourceTree = "<group>"; };
 		C291C7B81836C39900ABBB50 /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
 		C291C7B91836C39900ABBB50 /* Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Background.m; sourceTree = "<group>"; };
 		C291C7BA1836C39900ABBB50 /* LBProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBProgressBar.h; sourceTree = "<group>"; };
@@ -4774,6 +4777,8 @@
 				C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */,
 				C2CBF5E61AF7CBD9006BF90A /* TGS_RPCRequest.h */,
 				C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */,
+				C28C86751B98851300267C0B /* TGSKeychain.h */,
+				C28C86761B98851300267C0B /* TGSKeychain.m */,
 			);
 			name = protocol;
 			sourceTree = "<group>";
@@ -5901,6 +5906,7 @@
 				C2CBF6891AFB73FE006BF90A /* TGS_ConversationRowItem.m in Sources */,
 				C2CBF6661AFB6A91006BF90A /* BTRImageView.m in Sources */,
 				C2CBF6671AFB6A91006BF90A /* BTRLabel.m in Sources */,
+				C28C86771B98851300267C0B /* TGSKeychain.m in Sources */,
 				C2CBF6B11AFB8584006BF90A /* TGSDownloadItem.m in Sources */,
 				C2CBF6681AFB6A91006BF90A /* BTRPopUpButton.m in Sources */,
 				C2CBF6D81AFBDB6F006BF90A /* TGLinearProgressView.m in Sources */,

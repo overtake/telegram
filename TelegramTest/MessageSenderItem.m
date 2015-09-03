@@ -75,8 +75,7 @@
             self.message.entities = response.entities;
             
         }
-        
-       
+
         
         self.message.dstate = DeliveryStateNormal;
         

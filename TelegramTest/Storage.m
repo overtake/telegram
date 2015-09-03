@@ -270,10 +270,16 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
    
 }
 
+
+static NSString *oldEncryptionKey;
 static NSString *encryptionKey;
 
 +(void)updateEncryptionKey:(NSString *)key {
     encryptionKey = key;
+}
+
++(void)updateOldEncryptionKey:(NSString *)key {
+    oldEncryptionKey = key;
 }
 
 //
@@ -303,8 +309,11 @@ static NSString *encryptionKey;
     const char* sqlQ = [[NSString stringWithFormat:@"ATTACH DATABASE '%@' AS encrypted KEY '%@';", encryptedDatabasePath, encryptionKey] UTF8String];
     
     sqlite3 *unencrypted_DB;
-
-    if (sqlite3_open([copyDbPath UTF8String], &unencrypted_DB) == SQLITE_OK) {
+    
+    int rc = sqlite3_open([copyDbPath UTF8String], &unencrypted_DB);
+    
+    
+    if (rc == SQLITE_OK) {
 
         if(fileSize(dbPath) > 0) {
             [ASQueue dispatchOnMainQueue:^{
@@ -318,10 +327,13 @@ static NSString *encryptionKey;
         // export database
         res = sqlite3_exec(unencrypted_DB, "SELECT sqlcipher_export('encrypted');", NULL, NULL, NULL);
         
+        
         // Detach encrypted database
         res = sqlite3_exec(unencrypted_DB, "DETACH DATABASE encrypted;", NULL, NULL, NULL);
         
+        
         res = sqlite3_close(unencrypted_DB);
+        
         
         if(fileSize(dbPath) > 0) {
             [ASQueue dispatchOnMainQueue:^{
