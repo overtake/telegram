@@ -332,9 +332,7 @@
     
     NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
         
-        
-        
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:@[@(msg.n_id)]}];
+        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:@[@(msg.n_id)]];
         
         
     }];

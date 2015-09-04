@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.09.15.
+//  Auto created by Mikhail Filimonov on 04.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -244,12 +244,13 @@
 
 @interface TLAPI_messages_getHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
-@property int offset;
+@property int offset_id;
+@property int add_offset;
+@property int limit;
 @property int max_id;
 @property int min_id;
-@property int limit;
 
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset:(int)offset max_id:(int)max_id min_id:(int)min_id limit:(int)limit;
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_messages_search : TLApiObject
@@ -808,11 +809,13 @@
 
 @interface TLAPI_messages_getImportantHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
+@property int offset_id;
+@property int add_offset;
+@property int limit;
 @property int max_id;
 @property int min_id;
-@property int limit;
 
-+(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id min_id:(int)min_id limit:(int)limit;
++(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_messages_readChannelHistory : TLApiObject
@@ -823,9 +826,11 @@
 @end
 
 @interface TLAPI_messages_createChannel : TLApiObject
+@property int flags;
 @property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSMutableArray* users;
 
-+(TLAPI_messages_createChannel*)createWithTitle:(NSString*)title;
++(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title users:(NSMutableArray*)users;
 @end
 
 @interface TLAPI_messages_deleteChannelMessages : TLApiObject

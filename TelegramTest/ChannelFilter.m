@@ -142,7 +142,7 @@ static NSMutableDictionary * messageKeys;
     NSLog(@"remote_max_id:%d, offset:%d",max_id,next? 0 : -(int)self.controller.selectLimit);
 
     
-     self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[self.controller.conversation inputPeer] offset:next? 0 : -(int)self.controller.selectLimit max_id:max_id min_id:0 limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[self.controller.conversation inputPeer] offset_id:max_id add_offset:0 limit:(int)self.controller.selectLimit max_id:hole ? hole.max_id : INT32_MAX min_id:hole ? hole.min_id : 0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
         
          
         [SharedManager proccessGlobalResponse:response];
@@ -154,7 +154,11 @@ static NSMutableDictionary * messageKeys;
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:format];
         
-        messages = [messages filteredArrayUsingPredicate:predicate];
+        
+        
+        NSArray *f = [messages filteredArrayUsingPredicate:predicate];
+        
+        assert(f.count == messages.count);
          
         
         [self fillGroupHoles:messages bottom:!next];

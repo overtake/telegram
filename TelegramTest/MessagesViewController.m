@@ -518,13 +518,19 @@
         if(items.count == 1) {
             item = [items firstObject];
             
-            NSUInteger index = [self indexOfObject:item];
-            
-            [item updateWithHole:hole];
-            
-            if(index != NSNotFound) {
-                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            if(hole.messagesCount != 0) {
+                NSUInteger index = [self indexOfObject:item];
+                
+                [item updateWithHole:hole];
+                
+                if(index != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+            } else {
+                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
             }
+            
+            
             
         } else {
             
@@ -1173,7 +1179,7 @@ static NSTextAttachment *headerMediaIcon() {
     assert([NSThread isMainThread]);
     
     if(self.conversation.type == DialogTypeChannel)
-        filter = ChannelFilter.class;
+        filter = self.historyController.filter.class;
     
     if(self.historyController.filter.class != filter || force) {
         self.ignoredCount = 0;
@@ -1850,15 +1856,19 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void) deleteSelectedMessages {
+    
+    TL_conversation *conversation = self.conversation;
+    
+    
     NSMutableArray *array = [[NSMutableArray alloc] init];
     NSMutableArray *random = [[NSMutableArray alloc] init];
     NSMutableArray *channelMessages = [[NSMutableArray alloc] init];
     for(MessageTableItem *item in self.selectedMessages) {
        
         if(item.message.n_id && item.message.dstate == DeliveryStateNormal) {
-            if(![item.message.to_id isKindOfClass:[TL_peerChannel class]])
-                [array addObject:@(item.message.n_id)];
-            else
+            [array addObject:@(item.message.n_id)];
+            
+            if([item.message isChannelMessage])
                 [channelMessages addObject:@(item.message.channelMsgId)];
         }
         
@@ -1871,17 +1881,26 @@ static NSTextAttachment *headerMediaIcon() {
     
     id request = [TLAPI_messages_deleteMessages createWithN_id:array];
     
+    if(conversation.type == DialogTypeChannel)
+        request = [TLAPI_messages_deleteChannelMessages createWithPeer:[TL_inputPeerChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
+    
+    
     
     dispatch_block_t completeBlock = ^ {
-        [[Storage manager] deleteChannelMessages:channelMessages];
-        [[Storage manager] deleteMessages:array completeHandler:nil];
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:array}];
+        
+        
+        
+        if(conversation.type != DialogTypeChannel) {
+             [[DialogsManager sharedManager] deleteMessagesWithMessageIds:array];
+        }
+    
+        
         [self unSelectAll];
     };
     
-    if(self.conversation.type == DialogTypeSecretChat) {
+    if(conversation.type == DialogTypeSecretChat) {
         
-        if(!self.conversation.canSendMessage)
+        if(!conversation.canSendMessage)
         {
             completeBlock();
             return;
@@ -1897,7 +1916,14 @@ static NSTextAttachment *headerMediaIcon() {
     } else {
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
+            if(conversation.type == DialogTypeChannel)
+            {
+                [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithPeer:conversation.peer messages:array pts:[response pts] pts_count:[response pts_count]]];
+            }
+            
             completeBlock();
+            
+            
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             completeBlock();
@@ -1920,24 +1946,25 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)deleteMessages:(NSArray *)ids {
+- (void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
     
   //  [self.table beginUpdates];
     
     if(self.messages.count > 0) {
         NSUInteger count = self.selectedMessages.count;
         
-        for (NSNumber *msg_id in ids) {
-            MessageTableItem *message = [self findMessageItemById:[msg_id intValue]];
+        for (MessageTableItem *item in items) {
             
-            if(message != nil) {
-                NSUInteger row = [self.messages indexOfObject:message];
+            NSUInteger row = [self.messages indexOfObject:item];
+           
+            if(row != NSNotFound) {
                 [self.messages removeObjectAtIndex:row];
-                [self.selectedMessages removeObject:message];
+                [self.selectedMessages removeObject:item];
                 
                 [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
-                [message clean];
+                [item clean];
             }
+            
         }
 
         

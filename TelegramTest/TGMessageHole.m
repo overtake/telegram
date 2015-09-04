@@ -7,7 +7,7 @@
 //
 
 #import "TGMessageHole.h"
-
+#import "Storage.h"
 @implementation TGMessageHole
 
 -(id)initWithUniqueId:(int)uniqueId peer_id:(int)peer_id min_id:(int)min_id max_id:(int)max_id date:(int)date count:(int)count {
@@ -21,6 +21,18 @@
     }
     
     return self;
+}
+
+-(void)save {
+    [[Storage manager] insertMessagesHole:self];
+}
+
+-(void)remove {
+    [[Storage manager] removeHole:self];
+}
+
+-(void)setMessagesCount:(int)messagesCount {
+    _messagesCount = MAX(0,messagesCount);
 }
 
 -(int)type {

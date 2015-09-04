@@ -52,7 +52,7 @@
 
 -(void)createChannel {
    
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel  createWithTitle:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel createWithFlags:0 title:self.action.result.singleObject users:nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
         if(response.chats.count > 0) {

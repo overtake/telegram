@@ -49,7 +49,7 @@ typedef enum {
 + (NSMutableDictionary *)messageKeys:(int)peer_id;
 + (NSMutableArray *)messageItems:(int)peer_id;
 
-+(NSArray *)removeItems:(NSArray *)messageIds;
++(id)removeItemWithMessageId:(int)messageId withPeer_id:(int)peer_id;
 
 +(void)removeAllItems:(int)peerId;
 

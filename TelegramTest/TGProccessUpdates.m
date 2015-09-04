@@ -156,13 +156,16 @@ static NSArray *channelUpdates;
         static dispatch_once_t onceToken;
         
         dispatch_once(&onceToken, ^{
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class])];
         });
         
         
         if([channelUpdates indexOfObject:[update className]] != NSNotFound)
         {
             [_channelsUpdater addUpdate:update];
+            return;
+        } else if([channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
+            [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
             return;
         }
         
@@ -633,7 +636,8 @@ static NSArray *channelUpdates;
     }
     
     if([update isKindOfClass:[TL_updateDeleteMessages class]]) {
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:[update messages]}];
+        
+        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:[update messages]];
         return;
     }
     

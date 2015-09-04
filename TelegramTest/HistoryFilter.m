@@ -40,33 +40,24 @@ static NSMutableDictionary * messageKeys;
 }
 
 
-
-+(NSArray *)removeItems:(NSArray *)messageIds {
++(id)removeItemWithMessageId:(int)messageId withPeer_id:(int)peer_id  {
     
-    NSMutableArray *items = [[NSMutableArray alloc] init];
+    __block id item;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        [messageIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            TL_localMessage *msg = [[MessagesManager sharedManager] find:[obj intValue]];
-            
-            if(msg)
-            {
-                NSArray *f = [[self messageItems:msg.peer_id] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat: @"self.message.n_id IN %@", messageIds]];
-                
-                [items addObjectsFromArray:f];
-                
-                [[self messageItems:msg.peer_id] removeObjectsInArray:f];
-                
-                [[self messageKeys:msg.peer_id] removeObjectsForKeys:messageIds];
-            }
-            
-        }];
         
+        item = [self messageKeys:peer_id][@(messageId)];
+        
+        if(item) {
+            [[self messageKeys:peer_id] removeObjectForKey:@(messageId)];
+            [[self messageItems:peer_id] removeObject:item];
+        }
+        
+      
     } synchronous:YES];
     
-    return items;
+    return item;
     
 }
 
@@ -221,7 +212,7 @@ static NSMutableDictionary * messageKeys;
     if(!_controller)
         return;
 
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit max_id:source_id min_id:0 limit:(int)_controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit limit:(int)_controller.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, id response) {
         
         if(callback) {
             callback(response);

@@ -171,34 +171,7 @@
             
             NSArray *random_ids = [action valueForKey:@"random_ids"];
             
-            [[Storage manager] deleteMessagesWithRandomIds:random_ids completeHandler:^(BOOL result) {
-                
-                NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
-                
-                NSMutableArray *ids = [[NSMutableArray alloc] init];
-                
-                
-                for (NSNumber *msgId in random_ids) {
-                    
-                    TL_destructMessage *message = [[MessagesManager sharedManager] findWithRandomId:[msgId longValue]];
-                    
-                    if(message) {
-                        [ids addObject:@(message.n_id)];
-                    }
-                    
-                    if(message && message.conversation) {
-                        [update setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
-                    }
-                    
-                }
-                
-                for (TL_conversation *dialog in update.allValues) {
-                    [[DialogsManager sharedManager] updateLastMessageForDialog:dialog];
-                }
-                
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                
-            }];
+            [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:random_ids isChannelMessages:NO];
             
             return YES;
         }

@@ -117,6 +117,7 @@
     self->_dialog = dialog;
     
     [_discussionSwitch setHidden:dialog.type != DialogTypeChannel];
+    [_discussionSwitch setOn:NO];
     
     
     [self.nameTextField updateWithConversation:self.dialog];

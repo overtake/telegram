@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.09.15..
+//  Auto created by Mikhail Filimonov on 04.09.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -571,22 +571,24 @@
 @end
 
 @implementation TLAPI_messages_getHistory
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset:(int)offset max_id:(int)max_id min_id:(int)min_id limit:(int)limit {
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_messages_getHistory* obj = [[TLAPI_messages_getHistory alloc] init];
     obj.peer = peer;
-	obj.offset = offset;
+	obj.offset_id = offset_id;
+	obj.add_offset = add_offset;
+	obj.limit = limit;
 	obj.max_id = max_id;
 	obj.min_id = min_id;
-	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-505490651];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1970355494];
 	[ClassStore TLSerialize:self.peer stream:stream];
-	[stream writeInt:self.offset];
+	[stream writeInt:self.offset_id];
+	[stream writeInt:self.add_offset];
+	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.min_id];
-	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end
@@ -1901,20 +1903,24 @@
 @end
 
 @implementation TLAPI_messages_getImportantHistory
-+(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id min_id:(int)min_id limit:(int)limit {
++(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_messages_getImportantHistory* obj = [[TLAPI_messages_getImportantHistory alloc] init];
     obj.peer = peer;
+	obj.offset_id = offset_id;
+	obj.add_offset = add_offset;
+	obj.limit = limit;
 	obj.max_id = max_id;
 	obj.min_id = min_id;
-	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:632812466];
+	SerializedData* stream = [ClassStore streamWithConstuctor:615465893];
 	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.offset_id];
+	[stream writeInt:self.add_offset];
+	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];
 	[stream writeInt:self.min_id];
-	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end
@@ -1935,14 +1941,27 @@
 @end
 
 @implementation TLAPI_messages_createChannel
-+(TLAPI_messages_createChannel*)createWithTitle:(NSString*)title {
++(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title users:(NSMutableArray*)users {
     TLAPI_messages_createChannel* obj = [[TLAPI_messages_createChannel alloc] init];
-    obj.title = title;
+    obj.flags = flags;
+	obj.title = title;
+	obj.users = users;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-641966126];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-399443765];
+	[stream writeInt:self.flags];
 	[stream writeString:self.title];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLInputUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
 	return [stream getOutput];
 }
 @end

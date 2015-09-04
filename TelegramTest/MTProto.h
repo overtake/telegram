@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.09.15.
+//  Auto created by Mikhail Filimonov on 04.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -870,13 +870,15 @@
 @property int read_inbox_max_id;
 @property int unread_count;
 @property int unread_important_count;
+@property int inviter_id;
+@property int invite_date;
 @end
 
 @interface TL_chatFull : TLChatFull<NSCoding>
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -1490,6 +1492,7 @@
 @property int max_id;
 @property (nonatomic, strong) TLWebPage* webpage;
 @property int channel_id;
+@property (nonatomic, strong) TLMessageGroup* group;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1578,6 +1581,9 @@
 @end
 @interface TL_updateChannelTooLong : TLUpdate<NSCoding>
 +(TL_updateChannelTooLong*)createWithChannel_id:(int)channel_id;
+@end
+@interface TL_updateChannelGroup : TLUpdate<NSCoding>
++(TL_updateChannelGroup*)createWithChannel_id:(int)channel_id group:(TLMessageGroup*)group;
 @end
 @interface TL_updateNewChannelMessage : TLUpdate<NSCoding>
 +(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
@@ -2566,6 +2572,9 @@
 @end
 @interface TL_channelMessagesFilter : TLChannelMessagesFilter<NSCoding>
 +(TL_channelMessagesFilter*)createWithFlags:(int)flags ranges:(NSMutableArray*)ranges;
+@end
+@interface TL_channelMessagesFilterCollapsed : TLChannelMessagesFilter<NSCoding>
++(TL_channelMessagesFilterCollapsed*)create;
 @end
 	
 @interface TLProtoMessage()

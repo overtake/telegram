@@ -829,11 +829,10 @@ static int offsetEditable = 30;
         [item.messageSender cancel];
     
     item.messageSender = nil;
-    [[Storage manager] deleteMessagesWithRandomIds:@[@(item.message.randomId)] completeHandler:nil];
-    [[DialogsManager sharedManager] updateLastMessageForDialog:item.message.conversation];
+    
+    [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:@[@(item.message.randomId)] isChannelMessages:self.item.message.isChannelMessage];
+    
     [self.messagesViewController deleteItem:item];
-    [Notification perform:DELETE_MESSAGE
-                     data:@{KEY_MESSAGE:item.message}];
 }
 
 

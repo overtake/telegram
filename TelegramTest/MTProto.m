@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.09.15.
+//  Auto created by Mikhail Filimonov on 04.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3786,12 +3786,14 @@
 @end
 
 @implementation TL_channelFull
-+(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
++(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
 	TL_channelFull* obj = [[TL_channelFull alloc] init];
 	obj.n_id = n_id;
 	obj.read_inbox_max_id = read_inbox_max_id;
 	obj.unread_count = unread_count;
 	obj.unread_important_count = unread_important_count;
+	obj.inviter_id = inviter_id;
+	obj.invite_date = invite_date;
 	obj.chat_photo = chat_photo;
 	obj.notify_settings = notify_settings;
 	obj.exported_invite = exported_invite;
@@ -3802,6 +3804,8 @@
 	[stream writeInt:self.read_inbox_max_id];
 	[stream writeInt:self.unread_count];
 	[stream writeInt:self.unread_important_count];
+	[stream writeInt:self.inviter_id];
+	[stream writeInt:self.invite_date];
 	[ClassStore TLSerialize:self.chat_photo stream:stream];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
 	[ClassStore TLSerialize:self.exported_invite stream:stream];
@@ -3811,6 +3815,8 @@
 	self.read_inbox_max_id = [stream readInt];
 	self.unread_count = [stream readInt];
 	self.unread_important_count = [stream readInt];
+	self.inviter_id = [stream readInt];
+	self.invite_date = [stream readInt];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
@@ -3824,6 +3830,8 @@
     objc.read_inbox_max_id = self.read_inbox_max_id;
     objc.unread_count = self.unread_count;
     objc.unread_important_count = self.unread_important_count;
+    objc.inviter_id = self.inviter_id;
+    objc.invite_date = self.invite_date;
     objc.chat_photo = [self.chat_photo copy];
     objc.notify_settings = [self.notify_settings copy];
     objc.exported_invite = [self.exported_invite copy];
@@ -10533,6 +10541,50 @@
     TL_updateChannelTooLong *objc = [[TL_updateChannelTooLong alloc] init];
     
     objc.channel_id = self.channel_id;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_updateChannelGroup
++(TL_updateChannelGroup*)createWithChannel_id:(int)channel_id group:(TLMessageGroup*)group {
+	TL_updateChannelGroup* obj = [[TL_updateChannelGroup alloc] init];
+	obj.channel_id = channel_id;
+	obj.group = group;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.channel_id];
+	[ClassStore TLSerialize:self.group stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.channel_id = [stream readInt];
+	self.group = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_updateChannelGroup *)copy {
+    
+    TL_updateChannelGroup *objc = [[TL_updateChannelGroup alloc] init];
+    
+    objc.channel_id = self.channel_id;
+    objc.group = [self.group copy];
     
     return objc;
 }
@@ -19471,6 +19523,46 @@
     
     objc.flags = self.flags;
     objc.ranges = [self.ranges copy];
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelMessagesFilterCollapsed
++(TL_channelMessagesFilterCollapsed*)create {
+	TL_channelMessagesFilterCollapsed* obj = [[TL_channelMessagesFilterCollapsed alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelMessagesFilterCollapsed *)copy {
+    
+    TL_channelMessagesFilterCollapsed *objc = [[TL_channelMessagesFilterCollapsed alloc] init];
+    
+    
     
     return objc;
 }

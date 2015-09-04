@@ -399,7 +399,9 @@ static long h_r_l;
     return [_fullItems indexOfObject:item];
 }
 
--(void)deleteMessages:(NSArray *)ids {
+-(void)deleteItems:(NSArray *)dItems orMessageIds:(NSArray *)ids {
+    
+    
     NSArray *items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.document.message.n_id IN (%@)",ids]];
     
     [items enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {

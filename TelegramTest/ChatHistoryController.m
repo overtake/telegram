@@ -326,31 +326,55 @@ static TGChannelsPolling *channelPolling;
         
         self.proccessing = YES;
         
-        NSArray *msgs = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
+        NSArray *updateData = [notification.userInfo objectForKey:KEY_DATA];
         
-        if(msgs.count == 0)
+        if(updateData.count == 0)
             return;
         
-        NSMutableDictionary *deleted = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *dItems = [[NSMutableDictionary alloc] init];
         
-        for (Class filterClass in filters) {
+        
+        [updateData enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             
-            NSArray *r = [filterClass removeItems:msgs];
+            for (Class filterClass in filters) {
+                
+                id item = [filterClass removeItemWithMessageId:[obj[KEY_MESSAGE_ID] intValue] withPeer_id:[obj[KEY_PEER_ID] intValue]];
+                
+                if(item) {
+                    NSMutableArray *items = dItems[NSStringFromClass(filterClass)];
+                    
+                    if(!items)
+                    {
+                        items = [NSMutableArray array];
+                        dItems[NSStringFromClass(filterClass)] = items;
+                    }
+                    
+                    [items addObject:item];
+                }
+                
             
-            deleted[NSStringFromClass(filterClass)] = r;
+                
+            }
             
-        }
+        }];
+        
+        
         
         [listeners enumerateObjectsUsingBlock:^(ChatHistoryController *obj, NSUInteger idx, BOOL *stop) {
             
-            NSArray * td = deleted[obj.filter.className];
+            NSArray * td = dItems[obj.filter.className];
             
             td = [td filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.peer_id == %d", obj.conversation.peer_id]];
             
+            NSMutableArray *msgIds = [[NSMutableArray alloc] init];
+            
+            [td enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                [msgIds addObject:@(obj.message.n_id)];
+            }];
+            
             if(td.count > 0) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [obj.controller deleteMessages:msgs];
-                    
+                    [obj.controller deleteItems:td orMessageIds:msgIds];
                 }];
             }
 
@@ -1128,7 +1152,7 @@ static TGChannelsPolling *channelPolling;
             MessageTableItem *item = [items lastObject];
             
             NSRange range = NSMakeRange(0, filtred.count);
-            if(filtred.count == items.count && self.filter.class == [HistoryFilter class] && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
+            if(filtred.count == items.count && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     
                     [self.controller receivedMessageList:filtred inRange:range itsSelf:YES];

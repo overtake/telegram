@@ -224,22 +224,24 @@
 -(void)didDeleteMessages:(NSNotification *)notification {
 
     
-    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    NSArray *peer_update_data = notification.userInfo[KEY_DATA];
     
     NSMutableArray *items_to_delete = [[NSMutableArray alloc] init];
     
-    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
-            
-        [self.items enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+    [peer_update_data enumerateObjectsUsingBlock:^(NSDictionary *data, NSUInteger idx, BOOL *stop) {
+        
+        if(self.conversation.peer_id == [data[KEY_PEER_ID] intValue]) {
+            [self.items enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
                 
-            if(obj.previewObject.msg_id == [msg_id intValue]) {
+                if(obj.previewObject.msg_id == [data[KEY_MESSAGE_ID] intValue]) {
                     
-                [items_to_delete addObject:obj];
+                    [items_to_delete addObject:obj];
                     
-                *stop = YES;
-            }
+                    *stop = YES;
+                }
                 
-        }];
+            }];
+        }
             
     }];
     

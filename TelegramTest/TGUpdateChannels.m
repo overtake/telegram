@@ -33,12 +33,34 @@
     return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],1);
 }
 
+-(TL_conversation *)conversationWithChannelId:(int)channel_id {
+    
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:-channel_id];
+    
+    if(!conversation) {
+        conversation = [[Storage manager] selectConversation:[TL_peerChannel createWithChannel_id:channel_id]];
+        
+        assert(conversation != nil);
+        
+        [[DialogsManager sharedManager] add:@[conversation]];
+    }
+    
+    
+    return conversation;
+    
+}
+
 
 
 -(int)channelIdWithUpdate:(id)update {
     
     if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
+    } else if([update isKindOfClass:[TL_updateChannelPts class]]) {
+        return [(TL_updateChannelPts *)update channel_id];
+    } else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
+        return [[(TL_updateDeleteChannelMessages *)update peer] channel_id];
+
     }
     
     return 0;
@@ -59,7 +81,7 @@
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class])];
+            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class])];
             statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class])];
         });
         
@@ -78,7 +100,7 @@
 
 -(void)addStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
     
-    if(statefulMessage.pts > 0 && [self ptsWithChannelId:statefulMessage.channel_id] + statefulMessage.pts_count == statefulMessage.pts )
+    if(statefulMessage.pts == 0 || [self ptsWithChannelId:statefulMessage.channel_id] + statefulMessage.pts_count == statefulMessage.pts )
     {
         [self proccessStatefullUpdate:statefulMessage];
         
@@ -154,10 +176,6 @@
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)[statefulMessage update] message]];
         
-        msg.conversation.pts = statefulMessage.pts;
-        [msg.conversation save];
-        
-        
         int minId = [[Storage manager] lastSyncedMessageIdWithChannelId:msg.peer_id important:YES];
         
         TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:INT32_MAX] lastObject];
@@ -172,7 +190,7 @@
                 hole.messagesCount++;
                 hole.date = msg.date;
                 
-                [[Storage manager] insertMessagesHole:hole];
+                [hole save];
                 
                 [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
                 
@@ -182,8 +200,44 @@
         
         [MessagesManager addAndUpdateMessage:msg];
         
+    } else if( [statefulMessage.update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
+        
+        NSMutableArray *channelMessages = [NSMutableArray array];
+        
+        int peer_id = -[[(TL_updateDeleteChannelMessages *)statefulMessage.update peer] channel_id];
+        
+        [[statefulMessage.update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            
+            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:[obj intValue] max:[obj intValue]+1];
+            
+            if(groupHoles.count == 1) {
+                TGMessageGroupHole *hole = [groupHoles firstObject];
+                
+                hole.messagesCount--;
+                
+                if(hole.messagesCount == 0) {
+                    [hole remove];
+                } else
+                    [hole save];
+                
+                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            }
+            
+            [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];
+        }];
+        
+        [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
+        
     }
     
+    if(statefulMessage.pts > 0) {
+        TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
+        
+        conversation.pts = [statefulMessage pts];
+        
+        [conversation save];
+    }
     
 }
 
@@ -199,6 +253,8 @@
 
 -(void)failUpdateWithChannelId:(int)channel_id
 {
+    
+    assert(NO);
     
     TL_channel *channel = [[ChatsManager sharedManager] find:channel_id];
     

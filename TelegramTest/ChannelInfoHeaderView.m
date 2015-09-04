@@ -16,4 +16,14 @@
     // Drawing code here.
 }
 
+- (void)reload {
+    
+    [super reload];
+    
+    [self.avatarImageView setSourceType:ChatAvatarSourceChannel];
+    
+    [self.avatarImageView rebuild];
+    
+}
+
 @end

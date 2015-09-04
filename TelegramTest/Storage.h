@@ -63,10 +63,9 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)insertMessages:(NSArray *)messages;
 
--(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
--(void)deleteChannelMessages:(NSArray *)messages;
--(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
-
+-(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
+-(void)deleteMessagesWithRandomIds:(NSArray *)messages isChannelMessages:(BOOL)isChannelMessages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
+-(void)deleteChannelMessagesMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 

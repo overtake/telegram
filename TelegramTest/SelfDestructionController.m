@@ -83,8 +83,8 @@
         }
     }
     if(todelete.count) {
-        [[Storage manager] deleteMessages:todelete completeHandler:nil];
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:todelete}];
+        
+        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:todelete];
         
         [remoteDelete enumerateKeysAndObjectsUsingBlock:^(NSNumber *chat_id, NSMutableArray *obj, BOOL *stop) {
             

@@ -360,8 +360,6 @@ NSArray *urlSchemes() {
 
 
 
-
-
 void open_card(NSString *link) {
     
     
@@ -429,6 +427,8 @@ void join_group_by_hash(NSString * hash) {
                         
                         if([response chats].count > 0) {
                             TLChat *chat = [response chats][0];
+                            
+                            
                             
                             TL_conversation *conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
                             

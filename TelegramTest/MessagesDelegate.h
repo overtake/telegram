@@ -12,7 +12,7 @@
 
 @required
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force;
--(void)deleteMessages:(NSArray *)ids;
+-(void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids;
 -(void)flushMessages;
 -(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force;
 - (void)didAddIgnoredMessages:(NSArray *)items;

@@ -107,6 +107,7 @@ NSString *const KEY_BROADCAST = @"broadcast";
 NSString *const KEY_PHOTO = @"photo";
 NSString *const KEY_MESSAGE_ID_LIST = @"message_id_list";
 NSString *const KEY_MESSAGE_LIST = @"message_list";
+NSString *const KEY_DATA = @"randomdata";
 NSString *const KEY_DIALOG = @"dialog";
 NSString *const KEY_POSITION = @"position";
 NSString *const KEY_DIALOGS = @"dialogs";

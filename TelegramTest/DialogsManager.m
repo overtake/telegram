@@ -25,7 +25,6 @@
     if(self = [super initWithQueue:queue]) {
         [Notification addObserver:self selector:@selector(setTopMessageToDialog:) name:MESSAGE_UPDATE_TOP_MESSAGE];
         [Notification addObserver:self selector:@selector(setTopMessagesToDialogs:) name:MESSAGE_LIST_UPDATE_TOP];
-        [Notification addObserver:self selector:@selector(deleteMessages:) name:MESSAGE_DELETE_EVENT];
         [Notification addObserver:self selector:@selector(updateReadList:) name:MESSAGE_READ_EVENT];
     }
     return self;
@@ -114,7 +113,11 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
+        
+        if([chat isKindOfClass:[TL_channel class]]) {
+            dialog = [self createDialogForChannel:chat];
+        } else
+            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -178,30 +181,73 @@
     
 }
 
-- (void)deleteMessages:(NSNotification *)messages {
+- (void)deleteMessagesWithMessageIds:(NSArray *)ids {
     
-    NSArray *deleted = [messages.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
     [self.queue dispatchOnQueue:^{
         
-        [[Storage manager] deleteMessages:deleted completeHandler:nil];
-        
-        NSMutableDictionary *dialogstoUpdate = [[NSMutableDictionary alloc] init];
-        
-        for (NSNumber *msg_id in deleted) {
-            TL_localMessage *message = [[MessagesManager sharedManager] find:[msg_id intValue]];
-            if(message.conversation)
-                [dialogstoUpdate setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
-        }
-        
-        
-        for(TL_conversation *dialog in dialogstoUpdate.allValues) {
-            [self updateLastMessageForDialog:dialog];
-        }
-        
+        [[Storage manager] deleteMessages:ids completeHandler:^(NSArray *peer_update) {
+            
+            [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                
+                [self updateLastMessageForDialog:conversation];
+                
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
+            
+        }];
         
     }];
     
+}
+
+
+- (void)deleteMessagesWithRandomMessageIds:(NSArray *)ids isChannelMessages:(BOOL)isChannelMessages {
+    
+    
+    [self.queue dispatchOnQueue:^{
+        
+        
+        [[Storage manager] deleteMessagesWithRandomIds:ids isChannelMessages:isChannelMessages completeHandler:^(NSArray *peer_update_data) {
+            
+            [peer_update_data enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                
+                [self updateLastMessageForDialog:conversation];
+                
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update_data}];
+            
+        }];
+        
+    }];
+    
+}
+
+-(void)deleteChannelMessags:(NSArray *)messageIds {
+    [self.queue dispatchOnQueue:^{
+        
+        [[Storage manager] deleteChannelMessagesMessages:messageIds completeHandler:^(NSArray *peer_update) {
+            
+            [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                
+                [self updateLastMessageForDialog:conversation];
+                
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
+            
+        }];
+        
+    }];
+
 }
 
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
@@ -212,10 +258,6 @@
             
             if(lastMessage) {
                 
-                if(![[MessagesManager sharedManager] find:lastMessage.n_id])
-                    [[MessagesManager sharedManager] TGsetMessage:lastMessage];
-                
-               
                 dialog.top_message = lastMessage.n_id;
                 dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
                 dialog.last_marked_message = lastMessage.n_id;

@@ -102,6 +102,7 @@ extern NSString *const KEY_BROADCAST;
 extern NSString *const KEY_PHOTO;
 extern NSString *const KEY_MESSAGE_ID_LIST;
 extern NSString *const KEY_MESSAGE_LIST;
+extern NSString *const KEY_DATA;
 extern NSString *const KEY_DIALOG;
 extern NSString *const KEY_POSITION;
 extern NSString *const KEY_DIALOGS;

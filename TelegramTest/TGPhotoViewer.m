@@ -232,20 +232,26 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+        NSArray *peer_update_data = notification.userInfo[KEY_DATA];
         
-        [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
+        
+        
+        [peer_update_data enumerateObjectsUsingBlock:^(NSDictionary *data, NSUInteger idx, BOOL *stop) {
             
-            [_list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
-                
-                if(obj.previewObject.msg_id == [msg_id intValue]) {
+            if(self.conversation.peer_id == [data[KEY_PEER_ID] intValue]) {
+                [_list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
                     
-                    [self deleteItem:obj];
+                    if(obj.previewObject.msg_id == [data[KEY_MESSAGE_ID] intValue]) {
+                        
+                        [self deleteItem:obj];
+                        
+                        *stop = YES;
+                    }
                     
-                    *stop = YES;
-                }
-                
-            }];
+                }];
+            }
+            
+            
             
         }];
         

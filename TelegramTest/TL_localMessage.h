@@ -46,7 +46,7 @@ long channelMsgId(int msg_id, int peer_id);
 -(TLPeer *)peer;
 -(TLChat *)chat;
 -(BOOL)isImportantMessage;
-
+-(BOOL)isChannelMessage;
 -(BOOL)n_out;
 -(BOOL)unread;
 -(BOOL)readedContent;

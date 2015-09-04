@@ -7,7 +7,12 @@
 //
 
 #import "ChannelInfoViewController.h"
-
+#import "ChannelInfoHeaderView.h"
 @implementation ChannelInfoViewController
+
+-(void)loadView {
+    [super loadView];
+    self.headerView = [[ChannelInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 260)];
+}
 
 @end

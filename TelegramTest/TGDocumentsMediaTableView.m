@@ -126,15 +126,16 @@
     }
 }
 
--(void)deleteMessages:(NSArray *)ids {
+-(void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
     
     if(self.items.count > 1) {
-        NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
-            [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self.items indexOfObject:obj]] withAnimation:NSTableViewAnimationEffectFade];
-            
+            NSUInteger itemIndex = [self.items indexOfObject:obj];
+            if(itemIndex != NSNotFound) {
+                [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:itemIndex] withAnimation:NSTableViewAnimationEffectFade];
+            }
         }];
         
         [self.items removeObjectsInArray:items];

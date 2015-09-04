@@ -269,6 +269,10 @@
     return ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);
 }
 
+-(BOOL)isChannelMessage {
+    return [self.to_id isKindOfClass:[TL_peerChannel class]];
+}
+
 -(BOOL)unread {
     return self.flags & TGUNREADMESSAGE;
 }

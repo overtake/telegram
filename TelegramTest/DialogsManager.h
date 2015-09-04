@@ -28,6 +28,13 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out;
 
+
+// delete messages
+-(void)deleteMessagesWithMessageIds:(NSArray *)ids;
+-(void)deleteChannelMessags:(NSArray *)messageIds;
+-(void)deleteMessagesWithRandomMessageIds:(NSArray *)ids isChannelMessages:(BOOL)isChannelMessages;
+
+
 - (void)deleteDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 - (void)clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block;
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog;

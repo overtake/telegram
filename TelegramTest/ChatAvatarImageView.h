@@ -15,7 +15,8 @@
 typedef enum {
     ChatAvatarSourceUser,
     ChatAvatarSourceGroup,
-    ChatAvatarSourceBroadcast
+    ChatAvatarSourceBroadcast,
+    ChatAvatarSourceChannel
 } ChatAvatarSourceType;
 
 
