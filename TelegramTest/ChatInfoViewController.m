@@ -49,7 +49,7 @@
 }
 
 -(void)redrawRow {
-    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteBroadcast", nil)];
+    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat || _conversation.type == DialogTypeChannel ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteBroadcast", nil)];
     
     [self.button sizeToFit];
 }

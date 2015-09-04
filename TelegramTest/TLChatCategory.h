@@ -32,4 +32,8 @@ typedef enum {
 - (NSAttributedString *)statusForSearchTableView;
 
 
+-(BOOL)isAdmin;
+-(BOOL)isBroadcast;
+-(BOOL)isPublic;
+
 @end

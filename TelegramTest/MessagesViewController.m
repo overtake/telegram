@@ -912,7 +912,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     centerView = self.normalNavigationCenterView;
     
-    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class && self.historyController.filter.class != ChannelFilter.class) {
+    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class && self.historyController.filter.class != ChannelFilter.class && self.historyController.filter.class != ChannelImportantFilter.class) {
         state = MessagesViewControllerStateFiltred;
     }
     
@@ -2246,8 +2246,11 @@ static NSTextAttachment *headerMediaIcon() {
         [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
         [self addScrollEvent];
         
-        if(self.conversation.type == DialogTypeChannel)
+        if(self.conversation.type == DialogTypeChannel) {
             [self.historyController startChannelPolling];
+        }
+        
+        
         
     }
 }
@@ -2276,13 +2279,15 @@ static NSTextAttachment *headerMediaIcon() {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
-        if(self.conversation.last_marked_message != self.conversation.top_message) {
-            self.conversation.last_marked_message = self.conversation.top_message;
-            self.conversation.last_marked_date = [[MTNetwork instance] getTime];
-            [self.conversation save];
-        }
+        [ASQueue dispatchOnStageQueue:^{
+            if(self.conversation.last_marked_message != self.conversation.top_message) {
+                self.conversation.last_marked_message = self.conversation.top_message;
+                self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+                [self.conversation save];
+            }
+        }];
         
-        
+       
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
             _delayedBlockHandle = nil;
             if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {

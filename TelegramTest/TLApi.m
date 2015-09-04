@@ -1554,7 +1554,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:200282908];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-113456221];
 	[stream writeString:self.username];
 	return [stream getOutput];
 }
@@ -1989,6 +1989,51 @@
                 break;
 		}
 	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_editChatAbout
++(TLAPI_messages_editChatAbout*)createWithChat_id:(TLInputChat*)chat_id about:(NSString*)about {
+    TLAPI_messages_editChatAbout* obj = [[TLAPI_messages_editChatAbout alloc] init];
+    obj.chat_id = chat_id;
+	obj.about = about;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1969841261];
+	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[stream writeString:self.about];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_checkChannelUsername
++(TLAPI_messages_checkChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username {
+    TLAPI_messages_checkChannelUsername* obj = [[TLAPI_messages_checkChannelUsername alloc] init];
+    obj.chat_id = chat_id;
+	obj.username = username;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-422389516];
+	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[stream writeString:self.username];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_updateChannelUsername
++(TLAPI_messages_updateChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username {
+    TLAPI_messages_updateChannelUsername* obj = [[TLAPI_messages_updateChannelUsername alloc] init];
+    obj.chat_id = chat_id;
+	obj.username = username;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-835807865];
+	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[stream writeString:self.username];
 	return [stream getOutput];
 }
 @end

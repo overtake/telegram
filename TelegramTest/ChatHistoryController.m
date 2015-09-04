@@ -132,11 +132,14 @@ static TGChannelsPolling *channelPolling;
 -(void)pollingDidSaidTooLong {
     
     
-    // add new holes after receive too long update.
+    // add new holes after received too long update.
    
     
     
+    
+    
     [self setState:ChatHistoryStateLocal next:NO];
+    
     
     [self removeAllItems];
     

@@ -62,8 +62,10 @@
     if(_conversation.type == DialogTypeSecretChat) {
         
         request = [TLAPI_messages_readEncryptedHistory createWithPeer:[_conversation.encryptedChat inputPeer] max_date:[[MTNetwork instance] getTime]];
-    } else {
+    } else if(_conversation.type != DialogTypeChannel) {
         request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset];
+    } else {
+        request = [TLAPI_messages_readChannelHistory createWithPeer:[_conversation inputPeer] max_id:INT32_MAX]; //TODO
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {

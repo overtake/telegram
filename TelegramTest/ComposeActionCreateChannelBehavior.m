@@ -83,7 +83,6 @@
 
 -(void)composeDidCancel {
     
-    
     [self.request cancelRequest];
     
     [self.delegate behaviorDidEndRequest:nil];

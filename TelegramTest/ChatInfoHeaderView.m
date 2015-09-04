@@ -392,6 +392,8 @@
         [self TMNameTextFieldDidChanged:self.nameTextField];
         
         
+        [_exportChatInvite setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x,self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42)];
+        
         [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
         
         if(ACCEPT_FEATURE)

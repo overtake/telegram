@@ -18,12 +18,12 @@
 
 - (void)reload {
     
-    [super reload];
     
+    [self.addMembersButton setHidden:YES];
     [self.avatarImageView setSourceType:ChatAvatarSourceChannel];
+
     
-    [self.avatarImageView rebuild];
-    
+    [super reload];
 }
 
 @end

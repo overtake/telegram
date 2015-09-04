@@ -261,9 +261,6 @@
 @interface TLSendMessageAction : TLObject
 @end
 	
-@interface TLContactFound : TLObject
-@end
-	
 @interface TLcontacts_Found : TLObject
 @end
 	
@@ -382,6 +379,9 @@
 @end
 	
 @interface TLChannelMessagesFilter : TLObject
+@end
+	
+@interface TLcontacts_ResolvedPeer : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -845,6 +845,7 @@
 @property int version;
 @property int flags;
 @property long access_hash;
+@property (nonatomic, strong) NSString* username;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
@@ -857,7 +858,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 	
 @interface TLChatFull()
@@ -867,6 +868,7 @@
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @property (nonatomic, strong) NSMutableArray* bot_info;
+@property (nonatomic, strong) NSString* about;
 @property int read_inbox_max_id;
 @property int unread_count;
 @property int unread_important_count;
@@ -878,7 +880,7 @@
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithN_id:(int)n_id about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -2011,21 +2013,14 @@
 +(TL_sendMessageChooseContactAction*)create;
 @end
 	
-@interface TLContactFound()
-@property int user_id;
-@end
-
-@interface TL_contactFound : TLContactFound<NSCoding>
-+(TL_contactFound*)createWithUser_id:(int)user_id;
-@end
-	
 @interface TLcontacts_Found()
 @property (nonatomic, strong) NSMutableArray* results;
+@property (nonatomic, strong) NSMutableArray* chats;
 @property (nonatomic, strong) NSMutableArray* users;
 @end
 
 @interface TL_contacts_found : TLcontacts_Found<NSCoding>
-+(TL_contacts_found*)createWithResults:(NSMutableArray*)results users:(NSMutableArray*)users;
++(TL_contacts_found*)createWithResults:(NSMutableArray*)results chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLInputPrivacyKey()
@@ -2575,6 +2570,16 @@
 @end
 @interface TL_channelMessagesFilterCollapsed : TLChannelMessagesFilter<NSCoding>
 +(TL_channelMessagesFilterCollapsed*)create;
+@end
+	
+@interface TLcontacts_ResolvedPeer()
+@property (nonatomic, strong) TLPeer* peer;
+@property (nonatomic, strong) NSMutableArray* chats;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_contacts_resolvedPeer : TLcontacts_ResolvedPeer<NSCoding>
++(TL_contacts_resolvedPeer*)createWithPeer:(TLPeer*)peer chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLProtoMessage()

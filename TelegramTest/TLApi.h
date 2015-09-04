@@ -840,6 +840,27 @@
 +(TLAPI_messages_deleteChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
 @end
 
+@interface TLAPI_messages_editChatAbout : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property (nonatomic, strong) NSString* about;
+
++(TLAPI_messages_editChatAbout*)createWithChat_id:(TLInputChat*)chat_id about:(NSString*)about;
+@end
+
+@interface TLAPI_messages_checkChannelUsername : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property (nonatomic, strong) NSString* username;
+
++(TLAPI_messages_checkChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username;
+@end
+
+@interface TLAPI_messages_updateChannelUsername : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property (nonatomic, strong) NSString* username;
+
++(TLAPI_messages_updateChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username;
+@end
+
 @interface TLAPI_updates_getChannelDifference : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) TLChannelMessagesFilter* filter;

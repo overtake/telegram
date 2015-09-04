@@ -181,4 +181,14 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
 }
 
+-(BOOL)isAdmin {
+    return self.flags & (1 << 0);
+}
+-(BOOL)isBroadcast {
+    return self.flags & (1 << 1);
+}
+-(BOOL)isPublic {
+    return self.flags & (1 << 2);
+}
+
 @end
