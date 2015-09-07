@@ -158,12 +158,16 @@
         
         return @([SettingsArchiver checkMaskedSetting:MessagesNotificationPreview] && [SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
-        
+    
+    
+    [messagePreview setEnabled:[SettingsArchiver checkMaskedSetting:PushNotifications]];
     
     
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
         [SettingsArchiver addOrRemoveSetting:PushNotifications];
+        
+        [messagePreview setEnabled:[SettingsArchiver checkMaskedSetting:PushNotifications]];
         
         [self.tableView reloadData];
         

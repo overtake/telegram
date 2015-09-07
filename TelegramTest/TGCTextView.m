@@ -711,7 +711,7 @@
 
 
 
--(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest {
+-(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
     
    if(_disableLinks)
        return nil;
@@ -750,6 +750,12 @@
                 NSDictionary *attrs = [self.attributedString attributesAtIndex:position effectiveRange:&range];
                 link = [attrs objectForKey:NSLinkAttributeName];
                 
+                if(link.length > 0) {
+                    NSString *real = [self.attributedString.string substringWithRange:range];
+                    
+                    *itsReal = [link isEqualToString:real];
+                }
+                
                 *hitTest = YES;
                 
                 return link;
@@ -770,9 +776,9 @@
     
     if([self mouse:location inRect:self.bounds]) {
         
-        BOOL hitTest;
+        BOOL hitTest,itsReal;
         
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest];
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
         
         if(hitTest) {
             if(link) {
@@ -806,11 +812,11 @@
     if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
-        BOOL hitTest;
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest];
+        BOOL hitTest,itsReal;
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
         
         if(link) {
-            [self open_link:link];
+            [self open_link:link itsReal:itsReal];
         } else if(![self _checkClickCount:theEvent]) {
             [super mouseUp:theEvent];
         }
@@ -822,8 +828,17 @@
     [[NSCursor arrowCursor] set];
 }
 
--(void)open_link:(NSString *)link {
-    open_link(link);
+-(void)open_link:(NSString *)link  itsReal:(BOOL)itsReal {
+    if(itsReal) {
+        open_link(link);
+    } else {
+        confirm(appName(), [NSString stringWithFormat:@"Open URL: %@?",link], ^{
+            
+            open_link(link);
+            
+        }, nil);
+    }
+    
 }
 
 
