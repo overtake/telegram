@@ -794,12 +794,10 @@
 		C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78E81923CB76001A9D1B /* DocumentHistoryFilter.m */; };
 		C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EB1923CBA1001A9D1B /* PhotoHistoryFilter.m */; };
 		C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EE1924D934001A9D1B /* NoMessagesView.m */; };
-		C2FF82C01B9DF70900DE2455 /* Sparkle.framework in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2FF82C11B9DF70A00DE2455 /* HockeySDK.framework in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2FF82C21B9DF70E00DE2455 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2FF82C31B9DF70E00DE2455 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C2FF82C41B9DF78700DE2455 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2FF82C51B9DF78800DE2455 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2FF82D01B9DFC3D00DE2455 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2FF82D11B9DFC3D00DE2455 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2FF82D21B9DFC4100DE2455 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2FF82D31B9DFC4200DE2455 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837D17FD80AD0029EFCB /* libz.dylib */; };
 		CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837F17FDB68C0029EFCB /* CoreFoundation.framework */; };
 		CE0AC51D18BE0EE70031658A /* TL_destructMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0AC51C18BE0EE70031658A /* TL_destructMessage.m */; };
@@ -935,8 +933,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2FF82C41B9DF78700DE2455 /* Sparkle.framework in Copy Files (6 items) */,
-				C2FF82C51B9DF78800DE2455 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2FF82D21B9DFC4100DE2455 /* Sparkle.framework in Copy Files (6 items) */,
+				C2FF82D31B9DFC4200DE2455 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -956,8 +954,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C2FF82C01B9DF70900DE2455 /* Sparkle.framework in Embed App Extensions */,
-				C2FF82C11B9DF70A00DE2455 /* HockeySDK.framework in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2567,8 +2563,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2FF82C21B9DF70E00DE2455 /* Sparkle.framework in Frameworks */,
-				C2FF82C31B9DF70E00DE2455 /* HockeySDK.framework in Frameworks */,
+				C2FF82D01B9DFC3D00DE2455 /* Sparkle.framework in Frameworks */,
+				C2FF82D11B9DFC3D00DE2455 /* HockeySDK.framework in Frameworks */,
 				C2D826241B6FA8E800434D37 /* MtProtoKit.framework in Frameworks */,
 				C2D825EE1B6A711E00434D37 /* WebKit.framework in Frameworks */,
 				C2CBF64A1AFA5A23006BF90A /* MapKit.framework in Frameworks */,
@@ -6802,7 +6798,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -6844,7 +6840,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
