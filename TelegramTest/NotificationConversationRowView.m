@@ -87,12 +87,16 @@
     [super redrawRow];
     
     
+    [_notificationSwitch setEnabled:[SettingsArchiver checkMaskedSetting:PushNotifications]];
+    
     NotificationConversationRowItem *item = (NotificationConversationRowItem *) [self rowItem];
     
     [_avatarImageView updateWithConversation:item.conversation];
     [_nameTextField updateWithConversation:item.conversation];
  
     [_notificationSwitch setOn:!item.conversation.isMute animated:NO];
+    
+    
     
 }
 

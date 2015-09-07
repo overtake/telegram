@@ -250,6 +250,10 @@
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    
+    if(!self.isEnabled)
+        return;
+    
     self.isActive = NO;
     
     BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
@@ -325,8 +329,6 @@
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated {
     
-    if(!self.isEnabled)
-        return;
     
     _animationDuration = animated ? kAnimationDuration : 0;
    
