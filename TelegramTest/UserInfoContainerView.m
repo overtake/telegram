@@ -148,7 +148,7 @@
             BlockedHandler handlerBlock = ^(BOOL result) {
                 self.blockContact.locked = NO;
                 
-                if(!self.user.isBlocked)
+                if(!self.user.isBlocked && self.user.isBot)
                 {
                     [[Telegram rightViewController] navigationGoBack];
                     [[Telegram rightViewController].messagesViewController sendMessage:@"/start" forConversation:[Telegram conversation]];
