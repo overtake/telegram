@@ -832,7 +832,7 @@
     if(itsReal) {
         open_link(link);
     } else {
-        confirm(appName(), [NSString stringWithFormat:@"Open URL: %@?",link], ^{
+        confirm(appName(), [NSString stringWithFormat:@"Open this link: %@?",link], ^{
             
             open_link(link);
             
