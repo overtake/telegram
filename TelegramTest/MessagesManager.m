@@ -199,9 +199,8 @@ static const int seconds_to_notify = 120;
         }
         
         
-        //&& [SettingsArchiver checkMaskedSetting:PushNotifications]
         
-        if ([NSUserNotification class] && [NSUserNotificationCenter class] ) {
+        if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
             
             if([TGPasslock isVisibility] || [message.to_id isSecret] || ![SettingsArchiver checkMaskedSetting:MessagesNotificationPreview])
             {

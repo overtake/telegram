@@ -165,6 +165,13 @@
     }];
     
     
+    GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:PushNotifications];
+        
+    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
+    }];
     
     
     
@@ -206,7 +213,7 @@
     [self.tableView addItem:resetAllNotifications tableRedraw:NO];
     [self.tableView addItem:messagePreview tableRedraw:NO];
     [self.tableView addItem:soundNotification tableRedraw:NO];
-    
+    [self.tableView addItem:soundEffects tableRedraw:NO];
     [self.tableView addItem:description tableRedraw:NO];
     
     [self.tableView addItem:self.searchItem tableRedraw:NO];
