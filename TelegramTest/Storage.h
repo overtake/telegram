@@ -46,6 +46,8 @@ extern NSString *const RECENT_SEARCH;
 
 +(NSString *)path;
 
++(BOOL)isInitialized;
+
 // START MESSAGE AND DIALOGS PROCEDURES!!!
 
 

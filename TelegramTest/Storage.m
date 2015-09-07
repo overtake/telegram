@@ -62,6 +62,19 @@ static Storage *instance;
 
 }
 
++(BOOL)isInitialized {
+    
+    __block BOOL inited = NO;
+    
+    [keyQueue dispatchOnQueue:^{
+        
+        inited = instance != nil;
+        
+    } synchronous:YES];
+    
+    return inited;
+}
+
 +(void)initManagerWithCallback:(dispatch_block_t)callback {
     [keyQueue dispatchOnQueue:^{
         if(!instance)
