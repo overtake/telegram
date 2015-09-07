@@ -2038,7 +2038,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [db executeUpdate:@"update sharedmedia set message_id = ? where message_id = (select n_id from messages where random_id = ?)",@(n_id),@(random_id)];
         
-        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(random_id),@(DeliveryStateNormal)];
+        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(DeliveryStateNormal),@(random_id)];
         
     }];
 }

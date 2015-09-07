@@ -75,8 +75,6 @@
                     return;
                 
                 
-                
-                
                 NSRange range = [self checkAndReturnEntityRange:obj];
                 
                 NSString *link = [self.message.message substringWithRange:range];
