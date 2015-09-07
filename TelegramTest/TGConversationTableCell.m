@@ -337,6 +337,11 @@ static NSDictionary *attributes() {
         
         [_messageField setAttributedStringValue:attr];
         
+        if(!self.item.typing) {
+            [_timer invalidate];
+            _timer = nil;
+        }
+        
     } queue:[ASQueue mainQueue].nativeQueue];
     
     [_timer start];

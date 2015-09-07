@@ -154,6 +154,10 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
     
     
     
+    if(!encryptionKey) {
+        return;
+    }
+    
     self->queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
 
     
