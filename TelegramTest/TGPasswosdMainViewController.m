@@ -160,7 +160,8 @@
             
             GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PasswordSettings.AdditionDescription", nil)];
             
-            description.height = 60;
+            description.height = 100;
+            description.isFlipped = YES;
             
             
             [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
