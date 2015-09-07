@@ -78,8 +78,9 @@
 
 
 - (IBAction)openSettings:(id)sender {
-    [[Telegram rightViewController] showGeneralSettings];
     
+    [[Telegram leftViewController] showTabControllerAtIndex:2];
+        
 }
 
 - (IBAction)clearChatHistory:(NSMenuItem *)sender {

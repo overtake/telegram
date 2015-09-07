@@ -104,7 +104,7 @@
     if (self = [super initWithFrame:frameRect]) {
         _titleField = [TMTextField defaultTextField];
         
-        [[_titleField cell] setTruncatesLastVisibleLine:NO];
+        [[_titleField cell] setTruncatesLastVisibleLine:YES];
         
         [self addSubview:_titleField];
         
@@ -162,6 +162,7 @@
     
     [_removeButton setFrameOrigin:NSMakePoint(newSize.width - 100 - NSWidth(_removeButton.frame), 17)];
     [_titleField setFrameOrigin:NSMakePoint(100, 8)];
+    [_titleField setFrameSize:NSMakeSize(newSize.width - 280, NSHeight(_titleField.frame))];
     [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, 5)];
 }
 

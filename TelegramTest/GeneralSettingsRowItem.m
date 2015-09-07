@@ -24,6 +24,7 @@
         _height = height;
         _rand = arc4random();
         _stateback = stateback;
+        _enabled = YES;
     }
     
     return self;

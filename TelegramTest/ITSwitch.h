@@ -28,6 +28,7 @@ typedef void(^changeHandler)(BOOL isOn);
 @property (nonatomic, strong) NSColor *tintColor;
 @property(nonatomic, copy) changeHandler didChangeHandler;
 
+
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 
 @end

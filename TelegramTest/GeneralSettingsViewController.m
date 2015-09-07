@@ -39,72 +39,72 @@
     [SettingsArchiver addEventListener:self];
     
     
-    
-    GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoVideoDownloadHeader", nil)];
-    
-    autoPhotoHeader.height = 61;
-    
-     [self.tableView insert:autoPhotoHeader atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    
-    GeneralSettingsRowItem *autoPhotoDownloadGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        
-        [SettingsArchiver addOrRemoveSetting:AutoGroupVideo];
-        
-    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupVideo]);
-    }];
-    
-    [self.tableView insert:autoPhotoDownloadGroup atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    GeneralSettingsRowItem *autoPhotoDownloadPrivate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        
-        [SettingsArchiver addOrRemoveSetting:AutoPrivateVideo];
-        
-    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoPrivateVideo]);
-    }];
-    
-    [self.tableView insert:autoPhotoDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    //photo end
-    
-    
-    
-    //audio
-    
-    GeneralSettingsBlockHeaderItem *autoAudioHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoAudioDownloadHeader", nil)];
-    
-     autoAudioHeader.height = 51;
-    
-    [self.tableView insert:autoAudioHeader atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    
-    
-    GeneralSettingsRowItem *autoAudioDownloadGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        
-        [SettingsArchiver addOrRemoveSetting:AutoGroupAudio];
-        
-    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
-    }];
-    
-    [self.tableView insert:autoAudioDownloadGroup atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
-    GeneralSettingsRowItem *autoAudioDownloadPrivate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        
-        [SettingsArchiver addOrRemoveSetting:AutoPrivateAudio];
-        
-    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoPrivateAudio]);
-    }];
-    
-    [self.tableView insert:autoAudioDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    GeneralSettingsBlockHeaderItem *autoPhotoHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoVideoDownloadHeader", nil)];
+//    
+//    autoPhotoHeader.height = 61;
+//    
+//     [self.tableView insert:autoPhotoHeader atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    
+//    
+//    GeneralSettingsRowItem *autoPhotoDownloadGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        
+//        [SettingsArchiver addOrRemoveSetting:AutoGroupVideo];
+//        
+//    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:AutoGroupVideo]);
+//    }];
+//    
+//    [self.tableView insert:autoPhotoDownloadGroup atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    
+//    GeneralSettingsRowItem *autoPhotoDownloadPrivate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        
+//        [SettingsArchiver addOrRemoveSetting:AutoPrivateVideo];
+//        
+//    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:AutoPrivateVideo]);
+//    }];
+//    
+//    [self.tableView insert:autoPhotoDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    
+//    //photo end
+//    
+//    
+//    
+//    //audio
+//    
+//    GeneralSettingsBlockHeaderItem *autoAudioHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"GeneralSettings.AutoAudioDownloadHeader", nil)];
+//    
+//     autoAudioHeader.height = 51;
+//    
+//    [self.tableView insert:autoAudioHeader atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    
+//    
+//    
+//    GeneralSettingsRowItem *autoAudioDownloadGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        
+//        [SettingsArchiver addOrRemoveSetting:AutoGroupAudio];
+//        
+//    } description:NSLocalizedString(@"Settings.Groups", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+//    }];
+//    
+//    [self.tableView insert:autoAudioDownloadGroup atIndex:self.tableView.list.count tableRedraw:NO];
+//    
+//    
+//    GeneralSettingsRowItem *autoAudioDownloadPrivate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        
+//        [SettingsArchiver addOrRemoveSetting:AutoPrivateAudio];
+//        
+//    } description:NSLocalizedString(@"Settings.PrivateChats", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:AutoPrivateAudio]);
+//    }];
+//    
+//    [self.tableView insert:autoAudioDownloadPrivate atIndex:self.tableView.list.count tableRedraw:NO];
 
     
 //    GeneralSettingsBlockHeaderItem *notificationsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.MessageNotificationsHeader", nil)];
@@ -116,42 +116,6 @@
 
 //    
     
-//    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
-//        
-//    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-//        return NSLocalizedString([SettingsArchiver soundNotification], nil);
-//    }];
-//    
-//    
-//    
-//    
-//    
-//    
-//    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-//    
-//    NSArray *list = soundsList();
-//    
-//    for (int i = 0; i < list.count; i++) {
-//        
-//        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
-//            
-//            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
-//                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-//            else
-//                [SettingsArchiver setSoundNotification:sender.title];
-//            
-//            [self.tableView reloadData];
-//            
-//        }];
-//        
-//        
-//        
-//        [menu addItem:item];
-//    }
-//    
-//    soundNotification.menu = menu;
-//    
-//    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     GeneralSettingsBlockHeaderItem *chatSettingsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.ChatSettingsHeader", nil)];
@@ -160,16 +124,55 @@
     
     [self.tableView insert:chatSettingsHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
-    //audio end
     
-    GeneralSettingsRowItem *emojiReplaces = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
-    } description:NSLocalizedString(@"Settings.EmojiReplaces", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
+    
+    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
+        
+    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return NSLocalizedString([SettingsArchiver soundNotification], nil);
     }];
     
-    [self.tableView insert:emojiReplaces atIndex:self.tableView.list.count tableRedraw:NO];
     
+    
+    
+    
+    
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+    
+    NSArray *list = soundsList();
+    
+    for (int i = 0; i < list.count; i++) {
+        
+        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
+            
+            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
+                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+            else
+                [SettingsArchiver setSoundNotification:sender.title];
+            
+            [self.tableView reloadData];
+            
+        }];
+        
+        
+        
+        [menu addItem:item];
+    }
+    
+    soundNotification.menu = menu;
+    
+    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    //audio end
+//    
+//    GeneralSettingsRowItem *emojiReplaces = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
+//    } description:NSLocalizedString(@"Settings.EmojiReplaces", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
+//    }];
+//    
+//    [self.tableView insert:emojiReplaces atIndex:self.tableView.list.count tableRedraw:NO];
+//    
     
     
     GeneralSettingsRowItem *bigFong = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
@@ -196,17 +199,16 @@
     }];
     
     [self.tableView insert:stickers atIndex:self.tableView.list.count tableRedraw:NO];
-   
-    GeneralSettingsRowItem *cache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
-        
-        [[Telegram rightViewController] showCacheSettingsViewController];
-        
-    } description:NSLocalizedString(@"Settings.Cache", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return nil;
-    }];
     
-    [self.tableView insert:cache atIndex:self.tableView.list.count tableRedraw:NO];
-
+    
+    
+    GeneralSettingsBlockHeaderItem *advancedHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.AdvancedSettingsHeader", nil)];
+    
+    advancedHeader.height = 61;
+    
+    [self.tableView insert:advancedHeader atIndex:self.tableView.list.count tableRedraw:NO];
+   
+    
     
 //    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
 //        
@@ -220,6 +222,7 @@
     
     
     
+    
     GeneralSettingsRowItem *advancedSettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
         
         [[Telegram mainViewController].settingsWindowController showWindowWithAction:SettingsWindowActionChatSettings];
@@ -229,6 +232,18 @@
     }];
     
     [self.tableView insert:advancedSettings atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    GeneralSettingsRowItem *cache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        
+        [[Telegram rightViewController] showCacheSettingsViewController];
+        
+    } description:NSLocalizedString(@"Settings.Cache", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return nil;
+    }];
+    
+    [self.tableView insert:cache atIndex:self.tableView.list.count tableRedraw:NO];
+
     
     
 #ifdef TGDEBUG

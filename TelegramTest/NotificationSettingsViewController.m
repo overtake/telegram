@@ -117,6 +117,8 @@
             
             [RPCRequest sendRequest:[TLAPI_account_resetNotifySettings create] successHandler:^(id request, id response) {
                 
+                [SettingsArchiver addSetting:PushNotifications];
+                
                 [self.items enumerateObjectsUsingBlock:^(NotificationConversationRowItem *obj, NSUInteger idx, BOOL *stop) {
                     
                     [obj.conversation updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
@@ -140,12 +142,13 @@
             
         }, nil);
         
-    } description:NSLocalizedString(@"NotificationSettings.ResetAllNotifications", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"NotificationSettings.ResetAllNotifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         
         
         return @"";
     }];
     
+    resetAllNotifications.textColor = [NSColor redColor];
     
     GeneralSettingsRowItem *messagePreview = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
@@ -154,51 +157,53 @@
     } description:NSLocalizedString(@"NotificationSettings.MessagePreview", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         
         
-        return @([SettingsArchiver checkMaskedSetting:MessagesNotificationPreview]);
+        return @([SettingsArchiver checkMaskedSetting:MessagesNotificationPreview] && [SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
-    
-    
-    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
         
-    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return NSLocalizedString([SettingsArchiver soundNotification], nil);
-    }];
     
     
     GeneralSettingsRowItem *soundEffects = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
         [SettingsArchiver addOrRemoveSetting:PushNotifications];
         
-    } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        [self.tableView reloadData];
+        
+    } description:NSLocalizedString(@"Notifications", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:PushNotifications]);
     }];
     
     
     
     
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-    
-    NSArray *list = soundsList();
-    
-    for (int i = 0; i < list.count; i++) {
-        
-        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
-            
-            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
-                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
-            else
-                [SettingsArchiver setSoundNotification:sender.title];
-            
-            [self.tableView reloadData];
-            
-        }];
-        
-        
-        
-        [menu addItem:item];
-    }
-    
-    soundNotification.menu = menu;
+//    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(GeneralSettingsRowItem *item) {
+//        
+//    } description:NSLocalizedString(@"Settings.NotificationTone", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//        return NSLocalizedString([SettingsArchiver soundNotification], nil);
+//    }];
+//    
+//    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+//    
+//    NSArray *list = soundsList();
+//    
+//    for (int i = 0; i < list.count; i++) {
+//        
+//        NSMenuItem *item = [NSMenuItem menuItemWithTitle:NSLocalizedString(list[i], nil) withBlock:^(NSMenuItem *sender) {
+//            
+//            if([sender.title isEqualToString:NSLocalizedString(@"DefaultSoundName", nil)])
+//                [SettingsArchiver setSoundNotification:@"DefaultSoundName"];
+//            else
+//                [SettingsArchiver setSoundNotification:sender.title];
+//            
+//            [self.tableView reloadData];
+//            
+//        }];
+//        
+//        
+//        
+//        [menu addItem:item];
+//    }
+//    
+//    soundNotification.menu = menu;
 
     
     GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"NotificationSettings.Description", nil)];
@@ -209,11 +214,13 @@
     
     
     
+    [self.tableView addItem:soundEffects tableRedraw:NO];
+
+    [self.tableView addItem:messagePreview tableRedraw:NO];
+   // [self.tableView addItem:soundNotification tableRedraw:NO];
+    
     
     [self.tableView addItem:resetAllNotifications tableRedraw:NO];
-    [self.tableView addItem:messagePreview tableRedraw:NO];
-    [self.tableView addItem:soundNotification tableRedraw:NO];
-    [self.tableView addItem:soundEffects tableRedraw:NO];
     [self.tableView addItem:description tableRedraw:NO];
     
     [self.tableView addItem:self.searchItem tableRedraw:NO];

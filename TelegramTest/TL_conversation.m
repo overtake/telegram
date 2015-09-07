@@ -154,7 +154,7 @@
     if(self.type == DialogTypeSecretChat)
         return NO;
     
-    return self.notify_settings.mute_until > [[MTNetwork instance] getTime];
+    return self.notify_settings.mute_until > [[MTNetwork instance] getTime] || ![SettingsArchiver checkMaskedSetting:PushNotifications];
 }
 
 
