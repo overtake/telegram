@@ -234,7 +234,7 @@ static NSImage *attachBackgroundThumb() {
         [self.fileNameTextField setDrawsBackground:NO];
 //        [self.fileNameTextField setBackgroundColor:[NSColor redColor]];
         
-        [[self.fileNameTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
+        [[self.fileNameTextField cell] setLineBreakMode:NSLineBreakByTruncatingMiddle];
         [[self.fileNameTextField cell] setTruncatesLastVisibleLine:YES];
         
         [self.containerView addSubview:self.fileNameTextField];
