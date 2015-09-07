@@ -865,7 +865,7 @@ static int offsetEditable = 30;
 
 - (void)checkState:(SenderItem *)sender {
         if(sender.state == MessageSendingStateSent) {
-            [self.item.messageSender removeEventListener:self];
+            [sender removeEventListener:self];
             self.cellState = CellStateNormal;
             self.item.messageSender = nil;
         }
@@ -998,7 +998,7 @@ static int offsetEditable = 30;
                 [self deleteAndCancel];
             }
         } else
-            [self.item.messageSender removeEventListener:self];
+            [item removeEventListener:self];
     }];
     
 }
