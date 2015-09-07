@@ -270,16 +270,20 @@ static NSDictionary *attributes() {
 
 -(void)updateFrames {
     
+    NSValue *point = [self stateImage][@"point"];
+    
      [_swipe setFrameSize:self.frame.size];
     
+    
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
+    
     
     [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
     
-    NSValue *point = [self stateImage][@"point"];
+    point = [self stateImage][@"point"];
     
     if(point) {
         [_stateImageView setFrame:NSMakeRect([point pointValue].x, [point pointValue].y, NSWidth(_stateImageView.frame), NSHeight(_stateImageView.frame))];
@@ -417,7 +421,10 @@ static NSDictionary *attributes() {
         _stateImageView = nil;
     }
     
-    
+    if(stateImage && !_stateImageView) {
+        int bp = 0;
+    }
+
     
     [self updateFrames];
     
@@ -433,7 +440,6 @@ static NSDictionary *attributes() {
         
         NSPoint point;
         
-        if(self.style != ConversationTableCellShortStyle) {
             if(self.item.message.dstate == DeliveryStateNormal) {
                 
                 if(!self.item.message.unread) {
@@ -460,7 +466,6 @@ static NSDictionary *attributes() {
             
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};
             
-        }
     }
     
     return nil;

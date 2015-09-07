@@ -466,6 +466,9 @@
          contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
       </ContextState>
       <ContextState
+         contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -518,6 +521,14 @@
       </ContextState>
       <ContextState
          contextName = "-[UserInfoContainerView buildTTLTitle]:UserInfoContainerView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[FullChatManager loadFullChatByChatId:force:isChannel:callback:]:FullChatManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "isChannel">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:]:TGModernEncryptedUpdates.m">
@@ -745,6 +756,9 @@
                value = "filePath">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__65-[FullChatManager loadFullChatByChatId:force:isChannel:callback:]_block_invoke:FullChatManager.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
@@ -1317,6 +1331,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MTDiscoverDatacenterAddressAction getConfigSuccess:]:MTDiscoverDatacenterAddressAction.m">
+      </ContextState>
+      <ContextState
+         contextName = "__51-[ChatHistoryController notificationDeleteMessage:]_block_invoke_2:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke212:TGAllStickersTableView.m">
@@ -1904,6 +1921,9 @@
          contextName = "__35-[ForwardSenterItem performRequest]_block_invoke82:ForwardSenterItem.m">
       </ContextState>
       <ContextState
+         contextName = "__51-[ChatHistoryController notificationDeleteMessage:]_block_invoke:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__23-[DownloadItem notify:]_block_invoke_3:DownloadItem.m">
       </ContextState>
       <ContextState
@@ -2191,6 +2211,9 @@
          contextName = "-[ImageAttachSenderItem performRequest]:ImageAttachSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__39-[DialogsManager deleteChannelMessags:]_block_invoke_2:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "__61-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]_block_invoke:ChannelImportantFilter.m">
       </ContextState>
       <ContextState
@@ -2266,9 +2289,6 @@
          <PersistentStrings>
             <PersistentString
                value = "encryptedDatabasePath">
-            </PersistentString>
-            <PersistentString
-               value = "copyDbPath">
             </PersistentString>
             <PersistentString
                value = "encryptionKey">
@@ -2542,6 +2562,9 @@
          contextName = "-[TGProccessUpdates proccessStatefulMessage:needSave:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "__57-[Storage deleteChannelMessagesMessages:completeHandler:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -2630,6 +2653,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController isHeaderMessage:prevItem:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke95:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
@@ -3417,6 +3443,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGConversationTableCell setItem:]:TGConversationTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "stateImage">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService processMessage:]:TGUpdateMessageService.m">
