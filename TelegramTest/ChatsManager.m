@@ -165,5 +165,28 @@
     
 }
 
+-(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler  {
+    
+    [RPCRequest sendRequest:[TLAPI_messages_updateChannelUsername createWithChat_id:channel.input username:userName] successHandler:^(id request, id response) {
+        
+        if([response isKindOfClass:[TL_boolTrue class]]) {
+            channel.username = userName;
+            [[Storage manager] insertChat:channel completeHandler:nil];
+            
+            if(completeHandler != nil) {
+                completeHandler(channel);
+            }
+        }
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+        if(errorHandler != nil) {
+            errorHandler(error.error_msg);
+        }
+        
+    }];
+    
+}
+
 
 @end

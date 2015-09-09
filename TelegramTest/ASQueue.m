@@ -112,80 +112,80 @@
         if (_isMainQueue)
         {
             if ([NSThread isMainThread]) {
-                @try {
+            //    @try {
                      block();
-                }
-                @catch (NSException *exception) {
-                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+            //    }
+           //     @catch (NSException *exception) {
+                //    MTLog(@"fatal error: %@",[exception callStackSymbols]);
                     
 #ifdef TGDEBUG
-                    [self alertUserWithCrash:exception];
+                 //   [self alertUserWithCrash:exception];
 #endif
-                }
+           //     }
                 
             }
             
             else if (synchronous)
                 dispatch_sync(_queue, ^{
-                    @try {
+              //      @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+              //      }
+                 //   @catch (NSException *exception) {
+                      //   MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                     //   [self alertUserWithCrash:exception];
 #endif
-                    }
+                 //   }
                     
                 });
             else
                 dispatch_async(_queue, ^{
-                    @try {
+                //    @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                 //   }
+                  //  @catch (NSException *exception) {
+                    //     MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                   //     [self alertUserWithCrash:exception];
 #endif
-                    }
+                 //   }
                 });
         }
         else
         {
             if (dispatch_get_current_queue() == self.nativeQueue)
-                @try {
+               // @try {
                     block();
-                }
-                @catch (NSException *exception) {
-                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+              //  }
+               // @catch (NSException *exception) {
+                 //   MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                    [self alertUserWithCrash:exception];
+                  //  [self alertUserWithCrash:exception];
 #endif
-                }
+              //  }
             else if (synchronous)
                 dispatch_sync(_queue, ^{
-                    @try {
+                  //  @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                 //   }
+                   // @catch (NSException *exception) {
+                   //      MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                   //     [self alertUserWithCrash:exception];
 #endif
-                    }
+                  //  }
                 });
             else
                 dispatch_async(_queue, ^{
-                    @try {
+                   // @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                  //  }
+                  //  @catch (NSException *exception) {
+                    //     MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                     //   [self alertUserWithCrash:exception];
 #endif
-                    }
+                   // }
                 });
         }
     }

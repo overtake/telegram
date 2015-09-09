@@ -199,6 +199,8 @@
         
     [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:isChannel ? [TL_inputChannel createWithChannel_id:chat.n_id access_hash:chat.access_hash] : [TL_inputChat createWithChat_id:chat_id]] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
         
+         [SharedManager proccessGlobalResponse:result];
+        
         if([result isKindOfClass:[TL_messages_chatFull class]]) {
             TL_conversation *conversation = [[DialogsManager sharedManager] findByChatId:chat_id];
             
@@ -207,7 +209,17 @@
             [conversation save];
         }
         
-        [SharedManager proccessGlobalResponse:result];
+        if(![result full_chat]) {
+            [ASQueue dispatchOnMainQueue:^{
+                if(callback)
+                    callback([result full_chat]);
+            }];
+            
+            return;
+        }
+        
+        
+       
         
         [self.queue dispatchOnQueue:^{
             

@@ -1,19 +1,20 @@
 //
-//  ComposeActionCreateChannelBehavior.m
+//  ComposeActionCreatePublicChannelBehavior.m
 //  Telegram
 //
-//  Created by keepcoder on 19.08.15.
+//  Created by keepcoder on 08.09.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "ComposeActionCreateChannelBehavior.h"
-#import "SelectUserItem.h"
+#import "ComposeActionCreatePublicChannelBehavior.h"
 
-@interface ComposeActionCreateChannelBehavior ()
+
+@interface ComposeActionCreatePublicChannelBehavior ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
 
-@implementation ComposeActionCreateChannelBehavior
+@implementation ComposeActionCreatePublicChannelBehavior
+
 
 -(NSUInteger)limit {
     return -1;
@@ -27,7 +28,7 @@
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-     [attr appendString:NSLocalizedString(@"Compose.ChannelTitle", nil) withColor:NSColorFromRGB(0x333333)];
+    [attr appendString:NSLocalizedString(@"Compose.ChannelTitle", nil) withColor:NSColorFromRGB(0x333333)];
     
     [attr setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attr.length-1)];
     
@@ -52,19 +53,7 @@
 
 -(void)createChannel {
     
-    
-    NSArray *selected = self.action.result.multiObjects;
-    
-    
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for(SelectUserItem* item in selected) {
-        if(item.user.type != TLUserTypeSelf) {
-            [array addObject:[item.user inputUser]];
-        }
-        
-    }
-   
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel createWithFlags:1 << 0 title:self.action.result.singleObject users:array] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel createWithFlags:0 title:self.action.result.singleObject users:nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
         if(response.chats.count > 0) {
@@ -78,10 +67,8 @@
                 
                 [[Telegram sharedInstance] showMessagesFromDialog:channel.dialog sender:self];
             }];
-        
+            
         }
-        
-        
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -99,5 +86,4 @@
     
     [self.delegate behaviorDidEndRequest:nil];
 }
-
 @end

@@ -543,7 +543,7 @@
 }
 
 - (void)showByDialog:(TL_conversation *)dialog sender:(id)sender {
-    [self showByDialog:dialog withJump:0 historyFilter:[HistoryFilter class] sender:sender];
+    [self showByDialog:dialog withJump:0 historyFilter:nil sender:sender];
 }
 
 
@@ -657,19 +657,19 @@
 }
 
 -(void)showComposeCreateChannel:(ComposeAction *)composeAction {
-    if(self.navigationViewController.currentController == self.composeCreateChannelViewController && self.composeCreateChannelViewController.action == composeAction)
+    if(self.navigationViewController.currentController == self.composeChatCreateViewController && self.composeChatCreateViewController.action == composeAction)
         return;
     
-    if(!self.composeCreateChannelViewController)
+    if(!self.composeChatCreateViewController)
     {
-        self.composeCreateChannelViewController = [[ComposeCreateChannelViewController alloc] initWithFrame:self.view.bounds];
+        self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
     }
     
     
     [self hideModalView:YES animation:NO];
     
-    [self.composeCreateChannelViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeCreateChannelViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    [self.composeChatCreateViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 
 }
 
@@ -782,8 +782,23 @@
     
     [self hideModalView:YES animation:NO];
     
+    self.userNameViewController.channel = nil;
+    self.userNameViewController.completionHandler = nil;
     
     [self.navigationViewController pushViewController:self.userNameViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+- (void)showUserNameControllerWithChannel:(TL_channel *)channel completionHandler:(dispatch_block_t)completionHandler {
+    if(self.navigationViewController.currentController == self.userNameViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    self.userNameViewController.channel = channel;
+    self.userNameViewController.completionHandler = completionHandler;
+    
+    [self.navigationViewController pushViewController:self.userNameViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
 }
 
 -(void)showAddContactController {

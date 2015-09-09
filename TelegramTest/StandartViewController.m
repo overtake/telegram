@@ -12,6 +12,7 @@
 #import "ComposeActionBroadcastBehavior.h"
 #import "TGRecentSearchTableView.h"
 #import "ComposeActionCreateChannelBehavior.h"
+#import "ComposeActionCreatePublicChannelBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -180,7 +181,7 @@
         
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
         
-        [[Telegram rightViewController] showComposeCreateChannel:action];
+        [[Telegram rightViewController] showComposeWithAction:action];
         
         [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
         
@@ -208,23 +209,23 @@
     
     
     
-    
-    NSMenuItem *broadcast = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.Broadcast", nil) withBlock:^(id sender) {
-        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBroadcastBehavior class]];
-        
-        if([[BroadcastManager sharedManager] all].count == 0) {
-             [[Telegram rightViewController] showComposeWithAction:action];
-        } else {
-             [[Telegram rightViewController] showComposeBroadcastList:action];
-        }
-        
-       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-        
-    }];
-
-    [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-    [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-    [theMenu addItem:broadcast];
+//    
+//    NSMenuItem *broadcast = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.Broadcast", nil) withBlock:^(id sender) {
+//        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBroadcastBehavior class]];
+//        
+//        if([[BroadcastManager sharedManager] all].count == 0) {
+//             [[Telegram rightViewController] showComposeWithAction:action];
+//        } else {
+//             [[Telegram rightViewController] showComposeBroadcastList:action];
+//        }
+//        
+//       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+//        
+//    }];
+//
+//    [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+//    [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+//    [theMenu addItem:broadcast];
     
    
     

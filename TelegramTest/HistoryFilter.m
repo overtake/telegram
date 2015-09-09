@@ -19,17 +19,15 @@
 #import "SharedLinksHistoryFilter.h"
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
-@interface HistoryFilter ()
-{
-    BOOL _de_alloc;
-}
-
-@end
 
 @implementation HistoryFilter
 
-static NSMutableDictionary * messageItems;
-static NSMutableDictionary * messageKeys;
+
+static NSMutableDictionary * classItems;
+
+
+static NSString *kMessageKeys = @"kMessageKeys";
+static NSString *kMessageItems = @"kMessageItems";
 
 -(id)initWithController:(ChatHistoryController *)controller {
     if(self = [super init]) {
@@ -61,16 +59,46 @@ static NSMutableDictionary * messageKeys;
     
 }
 
-+(NSArray *)items:(NSArray *)msgIds {
++(NSMutableDictionary *)fClassData {
     
+    NSMutableDictionary *classData = classItems[NSStringFromClass(self.class)];
+    
+    if(classData == nil) {
+        classData = [NSMutableDictionary dictionary];
+        classData[kMessageItems] = [NSMutableDictionary dictionary];
+        classData[kMessageKeys] = [NSMutableDictionary dictionary];
+        
+        classItems[NSStringFromClass(self.class)] = classData;
+    }
+    
+    return classData;
+}
 
++(NSMutableDictionary *)fClassItems {
+    
+    id items = self.fClassData[kMessageItems];
+    
+    
+    assert(items != nil);
+    
+    return items;
+}
++(NSMutableDictionary *)fClassKeys {
+    id keys = self.fClassData[kMessageKeys];
+    
+    assert(keys != nil);
+    
+    return keys;
+}
+
++(NSArray *)items:(NSArray *)msgIds {
     
     NSMutableArray *messageIds = [msgIds mutableCopy];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     [ASQueue dispatchOnStageQueue:^{
-        [messageKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
+        [self.fClassKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
             
             
             NSMutableArray *finded = [[NSMutableArray alloc] init];
@@ -109,29 +137,47 @@ static NSMutableDictionary * messageKeys;
 }
 
 - (NSMutableDictionary *)messageKeys:(int)peer_id {
-    return [[self class] messageKeys:peer_id];
+    
+    NSMutableDictionary *messageKeys = self.class.fClassKeys[@(peer_id)];
+    
+    
+    if(messageKeys == nil) {
+        messageKeys = [NSMutableDictionary dictionary];
+        self.class.fClassKeys[@(peer_id)] = messageKeys;
+    }
+    
+    return messageKeys;
 }
 
 - (NSMutableArray *)messageItems:(int)peer_id {
-    return [[self class] messageItems:peer_id];
+    
+    NSMutableArray *messageItems = self.class.fClassItems[@(peer_id)];
+    
+    
+    if(messageItems == nil) {
+        messageItems = [NSMutableArray array];
+        self.class.fClassItems[@(peer_id)] = messageItems;
+    }
+    
+    return messageItems;
 }
 
 + (NSMutableDictionary *)messageKeys:(int)peer_id {
     
-    __block NSMutableDictionary *keys;
+    __block NSMutableDictionary *messageKeys;
     [ASQueue dispatchOnStageQueue:^{
         
-        keys = messageKeys[@(peer_id)];
+        messageKeys = self.fClassKeys[@(peer_id)];
         
-        if(!keys)
-        {
-            keys = [[NSMutableDictionary alloc] init];
-            messageKeys[@(peer_id)] = keys;
+        
+        if(messageKeys == nil) {
+            messageKeys = [NSMutableDictionary dictionary];
+            self.fClassKeys[@(peer_id)] = messageKeys;
         }
-
+        
     } synchronous:YES];
     
-    return keys;
+    return messageKeys;
 }
 
 + (NSMutableArray *)messageItems:(int)peer_id {
@@ -139,12 +185,12 @@ static NSMutableDictionary * messageKeys;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        items = messageItems[@(peer_id)];
+        items = self.fClassItems[@(peer_id)];
         
         if(!items)
         {
             items = [[NSMutableArray alloc] init];
-            messageItems[@(peer_id)] = items;
+            self.fClassItems[@(peer_id)] = items;
         }
         
     } synchronous:YES];
@@ -154,14 +200,6 @@ static NSMutableDictionary * messageKeys;
     return items;
 }
 
-+(void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        messageItems = [[NSMutableDictionary alloc] init];
-        messageKeys = [[NSMutableDictionary alloc] init];
-        
-    });
-}
 
 
 -(int)type {
@@ -174,9 +212,8 @@ static NSMutableDictionary * messageKeys;
 
 +(void)drop {
     [ASQueue dispatchOnStageQueue:^{
-        [messageKeys removeAllObjects];
-        [messageItems removeAllObjects];
-        
+        [self.fClassItems removeAllObjects];
+        [self.fClassItems removeAllObjects];
         
         [PhotoHistoryFilter drop];
         [DocumentHistoryFilter drop];
@@ -189,9 +226,15 @@ static NSMutableDictionary * messageKeys;
         [ChannelFilter drop];
     }];
     
-    
-    
-    
+}
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        classItems = [NSMutableDictionary dictionary];
+        
+    });
 }
 
 -(NSArray *)storageRequest:(BOOL)next {
@@ -199,7 +242,6 @@ static NSMutableDictionary * messageKeys;
     int maxDate = next ? _controller.maxDate : _controller.minDate;
     
     return [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
-
     
 }
 
@@ -230,10 +272,6 @@ static NSMutableDictionary * messageKeys;
 
 
 -(void)dealloc {
-    
-    _de_alloc = YES;
-    
- //   NSLog(@"dealloc %@ : %@",self,[NSThread currentThread]);
     
     
     [self.request cancelRequest];

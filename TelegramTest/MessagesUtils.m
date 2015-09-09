@@ -14,7 +14,7 @@
 #import "TGDateUtils.h"
 @implementation MessagesUtils
 
-+(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
++(NSString *)serviceMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
@@ -45,8 +45,9 @@
         text = action.title;
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
         
+        NSString *fullName = message.from_id == 0 ? message.chat.title : [user fullName];
         
-        text = [NSString stringWithFormat:@"%@ %@", [user fullName],NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
+        text = [NSString stringWithFormat:@"%@ %@", fullName,NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
         
     }
     return text;
@@ -176,8 +177,14 @@
             // if(userLast == [UsersManager currentUser])
             //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
             //  else
-            if(message.conversation.type != DialogTypeSecretChat)
-                chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
+            
+            if(message.from_id == 0) {
+                chatUserNameString = message.chat.title;
+            } else {
+                if(message.conversation.type != DialogTypeSecretChat)
+                    chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
+            }
+            
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
@@ -285,7 +292,7 @@
     return messageText;
 }
 
-+ (NSAttributedString *) serviceAttributedMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
++ (NSAttributedString *) serviceAttributedMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     
@@ -369,16 +376,12 @@
     
     NSRange start;
     //  if(user != [UsersManager currentUser]) {
-    start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
-    [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
-    //    } else {
-    //        start = [attributedString appendString:NSLocalizedString(@"Profile.You", nil) withColor:NSColorFromRGB(0xaeaeae)];
-    //        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-    //        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
-    //    }
+    start = [attributedString appendString:message.from_id == 0 ? message.chat.title : [user fullName] withColor:LINK_COLOR];
     
-    
+    if(message.from_id > 0) {
+        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
+        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+    }
     
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];

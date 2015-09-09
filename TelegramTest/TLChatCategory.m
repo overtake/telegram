@@ -30,7 +30,7 @@ DYNAMIC_PROPERTY(DDialog);
     }
     
     if(!dialog) {
-        dialog = [[Storage manager] selectConversation:[TL_peerChat createWithChat_id:self.n_id]];
+        dialog = [[Storage manager] selectConversation:self.peer];
         
         if(!dialog) {
             if([self isKindOfClass:[TL_channel class]])
@@ -181,6 +181,10 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
 }
 
+-(TLPeer *)peer {
+    return [self isKindOfClass:[TL_channel class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
+}
+
 -(BOOL)isAdmin {
     return self.flags & (1 << 0);
 }
@@ -189,6 +193,10 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 -(BOOL)isPublic {
     return self.flags & (1 << 2);
+}
+
+-(NSString *)usernameLink {
+    return self.username.length > 0 ? [NSString stringWithFormat:@"https://telegram.me/%@",self.username] : @"";
 }
 
 @end

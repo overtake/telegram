@@ -25,14 +25,14 @@ static NSMutableDictionary *senders;
     return self;
 }
 
-- (id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation {
+- (id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         [NSException raise:@"Fatal sending error" format:@"Can't use (%@) this class class for send message with file path",NSStringFromClass([self class])];
     }
     return self;
 }
 
-- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation  {
+- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags  {
     if(self = [super init]) {
         [NSException raise:@"Fatal sending error" format:@"Can't use (%@) this class class for send message with file path",NSStringFromClass([self class])];
     }
@@ -387,6 +387,18 @@ static NSMutableArray *waiting;
         }
     }
     
+}
+
+-(int)senderFlags {
+    int flags = 0;
+    
+    flags|= self.message.reply_to_msg_id != 0 ? 1 : 0;
+    
+    flags|=[self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
+    
+    flags|=self.message.from_id == 0 ? 1 << 4 : 0;
+    
+    return flags;
 }
 
 -(TL_updateNewMessage *)updateNewMessageWithUpdates:(TLUpdates *)updates {

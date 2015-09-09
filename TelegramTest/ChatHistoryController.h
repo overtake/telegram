@@ -51,7 +51,6 @@
 -(HistoryFilter *)filter;
 -(void)setFilter:(HistoryFilter *)filter;
 
--(id)initWithController:(id<MessagesDelegate>)controller;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;
 typedef void (^selectHandler)(NSArray *result, NSRange range);
 
@@ -75,5 +74,16 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)startChannelPolling;
 
 -(TL_conversation *)conversation;
+
+
+
+// protected methods
+-(NSArray *)selectAllItems;
+-(ASQueue *)queue;
+-(NSArray *)filterAndAdd:(NSArray *)items isLates:(BOOL)isLatest;
+-(NSArray *)sortItems:(NSArray *)sort;
+-(void)setProccessing:(BOOL)isProccessing;
+-(void)setState:(ChatHistoryState)state next:(BOOL)next;
+-(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range;
 @end
 

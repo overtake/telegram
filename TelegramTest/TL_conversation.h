@@ -84,6 +84,8 @@ typedef enum {
 - (NSUInteger)cacheHash;
 - (NSString *)cacheKey;
 
+-(BOOL)canEditConversation;
+
 -(long)channel_top_message_id;
 
 - (DialogType) type;

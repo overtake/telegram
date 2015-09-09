@@ -32,7 +32,7 @@
     return self;
 }
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags {
     if(self = [self initWithMessage:message forConversation:conversation]) {
         
     }

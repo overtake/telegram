@@ -466,6 +466,9 @@
          contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
       </ContextState>
       <ContextState
+         contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1028,6 +1031,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChatInfoViewController reloadParticipants]:ChatInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.fullChat">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -1336,6 +1347,9 @@
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke212:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
+         contextName = "__47-[TGPVMediaBehavior loadRemote:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchViewController searchByString:]:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1380,6 +1394,17 @@
          <PersistentStrings>
             <PersistentString
                value = "frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelInfoHeaderView reload]:ChannelInfoHeaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "[chat isPublic]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1801,6 +1826,9 @@
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[TMCollectionPageController loadRemote]_block_invoke_2:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
          contextName = "__42-[TGSModalSenderView sendAsMedia:rowItem:]_block_invoke_2:TGSModalSenderView.m">
       </ContextState>
       <ContextState
@@ -2013,6 +2041,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageView setObject:]:TGPVImageView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "max_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__72-[Storage loadChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
@@ -2652,6 +2688,9 @@
          contextName = "-[MessagesViewController isHeaderMessage:prevItem:]:MessagesViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke95:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
       </ContextState>
       <ContextState
@@ -2965,6 +3004,11 @@
       </ContextState>
       <ContextState
          contextName = "open_user_by_name:FileUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "params[@&quot;domain&quot;]]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">
@@ -3118,6 +3162,9 @@
                value = "self">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__open_user_by_name_block_invoke481:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "__33-[NewContactsManager getStatuses]_block_invoke:NewContactsManager.m">
@@ -3437,6 +3484,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGConversationTableCell setItem:]:TGConversationTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "stateImage">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService processMessage:]:TGUpdateMessageService.m">

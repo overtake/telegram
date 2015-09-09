@@ -11,4 +11,8 @@
 @interface ChatsManager : SharedManager
 - (NSArray *)secretChats;
 -(void)acceptEncryption:(TL_encryptedChatRequested *)request;
+
+-(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler;
+
+
 @end

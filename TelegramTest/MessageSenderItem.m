@@ -16,11 +16,15 @@
 @implementation MessageSenderItem
 
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags {
     
     if(self = [super initWithConversation:conversation]) {
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+            
         
         if(noWebpage)
             self.message.media = [TL_messageMediaWebPage createWithWebpage:[TL_webPageEmpty createWithN_id:0]];
@@ -32,8 +36,8 @@
     return self;
 }
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation {
-    if(self = [self initWithMessage:message forConversation:conversation noWebpage:YES]) {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
+    if(self = [self initWithMessage:message forConversation:conversation noWebpage:YES additionFlags:additionFlags]) {
         
     }
     
@@ -51,12 +55,7 @@
     
     if(self.conversation.type != DialogTypeBroadcast) {
         
-        int flags = self.message.reply_to_msg_id != 0 ? 1 : 0;
-        
-        flags|=[self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
-        
-        
-        request = [TLAPI_messages_sendMessage createWithFlags:flags peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:nil];
+        request = [TLAPI_messages_sendMessage createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:nil];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;

@@ -816,6 +816,9 @@
 		C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EB1923CBA1001A9D1B /* PhotoHistoryFilter.m */; };
 		C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EE1924D934001A9D1B /* NoMessagesView.m */; };
 		C2FF82A31B99C7CE00DE2455 /* TL_updateChannelPts.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82A21B99C7CE00DE2455 /* TL_updateChannelPts.m */; };
+		C2FF82DC1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82DB1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m */; };
+		C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */; };
+		C2FF82EB1BA0796400DE2455 /* ChannelsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */; };
 		CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837D17FD80AD0029EFCB /* libz.dylib */; };
 		CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837F17FDB68C0029EFCB /* CoreFoundation.framework */; };
 		CE0AC51D18BE0EE70031658A /* TL_destructMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0AC51C18BE0EE70031658A /* TL_destructMessage.m */; };
@@ -2451,6 +2454,12 @@
 		C2FA78EE1924D934001A9D1B /* NoMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoMessagesView.m; sourceTree = "<group>"; };
 		C2FF82A11B99C7CE00DE2455 /* TL_updateChannelPts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_updateChannelPts.h; sourceTree = "<group>"; };
 		C2FF82A21B99C7CE00DE2455 /* TL_updateChannelPts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_updateChannelPts.m; sourceTree = "<group>"; };
+		C2FF82DA1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCreatePublicChannelBehavior.h; sourceTree = "<group>"; };
+		C2FF82DB1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionCreatePublicChannelBehavior.m; sourceTree = "<group>"; };
+		C2FF82E61B9F28D900DE2455 /* ChannelHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelHistoryController.h; sourceTree = "<group>"; };
+		C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelHistoryController.m; sourceTree = "<group>"; };
+		C2FF82E91BA0796400DE2455 /* ChannelsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelsManager.h; sourceTree = "<group>"; };
+		C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelsManager.m; sourceTree = "<group>"; };
 		CE05837D17FD80AD0029EFCB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		CE05837F17FDB68C0029EFCB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		CE0AC51B18BE0EE70031658A /* TL_destructMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_destructMessage.h; sourceTree = "<group>"; };
@@ -3640,6 +3649,8 @@
 				C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */,
 				C2D8CFC11B84D3E200080775 /* ComposeActionCreateChannelBehavior.h */,
 				C2D8CFC21B84D3E200080775 /* ComposeActionCreateChannelBehavior.m */,
+				C2FF82DA1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.h */,
+				C2FF82DB1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -5243,6 +5254,8 @@
 				C28261EB1992974C004AC73E /* BroadcastManager.m */,
 				C2D51B961B179D91009327C0 /* FullUsersManager.h */,
 				C2D51B971B179D91009327C0 /* FullUsersManager.m */,
+				C2FF82E91BA0796400DE2455 /* ChannelsManager.h */,
+				C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */,
 			);
 			name = managers;
 			sourceTree = "<group>";
@@ -5614,6 +5627,8 @@
 				C20A5F341B8F4579007F4B49 /* TGChannelsPolling.m */,
 				C20A5F571B8F8B2B007F4B49 /* TGHistoryResponse.h */,
 				C20A5F581B8F8B2B007F4B49 /* TGHistoryResponse.m */,
+				C2FF82E61B9F28D900DE2455 /* ChannelHistoryController.h */,
+				C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */,
 			);
 			name = message_controllers;
 			sourceTree = "<group>";
@@ -6161,6 +6176,7 @@
 				C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
+				C2FF82DC1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
@@ -6301,6 +6317,7 @@
 				C26F7EC91A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m in Sources */,
 				C2CBAEE118F6D617008DF862 /* PreviewObject.m in Sources */,
 				CEA46CFB182A590B007209A6 /* TypingController.m in Sources */,
+				C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */,
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
 				C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */,
@@ -6311,6 +6328,7 @@
 				C2689F6F18B3B96300272CD4 /* TGUpdateMessageService.m in Sources */,
 				C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */,
 				0A073FD218BF953300BAA928 /* TMTextView.m in Sources */,
+				C2FF82EB1BA0796400DE2455 /* ChannelsManager.m in Sources */,
 				C24F878B1A00002700EC962E /* DeleteRandomMessagesSenderItem.m in Sources */,
 				C276C7D3195C6C1B0037C4D7 /* ITProgressIndicator.m in Sources */,
 				C274C4051ACBFF33000DFDE4 /* TGWebpageContainer.m in Sources */,

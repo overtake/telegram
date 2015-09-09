@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.09.15.
+//  Auto created by Mikhail Filimonov on 08.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -872,15 +872,13 @@
 @property int read_inbox_max_id;
 @property int unread_count;
 @property int unread_important_count;
-@property int inviter_id;
-@property int invite_date;
 @end
 
 @interface TL_chatFull : TLChatFull<NSCoding>
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -897,14 +895,16 @@
 @end
 	
 @interface TLChatParticipants()
+@property int flags;
 @property int chat_id;
+@property (nonatomic, strong) TLChatParticipant* self_participant;
 @property int admin_id;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property int version;
 @end
 
 @interface TL_chatParticipantsForbidden : TLChatParticipants<NSCoding>
-+(TL_chatParticipantsForbidden*)createWithChat_id:(int)chat_id;
++(TL_chatParticipantsForbidden*)createWithFlags:(int)flags chat_id:(int)chat_id self_participant:(TLChatParticipant*)self_participant;
 @end
 @interface TL_chatParticipants : TLChatParticipants<NSCoding>
 +(TL_chatParticipants*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
@@ -1546,7 +1546,7 @@
 +(TL_updateEncryptedMessagesRead*)createWithChat_id:(int)chat_id max_date:(int)max_date date:(int)date;
 @end
 @interface TL_updateChatParticipantAdd : TLUpdate<NSCoding>
-+(TL_updateChatParticipantAdd*)createWithChat_id:(int)chat_id user_id:(int)user_id inviter_id:(int)inviter_id version:(int)version;
++(TL_updateChatParticipantAdd*)createWithChat_id:(int)chat_id user_id:(int)user_id inviter_id:(int)inviter_id date:(int)date version:(int)version;
 @end
 @interface TL_updateChatParticipantDelete : TLUpdate<NSCoding>
 +(TL_updateChatParticipantDelete*)createWithChat_id:(int)chat_id user_id:(int)user_id version:(int)version;

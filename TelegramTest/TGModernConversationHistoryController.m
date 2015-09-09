@@ -15,8 +15,7 @@ static NSString *kYapChannelCollection = @"channels_keys";
 static NSString *kYapChannelKey = @"channels_is_loaded";
 @interface TGChannelsLoader : TGObservableObject
 
-@property (nonatomic,strong) NSArray *channels;
-
+@property (nonatomic,assign,readonly) BOOL channelsIsLoaded;
 
 @end
 
@@ -45,9 +44,11 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
         else
             [[Storage manager] allChannels:^(NSArray *channels, NSArray *messages) {
                 
-                _channels = channels;
+                _channelsIsLoaded = YES;
                 
-                [self notifyListenersWithObject:_channels];
+                [[ChannelsManager sharedManager] add:channels];
+                
+                [self notifyListenersWithObject:channels];
                 
             } deliveryOnQueue:queue];
         
@@ -143,7 +144,9 @@ static const int limit = 1000;
     [queue dispatchOnQueue:^{
         
         
-        _channels = channels;
+        _channelsIsLoaded = YES;
+        
+        [[ChannelsManager sharedManager] add:channels];
         
         [self notifyListenersWithObject:channels];
         
@@ -229,7 +232,7 @@ static BOOL isStorageLoaded;
         
         _isLoading = YES;
         
-        if(channelsLoader.channels == nil)
+        if(!channelsLoader.channelsIsLoaded)
             _loadNextAfterLoadChannels = YES;
         else
             [self performLoadNext];
@@ -331,8 +334,8 @@ static BOOL isStorageLoaded;
 -(void)dispatchWithFullList:(NSArray *)all {
     
     
-    
-    NSArray *mixed = [self mixChannelsWithConversations:[channelsLoader.channels subarrayWithRange:NSMakeRange(_channelsOffset, channelsLoader.channels.count - _channelsOffset)] conversations:all];
+    NSArray *allChannels = [[ChannelsManager sharedManager] all];
+    NSArray *mixed = [self mixChannelsWithConversations:[allChannels subarrayWithRange:NSMakeRange(_channelsOffset, allChannels.count - _channelsOffset)] conversations:all];
     
     
     __block NSUInteger lastIndex = mixed.count;

@@ -121,7 +121,7 @@
 
 
 - (void)performEnter {
-    if(self.isRemoteChecked && ![[UsersManager currentUser].username isEqualToString:self.checkedUserName]) {
+    if(self.isRemoteChecked && ![[self defaultUsername] isEqualToString:self.checkedUserName]) {
         [self.textView.textView resignFirstResponder];
         self.controller.doneButton.tapBlock();
     }
@@ -129,7 +129,7 @@
 
 -(void)updateSaveButton {
     
-    if([[UsersManager currentUser].username isEqualToString:self.textView.textView.stringValue]) {
+    if([[self defaultUsername] isEqualToString:self.textView.textView.stringValue]) {
         [self.controller.doneButton setDisable:YES];
         
         return;
@@ -173,10 +173,23 @@
     return r.location == 0;
 }
 
+-(NSString *)defaultUsername {
+    return self.controller.channel ? self.controller.channel.username : [UsersManager currentUser].username;
+}
+
+-(id)checkUsernameRequest:(NSString *)userNameToCheck {
+    id request = [TLAPI_account_checkUsername createWithUsername:userNameToCheck];
+    
+    if(self.controller.channel) {
+        request = [TLAPI_messages_checkChannelUsername createWithChat_id:[self.controller.channel input] username:userNameToCheck];
+    }
+    
+    return request;
+}
 
 -(void)updateChecker {
     
-    if([self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].username]) {
+    if([self.textView.textView.stringValue isEqualToString:[self defaultUsername]]) {
         [self.progressView setHidden:YES];
         [self.progressView stopAnimation:self];
         [self.successView setHidden:NO];
@@ -188,7 +201,7 @@
         if(!self.timer) {
             
             self.isSuccessChecked = NO;
-            self.isRemoteChecked = [self.textView.textView.stringValue isEqualToString:[UsersManager currentUser].username];
+            self.isRemoteChecked = [self.textView.textView.stringValue isEqualToString:[self defaultUsername]];
             [self updateSaveButton];
             
             self.timer = [[TGTimer alloc] initWithTimeout:0.2 repeat:NO completion:^{
@@ -204,7 +217,9 @@
                 
                 NSString *userNameToCheck = self.textView.textView.stringValue;
                 
-                self.request = [RPCRequest sendRequest:[TLAPI_account_checkUsername createWithUsername:userNameToCheck] successHandler:^(RPCRequest *request, id response) {
+               
+                
+                self.request = [RPCRequest sendRequest:[self checkUsernameRequest:userNameToCheck] successHandler:^(RPCRequest *request, id response) {
                     
                     self.isSuccessChecked = [response isKindOfClass:[TL_boolTrue class]];
                     self.isRemoteChecked = YES;
@@ -298,16 +313,36 @@
         
         
         [strongSelf showModalProgress];
-        [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TLUser *user) {
-            
-            [strongSelf hideModalProgress];
-            
-            
-            [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
-        } errorHandler:^(NSString *error) {
-            alert(error, error);
-            [strongSelf hideModalProgress];
-        }];
+        
+        if(self.channel != nil) {
+            [[ChatsManager sharedManager] updateChannelUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName channel:strongSelf.channel completeHandler:^(TL_channel *channel) {
+                [strongSelf hideModalProgress];
+                
+                
+                [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
+                
+                if(strongSelf.completionHandler != nil) {
+                    strongSelf.completionHandler();
+                }
+
+            } errorHandler:^(NSString *error) {
+                alert(error, error);
+                [strongSelf hideModalProgress];
+            }];
+        } else {
+            [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TLUser *user) {
+                
+                [strongSelf hideModalProgress];
+                
+                
+                [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
+            } errorHandler:^(NSString *error) {
+                alert(error, error);
+                [strongSelf hideModalProgress];
+            }];
+
+        }
+        
     }];
     
     [self.doneButton setDisableColor:GRAY_TEXT_COLOR];
@@ -332,7 +367,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [((UserNameViewContainer *)self.view).textView.textView setStringValue:[UsersManager currentUser].username];
+    [((UserNameViewContainer *)self.view).textView.textView setStringValue:[(UserNameViewContainer *)self.view defaultUsername]];
     [((UserNameViewContainer *)self.view) controlTextDidChange:nil];
     
 }

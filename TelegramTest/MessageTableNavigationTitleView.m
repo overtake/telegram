@@ -119,6 +119,8 @@
     [_discussionSwitch setHidden:dialog.type != DialogTypeChannel];
     [_discussionSwitch setOn:NO];
     
+    [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
+    
     
     [self.nameTextField updateWithConversation:self.dialog];
     [self.statusTextField updateWithConversation:self.dialog];

@@ -722,26 +722,19 @@
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer.peer_id)];
             if(current) {
-                if(current.unread_count != dialog.unread_count)
-                    current.unread_count = dialog.unread_count;
-                if(current.top_message != dialog.top_message)
-                    current.top_message = dialog.top_message;
-                if(current.last_message_date != dialog.last_message_date)
-                    current.last_message_date = dialog.last_message_date;
-                if(current.notify_settings != dialog.notify_settings)
-                    current.notify_settings = dialog.notify_settings;
-                if(current.fake != dialog.fake)
-                    current.fake = dialog.fake;
-                if(current.last_marked_message != dialog.last_marked_message)
-                    current.last_marked_message = dialog.last_marked_message;
-                if(current.top_message_fake != dialog.top_message_fake)
-                    current.top_message_fake = dialog.top_message_fake;
-                if(current.last_marked_date != dialog.last_marked_date)
-                    current.last_marked_date = dialog.last_marked_date;
-                if(current.last_real_message_date != dialog.last_real_message_date)
-                    current.last_real_message_date = dialog.last_real_message_date;
-                if(current.dstate != dialog.dstate)
-                    current.dstate = dialog.dstate;
+                current.unread_count = dialog.unread_count;
+                current.top_message = dialog.top_message;
+                current.last_message_date = dialog.last_message_date;
+                current.notify_settings = dialog.notify_settings;
+                current.fake = dialog.fake;
+                current.last_marked_message = dialog.last_marked_message;
+                current.top_message_fake = dialog.top_message_fake;
+                current.last_marked_date = dialog.last_marked_date;
+                current.last_real_message_date = dialog.last_real_message_date;
+                current.dstate = dialog.dstate;
+                current.read_inbox_max_id = dialog.read_inbox_max_id;
+                current.top_important_message = dialog.top_important_message;
+                current.unread_important_count = dialog.unread_important_count;
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer.peer_id)];

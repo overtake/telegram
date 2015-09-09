@@ -20,7 +20,7 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation {
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         self.filePath = filePath;
         self.conversation = conversation;
@@ -33,6 +33,10 @@
         self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
         
         self.message.flags|=TGREADEDCONTENT;
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+
     }
     return self;
 }
@@ -73,7 +77,7 @@
         if(weakSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:weakSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+            request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
         }
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {

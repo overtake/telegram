@@ -124,6 +124,8 @@
 - (void)showSecuritySettings;
 - (void)showAbout;
 - (void)showUserNameController;
+- (void)showUserNameControllerWithChannel:(TL_channel *)channel completionHandler:(dispatch_block_t)completionHandler;
+
 
 - (void)showAddContactController;
 - (void)showPrivacyController;

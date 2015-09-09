@@ -245,11 +245,12 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         
         [db executeUpdate:@"create table if not exists encrypted_chats (chat_id integer primary key,serialized blob)"];
         
-        [db executeUpdate:@"create table if not exists sharedmedia_v2 (message_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer, random_id integer)"];
+        [db executeUpdate:@"create table if not exists sharedmedia_v2 (random_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer, message_id integer)"];
         
         
         [db executeUpdate:@"CREATE INDEX if not exists sm_peer_message_idx ON sharedmedia_v2(peer_id,message_id)"];
-        [db executeUpdate:@"CREATE INDEX if not exists sm_random_id_idx ON sharedmedia_v2(random_id)"];
+        [db executeUpdate:@"CREATE INDEX if not exists sm_filter_mask_idx ON sharedmedia_v2(filter_mask)"];
+        [db executeUpdate:@"CREATE INDEX if not exists sm_random_id_idx ON sharedmedia_v2(message_id)"];
         
         
         [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
@@ -718,9 +719,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *holes = [NSMutableArray array];
         
        
-        if(!important) {
-            //if((obj.min_id == 0 && obj.max_id >= max_id) || (obj.min_id != 0 && obj.min_id >= min && obj.max_id < max_id))
-            
+        if(!important) {            
             
             result = [db executeQuery:@"select * from message_holes where peer_id = ? and NOT(? > max_id OR ? <= min_id) and (type & 2 = 2) order by date asc",@(conversationId),@(min),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id)];
             
@@ -730,9 +729,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 [holes addObject:hole];
             }
             
-            topHole = [holes firstObject];
-            
             [result close];
+            
+            
+            topHole = [holes firstObject];
+            botHole = [holes lastObject];
+            
             
         } else {
             result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((max_id <= ?) and (min_id >= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id),@(min_id == 0 ? min : min_id)];
@@ -2325,7 +2327,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(DeliveryStateNormal),@(random_id)];
         
-        int  peer_id = [db intForQuery:@"select peer_id from channgel_messages where random_id = ?",@(random_id)];
+        int  peer_id = [db intForQuery:@"select peer_id from channel_messages where random_id = ?",@(random_id)];
       
         [db executeUpdate:@"update channel_messages set n_id = (?), dstate = (?) where random_id = ?",@(channelMsgId(n_id,peer_id)),@(DeliveryStateNormal),@(random_id)];
         
@@ -2633,7 +2635,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         int maxMsgId = [db intForQuery:@"select n_id from channel_messages where  peer_id = ? order by date desc, n_id desc limit 1",@(channel_id)];
         
         
-        int holeMaxId = [db intForQuery:@"select max_id from message_holes where peer_id = ? and (type & 2) = 2 and max_id > ? and min_id <= ? ?",@(channel_id),@(maxMsgId),@(maxMsgId),important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @""];
+        int holeMaxId = [db intForQuery:@"select max_id from message_holes where peer_id = ? and (type & ?) = ? and max_id > ? and min_id <= ?",@(important ? 4 : 2),@(important ? 4 : 2),@(channel_id),@(maxMsgId),@(maxMsgId)];
         
         
         if(holeMaxId != 0)

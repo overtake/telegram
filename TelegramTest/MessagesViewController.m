@@ -42,6 +42,7 @@
 #import "EncryptedKeyWindow.h"
 
 #import "ChatHistoryController.h"
+#import "ChannelHistoryController.h"
 
 #import "TMBottomScrollView.h"
 #import "ReadHistroryTask.h"
@@ -229,7 +230,7 @@
                 
         self.historyController = nil;
         
-        self.historyController = [[ChatHistoryController alloc] initWithController:self];
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:self.defHFClass];
         animated = NO;
         
         
@@ -237,6 +238,14 @@
     }
     
     [self.table.scrollView scrollToPoint:NSMakePoint(0, 0) animation:animated];
+}
+
+-(Class)hControllerClass {
+    return self.conversation.type == DialogTypeChannel ? [ChannelHistoryController class] : [ChatHistoryController class];
+}
+
+-(Class)defHFClass {
+    return self.conversation.type == DialogTypeChannel ? [ChannelImportantFilter class] : [HistoryFilter class];
 }
 
 
@@ -316,8 +325,8 @@
     self.filtredNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
     
     
-    [self.filtredNavigationLeftView setTapBlock:^{
-        [strongSelf setHistoryFilter:[HistoryFilter class] force:NO];
+    [self.filtredNavigationLeftView setTapBlock:^{ 
+        [strongSelf setHistoryFilter:[strongSelf defHFClass] force:NO];
     }];
     
     self.normalNavigationCenterView = [[MessageTableNavigationTitleView alloc] initWithFrame:NSZeroRect];
@@ -425,7 +434,7 @@
     
     self.historyController = nil;
     
-    self.historyController = [[ChatHistoryController alloc] initWithController:self];
+    self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:self.defHFClass];
     
     [self.searchMessagesView setHidden:YES];
     
@@ -459,7 +468,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
     
-    NSArray *items = [[HistoryFilter messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
+    NSArray *items = [[self.defHFClass messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
@@ -480,7 +489,7 @@
     NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
     
     
-    NSArray *items = [HistoryFilter items:messages];
+    NSArray *items = [self.defHFClass items:messages];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        
@@ -511,7 +520,7 @@
         TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
         
         
-        NSArray *items = [HistoryFilter items:@[@(hole.uniqueId)]];
+        NSArray *items = [self.defHFClass items:@[@(hole.uniqueId)]];
         
         MessageTableItemHole *item;
         
@@ -545,7 +554,7 @@
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
     
     
-    NSArray *items = [HistoryFilter items:@[@(message.n_id)]];
+    NSArray *items = [self.defHFClass items:@[@(message.n_id)]];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
@@ -763,6 +772,9 @@
 
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated {
     
+    if(![self acceptState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone])
+        return;
+    
     if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
     {
         [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
@@ -905,14 +917,19 @@ static NSTextAttachment *headerMediaIcon() {
     [self setState:state animated:NO];
 }
 
+-(BOOL)acceptState:(MessagesViewControllerState)state {
+    return self.conversation.canEditConversation || state == MessagesViewControllerStateNone;
+}
+
 - (void)setState:(MessagesViewControllerState)state animated:(BOOL)animated {
+    
     self->_state = state;
     
     id rightView, leftView, centerView;
     
     centerView = self.normalNavigationCenterView;
     
-    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class && self.historyController.filter.class != ChannelFilter.class && self.historyController.filter.class != ChannelImportantFilter.class) {
+    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != self.defHFClass && self.historyController.filter.class != ChannelFilter.class && self.historyController.filter.class != ChannelImportantFilter.class) {
         state = MessagesViewControllerStateFiltred;
     }
     
@@ -935,6 +952,9 @@ static NSTextAttachment *headerMediaIcon() {
         leftView = self.editableNavigationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
     }
+    
+    if(!self.conversation.canEditConversation)
+        rightView = nil;
     
     if(self.rightNavigationBarView != rightView)
         [self setRightNavigationBarView:rightView animated:YES];
@@ -1186,7 +1206,7 @@ static NSTextAttachment *headerMediaIcon() {
         self.historyController.filter = [[filter alloc] initWithController:self.historyController];
         [self flushMessages];
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
-        self.state = filter != HistoryFilter.class && filter != ChannelFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
+        self.state = filter != self.defHFClass && filter != ChannelFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
     }
 }
 
@@ -2116,7 +2136,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             [self.historyController drop:NO];
             
-            self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:[HistoryFilter class]];
+            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
             
             self.historyController.min_id = messageId;
             self.historyController.start_min = messageId;
@@ -2168,6 +2188,14 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+
+-(void)hideOrShowBottomView {
+    
+    [self.bottomView setHidden:self.conversation.type == DialogTypeChannel && !self.conversation.chat.isPublic && !self.conversation.chat.isAdmin];
+    
+    [self bottomViewChangeSize:self.conversation.type == DialogTypeChannel && !self.conversation.chat.isPublic && !self.conversation.chat.isAdmin ? 0 : _lastBottomOffsetY animated:NO];
+}
+
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
     [self hideSearchBox:NO];
         
@@ -2199,11 +2227,11 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(!historyFilter)
-            historyFilter = [HistoryFilter class];
+            historyFilter = [self defHFClass];
         
         [self.historyController drop:NO];
         
-        self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:historyFilter];
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:historyFilter];
         
         
         
@@ -2248,8 +2276,11 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(self.conversation.type == DialogTypeChannel) {
             [self.historyController startChannelPolling];
+           
         }
         
+        
+        [self hideOrShowBottomView];
         
         
     }
@@ -2263,7 +2294,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)setCurrentConversation:(TL_conversation *)dialog {
-    [self setCurrentConversation:dialog withJump:0 historyFilter:[HistoryFilter class]];
+    [self setCurrentConversation:dialog withJump:0 historyFilter:[self defHFClass]];
 }
 
 
@@ -2275,7 +2306,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)tryRead {
-    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == HistoryFilter.class && ![TGPasslock isVisibility]) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == self.defHFClass && ![TGPasslock isVisibility]) {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
@@ -2465,7 +2496,7 @@ static NSTextAttachment *headerMediaIcon() {
                 self.unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
                 
                 
-                NSArray *completeResult = message_id == 0 && self.historyController.filter.class == HistoryFilter.class && prevResult.count > 0 ? [prevResult arrayByAddingObject:self.unreadMark] : prevResult;
+                NSArray *completeResult = message_id == 0 && self.historyController.filter.class == self.defHFClass && prevResult.count > 0 ? [prevResult arrayByAddingObject:self.unreadMark] : prevResult;
                 
                 NSArray *nextResult = [completeResult arrayByAddingObjectsFromArray:result];
                 
@@ -2883,7 +2914,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     BOOL noWebpage = [self noWebpage:message];
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
@@ -2907,7 +2938,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
             
@@ -2920,7 +2951,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage  additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -2942,13 +2973,13 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
         Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
-        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation];
+        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem];
         
@@ -2963,7 +2994,7 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         SenderItem *sender;
@@ -2976,7 +3007,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:conversation];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
@@ -2991,7 +3022,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3004,7 +3035,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:conversation];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3034,7 +3065,7 @@ static NSTextAttachment *headerMediaIcon() {
         
     }];
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [self.bottomView closeEmoji];
     
@@ -3048,7 +3079,7 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.conversation.type != DialogTypeSecretChat) {
-            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation];
+            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         } else {
             sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:conversation document:sticker];
         }
@@ -3066,7 +3097,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3079,7 +3110,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:conversation];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3092,7 +3123,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3131,11 +3162,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(!self.conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation];
+        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
@@ -3153,7 +3184,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     NSUInteger lastTTL = [EncryptedParams findAndCreate:conversation.peer.peer_id].ttl;
     
@@ -3180,7 +3211,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage || conversation.type == DialogTypeSecretChat)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3188,7 +3219,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3244,7 +3275,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
 
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3299,7 +3330,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:conversation];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation additionFlags:self.historyController.filter.class == ChannelImportantFilter.class ? (1 << 4) : 0];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

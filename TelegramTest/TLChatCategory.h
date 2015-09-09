@@ -36,4 +36,6 @@ typedef enum {
 -(BOOL)isBroadcast;
 -(BOOL)isPublic;
 
+-(NSString *)usernameLink;
+
 @end

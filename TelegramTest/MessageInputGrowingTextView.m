@@ -63,6 +63,14 @@ typedef enum {
     return NO;
 }
 
+-(void)insertText:(id)insertString {
+    //lol. MessagesBottomView
+    if(!self.superview.superview.superview.superview.superview.isHidden) {
+         [super insertText:insertString];
+    }
+   
+}
+
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
      NSPasteboard *pst = [sender draggingPasteboard];
@@ -430,8 +438,12 @@ typedef enum {
         
         
     }
+    //lol. MessagesBottomView
+    if(!self.superview.superview.superview.superview.superview.isHidden) {
+        [super keyDown:theEvent];
+    }
     
-    [super keyDown:theEvent];
+    
     
 
     

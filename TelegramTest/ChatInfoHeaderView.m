@@ -64,7 +64,7 @@
             
             if(strongSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
                 
-                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]]) {
+                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]] && strongSelf.fullChat.chat_photo) {
                     
                     TL_photoSize *size = [strongSelf.fullChat.chat_photo.sizes lastObject];
                     

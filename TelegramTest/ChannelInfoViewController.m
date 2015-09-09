@@ -12,7 +12,7 @@
 
 -(void)loadView {
     [super loadView];
-    self.headerView = [[ChannelInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 260)];
+    self.headerView = [[ChannelInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
 }
 
 @end

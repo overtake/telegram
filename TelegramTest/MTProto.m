@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.09.15.
+//  Auto created by Mikhail Filimonov on 08.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3796,15 +3796,14 @@
 @end
 
 @implementation TL_channelFull
-+(TL_channelFull*)createWithN_id:(int)n_id about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count inviter_id:(int)inviter_id invite_date:(int)invite_date chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
++(TL_channelFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
 	TL_channelFull* obj = [[TL_channelFull alloc] init];
 	obj.n_id = n_id;
+	obj.participants = participants;
 	obj.about = about;
 	obj.read_inbox_max_id = read_inbox_max_id;
 	obj.unread_count = unread_count;
 	obj.unread_important_count = unread_important_count;
-	obj.inviter_id = inviter_id;
-	obj.invite_date = invite_date;
 	obj.chat_photo = chat_photo;
 	obj.notify_settings = notify_settings;
 	obj.exported_invite = exported_invite;
@@ -3812,24 +3811,22 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.participants stream:stream];
 	[stream writeString:self.about];
 	[stream writeInt:self.read_inbox_max_id];
 	[stream writeInt:self.unread_count];
 	[stream writeInt:self.unread_important_count];
-	[stream writeInt:self.inviter_id];
-	[stream writeInt:self.invite_date];
 	[ClassStore TLSerialize:self.chat_photo stream:stream];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
 	[ClassStore TLSerialize:self.exported_invite stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [stream readInt];
+	self.participants = [ClassStore TLDeserialize:stream];
 	self.about = [stream readString];
 	self.read_inbox_max_id = [stream readInt];
 	self.unread_count = [stream readInt];
 	self.unread_important_count = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.invite_date = [stream readInt];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
@@ -3840,12 +3837,11 @@
     TL_channelFull *objc = [[TL_channelFull alloc] init];
     
     objc.n_id = self.n_id;
+    objc.participants = [self.participants copy];
     objc.about = self.about;
     objc.read_inbox_max_id = self.read_inbox_max_id;
     objc.unread_count = self.unread_count;
     objc.unread_important_count = self.unread_important_count;
-    objc.inviter_id = self.inviter_id;
-    objc.invite_date = self.invite_date;
     objc.chat_photo = [self.chat_photo copy];
     objc.notify_settings = [self.notify_settings copy];
     objc.exported_invite = [self.exported_invite copy];
@@ -3984,23 +3980,31 @@
 @end
 
 @implementation TL_chatParticipantsForbidden
-+(TL_chatParticipantsForbidden*)createWithChat_id:(int)chat_id {
++(TL_chatParticipantsForbidden*)createWithFlags:(int)flags chat_id:(int)chat_id self_participant:(TLChatParticipant*)self_participant {
 	TL_chatParticipantsForbidden* obj = [[TL_chatParticipantsForbidden alloc] init];
+	obj.flags = flags;
 	obj.chat_id = chat_id;
+	obj.self_participant = self_participant;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeInt:self.chat_id];
+	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.self_participant stream:stream];}
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.chat_id = [stream readInt];
+	if(self.flags & (1 << 0)) {self.self_participant = [ClassStore TLDeserialize:stream];}
 }
         
 -(TL_chatParticipantsForbidden *)copy {
     
     TL_chatParticipantsForbidden *objc = [[TL_chatParticipantsForbidden alloc] init];
     
+    objc.flags = self.flags;
     objc.chat_id = self.chat_id;
+    objc.self_participant = [self.self_participant copy];
     
     return objc;
 }
@@ -4019,7 +4023,13 @@
 }
 
         
-
+        
+-(void)setSelf_participant:(TLChatParticipant*)self_participant
+{
+    [super setSelf_participant:self_participant];
+            
+    if(self.self_participant == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}
         
 @end
 
@@ -9912,11 +9922,12 @@
 @end
 
 @implementation TL_updateChatParticipantAdd
-+(TL_updateChatParticipantAdd*)createWithChat_id:(int)chat_id user_id:(int)user_id inviter_id:(int)inviter_id version:(int)version {
++(TL_updateChatParticipantAdd*)createWithChat_id:(int)chat_id user_id:(int)user_id inviter_id:(int)inviter_id date:(int)date version:(int)version {
 	TL_updateChatParticipantAdd* obj = [[TL_updateChatParticipantAdd alloc] init];
 	obj.chat_id = chat_id;
 	obj.user_id = user_id;
 	obj.inviter_id = inviter_id;
+	obj.date = date;
 	obj.version = version;
 	return obj;
 }
@@ -9924,12 +9935,14 @@
 	[stream writeInt:self.chat_id];
 	[stream writeInt:self.user_id];
 	[stream writeInt:self.inviter_id];
+	[stream writeInt:self.date];
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.chat_id = [stream readInt];
 	self.user_id = [stream readInt];
 	self.inviter_id = [stream readInt];
+	self.date = [stream readInt];
 	self.version = [stream readInt];
 }
         
@@ -9940,6 +9953,7 @@
     objc.chat_id = self.chat_id;
     objc.user_id = self.user_id;
     objc.inviter_id = self.inviter_id;
+    objc.date = self.date;
     objc.version = self.version;
     
     return objc;

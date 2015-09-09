@@ -11,6 +11,6 @@
 @interface StickerSenderItem : SenderItem
 
 
--(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation;
+-(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation additionFlags:(int)additionFlags;
 
 @end

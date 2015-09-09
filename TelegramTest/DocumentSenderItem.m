@@ -35,7 +35,7 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation {
+- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     
     if(self = [super init]) {
         self.mimeType = mimetypefromExtension([path pathExtension]);
@@ -191,7 +191,9 @@
         TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:attrs]];
         
         self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation];
-        
+       
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
     }
     
     return self;
@@ -285,7 +287,7 @@
     if(self.conversation.type == DialogTypeBroadcast) {
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
     }
     
     

@@ -124,6 +124,10 @@
     [[Telegram rightViewController] navigationGoBack];
 }
 
+-(void)buildFirstItem {
+    [self.tableView reloadData];
+}
+
 - (void)buildRightView {
     TMView *view = [[TMView alloc] init];
     

@@ -366,5 +366,9 @@ static void *kType;
     return _p_user;
 }
 
+-(BOOL)canEditConversation {
+    return self.type != DialogTypeChannel || (self.chat.isPublic || self.chat.isAdmin);
+}
+
 
 @end

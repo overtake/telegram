@@ -10,6 +10,6 @@
 #import "TGAttachObject.h"
 @interface ImageAttachSenderItem : SenderItem
 
--(id)initWithConversation:(TL_conversation *)conversation attachObject:(TGAttachObject *)attach;
+-(id)initWithConversation:(TL_conversation *)conversation attachObject:(TGAttachObject *)attach additionFlags:(int)additionFlags;
 
 @end

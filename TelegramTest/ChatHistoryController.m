@@ -50,13 +50,7 @@ static NSMutableArray *filters;
 static ASQueue *queue;
 static NSMutableArray *listeners;
 
--(id)initWithController:(id<MessagesDelegate>)controller {
-    if(self = [self initWithController:controller historyFilter:[HistoryFilter class]]) {
-        
-    }
-    
-    return self;
-}
+
 
 static TGChannelsPolling *channelPolling;
 
@@ -101,12 +95,7 @@ static TGChannelsPolling *channelPolling;
             
             _selectLimit = 50;
             
-            Class hf = historyFilter;
-            
-            if(hf == HistoryFilter.class && _controller.conversation.type == DialogTypeChannel)
-                hf = ChannelFilter.class;
-            
-            [self setFilter:[[hf alloc] initWithController:self]];
+            [self setFilter:[[historyFilter alloc] initWithController:self]];
             _need_save_to_db = YES;
         
 
@@ -169,6 +158,10 @@ static TGChannelsPolling *channelPolling;
     }];
     
     
+}
+
+-(ASQueue *)queue {
+    return queue;
 }
 
 -(NSUInteger)selectLimit {
@@ -619,9 +612,6 @@ static TGChannelsPolling *channelPolling;
         messageKeys = [filter messageKeys:self.conversation.peer_id];
         messageItems = [filter messageItems:self.conversation.peer_id];
         _requestCounter = 0;
-        
-        //debug
-        [self removeAllItems];
         
         NSArray *items = [self selectAllItems];
         
