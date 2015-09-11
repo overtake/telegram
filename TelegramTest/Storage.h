@@ -65,7 +65,7 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages isChannelMessages:(BOOL)isChannelMessages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
--(void)deleteChannelMessagesMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
+-(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 
@@ -155,6 +155,9 @@ extern NSString *const RECENT_SEARCH;
 
 -(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
 -(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important next:(BOOL)next;
+
+-(void)invalidateChannelMessagesWithPts:(int)pts;
+-(void)validateChannelMessages:(NSArray *)messages;
 
 
 -(TL_localMessage *)messageById:(int)msgId;

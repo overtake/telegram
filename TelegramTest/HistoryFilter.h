@@ -59,6 +59,8 @@ typedef enum {
 
 +(void)drop;
 
+-(int)additionSenderFlags;
+
 
 -(NSArray *)storageRequest:(BOOL)next;
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;

@@ -164,7 +164,8 @@ static NSArray *channelUpdates;
         static dispatch_once_t onceToken;
         
         dispatch_once(&onceToken, ^{
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class])];
+            
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
         });
         
         
@@ -437,12 +438,14 @@ static NSArray *channelUpdates;
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
+        
+        
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
+        
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || !message.fwdObject) {
             [self failSequence];
             return NO;
         }
-        
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
         
          if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
              [self failSequence];
@@ -455,12 +458,13 @@ static NSArray *channelUpdates;
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (shortMessage.fwd_from_id > 0 && ![[UsersManager sharedManager] find:shortMessage.fwd_from_id])) {
+         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
+        
+        
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (!message.fwdObject)) {
             [self failSequence];
             return NO;
         }
-        
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
         
         if(message.n_out) {
             message.from_id = [UsersManager currentUserId];
@@ -681,14 +685,14 @@ static NSArray *channelUpdates;
             [conversation save];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
         
         if(updateNotification.popup) {
             [[ASQueue mainQueue] dispatchOnQueue:^{
-                alert(NSLocalizedString(@"UpdateNotification.Alert", nil), updateNotification.message);
+                alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
             }];
             
         }
@@ -1066,7 +1070,11 @@ static NSArray *channelUpdates;
         
         
         for (TLUpdate *update in [updates other_updates]) {
-            [self proccessUpdate:update];
+            
+            if([channelUpdates indexOfObject:update.className] != NSNotFound)
+                [self.channelsUpdater addUpdate:update];
+            else
+                [self proccessUpdate:update];
         }
         
         [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response n_messages] asyncCompletionHandler:^{

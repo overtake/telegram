@@ -123,4 +123,8 @@
     
 }
 
+-(int)additionSenderFlags {
+    return (1 << 4);
+}
+
 @end

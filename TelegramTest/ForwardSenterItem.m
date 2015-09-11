@@ -26,7 +26,7 @@
 }
 
 
--(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation {
+-(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         self.conversation = conversation;
         
@@ -46,9 +46,14 @@
             
             TLMessage *f = copy[i];
             
+            
+            
             [ids addObject:@([f n_id])];
             
             TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:f.to_id fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities state:DeliveryStatePending];
+            
+            if(additionFlags & (1 << 4))
+                fake.from_id = 0;
              
             [fake save:i == copy.count-1];
             
@@ -95,7 +100,7 @@
         
     }];
     
-    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFrom_peer:from_peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
+    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFlags:[self senderFlags] from_peer:from_peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
@@ -144,6 +149,28 @@
         self.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 
+}
+
+-(int)senderFlags {
+    
+    if(self.fakes.count > 0) {
+        
+        TL_localMessage *msg = [self.fakes firstObject];
+        
+        int flags = 0;
+        
+        flags|= msg.reply_to_msg_id != 0 ? 1 : 0;
+        
+        flags|=[msg.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
+        
+        flags|=msg.from_id == 0 ? 1 << 4 : 0;
+
+        
+        return flags;
+        
+    } else
+        return [super senderFlags];
+    
 }
 
 -(void)updateMessageId:(TLUpdates *)updates {

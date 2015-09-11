@@ -17,6 +17,10 @@
 -(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force;
 - (void)didAddIgnoredMessages:(NSArray *)items;
 
+
+@optional
+-(void)jumpToLastMessages:(BOOL)force;
+
 -(TL_conversation *)conversation;
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages;
 -(void)updateLoading;

@@ -102,7 +102,7 @@
 }
 
 -(TLUser *)fromFwdUser {
-    return [[UsersManager sharedManager] find:self.fwd_from_id];
+    return [[UsersManager sharedManager] find:self.fwd_from_id.user_id];
 }
 
 -(void)setDstate:(DeliveryState)dstate {
@@ -121,6 +121,7 @@
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
         msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities state:DeliveryStateNormal];
+        
     } else {
         return (TL_localMessage *) message;
     }
@@ -158,7 +159,6 @@
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
-    [stream writeInt:self.pts];
     if(self.flags & (1 << 6))
         [ClassStore TLSerialize:self.reply_markup stream:stream];
     if(self.flags & (1 << 7)) {//Serialize FullVector
@@ -188,7 +188,6 @@
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
-    self.pts = [stream readInt];
     if(self.flags & (1 << 6))
         self.reply_markup = [ClassStore TLDeserialize:stream];
     if(self.flags & (1 << 7)) {//UNS FullVector
@@ -440,6 +439,13 @@ long channelMsgId(int msg_id, int peer_id) {
     
     return converted;
 
+}
+
+-(id)fwdObject {
+    if([self.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
+        return [[UsersManager sharedManager] find:self.fwd_from_id.user_id];
+    } else
+        return [[ChatsManager sharedManager] find:self.fwd_from_id.chat_id != 0 ? self.fwd_from_id.chat_id : self.fwd_from_id.channel_id];
 }
 
 -(id)copy {

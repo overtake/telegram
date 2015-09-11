@@ -10813,6 +10813,54 @@
         
 @end
 
+@implementation TL_updateChannelMessageViews
++(TL_updateChannelMessageViews*)createWithPeer:(TLPeer*)peer n_id:(int)n_id views:(int)views {
+	TL_updateChannelMessageViews* obj = [[TL_updateChannelMessageViews alloc] init];
+	obj.peer = peer;
+	obj.n_id = n_id;
+	obj.views = views;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.n_id];
+	[stream writeInt:self.views];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.peer = [ClassStore TLDeserialize:stream];
+	self.n_id = [stream readInt];
+	self.views = [stream readInt];
+}
+        
+-(TL_updateChannelMessageViews *)copy {
+    
+    TL_updateChannelMessageViews *objc = [[TL_updateChannelMessageViews alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.n_id = self.n_id;
+    objc.views = self.views;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 
 @implementation TLupdates_State
 @end

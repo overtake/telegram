@@ -274,6 +274,9 @@ static NSString *kMessageItems = @"kMessageItems";
     return hole && ( next ? self.hole.max_id <= self.controller.max_id : self.hole.max_id > self.hole.max_id);
 }
 
+-(int)additionSenderFlags {
+    return 0 ;
+}
 
 -(void)dealloc {
     

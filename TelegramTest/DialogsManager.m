@@ -232,7 +232,7 @@
 -(void)deleteChannelMessags:(NSArray *)messageIds {
     [self.queue dispatchOnQueue:^{
         
-        [[Storage manager] deleteChannelMessagesMessages:messageIds completeHandler:^(NSArray *peer_update) {
+        [[Storage manager] deleteChannelMessages:messageIds completeHandler:^(NSArray *peer_update) {
             
             [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                 
@@ -396,6 +396,8 @@
                     [self->keys removeObjectForKey:@(dialog.peer_id)];
                     
                     [[ChatsManager sharedManager] removeObjectWithKey:@(abs(dialog.peer_id))];
+                    
+                    [[ChannelsManager sharedManager] removeObjectWithKey:@(dialog.peer_id)];
                     
                     [MessagesManager updateUnreadBadge];
                     

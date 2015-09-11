@@ -72,6 +72,15 @@
             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)response.chats[0] n_id]];
             
             [[FullChatManager sharedManager] performLoad:channel.n_id isChannel:YES callback:^(TLChatFull *fullChat) {
+                
+                TL_conversation *conversation = channel.dialog;
+                
+                conversation.read_inbox_max_id = fullChat.read_inbox_max_id;
+                conversation.unread_count = fullChat.unread_count;
+                conversation.unread_important_count = fullChat.unread_important_count;
+                
+                [conversation save];
+                
                 [self.delegate behaviorDidEndRequest:response];
                 
                 [[Telegram rightViewController] clearStack];

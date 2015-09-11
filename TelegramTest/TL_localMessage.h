@@ -31,6 +31,8 @@ typedef enum {
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 
 
+@property (nonatomic,assign,getter=isInvalidate) BOOL invalidate;
+
 @property (nonatomic,strong) TGMessageHole *hole;
 
 -(NSUserNotification *)userNotification;
@@ -52,6 +54,9 @@ long channelMsgId(int msg_id, int peer_id);
 -(BOOL)unread;
 -(BOOL)readedContent;
 -(BOOL)isMentioned;
+
+-(id)fwdObject;
+
 - (TL_conversation *)conversation;
 -(int)filterType;
 

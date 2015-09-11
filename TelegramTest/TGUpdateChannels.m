@@ -81,8 +81,9 @@
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
+            
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
         });
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
@@ -159,7 +160,7 @@
         
         timer = [[TGTimer alloc] initWithTimeout:2 repeat:NO completion:^{
             
-            [self failUpdateWithChannelId:[timer.reservedObject intValue] limit:100 withCallback:nil];
+            [self failUpdateWithChannelId:statefullMessage.channel_id limit:100 withCallback:nil];
             
         } queue:_queue.nativeQueue reservedObject:@(statefullMessage.channel_id)];
         
@@ -169,12 +170,10 @@
 }
 
 
-
--(void)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
-    
-    if([statefulMessage.update isKindOfClass:[TL_updateNewChannelMessage class]])
+-(void)proccessUpdate:(id)update {
+    if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)[statefulMessage update] message]];
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
         int minId = [[Storage manager] lastSyncedMessageIdWithChannelId:msg.peer_id important:YES];
         
@@ -200,13 +199,13 @@
         
         [MessagesManager addAndUpdateMessage:msg];
         
-    } else if( [statefulMessage.update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
+    } else if( [update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         
         NSMutableArray *channelMessages = [NSMutableArray array];
         
-        int peer_id = -[[(TL_updateDeleteChannelMessages *)statefulMessage.update peer] channel_id];
+        int peer_id = -[[(TL_updateDeleteChannelMessages *)update peer] channel_id];
         
-        [[statefulMessage.update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
             NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:[obj intValue] max:[obj intValue]+1];
@@ -229,7 +228,27 @@
         
         [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
         
+    } else if([update isKindOfClass:[TL_updateMessageID class]]) {
+        [[Storage manager] updateMessageId:[(TL_updateMessageID *)update random_id] msg_id:[(TL_updateMessageID *)update n_id]];
+        [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
+    } else if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
+        
+    } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
+        
+        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil];
+        
+    } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
+        
+        int bp = 0;
+        
     }
+
+}
+
+
+-(void)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
+    
+    [self proccessUpdate:statefulMessage.update];
     
     if(statefulMessage.pts > 0) {
         TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
@@ -244,9 +263,7 @@
 
 -(void)proccessStatelessUpdate:(id)update {
     
-    if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
-        
-    }
+    [self proccessUpdate:update];
     
 }
 
@@ -255,10 +272,12 @@
 {
     TL_channel *channel = [[ChatsManager sharedManager] find:channel_id];
     
+    assert(channel_id != 0);
+    
     [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
         
         
-         TGMessageHole *longHole;
+        TGMessageHole *longHole;
         
         TL_conversation *conversation = [self conversationWithChannelId:channel_id];
         
@@ -268,14 +287,9 @@
         } else if([response isKindOfClass:[TL_updates_channelDifference class]]) {
             
             
-            // updateMessageId;
-            
             [[response other_updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                if([obj isKindOfClass:[TL_updateMessageID class]]) {
-                    [[Storage manager] updateMessageId:[(TL_updateMessageID *)obj random_id] msg_id:[(TL_updateMessageID *)obj n_id]];
-                    [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)obj n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)obj random_id])}];
-                }
+                [self proccessUpdate:obj];
                 
             }];
             
@@ -291,16 +305,6 @@
             
             
         } else if([response isKindOfClass:[TL_updates_channelDifferenceTooLong class]]) {
-            
-            conversation.pts = [response pts];
-            
-            conversation.top_message = [response top_message];
-            conversation.read_inbox_max_id = [response read_inbox_max_id];
-            conversation.unread_count = [response unread_count];
-            
-            [conversation save];
-            
-            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
             
             
             __block TL_localMessage *topMsg;
@@ -318,8 +322,23 @@
                 
             }];
             
-           
+            [[Storage manager] invalidateChannelMessagesWithPts:conversation.pts];
             
+            conversation.pts = [response pts];
+            
+            conversation.top_message = [response top_message];
+            conversation.lastMessage = topMsg;
+            conversation.read_inbox_max_id = [response read_inbox_max_id];
+            conversation.unread_count = [response unread_count];
+            
+            [conversation save];
+            
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
+            
+            
+            
+            
+           
             
             // insert holes
             {
@@ -352,5 +371,8 @@
 
     } timeout:0 queue:_queue.nativeQueue];
 }
+
+
+
 
 @end

@@ -159,7 +159,7 @@
 
 -(void)load:(BOOL)first {
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
         
         
         if(response.messages.count > 0) {

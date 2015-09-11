@@ -128,7 +128,7 @@ static const NSMutableDictionary *cache;
     //self.count = [[Storage manager] countOfMedia:peer_id];
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:self.type == TMSharedMediaDocumentsType ? [TL_inputMessagesFilterDocument create] : self.type == TMSharedMediaPhotoVideoType ? [TL_inputMessagesFilterPhotoVideo create] : [TL_inputMessagesFilterUrl create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:input q:@"" filter:self.type == TMSharedMediaDocumentsType ? [TL_inputMessagesFilterDocument create] : self.type == TMSharedMediaPhotoVideoType ? [TL_inputMessagesFilterPhotoVideo create] : [TL_inputMessagesFilterUrl create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
         [self setLocked:NO];
         

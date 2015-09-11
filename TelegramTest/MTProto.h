@@ -1505,6 +1505,7 @@
 @property (nonatomic, strong) TLWebPage* webpage;
 @property int channel_id;
 @property (nonatomic, strong) TLMessageGroup* group;
+@property int views;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1605,6 +1606,9 @@
 @end
 @interface TL_updateDeleteChannelMessages : TLUpdate<NSCoding>
 +(TL_updateDeleteChannelMessages*)createWithPeer:(TLPeer*)peer messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateChannelMessageViews : TLUpdate<NSCoding>
++(TL_updateChannelMessageViews*)createWithPeer:(TLPeer*)peer n_id:(int)n_id views:(int)views;
 @end
 	
 @interface TLupdates_State()

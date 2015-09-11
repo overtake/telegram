@@ -188,7 +188,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             
         }
         
-        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer)"];
+        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer)"];
         
         
         // channel messages indexes
@@ -657,7 +657,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date DESC, n_id desc LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date DESC, n_id desc LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -666,7 +666,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         while ([result next]) {
             TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             msg.flags = [result intForColumn:@"flags"];
-            
+            msg.invalidate = [result intForColumn:@"invalidate"];
+            msg.pts = [result intForColumn:@"pts"];
             if(msg) {
                 [messages addObject:msg];
                 [ids addObject:@(msg.n_id)];
@@ -686,13 +687,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             int localCount = [db intForQuery:@"SELECT count(*) from channel_messages where  peer_id = ? and date = ?",@(lastMessage.peer_id),@(lastMessage.date)];
             if(selectedCount.count < localCount) {
                 
-                NSString *sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where date = %d and n_id NOT IN (%@) and  peer_id = %d",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
+                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,invalidate,pts from channel_messages where date = %d and n_id NOT IN (%@) and  peer_id = %d",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
                 
                 FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
                 while ([result next]) {
                     TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
                     msg.flags = [result intForColumn:@"flags"];
+                    msg.invalidate = [result intForColumn:@"invalidate"];
+                    msg.pts = [result intForColumn:@"pts"];
                     if(msg)
                         [messages addObject:msg];
                 }
@@ -804,6 +807,25 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     return [[TGHistoryResponse alloc] initWithResult:[messages copy] hole:hole groupHoles:groupHoles];
 }
 
+
+-(void)invalidateChannelMessagesWithPts:(int)pts {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [db executeUpdate:@"update channel_messages set invalidate = 1 where pts < ?",@(pts)];
+        
+    }];
+}
+
+
+-(void)validateChannelMessages:(NSArray *)messages {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        NSString *sql = [NSString stringWithFormat:@"update channel_messages set invalidate = 0 where n_id IN (%@)",[messages componentsJoinedByString:@","]];
+        
+        [db executeUpdateWithFormat:sql,nil];
+        
+    }];
+}
 
 -(TL_localMessage *)messageById:(int)msgId {
     __block TL_localMessage *message;
@@ -1095,14 +1117,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         while ([result next]) {
             
-            while ([result next]) {
-                
-                
-                [peer_update_data addObject:@{KEY_PEER_ID:@([result intForColumn:@"peer_id"]),KEY_MESSAGE_ID:@([result intForColumn:@"n_id"])}];
-            }
-            
-            [result close];
+            [peer_update_data addObject:@{KEY_PEER_ID:@([result intForColumn:@"peer_id"]),KEY_MESSAGE_ID:@([result intForColumn:@"n_id"])}];
         }
+        
+        [result close];
         
         [result close];
         
@@ -1161,7 +1179,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)deleteChannelMessagesMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_updates))completeHandler {
+-(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_updates))completeHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
@@ -1290,10 +1308,16 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
             };
             
+             int globalPts = [db intForQuery:@"select pts from channel_dialogs where peer_id = ?",@(message.peer_id)];
+            
             
             dispatch_block_t insertChannelMessageBlock = ^ {
                 
                 int isset = [db intForQuery:@"select count(*) from channel_messages where n_id = ?",@(message.channelMsgId)];
+                
+                int pts = MAX(message.n_id,globalPts);
+                
+                message.pts = pts;
                 
                 if(isset == 0) {
                     [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts) values (?,?,?,?,?,?,?,?,?,?,?)"],
@@ -1307,12 +1331,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                      @(message.fakeId),
                      @(message.dstate),
                      @(message.randomId),
-                     @(message.pts)
+                     @(pts)
                      ];
 
                     
                 } else {
-                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(message.pts),@(message.channelMsgId),nil];
+                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),@(message.channelMsgId),nil];
 
                 }
                 

@@ -350,15 +350,6 @@
         return;
     }
     
-    if(dialog.type == DialogTypeChannel && self.modalObject == [self forwardModalView]) {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSInformationalAlertStyle];
-        [alert setMessageText:NSLocalizedString(@"Alert.Error", nil)];
-        [alert setInformativeText: NSLocalizedString(@"Conversation.CantForwardToChannel", nil)];
-        [alert show];
-        return;
-    }
-    
     
     
     if(self.modalView == [self shareContactModalView]) {

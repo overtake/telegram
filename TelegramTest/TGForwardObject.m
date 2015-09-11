@@ -27,12 +27,19 @@
         
         [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
             
-            if([exception indexOfObject:obj.fromUser] == NSNotFound) {
-                [firstNames addObject:obj.fromUser.first_name];
-                [exception addObject:obj.fromUser];
+            if(![obj.to_id isKindOfClass:[TL_peerChannel class]]) {
+                if([exception indexOfObject:obj.fromUser] == NSNotFound) {
+                    [firstNames addObject:obj.fromUser.first_name];
+                    [exception addObject:obj.fromUser];
+                }
+            } else {
+                [firstNames addObject:obj.chat.title];
+                *stop = YES;
             }
             
         }];
+        
+        
         
         
         [n appendString:[firstNames componentsJoinedByString:@", "] withColor:LINK_COLOR];

@@ -254,6 +254,7 @@
 @end
 
 @interface TLAPI_messages_search : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) NSString* q;
 @property (nonatomic, strong) TLMessagesFilter* filter;
@@ -263,7 +264,7 @@
 @property int max_id;
 @property int limit;
 
-+(TLAPI_messages_search*)createWithPeer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_messages_search*)createWithFlags:(int)flags peer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
 @end
 
 @interface TLAPI_messages_readHistory : TLApiObject
@@ -324,12 +325,13 @@
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFrom_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -859,6 +861,13 @@
 @property (nonatomic, strong) NSMutableArray* n_id;
 
 +(TLAPI_messages_incrementMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_messages_getMessagesViews : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_messages_getMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_messages_editChatAbout : TLApiObject

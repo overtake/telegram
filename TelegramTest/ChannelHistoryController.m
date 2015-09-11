@@ -10,7 +10,8 @@
 #import "MessageTableItem.h"
 #import "TGChannelsPolling.h"
 
-
+#import "ChannelImportantFilter.h"
+#import "ChannelFilter.h"
 @interface ChannelHistoryController () <TGChannelPollingDelegate>
 
 @end
@@ -74,6 +75,11 @@ static TGChannelsPolling *channelPolling;
                 
                 [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
                 
+                [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+                
+                
+               
+                
             }];
             
         }];
@@ -95,17 +101,30 @@ static TGChannelsPolling *channelPolling;
 
 -(void)pollingDidSaidTooLongWithHole:(TGMessageHole *)hole {
     
-    TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
+    if([self selectAllItems].count > 0) {
+        TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
+        
+        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
+        
+        converted = [self sortItems:converted];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
+            
+        }];
+    } else {
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [self.controller flushMessages];
+            [self removeAllItems];
+            
+            [self.controller jumpToLastMessages:YES];
+        }];
+       
+    }
     
-    NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
     
-    converted = [self sortItems:converted];
-    
-    [ASQueue dispatchOnMainQueue:^{
-
-         [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
-                    
-    }];
     
     
     // add new holes after received too long update.
@@ -297,12 +316,12 @@ static TGChannelsPolling *channelPolling;
 
 -(void)drop:(BOOL)dropMemory {
     
-    [channelPolling stop];
-    
-    
     [super drop:YES];
 }
 
+-(void)dealloc {
+    [channelPolling stop];
+}
 
 
 @end

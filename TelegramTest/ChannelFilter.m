@@ -45,6 +45,8 @@
     
 }
 
+
+
 -(void)request:(BOOL)next callback:(void (^)(NSArray *response,ChatHistoryState state))callback {
     
     if([self.controller checkState:ChatHistoryStateRemote next:next]) {
@@ -190,6 +192,10 @@
         [[Storage manager] insertMessagesHole:obj];
     }];
     
+}
+
+-(int)additionSenderFlags {
+    return (1 << 4);
 }
 
 
