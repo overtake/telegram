@@ -54,7 +54,7 @@
         
         [replyHeader setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:replyHeader.range];
         
-        [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:replyMessage.fwd_from_id != 0 ? replyMessage.fwd_from_id : replyMessage.from_id] range:replyHeader.range];
+        [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:replyMessage.fwd_from_id != nil ? replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:replyMessage.from_id]] range:replyHeader.range];
         
         _replyHeader = replyHeader;
         

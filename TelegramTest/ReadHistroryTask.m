@@ -63,9 +63,9 @@
         
         request = [TLAPI_messages_readEncryptedHistory createWithPeer:[_conversation.encryptedChat inputPeer] max_date:[[MTNetwork instance] getTime]];
     } else if(_conversation.type != DialogTypeChannel) {
-        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset];
+        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id offset:offset];
     } else {
-        request = [TLAPI_messages_readChannelHistory createWithPeer:[_conversation inputPeer] max_id:INT32_MAX]; //TODO
+        request = [TLAPI_messages_readChannelHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
@@ -83,6 +83,7 @@
                 
             }
         } else {
+            
             [ASQueue dispatchOnMainQueue:^{
                 if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
                     [_delegate didCompleteTaskRequest:self];

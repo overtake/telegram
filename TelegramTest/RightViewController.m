@@ -350,6 +350,14 @@
         return;
     }
     
+    if(dialog.type == DialogTypeChannel && self.modalObject == [self forwardModalView]) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert setMessageText:NSLocalizedString(@"Alert.Error", nil)];
+        [alert setInformativeText: NSLocalizedString(@"Conversation.CantForwardToChannel", nil)];
+        [alert show];
+        return;
+    }
     
     
     
@@ -454,11 +462,6 @@
 
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
-    
-    
-    
-    
-    
     
     TMModalView *view = [self forwardModalView];
     
@@ -703,6 +706,13 @@
 }
 
 - (void)showChatInfoPage:(TLChat *)chat {
+    
+    
+    if([chat isKindOfClass:[TL_channel class]]) {
+        [self showChannelInfoPage:chat];
+        return;
+    }
+    
     if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)
         return;
     

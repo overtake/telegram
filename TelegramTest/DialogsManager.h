@@ -38,4 +38,7 @@
 - (void)deleteDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 - (void)clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block;
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog;
+
+-(void)notifyAfterUpdateConversation:(TL_conversation *)conversation;
+
 @end

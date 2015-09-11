@@ -39,6 +39,8 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
             
         }];
         
+        [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
+        
         if(isNeedRemoteLoading)
             [self loadChannelsOnQueue:queue];
         else
@@ -57,6 +59,10 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
     return self;
 }
 
+-(void)logout:(NSNotification *)notification {
+    _channelsIsLoaded = NO;
+}
+
 static const int limit = 1000;
 
 -(void)loadNext:(int)offset result:(NSArray *)result onQueue:(ASQueue *)queue{
@@ -69,6 +75,8 @@ static const int limit = 1000;
         NSMutableArray *converted = [[NSMutableArray alloc] initWithCapacity:response.dialogs.count];
         
         
+        
+        
    //     assert(response.dialogs.count == response.messages.count);
         
         
@@ -76,6 +84,8 @@ static const int limit = 1000;
             
             NSArray *f = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.peer_id == %d", channel.peer.peer_id]];
             
+            
+            assert(f.count > 0);
             
             __block TL_localMessage *topMsg;
             __block TL_localMessage *minMsg;
@@ -116,9 +126,9 @@ static const int limit = 1000;
             }
             
             
-            assert(topMsg != nil);
             
-            [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:topMsg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:topMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:topMsg pts:channel.pts]];
+            
+            [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:topMsg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:topMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:topMsg pts:channel.pts isInvisibleChannel:NO]];
             
         }];
         
@@ -293,7 +303,7 @@ static BOOL isStorageLoaded;
                 
                 TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",channel.top_message]] lastObject]];
                 
-                [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:msg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:msg pts:channel.pts]];
+                [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:msg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:msg pts:channel.pts isInvisibleChannel:NO]];
                 
             }];
             

@@ -35,7 +35,9 @@ typedef enum {
 -(BOOL)isAdmin;
 -(BOOL)isBroadcast;
 -(BOOL)isPublic;
-
+-(BOOL)left;
+-(BOOL)isKicked;
+-(TLInputPeer *)inputPeer;
 -(NSString *)usernameLink;
 
 @end

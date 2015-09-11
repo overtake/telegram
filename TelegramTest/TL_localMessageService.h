@@ -11,6 +11,6 @@
 @interface TL_localMessageService : TL_localMessage
 + (TL_localMessageService *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id date:(int)date action:(TLMessageAction *)action fakeId:(int)fakeId randomId:(long)randomId dstate:(DeliveryState)dstate;
 
-+(TL_localMessageService *)createWithHole:(TGMessageGroupHole *)hole;
++(TL_localMessageService *)createWithHole:(TGMessageHole *)hole;
 
 @end

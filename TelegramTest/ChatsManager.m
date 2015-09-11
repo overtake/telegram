@@ -41,6 +41,7 @@
                 if(currentChat != nil) {
                     
                     
+                    
                     if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
                         currentChat.photo = newChat.photo;
                         [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
@@ -53,17 +54,26 @@
                     
                     currentChat.participants_count = newChat.participants_count;
                     currentChat.date = newChat.date;
-                    currentChat.version = newChat.version;
+                    
                     currentChat.access_hash = newChat.access_hash;
                     
-                    BOOL isNeedUpdateTypeNotification = NO;
-                    if(currentChat.left != newChat.left) {
-                        currentChat.left = newChat.left;
-                        isNeedUpdateTypeNotification = YES;
+                    if(currentChat.version != newChat.version) {
+                         currentChat.version = newChat.version;
+                        
+                        [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES isChannel:[currentChat isKindOfClass:[TL_channel class]]]; // force load chat if changed version.
                     }
+                   
+                    
+                    
+                    BOOL isNeedUpdateTypeNotification = NO;
                     
                     if(currentChat.type != newChat.type) {
                         currentChat.type = newChat.type;
+                        isNeedUpdateTypeNotification = YES;
+                    }
+                    
+                    if(currentChat.flags != newChat.flags) {
+                        currentChat.flags = newChat.flags;
                         isNeedUpdateTypeNotification = YES;
                     }
                     
@@ -164,6 +174,20 @@
     
     
 }
+
+
++(TLChat *)findChatByName:(NSString *)userName {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username == %@",userName]];
+    
+    if(chats.count == 1)
+        return chats[0];
+    
+    return nil;
+}
+
 
 -(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler  {
     

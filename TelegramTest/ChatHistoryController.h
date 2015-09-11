@@ -67,7 +67,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 
 -(void)removeAllItems;
-
+-(void)removeAllItemsWithPeerId:(int)peer_id;
 +(void)drop;
 -(void)drop:(BOOL)dropMemory;
 

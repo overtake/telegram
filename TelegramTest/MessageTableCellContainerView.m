@@ -143,7 +143,12 @@
     if(!self.fwdAvatar) {
         self.fwdAvatar = [TMAvatarImageView standartMessageTableAvatar];
         [self.fwdAvatar setTapBlock:^{
-            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.fwd_user.n_id conversation:weakSelf.item.fwd_user.dialog sender:weakSelf];
+            
+            if(weakSelf.item.fwd_user)
+                [[Telegram rightViewController] showUserInfoPage:weakSelf.item.fwd_user];
+            else
+                [[Telegram rightViewController] showByDialog:weakSelf.item.fwd_chat.dialog sender:weakSelf];
+            
         }];
         [self.fwdContainer addSubview:self.fwdAvatar];
     }
@@ -507,7 +512,7 @@ static BOOL dragAction = NO;
     NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     if(NSPointInRect(pos, self.rightView.frame)) {
-        if(self.messagesViewController.state == MessagesViewControllerStateEditable) {
+        if(self.messagesViewController.state == MessagesViewControllerStateNone && self.messagesViewController.conversation.canEditConversation) {
             [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
             [self mouseDown:theEvent];
             
@@ -644,8 +649,10 @@ static BOOL dragAction = NO;
             [CATransaction commit];
         }
         
-        
-        [self.fwdAvatar setUser:item.fwd_user];
+        if(item.fwd_user)
+            [self.fwdAvatar setUser:item.fwd_user];
+        else
+            [self.fwdAvatar setChat:item.fwd_chat];
         
         if(self.item.isHeaderMessage) {
             [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - 22 - minus))];

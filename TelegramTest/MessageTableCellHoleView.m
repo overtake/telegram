@@ -8,15 +8,29 @@
 
 #import "MessageTableCellHoleView.h"
 #import "TGCTextView.h"
+
+@interface TGCustomTextView : TGCTextView
+@property (nonatomic,weak) MessageTableItemHole *holeItem;
+@end
+
+
+@implementation TGCustomTextView
+
+-(void)open_link:(NSString *)link {
+    [[Telegram rightViewController].messagesViewController jumpToLastMessages:YES];
+}
+
+@end
+
 @interface MessageTableCellHoleView ()
-@property (nonatomic,strong) TGCTextView *textView;
+@property (nonatomic,strong) TGCustomTextView *textView;
 @end
 
 @implementation MessageTableCellHoleView
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        _textView = [[TGCustomTextView alloc] initWithFrame:NSZeroRect];
         
         [self addSubview:_textView];
         
@@ -37,6 +51,7 @@
 -(void)setItem:(MessageTableItemHole *)item {
     [super setItem:item];
     
+    _textView.holeItem = item;
     
     [_textView setFrameSize:item.textSize];
     [_textView setAttributedString:item.text];

@@ -74,6 +74,8 @@ int maxChatUsers();
 
 +(void)sendLogs;
 
++(id)findObjectWithName:(NSString *)name;
+
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;
 

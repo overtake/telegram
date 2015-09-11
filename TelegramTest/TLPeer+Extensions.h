@@ -13,6 +13,7 @@
 -(BOOL)isChat;
 +(TLPeer *)peerForId:(int)peer_id;
 -(TLPeer *)peerOut;
+-(TLInputPeer *)inputPeer;
 -(BOOL)isSecret;
 -(BOOL)isBroadcast;
 @end

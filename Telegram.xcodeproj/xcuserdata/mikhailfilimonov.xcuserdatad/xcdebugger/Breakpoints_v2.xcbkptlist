@@ -57,29 +57,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "463507674.050802"
+            filePath = "TelegramTest/HistoryFilter.m"
+            timestampString = "463517084.199499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2572"
-            endingLineNumber = "2572"
-            landmarkName = "-allChannels:deliveryOnQueue:"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "+removeAllItems:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGUpdateChannels.m"
-            timestampString = "463065299.769306"
+            filePath = "TelegramTest/HistoryFilter.m"
+            timestampString = "463517092.858478"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
-            landmarkName = "-failUpdateWithChannelId:"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "+removeAllItems:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -19,7 +19,7 @@
 
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -41,7 +41,7 @@
 }
 
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(int)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state pts:(int)pts {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state pts:(int)pts {
     
     TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from_id:fwd_from_id fwd_date:fwd_date reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities state:state];
     
@@ -139,7 +139,6 @@
 
 - (void)save:(BOOL)updateConversation {
     [[Storage manager] insertMessage:self];
-    [[MessagesManager sharedManager] TGsetMessage:self];
     if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
     }
@@ -150,7 +149,7 @@
     [stream writeInt:self.n_id];
     if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
     [TLClassStore TLSerialize:self.to_id stream:stream];
-    if(self.flags & (1 << 2)) [stream writeInt:self.fwd_from_id];
+    if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
@@ -159,6 +158,7 @@
     [stream writeInt:self.fakeId];
     [stream writeInt:self.dstate];
     [stream writeLong:self.randomId];
+    [stream writeInt:self.pts];
     if(self.flags & (1 << 6))
         [ClassStore TLSerialize:self.reply_markup stream:stream];
     if(self.flags & (1 << 7)) {//Serialize FullVector
@@ -171,15 +171,15 @@
                 [ClassStore TLSerialize:obj stream:stream];
             }
         }}
-    
-    [stream writeInt:self.pts];
+    if(self.flags & (1 << 10)) {self.views = [stream readInt];}
+
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
     self.n_id = [stream readInt];
     if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
     self.to_id = [TLClassStore TLDeserialize:stream];
-    if(self.flags & (1 << 2)) self.fwd_from_id = [stream readInt];
+    if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
     if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];
@@ -188,6 +188,7 @@
     self.fakeId = [stream readInt];
     self.dstate = [stream readInt];
     self.randomId = [stream readLong];
+    self.pts = [stream readInt];
     if(self.flags & (1 << 6))
         self.reply_markup = [ClassStore TLDeserialize:stream];
     if(self.flags & (1 << 7)) {//UNS FullVector
@@ -205,7 +206,19 @@
             }
         }}
     
-    self.pts = [stream readInt];
+   
+    if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
+
+}
+
+
+
+-(TLPeer *)fwd_from_id {
+    if(self.class != [TL_localMessage class]) {
+        return [TL_peerUser createWithUser_id:self.fwd_from_id_old];
+    }
+    
+    return [super fwd_from_id];
 }
 
 -(int)peer_id {
@@ -274,7 +287,7 @@
 }
 
 -(BOOL)unread {
-    return self.flags & TGUNREADMESSAGE;
+    return self.isChannelMessage ? self.conversation.read_inbox_max_id < self.n_id :  self.flags & TGUNREADMESSAGE;
 }
 
 -(BOOL)readedContent {
@@ -399,6 +412,7 @@ DYNAMIC_PROPERTY(DDialog);
     
     if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
 }
+
 
 -(void)setEntities:(NSMutableArray*)entities
 {

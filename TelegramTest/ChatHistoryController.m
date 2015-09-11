@@ -38,6 +38,8 @@
 @property (nonatomic,strong) HistoryFilter *h_filter;
 @property (atomic,assign) BOOL proccessing;
 
+@property (nonatomic,strong) TL_conversation *conversation;
+
 @end
 
 @implementation ChatHistoryController
@@ -52,7 +54,7 @@ static NSMutableArray *listeners;
 
 
 
-static TGChannelsPolling *channelPolling;
+
 
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
@@ -75,11 +77,10 @@ static TGChannelsPolling *channelPolling;
             [filters addObject:[ChannelImportantFilter class]];
             listeners = [[NSMutableArray alloc] init];
             
-            channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:3];
+            
         });
         
-        [channelPolling setDelegate:self];
-        [channelPolling setCurrentConversation:controller.conversation];
+        _conversation = [controller conversation];
         
         
         [queue dispatchOnQueue:^{
@@ -87,13 +88,13 @@ static TGChannelsPolling *channelPolling;
             [listeners addObject:self];
             
        
-            // self.controller.conversation = conversation;
+            // self.conversation = conversation;
             _controller = controller;
             
             
             self.semaphore = dispatch_semaphore_create(1);
             
-            _selectLimit = 50;
+            self.selectLimit = 50;
             
             [self setFilter:[[historyFilter alloc] initWithController:self]];
             _need_save_to_db = YES;
@@ -118,47 +119,6 @@ static TGChannelsPolling *channelPolling;
     return self;
 }
 
--(void)pollingDidSaidTooLong {
-    
-    
-    // add new holes after received too long update.
-   
-    
-    
-    
-    
-    [self setState:ChatHistoryStateLocal next:NO];
-    
-    
-    [self removeAllItems];
-    
-    self.proccessing = YES;
-    
-    [self.filter request:YES callback:^(id response, ChatHistoryState state) {
-        
-        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:response] isLates:NO];
-        
-        converted = [self sortItems:converted];
-        
-        [self setState:self.filter.botHole.max_id != INT32_MAX ? ChatHistoryStateFull : ChatHistoryStateLocal next:NO];
-        
-        [ASQueue dispatchOnMainQueue:^{
-            
-            self.proccessing = NO;
-            
-            [self.controller flushMessages];
-            
-            
-            [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
-
-        }];
-        
-        
-        
-    }];
-    
-    
-}
 
 -(ASQueue *)queue {
     return queue;
@@ -169,92 +129,7 @@ static TGChannelsPolling *channelPolling;
 }
 
 
-/*
- self.proccessing = YES;
- 
- 
- 
- [self.filter remoteRequest:YES max_id:0 callback:^(NSArray *result, BOOL end) {
- 
- NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:result] isLates:NO];
- 
- converted = [self sortItems:converted];
- 
- [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
- 
- }];
- */
 
--(void)pollingReceivedUpdates:(id)updates endPts:(int)pts {
-    
-}
-
-
-
--(void)startChannelPolling {
-    [channelPolling start];
-}
-
-
--(void)checkMaxItems {
-    
-    for (Class filterClass in filters) {
-        
-        NSMutableArray *filterItems = [filterClass messageItems:self.conversation.peer_id];
-        NSMutableDictionary *filterKeys = [filterClass messageKeys:self.conversation.peer_id];
-        
-        const int max = 300;
-        
-        if(filterItems.count >= max) {
-            
-            MTLog(@"h_items_count:%lu",filterItems.count);
-            
-            NSMutableDictionary *peers = [[NSMutableDictionary alloc] init];
-            
-            
-            [filterItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                
-                NSMutableArray *items = peers[@(obj.message.peer_id)];
-                
-                if(!items) {
-                    items = [[NSMutableArray alloc] init];
-                    
-                    peers[@(obj.message.peer_id)] = items;
-                }
-                if(obj.message.dstate == DeliveryStateNormal || obj.message.dstate == DeliveryStateError)
-                    [items addObject:obj];
-                
-            }];
-            
-            NSUInteger average = max/2/peers.count;
-            
-            [filterItems removeAllObjects];
-            
-            [filterKeys removeAllObjects];
-            
-            [peers enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id peerItems, BOOL *stop) {
-                
-                NSArray *items = [self sortItems:peerItems];
-                
-                items = [items subarrayWithRange:NSMakeRange(0, MIN(average,items.count))];
-                
-                [filterItems addObjectsFromArray:items];
-                
-                [items enumerateObjectsUsingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL *stop) {
-                    
-                    filterKeys[@(item.message.n_id)] = item;
-                    
-                }];
-                
-            }];
-            
-            MTLog(@"h_items_count:%lu",filterItems.count);
-        }
-        
-    }
-    
-
-}
 
 
 -(void)notificationReceiveMessages:(NSNotification *)notify {
@@ -613,17 +488,22 @@ static TGChannelsPolling *channelPolling;
         messageItems = [filter messageItems:self.conversation.peer_id];
         _requestCounter = 0;
         
+        _start_min = _min_id = self.conversation.last_marked_message == 0 ? self.conversation.top_message : self.conversation.last_marked_message;
+        _max_id =  0;
+        
+        _maxDate = [[MTNetwork instance] getTime];
+        _minDate = self.conversation.last_marked_date+1;
+
+        
         NSArray *items = [self selectAllItems];
         
         if(items.count > 0) {
             MessageTableItem *item = items[0];
             
-            if(self.filter.class == HistoryFilter.class && (item.message.n_id != self.controller.conversation.top_message && item.message.n_id < TGMINFAKEID)) {
-                [[self.filter class] removeAllItems:self.controller.conversation.peer.peer_id];
+            if(self.filter.class == HistoryFilter.class && (item.message.n_id != self.conversation.top_message && item.message.n_id < TGMINFAKEID)) {
+                [[self.filter class] removeAllItems:self.conversation.peer.peer_id];
             }
         }
-        
-        
         
         _nextState = ChatHistoryStateCache;
         _prevState = ChatHistoryStateCache;
@@ -648,47 +528,16 @@ static TGChannelsPolling *channelPolling;
         self.proccessing = YES;
         
         
-        
-        
-        [self.filter request:next callback:^(NSArray *result, ChatHistoryState state) {
-            
-            [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
-                
-                
-                NSArray *items = [self.controller messageTableItemsFromMessages:result];
-                
-                
-                NSArray *converted = [self filterAndAdd:items isLates:NO];
-                
-                
-                converted = [self sortItems:converted];
-                
-                [self setState:state next:next];
-                
-                
-                
-                [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                
-            }];
-            
-        }];
-        
-        
-        return;
-        
-        // begin old logic
-        
-        
         BOOL notify = NO;
-    
+        
         
         NSArray *allItems;
         
         
         if( [self checkState:ChatHistoryStateCache next:next]) {
             
-            // disable memory items
-         //   allItems = [self selectAllItems];
+            
+            allItems = [self selectAllItems];
             
             
             
@@ -698,7 +547,7 @@ static TGChannelsPolling *channelPolling;
                 
                 if((self.filter.type & obj.message.filterType) > 0) {
                     
-                    int source_date = next ? self.maxDate : self.minDate;
+                    int source_date = next ? _maxDate : _minDate;
                     
                     if(next) {
                         
@@ -714,37 +563,39 @@ static TGChannelsPolling *channelPolling;
             }];
             
             
-//            if(memory.count >= _selectLimit) {
-//                
-//                NSUInteger location = next ? 0 : (memory.count-_selectLimit);
-//                memory = [[memory subarrayWithRange:NSMakeRange(location, _selectLimit)] mutableCopy];
-//                
-//                MessageTableItem *lastItem = [memory lastObject];
-//            
-//                NSArray *merge = [[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]];
-//                
-//                [memory addObjectsFromArray:merge];
-//                
-//            } else {
-            
-            ChatHistoryState state = ChatHistoryStateLocal;
-            
-//                if(!next) {
-//                    state = (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class) && ( self.max_id == 0 || (self.min_id >= self.controller.conversation.sync_message_id && self.controller.conversation.sync_message_id != 0) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-//                    
-//                } else {
-//                    state = ((self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class) && (self.max_id == 0 ? self.min_id >= _controller.conversation.sync_message_id : self.max_id > self.conversation.sync_message_id) ) || self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-//                    
-//                }
-            
+            if(memory.count >= self.selectLimit) {
+                
+                NSUInteger location = next ? 0 : (memory.count-self.selectLimit);
+                memory = [[memory subarrayWithRange:NSMakeRange(location, self.selectLimit)] mutableCopy];
+                
+                MessageTableItem *lastItem = [memory lastObject];
+                
+                NSArray *merge = [[allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.date == %d",lastItem.message.date]] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self IN %@)",memory]];
+                
+                [memory addObjectsFromArray:merge];
+                
+            } else {
+                
+                ChatHistoryState state;
+                
+                if(!next) {
+                    state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.conversation.sync_message_id && self.conversation.sync_message_id != 0) || self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
+                } else {
+                    state = (self.filter.class == HistoryFilter.class && (_max_id == 0 ? _min_id >= _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
+                    
+                }
+                
                 [self setState:state next:next];
-         //   }
+            }
             
             if(memory.count > 0)
                 notify = YES;
             
             
-            if((!next && self.min_id == self.controller.conversation.top_message && self.filter.class != ChannelFilter.class)) {
+            [self saveId:memory next:next];
+            
+            if((!next && _min_id == self.conversation.top_message)) {
                 [self setState:ChatHistoryStateFull next:next];
                 
                 notify = YES;
@@ -756,17 +607,16 @@ static TGChannelsPolling *channelPolling;
             
         }
         
-
+        
         
         if(anotherSource && !notify) {
             
-           if([self checkState:ChatHistoryStateLocal next:next]) {
+            if([self checkState:ChatHistoryStateLocal next:next]) {
                 
                 
                 NSArray *result = [self.filter storageRequest:next];
                 
                 [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
-                    
                     
                     NSArray *items = [self.controller messageTableItemsFromMessages:result];
                     
@@ -777,12 +627,14 @@ static TGChannelsPolling *channelPolling;
                     converted = [self sortItems:converted];
                     
                     
+                    [self saveId:converted next:next];
                     
-                    if(!next && (self.min_id >= self.conversation.top_message) && self.filter.class != ChannelFilter.class) {
+                    
+                    if(!next && (_min_id >= self.conversation.top_message)) {
                         [self setState:ChatHistoryStateFull next:next];
                     } else {
-                        if(converted.count < _selectLimit) {
-                            [self setState: self.controller.conversation.type != DialogTypeSecretChat && self.controller.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
+                        if(converted.count < self.selectLimit) {
+                            [self setState: self.conversation.type != DialogTypeSecretChat && self.conversation.type != DialogTypeBroadcast ? ChatHistoryStateRemote : ChatHistoryStateFull next:next];
                         }
                     }
                     
@@ -790,7 +642,7 @@ static TGChannelsPolling *channelPolling;
                     [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
                     
                 }];
-
+                
                 
                 
             } else if([self checkState:ChatHistoryStateRemote next:next]) {
@@ -806,7 +658,7 @@ static TGChannelsPolling *channelPolling;
                             
                             NSArray *messages = [[response messages] copy];
                             
-                            if((self.filter.class != HistoryFilter.class && self.filter.class != ChannelFilter.class) || !_need_save_to_db) {
+                            if(self.filter.class != HistoryFilter.class || !_need_save_to_db) {
                                 [[response messages] removeAllObjects];
                             }
                             
@@ -814,8 +666,8 @@ static TGChannelsPolling *channelPolling;
                             TL_localMessage *sync_message = [[response messages] lastObject];
                             
                             if(sync_message) {
-                                self.controller.conversation.sync_message_id = sync_message.n_id;
-                                [self.controller.conversation save];
+                                self.conversation.sync_message_id = sync_message.n_id;
+                                [self.conversation save];
                             }
                             
                             
@@ -826,28 +678,19 @@ static TGChannelsPolling *channelPolling;
                             
                             converted = [self sortItems:converted];
                             
+                            [self saveId:converted next:next];
                             
-                            if(next && converted.count <  (_selectLimit-1)) {
+                            
+                            
+                            
+                            if(next && converted.count <  (self.selectLimit-1)) {
                                 [self setState:ChatHistoryStateFull next:next];
                             }
                             
-                            if(!next && (self.min_id) == self.controller.conversation.top_message) {
+                            if(!next && (_min_id) == self.conversation.top_message) {
                                 [self setState:ChatHistoryStateFull next:next];
                             }
                             
-                            if(!next && self.filter.class == ChannelFilter.class) {
-                                
-                                if(messages.count > 0) {
-                                    TL_localMessage *msg = messages[0];
-                                    if(msg) {
-                                        [[DialogsManager sharedManager] updateTop:msg needUpdate:YES update_real_date:NO];
-                                    }
-                                    
-                                }
-                                
-                                
-                                
-                            }
                             self.filter.request = nil;
                             
                             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
@@ -862,10 +705,80 @@ static TGChannelsPolling *channelPolling;
             }
             
         }
-
+        
     } synchronous:sync];
     
 }
+
+-(void)saveId:(NSArray *)source next:(BOOL)next {
+    
+    
+    if(source.count > 0)  {
+        
+        if(next || _start_min == _min_id) {
+            BOOL localSaved = NO;
+            BOOL serverSaved = NO;
+            for (int i = (int) source.count-1; i >= 0; i--) {
+                if(!localSaved) {
+                    _max_id = [[(MessageTableItem *)source[i] message] n_id];
+                    _maxDate = [[(MessageTableItem *)source[i] message] date]-1;
+                    localSaved = YES;
+                }
+                
+                if(!serverSaved && [[(MessageTableItem *)source[i] message] n_id] != 0 && [[(MessageTableItem *)source[i] message] n_id] < TGMINFAKEID) {
+                    _server_max_id = [[(MessageTableItem *)source[i] message] n_id];
+                    serverSaved = YES;
+                }
+                
+                if(localSaved && serverSaved)
+                    break;
+                
+            }
+            
+        }
+        
+        if(!next) {
+            BOOL localSaved = NO;
+            BOOL serverSaved = NO;
+            
+            for (MessageTableItem *item in source) {
+                if(!localSaved) {
+                    _min_id = [item.message n_id];
+                    _minDate = [item.message date]+1;
+                    localSaved = YES;
+                }
+                
+                if(!serverSaved && item.message.n_id != 0 && item.message.n_id < TGMINFAKEID) {
+                    _server_min_id = [item.message n_id];
+                    serverSaved = YES;
+                }
+                
+                
+            }
+        }
+        
+    }
+    
+}
+
+
+
+
+-(void)setMin_id:(int)min_id {
+    self->_min_id = min_id;
+    _server_min_id = min_id;
+}
+
+-(void)setMax_id:(int)max_id {
+    _max_id = max_id;
+    _server_max_id = max_id;
+}
+
+-(void)setStart_min:(int)start_min {
+    _start_min = start_min;
+    _server_start_min = start_min;
+}
+
 
 -(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next {
     return next ? _nextState == state : _prevState == state;
@@ -879,144 +792,6 @@ static TGChannelsPolling *channelPolling;
     
     
 }
-
--(int)min_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return 0;
-    
-    
-    __block MessageTableItem *lastObject;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            lastObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return lastObject.message.n_id;
-    
-}
-
--(int)minDate {
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return 0;
-    
-    
-    __block MessageTableItem *lastObject;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            lastObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return lastObject.message.date - 1;
-
-}
-
-
-
--(int)max_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    if(allItems.count == 0)
-        return INT32_MAX;
-    
-
-    
-    __block MessageTableItem *firstObject;
-    
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            firstObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return firstObject.message.n_id;
-}
-
--(int)maxDate {
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return INT32_MAX;
-    
-    __block MessageTableItem *firstObject;
-    
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            firstObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return firstObject.message.date + 1;
-}
-
--(int)server_max_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    __block MessageTableItem *item;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
-        {
-            item = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return item.message.n_id;
-    
-}
-
--(int)server_min_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    __block MessageTableItem *item;
-    
-    [allItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
-        {
-            item = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return item.message.n_id;
-
-}
-
 
 -(NSArray *)selectAllItems {
 
@@ -1043,10 +818,15 @@ static TGChannelsPolling *channelPolling;
 
 -(void)removeAllItems {
     for (Class filterClass in filters) {
-        [filterClass removeAllItems:self.controller.conversation.peer_id];
+        [filterClass removeAllItems:self.conversation.peer_id];
     }
 }
 
+-(void)removeAllItemsWithPeerId:(int)peer_id {
+    for (Class filterClass in filters) {
+        [filterClass removeAllItems:peer_id];
+    }
+}
 
 -(int)posAtMessage:(TLMessage *)message {
     
@@ -1065,7 +845,7 @@ static TGChannelsPolling *channelPolling;
 
 -(void)addItem:(MessageTableItem *)item {
     
-    [self addItem:item conversation:self.controller.conversation callback:nil sentControllerCallback:nil];
+    [self addItem:item conversation:self.conversation callback:nil sentControllerCallback:nil];
 }
 
 
@@ -1078,7 +858,7 @@ static TGChannelsPolling *channelPolling;
 }
 
 -(void)addItem:(MessageTableItem *)item sentControllerCallback:(dispatch_block_t)sentControllerCallback {
-     [self addItem:item conversation:self.controller.conversation callback:nil sentControllerCallback:sentControllerCallback];
+     [self addItem:item conversation:self.conversation callback:nil sentControllerCallback:sentControllerCallback];
 }
 
 
@@ -1145,7 +925,7 @@ static TGChannelsPolling *channelPolling;
             MessageTableItem *item = [items lastObject];
             
             NSRange range = NSMakeRange(0, filtred.count);
-            if(filtred.count == items.count && item.messageSender.conversation.peer.peer_id == self.controller.conversation.peer.peer_id) {
+            if(filtred.count == items.count && item.messageSender.conversation.peer.peer_id == self.conversation.peer.peer_id) {
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                     
                     [self.controller receivedMessageList:filtred inRange:range itsSelf:YES];
@@ -1193,12 +973,12 @@ static TGChannelsPolling *channelPolling;
             
             [queue dispatchOnQueue:^{
                 
-                if(self.controller.conversation.last_marked_message > TGMINFAKEID || self.controller.conversation.last_marked_message < checkItem.message.n_id) {
+                if(self.conversation.last_marked_message > TGMINFAKEID || self.conversation.last_marked_message < checkItem.message.n_id) {
                     
                     checkItem.messageSender.conversation.last_marked_message = checkItem.message.n_id;
                     checkItem.messageSender.conversation.last_marked_date = checkItem.message.date;
                     
-                    [self.controller.conversation save];
+                    [self.conversation save];
                     
                }
                 
@@ -1274,7 +1054,7 @@ static TGChannelsPolling *channelPolling;
 }
 
 -(TL_conversation *)conversation {
-    return _controller.conversation;
+    return _conversation;
 }
 
 -(void)dealloc {

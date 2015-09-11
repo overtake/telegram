@@ -8,11 +8,15 @@
 
 #import "TMInAppLinks.h"
 #import "Telegram.h"
-
+#import "TLPeer+Extensions.h"
 @implementation TMInAppLinks
 
 + (NSString *) userProfile:(int)user_id {
     return [NSString stringWithFormat:@"USER_PROFILE:%d", user_id];
+}
+
++ (NSString *)peerProfile:(TLPeer*)peer {
+    return [NSString stringWithFormat:@"openWithPeer:%@:%d",peer.className,peer.peer_id];
 }
 
 + (void) parseUrlAndDo:(NSString *)url {

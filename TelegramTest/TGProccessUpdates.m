@@ -89,6 +89,14 @@ static ASQueue *queue;
     }];
 }
 
+-(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback {
+    [queue dispatchOnQueue:^{
+        
+        [_channelsUpdater failUpdateWithChannelId:channel_id limit:limit withCallback:callback];
+        
+    }];
+}
+
 
 -(void)drop {
     
@@ -164,7 +172,7 @@ static NSArray *channelUpdates;
         {
             [_channelsUpdater addUpdate:update];
             return;
-        } else if([channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
+        } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
             [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
             return;
         }

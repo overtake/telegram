@@ -203,22 +203,26 @@
     return self.noMessagesView;
 }
 
-- (void)jumpToLastMessages {
+- (void)jumpToLastMessages:(BOOL)force {
     
     BOOL animated = YES;
     
     
-    if(self.replyMsgsStack.count > 0)
-    {
-        int msg_id = [[self.replyMsgsStack lastObject] intValue];
-        
-        [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
-        
-        [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil];
-        return;
+    if(!force) {
+        if(self.replyMsgsStack.count > 0)
+        {
+            int msg_id = [[self.replyMsgsStack lastObject] intValue];
+            
+            [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
+            
+            [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil];
+            return;
+        }
     }
     
-    if(_historyController.prevState != ChatHistoryStateFull) {
+    
+    
+    if(_historyController.prevState != ChatHistoryStateFull || force) {
         
         
         
@@ -245,7 +249,7 @@
 }
 
 -(Class)defHFClass {
-    return self.conversation.type == DialogTypeChannel ? [ChannelImportantFilter class] : [HistoryFilter class];
+    return self.conversation.type == DialogTypeChannel ? [ChannelFilter class] : [HistoryFilter class];
 }
 
 
@@ -405,7 +409,7 @@
     [self.jumpToBottomButton setAutoresizingMask:NSViewMinXMargin];
     [self.jumpToBottomButton setHidden:YES];
     [self.jumpToBottomButton setCallback:^{
-        [strongSelf jumpToLastMessages];
+        [strongSelf jumpToLastMessages:NO];
     }];
     [self.view addSubview:self.jumpToBottomButton];
     
@@ -729,7 +733,7 @@
         return;
     
     if(self.historyController.prevState != ChatHistoryStateFull)
-        [self jumpToLastMessages];
+        [self jumpToLastMessages:YES];
     
     [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
         
@@ -1730,7 +1734,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(isScrollToEnd || forceEnd) {
         if(_historyController.prevState != ChatHistoryStateFull) {
-            [self jumpToLastMessages];
+            [self jumpToLastMessages:YES];
             return;
         } else {
              [self.table.scrollView scrollToEndWithAnimation:YES];
@@ -2191,9 +2195,9 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)hideOrShowBottomView {
     
-    [self.bottomView setHidden:self.conversation.type == DialogTypeChannel && !self.conversation.chat.isPublic && !self.conversation.chat.isAdmin];
+    [self.bottomView setHidden:self.conversation.type == DialogTypeChannel && self.conversation.chat.isBroadcast && !self.conversation.chat.isAdmin && !self.conversation.isInvisibleChannel];
     
-    [self bottomViewChangeSize:self.conversation.type == DialogTypeChannel && !self.conversation.chat.isPublic && !self.conversation.chat.isAdmin ? 0 : _lastBottomOffsetY animated:NO];
+    [self bottomViewChangeSize:self.bottomView.isHidden ? 0 : _lastBottomOffsetY animated:NO];
 }
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
@@ -2341,6 +2345,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     self.conversation.unread_count = 0;
+    _conversation.read_inbox_max_id = self.conversation.top_message;
     
     [self.conversation save];
     
@@ -2688,7 +2693,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!self.unreadMark) {
             _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
-            array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
+            if(array.count > 0)
+                array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
         }
     }
     

@@ -129,6 +129,7 @@
     
     [self.notificationView setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
+    
     if(!self.addMembersButton.isHidden) {
         yOffset+=NSHeight(self.notificationView.frame);
         
@@ -137,6 +138,7 @@
      
     
     yOffset+=42;
+    
     
     
     if(self.type == ChatInfoViewControllerNormal) {

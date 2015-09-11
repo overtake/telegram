@@ -34,13 +34,12 @@
     int minDate = next ? 0 : self.controller.maxDate;
     
     
-    TGHistoryResponse *response = [[Storage manager] loadChannelMessages:self.controller.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.controller.selectLimit filterMask:[self type] important:NO];
+    TGHistoryResponse *response = [[Storage manager] loadChannelMessages:self.controller.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.controller.selectLimit filterMask:[self type] important:NO next:next];
     
-    self.topHole = response.topHole;
-    self.botHole = response.botHole;
+    self.hole = response.hole;
     
     
-    *state = response.result.count < self.controller.selectLimit || (self.botHole || self.topHole) ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    *state = response.result.count < self.controller.selectLimit || [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
     return response.result;
     
@@ -50,7 +49,7 @@
     
     if([self.controller checkState:ChatHistoryStateRemote next:next]) {
         
-        [self remoteRequest:next hole:next ? self.topHole : self.botHole callback:callback];
+        [self remoteRequest:next hole:self.hole callback:callback];
         
     } else {
         
@@ -84,11 +83,7 @@
         
          TGMessageHole *nHole = nil;
          
-        if(messages.count == response.messages.count && messages.count < self.controller.selectLimit) {
-            
-            [[Storage manager] removeHole:next ? self.topHole : self.botHole];
-            
-        } else if(hole != nil) {
+         if(hole != nil) {
             
             int min = hole.min_id;
             int max = hole.max_id;
@@ -108,18 +103,15 @@
             
             
             if(nHole.min_id == nHole.max_id) {
-                [[Storage manager] removeHole:nHole];
+                [nHole remove];
                 nHole = nil;
             } else
-                [[Storage manager] insertMessagesHole:nHole];
+                [nHole save];
             
             
         }
          
-         if(next)
-             self.topHole = nHole;
-         else
-             self.botHole = nHole;
+         self.hole = nHole;
         
         if(callback) {
             callback(messages,!nHole ? ChatHistoryStateLocal : ChatHistoryStateRemote);
@@ -147,10 +139,7 @@
         maxId = hole.max_id;
     }
     
-    if(next)
-        self.topHole = hole;
-    else
-        self.botHole = hole;
+    self.hole = hole;
     
     [self remoteRequest:next max_id:maxId hole:hole callback:callback];
     

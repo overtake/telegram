@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSString *dateStr;
 
 @property (nonatomic, strong) TLUser *fwd_user;
+@property (nonatomic, strong) TLChat *fwd_chat;
 
 @property (nonatomic) BOOL isForwadedMessage;
 @property (nonatomic) BOOL isSelected;

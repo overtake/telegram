@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.09.15.
+//  Auto created by Mikhail Filimonov on 11.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -324,11 +324,18 @@
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
+@property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id;
++(TLAPI_messages_forwardMessages*)createWithFrom_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
+@end
+
+@interface TLAPI_messages_reportSpam : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_reportSpam*)createWithPeer:(TLInputPeer*)peer;
 @end
 
 @interface TLAPI_messages_getChats : TLApiObject
@@ -840,11 +847,33 @@
 +(TLAPI_messages_deleteChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
 @end
 
+@interface TLAPI_messages_getChannelMessages : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_messages_getChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_messages_incrementMessagesViews : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_messages_incrementMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
+@end
+
 @interface TLAPI_messages_editChatAbout : TLApiObject
 @property (nonatomic, strong) TLInputChat* chat_id;
 @property (nonatomic, strong) NSString* about;
 
 +(TLAPI_messages_editChatAbout*)createWithChat_id:(TLInputChat*)chat_id about:(NSString*)about;
+@end
+
+@interface TLAPI_messages_getChannelParticipants : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property int offset;
+@property int limit;
+
++(TLAPI_messages_getChannelParticipants*)createWithChat_id:(TLInputChat*)chat_id offset:(int)offset limit:(int)limit;
 @end
 
 @interface TLAPI_messages_checkChannelUsername : TLApiObject

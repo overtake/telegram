@@ -10,11 +10,10 @@
 
 @implementation TGHistoryResponse
 
--(id)initWithResult:(NSArray *)result botHole:(TGMessageHole *)botHole topHole:(TGMessageHole *)topHole groupHoles:(NSArray *)groupHoles {
+-(id)initWithResult:(NSArray *)result hole:(TGMessageHole *)hole groupHoles:(NSArray *)groupHoles {
     if(self = [super init]) {
         _result = result;
-        _botHole = botHole;
-        _topHole = topHole;
+        _hole = hole;
         _groupHoles = groupHoles;
     }
     

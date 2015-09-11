@@ -57,7 +57,7 @@
         
         [self.cancelButton setTapBlock:^ {
             strongSelf.closeCallback();
-            [strongSelf.controller jumpToLastMessages];
+            [strongSelf.controller jumpToLastMessages:YES];
             [strongSelf.request cancelRequest];
             strongSelf.request = nil;
         }];

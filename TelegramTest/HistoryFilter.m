@@ -270,6 +270,10 @@ static NSString *kMessageItems = @"kMessageItems";
     
 }
 
+-(BOOL)confirmHole:(TGMessageHole *)hole withNext:(BOOL)next {
+    return hole && ( next ? self.hole.max_id <= self.controller.max_id : self.hole.max_id > self.hole.max_id);
+}
+
 
 -(void)dealloc {
     

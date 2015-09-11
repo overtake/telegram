@@ -194,7 +194,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         // channel messages indexes
         {
             [db executeUpdate:@"CREATE INDEX if not exists cm_n_id_idx ON channel_messages(n_id)"];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_select_messages_idx ON channel_messages(channel_id,date)"];
+            [db executeUpdate:@"CREATE INDEX if not exists cm_select_messages_idx ON channel_messages(peer_id,date)"];
             [db executeUpdate:@"CREATE INDEX if not exists cm_peer_idx ON channel_messages(peer_id)"];
             [db executeUpdate:@"CREATE INDEX if not exists cm_date_idx ON channel_messages(date)"];
             [db executeUpdate:@"CREATE INDEX if not exists cm_random_idx ON channel_messages(random_id)"];
@@ -220,7 +220,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
         }
         
         
-       [db executeUpdate:@"create table if not exists channel_dialogs (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count unsigned integer,last_message_date integer, notify_settings blob, last_marked_message integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, unread_important_count integer, pts integer)"];
+       [db executeUpdate:@"create table if not exists channel_dialogs (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count unsigned integer,last_message_date integer, notify_settings blob, last_marked_message integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, unread_important_count integer, pts integer, is_invisible integer)"];
         
         
         
@@ -625,13 +625,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important {
+-(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important next:(BOOL)next {
     
     
     __block NSMutableArray *messages = [[NSMutableArray alloc] init];
     
-    __block TGMessageHole *botHole;
-    __block TGMessageHole *topHole;
+    __block TGMessageHole *hole;
     
     NSMutableArray *groupHoles = [[NSMutableArray alloc] init];
     
@@ -658,7 +657,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date < %d  AND (filter_mask & %d > 0) %@ ORDER BY date DESC, n_id desc LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date DESC, n_id desc LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -719,25 +718,24 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *holes = [NSMutableArray array];
         
        
-        if(!important) {            
+        
             
-            result = [db executeQuery:@"select * from message_holes where peer_id = ? and NOT(? > max_id OR ? <= min_id) and (type & 2 = 2) order by date asc",@(conversationId),@(min),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id)];
+        result = [db executeQuery:@"select * from message_holes where peer_id = ? and NOT(? > max_id OR ? <= min_id) and (type & 2 = 2) order by date asc",@(conversationId),@(min),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id)];
+        
+        while ([result next]) {
+            TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
             
-            while ([result next]) {
-                TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
-                
-                [holes addObject:hole];
-            }
-            
-            [result close];
-            
-            
-            topHole = [holes firstObject];
-            botHole = [holes lastObject];
-            
-            
-        } else {
-            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((max_id <= ?) and (min_id >= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id),@(min_id == 0 ? min : min_id)];
+            [holes addObject:hole];
+        }
+        
+        [result close];
+        
+        hole = [holes firstObject];
+        
+        
+        
+         if(important) {
+            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((max_id > ?) and (min_id <= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(min),@(max)];
             
             while ([result next]) {
                 TGMessageHole *hole = [[TGMessageGroupHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
@@ -755,7 +753,23 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         // slice messages with hole
         
         
-        messages = [[messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id <= %d and self.n_id >= %d",botHole ? botHole.min_id : max,topHole ? topHole.max_id : 0]] mutableCopy];
+        
+        if(hole) {
+            
+            NSPredicate *predicate;
+            
+            if(next)
+                predicate = [NSPredicate predicateWithFormat:@"self.n_id >= %d",hole.max_id];
+            else
+                predicate = [NSPredicate predicateWithFormat:@"self.n_id < %d",hole.min_id];
+            
+            messages = [[messages filteredArrayUsingPredicate:predicate] mutableCopy];
+            
+        }
+        
+        
+        
+        
         
         
         [groupHoles enumerateObjectsUsingBlock:^(TGMessageGroupHole *hole, NSUInteger idx, BOOL *stop) {
@@ -787,7 +801,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [[MessagesManager sharedManager] addSupportMessages:support];
     
     
-    return [[TGHistoryResponse alloc] initWithResult:[messages copy] botHole:botHole topHole:topHole groupHoles:groupHoles];
+    return [[TGHistoryResponse alloc] initWithResult:[messages copy] hole:hole groupHoles:groupHoles];
 }
 
 
@@ -901,7 +915,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSString *sql = [NSString stringWithFormat:@"select message_text,serialized,flags from messages where peer_id = %d ORDER BY date DESC, n_id DESC LIMIT 1",peer_id];
         
         if([peer isKindOfClass:[TL_peerChannel class]])
-            sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where  peer_id = %d ORDER BY date DESC, n_id DESC LIMIT 1",peer_id];
+            sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where  peer_id = %d and (filter_type & %d) > 0 ORDER BY date DESC, n_id DESC LIMIT 1",peer_id,HistoryFilterImportantChannelMessage];
         
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
@@ -2487,7 +2501,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [channels enumerateObjectsUsingBlock:^(TL_conversation *channel, NSUInteger idx, BOOL *stop) {
             
             
-            [db executeUpdate:@"insert or replace into channel_dialogs (peer_id,top_message,last_message_date,unread_count,notify_settings,last_marked_message,sync_message_id,last_marked_date,last_real_message_date,read_inbox_max_id, unread_important_count, pts) values (?,?,?,?,?,?,?,?,?,?,?,?)",
+            [db executeUpdate:@"insert or replace into channel_dialogs (peer_id,top_message,last_message_date,unread_count,notify_settings,last_marked_message,sync_message_id,last_marked_date,last_real_message_date,read_inbox_max_id, unread_important_count, pts,is_invisible) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
              @([channel.peer peer_id]),
              @(channel.channel_top_message_id),
              @(channel.last_message_date),
@@ -2499,7 +2513,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
              @(channel.last_real_message_date),
              @(channel.read_inbox_max_id),
              @(channel.unread_important_count),
-             @(channel.pts)
+             @(channel.pts),
+             @(channel.isInvisibleChannel)
              ];
             
         }];
@@ -2526,7 +2541,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)allChannels:(void (^)(NSArray *channels, NSArray *messages))completeHandler deliveryOnQueue:(ASQueue *)deliveryQueue {
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *result = [db executeQuery:@"select channel_messages.from_id, channel_dialogs.peer_id,channel_dialogs.last_message_date, channel_messages.serialized serialized_message,channel_dialogs.read_inbox_max_id,channel_dialogs.unread_important_count, channel_dialogs.top_message,channel_dialogs.sync_message_id,channel_dialogs.last_marked_date,channel_dialogs.unread_count unread_count, channel_dialogs.notify_settings notify_settings, channel_dialogs.pts pts, channel_dialogs.last_marked_message last_marked_message,channel_dialogs.last_real_message_date last_real_message_date, channel_messages.flags from channel_dialogs left join channel_messages on channel_dialogs.top_message = channel_messages.n_id ORDER BY channel_dialogs.last_real_message_date"];
+        FMResultSet *result = [db executeQuery:@"select channel_messages.from_id, channel_dialogs.peer_id,channel_dialogs.last_message_date, channel_messages.serialized serialized_message,channel_dialogs.read_inbox_max_id,channel_dialogs.unread_important_count, channel_dialogs.top_message,channel_dialogs.sync_message_id,channel_dialogs.last_marked_date,channel_dialogs.unread_count unread_count, channel_dialogs.notify_settings notify_settings, channel_dialogs.pts pts, channel_dialogs.is_invisible is_invisible, channel_dialogs.last_marked_message last_marked_message,channel_dialogs.last_real_message_date last_real_message_date, channel_messages.flags from channel_dialogs left join channel_messages on channel_dialogs.top_message = channel_messages.n_id ORDER BY channel_dialogs.last_real_message_date"];
         
         
         NSMutableArray *channels = [[NSMutableArray alloc] init];
@@ -2559,7 +2574,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     [messages addObject:message];
             }
             
-            TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:msgId unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"]];
+            TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:msgId unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"]];
             
             
             [channels addObject:channel];

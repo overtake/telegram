@@ -177,8 +177,8 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return attributedString;
 }
 
--(TLInputChat *)input {
-    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
+-(TLInputChat *)inputPeer {
+    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
 }
 
 -(TLPeer *)peer {
@@ -193,6 +193,14 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 -(BOOL)isPublic {
     return self.flags & (1 << 2);
+}
+
+-(BOOL)left {
+    return self.flags & (1 << 3);
+}
+
+-(BOOL)isKicked {
+    return self.flags & (1 << 4);
 }
 
 -(NSString *)usernameLink {

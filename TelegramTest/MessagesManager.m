@@ -336,7 +336,6 @@ static const int seconds_to_notify = 120;
     [self.queue dispatchOnQueue:^{
         for (TLMessage *message in all) {
             assert([message isKindOfClass:[TL_localMessage class]]);
-            [self TGsetMessage:message];
         }
     }];
 
@@ -350,32 +349,7 @@ static const int seconds_to_notify = 120;
 
 
 -(void)addMessage:(TLMessage *)message  {
-    [self TGsetMessage:message];
     [[Storage manager] insertMessage:message];
-}
-
--(void)TGsetMessage:(TL_localMessage *)message {
-    
-    [self.queue dispatchOnQueue:^{
-        if(!message || message.n_id == 0) return;
-        
-        TL_localMessage *m = self.messages[@(message.n_id)];
-        
-        
-        if(m) {
-            m.message = message.message;
-            m.flags = message.flags;
-            m.dstate = message.dstate;
-            m.media = message.media;
-            m.action = message.action;
-            m.randomId = message.randomId;
-            m.fakeId = message.fakeId;
-        } else {
-            
-            [self.messages_with_random_ids setObject:message forKey:@(message.randomId)];
-        }
-        
-    }];
 }
 
 

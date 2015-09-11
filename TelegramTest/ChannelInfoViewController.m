@@ -13,6 +13,16 @@
 -(void)loadView {
     [super loadView];
     self.headerView = [[ChannelInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
+    
+    
+
+}
+
+-(void)setChat:(TLChat *)chat {
+    [super setChat:chat];
+    
+    
+    [self.rightNavigationBarView setHidden:!self.chat.dialog.canEditConversation];
 }
 
 @end

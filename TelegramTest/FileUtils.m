@@ -500,25 +500,42 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
 
 void open_user_by_name(NSDictionary *params) {
     
-    __block TLUser *user = [UsersManager findUserByName:params[@"domain"]];
+    __block id obj = [Telegram findObjectWithName:params[@"domain"]];
     
     dispatch_block_t showConversation = ^ {
         
-        if(user.isBot && params[@"start"]) {
-            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
-            [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
-        } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
-            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
-        } else if(params[@"open_profile"]) {
-            [[Telegram rightViewController] showUserInfoPage:user];
+        if([obj isKindOfClass:[TLUser class]]) {
+            
+            TLUser *user = obj;
+            
+            if(user.isBot && params[@"start"]) {
+                [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+                [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
+            } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
+                [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
+            } else if(params[@"open_profile"]) {
+                [[Telegram rightViewController] showUserInfoPage:user];
+            } else {
+                [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+            }
         } else {
-            [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+            [[Telegram rightViewController] showByDialog:((TLChat *)obj).dialog sender:nil];
         }
+        
+        
     };
     
-    dispatch_block_t showInfo = ^ {
-        [[Telegram rightViewController] showUserInfoPage:user];
+    
+    dispatch_block_t showInfo = ^{
+      
+        if([obj isKindOfClass:[TLUser class]]) {
+            [[Telegram rightViewController] showUserInfoPage:obj];
+        } else {
+            [[Telegram rightViewController] showChatInfoPage:obj];
+        }
+        
     };
+    
     
     dispatch_block_t perform = ^ {
       
@@ -529,27 +546,29 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(user) {        
+    if(obj) {
         
         perform();
         
     } else {
         [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:params[@"domain"]] successHandler:^(RPCRequest *request, TLUser *response) {
+        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:params[@"domain"]] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
             
             [TMViewController hideModalProgress];
             
+            [SharedManager proccessGlobalResponse:response];
+            
             dispatch_after_seconds(0.2,^ {
                 
-                if(![response isKindOfClass:[TL_userEmpty class]]) {
-                    
-                    [[UsersManager sharedManager] add:@[response] withCustomKey:@"n_id" update:YES];
-                    
-                    user = [[UsersManager sharedManager] find:response.n_id];
-                    
-                    perform();
-                    
+                if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                    obj = [response.chats firstObject];
+                } else if([response isKindOfClass:[TL_peerUser class]]) {
+                    obj = [response.users firstObject];
+                }
+                
+                if(obj) {
+                     perform();
                 } else {
                     alert(NSLocalizedString(@"UserNameExport.UserNameNotFound", nil), NSLocalizedString(@"UserNameExport.UserNameNotFoundDescription", nil));
                 }

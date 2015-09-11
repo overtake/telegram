@@ -40,6 +40,18 @@
         return [TL_peerChat createWithChat_id:self.chat_id];
     else if(self.channel_id != 0)
         return [TL_peerChannel createWithChannel_id:self.channel_id];
+    
+    
+    return nil;
+}
+
+-(TLInputPeer *)inputPeer {
+    if(self.chat_id == 0 && self.channel_id == 0)
+        return [TL_inputPeerUser createWithUser_id:self.user_id access_hash:[[[UsersManager sharedManager] find:self.user_id] access_hash]];
+    else if(![self isBroadcast])
+        return [[[ChatsManager sharedManager] find:self.chat_id == 0 ? self.channel_id : self.chat_id] inputPeer];
+    
+    return nil;
 }
 
 

@@ -41,12 +41,12 @@
 }
 
 
-+ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage pts:(int)pts {
++ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage pts:(int)pts isInvisibleChannel:(BOOL)isInvisibleChannel {
     
     TL_conversation *conversation = [self createWithPeer:peer top_message:top_message unread_count:unread_count last_message_date:last_message_date notify_settings:notify_settings last_marked_message:last_marked_message top_message_fake:top_message_fake last_marked_date:last_marked_date sync_message_id:sync_message_id read_inbox_max_id:read_inbox_max_id unread_important_count:unread_important_count lastMessage:lastMessage];
     
     conversation.pts = pts;
-    
+    conversation.invisibleChannel = isInvisibleChannel;
     return conversation;
     
 }
@@ -182,8 +182,9 @@
     if(self.type == DialogTypeSecretChat)
         return YES;
     
-    return self.last_message_date > 0  && !self.fake;
+    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
 }
+
 
 - (void)mute:(dispatch_block_t)completeHandler until:(int)until {
     [self _changeMute:until completeHandler:completeHandler];
@@ -367,7 +368,7 @@ static void *kType;
 }
 
 -(BOOL)canEditConversation {
-    return self.type != DialogTypeChannel || (self.chat.isPublic || self.chat.isAdmin);
+    return self.type != DialogTypeChannel || (!self.chat.isBroadcast || self.chat.isAdmin);
 }
 
 

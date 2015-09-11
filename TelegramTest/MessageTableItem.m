@@ -55,7 +55,12 @@
            
             self.user = [[UsersManager sharedManager] find:object.from_id];
             if(self.isForwadedMessage) {
-                self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from_id];
+                if([object.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
+                    self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from_id.user_id];
+                } else  {
+                    self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from_id.chat_id == 0 ? object.fwd_from_id.channel_id : object.fwd_from_id.chat_id];
+                }
+                
             }
             
             [self rebuildDate];
@@ -142,12 +147,12 @@
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
 //        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
-        TLUser *user = self.fwd_user;
+        NSString *title = self.fwd_user ? self.fwd_user.fullName : self.fwd_chat.title;
         
         NSRange rangeUser = NSMakeRange(0, 0);
-        if(user) {
-            rangeUser = [self.forwardMessageAttributedString appendString:user.fullName withColor:LINK_COLOR];
-            [self.forwardMessageAttributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:rangeUser];
+        if(title) {
+            rangeUser = [self.forwardMessageAttributedString appendString:title withColor:LINK_COLOR];
+            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from_id] forRange:rangeUser];
             
         }
         [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];

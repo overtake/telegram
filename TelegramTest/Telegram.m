@@ -385,6 +385,17 @@ static TGEnterPasswordPanel *panel;
     }
 }
 
++(id)findObjectWithName:(NSString *)name {
+    
+    id obj = [UsersManager findUserByName:name];
+    
+    if(!obj)
+        obj = [ChatsManager findChatByName:name];
+    
+    return obj;
+    
+}
+
 +(void)initializeDatabase {
     [self.leftViewController.conversationsViewController initialize];
 }

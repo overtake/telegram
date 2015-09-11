@@ -23,7 +23,7 @@
     return msg;
 }
 
-+(TL_localMessageService *)createWithHole:(TGMessageGroupHole *)hole {
++(TL_localMessageService *)createWithHole:(TGMessageHole *)hole {
     
     TL_localMessageService *service = [TL_localMessageService createWithN_id:hole.uniqueId flags:16 from_id:0 to_id:[TL_peerChannel createWithChannel_id:-hole.peer_id] date:hole.date action:[TL_messageActionEmpty create] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
     

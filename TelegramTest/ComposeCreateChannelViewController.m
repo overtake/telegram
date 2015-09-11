@@ -90,7 +90,7 @@
         
         [self addSubview:self.textView];
         
-        self.chat = [TL_chat createWithN_id:-1 title:@"" photo:[TL_chatPhotoEmpty create] participants_count:0 date:0 left:NO version:1];
+        self.chat = [TL_chat createWithFlags:0 n_id:-1 title:@"" photo:[TL_chatPhotoEmpty create] participants_count:0 date:0 version:1];
         
         
     }

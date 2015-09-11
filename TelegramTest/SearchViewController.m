@@ -227,7 +227,7 @@ typedef enum {
         TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
         [self.tableView cancelSelection];
 
-        if(![dialog isKindOfClass:NSNull.class] && dialog) {
+        if(![dialog isKindOfClass:NSNull.class] && dialog && self.searchParams.searchString.length > 0) {
             NSUInteger hash = [SearchItem hash:[[SearchItem alloc] initWithDialogItem:dialog searchString:self.searchParams.searchString]];
             [self.tableView setSelectedByHash:hash];
         }

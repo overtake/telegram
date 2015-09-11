@@ -8,8 +8,40 @@
 
 #import "ChannelHistoryController.h"
 #import "MessageTableItem.h"
+#import "TGChannelsPolling.h"
+
+
+@interface ChannelHistoryController () <TGChannelPollingDelegate>
+
+@end
+
 @implementation ChannelHistoryController
 
+
+static TGChannelsPolling *channelPolling;
+
+-(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
+    if(self = [super initWithController:controller historyFilter:historyFilter]) {
+        
+        
+        [self.queue dispatchOnQueue:^{
+            
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:3];
+                
+            });
+            
+            [channelPolling setDelegate:self];
+            [channelPolling setCurrentConversation:controller.conversation];
+            
+            
+        } synchronous:YES];
+        
+    }
+    
+    return self;
+}
 
 
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler {
@@ -46,8 +78,81 @@
             
         }];
         
+    } synchronous:sync];
+    
+}
+
+-(void)setFilter:(HistoryFilter *)filter {
+    
+    [self.queue dispatchOnQueue:^{
+        [self removeAllItems];
+        [super setFilter:filter];
     }];
     
+    
+
+}
+
+-(void)pollingDidSaidTooLongWithHole:(TGMessageHole *)hole {
+    
+    TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
+    
+    NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
+    
+    converted = [self sortItems:converted];
+    
+    [ASQueue dispatchOnMainQueue:^{
+
+         [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
+                    
+    }];
+    
+    
+    // add new holes after received too long update.
+    
+//     [self setState:ChatHistoryStateLocal next:NO];
+//    
+//    
+//    [self removeAllItems];
+//    
+//    self.proccessing = YES;
+//    
+//    [self.filter request:YES callback:^(id response, ChatHistoryState state) {
+//        
+//        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:response] isLates:NO];
+//        
+//        converted = [self sortItems:converted];
+//        
+//        [self setState:self.filter.hole.max_id != INT32_MAX ? ChatHistoryStateFull : ChatHistoryStateLocal next:NO];
+//        
+//        [ASQueue dispatchOnMainQueue:^{
+//            
+//            self.proccessing = NO;
+//            
+//            [self.controller flushMessages];
+//            
+//            
+//            [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
+//            
+//        }];
+//        
+//        
+//        
+//    }];
+//    
+    
+}
+
+
+
+-(void)pollingReceivedUpdates:(id)updates endPts:(int)pts {
+    
+}
+
+
+
+-(void)startChannelPolling {
+    [channelPolling start];
 }
 
 
@@ -188,6 +293,11 @@
     return item.message.n_id;
     
 }
+
+-(void)drop:(BOOL)dropMemory {
+    [super drop:YES];
+}
+
 
 
 @end

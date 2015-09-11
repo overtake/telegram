@@ -85,96 +85,29 @@ static int pollingDelay = 5;
     
     _timer = [[TGTimer alloc] initWithTimeout:time repeat:repeat completion:^{
         
-        _request = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.peer.channel_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:_conversation.pts limit:_limit] successHandler:^(id request, id response) {
+        [[MTNetwork instance].updateService.proccessor failUpdateWithChannelId:_conversation.peer.channel_id limit:_limit withCallback:^(id response, TGMessageHole *longHole) {
             
-            
-            _lastRequestTime[@(_conversation.peer_id)] = @([[MTNetwork instance] getTime]);
-            
-            if([response isKindOfClass:[TL_updates_channelDifferenceEmpty class]]) {
+            [ASQueue dispatchOnStageQueue:^{
                 
+                _lastRequestTime[@(_conversation.peer_id)] = @([[MTNetwork instance] getTime]);
                 
-            } else if([response isKindOfClass:[TL_updates_channelDifference class]]) {
-                
-                
-                // updateMessageId;
-                
-                [[response other_updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([response isKindOfClass:[TL_updates_channelDifferenceEmpty class]]) {
                     
-                    if([obj isKindOfClass:[TL_updateMessageID class]]) {
-                        [[Storage manager] updateMessageId:[(TL_updateMessageID *)obj random_id] msg_id:[(TL_updateMessageID *)obj n_id]];
-                    }
                     
-                }];
-                
-                self.conversation.pts = [(TL_updates_channelDifference *)response pts];
-                
-                [self.conversation save];
-                
-                [TL_localMessage convertReceivedMessages:[response n_messages]];
-                
-                [[Storage manager] insertMessages:[response n_messages]];
-                
-                [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-                
-                                
-            } else if([response isKindOfClass:[TL_updates_channelDifferenceTooLong class]]) {
-                
-                _conversation.pts = [response pts];
-                
-                _conversation.top_message = [response top_message];
-                _conversation.read_inbox_max_id = [response read_inbox_max_id];
-                _conversation.unread_count = [response unread_count];
-                
-                [_conversation save];
-                
-                
-                __block TL_localMessage *topMsg;
-                __block TL_localMessage *minMsg;
-                
-                [[response messages] enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
+                } else if([response isKindOfClass:[TL_updates_channelDifference class]]) {
                     
-                    TL_localMessage *c = [TL_localMessage convertReceivedMessage:obj];
+                } else if([response isKindOfClass:[TL_updates_channelDifferenceTooLong class]]) {
                     
-                    if([response top_message] == c.n_id)
-                        topMsg = c;
-                    
-                    if(!minMsg || c.n_id < minMsg.n_id)
-                        minMsg = c;
-                    
-                }];
-                
-                {
-                    if(minMsg.n_id != topMsg.n_id) {
-                        TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:minMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id date:minMsg.date count:0];
-                        
-                        [[Storage manager] insertMessagesHole:hole];
-                    }
-                    
-                    int maxSyncedId = [[Storage manager] lastSyncedMessageIdWithChannelId:self.conversation.peer_id important:NO];
-                    
-                    TGMessageHole *longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:maxSyncedId max_id:minMsg.n_id date:minMsg.date count:0];
-                    
-                    [[Storage manager] insertMessagesHole:longHole];
-                    
+                    [_delegate pollingDidSaidTooLongWithHole:longHole];
                 }
                 
-                [SharedManager proccessGlobalResponse:response];
+                 if(!repeat && !_isStoped)
+                    [self launchTimer:[response timeout] repeat:YES];
                 
-                [_delegate pollingDidSaidTooLong];
-            }
+            }];
+        
             
-            
-            
-            
-            
-            if(!repeat && !_isStoped)
-                [self launchTimer:[response timeout] repeat:YES];
-            
-        } errorHandler:^(id request, RpcError *error) {
-            
-            
-            
-        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+        }];
         
         
     } queue:[ASQueue globalQueue].nativeQueue];
