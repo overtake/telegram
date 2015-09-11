@@ -915,7 +915,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSString *sql = [NSString stringWithFormat:@"select message_text,serialized,flags from messages where peer_id = %d ORDER BY date DESC, n_id DESC LIMIT 1",peer_id];
         
         if([peer isKindOfClass:[TL_peerChannel class]])
-            sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where  peer_id = %d and (filter_type & %d) > 0 ORDER BY date DESC, n_id DESC LIMIT 1",peer_id,HistoryFilterImportantChannelMessage];
+            sql = [NSString stringWithFormat:@"select serialized,flags from channel_messages where peer_id = %d and (filter_mask & %d) > 0 ORDER BY date DESC, n_id DESC LIMIT 1",peer_id,HistoryFilterImportantChannelMessage];
         
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
@@ -1533,6 +1533,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db beginTransaction];
         [db executeUpdate:@"delete from dialogs where peer_id = ?",@(dialog.peer_id)];
         [db executeUpdate:@"delete from messages where peer_id = ?",@(dialog.peer_id)];
+        [db executeUpdate:@"delete from channel_dialogs where peer_id = ?",@(dialog.peer_id)];
         [db executeUpdate:@"delete from sharedmedia_v2 where peer_id = ?",@(dialog.peer_id)];
         if([dialog.peer isChat]) {
             [db executeUpdate:@"delete from encrypted_chats where chat_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];

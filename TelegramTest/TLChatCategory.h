@@ -26,7 +26,6 @@ typedef enum {
 -(TL_conversation *)dialog;
 
 -(TLChatFull *)chatFull;
--(TLInputChat *)input;
 - (NSAttributedString *)statusAttributedString;
 - (NSAttributedString *)statusForMessagesHeaderView;
 - (NSAttributedString *)statusForSearchTableView;
@@ -37,7 +36,7 @@ typedef enum {
 -(BOOL)isPublic;
 -(BOOL)left;
 -(BOOL)isKicked;
--(TLInputPeer *)inputPeer;
+-(TLInputChat *)inputPeer;
 -(NSString *)usernameLink;
 
 @end

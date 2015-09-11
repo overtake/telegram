@@ -157,6 +157,7 @@ static TGChannelsPolling *channelPolling;
 
 
 
+
 -(int)min_id {
     
     NSArray *allItems = [self selectAllItems];
@@ -295,6 +296,10 @@ static TGChannelsPolling *channelPolling;
 }
 
 -(void)drop:(BOOL)dropMemory {
+    
+    [channelPolling stop];
+    
+    
     [super drop:YES];
 }
 

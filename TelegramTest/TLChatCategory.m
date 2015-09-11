@@ -178,8 +178,10 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 
 -(TLInputChat *)inputPeer {
-    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : [self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id];
+    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? (TLInputChat *) [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id]);
 }
+
+
 
 -(TLPeer *)peer {
     return [self isKindOfClass:[TL_channel class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];

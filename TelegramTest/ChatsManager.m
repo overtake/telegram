@@ -191,7 +191,7 @@
 
 -(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler  {
     
-    [RPCRequest sendRequest:[TLAPI_messages_updateChannelUsername createWithChat_id:channel.input username:userName] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_updateChannelUsername createWithChat_id:channel.inputPeer username:userName] successHandler:^(id request, id response) {
         
         if([response isKindOfClass:[TL_boolTrue class]]) {
             channel.username = userName;

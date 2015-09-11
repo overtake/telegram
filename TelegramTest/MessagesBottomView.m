@@ -812,8 +812,38 @@
     
     [_secretInfoView setCallback:^{
        
-        
-        if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
+        if(weakSelf.dialog.isInvisibleChannel) {
+            
+            [TMViewController showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:weakSelf.dialog.chat.inputPeer user_id:[[UsersManager currentUser] inputUser] fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+                
+                
+                weakSelf.dialog.invisibleChannel = NO;
+                
+                [weakSelf.dialog save];
+                
+                
+                
+                [[DialogsManager sharedManager] notifyAfterUpdateConversation:weakSelf.dialog];
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+                    [TMViewController hideModalProgressWithSuccess];
+                }];
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [TMViewController hideModalProgress];
+                }];
+                
+                
+            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            
+            
+        } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
         {
             
             [TMViewController showModalProgress];
@@ -829,7 +859,6 @@
             
             return;
         }
-        
         if(_onClickToLockedView != nil)
         {
             weakSelf.onClickToLockedView();
@@ -850,8 +879,9 @@
             }
         }
         
-        if(!self.dialog.canSendMessage)
+        if(!self.dialog.canSendMessage || self.dialog.isInvisibleChannel)
             state = MessagesBottomViewBlockChat;
+        
     }
     
     

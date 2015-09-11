@@ -274,6 +274,7 @@
                 
                 if([obj isKindOfClass:[TL_updateMessageID class]]) {
                     [[Storage manager] updateMessageId:[(TL_updateMessageID *)obj random_id] msg_id:[(TL_updateMessageID *)obj n_id]];
+                    [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)obj n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)obj random_id])}];
                 }
                 
             }];

@@ -128,8 +128,14 @@
         
     }
     
-    if(self.type == DialogTypeChat) {
-        if(self.chat.type == TLChatTypeForbidden) {
+    if(self.type == DialogTypeChat || self.type == DialogTypeChannel) {
+        
+        if(self.isInvisibleChannel) {
+            return NSLocalizedString(@"Conversation.Action.JointToChannel", nil);
+        }
+        
+        
+        if(self.chat.isKicked) {
             return NSLocalizedString(@"Conversation.Action.YouKickedGroup", nil);
         }
         
@@ -138,7 +144,10 @@
             return NSLocalizedString(@"Conversation.Action.YouLeftGroup", nil);
         }
         
+        
+        
     }
+    
     
     if(self.type == DialogTypeUser) {
         if(self.user.isBlocked) {
@@ -184,6 +193,14 @@
     
     return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
 }
+
+//-(BOOL)isInvisibleChannel {
+//    if(self.type == DialogTypeChannel) {
+//        return _invisibleChannel || [self.chat left];
+//    }
+//    
+//    return _invisibleChannel;
+//}
 
 
 - (void)mute:(dispatch_block_t)completeHandler until:(int)until {

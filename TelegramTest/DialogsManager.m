@@ -393,7 +393,9 @@
                     [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
                     
                     [self->list removeObject:dialog];
-                    [self->keys removeObjectForKey:@(dialog.peer.peer_id)];
+                    [self->keys removeObjectForKey:@(dialog.peer_id)];
+                    
+                    [[ChatsManager sharedManager] removeObjectWithKey:@(abs(dialog.peer_id))];
                     
                     [MessagesManager updateUnreadBadge];
                     
@@ -406,7 +408,7 @@
             }];
         };
         
-        if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast)
+        if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel)
             [self _clearHistory:dialog offset:0 completeHandler:^{
                 block();
             }];
@@ -430,8 +432,8 @@
         return;
     }
     
-    if(dialog.type == DialogTypeChat && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
-        [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.input user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
+    if((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
+        [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
             newBlock();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             newBlock();

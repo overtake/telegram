@@ -969,6 +969,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.centerNavigationBarView != centerView) {
         [self setCenterNavigationBarView:centerView];
     }
+    
+    [self hideOrShowBottomView];
 }
 
 - (void)rightButtonAction {
@@ -2282,9 +2284,6 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController startChannelPolling];
            
         }
-        
-        
-        [self hideOrShowBottomView];
         
         
     }
@@ -3694,7 +3693,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)leaveOrReturn:(TL_conversation *)dialog {
     TLInputUser *input = [[UsersManager currentUser] inputUser];
     
-    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.input user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.input user_id:input];
+    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.inputPeer user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.inputPeer user_id:input];
     
     
     if(dialog.chat.left) {

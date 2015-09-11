@@ -288,7 +288,7 @@
     UploadOperation *operation = [[UploadOperation alloc] init];
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
         if(self.sourceType == ChatAvatarSourceGroup || self.sourceType == ChatAvatarSourceChannel) {
-            request = [TLAPI_messages_editChatPhoto createWithChat_id:self.chat.input photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
+            request = [TLAPI_messages_editChatPhoto createWithChat_id:self.chat.inputPeer photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
             groupBlock();
         } else {
             request = [TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]];

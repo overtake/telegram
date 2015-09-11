@@ -21,7 +21,6 @@
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
     
-    
     [self.rightNavigationBarView setHidden:!self.chat.dialog.canEditConversation];
 }
 
