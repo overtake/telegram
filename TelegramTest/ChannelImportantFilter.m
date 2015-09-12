@@ -73,7 +73,7 @@
          [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:[response messages]] withNext:next];
         
         if(callback) {
-            callback(messages,hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
+            callback(messages,hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -102,10 +102,19 @@
     
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     
+    
+    
     [collapsed enumerateObjectsUsingBlock:^(TL_messageGroup *obj, NSUInteger idx, BOOL *stop) {
         
         
-        TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:obj.n_count];
+//        NSArray *groups = [[Storage manager] groupHoles:self.controller.conversation.peer_id min:obj.min_id max:obj.max_id];
+//                
+//        TGMessageGroupHole *localHole = [groups firstObject];
+//        
+        int uniqueId =  -rand_int();
+        
+        TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:uniqueId peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:obj.n_count];
+        
         
         TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:0];
         

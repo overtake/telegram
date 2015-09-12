@@ -80,5 +80,7 @@
 -(BOOL)isReplyMessage;
 -(BOOL)isFwdMessage;
 
+-(int)fontSize;
+
 
 @end

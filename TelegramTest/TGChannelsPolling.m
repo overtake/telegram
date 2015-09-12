@@ -8,7 +8,7 @@
 
 #import "TGChannelsPolling.h"
 #import "TGTimer.h"
-
+#import "TGForceChannelUpdate.h"
 @interface TGChannelsPolling ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,assign) int pts;
@@ -125,22 +125,28 @@ static int pollingDelay = 5;
 
 -(void)checkInvalidatedMessages:(NSArray *)result important:(BOOL)important {
     
+    
+    
     BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.invalidate == 1"]].count > 0;
     
-    invalidate = NO;
+    
     
     if(!invalidate || _conversation.pts == 0 || result.count == 0)
     {
         return;
     }
     
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:[(TL_localMessage *)[result lastObject] n_id] max_id:[(TL_localMessage *)[result firstObject] n_id]]] mutableCopy]] pts:[(TL_localMessage *)[result lastObject] pts] limit:(int)result.count] successHandler:^(id request, TL_updates_channelDifference *response) {
+    int pts = [(TL_localMessage *)[result lastObject] n_id];
+    
+    int limit = _conversation.pts - pts;
+    
+    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:[(TL_localMessage *)[result lastObject] n_id] max_id:[(TL_localMessage *)[result firstObject] n_id]]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
         
         
         if([response isKindOfClass:[TL_updates_channelDifference class]]) {
             [response.other_updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                [[MTNetwork instance].updateService.proccessor addUpdate:obj];
+                [[MTNetwork instance].updateService.proccessor addUpdate:[[TGForceChannelUpdate alloc] initWithUpdate:obj]];
                 
             }];
             

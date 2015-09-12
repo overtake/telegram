@@ -23,7 +23,6 @@
 #import "CMath.h"
 #import "SharedManager.h"
 #import <MTProtoKit/MTLogging.h>
-#import "TL_updateChannelPts.h"
 #import "TL_destructMessage.h"
 #import "TL_outDocument.h"
 #import "TL_localMessageService.h"

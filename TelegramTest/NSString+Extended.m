@@ -991,7 +991,9 @@
 
 //   'D83DDC4D': [27, ':like:'], 'D83DDC4E': [28, ':dislike:'], '261D': [29, ':up:'], '270C': [30, ':v:'], 'D83DDC4C': [31, ':ok:']
 
-
+-(NSString *)emojiString {
+    return [[self getEmojiFromString:YES] componentsJoinedByString:@""];
+}
 
 - (NSArray *)getEmojiFromString:(BOOL)checkColor {
     

@@ -9,6 +9,7 @@
 #import "TGUpdateChannels.h"
 #import "TGUpdateChannelContainer.h"
 #import "TGTimer.h"
+#import "TGForceChannelUpdate.h"
 @interface TGUpdateChannels ()
 @property (nonatomic,strong) ASQueue *queue;
 @property (nonatomic,strong) NSMutableDictionary *channelWaitingUpdates;
@@ -56,11 +57,8 @@
     
     if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
-    } else if([update isKindOfClass:[TL_updateChannelPts class]]) {
-        return [(TL_updateChannelPts *)update channel_id];
-    } else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
+    }  else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         return [[(TL_updateDeleteChannelMessages *)update peer] channel_id];
-
     }
     
     return 0;
@@ -82,7 +80,7 @@
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
-            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class])];
+            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class])];
             statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
         });
         
@@ -91,6 +89,8 @@
             [self addStatefullUpdate:[[TGUpdateChannelContainer alloc] initWithPts:[update pts] pts_count:[update pts_count] channel_id:[self channelIdWithUpdate:update] update:update]];
         }  else if([statelessUpdates indexOfObject:[update className]] != NSNotFound) {
             [self proccessStatelessUpdate:update];
+        } else if([update isKindOfClass:[TGForceChannelUpdate class]]) {
+            [self proccessUpdate:[(TGForceChannelUpdate *)update update]];
         }
         
         

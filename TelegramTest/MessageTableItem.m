@@ -425,6 +425,10 @@
     return NO;
 }
 
+-(int)fontSize {
+    return [SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13;
+}
+
 -(void)dealloc {
 }
 

@@ -817,7 +817,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)invalidateChannelMessagesWithPts:(int)pts {
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:@"update channel_messages set invalidate = 1 where pts < ?",@(pts)];
+        [db executeUpdate:@"update channel_messages set invalidate = 1 where pts <= ?",@(pts)];
         
     }];
 }

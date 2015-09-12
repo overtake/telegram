@@ -20,6 +20,8 @@
 @property (nonatomic, strong) NSMutableAttributedString *forwardAttributedString;
 @property (nonatomic,strong) id requestKey;
 
+@property (nonatomic,assign) BOOL isEmojiMessage;
+
 
 @end
 
@@ -32,6 +34,20 @@
     
     NSString *message = [[object.message trim] fixEmoji];
     
+    NSArray *emoji = [message getEmojiFromString:NO];
+    
+    if(emoji.count <= 5) {
+        NSMutableString *c = [message mutableCopy];
+        
+        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [c replaceOccurrencesOfString:obj withString:@"" options:0 range:NSMakeRange(0, c.length)];
+            
+        }];
+        
+        _isEmojiMessage = [c trim].length == 0;
+    }
+    
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
@@ -40,6 +56,7 @@
     [self updateEntities];
     
     [SettingsArchiver addEventListener:self];
+    
     
     
     
@@ -144,7 +161,8 @@
 -(void)updateFontAttributesByEntities {
     [self.textAttributed removeAttribute:NSFontAttributeName range:self.textAttributed.range];
     
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
+    
+    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[self fontSize]] forRange:self.textAttributed.range];
     
     
     [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
@@ -307,7 +325,12 @@
 }
 
 
-
+-(int)fontSize {
+    if(_isEmojiMessage)
+        return 36;
+    else
+        return [super fontSize];
+}
 
 -(void)dealloc {
     [SettingsArchiver removeEventListener:self];

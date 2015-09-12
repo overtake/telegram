@@ -20,6 +20,7 @@
 #import "TGModernEncryptedUpdates.h"
 #import "FullUsersManager.h"
 #import "TGUpdateChannels.h"
+#import "TGForceChannelUpdate.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
@@ -165,16 +166,20 @@ static NSArray *channelUpdates;
         
         dispatch_once(&onceToken, ^{
             
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateChannelPts class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
         });
         
         
         if([channelUpdates indexOfObject:[update className]] != NSNotFound)
         {
             [_channelsUpdater addUpdate:update];
+            
             return;
         } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
             [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
+            
+            [_updateState setDate:[(TL_updateShort *)update date]];
+            [self saveUpdateState];
             return;
         }
         
@@ -190,6 +195,9 @@ static NSArray *channelUpdates;
                 }
                 
             }];
+            
+            [_updateState setDate:[(TL_updates *)update date]];
+            [self saveUpdateState];
             
         }
         

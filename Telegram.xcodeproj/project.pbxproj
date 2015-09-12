@@ -815,7 +815,7 @@
 		C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78E81923CB76001A9D1B /* DocumentHistoryFilter.m */; };
 		C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EB1923CBA1001A9D1B /* PhotoHistoryFilter.m */; };
 		C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EE1924D934001A9D1B /* NoMessagesView.m */; };
-		C2FF82A31B99C7CE00DE2455 /* TL_updateChannelPts.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82A21B99C7CE00DE2455 /* TL_updateChannelPts.m */; };
+		C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */; };
 		C2FF82DC1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82DB1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m */; };
 		C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */; };
 		C2FF82EB1BA0796400DE2455 /* ChannelsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */; };
@@ -2452,8 +2452,8 @@
 		C2FA78EB1923CBA1001A9D1B /* PhotoHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoHistoryFilter.m; sourceTree = "<group>"; };
 		C2FA78ED1924D934001A9D1B /* NoMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMessagesView.h; sourceTree = "<group>"; };
 		C2FA78EE1924D934001A9D1B /* NoMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoMessagesView.m; sourceTree = "<group>"; };
-		C2FF82A11B99C7CE00DE2455 /* TL_updateChannelPts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_updateChannelPts.h; sourceTree = "<group>"; };
-		C2FF82A21B99C7CE00DE2455 /* TL_updateChannelPts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_updateChannelPts.m; sourceTree = "<group>"; };
+		C2FF82A11B99C7CE00DE2455 /* TGForceChannelUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGForceChannelUpdate.h; sourceTree = "<group>"; };
+		C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGForceChannelUpdate.m; sourceTree = "<group>"; };
 		C2FF82DA1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCreatePublicChannelBehavior.h; sourceTree = "<group>"; };
 		C2FF82DB1B9F144800DE2455 /* ComposeActionCreatePublicChannelBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionCreatePublicChannelBehavior.m; sourceTree = "<group>"; };
 		C2FF82E61B9F28D900DE2455 /* ChannelHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelHistoryController.h; sourceTree = "<group>"; };
@@ -4107,8 +4107,8 @@
 				C20A5EC21B878E7C007F4B49 /* TL_channelConversation.m */,
 				C20A5ECD1B8B67D7007F4B49 /* TL_conversation_old34.h */,
 				C20A5ECE1B8B67D7007F4B49 /* TL_conversation_old34.m */,
-				C2FF82A11B99C7CE00DE2455 /* TL_updateChannelPts.h */,
-				C2FF82A21B99C7CE00DE2455 /* TL_updateChannelPts.m */,
+				C2FF82A11B99C7CE00DE2455 /* TGForceChannelUpdate.h */,
+				C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */,
 			);
 			name = constructors;
 			sourceTree = "<group>";
@@ -6694,7 +6694,7 @@
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C2ACCE561ADD2A0600ABEE78 /* TGConversationsViewController.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
-				C2FF82A31B99C7CE00DE2455 /* TL_updateChannelPts.m in Sources */,
+				C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */,
 				C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */,
 				C274C4221ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
