@@ -13,7 +13,7 @@
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 @interface ChannelHistoryController () <TGChannelPollingDelegate>
-
+@property (nonatomic,assign) BOOL pollingIsStarted;
 @end
 
 @implementation ChannelHistoryController
@@ -36,6 +36,7 @@ static TGChannelsPolling *channelPolling;
             [channelPolling setDelegate:self];
             [channelPolling setCurrentConversation:controller.conversation];
             
+            _pollingIsStarted = NO;
             
         } synchronous:YES];
         
@@ -101,29 +102,30 @@ static TGChannelsPolling *channelPolling;
 
 -(void)pollingDidSaidTooLongWithHole:(TGMessageHole *)hole {
     
-    if([self selectAllItems].count > 0) {
-        TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
-        
-        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
-        
-        converted = [self sortItems:converted];
-        
-        [ASQueue dispatchOnMainQueue:^{
+    if(hole != nil) {
+        if([self selectAllItems].count > 0) {
+            TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
             
-            [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
+            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
             
-        }];
-    } else {
-        
-        [ASQueue dispatchOnMainQueue:^{
-            [self.controller flushMessages];
-            [self removeAllItems];
+            converted = [self sortItems:converted];
             
-            [self.controller jumpToLastMessages:YES];
-        }];
-       
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
+                
+            }];
+        } else {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self.controller flushMessages];
+                [self removeAllItems];
+                
+                [self.controller jumpToLastMessages:YES];
+            }];
+            
+        }
     }
-    
     
     
     
@@ -171,10 +173,22 @@ static TGChannelsPolling *channelPolling;
 
 
 -(void)startChannelPolling {
-    [channelPolling start];
+    
+    if(!channelPolling.isActive) {
+        [channelPolling start];
+        _pollingIsStarted = YES;
+    }
 }
 
+-(void)startChannelPollingIfAlreadyStoped {
+    if(!channelPolling.isActive && _pollingIsStarted) {
+        [channelPolling start];
+    }
+}
 
+-(void)stopChannelPolling {
+    [channelPolling stop];
+}
 
 
 -(int)min_id {
@@ -232,7 +246,7 @@ static TGChannelsPolling *channelPolling;
     
     
     if(allItems.count == 0)
-        return INT32_MAX;
+        return self.conversation.last_marked_message;
     
     
     
@@ -255,7 +269,7 @@ static TGChannelsPolling *channelPolling;
     NSArray *allItems = [self selectAllItems];
     
     if(allItems.count == 0)
-        return INT32_MAX;
+        return self.conversation.last_marked_date;
     
     __block MessageTableItem *firstObject;
     

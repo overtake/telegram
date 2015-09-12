@@ -340,6 +340,9 @@
          contextName = "-[DownloadDocumentItem initWithDocument:]:DownloadDocumentItem.m">
       </ContextState>
       <ContextState
+         contextName = "__79-[TGChannelsPolling checkInvalidatedMessages:important:asyncCompletionHandler:]_block_invoke:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
          <PersistentStrings>
             <PersistentString
@@ -632,6 +635,9 @@
                value = "object.previewObject">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke98:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText updateLinkAttributesByMessageEntities]:MessageTableItemText.m">
@@ -1244,6 +1250,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_message unserialize:]:MTProto.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TLChat(Category) dialog]:TLChatCategory.m">
       </ContextState>
       <ContextState
          contextName = "-[UserInfoShortButtonView setRightContainer:]:UserInfoShortButtonView.m">
@@ -2498,6 +2507,14 @@
          contextName = "__44-[TGChannelsPolling setCurrentConversation:]_block_invoke:TGChannelsPolling.m">
       </ContextState>
       <ContextState
+         contextName = "__60-[Storage insertChannels:completionHandler:deliveryOnQueue:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "channels">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageView setObject:]:TGImageView.m">
          <PersistentStrings>
             <PersistentString
@@ -2711,6 +2728,9 @@
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGChannelsPolling launchTimer:repeat:]:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
          contextName = "__45-[ChannelFilter remoteRequest:hole:callback:]_block_invoke:ChannelFilter.m">
          <PersistentStrings>
             <PersistentString
@@ -2732,6 +2752,14 @@
             </PersistentString>
             <PersistentString
                value = "dialog.chat.type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMNavigationController setCurrentViewController:withAnimation:]:TMNavigationController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.currentController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

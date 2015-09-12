@@ -165,11 +165,11 @@
     self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:rect];
     
     
-    [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
-    
-    
-    [self.navigationViewController.viewControllerStack removeAllObjects];
-    
+//    [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
+//    
+//    
+//    [self.navigationViewController.viewControllerStack removeAllObjects];
+//    
    
     
     [self.navigationViewController.view.window makeFirstResponder:nil];

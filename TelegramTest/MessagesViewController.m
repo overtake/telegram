@@ -1257,6 +1257,8 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     [self.table.scrollView setHasVerticalScroller:YES];
+    
+    [self.historyController startChannelPollingIfAlreadyStoped];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1265,16 +1267,18 @@ static NSTextAttachment *headerMediaIcon() {
     [Notification perform:@"ChangeDialogSelection" data:@{}];
     
    [self.table.scrollView setHasVerticalScroller:NO];
+    
+    [self.historyController stopChannelPolling];
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
-    
     
     
     if(NSClassFromString(@"NSUserActivity")) {
         [self.activity invalidate];
     }
 }
+
 
 
 - (void)scrollDidStart {

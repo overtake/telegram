@@ -36,9 +36,15 @@ static int pollingDelay = 5;
 }
 
 
+-(BOOL)isActive {
+    return !_isStoped;
+}
+
 -(void)setCurrentConversation:(TL_conversation *)conversation {
     
     [ASQueue dispatchOnStageQueue:^{
+        
+        [self stop];
         
          _conversation = conversation;
         
@@ -82,6 +88,8 @@ static int pollingDelay = 5;
 }
 
 -(void)launchTimer:(int)time repeat:(BOOL)repeat {
+    
+    int bp = 0;
     
     _timer = [[TGTimer alloc] initWithTimeout:time repeat:repeat completion:^{
         
@@ -138,7 +146,6 @@ static int pollingDelay = 5;
                 
             }];
             
-            
         }
         
         NSMutableArray *ids = [NSMutableArray array];
@@ -147,7 +154,6 @@ static int pollingDelay = 5;
             [ids addObject:@(obj.channelMsgId)];
         }];
 
-        
         [[Storage manager] validateChannelMessages:ids];
         
         

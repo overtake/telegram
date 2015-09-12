@@ -1057,6 +1057,18 @@ static NSMutableArray *listeners;
     return _conversation;
 }
 
+-(void)startChannelPolling {
+    
+}
+
+-(void)startChannelPollingIfAlreadyStoped {
+    
+}
+
+-(void)stopChannelPolling {
+    
+}
+
 -(void)dealloc {
         
     [queue dispatchOnQueue:^{

@@ -229,6 +229,10 @@ static const int navigationOffset = 48;
     [view.layer setOpacity:1];
 }
 
+-(void)setCurrentController:(TMViewController *)currentController {
+    _currentController = currentController;
+}
+
 - (void)setCurrentViewController:(TMViewController *)newViewController withAnimation:(BOOL)animationFlag {
     
    
@@ -269,10 +273,10 @@ static const int navigationOffset = 48;
     
     
     if(oldView == newView) {
-        [oldViewController viewWillDisappear:NO];
-        [newViewController viewWillAppear:NO];
-        [oldViewController viewDidDisappear:NO];
-        [newViewController viewWillAppear:NO];
+//        [oldViewController viewWillDisappear:NO];
+//        [newViewController viewWillAppear:NO];
+//        [oldViewController viewDidDisappear:NO];
+//        [newViewController viewWillAppear:NO];
         [newViewController becomeFirstResponder];
         
        return;

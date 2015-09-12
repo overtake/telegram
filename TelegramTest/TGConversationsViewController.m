@@ -346,6 +346,9 @@
 
 -(void)move:(int)position conversation:(TL_conversation *)conversation {
     
+    if(!conversation.isAddToList)
+        return;
+    
     if(position == 0 && conversation.top_message > TGMINFAKEID) {
         [self.tableView scrollToBeginningOfDocument:self];
     }

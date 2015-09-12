@@ -72,7 +72,8 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)drop:(BOOL)dropMemory;
 
 -(void)startChannelPolling;
-
+-(void)stopChannelPolling;
+-(void)startChannelPollingIfAlreadyStoped;
 -(TL_conversation *)conversation;
 
 

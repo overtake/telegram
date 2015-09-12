@@ -274,6 +274,8 @@
     
     assert(channel_id != 0);
     
+    TL_conversation *conversation = [self conversationWithChannelId:channel_id];
+    
     [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
         
         
@@ -328,6 +330,13 @@
             
             conversation.top_message = [response top_message];
             conversation.lastMessage = topMsg;
+            conversation.last_message_date = topMsg.date;
+            
+            if(conversation.last_marked_message == 0) {
+                conversation.last_marked_message = conversation.top_message;
+                conversation.last_marked_date = conversation.last_message_date;
+            }
+            
             conversation.read_inbox_max_id = [response read_inbox_max_id];
             conversation.unread_count = [response unread_count];
             
@@ -350,9 +359,13 @@
                 
                 int maxSyncedId = [[Storage manager] lastSyncedMessageIdWithChannelId:conversation.peer_id important:NO];
                 
-                longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:maxSyncedId max_id:minMsg.n_id date:minMsg.date count:0];
+                if(maxSyncedId != minMsg.n_id) {
+                    longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:maxSyncedId max_id:minMsg.n_id date:minMsg.date count:0];
+                    
+                    [[Storage manager] insertMessagesHole:longHole];
+                }
                 
-                [[Storage manager] insertMessagesHole:longHole];
+                
                 
             }
             

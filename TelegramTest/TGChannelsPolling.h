@@ -20,6 +20,8 @@
 
 @property (nonatomic,weak) id <TGChannelPollingDelegate> delegate;
 
+@property (nonatomic,assign,readonly) BOOL isActive;
+
 -(id)initWithDelegate:(id <TGChannelPollingDelegate>)delegate withUpdatesLimit:(int)limit;
 
 -(void)setCurrentConversation:(TL_conversation *)conversation;

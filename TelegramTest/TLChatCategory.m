@@ -25,7 +25,10 @@ DYNAMIC_PROPERTY(DDialog);
     TL_conversation *dialog = [self getDDialog];
     
     if(!dialog) {
-        dialog = [[DialogsManager sharedManager] findByChatId:self.n_id];
+        if([self isKindOfClass:[TL_channel class]])
+            dialog = [[ChannelsManager sharedManager] find:-self.n_id];
+        else
+            dialog = [[DialogsManager sharedManager] findByChatId:self.n_id];
         [self setDDialog:dialog];
     }
     

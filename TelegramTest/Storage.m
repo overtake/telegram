@@ -657,7 +657,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date DESC, n_id desc LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -733,7 +733,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [result close];
         
-        hole = [holes firstObject];
+        
+        if(!next)
+            hole = [holes firstObject];
+        else
+            hole = [holes lastObject];
+        
+        
         
         
         
@@ -1872,19 +1878,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *result = [db executeQuery:@"select sum(unread_count) AS unread_count from dialogs"];
+        int unread_count = [db intForQuery:@"select sum(unread_count) from dialogs"];
        
-        
-        int unread_count  = -1;
-        while ([result next]) {
-            unread_count = [result intForColumn:@"unread_count"];
-        }
-        
+        int channel_unread_count = [db intForQuery:@"select sum(unread_count) from channel_dialogs where is_invisible = 0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(unread_count);
+            if(completeHandler) completeHandler(unread_count+channel_unread_count);
         });
-        [result close];
     }];
 
 }
@@ -2203,6 +2203,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             if([conversation.peer isKindOfClass:[TL_peerChannel class]]) {
                 conversation.pts = [result intForColumn:@"pts"];
                 conversation.unread_important_count = [result intForColumn:@"unread_important_count"];
+                conversation.invisibleChannel = [result intForColumn:@"is_invisible"];
             }
             
            
@@ -2602,6 +2603,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:msgId unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"]];
             
             
+            
+            if(channel.isInvisibleChannel) {
+                int bp = 0;
+            }
             [channels addObject:channel];
 
         }

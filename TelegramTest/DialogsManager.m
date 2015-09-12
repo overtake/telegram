@@ -137,6 +137,8 @@
     [ASQueue dispatchOnStageQueue:^{
         dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil pts:0 isInvisibleChannel:YES];
         
+        [dialog save];
+        
         
         dialog.fake = YES;
         [self add:@[dialog]];

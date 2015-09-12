@@ -86,7 +86,9 @@
     self->_last_real_message_date = last_message_date;
 }
 
-
+-(void)setLastMessage:(TL_localMessage *)lastMessage {
+    _lastMessage = lastMessage;
+}
 
 -(BOOL)canSendMessage {
     
