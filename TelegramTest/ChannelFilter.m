@@ -88,7 +88,13 @@
         [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:messages] withNext:next];
         
         if(callback) {
-            callback(messages,hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote);
+            ChatHistoryState state = hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote;
+            
+            if(state == ChatHistoryStateFull) {
+                int bp = 0;
+            }
+            
+            callback(messages,state);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
