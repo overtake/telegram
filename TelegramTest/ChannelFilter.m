@@ -39,12 +39,21 @@
     self.hole = response.hole;
     
     
+//    if(response.result.count < self.controller.selectLimit)
+//        *state = [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateFull;
+//    else
+//        *state = [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    
     *state = response.result.count < self.controller.selectLimit || [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    
+    if(*state == ChatHistoryStateFull) {
+        int b = 0;
+    }
+    
     
     return response.result;
     
 }
-
 
 
 -(void)request:(BOOL)next callback:(void (^)(NSArray *response,ChatHistoryState state))callback {
@@ -116,7 +125,7 @@
          self.hole = nHole;
         
         if(callback) {
-            callback(messages,!nHole ? ChatHistoryStateLocal : ChatHistoryStateRemote);
+            callback(messages,hole && !nHole ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
