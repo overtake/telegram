@@ -37,8 +37,12 @@ typedef enum {
 } ChatHistoryState;
 
 @property (nonatomic,weak) ChatHistoryController *controller;
-@property (nonatomic,strong) TGMessageHole *hole;
 
+
+
+
+-(TGMessageHole *)holeWithNext:(BOOL)next;
+-(void)setHole:(TGMessageHole *)hole withNext:(BOOL)next;
 
 -(id)initWithController:(ChatHistoryController *)controller;
 
@@ -61,11 +65,13 @@ typedef enum {
 
 -(int)additionSenderFlags;
 
+-(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages;
+
 
 -(NSArray *)storageRequest:(BOOL)next;
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
 
--(BOOL)confirmHole:(TGMessageHole *)hole withNext:(BOOL)next;
+-(BOOL)confirmHoleWithNext:(BOOL)next;
 
 
 -(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;

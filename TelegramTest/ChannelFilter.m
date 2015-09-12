@@ -36,7 +36,7 @@
     
     TGHistoryResponse *response = [[Storage manager] loadChannelMessages:self.controller.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.controller.selectLimit filterMask:[self type] important:NO next:next];
     
-    self.hole = response.hole;
+    [self setHole:response.hole withNext:next];
     
     
 //    if(response.result.count < self.controller.selectLimit)
@@ -44,11 +44,7 @@
 //    else
 //        *state = [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
-    *state = response.result.count < self.controller.selectLimit || [self confirmHole:self.hole withNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
-    
-    if(*state == ChatHistoryStateFull) {
-        int b = 0;
-    }
+    *state = response.result.count < self.controller.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
     
     return response.result;
@@ -60,7 +56,7 @@
     
     if([self.controller checkState:ChatHistoryStateRemote next:next]) {
         
-        [self remoteRequest:next hole:self.hole callback:callback];
+        [self remoteRequest:next hole:[self holeWithNext:next] callback:callback];
         
     } else {
         
@@ -87,45 +83,12 @@
         NSArray *messages = [[response messages] copy];
         
         
-        
         [self fillGroupHoles:messages bottom:!next];
 
-        
-        
-         TGMessageHole *nHole = nil;
-         
-         if(hole != nil) {
-            
-            int min = hole.min_id;
-            int max = hole.max_id;
-            
-            if(messages.count > 0)
-            {
-                TL_localMessage *first = [messages firstObject];
-                TL_localMessage *last = [messages lastObject];
-                
-                max = first.n_id;
-                min = last.n_id;
-            }
-            
-            
-            
-           nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
-            
-            
-            if(nHole.min_id == nHole.max_id) {
-                [nHole remove];
-                nHole = nil;
-            } else
-                [nHole save];
-            
-            
-        }
-         
-         self.hole = nHole;
+        [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:messages] withNext:next];
         
         if(callback) {
-            callback(messages,hole && !nHole ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
+            callback(messages,hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -149,8 +112,6 @@
     } else if(hole != nil && next) {
         maxId = hole.max_id;
     }
-    
-    self.hole = hole;
     
     [self remoteRequest:next max_id:maxId hole:hole callback:callback];
     

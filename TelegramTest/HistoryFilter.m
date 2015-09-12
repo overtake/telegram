@@ -20,6 +20,11 @@
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 
+@interface HistoryFilter ()
+@property (nonatomic,strong,readonly) TGMessageHole *botHole;
+@property (nonatomic,strong,readonly) TGMessageHole *topHole;
+@end
+
 @implementation HistoryFilter
 
 
@@ -214,16 +219,6 @@ static NSString *kMessageItems = @"kMessageItems";
     [ASQueue dispatchOnStageQueue:^{
         [self.fClassItems removeAllObjects];
         [self.fClassItems removeAllObjects];
-        
-        [PhotoHistoryFilter drop];
-        [DocumentHistoryFilter drop];
-        [VideoHistoryFilter drop];
-        [PhotoVideoHistoryFilter drop];
-        [AudioHistoryFilter drop];
-        [MP3HistoryFilter drop];
-        [SharedLinksHistoryFilter drop];
-        [ChannelImportantFilter drop];
-        [ChannelFilter drop];
     }];
     
 }
@@ -270,12 +265,58 @@ static NSString *kMessageItems = @"kMessageItems";
     
 }
 
--(BOOL)confirmHole:(TGMessageHole *)hole withNext:(BOOL)next {
-    return hole && ( next ? self.hole.max_id <= self.controller.max_id : self.hole.max_id > self.hole.max_id);
+-(BOOL)confirmHoleWithNext:(BOOL)next {
+    return [self holeWithNext:next] && ( next ? [self holeWithNext:next].max_id <= self.controller.max_id : [self holeWithNext:next].max_id > [self holeWithNext:next].max_id);
 }
 
 -(int)additionSenderFlags {
     return 0 ;
+}
+
+-(TGMessageHole *)holeWithNext:(BOOL)next {
+    return next ? _topHole : _botHole;
+}
+
+-(void)setHole:(TGMessageHole *)hole withNext:(BOOL)next {
+    if(next)
+        _topHole = hole;
+    else
+        _botHole = hole;
+}
+
+-(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages {
+    
+    TGMessageHole *nHole;
+    
+    if(hole != nil) {
+        
+        int min = hole.min_id;
+        int max = hole.max_id;
+        
+        if(messages.count > 0)
+        {
+            TL_localMessage *first = [messages firstObject];
+            TL_localMessage *last = [messages lastObject];
+            
+            max = first.n_id;
+            min = last.n_id;
+        }
+        
+        
+        
+        nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
+        
+        
+        if(nHole.min_id == nHole.max_id) {
+            [nHole remove];
+            nHole = nil;
+        } else
+            [nHole save];
+        
+        
+    }
+    
+    return nHole;
 }
 
 -(void)dealloc {

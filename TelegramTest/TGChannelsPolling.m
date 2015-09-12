@@ -88,9 +88,7 @@ static int pollingDelay = 5;
 }
 
 -(void)launchTimer:(int)time repeat:(BOOL)repeat {
-    
-    int bp = 0;
-    
+        
     _timer = [[TGTimer alloc] initWithTimeout:time repeat:repeat completion:^{
         
         [[MTNetwork instance].updateService.proccessor failUpdateWithChannelId:_conversation.peer.channel_id limit:_limit withCallback:^(id response, TGMessageHole *longHole) {
