@@ -512,7 +512,7 @@ static BOOL dragAction = NO;
     NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     if(NSPointInRect(pos, self.rightView.frame)) {
-        if(self.messagesViewController.state == MessagesViewControllerStateNone && self.messagesViewController.conversation.canEditConversation) {
+        if(self.messagesViewController.state == MessagesViewControllerStateNone) {
             [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
             [self mouseDown:theEvent];
             

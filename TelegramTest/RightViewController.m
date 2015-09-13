@@ -350,7 +350,14 @@
         return;
     }
     
-    
+    if(!dialog.canSendMessage && self.modalView == [self forwardModalView]) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert setMessageText:NSLocalizedString(@"Alert.Error", nil)];
+        [alert setInformativeText: NSLocalizedString(@"Conversation.CantForwardMessagesToThisConversation", nil)];
+        [alert show];
+        return;
+    }
     
     if(self.modalView == [self shareContactModalView]) {
         

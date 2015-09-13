@@ -352,7 +352,10 @@
     } else {
         if(self.forwardEnabled)
             [self.forwardButton setDisable:NO];
-        [self.deleteButton setDisable:NO];
+        
+        
+        
+        [self.deleteButton setDisable:self.dialog.type == DialogTypeChannel ? !self.dialog.canSendMessage : NO];
     }
     
     [self.messagesSelectedCount setHidden:NO];
@@ -842,6 +845,21 @@
                 
             } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
             
+            
+        } else if(weakSelf.dialog.chat.isBroadcast) {
+            
+            [TMViewController showModalProgressWithDescription:NSLocalizedString(@"Channel.ShareCopyDescription",nil)];
+            
+            NSPasteboard* cb = [NSPasteboard generalPasteboard];
+            
+            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
+            [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.dialog.chat.username] forType:NSStringPboardType];
+            
+            dispatch_after_seconds(0.2, ^{
+                
+                [TMViewController hideModalProgressWithSuccess];
+                
+            });
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
         {

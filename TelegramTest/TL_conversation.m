@@ -106,6 +106,9 @@
     if(self.type == DialogTypeUser && self.user.isBot)
         return  !self.user.isBot || !self.user.isBlocked;
     
+    if(self.type == DialogTypeChannel)
+        return (!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin;
+    
     return YES;
 }
 
@@ -132,9 +135,20 @@
     
     if(self.type == DialogTypeChat || self.type == DialogTypeChannel) {
         
-        if(self.isInvisibleChannel) {
-            return NSLocalizedString(@"Conversation.Action.JointToChannel", nil);
+        if(self.type == DialogTypeChannel) {
+            
+            if(self.isInvisibleChannel) {
+                return NSLocalizedString(@"Conversation.Action.JointToChannel", nil);
+            }
+            
+            if(self.chat.isBroadcast) {
+                return NSLocalizedString(@"Conversation.Action.Share", nil);
+            }
+            
+            
         }
+        
+        
         
         
         if(self.chat.isKicked) {
@@ -387,8 +401,9 @@ static void *kType;
 }
 
 -(BOOL)canEditConversation {
-    return self.type != DialogTypeChannel || (!self.chat.isBroadcast || self.chat.isAdmin);
+    return YES; //self.type != DialogTypeChannel || (!self.chat.isBroadcast || self.chat.isAdmin);
 }
+
 
 
 @end

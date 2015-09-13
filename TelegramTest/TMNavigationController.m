@@ -273,10 +273,10 @@ static const int navigationOffset = 48;
     
     
     if(oldView == newView) {
-//        [oldViewController viewWillDisappear:NO];
-//        [newViewController viewWillAppear:NO];
-//        [oldViewController viewDidDisappear:NO];
-//        [newViewController viewWillAppear:NO];
+        [oldViewController viewWillDisappear:NO];
+        [newViewController viewWillAppear:NO];
+        [oldViewController viewDidDisappear:NO];
+        [newViewController viewWillAppear:NO];
         [newViewController becomeFirstResponder];
         
        return;

@@ -100,7 +100,7 @@
 
 @end
 
-@interface MessagesViewController () <SettingsListener> {
+@interface MessagesViewController () <SettingsListener,TMNavagationDelegate> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
 }
 
@@ -450,8 +450,18 @@
     [self.stickerPanel hide:NO];
 
     
+    
 }
 
+-(void)_didStackRemoved {
+    
+    _conversation = nil;
+    
+    [self flushMessages];
+    
+    [self.historyController stopChannelPolling];
+    
+}
 
 
 -(void)messageTableItemUpdate:(NSNotification *)notification {
@@ -778,8 +788,8 @@
     if(![self acceptState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone])
         return;
     
-    if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
-    {
+   // if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
+  //  {
         [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
         for(int i = 0; i < self.messages.count; i++) {
             MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
@@ -787,15 +797,13 @@
                 [cell setEditable:show animation:animated];
             }
         }
-    }
+  //  }
     
     
     
 }
 
--(void)_didStackRemoved {
-    [self flushMessages];
-}
+
 
 
 -(NSAttributedString *)stringForSharedMedia:(NSString *)mediaString {
@@ -952,7 +960,7 @@ static NSTextAttachment *headerMediaIcon() {
         
     } else {
         rightView = self.editableNavigationRightView;
-        leftView = self.editableNavigationLeftView;
+        leftView = self.conversation.type == DialogTypeChannel ? self.conversation.canSendMessage  ? self.editableNavigationLeftView : [self standartLeftBarView] : self.editableNavigationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
     }
     
@@ -969,7 +977,6 @@ static NSTextAttachment *headerMediaIcon() {
         [self setCenterNavigationBarView:centerView];
     }
     
-    [self hideOrShowBottomView];
 }
 
 - (void)rightButtonAction {
@@ -1258,8 +1265,6 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     [self.table.scrollView setHasVerticalScroller:YES];
-    
-    [self.historyController startChannelPollingIfAlreadyStoped];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1269,7 +1274,6 @@ static NSTextAttachment *headerMediaIcon() {
     
    [self.table.scrollView setHasVerticalScroller:NO];
     
-    [self.historyController stopChannelPolling];
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
@@ -2198,12 +2202,6 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
--(void)hideOrShowBottomView {
-    
-    [self.bottomView setHidden:self.conversation.type == DialogTypeChannel && self.conversation.chat.isBroadcast && !self.conversation.chat.isAdmin && !self.conversation.isInvisibleChannel];
-    
-    [self bottomViewChangeSize:self.bottomView.isHidden ? 0 : _lastBottomOffsetY animated:NO];
-}
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
     [self hideSearchBox:NO];
