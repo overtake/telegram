@@ -17,6 +17,7 @@
 @interface CreateChannelHeaderItem : TGGeneralRowItem
 @property (nonatomic,strong) NSString *channelName;
 @property (nonatomic,strong) NSString *channelAbout;
+@property (nonatomic,assign) BOOL discussion;
 @property (nonatomic,strong) ComposeCreateChannelViewController *controller;
 @end
 
@@ -209,8 +210,6 @@
     [self.view addSubview:self.tableView.containerView];
     
     
-    
-    
     _headerItem = [[CreateChannelHeaderItem alloc] initWithHeight:160];
     _headerItem.controller = self;
     
@@ -221,11 +220,13 @@
     
     GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
         
+        _headerItem.discussion = !_headerItem.discussion;
         
+        [self updateCompose];
         
     } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(GeneralSettingsRowItem *item) {
         
-        return @(YES);
+        return @(_headerItem.discussion);
         
     }];
     
@@ -282,6 +283,9 @@
         
         self.headerItem.channelName = ((NSArray *)self.action.result.stepResult[0]).count > 0 ? [self.action.result.stepResult[0] firstObject] : @"";
         self.headerItem.channelAbout = ((NSArray *)self.action.result.stepResult[0]).count == 2 ? [self.action.result.stepResult[0] lastObject] : @"";
+        
+        self.headerItem.discussion = [self.action.result.stepResult[1] intValue];
+        
     } else {
         self.headerItem.channelName  = @"";
         self.headerItem.channelAbout = nil;
@@ -314,9 +318,11 @@
         result = [result arrayByAddingObject:self.headerItem.channelAbout];
     
     
+    
+    
     NSArray *allSteps = self.action.result.stepResult;
     
-    result = [@[result] arrayByAddingObjectsFromArray:[allSteps subarrayWithRange:NSMakeRange(MIN(1,allSteps.count), MIN(allSteps.count,abs((int)allSteps.count - 1)))]];
+    result = [@[result,@(self.headerItem.discussion)] arrayByAddingObjectsFromArray:[allSteps subarrayWithRange:NSMakeRange(MIN(1,allSteps.count), MIN(allSteps.count,abs((int)allSteps.count - 1)))]];
     
     if(!self.action.result) {
         self.action.result = [[ComposeResult alloc] initWithStepResult:result];
@@ -330,8 +336,6 @@
 -(BOOL)becomeFirstResponder {
     
     return YES;
-    
-    //return [self.headerView becomeFirstResponder];
 }
 
 

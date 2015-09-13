@@ -51,6 +51,8 @@
     if(self = [super initWithFrame:frameRect]) {
         
         
+        self.isFlipped = YES;
+        
         _oberser = observer;
         
         self.successView = imageViewWithImage(image_UsernameCheck());
@@ -134,12 +136,34 @@
 -(void)setOberser:(TGChangeUserObserver *)oberser {
     _oberser = oberser;
     
+    [_descriptionView setString:oberser.desc];
+    [_descriptionView sizeToFit];
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
+    
+    [str appendString:oberser.placeholder withColor:DARK_GRAY];
+    [str setAlignment:NSLeftTextAlignment range:str.range];
+    [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+    
+    [[self.textView textView].cell setPlaceholderAttributedString:str];
+
+    
+    [self.textView.textView setStringValue:@""];
+    
+    [self updateChecker];
+    
+    [self setFrameSize:self.frame.size];
+    
     // update interface
+}
+
+-(void)dispatchSaveBlock {
+    [self performEnter];
 }
 
 
 - (void)performEnter {
-    if(self.isRemoteChecked && ![[self defaultUsername] isEqualToString:self.checkedUserName]) {
+    if((self.isRemoteChecked && ![[self defaultUsername] isEqualToString:self.checkedUserName]) || ([self defaultUsername] == nil && self.checkedUserName.length == 0)) {
         [self.textView.textView resignFirstResponder];
         if(self.oberser.willNeedSaveUserName != nil) {
             self.oberser.willNeedSaveUserName(self.textView.textView.stringValue);
@@ -177,6 +201,7 @@
         }
         
     }
+    
     
 }
 
@@ -292,8 +317,6 @@
     [super setFrameSize:newSize];
     
     NSSize size = [self.descriptionView.attributedString sizeForTextFieldForWidth:newSize.width - 200];
-    
-    
     
     [self.descriptionView setFrameSize:size];
 }

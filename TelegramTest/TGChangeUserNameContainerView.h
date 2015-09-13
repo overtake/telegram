@@ -31,6 +31,8 @@
 
 @property (nonatomic,strong) TGChangeUserObserver *oberser;
 
+-(void)dispatchSaveBlock;
+
 -(instancetype)initWithFrame:(NSRect)frameRect observer:(TGChangeUserObserver *)observer;
 
 

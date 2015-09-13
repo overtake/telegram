@@ -20,7 +20,12 @@
 }
 
 -(NSString *)doneTitle {
-    return ![self.action.currentViewController isKindOfClass:[ComposeCreateChannelUserNameStepViewController class]] ? NSLocalizedString(@"Compose.Next", nil) : NSLocalizedString(@"Compose.Create", nil);
+    if([self.action.currentViewController isKindOfClass:[ComposeCreateChannelUserNameStepViewController class]])
+        return NSLocalizedString(@"Compose.Save", nil);
+    if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])
+        return NSLocalizedString(@"Compose.Create", nil);
+    else
+        return NSLocalizedString(@"Compose.Next", nil);
 }
 
 -(NSAttributedString *)centerTitle {
@@ -43,12 +48,17 @@
     } else if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
         
         
-        
-    } else {
         [self.delegate behaviorDidStartRequest];
         
         [self createChannel];
+        
+    } else {
+        [self updateUserName];
     }
+}
+
+-(void)updateUserName {
+    
 }
 
 
@@ -65,8 +75,13 @@
         }
         
     }
+    
+    if(self.action.result.stepResult.count < 2)
+        return;
+    
+    BOOL discussion = [self.action.result.stepResult[1] intValue];
    
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel createWithFlags:1 << 0 title:self.action.result.singleObject users:array] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] users:array] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
         if(response.chats.count > 0) {
@@ -87,12 +102,14 @@
                 
                 [[Telegram rightViewController] clearStack];
                 
-                [[Telegram sharedInstance] showMessagesFromDialog:channel.dialog sender:self];
+                [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
+                
+                self.action.result.singleObject = channel;
+                
+                [[Telegram rightViewController] showComposeChangeUserName:self.action];
             }];
         
         }
-        
-        
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

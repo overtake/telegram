@@ -568,7 +568,7 @@
             
         }
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:((self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]) || [Telegram isSingleLayout]) && ![sender isKindOfClass:[AppDelegate class]] && ![sender isKindOfClass:[TGPhotoViewer class]]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:((self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]) || [Telegram isSingleLayout]) && ![sender isKindOfClass:[AppDelegate class]] && ![sender isKindOfClass:[TGPhotoViewer class]] && ![sender isKindOfClass:NSClassFromString(@"ComposeActionCreateChannelBehavior")]];
     }
 
     return YES;
@@ -1036,6 +1036,22 @@
     [self.channelInfoViewController setChat:chat];
     
     [self.navigationViewController pushViewController:self.channelInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
+}
+
+-(void)showComposeChangeUserName:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == self.composeCreateChannelUserNameStepViewController && self.composeCreateChannelUserNameStepViewController.action == action)
+        return;
+    
+    if(_composeCreateChannelUserNameStepViewController == nil) {
+        _composeCreateChannelUserNameStepViewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.composeCreateChannelUserNameStepViewController setAction:action];
+    [self.navigationViewController pushViewController:self.composeCreateChannelUserNameStepViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
 }
 
 @end

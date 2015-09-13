@@ -165,4 +165,6 @@
 
 -(void)showChannelInfoPage:(TLChat *)chat;
 
+-(void)showComposeChangeUserName:(ComposeAction *)action;
+
 @end
