@@ -62,7 +62,7 @@
         [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
         
         
-        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 80, NSWidth(self.frame) - 200, 23)];
+        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(30, 50, NSWidth(self.frame) - 60, 23)];
         
         [self.successView setFrameOrigin:NSMakePoint(NSWidth(self.textView.frame) - NSWidth(self.successView.frame), 8)];
         
@@ -88,7 +88,7 @@
         
         [self.statusTextField sizeToFit];
         
-        [self.statusTextField setFrameOrigin:NSMakePoint(100, NSMinY(self.textView.frame) + 30)];
+        [self.statusTextField setFrameOrigin:NSMakePoint(30, NSMinY(self.textView.frame) + 30)];
         
         [self addSubview:self.statusTextField];
         
@@ -113,7 +113,7 @@
         [self.textView.textView setFrameOrigin:NSMakePoint(0, NSMinY(self.textView.textView.frame))];
         
         
-        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(96, 122, NSWidth(self.frame) - 200, 100)];
+        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(26, 92, NSWidth(self.frame) - 60, 100)];
         
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         
@@ -309,16 +309,16 @@
     [self.statusTextField sizeToFit];
     self.statusTextField.textColor = color;
     
-    [self.descriptionView setFrameOrigin:NSMakePoint(96, !self.statusTextField.isHidden ? 130 : 110)];
+    [self.descriptionView setFrameOrigin:NSMakePoint(26, !self.statusTextField.isHidden ? 100 : 80)];
     
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    NSSize size = [self.descriptionView.attributedString sizeForTextFieldForWidth:newSize.width - 200];
+    NSSize size = [self.descriptionView.attributedString sizeForTextFieldForWidth:newSize.width - 60];
     
-    [self.descriptionView setFrameSize:size];
+    [self.descriptionView setFrameSize:NSMakeSize(newSize.width - 60, size.height)];
 }
 
 @end

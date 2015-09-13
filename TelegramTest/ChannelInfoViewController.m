@@ -18,6 +18,10 @@
 
 }
 
+-(void)save {
+    [self.headerView save];
+}
+
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
     

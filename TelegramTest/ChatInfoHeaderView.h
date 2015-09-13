@@ -39,6 +39,7 @@
 @property (nonatomic, strong,readonly) ITSwitch *notificationSwitcher;
 @property (nonatomic, strong,readonly) LineView *nameLiveView;
 
+-(void)save;
 
 - (NSString *)title;
 - (void)reload;

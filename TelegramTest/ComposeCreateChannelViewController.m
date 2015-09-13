@@ -236,7 +236,7 @@
     [self.tableView addItem:discussionItem tableRedraw:NO];
     
     
-    GeneralSettingsBlockHeaderItem *discussionDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DiscussionEnableDiscription", nil) height:62 flipped:YES];
+    GeneralSettingsBlockHeaderItem *discussionDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DiscussionEnableDescription", nil) height:62 flipped:YES];
     
     discussionDescription.xOffset = 30;
     
@@ -316,7 +316,6 @@
         result = [result arrayByAddingObject:self.headerItem.channelName];
     if(self.headerItem.channelAbout.length > 0)
         result = [result arrayByAddingObject:self.headerItem.channelAbout];
-    
     
     
     

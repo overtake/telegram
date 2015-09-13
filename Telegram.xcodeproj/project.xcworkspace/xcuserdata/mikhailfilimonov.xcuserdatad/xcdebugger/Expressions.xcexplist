@@ -610,6 +610,9 @@
                value = "self.type">
             </PersistentString>
             <PersistentString
+               value = "tags">
+            </PersistentString>
+            <PersistentString
                value = "self.type">
             </PersistentString>
          </PersistentStrings>
@@ -2087,7 +2090,12 @@
          contextName = "-[TLUser(Category) rebuildType]:TLUserCategory.m">
       </ContextState>
       <ContextState
-         contextName = "__39-[TGPhotoViewer convertPreviewObjects:]_block_invoke:TGPhotoViewer.m">
+         contextName = "__47-[ChatHistoryController pollingDidSaidTooLong:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.filter.botHole.max_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageIGContainer setWebpage:]:TGWebpageIGContainer.m">
@@ -2111,6 +2119,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageView setObject:]:TGPVImageView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "max_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__72-[Storage loadChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
@@ -2570,6 +2586,9 @@
             </PersistentString>
             <PersistentString
                value = "topHole">
+            </PersistentString>
+            <PersistentString
+               value = "messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3110,9 +3129,6 @@
                value = "params[@&quot;domain&quot;]]">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">

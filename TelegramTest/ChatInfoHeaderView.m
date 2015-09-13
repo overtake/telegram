@@ -347,7 +347,7 @@
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 100, self.nameTextField.bounds.size.height)];
     
     
     [self.statusTextField sizeToFit];
@@ -357,7 +357,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 100, self.nameTextField.bounds.size.height)];
     
     
     [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
@@ -449,6 +449,9 @@
     
 }
 
+-(void)save {
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];

@@ -10,4 +10,6 @@
 
 @interface ChannelInfoHeaderView : ChatInfoHeaderView
 
+
+
 @end

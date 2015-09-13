@@ -201,8 +201,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [db executeUpdate:@"CREATE INDEX if not exists date_idx ON messages(date)"];
             [db executeUpdate:@"CREATE INDEX if not exists random_idx ON messages(random_id)"];
             [db executeUpdate:@"CREATE INDEX if not exists peer_flags_idx ON messages(peer_id,flags)"];
-            [db executeUpdate:@"CREATE INDEX if not exists fake_idx ON messages(fake_id)"];
-            
+            [db executeUpdate:@"CREATE INDEX if not exists fake_id_idx ON messages(fake_id)"];
         }
         
         [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer)"];

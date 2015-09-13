@@ -32,7 +32,17 @@
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-     [attr appendString:NSLocalizedString(@"Compose.ChannelTitle", nil) withColor:NSColorFromRGB(0x333333)];
+    NSString *title;
+    
+    if([self.action.currentViewController isKindOfClass:[ComposeCreateChannelUserNameStepViewController class]])
+        title = NSLocalizedString(@"Channel.Link", nil);
+    if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])
+        title = NSLocalizedString(@"Compose.Members", nil);
+    else
+        title = NSLocalizedString(@"Compose.NewChannel", nil);
+
+    
+    [attr appendString:title withColor:NSColorFromRGB(0x333333)];
     
     [attr setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attr.length-1)];
     
@@ -118,7 +128,6 @@
     
     
 }
-
 
 
 -(void)composeDidCancel {

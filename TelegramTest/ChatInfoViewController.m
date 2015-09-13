@@ -49,7 +49,7 @@
 }
 
 -(void)redrawRow {
-    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat || _conversation.type == DialogTypeChannel ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteBroadcast", nil)];
+    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.LeaveChannel", nil)];
     
     [self.button sizeToFit];
 }
@@ -126,6 +126,12 @@
 
 -(void)buildFirstItem {
     [self.tableView reloadData];
+}
+
+-(void)setType:(ChatInfoViewControllerType)type {
+    _type = type;
+    [self.headerView setType:type];
+    [self buildRightView];
 }
 
 - (void)buildRightView {

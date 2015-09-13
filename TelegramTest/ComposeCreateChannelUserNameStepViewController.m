@@ -22,7 +22,7 @@
 -(void)loadView {
     [super loadView];
     
-    _observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.SetUserNameDescription", nil) placeholder:NSLocalizedString(@"Channel.SetUserNamePlaceHolder", nil) defaultUserName:@"wtfmen"];
+    _observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil) placeholder:NSLocalizedString(@"Channel.SetChannelLinkPlaceholder", nil) defaultUserName:@"wtfmen"];
     
     
     weak();
@@ -58,9 +58,7 @@
     
     [_observer setNeedApiObjectWithUserName:^id(NSString *userName) {
         
-        TL_channel *channel = weakSelf.action.result.singleObject;
-        
-        return [TLAPI_messages_checkChannelUsername createWithChat_id:channel.inputPeer username:userName];
+        return [TLAPI_messages_checkChannelUsername createWithChat_id:[TL_inputChatEmpty create] username:userName];
     }];
     
     self.view = _changeUserNameContainerView  = [[TGChangeUserNameContainerView alloc] initWithFrame:self.view.bounds observer:_observer];
@@ -117,8 +115,6 @@
 
 
 -(void)updateCompose {
-    
-   
     
     
 }

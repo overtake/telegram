@@ -5,7 +5,7 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-//#define TGDEBUG // UNDEF IN RELEASE
+#define TGDEBUG // UNDEF IN RELEASE
 //#define TGStable // DEF IN stable version
 
 

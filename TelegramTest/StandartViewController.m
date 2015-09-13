@@ -188,8 +188,8 @@
         
     }];
     
-    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewGroup"]];
-    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewGroupActive"]];
+    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
     [theMenu addItem:createChannel];
     
     
