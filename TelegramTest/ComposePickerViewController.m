@@ -115,7 +115,11 @@
 
 -(void)selectTableDidChangedItem:(SelectUserItem *)item {
     
-    self.action.result = [[ComposeResult alloc] initWithMultiObjects:[self.tableView selectedItems]];
+    if(!self.action.result)
+        self.action.result = [[ComposeResult alloc] initWithMultiObjects:[self.tableView selectedItems]];
+     else
+         self.action.result.multiObjects = [self.tableView selectedItems];
+    
     
     [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     

@@ -651,19 +651,19 @@
 }
 
 -(void)showComposeCreateChannel:(ComposeAction *)composeAction {
-    if(self.navigationViewController.currentController == self.composeChatCreateViewController && self.composeChatCreateViewController.action == composeAction)
+    if(self.navigationViewController.currentController == self.composeCreateChannelViewController && self.composeCreateChannelViewController.action == composeAction)
         return;
     
-    if(!self.composeChatCreateViewController)
+    if(!self.composeCreateChannelViewController)
     {
-        self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
+        self.composeCreateChannelViewController = [[ComposeCreateChannelViewController alloc] initWithFrame:self.view.bounds];
     }
     
     
     [self hideModalView:YES animation:NO];
     
-    [self.composeChatCreateViewController setAction:composeAction];
-    [self.navigationViewController pushViewController:self.composeChatCreateViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    [self.composeCreateChannelViewController setAction:composeAction];
+    [self.navigationViewController pushViewController:self.composeCreateChannelViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 
 }
 

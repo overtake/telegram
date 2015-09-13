@@ -97,11 +97,7 @@
     
     if(![[MTNetwork instance] passcodeIsEnabled]) {
         
-        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PasscodeSettings.TurnOnDescription", nil)];
-        
-        
-        description.height = 100;
-        description.isFlipped = YES;
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PasscodeSettings.TurnOnDescription", nil) height:100 flipped:YES];
         
         [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     }

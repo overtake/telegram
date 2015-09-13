@@ -105,11 +105,7 @@
     [self.tableView insert:revokeLink atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"ChatExportLink.Description", nil)]];
-    
-    description.height = 100;
-    
-    description.isFlipped = YES;
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"ChatExportLink.Description", nil)] height:100 flipped:YES];
     
     [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     

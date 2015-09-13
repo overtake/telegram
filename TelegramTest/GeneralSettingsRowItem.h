@@ -7,8 +7,8 @@
 //
 
 #import "TMRowItem.h"
-
-@interface GeneralSettingsRowItem : TMRowItem
+#import "TGGeneralRowItem.h"
+@interface GeneralSettingsRowItem : TGGeneralRowItem
 
 typedef enum
 {
@@ -29,12 +29,12 @@ typedef enum
 
 @property (nonatomic,strong,readonly,getter=description) NSString *desc;
 @property (nonatomic,strong) NSString *subdesc;
-@property (nonatomic,assign) int height;
 
 @property (nonatomic,assign) BOOL locked;
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback;
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description subdesc:(NSString *)subdesc height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback;
+
 
 @end

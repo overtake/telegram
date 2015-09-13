@@ -583,6 +583,11 @@
       </ContextState>
       <ContextState
          contextName = "__61-[TGProccessUpdates uptodate:qts:date:updateConnectionState:]_block_invoke:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "request">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__48-[TGRecentSearchTableView loadRecentSearchItems]_block_invoke42:TGRecentSearchTableView.m">
@@ -1096,6 +1101,9 @@
       </ContextState>
       <ContextState
          contextName = "+[TGTLSerialization parseResponse:request:]:TGTLSerialization.mm">
+      </ContextState>
+      <ContextState
+         contextName = "-[HistoryFilter proccessAndGetHoleWithHole:next:messages:]:HistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
@@ -1651,6 +1659,9 @@
          contextName = "-[DialogsManager checkBotKeyboard:forMessage:notify:]:DialogsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]:ChannelImportantFilter.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
          <PersistentStrings>
             <PersistentString
@@ -1878,6 +1889,17 @@
       </ContextState>
       <ContextState
          contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[TGChannelsPolling checkInvalidatedMessages:important:]_block_invoke:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ComposeCreateChannelViewController viewWillAppear:]:ComposeCreateChannelViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.result.stepResult[0]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">

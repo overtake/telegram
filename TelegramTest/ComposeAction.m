@@ -27,6 +27,12 @@
     return self;
 }
 
+-(id)initWithStepResult:(NSArray *)stepResult {
+    if(self = [super init]) {
+        _stepResult = stepResult;
+    }
+    return self;
+}
 
 @end
 

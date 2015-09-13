@@ -131,9 +131,7 @@
     
     [self.tableView removeAllItems:NO];
     
-    GeneralSettingsBlockHeaderItem *selfHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.CurrentSession", nil)];
-    
-    selfHeader.height = 62;
+    GeneralSettingsBlockHeaderItem *selfHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"AuthSessions.CurrentSession", nil) height:62 flipped:NO];
     
     [self.tableView insert:selfHeader atIndex:self.tableView.count tableRedraw:NO];
     
@@ -156,9 +154,8 @@
     
     if(self.authorizations.count > 0) {
         
-        GeneralSettingsBlockHeaderItem *otherHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"AuthSessions.OtherSessions", nil)];
+        GeneralSettingsBlockHeaderItem *otherHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"AuthSessions.OtherSessions", nil) height:62 flipped:NO];
         
-        otherHeader.height = 62;
         
         [self.tableView insert:otherHeader atIndex:self.tableView.count tableRedraw:NO];
         

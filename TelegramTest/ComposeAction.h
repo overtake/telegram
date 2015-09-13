@@ -12,10 +12,14 @@
 @interface ComposeResult : NSObject
 
 @property (nonatomic,strong) id singleObject;
-@property (nonatomic,strong,readonly) NSArray *multiObjects;
+@property (nonatomic,strong) NSArray *multiObjects;
+
+@property (nonatomic,strong) NSArray *stepResult;
 
 
 -(id)initWithMultiObjects:(NSArray *)multiObjects;
+
+-(id)initWithStepResult:(NSArray *)stepResult;
 
 @end
 

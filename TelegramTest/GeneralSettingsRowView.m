@@ -163,19 +163,24 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.subdescField.frame), 10)];
     
-    [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.switchControl.frame), 10)];
+    TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
     
-    [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.selectedImageView.frame), 10)];
+    [self.descriptionField setFrameOrigin:NSMakePoint( item.xOffset, 12)];
     
-    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_ArrowGrey().size.width - 4, 14)];
+    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.subdescField.frame), 10)];
     
-    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
+    [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.switchControl.frame), 10)];
     
-    [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.lockedIndicator.frame), 10)];
+    [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.selectedImageView.frame), 10)];
     
-    [self.descriptionField setFrameSize:NSMakeSize(NSWidth(self.frame) - 250, NSHeight(self.descriptionField.frame))];
+    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
+    
+    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
+    
+    [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
+    
+    [self.descriptionField setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50), NSHeight(self.descriptionField.frame))];
 }
 
 
@@ -184,7 +189,9 @@
     
     [NSColorFromRGB(0xe0e0e0) setFill];
     
-    NSRectFill(NSMakeRect(100, 0, NSWidth(self.frame) - 200, 1));
+    TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
+    
+    NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(self.frame) - item.xOffset * 2, 1));
 }
 
 @end

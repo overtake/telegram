@@ -158,9 +158,7 @@
             
             [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
             
-            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PasswordSettings.AdditionDescription", nil)];
-            
-            description.height = 60;
+            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PasswordSettings.AdditionDescription", nil) height:60 flipped:NO];
             
             
             [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
@@ -400,10 +398,7 @@
             
             // description
             
-            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.EnabledDescription", nil),[_passwordResult email_unconfirmed_pattern]]];
-            
-            description.height = 100;
-            description.isFlipped = YES;
+            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.EnabledDescription", nil),[_passwordResult email_unconfirmed_pattern]] height:100 flipped:YES];
             
             [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
         }
@@ -576,9 +571,8 @@
         [self.tableView insert:turnPassword atIndex:self.tableView.count tableRedraw:NO];
         
         
-        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.ConfrimEmailDescription", nil),[_passwordResult email_unconfirmed_pattern]]];
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"PasswordSettings.ConfrimEmailDescription", nil),[_passwordResult email_unconfirmed_pattern]] height:100 flipped:NO];
         
-        description.height = 100;
         
         
         [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];

@@ -194,11 +194,7 @@
     soundNotification.menu = menu;
 
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"NotificationSettings.Description", nil)];
-    
-    description.height = 82;
-    description.isFlipped = YES;
-    
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"NotificationSettings.Description", nil) height:82 flipped:YES];
     
     
     

@@ -44,6 +44,7 @@
 #import "NotificationSettingsViewController.h"
 #import "ComposeCreateChannelViewController.h"
 #import "ChannelInfoViewController.h"
+#import "ComposeCreateChannelUserNameStepViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -92,6 +93,9 @@
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
 @property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
 @property (nonatomic, strong) ChannelInfoViewController *channelInfoViewController;
+@property (nonatomic, strong) ComposeCreateChannelUserNameStepViewController *composeCreateChannelUserNameStepViewController;
+
+
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;

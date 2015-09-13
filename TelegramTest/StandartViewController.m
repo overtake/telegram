@@ -181,7 +181,7 @@
         
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
         
-        [[Telegram rightViewController] showComposeWithAction:action];
+        [[Telegram rightViewController] showComposeCreateChannel:action];
         
         [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
         

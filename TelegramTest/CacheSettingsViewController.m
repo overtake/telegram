@@ -149,10 +149,8 @@
     }
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Cache.Description", nil)];
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Cache.Description", nil) height:100 flipped:YES];
     
-    description.height = 100;
-    description.isFlipped = YES;
     
     [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     

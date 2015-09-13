@@ -564,6 +564,10 @@
 		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
+		C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669851BA5571C004AF678 /* TGSettingsTableView.m */; };
+		C2B669891BA5591F004AF678 /* TGGeneralRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */; };
+		C2B6698C1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */; };
+		C2B6698F1BA575AE004AF678 /* TGChangeUserNameContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698E1BA575AE004AF678 /* TGChangeUserNameContainerView.m */; };
 		C2BC529D1A695A270004A8FE /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BC529C1A695A270004A8FE /* IOKit.framework */; };
 		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
 		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
@@ -2122,6 +2126,14 @@
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
 		C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeAlertController.h; sourceTree = "<group>"; };
 		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
+		C2B669841BA5571C004AF678 /* TGSettingsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSettingsTableView.h; sourceTree = "<group>"; };
+		C2B669851BA5571C004AF678 /* TGSettingsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSettingsTableView.m; sourceTree = "<group>"; };
+		C2B669871BA5591F004AF678 /* TGGeneralRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralRowItem.h; sourceTree = "<group>"; };
+		C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGeneralRowItem.m; sourceTree = "<group>"; };
+		C2B6698A1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeCreateChannelUserNameStepViewController.h; sourceTree = "<group>"; };
+		C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeCreateChannelUserNameStepViewController.m; sourceTree = "<group>"; };
+		C2B6698D1BA575AE004AF678 /* TGChangeUserNameContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChangeUserNameContainerView.h; sourceTree = "<group>"; };
+		C2B6698E1BA575AE004AF678 /* TGChangeUserNameContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChangeUserNameContainerView.m; sourceTree = "<group>"; };
 		C2BC529C1A695A270004A8FE /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 		C2C1DC031A43345400BBCC63 /* MessageTableItemSticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemSticker.h; sourceTree = "<group>"; };
 		C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemSticker.m; sourceTree = "<group>"; };
@@ -3930,6 +3942,8 @@
 			children = (
 				C268C13B19EEB580007F836A /* UserNameViewController.h */,
 				C268C13C19EEB580007F836A /* UserNameViewController.m */,
+				C2B6698D1BA575AE004AF678 /* TGChangeUserNameContainerView.h */,
+				C2B6698E1BA575AE004AF678 /* TGChangeUserNameContainerView.m */,
 			);
 			name = username;
 			sourceTree = "<group>";
@@ -4367,6 +4381,10 @@
 				C297955719EC29EA00BE893E /* GeneralSettingsRowView.m */,
 				C297955919EC36F100BE893E /* GeneralSettingsBlockHeaderView.h */,
 				C297955A19EC36F100BE893E /* GeneralSettingsBlockHeaderView.m */,
+				C2B669841BA5571C004AF678 /* TGSettingsTableView.h */,
+				C2B669851BA5571C004AF678 /* TGSettingsTableView.m */,
+				C2B669871BA5591F004AF678 /* TGGeneralRowItem.h */,
+				C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */,
 			);
 			name = general;
 			sourceTree = "<group>";
@@ -5150,6 +5168,8 @@
 			children = (
 				C2D8CFC41B84D73D00080775 /* ComposeCreateChannelViewController.h */,
 				C2D8CFC51B84D73D00080775 /* ComposeCreateChannelViewController.m */,
+				C2B6698A1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.h */,
+				C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */,
 			);
 			name = channels;
 			sourceTree = "<group>";
@@ -6500,6 +6520,7 @@
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,
+				C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */,
 				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
 				C20A5F591B8F8B2B007F4B49 /* TGHistoryResponse.m in Sources */,
 				C2D4B86D1AFCE8FA0035B4E4 /* YapRowidSet.mm in Sources */,
@@ -6509,6 +6530,7 @@
 				C268C19119F0519C007F836A /* POPLayerExtras.mm in Sources */,
 				0A4A1A1F189FFAE400D756CD /* MessageTableItemTyping.m in Sources */,
 				C274C3FC1ACBF765000DFDE4 /* TGWebpageIGContainer.m in Sources */,
+				C2B6698C1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m in Sources */,
 				C20A7E6219D706D0008844F2 /* ASActor.m in Sources */,
 				0A9EDC4F1897BA0E0037E1BC /* NSFont+RBLFallbackAdditions.m in Sources */,
 				0A6D099319535E8500A9AC64 /* NSTextFieldCategory.m in Sources */,
@@ -6623,6 +6645,7 @@
 				C2D825E61B6915B500434D37 /* NotificationConversationRowView.m in Sources */,
 				C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */,
 				C20A5F531B8F6CC3007F4B49 /* MessageTableItemHole.m in Sources */,
+				C2B6698F1BA575AE004AF678 /* TGChangeUserNameContainerView.m in Sources */,
 				C281C180191AA139007B160F /* TMPreviewChatPicture.m in Sources */,
 				C20A5ECF1B8B67D7007F4B49 /* TL_conversation_old34.m in Sources */,
 				0A2F5AD8181A8FC6005045A5 /* NSContactsPopover.m in Sources */,
@@ -6717,6 +6740,7 @@
 				C256E90918D201CD008FFA04 /* TMPreviewVideoItem.m in Sources */,
 				C2D51BFB1B21C707009327C0 /* TGAudioRowView.m in Sources */,
 				0AB43BA518D44A1C00FB805A /* GifAnimationLayer.m in Sources */,
+				C2B669891BA5591F004AF678 /* TGGeneralRowItem.m in Sources */,
 				C268C18F19F0519C007F836A /* POPDecayAnimation.mm in Sources */,
 				0A9C56A218CB0D66005B5049 /* TMBackButton.m in Sources */,
 				C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */,

@@ -37,9 +37,7 @@
     [self.view addSubview:self.tableView.containerView];
     
     
-    GeneralSettingsBlockHeaderItem *privacyHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.PrivacyHeader", nil)];
-    
-    privacyHeader.height = 61;
+    GeneralSettingsBlockHeaderItem *privacyHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.PrivacyHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:privacyHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -64,9 +62,7 @@
     
 
     
-    GeneralSettingsBlockHeaderItem *security = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.SecurityHeader", nil)];
-    
-    security.height = 51;
+    GeneralSettingsBlockHeaderItem *security = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.SecurityHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:security atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -133,9 +129,7 @@
 //    [self.tableView insert:logout atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil)];
-    
-    deleteAccountHeader.height = 51;
+    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:deleteAccountHeader atIndex:self.tableView.list.count tableRedraw:NO];
     

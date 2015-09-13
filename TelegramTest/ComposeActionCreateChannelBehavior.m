@@ -20,7 +20,7 @@
 }
 
 -(NSString *)doneTitle {
-    return [self.action.currentViewController isKindOfClass:[ComposePickerViewController class]] ? NSLocalizedString(@"Compose.Next", nil) : NSLocalizedString(@"Compose.Create", nil);
+    return ![self.action.currentViewController isKindOfClass:[ComposeCreateChannelUserNameStepViewController class]] ? NSLocalizedString(@"Compose.Next", nil) : NSLocalizedString(@"Compose.Create", nil);
 }
 
 -(NSAttributedString *)centerTitle {
@@ -36,16 +36,18 @@
 
 
 -(void)composeDidDone {
-    if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
+    if([self.action.currentViewController isKindOfClass:[ComposeCreateChannelViewController class]]) {
         
-        [[Telegram rightViewController] showComposeCreateChannel:self.action];
+        [[Telegram rightViewController] showComposeWithAction:self.action];
+        
+    } else if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
+        
+        
         
     } else {
-        
         [self.delegate behaviorDidStartRequest];
         
         [self createChannel];
-        
     }
 }
 

@@ -9,29 +9,34 @@
 #import "GeneralSettingsBlockHeaderView.h"
 
 @interface GeneralSettingsBlockHeaderItem ()
-@property (nonatomic,assign,readonly) int rand;
+
 @end
 
 @implementation GeneralSettingsBlockHeaderItem
 
--(id)initWithObject:(id)object {
-    if(self = [super initWithObject:object]) {
-        
+
+
+
+
+-(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped {
+    if(self = [super init]) {
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:object withColor:GRAY_TEXT_COLOR];
+        [attr appendString:header withColor:GRAY_TEXT_COLOR];
         [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
         
         _header = attr;
-        _rand = arc4random();
+        self.height = height;
+        _isFlipped = flipped;
     }
     
     return self;
 }
 
--(NSUInteger)hash {
-    return _rand;
+-(Class)viewClass {
+    return [GeneralSettingsBlockHeaderView class];
 }
+
 
 @end
 
@@ -62,6 +67,9 @@
 }
 
 
+
+
+
 -(void)redrawRow {
     
     GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
@@ -74,10 +82,10 @@
     
     GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
     
-    NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - 200];
+    NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - item.xOffset*2];
     
-    [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - 200, s.height )];
-    [self.textField setFrameOrigin:NSMakePoint(100, item.isFlipped ? NSHeight(self.frame) - s.height : 0 )];
+    [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - item.xOffset*2, s.height )];
+    [self.textField setFrameOrigin:NSMakePoint(item.xOffset, item.isFlipped ? NSHeight(self.frame) - s.height : 0 )];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

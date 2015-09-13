@@ -10,10 +10,10 @@
 #import "GeneralSettingsRowItem.h"
 
 @interface GeneralSettingsRowItem ()
-@property (nonatomic,assign) int rand;
 @end
 
 @implementation GeneralSettingsRowItem
+
 
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description  height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback {
@@ -21,8 +21,7 @@
         _type = type;
         _callback = callback;
         _desc = description;
-        _height = height;
-        _rand = arc4random();
+        self.height = height;
         _stateback = stateback;
     }
     
@@ -38,8 +37,8 @@
 }
 
 
--(NSUInteger)hash {
-    return _rand;
+-(Class)viewClass {
+    return NSClassFromString(@"GeneralSettingsRowView");
 }
 
 @end
