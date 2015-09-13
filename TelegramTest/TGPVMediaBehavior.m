@@ -24,12 +24,18 @@
             
             
             if(self != nil) {
+                
+                list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PreviewObject *evaluatedObject, NSDictionary *bindings) {
+                    
+                    return ![[[(TL_localMessage *)evaluatedObject.media media] photo] isKindOfClass:[TL_photoEmpty class]];
+                    
+                }]];
+                
+                if(list.count == 0 && next)
+                    _state = _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
+                
                 [ASQueue dispatchOnStageQueue:^{
                     callback(list);
-                    
-                    if(list.count == 0 && next)
-                        _state = _conversation.type == DialogTypeSecretChat ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
-                    
                 }];
             }
        
@@ -89,8 +95,12 @@
        
        _request = nil;
        
-        if(callback)
-            callback(previewObjects);
+       [ASQueue dispatchOnMainQueue:^{
+           if(callback)
+               callback(previewObjects);
+       }];
+       
+       
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         

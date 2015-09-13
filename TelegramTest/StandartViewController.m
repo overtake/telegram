@@ -33,6 +33,10 @@
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
+}
+
 -(void)setFrameSize:(NSSize)newSize {
     
     
@@ -151,9 +155,6 @@
     
 }
 
--(BOOL)becomeFirstResponder {
-    return [self.searchTextField becomeFirstResponder];
-}
 
 -(void)showComposeMenu {
     
@@ -331,7 +332,7 @@
 }
 
 -(void)searchFieldFocus {
-    if(self.searchTextField.stringValue.length == 0)
+    if(self.searchTextField.stringValue.length == 0 && [self.searchTextField isFirstResponder])
         [self showRecentSearchItems];
 }
 

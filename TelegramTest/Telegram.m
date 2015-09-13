@@ -132,7 +132,7 @@ int maxBroadcastUsers() {
 }
 
 - (void)setAccountOffline:(BOOL)force {
-    if([SettingsArchiver checkMaskedSetting:OnlineForever])
+    if([SettingsArchiver checkMaskedSetting:OnlineForever]  || ![Storage isInitialized])
         return;
     
     if(force) {
@@ -166,7 +166,7 @@ int maxBroadcastUsers() {
 - (void)setAccountOnline {
     
     
-    if(![self canBeOnline]) {
+    if(![self canBeOnline] || ![Storage isInitialized]) {
         [self setAccountOffline:YES];
         return;
     }
@@ -174,7 +174,7 @@ int maxBroadcastUsers() {
     [self.accountOfflineStatusTimer invalidate];
     self.accountOfflineStatusTimer = nil;
     
-    if([[UsersManager currentUser] isOnline])
+    if([[UsersManager currentUser] isOnline] )
         return;
     
     

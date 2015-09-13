@@ -756,8 +756,14 @@ void exceptionHandler(NSException * exception)
     
     [TGPasslock appIncomeActive];
     
-    if(![TMViewController isModalActive])
+    if(![TMViewController isModalActive]) {
+        
+        if([Telegram isSingleLayout] && [[Telegram rightViewController].navigationViewController.currentController isKindOfClass:[StandartViewController class]])
+            return;
+        
         [[Telegram rightViewController] becomeFirstResponder];
+    }
+    
     else
         [[TMViewController modalView] becomeFirstResponder];
 }

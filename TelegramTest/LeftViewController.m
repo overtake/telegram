@@ -231,9 +231,31 @@ static const int bottomOffset = 58;
     [self.tabController setUnreadCount:count];
 }
 
+static TMViewController *changedController;
+
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
     [self.tabViewController showControllerByIndex:index];
     
+    if(![Telegram isSingleLayout]) {
+        if([self.tabViewController.currentController isKindOfClass:[AccountSettingsViewController class]]) {
+            
+            changedController = [Telegram rightViewController].navigationViewController.currentController;
+            
+            [[Telegram rightViewController] showGeneralSettings];
+        } else if([[Telegram rightViewController].navigationViewController.viewControllerStack indexOfObject:changedController] != NSNotFound) {
+            
+            NSUInteger idx = [[Telegram rightViewController].navigationViewController.viewControllerStack indexOfObject:changedController];
+            
+            [[Telegram rightViewController].navigationViewController.viewControllerStack removeObjectsInRange:NSMakeRange(idx, [Telegram rightViewController].navigationViewController.viewControllerStack.count - idx)];
+            
+            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:changedController != [[Telegram rightViewController] currentEmptyController]];
+            changedController = nil;
+            
+        }
+    }
+    
+    
+   
     
     [self setCenterBarViewText:item.title];
 }

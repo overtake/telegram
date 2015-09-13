@@ -149,6 +149,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
                                 [_queue dispatchOnQueue:^{
                                     
                                     [self updateStorageEncryptionKey];
+                                    [Storage updateOldEncryptionKey:md5Hash];
                                     
                                     [Storage initManagerWithCallback:^{
                                     
@@ -236,7 +237,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
             [keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
             
             [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
-            
         }
         
     }

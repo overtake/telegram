@@ -503,6 +503,7 @@
 		C28261E219926C62004AC73E /* TL_peerBroadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E119926C62004AC73E /* TL_peerBroadcast.m */; };
 		C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E8199291EF004AC73E /* TL_broadcast.m */; };
 		C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261EB1992974C004AC73E /* BroadcastManager.m */; };
+		C28C86771B98851300267C0B /* TGSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C28C86761B98851300267C0B /* TGSKeychain.m */; };
 		C291C7BC1836C39900ABBB50 /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7B91836C39900ABBB50 /* Background.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7BD1836C39900ABBB50 /* LBProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BB1836C39900ABBB50 /* LBProgressBar.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
@@ -948,6 +949,13 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
 		};
+		C2FF82D41B9DFE8D00DE2455 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -978,6 +986,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				C2FF82D61B9DFE9600DE2455 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2004,6 +2013,8 @@
 		C28261E8199291EF004AC73E /* TL_broadcast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_broadcast.m; sourceTree = "<group>"; };
 		C28261EA1992974C004AC73E /* BroadcastManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastManager.h; sourceTree = "<group>"; };
 		C28261EB1992974C004AC73E /* BroadcastManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastManager.m; sourceTree = "<group>"; };
+		C28C86751B98851300267C0B /* TGSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSKeychain.h; sourceTree = "<group>"; };
+		C28C86761B98851300267C0B /* TGSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSKeychain.m; sourceTree = "<group>"; };
 		C291C7B81836C39900ABBB50 /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
 		C291C7B91836C39900ABBB50 /* Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Background.m; sourceTree = "<group>"; };
 		C291C7BA1836C39900ABBB50 /* LBProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBProgressBar.h; sourceTree = "<group>"; };
@@ -2480,7 +2491,6 @@
 		CE23C38118C717D200AA6C78 /* MessageTableItemAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemAudio.m; sourceTree = "<group>"; };
 		CE29CA791801355200803E22 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		CE29CA7A1801355200803E22 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
-		CE46A25A1854C05900D6EF14 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE46A25B1854C09A00D6EF14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE4961C618034ACD000C3738 /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
 		CE4961C718034ACD000C3738 /* Crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Crypto.m; sourceTree = "<group>"; };
@@ -4890,6 +4900,8 @@
 				C2CBF5E41AF7CB42006BF90A /* TGS_MTNetwork.m */,
 				C2CBF5E61AF7CBD9006BF90A /* TGS_RPCRequest.h */,
 				C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */,
+				C28C86751B98851300267C0B /* TGSKeychain.h */,
+				C28C86761B98851300267C0B /* TGSKeychain.m */,
 			);
 			name = protocol;
 			sourceTree = "<group>";
@@ -5770,6 +5782,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C2FF82D51B9DFE8D00DE2455 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -6040,6 +6053,7 @@
 				C2CBF6891AFB73FE006BF90A /* TGS_ConversationRowItem.m in Sources */,
 				C2CBF6661AFB6A91006BF90A /* BTRImageView.m in Sources */,
 				C2CBF6671AFB6A91006BF90A /* BTRLabel.m in Sources */,
+				C28C86771B98851300267C0B /* TGSKeychain.m in Sources */,
 				C2CBF6B11AFB8584006BF90A /* TGSDownloadItem.m in Sources */,
 				C2CBF6681AFB6A91006BF90A /* BTRPopUpButton.m in Sources */,
 				C2CBF6D81AFBDB6F006BF90A /* TGLinearProgressView.m in Sources */,
@@ -6817,6 +6831,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C2FF82D51B9DFE8D00DE2455 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C2FF82D41B9DFE8D00DE2455 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -6856,7 +6878,6 @@
 		CE46A2571854B68F00D6EF14 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				CE46A25A1854C05900D6EF14 /* ru */,
 				CE46A25B1854C09A00D6EF14 /* en */,
 				C20D18B11945BE890095A906 /* es */,
 				C2002D14199E9ADA002A1915 /* de */,
@@ -7108,7 +7129,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d64a7853-38f5-4cd3-952a-7a98ed7c4b55";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;
@@ -7155,7 +7176,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d64a7853-38f5-4cd3-952a-7a98ed7c4b55";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
 				VALIDATE_PRODUCT = NO;

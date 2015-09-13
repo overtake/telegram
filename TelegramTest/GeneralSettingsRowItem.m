@@ -23,6 +23,7 @@
         _desc = description;
         self.height = height;
         _stateback = stateback;
+        _enabled = YES;
     }
     
     return self;

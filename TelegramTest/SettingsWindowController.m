@@ -20,6 +20,7 @@
 @interface SettingsWindowController ()<SettingsListener>
 
 @property (weak) IBOutlet NSButton *open_links_in_background;
+@property (weak) IBOutlet NSButton *convertEmoji;
 
 @property (weak) IBOutlet NSButton *auto_downlod_video_group;
 @property (weak) IBOutlet NSButton *auto_downlod_video_private;
@@ -104,6 +105,8 @@
  
     [self.open_links_in_background setTitle:NSLocalizedString(@"Settings.OpenLinksBackground", nil)];
     
+    [self.convertEmoji setTitle:NSLocalizedString(@"Settings.EmojiReplaces", nil)];
+    
     [self.auto_downlod_video_private setTitle:NSLocalizedString(@"Settings.PrivateChats", nil)];
     [self.auto_downlod_video_group setTitle:NSLocalizedString(@"Settings.Groups", nil)];
     
@@ -175,7 +178,7 @@
     
     self.blocked_table_view.removeButton = self.remove_from_block_button;
     
-    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 60)];
+    [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 30)];
     
     [self.security_settings_view setFrameOrigin:NSMakePoint(-5, self.security_settings_view.frame.size.height-70)];
     
@@ -228,6 +231,8 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     [self.sound_notifications_button setHidden:!([NSUserNotification class] && [NSUserNotificationCenter class])];
     
     [self.open_links_in_background setState:[SettingsArchiver checkMaskedSetting:OpenLinksInBackground]];
+    
+    [self.convertEmoji setState:[SettingsArchiver checkMaskedSetting:EmojiReplaces]];
     
     [self.auto_downlod_video_group setState:[SettingsArchiver checkMaskedSetting:AutoGroupVideo]];
     [self.auto_downlod_video_private setState:[SettingsArchiver checkMaskedSetting:AutoPrivateVideo]];
@@ -385,6 +390,9 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 
 - (IBAction)soundEffectCheckbox:(id)sender {
 [SettingsArchiver addOrRemoveSetting:SoundEffects];
+}
+- (IBAction)convertEmoji:(id)sender {
+    [SettingsArchiver addOrRemoveSetting:EmojiReplaces];
 }
 
 - (IBAction)openLinksInBackground:(id)sender {

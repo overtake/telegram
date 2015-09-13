@@ -607,7 +607,7 @@
                value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
             <PersistentString
-               value = "tags">
+               value = "self.type">
             </PersistentString>
             <PersistentString
                value = "self.type">
@@ -1386,6 +1386,9 @@
          contextName = "__34-[TGWebpageYTContainer mouseDown:]_block_invoke:TGWebpageYTContainer.m">
       </ContextState>
       <ContextState
+         contextName = "__51-[ChatHistoryController notificationDeleteMessage:]_block_invoke_2:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke212:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
@@ -1872,6 +1875,9 @@
       </ContextState>
       <ContextState
          contextName = "__open_card_block_invoke_2:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40-[TMCollectionPageController loadRemote]_block_invoke_2:TMCollectionPageController.m">
       </ContextState>
       <ContextState
          contextName = "__42-[TGSModalSenderView sendAsMedia:rowItem:]_block_invoke_2:TGSModalSenderView.m">
@@ -2626,7 +2632,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -2635,10 +2641,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3104,6 +3110,9 @@
                value = "params[@&quot;domain&quot;]]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">

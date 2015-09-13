@@ -24,8 +24,11 @@ typedef enum
 
 @property (nonatomic,strong,readonly) id (^stateback)(GeneralSettingsRowItem *item);
 
+@property (nonatomic,strong) NSColor *textColor;
+
 @property (nonatomic,strong) NSMenu *menu;
 
+@property (nonatomic,assign, getter=isEnabled) BOOL enabled;
 
 @property (nonatomic,strong,readonly,getter=description) NSString *desc;
 @property (nonatomic,strong) NSString *subdesc;

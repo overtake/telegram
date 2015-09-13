@@ -42,6 +42,9 @@
 
 -(BOOL)loadRecentSearchItems {
     
+    if(![Storage isInitialized])
+        return NO;
+    
     __block NSArray *peerIds;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
@@ -56,17 +59,30 @@
     [self removeAllItems:NO];
     [self reloadData];
 
+    if(peerIds.count > 0) {
+        NSArray *conversations = [[Storage manager] conversationsWithIds:peerIds];
+        
+        conversations = [conversations sortedArrayUsingComparator:^NSComparisonResult(TL_conversation *obj1, TL_conversation *obj2) {
+            
+            NSNumber *idx1 = @([peerIds indexOfObject:@(obj1.peer_id)]);
+            NSNumber *idx2 = @([peerIds indexOfObject:@(obj2.peer_id)]);
+            
+            return [idx1 compare:idx2];
+            
+        }];
+        
+        [conversations enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+            
+            TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
+            
+            [self addItem:item tableRedraw:NO];
+            
+        }];
+        
+        [self reloadData];
+    }
     
     
-    [[[Storage manager] conversationsWithIds:peerIds] enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
-        
-        TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
-        
-        [self addItem:item tableRedraw:NO];
-        
-    }];
-    
-    [self reloadData];
     
     return self.count > 0;
     

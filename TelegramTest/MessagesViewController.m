@@ -262,6 +262,7 @@
 }
 
 - (void)loadView {
+
     [super loadView];
     
     _replyMsgsStack = [[NSMutableArray alloc] init];

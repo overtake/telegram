@@ -100,11 +100,13 @@
     
     [self.descriptionField setStringValue:item.description];
     
+    [self.descriptionField setTextColor:item.textColor ? item.textColor : TEXT_COLOR];
+    
     [self.nextDesc setStringValue:item.subdesc];
     
     [self.nextDesc sizeToFit];
     
-    
+    [self.switchControl setEnabled:item.isEnabled];
     
     [self.switchControl setDidChangeHandler:^(BOOL isOn) {
         item.callback(item);

@@ -45,7 +45,7 @@
 -(BOOL)indexIsSelected:(int)index;
 
 
-
+-(void)open_link:(NSString *)link itsReal:(BOOL)itsReal;
 
 
 // its private not for use

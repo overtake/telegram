@@ -10,7 +10,7 @@
 #import <MTProtoKit/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
-#import "TGKeychain.h"
+#import "TGSKeychain.h"
 #import "NSData+Extensions.h"
 #import "NSMutableData+Extension.h"
 
@@ -20,6 +20,7 @@
 #import "TLApi.h"
 #import "CMath.h"
 #import "TGSAppManager.h"
+#import "TGSKeychain.h"
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -65,7 +66,7 @@
     ASQueue *_queue;
     TGTimer *_globalTimer;
     NSMutableArray *_dispatchTimers;
-    TGKeychain *_keychain;
+    TGSKeychain *_keychain;
 }
 
 @end
@@ -207,7 +208,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
         
         if(isset) {
             
-            TGKeychain *keychain = [self nKeychain];
+            TGSKeychain *keychain = [self nKeychain];
             
             [keychain setNotEncryptedKeychain:YES];
             
@@ -229,8 +230,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
     return [_mtProto messageServiceQueue];
 }
 
--(TGKeychain *)nKeychain {
-    return [TGKeychain keychainWithName:@"ru.keepcoder.telegram"];
+-(TGSKeychain *)nKeychain {
+    return [TGSKeychain keychainWithName:@"ru.keepcoder.telegram"];
 }
 
 
@@ -238,7 +239,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)_keychain;
+        TGSKeychain *keychain = (TGSKeychain *)_keychain;
         
         [keychain updatePasscodeHash:md5Hash save:YES];
         
@@ -253,7 +254,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)_keychain;
+        TGSKeychain *keychain = (TGSKeychain *)_keychain;
         
         result = [md5Hash isEqualToData:[keychain md5PasscodeHash]];
         
@@ -269,7 +270,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     [_queue dispatchOnQueue:^{
         
-        TGKeychain *keychain = (TGKeychain *)_keychain;
+        TGSKeychain *keychain = (TGSKeychain *)_keychain;
         
         result = [keychain passcodeIsEnabled];
         
@@ -280,7 +281,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
 }
 
--(void)startWithKeychain:(TGKeychain *)keychain {
+-(void)startWithKeychain:(TGSKeychain *)keychain {
     
     [_context setKeychain:keychain];
     
