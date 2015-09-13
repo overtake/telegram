@@ -8,7 +8,6 @@
 
 #import "ChannelInfoHeaderView.h"
 #import "UserInfoParamsView.h"
-
 @interface ChannelInfoHeaderView ()
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
@@ -26,6 +25,7 @@
 
 @property (nonatomic,strong) TMView *editAboutContainer;
 
+@property (nonatomic,strong) TMTextField *linkTextField;
 @end
 
 @implementation ChannelInfoHeaderView
@@ -102,18 +102,24 @@
         
         
         self.linkEditButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.EditLink", nil) tapBlock:^{
+                        
             
-            [self.controller setType:ChatInfoViewControllerNormal];
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
             
-            [[Telegram rightViewController] showUserNameControllerWithChannel:(TL_channel *)self.controller.chat completionHandler:^{
-                [self reload];
-                [self.controller.navigationViewController goBackWithAnimation:YES];
-            }];
+            action.result = [[ComposeResult alloc] init];
+            
+            action.result.singleObject = self.controller.chat;
+            
+            [[Telegram rightViewController] showComposeChangeUserName:action];
+            
             
         }];
         
         
-       
+        self.linkTextField = [TMTextField defaultTextField];
+        
+        [self.linkTextField setFont:TGSystemFont(13)];
+        [self.linkTextField setTextColor:GRAY_TEXT_COLOR];
         
         
         [self.setGroupPhotoButton.textButton setStringValue:NSLocalizedString(@"Profile.SetChannelPhoto", nil)];
@@ -159,6 +165,20 @@
             MTLog(@"full chat is not loading");
             return;
         }
+        
+        
+        if(self.controller.chat.username.length > 0) {
+            [self.linkTextField setStringValue:[NSString stringWithFormat:@"/%@",self.controller.chat.username]];
+            [self.linkTextField sizeToFit];
+            [self.linkEditButton setRightContainer:self.linkTextField];
+        } else {
+            [self.linkEditButton setRightContainer:nil];
+        }
+        
+        
+        
+        
+        
         
         [self.avatarImageView setChat:chat];
         [self.avatarImageView rebuild];
@@ -364,7 +384,7 @@
 -(void)setType:(ChatInfoViewControllerType)type {
     [super setType:type];
     
-    [self rebuildOrigins];
+    [self reload];
 }
 
 

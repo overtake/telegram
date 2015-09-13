@@ -14,8 +14,14 @@
     [super loadView];
     self.headerView = [[ChannelInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 350)];
     
-    
 
+}
+
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self setType:self.type];
 }
 
 -(void)save {
@@ -24,6 +30,8 @@
 
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
+    
+    self.type = ChatInfoViewControllerNormal;
     
     [self.rightNavigationBarView setHidden:!self.chat.dialog.canEditConversation];
 }

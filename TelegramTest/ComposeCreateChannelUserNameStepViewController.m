@@ -29,7 +29,7 @@
     
     [_observer setWillNeedSaveUserName:^(NSString *userName) {
         
-        if(!(userName.length == 0 && weakSelf.observer.defaultUserName == nil)) {
+        if(!(userName.length == 0 && weakSelf.observer.defaultUserName == nil) && ![userName isEqualToString:weakSelf.observer.defaultUserName]) {
             [weakSelf showModalProgress];
             
             [[ChatsManager sharedManager] updateChannelUserName:userName channel:weakSelf.action.result.singleObject completeHandler:^(TL_channel *channel) {

@@ -148,7 +148,8 @@
     [[self.textView textView].cell setPlaceholderAttributedString:str];
 
     
-    [self.textView.textView setStringValue:@""];
+    [self.textView.textView setStringValue:oberser.defaultUserName];
+    self.checkedUserName = oberser.defaultUserName;
     
     [self updateChecker];
     
@@ -163,7 +164,7 @@
 
 
 - (void)performEnter {
-    if((self.isRemoteChecked && ![[self defaultUsername] isEqualToString:self.checkedUserName]) || ([self defaultUsername] == nil && self.checkedUserName.length == 0)) {
+    if([self accept]) {
         [self.textView.textView resignFirstResponder];
         if(self.oberser.willNeedSaveUserName != nil) {
             self.oberser.willNeedSaveUserName(self.textView.textView.stringValue);
@@ -171,20 +172,20 @@
     }
 }
 
+-(BOOL)accept {
+    return [[self defaultUsername] isEqualToString:self.textView.textView.stringValue] || (self.isRemoteChecked && self.isSuccessChecked) || self.textView.textView.stringValue.length == 0;
+}
+
 -(void)updateSaveButton {
     
     
     if(self.oberser.didChangedUserName != nil) {
-        self.oberser.didChangedUserName(self.textView.textView.stringValue,(![[self defaultUsername] isEqualToString:self.textView.textView.stringValue] && !((self.textView.textView.stringValue.length < 5) || (!self.isRemoteChecked || !self.isSuccessChecked))) || self.textView.textView.stringValue.length == 0);
+        self.oberser.didChangedUserName(self.textView.textView.stringValue,[self accept]);
     }
     
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {
-    
-    
-    [self updateSaveButton];
-    
     
     if((self.textView.textView.stringValue.length >= 5 && [self isNumberValid]) || self.textView.textView.stringValue.length == 0) {
         [self updateChecker];
@@ -193,6 +194,9 @@
         [self.progressView stopAnimation:self];
         [self.successView setHidden:YES];
         
+        self.isRemoteChecked = NO;
+        self.isSuccessChecked = NO;
+
         
         if(![self isNumberValid]) {
             [self setState:NSLocalizedString(@"USERNAME_CANT_FIRST_NUMBER", nil) color:[NSColor redColor]];
@@ -202,6 +206,7 @@
         
     }
     
+     [self updateSaveButton];
     
 }
 
@@ -226,6 +231,8 @@
         
         [self setState:nil color:nil];
         
+        [self updateSaveButton];
+        
     } else if(![self.lastUserName isEqualToString:self.textView.textView.stringValue] && self.textView.textView.stringValue.length != 0) {
         
         if(!self.timer) {
@@ -245,7 +252,14 @@
                 if(self.request)
                     [self.request cancelRequest];
                 
-                NSString *userNameToCheck = self.textView.textView.stringValue;
+                
+                if([[self defaultUsername] isEqualToString:self.textView.textView.stringValue])
+                {
+                    [self updateChecker];
+                    return;
+                }
+                
+                NSString *userNameToCheck = self.lastUserName;
                 
                 
                 
