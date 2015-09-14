@@ -75,10 +75,8 @@
             
             if(!_replyMessage)
             {
-                _replyMessage = [[MessagesManager sharedManager] find:self.reply_to_msg_id];
-                
                 if(!_replyMessage)
-                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id];
+                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id inChannel:[self.to_id isKindOfClass:[TL_peerChannel class]] ? self.to_id.channel_id : 0];
                 
                 if(_replyMessage)
                 {

@@ -204,7 +204,7 @@ static NSString *kInputTextForPeers = @"kInputTextForPeers";
             [db executeUpdate:@"CREATE INDEX if not exists fake_id_idx ON messages(fake_id)"];
         }
         
-        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer)"];
+        [db executeUpdate:@"create table if not exists channel_messages (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer)"];
         
         
         // channel messages indexes
@@ -862,24 +862,42 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 -(TL_localMessage *)messageById:(int)msgId {
+    return [self messageById:msgId inChannel:0];
+}
+
+-(TL_localMessage *)messageById:(int)msgId inChannel:(int)channel_id {
+    
     __block TL_localMessage *message;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where n_id = %d",msgId];
+        
+        if(channel_id != 0)
+        {
+            sql = [NSString stringWithFormat:@"select serialized,flags,views,pts from channel_messages where n_id = %ld",channelMsgId(msgId, channel_id)];
+        }
+        
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
         while ([result next]) {
             message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            message.flags = -1;
-            message.message = [result stringForColumn:@"message_text"];
             message.flags = [result intForColumn:@"flags"];
+            
+            if([message.to_id isKindOfClass:[TL_peerChannel class]]) {
+                message.pts = [result intForColumn:@"pts"];
+                message.views = [result intForColumn:@"views"];
+            } else {
+                message.message = [result stringForColumn:@"message_text"];
+            }
+            
         }
         [result close];
-
+        
     }];
     
     return message;
-
+    
 }
 
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q  {

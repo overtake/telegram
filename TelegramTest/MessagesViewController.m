@@ -2165,12 +2165,18 @@ static NSTextAttachment *headerMediaIcon() {
             [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
         };
         
-        TL_localMessage *msg = [[Storage manager] messageById:messageId];
+        TL_localMessage *msg = [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
         
         
         if(!msg) {
             
-            [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
+            id request = [TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]];
+            
+            if(self.conversation.type == DialogTypeChannel) {
+                request = [TLAPI_messages_getChannelMessages createWithPeer:self.conversation.inputPeer n_id:[@[@(messageId)] mutableCopy]];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
                 
                 if(response.messages.count > 0) {
                     TLMessage *msg = response.messages[0];

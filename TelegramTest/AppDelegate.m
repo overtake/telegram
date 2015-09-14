@@ -173,7 +173,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue]];
+            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
                 if(msg)

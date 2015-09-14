@@ -162,6 +162,9 @@ extern NSString *const RECENT_SEARCH;
 -(void)validateChannelMessages:(NSArray *)messages;
 
 
+-(TL_localMessage *)messageById:(int)msgId inChannel:(int)channel_id;
+
+
 -(TL_localMessage *)messageById:(int)msgId;
 -(void)insertMedia:(TL_localMessage *)message;
 
