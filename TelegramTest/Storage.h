@@ -229,12 +229,6 @@ extern NSString *const RECENT_SEARCH;
 
 +(void)updateEncryptionKey:(NSString *)key;
 
-
-
--(void)addOrUpdateChannelWithPts:(int)channel_id pts:(int)pts;
--(void)removeChannelUpdate:(int)channel_id;
--(NSDictionary *)channelUpdates;
-
 +(void)updateOldEncryptionKey:(NSString *)key;
 // signal requests
 +(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
