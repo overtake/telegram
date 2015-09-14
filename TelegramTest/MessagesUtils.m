@@ -178,12 +178,9 @@
             //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
             //  else
             
-            if(message.from_id == 0) {
-                chatUserNameString = message.chat.title;
-            } else {
-                if(message.conversation.type != DialogTypeSecretChat)
-                    chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
-            }
+             if(message.conversation.type != DialogTypeSecretChat && message.conversation.type != DialogTypeChannel)
+                chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
+
             
             
             TLMessageAction *action = message.action;
@@ -376,7 +373,7 @@
     
     NSRange start;
     //  if(user != [UsersManager currentUser]) {
-    start = [attributedString appendString:message.from_id == 0 ? message.chat.title : [user fullName] withColor:LINK_COLOR];
+    start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
     if(message.from_id > 0) {
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];

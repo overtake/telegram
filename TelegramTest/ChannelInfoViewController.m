@@ -33,7 +33,12 @@
     
     self.type = ChatInfoViewControllerNormal;
     
-    [self.rightNavigationBarView setHidden:!self.chat.dialog.canEditConversation];
+    [self.rightNavigationBarView setHidden:!self.chat.dialog.chat.isAdmin];
+}
+
+-(void)buildRightView {
+    [super buildRightView];
+     [self.rightNavigationBarView setHidden:!self.chat.dialog.chat.isAdmin];
 }
 
 @end

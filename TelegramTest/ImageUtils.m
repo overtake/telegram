@@ -213,6 +213,7 @@ CACHE_IMAGE(SearchDown);
 
 CACHE_IMAGE(ZoomIn);
 CACHE_IMAGE(ZoomOut);
+CACHE_IMAGE(Camera);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

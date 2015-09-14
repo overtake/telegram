@@ -138,7 +138,7 @@
         if(self.type == DialogTypeChannel) {
             
             if(self.isInvisibleChannel) {
-                return NSLocalizedString(@"Conversation.Action.JointToChannel", nil);
+                return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
             }
             
             if(self.chat.isBroadcast) {

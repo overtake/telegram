@@ -241,6 +241,8 @@
         
         int bp = 0;
         
+    } else if([update isKindOfClass:[TL_updateMessageID class]]) {
+        [[MTNetwork instance].updateService.proccessor addUpdate:update];
     }
 
 }

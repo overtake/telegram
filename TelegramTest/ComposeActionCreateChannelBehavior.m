@@ -108,15 +108,37 @@
                 
                 [conversation save];
                 
-                [self.delegate behaviorDidEndRequest:response];
                 
-                [[Telegram rightViewController] clearStack];
+                dispatch_block_t block = ^{
+                    [self.delegate behaviorDidEndRequest:response];
+                    
+                    [[Telegram rightViewController] clearStack];
+                    
+                    [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
+                    
+                    self.action.result.singleObject = channel;
+                    
+                    [[Telegram rightViewController] showComposeChangeUserName:self.action];
+                };
                 
-                [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
+                if([self.action.result.stepResult.firstObject count] == 2) {
+                    
+                    [RPCRequest sendRequest:[TLAPI_messages_editChatAbout createWithChat_id:channel.inputPeer about:self.action.result.stepResult.firstObject[1]] successHandler:^(id request, id response) {
+                        
+                        
+                        fullChat.about = self.action.result.stepResult.firstObject[1];
+                        [[Storage manager] insertFullChat:fullChat completeHandler:nil];
+                        
+                        block();
+                    } errorHandler:^(id request, RpcError *error) {
+                        block();
+                    } timeout:10];
+                    
+                } else {
+                    block();
+                }
                 
-                self.action.result.singleObject = channel;
                 
-                [[Telegram rightViewController] showComposeChangeUserName:self.action];
             }];
         
         }

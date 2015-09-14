@@ -160,7 +160,19 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 
 - (NSAttributedString *)statusForMessagesHeaderView {
+    
+    
+
+    
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    
+    if([self isKindOfClass:[TL_channel class]])
+    {
+        [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+        
+        return attributedString;
+    }
+    
     [attributedString appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
     
     int online = [[FullChatManager sharedManager] getOnlineCount:self.n_id];

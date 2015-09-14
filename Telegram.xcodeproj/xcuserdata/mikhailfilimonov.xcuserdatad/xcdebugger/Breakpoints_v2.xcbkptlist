@@ -121,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/ChannelFilter.m"
-            timestampString = "463774611.663678"
+            filePath = "TelegramTest/TMNavigationController.m"
+            timestampString = "463832948.484102"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "-remoteRequest:max_id:hole:callback:"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "-pushViewController:animated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -137,13 +137,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TMNavigationController.m"
-            timestampString = "463832948.484102"
+            filePath = "TelegramTest/ComposeActionCreateChannelBehavior.m"
+            timestampString = "463855650.037461"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
-            landmarkName = "-pushViewController:animated:"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "-createChannel"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

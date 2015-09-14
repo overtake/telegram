@@ -208,7 +208,7 @@
 -(void)rebuildOrigins {
     
     [self.exportChatInvite setHidden:YES];
-    [self.sharedMediaButton setHidden:YES];
+    [self.sharedMediaButton setHidden:NO];
     [self.filesMediaButton setHidden:YES];
     [self.sharedLinksButton setHidden:YES];
     
@@ -230,6 +230,11 @@
     
     [self.notificationView setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
+    
+    yOffset+=42;
+    
+    
+    [self.sharedMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
     yOffset+=42;
     

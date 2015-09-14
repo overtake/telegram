@@ -128,6 +128,8 @@
         
         
         [_progressIndicator setFrameOrigin:NSMakePoint(NSMinX(_progressIndicator.frame), NSMaxY(_textField.frame) + 10)];
+        
+        [_successImageView setFrameOrigin:NSMakePoint(NSMinX(_successImageView.frame), NSMaxY(_textField.frame) + 5)];
 
     } else {
         [_progressContainer setFrameSize:NSMakeSize(80, 80)];

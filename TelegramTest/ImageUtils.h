@@ -204,6 +204,7 @@ CACHE_IMAGE(SearchDown);
 
 CACHE_IMAGE(ZoomIn);
 CACHE_IMAGE(ZoomOut);
+CACHE_IMAGE(Camera);
 @interface ImageUtils : NSObject
 
 

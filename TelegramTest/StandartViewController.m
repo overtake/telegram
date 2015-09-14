@@ -12,7 +12,6 @@
 #import "ComposeActionBroadcastBehavior.h"
 #import "TGRecentSearchTableView.h"
 #import "ComposeActionCreateChannelBehavior.h"
-#import "ComposeActionCreatePublicChannelBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
