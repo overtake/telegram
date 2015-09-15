@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 14.09.15.
+//  Auto created by Mikhail Filimonov on 15.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -385,6 +385,12 @@
 @end
 	
 @interface TLChannelParticipant : TLObject
+@end
+	
+@interface TLChannelParticipantsFilter : TLObject
+@end
+	
+@interface TLChannelParticipantRole : TLObject
 @end
 	
 @interface TLmessages_ChannelParticipants : TLObject
@@ -1595,6 +1601,9 @@
 @interface TL_updateChannelTooLong : TLUpdate<NSCoding>
 +(TL_updateChannelTooLong*)createWithChannel_id:(int)channel_id;
 @end
+@interface TL_updateChannel : TLUpdate<NSCoding>
++(TL_updateChannel*)createWithChannel_id:(int)channel_id;
+@end
 @interface TL_updateChannelGroup : TLUpdate<NSCoding>
 +(TL_updateChannelGroup*)createWithChannel_id:(int)channel_id group:(TLMessageGroup*)group;
 @end
@@ -2604,6 +2613,40 @@
 
 @interface TL_channelParticipant : TLChannelParticipant<NSCoding>
 +(TL_channelParticipant*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@end
+@interface TL_channelParticipantModerator : TLChannelParticipant<NSCoding>
++(TL_channelParticipantModerator*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@end
+@interface TL_channelParticipantPublisher : TLChannelParticipant<NSCoding>
++(TL_channelParticipantPublisher*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@end
+@interface TL_channelParticipantCreator : TLChannelParticipant<NSCoding>
++(TL_channelParticipantCreator*)createWithUser_id:(int)user_id;
+@end
+	
+@interface TLChannelParticipantsFilter()
+
+@end
+
+@interface TL_channelParticipantsRecent : TLChannelParticipantsFilter<NSCoding>
++(TL_channelParticipantsRecent*)create;
+@end
+@interface TL_channelParticipantsAdmins : TLChannelParticipantsFilter<NSCoding>
++(TL_channelParticipantsAdmins*)create;
+@end
+	
+@interface TLChannelParticipantRole()
+
+@end
+
+@interface TL_channelRoleEmpty : TLChannelParticipantRole<NSCoding>
++(TL_channelRoleEmpty*)create;
+@end
+@interface TL_channelRoleModerator : TLChannelParticipantRole<NSCoding>
++(TL_channelRoleModerator*)create;
+@end
+@interface TL_channelRolePublisher : TLChannelParticipantRole<NSCoding>
++(TL_channelRolePublisher*)create;
 @end
 	
 @interface TLmessages_ChannelParticipants()

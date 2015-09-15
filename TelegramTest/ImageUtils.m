@@ -214,6 +214,11 @@ CACHE_IMAGE(SearchDown);
 CACHE_IMAGE(ZoomIn);
 CACHE_IMAGE(ZoomOut);
 CACHE_IMAGE(Camera);
+
+CACHE_IMAGE(ChannelMessageAsAdmin);
+CACHE_IMAGE(ChannelMessageAsAdminHighlighted);
+CACHE_IMAGE(ChannelViews);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

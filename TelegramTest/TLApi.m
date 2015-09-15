@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 14.09.15..
+//  Auto created by Mikhail Filimonov on 15.09.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1960,17 +1960,19 @@
 @end
 
 @implementation TLAPI_messages_createChannel
-+(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title users:(NSMutableArray*)users {
++(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users {
     TLAPI_messages_createChannel* obj = [[TLAPI_messages_createChannel alloc] init];
     obj.flags = flags;
 	obj.title = title;
+	obj.about = about;
 	obj.users = users;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-399443765];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2135216835];
 	[stream writeInt:self.flags];
 	[stream writeString:self.title];
+	[stream writeString:self.about];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2109,18 +2111,37 @@
 @end
 
 @implementation TLAPI_messages_getChannelParticipants
-+(TLAPI_messages_getChannelParticipants*)createWithChat_id:(TLInputChat*)chat_id offset:(int)offset limit:(int)limit {
++(TLAPI_messages_getChannelParticipants*)createWithChat_id:(TLInputChat*)chat_id filter:(TLChannelParticipantsFilter*)filter offset:(int)offset limit:(int)limit {
     TLAPI_messages_getChannelParticipants* obj = [[TLAPI_messages_getChannelParticipants alloc] init];
     obj.chat_id = chat_id;
+	obj.filter = filter;
 	obj.offset = offset;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1249319286];
+	SerializedData* stream = [ClassStore streamWithConstuctor:950131505];
 	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[ClassStore TLSerialize:self.filter stream:stream];
 	[stream writeInt:self.offset];
 	[stream writeInt:self.limit];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_editChatAdmin
++(TLAPI_messages_editChatAdmin*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id role:(TLChannelParticipantRole*)role {
+    TLAPI_messages_editChatAdmin* obj = [[TLAPI_messages_editChatAdmin alloc] init];
+    obj.chat_id = chat_id;
+	obj.user_id = user_id;
+	obj.role = role;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1647919216];
+	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[ClassStore TLSerialize:self.role stream:stream];
 	return [stream getOutput];
 }
 @end

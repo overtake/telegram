@@ -12,9 +12,12 @@
 
 
 
--(void)addSupportMessages:(NSArray *)supportMessages;
++(void)addSupportMessages:(NSArray *)supportMessages;
 
--(TL_localMessage *)supportMessage:(int)n_id;
++(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id;
+
+
+
 
 -(TL_localMessage *)findWithRandomId:(long)random_id;
 

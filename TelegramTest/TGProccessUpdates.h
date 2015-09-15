@@ -18,9 +18,6 @@
 
 -(void)resetStateAndSync;
 
-+(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages asyncCompletionHandler:(dispatch_block_t)completionHandler;
-+(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages;
-
 
 -(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback;
 

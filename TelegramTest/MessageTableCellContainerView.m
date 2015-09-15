@@ -70,8 +70,8 @@
         [self.rightView.layer addSublayer:self.dateLayer];
         
         
-        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 20, NSHeight(self.rightView.frame))];
-        
+        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 35, NSHeight(self.rightView.frame))];
+                
         
         [self.rightView addSubview:self.stateLayer];
         
@@ -729,7 +729,8 @@ static BOOL dragAction = NO;
     
     [self.dateLayer setString:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + 32, 18)];
+    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) , 18)];
     
     [self.rightView setToolTip:self.item.fullDate];
     

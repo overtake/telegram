@@ -166,7 +166,7 @@ NSString *const tableUsers = @"users";
 NSString *const tableContacts = @"contacts";
 NSString *const tableChatsFull = @"chats_full_new";
 NSString *const tableImportedContacts = @"imported_contacts";
-NSString *const tableUEncryptedChats = @"encrypted_chats";
+NSString *const tableEncryptedChats = @"encrypted_chats";
 NSString *const tableSharedMedia = @"sharedmedia_v2";
 NSString *const tableSelfDestruction = @"self_destruction";
 NSString *const tableUserPhotos = @"user_photos";
@@ -176,7 +176,7 @@ NSString *const tableFiles = @"files";
 NSString *const tableBroadcasts = @"broadcasts";
 NSString *const tableOutSecretActions = @"out_secret_actions";
 NSString *const tableInSecretActions = @"in_secret_actions";
-NSString *const tableSupportMessages = @"support_messages";
+NSString *const tableSupportMessages = @"support_messages2";
 NSString *const tableMessageHoles = @"message_holes";
 
 
@@ -220,111 +220,112 @@ NSString *const tableMessageHoles = @"message_holes";
         res = [db setKey:encryptionKey];
         
         
-        [db executeUpdate:@"create table if not exists ? (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)",tableMessages];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)",tableMessages]];
         
         //messages indexes
         {
-            [db executeUpdate:@"CREATE INDEX if not exists select_messages_idx ON ?(peer_id,date)",tableMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists peer_idx ON ?(peer_id)",tableMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists date_idx ON ?(date)",tableMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists random_idx ON ?(random_id)",tableMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists peer_flags_idx ON ?(peer_id,flags)",tableMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists fake_id_idx ON ?(fake_id)",tableMessages];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists select_messages_idx ON %@(peer_id,date)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists peer_idx ON %@(peer_id)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists date_idx ON %@(date)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists random_idx ON %@(random_id)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists peer_flags_idx ON %@(peer_id,flags)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists fake_id_idx ON %@(fake_id)",tableMessages]];
         }
         
         
-        [db executeUpdate:@"create table if not exists ? (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer)",tableChannelMessages];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer)",tableChannelMessages]];
         
         
         // channel messages indexes
         {
-            [db executeUpdate:@"CREATE INDEX if not exists cm_n_id_idx ON ?(n_id)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_select_messages_idx ON ?(peer_id,date)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_peer_idx ON ?(peer_id)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_date_idx ON ?(date)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_random_idx ON ?(random_id)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_peer_flags_idx ON ?(peer_id,flags)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_fake_idx ON ?(fake_id)",tableChannelMessages];
-            [db executeUpdate:@"CREATE INDEX if not exists cm_pts_idx ON ?(pts)",tableChannelMessages];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_n_id_idx ON %@(n_id)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_select_messages_idx ON %@(peer_id,date)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_peer_idx ON %@(peer_id)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_date_idx ON %@(date)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_random_idx ON %@(random_id)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_peer_flags_idx ON %@(peer_id,flags)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_fake_idx ON %@(fake_id)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_pts_idx ON %@(pts)",tableChannelMessages]];
         }
         
         
-        [db executeUpdate:@"create table if not exists ? (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer)",tableDialogs];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count unsigned integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer)",tableDialogs]];
         
         
         if (![db columnExists:@"read_inbox_max_id" inTableWithName:tableDialogs])
         {
-            [db executeUpdate:@"ALTER TABLE ? ADD COLUMN read_inbox_max_id integer",tableDialogs];
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN read_inbox_max_id integer",tableDialogs]];
         }
         
         
         //dialogs indexes
         {
-            [db executeUpdate:@"CREATE INDEX if not exists c_l_idx ON ?(last_real_message_date)",tableDialogs];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_l_idx ON %@(last_real_message_date)",tableDialogs]];
             
         }
         
         
-       [db executeUpdate:@"create table if not exists ? (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count unsigned integer,last_message_date integer, notify_settings blob, last_marked_message integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, unread_important_count integer, pts integer, is_invisible integer)",tableChannelDialogs];
+       [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count unsigned integer,last_message_date integer, notify_settings blob, last_marked_message integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, unread_important_count integer, pts integer, is_invisible integer)",tableChannelDialogs]];
         
         
         
         
-        [db executeUpdate:@"create table if not exists chats (n_id INTEGER PRIMARY KEY, serialized blob)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY, serialized blob)",tableChats]];
         
         
         
-        [db executeUpdate:@"create table if not exists update_state (seq integer, pts integer, date integer, qts integer, pts_count integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (seq integer, pts integer, date integer, qts integer, pts_count integer)",tableUpdateState]];
         
         
         
-        [db executeUpdate:@"CREATE TABLE IF NOT EXISTS users (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer)",tableUsers]];
         
-        [db executeUpdate:@"create table if not exists contacts (user_id INTEGER PRIMARY KEY,mutual integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists chats_full_new (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)"];
-        
-        [db executeUpdate:@"create table if not exists imported_contacts (hash blob primary key, hashObject string, user_id integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (user_id INTEGER PRIMARY KEY,mutual integer)",tableContacts]];
         
         
-        [db executeUpdate:@"create table if not exists encrypted_chats (chat_id integer primary key,serialized blob)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY, last_update_time integer, serialized blob)",tableChatsFull]];
         
-        [db executeUpdate:@"create table if not exists sharedmedia_v2 (random_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer, message_id integer)"];
-        
-        
-        [db executeUpdate:@"CREATE INDEX if not exists sm_peer_message_idx ON sharedmedia_v2(peer_id,message_id)"];
-        [db executeUpdate:@"CREATE INDEX if not exists sm_filter_mask_idx ON sharedmedia_v2(filter_mask)"];
-        [db executeUpdate:@"CREATE INDEX if not exists sm_random_id_idx ON sharedmedia_v2(message_id)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (hash blob primary key, hashObject string, user_id integer)",tableImportedContacts]];
         
         
-        [db executeUpdate:@"create table if not exists self_destruction (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (chat_id integer primary key,serialized blob)",tableEncryptedChats]];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (random_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer, message_id integer)",tableSharedMedia]];
         
         
-        [db executeUpdate:@"create table if not exists user_photos (id blob primary key, user_id integer, serialized blob,date integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_peer_message_idx ON %@(peer_id,message_id)",tableSharedMedia]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_filter_mask_idx ON %@(filter_mask)",tableSharedMedia]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_random_id_idx ON %@(message_id)",tableSharedMedia]];
         
         
-        
-        [db executeUpdate:@"create table if not exists blocked_users (user_id integer primary key, date integer)"];
-        
-        [db executeUpdate:@"create table if not exists tasks (task_id integer primary key, params blob, extender blob)"];
-        
-        [db executeUpdate:@"create table if not exists files (hash string PRIMARY KEY, serialized blob)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)",tableSelfDestruction]];
         
         
-        [db executeUpdate:@"create table if not exists broadcasts (n_id integer PRIMARY KEY, serialized blob, title string, date integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists out_secret_actions (action_id integer primary key, message_data blob, chat_id integer, senderClass string, out_seq_no integer, layer integer)"];
-        
-        [db executeUpdate:@"create table if not exists in_secret_actions (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)"];
-        
-        
-        [db executeUpdate:@"create table if not exists support_messages (n_id INTEGER PRIMARY KEY, serialized blob)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (id blob primary key, user_id integer, serialized blob,date integer)",tableUserPhotos]];
         
         
         
-        [db executeUpdate:@"create table if not exists message_holes (unique_id integer primary key, peer_id integer, min_id integer, max_id integer, date integer,count integer, type integer)"];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (user_id integer primary key, date integer)",tableBlockedUsers]];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (task_id integer primary key, params blob, extender blob)",tableTasks]];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (hash string PRIMARY KEY, serialized blob)",tableFiles]];
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id integer PRIMARY KEY, serialized blob, title string, date integer)",tableBroadcasts]];
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (action_id integer primary key, message_data blob, chat_id integer, senderClass string, out_seq_no integer, layer integer)",tableOutSecretActions]];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (action_id integer primary key, message_data blob, file_data blob, chat_id integer, date integer, in_seq_no integer, layer integer)",tableInSecretActions]];
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, serialized blob)",tableSupportMessages]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sp_n_id_idx ON %@(n_id)",tableSupportMessages]];
+        
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (unique_id integer primary key, peer_id integer, min_id integer, max_id integer, date integer,count integer, type integer)",tableMessageHoles]];
         
         
         
@@ -666,14 +667,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        [supportIds addObject:@([obj reply_to_msg_id])];
+        [supportIds addObject:@(channelMsgId([obj reply_to_msg_id], obj.peer_id))];
         
     }];
     
     
     NSArray *support = [self selectSupportMessages:supportIds];
     
-    [[MessagesManager sharedManager] addSupportMessages:support];
+    [MessagesManager addSupportMessages:support];
     
     return messages;
 
@@ -712,7 +713,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -723,6 +724,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             msg.flags = [result intForColumn:@"flags"];
             msg.invalidate = [result intForColumn:@"invalidate"];
             msg.pts = [result intForColumn:@"pts"];
+            msg.views = [result intForColumn:@"views"];
             if(msg) {
                 [messages addObject:msg];
                 [ids addObject:@(msg.n_id)];
@@ -733,7 +735,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        TL_localMessage *lastMessage = [messages lastObject];
+        TL_localMessage *lastMessage = next ? [messages lastObject] : [messages firstObject];
         
         if(lastMessage) {
             
@@ -764,8 +766,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         if(messages.count > 0)
         {
-            TL_localMessage *first = [messages firstObject];
-            TL_localMessage *last = [messages lastObject];
+            TL_localMessage *first = next ? [messages firstObject] : [messages lastObject];
+            TL_localMessage *last = !next ? [messages firstObject] : [messages lastObject];
             
             max = first.n_id;
             min = last.n_id;
@@ -778,7 +780,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
        
         
             
-        result = [db executeQuery:@"select * from message_holes where peer_id = ? and NOT(? > max_id OR ? <= min_id) and (type & 2 = 2) order by date asc",@(conversationId),@(min),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id)];
+        result = [db executeQuery:@"select * from message_holes where peer_id = ? and NOT(? > max_id OR ? < min_id) and (type & 2 = 2) order by date asc",@(conversationId),@(min),@(max_id == INT32_MAX ? max : max_id == 0 ? INT32_MAX : max_id)];
         
         while ([result next]) {
             TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
@@ -799,13 +801,19 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
          if(important) {
-            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((max_id > ?) and (min_id <= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(min),@(max)];
+            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((max_id >= ?) and (min_id <= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(min),@(max)];
             
             while ([result next]) {
-                TGMessageHole *hole = [[TGMessageGroupHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
+                TGMessageHole *gh = [[TGMessageGroupHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
                 
-                [groupHoles addObject:hole];
+                if(hole && (hole.max_id <= gh.max_id && hole.min_id >= gh.min_id)) {
+                    hole = nil;
+                }
+                
+                [groupHoles addObject:gh];
             }
+             
+             
             
             [result close];
         }
@@ -823,7 +831,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             NSPredicate *predicate;
             
             if(next)
-                predicate = [NSPredicate predicateWithFormat:@"self.n_id >= %d",hole.max_id];
+                predicate = [NSPredicate predicateWithFormat:@"self.n_id > %d",hole.max_id];
             else
                 predicate = [NSPredicate predicateWithFormat:@"self.n_id < %d",hole.min_id];
             
@@ -862,7 +870,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     NSArray *support = [self selectSupportMessages:supportIds];
     
-    [[MessagesManager sharedManager] addSupportMessages:support];
+    [MessagesManager addSupportMessages:support];
     
     
     return [[TGHistoryResponse alloc] initWithResult:[messages copy] hole:hole groupHoles:groupHoles];
@@ -887,6 +895,35 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
     }];
 }
+
+-(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId {
+    [queue inDatabase:^(FMDatabase *db){
+        [db executeUpdate:[NSString stringWithFormat:@"update %@ set views = ? where n_id = ?",tableChannelMessages],@(views),@(channelMsgId)];
+    }];
+}
+
+-(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId {
+   
+    __block TL_localMessage *msg;
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where (filter_mask & 4096) = 4096 and n_id =< ? order by desc limit 1",tableChannelMessages],@(channelMsgId)];
+        
+        if([result next]) {
+            msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            msg.flags = [result intForColumn:@"flags"];
+            msg.views = [result intForColumn:@"views"];
+            msg.pts = [result intForColumn:@"pts"];
+        }
+        
+        [result close];
+        
+    }];
+    
+    return msg;
+}
+
 
 -(TL_localMessage *)messageById:(int)msgId {
     return [self messageById:msgId inChannel:0];
@@ -1399,7 +1436,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 message.pts = pts;
                 
                 if(isset == 0) {
-                    [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts) values (?,?,?,?,?,?,?,?,?,?,?)"],
+                    [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts,views) values (?,?,?,?,?,?,?,?,?,?,?,?)"],
                      @(message.channelMsgId),
                      @(message.date),
                      @(message.from_id),
@@ -1410,12 +1447,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                      @(message.fakeId),
                      @(message.dstate),
                      @(message.randomId),
-                     @(pts)
+                     @(pts),
+                     @(message.views)
                      ];
 
                     
                 } else {
-                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),@(message.channelMsgId),nil];
+                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ?, views = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),
+                     @(message.views),@(message.channelMsgId),nil];
 
                 }
                 
@@ -1581,6 +1620,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d, NSArray *m))completeHandler {
     
+    dispatch_queue_t dq = dispatch_get_current_queue();
+    
     [queue inDatabase:^(FMDatabase *db) {
         NSMutableArray *dialogs = [[NSMutableArray alloc] init];
         NSMutableArray *messages = [[NSMutableArray alloc] init];
@@ -1594,7 +1635,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [result close];
         
-        if(completeHandler) completeHandler(dialogs,messages);
+        if(completeHandler){
+            dispatch_async(dq, ^{
+                completeHandler(dialogs,messages);
+            });
+        }
     }];
 }
 
@@ -2402,7 +2447,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSString *join = [ids componentsJoinedByString:@","];
         
         
-        NSString *sql = [NSString stringWithFormat:@"select * from support_messages where n_id IN (%@)",join];
+        NSString *sql = [NSString stringWithFormat:@"select * from %@ where n_id IN (%@)",tableSupportMessages,join];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -2425,7 +2470,16 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)addSupportMessages:(NSArray *)messages {
     [queue inDatabase:^(FMDatabase *db) {
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            [db executeUpdate:@"insert or replace into support_messages (n_id,serialized) values (?,?)",@(obj.n_id),[TLClassStore serialize:obj]];
+            
+            BOOL isset = [db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableSupportMessages],@(obj.channelMsgId)];
+            
+            if(isset) {
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where n_id = ?",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj],@(obj.channelMsgId)];
+            } else {
+                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
+            }
+            
+            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
         }];
     }];
 }
@@ -2666,10 +2720,16 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(void)insertMessagesHole:(TGMessageHole *)hole {
     
+    if(hole.max_id == 0) {
+        int bp = 0;
+    }
+        
     [queue inDatabase:^(FMDatabase *db) {
         
         
         int unique_id = [db intForQuery:@"SELECT unique_id FROM message_holes where (type & ?) = ? and peer_id = ? and ((min_id = 0 OR min_id < ?) and max_id = ?) order by date asc limit 1",@(hole.type),@(hole.type),@(hole.peer_id),@(hole.min_id), @(hole.max_id)];
+        
+        
         
         
         [db executeUpdate:@"insert or replace into message_holes (unique_id, peer_id, min_id, max_id, date, type, count) values (?,?,?,?,?,?,?)",@(unique_id < 0 ? unique_id : hole.uniqueId),@(hole.peer_id),@(hole.min_id),@(hole.max_id),@(hole.date),@(hole.type),@(hole.messagesCount)];
@@ -2696,7 +2756,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         FMResultSet *result;
 
-        result = [db executeQuery:@"select * from message_holes where peer_id = ? and (type & 4 = 4) and NOT(? > max_id OR ? <= min_id) order by date asc",@(peer_id),@(min),@(max)];
+        result = [db executeQuery:@"select * from message_holes where peer_id = ? and (type & 4 = 4) and NOT(? >= max_id OR ? <= min_id) order by date asc",@(peer_id),@(min),@(max)];
         
         
         while ([result next]) {
@@ -2717,7 +2777,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        int maxMsgId = [db intForQuery:@"select n_id from channel_messages where  peer_id = ? order by date desc, n_id desc limit 1",@(channel_id)];
+        int maxMsgId = [db intForQuery:@"select n_id from channel_messages where  peer_id = ? and (filter_mask & ?) > 0 order by date desc, n_id desc limit 1",@(channel_id),@(important ?HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage)];
         
         
         int holeMaxId = [db intForQuery:@"select max_id from message_holes where peer_id = ? and (type & ?) = ? and max_id > ? and min_id <= ?",@(important ? 4 : 2),@(important ? 4 : 2),@(channel_id),@(maxMsgId),@(maxMsgId)];

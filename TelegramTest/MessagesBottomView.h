@@ -49,6 +49,8 @@ typedef enum {
 
 -(void)addAttachment:(TGImageAttachment *)attachment;
 
+-(BOOL)sendMessageAsAdmin;
+
 -(NSUInteger)attachmentsCount;
 
 @end

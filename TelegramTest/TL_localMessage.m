@@ -19,7 +19,7 @@
 
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities views:(int)views state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -37,13 +37,14 @@
     msg.randomId = randomId;
     msg.reply_markup = reply_markup;
     msg.entities = entities;
+    msg.views = views;
     return msg;
 }
 
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities state:(DeliveryState)state pts:(int)pts {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views state:(DeliveryState)state pts:(int)pts {
     
-    TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from_id:fwd_from_id fwd_date:fwd_date reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities state:state];
+    TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from_id:fwd_from_id fwd_date:fwd_date reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities views:views state:state];
     
     msg.pts = pts;
     
@@ -71,17 +72,17 @@
         
         if(!_replyMessage)
         {
-            _replyMessage = [[MessagesManager sharedManager] supportMessage:self.reply_to_msg_id];
+            _replyMessage = [MessagesManager supportMessage:self.reply_to_msg_id peer_id:self.peer_id];
             
             if(!_replyMessage)
             {
                 if(!_replyMessage)
-                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id inChannel:[self.to_id isKindOfClass:[TL_peerChannel class]] ? self.to_id.channel_id : 0];
+                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id inChannel:[self.to_id isKindOfClass:[TL_peerChannel class]] ? self.peer_id : 0];
                 
                 if(_replyMessage)
                 {
                     [[Storage manager] addSupportMessages:@[_replyMessage]];
-                    [[MessagesManager sharedManager] addSupportMessages:@[_replyMessage]];
+                    [MessagesManager addSupportMessages:@[_replyMessage]];
                 }
             }
         }
@@ -118,7 +119,7 @@
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
-        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities state:DeliveryStateNormal];
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities views:message.views state:DeliveryStateNormal];
         
     } else {
         return (TL_localMessage *) message;
@@ -169,7 +170,10 @@
                 [ClassStore TLSerialize:obj stream:stream];
             }
         }}
-    if(self.flags & (1 << 10)) {self.views = [stream readInt];}
+    
+    if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
+    
+    
 
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -204,7 +208,7 @@
         }}
     
    
-    if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
+    if(self.flags & (1 << 10)) {self.views = [stream readInt];}
 
 }
 
@@ -447,7 +451,7 @@ long channelMsgId(int msg_id, int peer_id) {
 }
 
 -(id)copy {
-    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities state:self.dstate pts:self.pts];
+    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities views:self.views state:self.dstate pts:self.pts];
 }
 
 

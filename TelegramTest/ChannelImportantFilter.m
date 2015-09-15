@@ -106,24 +106,37 @@
     
     [collapsed enumerateObjectsUsingBlock:^(TL_messageGroup *obj, NSUInteger idx, BOOL *stop) {
         
-        
-//        NSArray *groups = [[Storage manager] groupHoles:self.controller.conversation.peer_id min:obj.min_id max:obj.max_id];
-//                
-//        TGMessageGroupHole *localHole = [groups firstObject];
-//        
+           
         int uniqueId =  -rand_int();
+        
+        NSArray *holes = [[Storage manager] groupHoles:peer_id min:obj.min_id max:obj.max_id];
+        
+        TGMessageGroupHole *unslamHole = [holes lastObject];
+        
+        if(unslamHole)
+            uniqueId = unslamHole.uniqueId;
+        
+    
         
         TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:uniqueId peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:obj.n_count];
         
-        
-        TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:0];
-        
-        TL_localMessageService *msg = [TL_localMessageService createWithHole:groupHole];
-        
-        [messages addObject:msg];
-        
         [[Storage manager] insertMessagesHole:groupHole];
-        [[Storage manager] insertMessagesHole:hole];
+
+        
+        
+        if(groupHole.uniqueId != unslamHole.uniqueId) {
+            TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:0];
+            
+            TL_localMessageService *msg = [TL_localMessageService createWithHole:groupHole];
+            
+            [messages addObject:msg];
+            
+            [[Storage manager] insertMessagesHole:hole];
+        } else {
+            [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:groupHole}];
+        }
+        
+        
         
         
     }];
@@ -132,6 +145,37 @@
     return [messages copy];
     
     
+}
+
+
+-(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages {
+    
+    TGMessageHole *nHole;
+    
+    if(hole != nil) {
+        
+        int min = hole.min_id;
+        int max = hole.max_id;
+        
+        if(messages.count > 0)
+        {
+            TL_localMessage *first = [messages firstObject];
+            TL_localMessage *last = [messages lastObject];
+            
+            max = first.n_id;
+            min = last.n_id;
+        }
+        
+        nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
+        
+        
+        if(nHole.min_id == nHole.max_id || abs(nHole.min_id - nHole.max_id) == 1) {
+            nHole = nil;
+        }
+        
+    }
+    
+    return nHole;
 }
 
 -(int)additionSenderFlags {

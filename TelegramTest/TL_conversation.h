@@ -92,4 +92,9 @@ typedef enum {
 
 - (DialogType) type;
 
+
+
+//channel methods
+-(BOOL)canSendChannelMessageAsAdmin;
+-(BOOL)canSendChannelMessageAsUser;
 @end

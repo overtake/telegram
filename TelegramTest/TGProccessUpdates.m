@@ -166,7 +166,7 @@ static NSArray *channelUpdates;
         
         dispatch_once(&onceToken, ^{
             
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
         });
         
         
@@ -448,7 +448,7 @@ static NSArray *channelUpdates;
         
         
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 state:DeliveryStateNormal];
         
         if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || !message.fwdObject) {
             [self failSequence];
@@ -466,7 +466,7 @@ static NSArray *channelUpdates;
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 state:DeliveryStateNormal];
         
         
         if(![[UsersManager sharedManager] find:shortMessage.user_id] || (!message.fwdObject)) {
@@ -509,76 +509,6 @@ static NSArray *channelUpdates;
     [self saveUpdateState];
     
     [self proccessUpdate:shortUpdate.update];
-}
-
-+(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages {
-    [self checkAndLoadIfNeededSupportMessages:messages asyncCompletionHandler:nil];
-}
-
-+(void)checkAndLoadIfNeededSupportMessages:(NSArray *)messages asyncCompletionHandler:(dispatch_block_t)completionHandler {
-    
-   NSMutableArray *supportMessages = [[NSMutableArray alloc] init];
-        
-    [messages enumerateObjectsUsingBlock:^(TL_localMessage * obj, NSUInteger idx, BOOL *stop) {
-            
-        if(obj.reply_to_msg_id != 0 && obj.replyMessage == nil) {
-            [supportMessages addObject:@(obj.reply_to_msg_id)];
-        } 
-            
-    }];
-        
-    if(supportMessages.count > 0)
-    {
-      
-        [self loadSupportSyncMessages:supportMessages syncCompletionHandler:completionHandler];
-    
-    } else if(completionHandler != nil) {
-        completionHandler();
-    }
-
-
-}
-
-+(void)loadSupportSyncMessages:(NSArray *)ids syncCompletionHandler:(dispatch_block_t)completionHandler {
-    
-    
-    dispatch_semaphore_t semaphore = NULL;
-    
-    if(completionHandler == nil) {
-       semaphore = dispatch_semaphore_create(0);
-    }
-    
-    [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[ids mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
-        
-        NSMutableArray *messages = [response.messages mutableCopy];
-        
-        [[response messages] removeAllObjects];
-        
-        [SharedManager proccessGlobalResponse:response];
-        
-        [TL_localMessage convertReceivedMessages:messages];
-        
-        [[Storage manager] addSupportMessages:messages];
-        [[MessagesManager sharedManager] addSupportMessages:messages];
-        
-        
-        if(completionHandler == nil) {
-            dispatch_semaphore_signal(semaphore);
-        } else {
-            completionHandler();
-        }
-        
-        
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-    } timeout:0 queue:queue.nativeQueue];
-    
-    if(completionHandler == nil) {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    }
-    
-   
 }
 
 
@@ -693,7 +623,7 @@ static NSArray *channelUpdates;
             [conversation save];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -916,7 +846,7 @@ static NSArray *channelUpdates;
         
         NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil state:DeliveryStateNormal];
+        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 state:DeliveryStateNormal];
         
         [MessagesManager addAndUpdateMessage:msg];
         
@@ -1085,39 +1015,33 @@ static NSArray *channelUpdates;
                 [self proccessUpdate:update];
         }
         
-        [TGProccessUpdates checkAndLoadIfNeededSupportMessages:[response n_messages] asyncCompletionHandler:^{
+        [queue dispatchOnQueue:^{
             
-           
-            [queue dispatchOnQueue:^{
-                
-                if([response n_messages].count > 0) {
-                    [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-                }
-                
-                
-                _updateState.checkMinimum = NO;
-                _updateState.qts = stateQts;
-                _updateState.pts = statePts;
-                _updateState.date = stateDate;
-                _updateState.seq = stateSeq;
-                _updateState.checkMinimum = YES;
-                
-                [self saveUpdateState];
-                
-                _holdUpdates = NO;
-                
-                if(intstate != nil) {
-                    [self uptodate:statePts qts:stateQts date:stateDate updateConnectionState:updateConnectionState];
-                } else {
-                    [Notification perform:PROTOCOL_UPDATED data:nil];
-                    [Telegram setConnectionState:ConnectingStatusTypeNormal];
-                }
-
-            }];
+            if([response n_messages].count > 0) {
+                [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+            }
+            
+            
+            _updateState.checkMinimum = NO;
+            _updateState.qts = stateQts;
+            _updateState.pts = statePts;
+            _updateState.date = stateDate;
+            _updateState.seq = stateSeq;
+            _updateState.checkMinimum = YES;
+            
+            [self saveUpdateState];
+            
+            _holdUpdates = NO;
+            
+            if(intstate != nil) {
+                [self uptodate:statePts qts:stateQts date:stateDate updateConnectionState:updateConnectionState];
+            } else {
+                [Notification perform:PROTOCOL_UPDATED data:nil];
+                [Telegram setConnectionState:ConnectingStatusTypeNormal];
+            }
             
         }];
-        
-       
+
        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

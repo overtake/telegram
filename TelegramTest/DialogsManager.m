@@ -536,7 +536,8 @@
         
         
         if(message.unread && !message.n_out) {
-            dialog.unread_count++;
+            if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+                dialog.unread_count++;
         }
         
         dialog.top_message = message.n_id;
@@ -659,6 +660,7 @@
                 }
                 
                 if(!message.n_out && message.unread) {
+                    if(dialog.type != DialogTypeChannel || message.isImportantMessage)
                     dialog.unread_count++;
                 }
                 

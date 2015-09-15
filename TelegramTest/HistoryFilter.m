@@ -307,7 +307,7 @@ static NSString *kMessageItems = @"kMessageItems";
         nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
         
         
-        if(nHole.min_id == nHole.max_id) {
+        if(nHole.min_id == nHole.max_id || abs(nHole.min_id - nHole.max_id) == 1) {
             [nHole remove];
             nHole = nil;
         } else

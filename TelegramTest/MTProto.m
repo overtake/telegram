@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 14.09.15.
+//  Auto created by Mikhail Filimonov on 15.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -10603,6 +10603,46 @@
         
 @end
 
+@implementation TL_updateChannel
++(TL_updateChannel*)createWithChannel_id:(int)channel_id {
+	TL_updateChannel* obj = [[TL_updateChannel alloc] init];
+	obj.channel_id = channel_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.channel_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.channel_id = [stream readInt];
+}
+        
+-(TL_updateChannel *)copy {
+    
+    TL_updateChannel *objc = [[TL_updateChannel alloc] init];
+    
+    objc.channel_id = self.channel_id;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 @implementation TL_updateChannelGroup
 +(TL_updateChannelGroup*)createWithChannel_id:(int)channel_id group:(TLMessageGroup*)group {
 	TL_updateChannelGroup* obj = [[TL_updateChannelGroup alloc] init];
@@ -19781,6 +19821,350 @@
     objc.user_id = self.user_id;
     objc.inviter_id = self.inviter_id;
     objc.date = self.date;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantModerator
++(TL_channelParticipantModerator*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date {
+	TL_channelParticipantModerator* obj = [[TL_channelParticipantModerator alloc] init];
+	obj.user_id = user_id;
+	obj.inviter_id = inviter_id;
+	obj.date = date;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeInt:self.inviter_id];
+	[stream writeInt:self.date];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+	self.inviter_id = [stream readInt];
+	self.date = [stream readInt];
+}
+        
+-(TL_channelParticipantModerator *)copy {
+    
+    TL_channelParticipantModerator *objc = [[TL_channelParticipantModerator alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.inviter_id = self.inviter_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantPublisher
++(TL_channelParticipantPublisher*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date {
+	TL_channelParticipantPublisher* obj = [[TL_channelParticipantPublisher alloc] init];
+	obj.user_id = user_id;
+	obj.inviter_id = inviter_id;
+	obj.date = date;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeInt:self.inviter_id];
+	[stream writeInt:self.date];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+	self.inviter_id = [stream readInt];
+	self.date = [stream readInt];
+}
+        
+-(TL_channelParticipantPublisher *)copy {
+    
+    TL_channelParticipantPublisher *objc = [[TL_channelParticipantPublisher alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.inviter_id = self.inviter_id;
+    objc.date = self.date;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantCreator
++(TL_channelParticipantCreator*)createWithUser_id:(int)user_id {
+	TL_channelParticipantCreator* obj = [[TL_channelParticipantCreator alloc] init];
+	obj.user_id = user_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+}
+        
+-(TL_channelParticipantCreator *)copy {
+    
+    TL_channelParticipantCreator *objc = [[TL_channelParticipantCreator alloc] init];
+    
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+
+@implementation TLChannelParticipantsFilter
+@end
+
+@implementation TL_channelParticipantsRecent
++(TL_channelParticipantsRecent*)create {
+	TL_channelParticipantsRecent* obj = [[TL_channelParticipantsRecent alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelParticipantsRecent *)copy {
+    
+    TL_channelParticipantsRecent *objc = [[TL_channelParticipantsRecent alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantsAdmins
++(TL_channelParticipantsAdmins*)create {
+	TL_channelParticipantsAdmins* obj = [[TL_channelParticipantsAdmins alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelParticipantsAdmins *)copy {
+    
+    TL_channelParticipantsAdmins *objc = [[TL_channelParticipantsAdmins alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+
+@implementation TLChannelParticipantRole
+@end
+
+@implementation TL_channelRoleEmpty
++(TL_channelRoleEmpty*)create {
+	TL_channelRoleEmpty* obj = [[TL_channelRoleEmpty alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelRoleEmpty *)copy {
+    
+    TL_channelRoleEmpty *objc = [[TL_channelRoleEmpty alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelRoleModerator
++(TL_channelRoleModerator*)create {
+	TL_channelRoleModerator* obj = [[TL_channelRoleModerator alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelRoleModerator *)copy {
+    
+    TL_channelRoleModerator *objc = [[TL_channelRoleModerator alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelRolePublisher
++(TL_channelRolePublisher*)create {
+	TL_channelRolePublisher* obj = [[TL_channelRolePublisher alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelRolePublisher *)copy {
+    
+    TL_channelRolePublisher *objc = [[TL_channelRolePublisher alloc] init];
+    
+    
     
     return objc;
 }

@@ -50,7 +50,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:f.to_id fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities state:DeliveryStatePending];
+            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:[f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id : [f.fwd_from_id isKindOfClass:[TL_peerChannel class]] ? f.fwd_from_id : [TL_peerUser createWithUser_id:f.from_id] fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views state:DeliveryStatePending];
             
             if(additionFlags & (1 << 4))
                 fake.from_id = 0;
@@ -115,7 +115,7 @@
         
         [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            if([obj isKindOfClass:[TL_updateNewMessage class]]) {
+            if([obj isKindOfClass:[TL_updateNewMessage class]] || [obj isKindOfClass:[TL_updateNewChannelMessage class]]) {
                 [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
             }
             
@@ -159,12 +159,7 @@
         
         int flags = 0;
         
-        flags|= msg.reply_to_msg_id != 0 ? 1 : 0;
-        
-        flags|=[msg.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
-        
         flags|=msg.from_id == 0 ? 1 << 4 : 0;
-
         
         return flags;
         

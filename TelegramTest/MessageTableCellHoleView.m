@@ -16,8 +16,13 @@
 
 @implementation TGCustomTextView
 
--(void)open_link:(NSString *)link {
-    [[Telegram rightViewController].messagesViewController jumpToLastMessages:YES];
+-(void)open_link:(NSString *)link itsReal:(BOOL)itsReal {
+    if([link isEqualToString:@"showNewMessages"])
+        [[Telegram rightViewController].messagesViewController jumpToLastMessages:YES];
+    else if([link isEqualToString:@"showComments"]) {
+        
+        [[Telegram rightViewController].messagesViewController showMessage:_holeItem.message.hole.min_id fromMsgId:0];
+    }
 }
 
 @end

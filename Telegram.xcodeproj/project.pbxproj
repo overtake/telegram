@@ -729,6 +729,7 @@
 		C2CBF6DB1AFBE662006BF90A /* NSTextFieldCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6D096E19535E8500A9AC64 /* NSTextFieldCategory.m */; };
 		C2CBF6DC1AFBE691006BF90A /* TMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD35DC81869B604007BA752 /* TMButton.m */; };
 		C2CBF6DE1AFBE812006BF90A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF6DD1AFBE812006BF90A /* Images.xcassets */; };
+		C2CC41C41BA7FC450097E973 /* WeakReference.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC41C31BA7FC450097E973 /* WeakReference.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
@@ -2290,6 +2291,8 @@
 		C2CBF6D51AFBDB6F006BF90A /* TGLinearProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLinearProgressView.h; sourceTree = "<group>"; };
 		C2CBF6D61AFBDB6F006BF90A /* TGLinearProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLinearProgressView.m; sourceTree = "<group>"; };
 		C2CBF6DD1AFBE812006BF90A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C2CC41C21BA7FC450097E973 /* WeakReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeakReference.h; sourceTree = "<group>"; };
+		C2CC41C31BA7FC450097E973 /* WeakReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeakReference.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
 		C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEnterPasswordPanel.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
@@ -5714,6 +5717,8 @@
 				C2CBF6971AFB7EFE006BF90A /* CFunctions.m */,
 				C20A5EDD1B8B8905007F4B49 /* TGObservableObject.h */,
 				C20A5EDE1B8B8905007F4B49 /* TGObservableObject.m */,
+				C2CC41C21BA7FC450097E973 /* WeakReference.h */,
+				C2CC41C31BA7FC450097E973 /* WeakReference.m */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -6793,6 +6798,7 @@
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
 				C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */,
 				C268C19319F0519C007F836A /* POPPropertyAnimation.mm in Sources */,
+				C2CC41C41BA7FC450097E973 /* WeakReference.m in Sources */,
 				0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */,
 				C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */,
 				C2C85B841AE57D0100FBEABD /* TGAttachObject.m in Sources */,

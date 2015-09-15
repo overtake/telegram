@@ -107,7 +107,9 @@
 }
 
 
-
+-(void)enableDiscussion {
+    [_discussionSwitch setOn:YES];
+}
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];

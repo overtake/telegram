@@ -30,7 +30,10 @@
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     if([hole isKindOfClass:[TGMessageGroupHole class]]) {
-        [attr appendString:self.message.hole.messagesCount != INT32_MAX ? [NSString stringWithFormat:@"+%d messages",self.message.hole.messagesCount] : @"new messages" withColor:TEXT_COLOR];
+        NSRange range = [attr appendString:self.message.hole.messagesCount != INT32_MAX ? [NSString stringWithFormat:@"+%d messages",self.message.hole.messagesCount] : @"new messages" withColor:LINK_COLOR];
+        
+        [attr addAttribute:NSLinkAttributeName value:@"showComments" range:range];
+        
     } else {
         NSRange range = [attr appendString:NSLocalizedString(@"Channel.GotoNewMessages", nil) withColor:LINK_COLOR];
         [attr addAttribute:NSLinkAttributeName value:@"showNewMessages" range:range];

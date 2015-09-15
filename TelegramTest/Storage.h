@@ -161,6 +161,10 @@ extern NSString *const RECENT_SEARCH;
 -(void)invalidateChannelMessagesWithPts:(int)pts;
 -(void)validateChannelMessages:(NSArray *)messages;
 
+-(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId;
+
+
+-(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
 
 -(TL_localMessage *)messageById:(int)msgId inChannel:(int)channel_id;
 

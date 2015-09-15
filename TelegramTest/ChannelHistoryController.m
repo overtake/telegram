@@ -59,29 +59,19 @@ static TGChannelsPolling *channelPolling;
         
         [self.filter request:next callback:^(NSArray *result, ChatHistoryState state) {
             
-            [TGProccessUpdates checkAndLoadIfNeededSupportMessages:result asyncCompletionHandler:^{
-                
-                
-                NSArray *items = [self.controller messageTableItemsFromMessages:result];
-                
-                
-                NSArray *converted = [self filterAndAdd:items isLates:NO];
-                
-                
-                converted = [self sortItems:converted];
-                
-                [self setState:state next:next];
-                
-                
-                
-                [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                
-                [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
-                
-                
-               
-                
-            }];
+            NSArray *items = [self.controller messageTableItemsFromMessages:result];
+            
+            
+            NSArray *converted = [self filterAndAdd:items isLates:NO];
+            
+            
+            converted = [self sortItems:converted];
+            
+            [self setState:state next:next];
+            
+            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+            
+            [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
             
         }];
         
@@ -234,7 +224,7 @@ static TGChannelsPolling *channelPolling;
         
     }];
     
-    return lastObject.message.date - 1;
+    return lastObject.message.date ;
     
 }
 
@@ -283,7 +273,7 @@ static TGChannelsPolling *channelPolling;
         
     }];
     
-    return firstObject.message.date + 1;
+    return firstObject.message.date;
 }
 
 -(int)server_max_id {

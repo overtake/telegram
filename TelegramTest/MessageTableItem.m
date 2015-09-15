@@ -138,7 +138,7 @@
     
     if([self isReplyMessage])
     {
-        _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage];
+        _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage fromMessage:self.message tableItem:self];
             
     }
     
@@ -413,7 +413,7 @@
 
 
 -(BOOL)isReplyMessage {
-    return self.message.replyMessage != nil && [self.message.replyMessage isKindOfClass:[TL_localMessage class]];
+    return self.message.reply_to_msg_id != 0;
 }
 
 -(BOOL)isFwdMessage {

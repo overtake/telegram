@@ -10,6 +10,7 @@
 #import "TGUpdateChannelContainer.h"
 #import "TGTimer.h"
 #import "TGForceChannelUpdate.h"
+#import "TLPeer+Extensions.h"
 @interface TGUpdateChannels ()
 @property (nonatomic,strong) ASQueue *queue;
 @property (nonatomic,strong) NSMutableDictionary *channelWaitingUpdates;
@@ -81,7 +82,7 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
         });
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
@@ -183,9 +184,9 @@
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id+1 date:msg.date count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id date:msg.date count:0];
                 
-                hole.max_id = msg.n_id+1;
+                hole.max_id = msg.n_id;
                 hole.messagesCount++;
                 hole.date = msg.date;
                 
@@ -239,10 +240,17 @@
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
         
-        int bp = 0;
+        TL_updateChannelMessageViews *views = (TL_updateChannelMessageViews *)update;
+        
+        [[Storage manager] updateMessageViews:views.views channelMsgId:channelMsgId(views.n_id, views.peer.peer_id)];
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
         [[MTNetwork instance].updateService.proccessor addUpdate:update];
+    } else if([update isKindOfClass:[TL_updateChannel class]]) {
+        
+        //TODO
+        // update channel interface.
+        
     }
 
 }

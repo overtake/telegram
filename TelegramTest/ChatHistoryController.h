@@ -65,6 +65,8 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)addItem:(MessageTableItem *)item conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback;
 
+-(void)addItemWithoutSavingState:(MessageTableItem *)item;
+
 
 -(void)removeAllItems;
 -(void)removeAllItemsWithPeerId:(int)peer_id;
@@ -76,7 +78,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)startChannelPollingIfAlreadyStoped;
 -(TL_conversation *)conversation;
 
-
+-(int)posAtMessage:(TLMessage *)message;
 
 // protected methods
 -(NSArray *)selectAllItems;

@@ -56,7 +56,11 @@
         
         [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            _supportMessages[@(obj.n_id)] = obj;
+            if(!_supportMessages[@(obj.peer_id)]) {
+                _supportMessages[@(obj.peer_id)] = [[NSMutableDictionary alloc] init];
+            }
+            
+            _supportMessages[@(obj.peer_id)][@(obj.n_id)] = obj;
             
         }];
         
@@ -65,19 +69,27 @@
    
 }
 
--(TL_localMessage *)supportMessage:(int)n_id {
+-(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
     
     __block TL_localMessage *message;
     
     [self.queue dispatchOnQueue:^{
         
-        message = _supportMessages[@(n_id)];
+        message = _supportMessages[@(peer_id)][@(n_id)];
         
     } synchronous:YES];
     
     return message;
 }
 
+
++(void)addSupportMessages:(NSArray *)supportMessages {
+    [[self sharedManager] addSupportMessages:supportMessages];
+}
+
++(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
+    return [[self sharedManager] supportMessage:n_id peer_id:peer_id];
+}
 
 -(void)dealloc {
     [Notification removeObserver:self];

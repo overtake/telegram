@@ -405,5 +405,13 @@ static void *kType;
 }
 
 
+-(BOOL)canSendChannelMessageAsAdmin {
+    return self.type == DialogTypeChannel && self.chat.isAdmin;
+}
+
+-(BOOL)canSendChannelMessageAsUser {
+    return self.type == DialogTypeChannel && ((self.chat.isAdmin && !self.chat.isBroadcast) || !self.chat.isBroadcast);
+}
+
 
 @end

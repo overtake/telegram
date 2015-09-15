@@ -56,7 +56,7 @@
     
     [members removeObjectAtIndex:0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:[TL_inputChat createWithChat_id:chatId] user_id:item.user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:[self.action.reservedObject1 inputPeer] user_id:item.user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
         
         if(self.chat) {

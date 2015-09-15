@@ -48,6 +48,7 @@
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) BTRButton *botKeyboardButton;
 @property (nonatomic, strong) BTRButton *botCommandButton;
+@property (nonatomic, strong) BTRButton *channelAdminButton;
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -188,7 +189,6 @@
     //botKeyboard
     
     
-    
     if(self.dialog.type == DialogTypeSecretChat) {
         weakify();
         ;
@@ -214,6 +214,9 @@
     
     _userFull = nil;
     _chatFull = nil;
+    
+    [_channelAdminButton setSelected:NO];
+    [self channelAdminButtonAction:_channelAdminButton];
     
     [self updateBotButtons];
     
@@ -255,12 +258,14 @@
     
     
     [self setHiddenRecoderControllers];
+    
+    
 }
 
 -(void)updateBotButtons {
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
-    } else if(self.dialog.type == DialogTypeChat) {
+    } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
         [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
     }
     
@@ -271,6 +276,14 @@
         
         [_botCommandButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botKeyboardButton.isHidden ? 60 : 90), NSMinY(_botKeyboardButton.frame))];
         
+    }
+    
+    [_channelAdminButton setHidden:!self.dialog.canSendChannelMessageAsAdmin || (!self.dialog.canSendChannelMessageAsUser && self.dialog.canSendChannelMessageAsAdmin)];
+    
+    
+    if(!_channelAdminButton.isHidden) {
+        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 120), NSMinY(_channelAdminButton.frame))];
+
     }
     
 }
@@ -527,6 +540,22 @@
     [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
     
     
+    
+    
+    
+    self.channelAdminButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ChannelMessageAsAdmin().size.width, image_ChannelMessageAsAdmin().size.height)];
+    [self.channelAdminButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.channelAdminButton.layer disableActions];
+    
+    [self.channelAdminButton addTarget:self action:@selector(channelAdminButtonAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.channelAdminButton setBackgroundImage: image_ChannelMessageAsAdmin() forControlState:BTRControlStateNormal];
+    
+    
+    [self.inputMessageTextField.containerView addSubview:self.channelAdminButton];
+    
+    
+    
+    
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
@@ -543,6 +572,10 @@
     return self.normalView;
 }
 
+-(BOOL)sendMessageAsAdmin {
+    return _channelAdminButton.isSelected && [self.dialog canSendChannelMessageAsAdmin];
+}
+
 -(void)botKeyboardButtonAction:(BTRButton *)button {
     [self.botKeyboard setHidden:!self.botKeyboard.isHidden];
     
@@ -557,6 +590,13 @@
 -(void)botCommandButtonAction:(BTRButton *)button {
     [self.inputMessageTextField setString:@"/"];
     [self.inputMessageTextField textDidChange:nil];
+}
+
+
+-(void)channelAdminButtonAction:(BTRButton *)button {
+    [_channelAdminButton setSelected:!_channelAdminButton.isSelected];
+    
+    [_channelAdminButton setBackgroundImage:!_channelAdminButton.isSelected ? image_ChannelMessageAsAdmin() : image_ChannelMessageAsAdminHighlighted() forControlState:BTRControlStateNormal];
 }
 
 -(NSMenu *)attachMenu {
@@ -1346,7 +1386,7 @@
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage fromMessage:nil tableItem:nil];
         
         
         _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
@@ -1558,6 +1598,8 @@
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
     [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    
+    
 }
 
 

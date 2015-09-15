@@ -36,6 +36,8 @@ typedef enum {
 -(BOOL)isPublic;
 -(BOOL)left;
 -(BOOL)isKicked;
+-(BOOL)isPublisher;
+-(BOOL)isModerator;
 -(TLInputChat *)inputPeer;
 -(NSString *)usernameLink;
 

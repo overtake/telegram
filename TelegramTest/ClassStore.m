@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 14.09.15.
+    //  Created by keepcoder on 15.09.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -481,6 +481,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_channelMessages class] forKey:[NSNumber numberWithInt:-1139861572]];
    [cs_classes setObject:[TL_messageActionChannelCreate class] forKey:[NSNumber numberWithInt:-1781355374]];
    [cs_classes setObject:[TL_updateChannelTooLong class] forKey:[NSNumber numberWithInt:1620337698]];
+   [cs_classes setObject:[TL_updateChannel class] forKey:[NSNumber numberWithInt:-1227598250]];
    [cs_classes setObject:[TL_updateChannelGroup class] forKey:[NSNumber numberWithInt:-1016324548]];
    [cs_classes setObject:[TL_updateNewChannelMessage class] forKey:[NSNumber numberWithInt:1656358105]];
    [cs_classes setObject:[TL_updateReadChannelInbox class] forKey:[NSNumber numberWithInt:-2017952899]];
@@ -494,6 +495,14 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channelMessagesFilterCollapsed class] forKey:[NSNumber numberWithInt:-100588754]];
    [cs_classes setObject:[TL_contacts_resolvedPeer class] forKey:[NSNumber numberWithInt:2131196633]];
    [cs_classes setObject:[TL_channelParticipant class] forKey:[NSNumber numberWithInt:1348540138]];
+   [cs_classes setObject:[TL_channelParticipantModerator class] forKey:[NSNumber numberWithInt:-1861910545]];
+   [cs_classes setObject:[TL_channelParticipantPublisher class] forKey:[NSNumber numberWithInt:58054166]];
+   [cs_classes setObject:[TL_channelParticipantCreator class] forKey:[NSNumber numberWithInt:-471670279]];
+   [cs_classes setObject:[TL_channelParticipantsRecent class] forKey:[NSNumber numberWithInt:-566281095]];
+   [cs_classes setObject:[TL_channelParticipantsAdmins class] forKey:[NSNumber numberWithInt:-1268741783]];
+   [cs_classes setObject:[TL_channelRoleEmpty class] forKey:[NSNumber numberWithInt:-1299865402]];
+   [cs_classes setObject:[TL_channelRoleModerator class] forKey:[NSNumber numberWithInt:-1776756363]];
+   [cs_classes setObject:[TL_channelRolePublisher class] forKey:[NSNumber numberWithInt:1364940080]];
    [cs_classes setObject:[TL_messages_channelParticipants class] forKey:[NSNumber numberWithInt:-695656991]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];

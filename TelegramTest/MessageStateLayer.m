@@ -8,12 +8,17 @@
 
 #import "MessageStateLayer.h"
 #import "TMClockProgressView.h"
+#import "NSNumber+NumberFormatter.h"
 @interface MessageStateLayer ()
 @property (nonatomic,strong) TMClockProgressView *progressView;
 @property (nonatomic,strong) NSImageView *readOrSentView;
 @property (nonatomic,strong) BTRButton *errorView;
 
 @property (nonatomic,assign) MessageTableCellState state;
+
+@property (nonatomic,strong) TMTextField *viewsCountText;
+
+@property (nonatomic,strong) NSImageView *channelImageView;
 
 @end
 
@@ -70,25 +75,51 @@
         self.errorView = nil;
     }
     
+    [_viewsCountText removeFromSuperview];
+    _viewsCountText = nil;
+    [_channelImageView removeFromSuperview];
     
-    if(state == MessageTableCellUnread || state == MessageTableCellRead) {
-       
-        if(!self.readOrSentView) {
+    if((state == MessageTableCellUnread || state == MessageTableCellRead) && self.container.item.message.from_id != 0) {
+
+         if(!self.readOrSentView) {
             self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 5, 0, 0)];
             self.readOrSentView.wantsLayer = YES;
         }
-        
+            
         self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
         [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-        [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 2 : 1, NSMinY(self.readOrSentView.frame))];
+        [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 12 : 11, NSMinY(self.readOrSentView.frame))];
         [self.layer addSublayer:self.readOrSentView.layer];
+
     } else {
         self.readOrSentView.image = nil;
         [self.readOrSentView.layer removeFromSuperlayer];
         self.readOrSentView = nil;
+        
+        if(self.container.item.message.from_id == 0) {
+            _viewsCountText = [TMTextField defaultTextField];
+            [_viewsCountText setFont:TGSystemFont(12)];
+            [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
+            [_viewsCountText setStringValue:[[NSNumber numberWithInt:self.container.item.message.views] prettyNumber]];
+            [_viewsCountText sizeToFit];
+            [_viewsCountText setFrameOrigin:CGPointMake(14,3)];
+            [self addSubview:_viewsCountText];
+            
+            
+            _channelImageView = imageViewWithImage(image_ChannelViews());
+            
+            [_channelImageView setFrameOrigin:NSMakePoint(0, 6)];
+            
+            [self addSubview:_channelImageView];
+        }
     }
     
+    
+    [self setNeedsDisplay:YES];
+    
 }
+
+
 
 
 
