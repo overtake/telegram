@@ -71,13 +71,14 @@ static TGChannelsPolling *channelPolling;
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
             
-            [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+            [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
             
         }];
         
     } synchronous:sync];
     
 }
+
 
 -(void)setFilter:(HistoryFilter *)filter {
     
@@ -151,6 +152,79 @@ static TGChannelsPolling *channelPolling;
 //        
 //    }];
 //    
+    
+}
+
+
+
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)item selectHandler:(selectHandler)selectHandler {
+    
+    
+    [self.queue dispatchOnQueue:^{
+        
+        [self addItemWithoutSavingState:item];
+        
+        [[Storage manager] insertMessage:item.message];
+        
+        NSMutableArray *prevResult = [NSMutableArray array];
+        NSMutableArray *nextResult = [NSMutableArray array];
+        
+        self.proccessing = YES;
+        [self loadAroundMessagesWithSelectHandler:selectHandler prevResult:prevResult nextResult:nextResult];
+        
+      
+    } synchronous:YES];
+    
+    
+}
+
+-(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult {
+    
+    
+    BOOL nextLoaded = nextResult.count > self.selectLimit || self.nextState == ChatHistoryStateFull;
+    BOOL prevLoaded = prevResult.count > self.selectLimit || self.prevState == ChatHistoryStateFull;
+    
+    
+    if(nextLoaded && prevLoaded) {
+        
+        NSArray *result = [prevResult arrayByAddingObjectsFromArray:nextResult];
+        
+        [self performCallback:selectHandler result:[self selectAllItems] range:NSMakeRange(0, result.count)];
+
+        [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+        
+        self.proccessing = NO;
+        return;
+    }
+    
+    BOOL nextRequest = prevLoaded;
+    
+    
+    
+    [self.filter request:nextRequest callback:^(NSArray *result, ChatHistoryState state) {
+        
+        NSArray *items = [self.controller messageTableItemsFromMessages:result];
+        
+        NSArray *converted = [self filterAndAdd:items isLates:NO];
+        
+        converted = [self sortItems:converted];
+        
+        if(nextRequest) {
+            [nextResult addObjectsFromArray:converted];
+        } else {
+            [prevResult addObjectsFromArray:converted];
+        }
+        
+        if(state == ChatHistoryStateFull) {
+            int bp = 0;
+        }
+        
+        [self setState:state next:nextRequest];
+        
+    
+        [self loadAroundMessagesWithSelectHandler:selectHandler prevResult:prevResult nextResult:nextResult];
+        
+    }];
     
 }
 
@@ -281,19 +355,25 @@ static TGChannelsPolling *channelPolling;
     NSArray *allItems = [self selectAllItems];
     
     
-    __block MessageTableItem *item;
+    __block int msgId;
     
     [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
+        if(((MessageTableItem *)allItems[0]).message.n_id && ((MessageTableItem *)allItems[0]).message.n_id < 0 && ((MessageTableItem *)allItems[0]).message.hole.date == INT32_MAX) {
+            msgId = ((MessageTableItem *)allItems[0]).message.hole.max_id;
+            *stop = YES;
+            return;
+        }
+        
         if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
         {
-            item = obj;
+            msgId = obj.message.n_id;
             *stop = YES;
         }
         
     }];
     
-    return item.message.n_id;
+    return msgId;
     
 }
 

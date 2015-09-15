@@ -421,9 +421,6 @@ static NSDictionary *attributes() {
         _stateImageView = nil;
     }
     
-    if(stateImage && !_stateImageView) {
-        int bp = 0;
-    }
 
     
     [self updateFrames];

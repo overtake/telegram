@@ -132,6 +132,33 @@ static NSString *kMessageItems = @"kMessageItems";
     return items;
 }
 
++(NSArray *)items:(NSArray *)messageIds withPeer_id:(int)peer_id {
+    
+    __block NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        NSDictionary *keys = [self messageKeys:peer_id];
+        
+        [messageIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            id item = keys[obj];
+            
+            if(item  != nil) {
+                [items addObject:item];
+            }
+            
+        }];
+        
+        
+    } synchronous:YES];
+    
+    
+    
+    return items;
+
+}
+
 +(void)removeAllItems:(int)peerId {
     
     [ASQueue dispatchOnStageQueue:^{

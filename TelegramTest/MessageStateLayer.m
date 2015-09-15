@@ -79,24 +79,14 @@
     _viewsCountText = nil;
     [_channelImageView removeFromSuperview];
     
-    if((state == MessageTableCellUnread || state == MessageTableCellRead) && self.container.item.message.from_id != 0) {
-
-         if(!self.readOrSentView) {
-            self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 5, 0, 0)];
-            self.readOrSentView.wantsLayer = YES;
-        }
-            
-        self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
-        [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-        [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 12 : 11, NSMinY(self.readOrSentView.frame))];
-        [self.layer addSublayer:self.readOrSentView.layer];
-
-    } else {
-        self.readOrSentView.image = nil;
-        [self.readOrSentView.layer removeFromSuperlayer];
-        self.readOrSentView = nil;
+    if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
-        if(self.container.item.message.from_id == 0) {
+        if(self.container.item.message.from_id == 0 ) {
+            
+            self.readOrSentView.image = nil;
+            [self.readOrSentView.layer removeFromSuperlayer];
+            self.readOrSentView = nil;
+            
             _viewsCountText = [TMTextField defaultTextField];
             [_viewsCountText setFont:TGSystemFont(12)];
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
@@ -111,7 +101,24 @@
             [_channelImageView setFrameOrigin:NSMakePoint(0, 6)];
             
             [self addSubview:_channelImageView];
+        } else {
+            if(!self.readOrSentView) {
+                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 5, 0, 0)];
+                self.readOrSentView.wantsLayer = YES;
+            }
+            
+            self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
+            [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
+            [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 12 : 11, NSMinY(self.readOrSentView.frame))];
+            [self.layer addSublayer:self.readOrSentView.layer];
         }
+
+    } else {
+        self.readOrSentView.image = nil;
+        [self.readOrSentView.layer removeFromSuperlayer];
+        self.readOrSentView = nil;
+        
+        
     }
     
     

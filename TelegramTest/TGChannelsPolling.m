@@ -9,6 +9,7 @@
 #import "TGChannelsPolling.h"
 #import "TGTimer.h"
 #import "TGForceChannelUpdate.h"
+#import "MessageTableItem.h"
 @interface TGChannelsPolling ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,assign) int pts;
@@ -127,7 +128,7 @@ static int pollingDelay = 5;
     
     
     
-    BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.invalidate == 1"]].count > 0;
+    BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.invalidate == 1"]].count > 0;
     
     
     
@@ -136,7 +137,7 @@ static int pollingDelay = 5;
         return;
     }
     
-    int pts = [(TL_localMessage *)[result lastObject] n_id];
+    int pts = [[(MessageTableItem *)[result lastObject] message] n_id];
     
     int limit = _conversation.pts - pts;
     

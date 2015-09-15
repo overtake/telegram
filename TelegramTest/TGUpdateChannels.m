@@ -184,11 +184,10 @@
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id max_id:msg.n_id date:msg.date count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id-1 max_id:msg.n_id date:msg.date count:0];
                 
-                hole.max_id = msg.n_id;
+                hole.max_id = msg.n_id+1;
                 hole.messagesCount++;
-                hole.date = msg.date;
                 
                 [hole save];
                 
@@ -243,6 +242,8 @@
         TL_updateChannelMessageViews *views = (TL_updateChannelMessageViews *)update;
         
         [[Storage manager] updateMessageViews:views.views channelMsgId:channelMsgId(views.n_id, views.peer.peer_id)];
+        
+        [Notification perform:UPDATE_MESSAGE_VIEWS data:@{KEY_DATA:@{@(views.n_id):@(views.views)},KEY_MESSAGE_ID_LIST:@[@(views.n_id)],KEY_PEER_ID:@(views.peer.peer_id)}];
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
         [[MTNetwork instance].updateService.proccessor addUpdate:update];

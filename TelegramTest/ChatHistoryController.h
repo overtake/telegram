@@ -57,6 +57,9 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler;
 
 
+
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg selectHandler:(selectHandler)selectHandler;
+
 -(void)addItem:(MessageTableItem *)item;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation  sentControllerCallback:(dispatch_block_t)sentControllerCallback;

@@ -123,7 +123,6 @@
         [[Storage manager] insertMessagesHole:groupHole];
 
         
-        
         if(groupHole.uniqueId != unslamHole.uniqueId) {
             TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:0];
             

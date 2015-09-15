@@ -126,7 +126,7 @@ static NSMutableArray *listeners;
 }
 
 -(NSUInteger)selectLimit {
-    return 5;
+    return 20;
 }
 
 
@@ -717,6 +717,11 @@ static NSMutableArray *listeners;
         
     } synchronous:sync];
     
+}
+
+
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)item selectHandler:(selectHandler)selectHandler {
+    @throw [NSException exceptionWithName:@"ChatHistoryController not support loading around messages" reason:@";(" userInfo:nil];
 }
 
 -(void)saveId:(NSArray *)source next:(BOOL)next {

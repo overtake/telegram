@@ -279,6 +279,8 @@
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
     
+    [Notification addObserver:self selector:@selector(updateMessageViews:) name:UPDATE_MESSAGE_VIEWS];
+    
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
     
@@ -481,7 +483,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
     
-    NSArray *items = [[self.defHFClass messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
+    NSArray *items = [[self.historyController.filter.class messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
@@ -502,7 +504,7 @@
     NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
     
     
-    NSArray *items = [self.defHFClass items:messages];
+    NSArray *items = [self.historyController.filter.class items:messages];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        
@@ -526,6 +528,24 @@
     
 }
 
+-(void)updateMessageViews:(NSNotification *)notification {
+    
+    NSArray *items = [self.historyController.filter.class items:notification.userInfo[KEY_MESSAGE_ID_LIST] withPeer_id:[notification.userInfo[KEY_PEER_ID] intValue]];
+    
+    NSDictionary *data = notification.userInfo[KEY_DATA];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItemText *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger index = [self indexOfObject:item];
+        
+        item.message.views = [data[@(item.message.n_id)] intValue];
+        
+        if(index != NSNotFound) {
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+    }];
+    
+}
+
 -(void)messageTableItemsHoleUpdate:(NSNotification *)notification {
     
     
@@ -533,7 +553,7 @@
         TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
         
         
-        NSArray *items = [self.defHFClass items:@[@(hole.uniqueId)]];
+        NSArray *items = [self.historyController.filter.class items:@[@(hole.uniqueId)]];
         
         MessageTableItemHole *item;
         
@@ -567,7 +587,7 @@
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
     
     
-    NSArray *items = [self.defHFClass items:@[@(message.n_id)]];
+    NSArray *items = [self.historyController.filter.class items:@[@(message.n_id)] withPeer_id:message.peer_id];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
@@ -2152,15 +2172,51 @@ static NSTextAttachment *headerMediaIcon() {
                 return;
             
             self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass] == [ChannelImportantFilter class] ? [ChannelFilter class] : [self defHFClass]];
-            
-            [self removeScrollEvent];
-            
+                        
             [self.historyController removeAllItems];
-            
-            [self flushMessages];
             
             
             if(conversation.type == DialogTypeChannel) {
+                
+                MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
+                
+                NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.n_id]];
+                
+                __block NSRect rect = NSZeroRect;
+                
+                int yTopOffset = 0;
+                
+                if(index != NSNotFound) {
+                    rect = [self.table rectOfRow:index];
+                    
+                    yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
+                    
+                }
+                
+                [self removeScrollEvent];
+                
+                [self.historyController loadAroundMessagesWithMessage:importantItem selectHandler:^(NSArray *result, NSRange range) {
+                    
+                    [self messagesLoadedTryToInsert:result pos:range.location next:YES];
+                    
+                    
+                        if(rect.origin.y == 0) {
+                            [self scrollToItem:importantItem animated:NO centered:NO highlight:YES];
+                        } else {
+                           
+                            rect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+
+                                rect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                            
+                            [self.table.scrollView.clipView scrollToPoint:rect.origin];
+                        }
+                        
+                        [self removeScrollEvent];
+
+                }];
+                
+                return;
+                
                 MessageTableItem *item = [self messageTableItemsFromMessages:@[msg]][0];
                 [self.historyController addItemWithoutSavingState:item];
                 
@@ -2169,18 +2225,23 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.normalNavigationCenterView enableDiscussion];
                 
             } else {
+                
+                [self flushMessages];
+                
                 self.historyController.min_id = messageId;
                 self.historyController.start_min = messageId;
                 self.historyController.max_id = messageId;
                 self.historyController.need_save_to_db = NO;
                 self.historyController.maxDate = 0;
                 self.historyController.minDate = 0;
+                
+                [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
             }
             
-            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
             
             
-            [self addScrollEvent];
+            
+            
         };
         
         if(!msg) {
@@ -2494,8 +2555,12 @@ static NSTextAttachment *headerMediaIcon() {
         
        if(prevResult.count > 0) {
             MessageTableItem *item = prevResult[0];
-            if(self.conversation.peer_id != item.message.peer_id)
-                assert(NO);
+           if(self.conversation.peer_id != item.message.peer_id) {
+#ifdef TGDEBUG
+        assert(NO);
+#endif
+           }
+           
         }
         
         

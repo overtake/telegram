@@ -141,11 +141,13 @@
     int min = last.n_id;
     
     [groups addObjectsFromArray:[[Storage manager] groupHoles:self.controller.conversation.peer_id min:min max:max]];
+
     
     // max to min
     [messages enumerateObjectsWithOptions:bottom ? NSEnumerationReverse : 0  usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
         TGMessageGroupHole *slamHole = [[groups filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.max_id > %d AND self.min_id < %d",obj.n_id,obj.n_id]] firstObject];
+        
         
         if(slamHole != nil) {
             
@@ -164,12 +166,16 @@
             
             
         } else  if(![obj isImportantMessage]) {
-            [groups addObject:[[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:bottom?INT32_MAX:obj.date count:1]];
+            
+            
+            [groups addObject:[[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id-1:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:obj.date count:1]];
         }
         
    }];
     
+    
     [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
+        
         [[Storage manager] insertMessagesHole:obj];
     }];
     

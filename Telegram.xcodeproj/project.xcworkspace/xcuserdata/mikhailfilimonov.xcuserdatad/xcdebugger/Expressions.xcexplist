@@ -469,6 +469,12 @@
             <PersistentString
                value = "next">
             </PersistentString>
+            <PersistentString
+               value = "max">
+            </PersistentString>
+            <PersistentString
+               value = "min">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -1572,6 +1578,14 @@
          contextName = "__32+[TGSecretAction _resendActions]_block_invoke_2:TGSecretAction.m">
       </ContextState>
       <ContextState
+         contextName = "__86-[ChannelHistoryController loadAroundMessagesWithSelectHandler:prevResult:nextResult:]_block_invoke:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "nextRequest">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ImageAttachSenderItem didEndUploading]:ImageAttachSenderItem.m">
       </ContextState>
       <ContextState
@@ -1936,6 +1950,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChannelHistoryController loadAroundMessagesWithSelectHandler:prevResult:nextResult:]:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.prevState">
+            </PersistentString>
+            <PersistentString
+               value = "self.nextState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUserRowView redrawRow]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
@@ -2011,6 +2036,9 @@
                value = "delegateDidStop">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__77-[ChannelHistoryController loadAroundMessagesWithMessage:sync:selectHandler:]_block_invoke:ChannelHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke_4235:TGPasswosdMainViewController.m">
@@ -2321,6 +2349,11 @@
       </ContextState>
       <ContextState
          contextName = "__39-[ChannelFilter fillGroupHoles:bottom:]_block_invoke122:ChannelFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "groups">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ImageAttachSenderItem performRequest]:ImageAttachSenderItem.m">
@@ -2335,6 +2368,9 @@
                value = "request">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController scrollToItem:animated:centered:highlight:]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController windowBecomeNotification:]:ChatHistoryController.m">
@@ -2975,6 +3011,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[Storage groupHoles:min:max:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "min">
+            </PersistentString>
+            <PersistentString
+               value = "max">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGPasswosdMainViewController rebuildController]:TGPasswosdMainViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -2998,6 +3045,9 @@
       </ContextState>
       <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateChannels proccessUpdate:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
@@ -3030,6 +3080,9 @@
       </ContextState>
       <ContextState
          contextName = "__35-[ForwardSenterItem performRequest]_block_invoke98:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__67-[MessagesViewController scrollToItem:animated:centered:highlight:]_block_invoke:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "__38-[TGStickerPackEmojiController reload]_block_invoke:TGStickerPackEmojiController.m">
