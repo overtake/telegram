@@ -1435,8 +1435,6 @@ static NSTextAttachment *headerMediaIcon() {
         __block MessageTableItem *item = [self objectAtIndex:range.location + range.length - 2];
         
         
-    
-    
         if(item) {
             [self showMessage:item.message.n_id fromMsgId:0];
             return;
@@ -2233,11 +2231,42 @@ static NSTextAttachment *headerMediaIcon() {
                         [self scrollToItem:importantItem animated:NO centered:NO highlight:YES];
                     } else {
                         
-                        rect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                        __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
                         
-                        rect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        if(drect.origin.y <= 0) {
+                            int bp = 0;
+                            
+                            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                            
+                            [ASQueue dispatchOnStageQueue:^{
+                                
+                                dispatch_block_t block = ^{
+                                    drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                                };
+                                
+                                if(NSEqualRects(drect, NSZeroRect)) {
+                                    block();
+                                } else {
+                                    dispatch_semaphore_signal(semaphore);
+                                }
+                                
+                            } synchronous:NO];
+                            
+                            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                        }
                         
-                        [self.table.scrollView.clipView scrollToPoint:rect.origin];
+                         if(self.table.scrollView.documentOffset.y > drect.origin.y)
+                             drect.origin.y += (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        else
+                            drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        
+                        NSLog(@"%@",NSStringFromRect(drect));
+                        
+                        if(drect.origin.y < 0) {
+                            int bp = 0;
+                        }
+                        
+                        [self.table.scrollView.clipView scrollToPoint:drect.origin];
                     }
                     
                     [self addScrollEvent];
