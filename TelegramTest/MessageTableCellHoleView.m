@@ -21,7 +21,7 @@
         [[Telegram rightViewController].messagesViewController jumpToLastMessages:YES];
     else if([link isEqualToString:@"showComments"]) {
         
-        [[Telegram rightViewController].messagesViewController showMessage:_holeItem.message.hole.min_id fromMsgId:0];
+        [[Telegram rightViewController].messagesViewController showMessage:_holeItem.message.hole.min_id fromMsgId:0 switchDiscussion:YES];
     }
 }
 

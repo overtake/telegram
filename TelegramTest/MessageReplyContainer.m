@@ -189,7 +189,7 @@
         
         if(_messageField.selectRange.location == NSNotFound) {
             if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
+                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id ];
         }
         
         

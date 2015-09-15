@@ -36,6 +36,10 @@
         }
     }
     
+    if(item.message.isChannelMessage && item.message.isImportantMessage && !item.message.isViewed) {
+        
+    }
+    
 }
 
 - (void)resizeAndRedraw {

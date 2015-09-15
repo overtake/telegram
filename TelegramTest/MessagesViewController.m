@@ -215,7 +215,7 @@
             
             [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
             
-            [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil];
+            [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil switchDiscussion:NO];
             return;
         }
     }
@@ -649,7 +649,7 @@
     
     [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
         
-        [self showMessage:msg_id fromMsgId:0 animated:NO selectText:searchString];
+        [self showMessage:msg_id fromMsgId:0 animated:NO selectText:searchString switchDiscussion:NO];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -1429,12 +1429,31 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)showOrHideChannelDiscussion {
     
-    Class f = [self.historyController.filter isKindOfClass:[ChannelFilter class]] ? [ChannelImportantFilter class] : [ChannelFilter class];
+    
+    if(self.conversation.type == DialogTypeChannel) {
+        NSRange range = [self.table rowsInRect:[self.table visibleRect]];
+        __block MessageTableItem *item = [self objectAtIndex:range.location + range.length - 2];
+        
+        
+    
+    
+        if(item) {
+            [self showMessage:item.message.n_id fromMsgId:0];
+            return;
+        } 
+
+    }
+    
+    
+    Class f = !self.normalNavigationCenterView.discussIsEnabled ? [ChannelImportantFilter class] : [ChannelFilter class];
     
     [self.historyController setFilter:[[f alloc] initWithController:self.historyController]];
     
     [self flushMessages];
     [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
+
+    
+    
 }
 
 //- (void)showConnectionController:(BOOL)animated {
@@ -2147,10 +2166,14 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId {
-    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil];
+    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil switchDiscussion:NO];
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text {
+- (void)showMessage:(int)messageId fromMsgId:(int)msgId switchDiscussion:(BOOL)switchDiscussion {
+    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil switchDiscussion:switchDiscussion];
+}
+
+- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
@@ -2164,14 +2187,17 @@ static NSTextAttachment *headerMediaIcon() {
         
         TL_conversation *conversation = self.conversation;
         
-        __block TL_localMessage *msg = conversation.type == DialogTypeChannel ?[[Storage manager] lastImportantMessageAroundMinId:channelMsgId(messageId, conversation.peer_id)] : [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
+        __block TL_localMessage *msg = conversation.type == DialogTypeChannel ? [[Storage manager] lastImportantMessageAroundMinId:channelMsgId(messageId, conversation.peer_id)] : [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
         
         dispatch_block_t block = ^{
             
             if(conversation != self.conversation || !msg)
                 return;
             
-            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass] == [ChannelImportantFilter class] ? [ChannelFilter class] : [self defHFClass]];
+            if(switchDiscussion)
+                [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
+            
+            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : [self defHFClass]];
                         
             [self.historyController removeAllItems];
             
@@ -2195,34 +2221,32 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 [self removeScrollEvent];
                 
+                [self showModalProgress];
+                
                 [self.historyController loadAroundMessagesWithMessage:importantItem selectHandler:^(NSArray *result, NSRange range) {
+                    
+                    [self flushMessages];
                     
                     [self messagesLoadedTryToInsert:result pos:range.location next:YES];
                     
-                    
-                        if(rect.origin.y == 0) {
-                            [self scrollToItem:importantItem animated:NO centered:NO highlight:YES];
-                        } else {
-                           
-                            rect = [self.table rectOfRow:[self indexOfObject:importantItem]];
-
-                                rect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
-                            
-                            [self.table.scrollView.clipView scrollToPoint:rect.origin];
-                        }
+                    if(rect.origin.y == 0) {
+                        [self scrollToItem:importantItem animated:NO centered:NO highlight:YES];
+                    } else {
                         
-                        [self removeScrollEvent];
+                        rect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                        
+                        rect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        
+                        [self.table.scrollView.clipView scrollToPoint:rect.origin];
+                    }
+                    
+                    [self addScrollEvent];
 
+                    [self hideModalProgress];
                 }];
                 
-                return;
                 
-                MessageTableItem *item = [self messageTableItemsFromMessages:@[msg]][0];
-                [self.historyController addItemWithoutSavingState:item];
-                
-                [self messagesLoadedTryToInsert:@[item] pos:0 next:YES];
-                
-                [self.normalNavigationCenterView enableDiscussion];
+
                 
             } else {
                 
@@ -2290,6 +2314,8 @@ static NSTextAttachment *headerMediaIcon() {
         
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
+        
+        [self.normalNavigationCenterView enableDiscussion:NO force:NO];
         [TGHelpPopup popover].fadeDuration = 0;
         [TGHelpPopup close];
         

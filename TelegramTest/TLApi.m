@@ -1987,6 +1987,21 @@
 }
 @end
 
+@implementation TLAPI_messages_toggleChannelComments
++(TLAPI_messages_toggleChannelComments*)createWithChat_id:(TLInputChat*)chat_id enabled:(Boolean)enabled {
+    TLAPI_messages_toggleChannelComments* obj = [[TLAPI_messages_toggleChannelComments alloc] init];
+    obj.chat_id = chat_id;
+	obj.enabled = enabled;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1274693457];
+	[ClassStore TLSerialize:self.chat_id stream:stream];
+	[stream writeBool:self.enabled];
+	return [stream getOutput];
+}
+@end
+
 @implementation TLAPI_messages_deleteChannelMessages
 +(TLAPI_messages_deleteChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id {
     TLAPI_messages_deleteChannelMessages* obj = [[TLAPI_messages_deleteChannelMessages alloc] init];

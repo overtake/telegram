@@ -106,9 +106,13 @@
     return self;
 }
 
+-(BOOL)discussIsEnabled {
+    return _discussionSwitch.isOn;
+}
 
--(void)enableDiscussion {
-    [_discussionSwitch setOn:YES];
+-(void)enableDiscussion:(BOOL)enable force:(BOOL)force {
+    [_discussionSwitch setOn:enable];
+    _discussForceSwitched = force;
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -125,8 +129,7 @@
     self->_dialog = dialog;
     
     [_discussionSwitch setHidden:dialog.type != DialogTypeChannel || dialog.chat.isBroadcast];
-    [_discussionSwitch setOn:NO];
-    
+
     [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
     

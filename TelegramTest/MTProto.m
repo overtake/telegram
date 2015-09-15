@@ -5391,6 +5391,46 @@
         
 @end
 
+@implementation TL_messageActionChannelToggleComments
++(TL_messageActionChannelToggleComments*)createWithEnabled:(Boolean)enabled {
+	TL_messageActionChannelToggleComments* obj = [[TL_messageActionChannelToggleComments alloc] init];
+	obj.enabled = enabled;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeBool:self.enabled];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.enabled = [stream readBool];
+}
+        
+-(TL_messageActionChannelToggleComments *)copy {
+    
+    TL_messageActionChannelToggleComments *objc = [[TL_messageActionChannelToggleComments alloc] init];
+    
+    objc.enabled = self.enabled;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 
 @implementation TLDialog
 @end

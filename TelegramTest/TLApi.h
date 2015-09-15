@@ -843,6 +843,13 @@
 +(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
 @end
 
+@interface TLAPI_messages_toggleChannelComments : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property Boolean enabled;
+
++(TLAPI_messages_toggleChannelComments*)createWithChat_id:(TLInputChat*)chat_id enabled:(Boolean)enabled;
+@end
+
 @interface TLAPI_messages_deleteChannelMessages : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) NSMutableArray* n_id;

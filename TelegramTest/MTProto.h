@@ -1022,6 +1022,7 @@
 @property (nonatomic, strong) TLPhoto* photo;
 @property int user_id;
 @property int inviter_id;
+@property Boolean enabled;
 @end
 
 @interface TL_messageActionEmpty : TLMessageAction<NSCoding>
@@ -1050,6 +1051,9 @@
 @end
 @interface TL_messageActionChannelCreate : TLMessageAction<NSCoding>
 +(TL_messageActionChannelCreate*)createWithTitle:(NSString*)title;
+@end
+@interface TL_messageActionChannelToggleComments : TLMessageAction<NSCoding>
++(TL_messageActionChannelToggleComments*)createWithEnabled:(Boolean)enabled;
 @end
 	
 @interface TLDialog()
