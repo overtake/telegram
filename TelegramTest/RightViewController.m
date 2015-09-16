@@ -575,7 +575,7 @@
             
         }
         
-        [self.navigationViewController pushViewController:self.messagesViewController animated:((self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]) || [Telegram isSingleLayout]) && ![sender isKindOfClass:[AppDelegate class]] && ![sender isKindOfClass:[TGPhotoViewer class]] && ![sender isKindOfClass:NSClassFromString(@"ComposeActionCreateChannelBehavior")]];
+        [self.navigationViewController pushViewController:self.messagesViewController animated:((self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]) || [Telegram isSingleLayout]) && ![sender isKindOfClass:[AppDelegate class]] && ![sender isKindOfClass:[TGPhotoViewer class]] && ![sender isKindOfClass:[ComposeActionBehavior class]]];
     }
 
     return YES;

@@ -30,9 +30,17 @@
     } else {
         [self.delegate behaviorDidStartRequest];
         
-        [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[[(SelectUserItem *)self.action.result.multiObjects[0] user] inputUser] role: [self.action.result.singleObject boolValue] ? [TL_channelRoleModerator create] : [TL_channelRolePublisher create]] successHandler:^(id request, id response) {
+        [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[[(SelectUserItem *)self.action.result.multiObjects[0] user] inputUser] role: [self.action.result.singleObject boolValue] ? [TL_channelRoleModerator create] : [TL_channelRoleEditor create]] successHandler:^(id request, id response) {
+                        
+            NSArray *stack = self.action.currentViewController.navigationViewController.viewControllerStack;
             
-            int bp =0;
+            NSUInteger idx = [stack indexOfObject:[Telegram rightViewController].channelInfoViewController];
+            
+            self.action.currentViewController.navigationViewController.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
+            
+            
+            [[Telegram rightViewController] showChannelInfoPage:self.chat];
+
             
             [self.delegate behaviorDidEndRequest:response];
             

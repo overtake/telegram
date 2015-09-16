@@ -2329,6 +2329,19 @@
 }
 @end
 
+@implementation TLAPI_channels_deleteChannel
++(TLAPI_channels_deleteChannel*)createWithChannel:(TLInputChannel*)channel {
+    TLAPI_channels_deleteChannel* obj = [[TLAPI_channels_deleteChannel alloc] init];
+    obj.channel = channel;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1072619549];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	return [stream getOutput];
+}
+@end
+
 @implementation TLAPI_updates_getChannelDifference
 +(TLAPI_updates_getChannelDifference*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit {
     TLAPI_updates_getChannelDifference* obj = [[TLAPI_updates_getChannelDifference alloc] init];

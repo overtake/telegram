@@ -19895,9 +19895,9 @@
         
 @end
 
-@implementation TL_channelParticipantPublisher
-+(TL_channelParticipantPublisher*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date {
-	TL_channelParticipantPublisher* obj = [[TL_channelParticipantPublisher alloc] init];
+@implementation TL_channelParticipantEditor
++(TL_channelParticipantEditor*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date {
+	TL_channelParticipantEditor* obj = [[TL_channelParticipantEditor alloc] init];
 	obj.user_id = user_id;
 	obj.inviter_id = inviter_id;
 	obj.date = date;
@@ -19914,9 +19914,9 @@
 	self.date = [stream readInt];
 }
         
--(TL_channelParticipantPublisher *)copy {
+-(TL_channelParticipantEditor *)copy {
     
-    TL_channelParticipantPublisher *objc = [[TL_channelParticipantPublisher alloc] init];
+    TL_channelParticipantEditor *objc = [[TL_channelParticipantEditor alloc] init];
     
     objc.user_id = self.user_id;
     objc.inviter_id = self.inviter_id;
@@ -20239,9 +20239,9 @@
         
 @end
 
-@implementation TL_channelRolePublisher
-+(TL_channelRolePublisher*)create {
-	TL_channelRolePublisher* obj = [[TL_channelRolePublisher alloc] init];
+@implementation TL_channelRoleEditor
++(TL_channelRoleEditor*)create {
+	TL_channelRoleEditor* obj = [[TL_channelRoleEditor alloc] init];
 	
 	return obj;
 }
@@ -20252,9 +20252,9 @@
 	
 }
         
--(TL_channelRolePublisher *)copy {
+-(TL_channelRoleEditor *)copy {
     
-    TL_channelRolePublisher *objc = [[TL_channelRolePublisher alloc] init];
+    TL_channelRoleEditor *objc = [[TL_channelRoleEditor alloc] init];
     
     
     

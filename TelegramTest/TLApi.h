@@ -976,6 +976,12 @@
 +(TLAPI_channels_exportInvite*)createWithChannel:(TLInputChannel*)channel;
 @end
 
+@interface TLAPI_channels_deleteChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+
++(TLAPI_channels_deleteChannel*)createWithChannel:(TLInputChannel*)channel;
+@end
+
 @interface TLAPI_updates_getChannelDifference : TLApiObject
 @property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) TLChannelMessagesFilter* filter;

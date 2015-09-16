@@ -2173,7 +2173,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(fromMsgId != 0)
         [_replyMsgsStack addObject:@(fromMsgId)];
     
-    if(item && self.conversation.type != DialogTypeChannel)
+    if(item)
     {
         [self scrollToItem:item animated:animated centered:YES highlight:YES];
     } else {

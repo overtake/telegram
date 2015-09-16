@@ -2630,8 +2630,8 @@
 @interface TL_channelParticipantModerator : TLChannelParticipant<NSCoding>
 +(TL_channelParticipantModerator*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
 @end
-@interface TL_channelParticipantPublisher : TLChannelParticipant<NSCoding>
-+(TL_channelParticipantPublisher*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@interface TL_channelParticipantEditor : TLChannelParticipant<NSCoding>
++(TL_channelParticipantEditor*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
 @end
 @interface TL_channelParticipantKicked : TLChannelParticipant<NSCoding>
 +(TL_channelParticipantKicked*)createWithUser_id:(int)user_id kicked_by:(int)kicked_by date:(int)date;
@@ -2664,8 +2664,8 @@
 @interface TL_channelRoleModerator : TLChannelParticipantRole<NSCoding>
 +(TL_channelRoleModerator*)create;
 @end
-@interface TL_channelRolePublisher : TLChannelParticipantRole<NSCoding>
-+(TL_channelRolePublisher*)create;
+@interface TL_channelRoleEditor : TLChannelParticipantRole<NSCoding>
++(TL_channelRoleEditor*)create;
 @end
 	
 @interface TLchannels_ChannelParticipants()
