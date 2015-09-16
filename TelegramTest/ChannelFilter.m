@@ -171,7 +171,7 @@
             
         } else  if(![obj isImportantMessage]) {
             
-            TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id-1:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:obj.date count:1];
+            TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id:0 max_id:bottom?INT32_MAX:obj.n_id date:obj.date count:1];
             
             [groups addObject:groupHole];
         }
@@ -182,12 +182,11 @@
     
     [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
         
-        NSLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
+        MTLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
         
         [[Storage manager] insertMessagesHole:obj];
     }];
     
-     int bp = 0;
     
 }
 

@@ -564,6 +564,10 @@
 		C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */; };
 		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
 		C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */; };
+		C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */; };
+		C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */; };
+		C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */; };
+		C2B0DF8C1BA9CE290023982C /* TGUserContainerRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669851BA5571C004AF678 /* TGSettingsTableView.m */; };
@@ -2127,6 +2131,14 @@
 		C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiButton.m; sourceTree = "<group>"; };
 		C2B0DF751BA98E7C0023982C /* TL_localEmptyMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localEmptyMessage.h; sourceTree = "<group>"; };
 		C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localEmptyMessage.m; sourceTree = "<group>"; };
+		C2B0DF811BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddChannelModeratorBehavior.h; sourceTree = "<group>"; };
+		C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddChannelModeratorBehavior.m; sourceTree = "<group>"; };
+		C2B0DF841BA9C59B0023982C /* ComposeConfirmModeratorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeConfirmModeratorViewController.h; sourceTree = "<group>"; };
+		C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeConfirmModeratorViewController.m; sourceTree = "<group>"; };
+		C2B0DF871BA9C6EC0023982C /* TGUserContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserContainerView.h; sourceTree = "<group>"; };
+		C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserContainerView.m; sourceTree = "<group>"; };
+		C2B0DF8A1BA9CE290023982C /* TGUserContainerRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserContainerRowItem.h; sourceTree = "<group>"; };
+		C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserContainerRowItem.m; sourceTree = "<group>"; };
 		C2B1730B19A3BF43003FBA23 /* Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		C2B325EC1A237A420012DE34 /* TLApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLApiObject.h; sourceTree = "<group>"; };
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
@@ -3666,6 +3678,8 @@
 				C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */,
 				C2D8CFC11B84D3E200080775 /* ComposeActionCreateChannelBehavior.h */,
 				C2D8CFC21B84D3E200080775 /* ComposeActionCreateChannelBehavior.m */,
+				C2B0DF811BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.h */,
+				C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -4164,6 +4178,10 @@
 			children = (
 				C271524F19B5C8AC00841C8A /* TMProgressModalView.h */,
 				C271525019B5C8AC00841C8A /* TMProgressModalView.m */,
+				C2B0DF871BA9C6EC0023982C /* TGUserContainerView.h */,
+				C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */,
+				C2B0DF8A1BA9CE290023982C /* TGUserContainerRowItem.h */,
+				C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -5177,6 +5195,8 @@
 				C2D8CFC51B84D73D00080775 /* ComposeCreateChannelViewController.m */,
 				C2B6698A1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.h */,
 				C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */,
+				C2B0DF841BA9C59B0023982C /* ComposeConfirmModeratorViewController.h */,
+				C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */,
 			);
 			name = channels;
 			sourceTree = "<group>";
@@ -6125,6 +6145,7 @@
 				C2D4B8761AFCE8FA0035B4E4 /* YapDatabase.m in Sources */,
 				0AA3F3A818BDF54F00D383F1 /* TMStatusTextField.m in Sources */,
 				C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */,
+				C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */,
 				0A9EDC4A1897BA0E0037E1BC /* CAAnimation+RBLBlockAdditions.m in Sources */,
 				C2D51B981B179D91009327C0 /* FullUsersManager.m in Sources */,
 				C2AA4EB918A8D23A00E20C68 /* TL_localMessage.m in Sources */,
@@ -6283,6 +6304,7 @@
 				C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* TGSwipeRedView.m in Sources */,
+				C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
@@ -6417,6 +6439,7 @@
 				0AA7E1C618CCF1D60064EFC7 /* ChatInfoHeaderView.m in Sources */,
 				CEA589471815ADBD00462DF0 /* TGDownloadOperation.m in Sources */,
 				C26E80301B7E106B003CC483 /* TGRecentSearchTableView.m in Sources */,
+				C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */,
 				0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */,
 				CEC8B88A1832108A00283E53 /* Reachability.m in Sources */,
 				C247C48318C0D38600726C91 /* TGUpdateContainer.m in Sources */,
@@ -6775,6 +6798,7 @@
 				C2FA78D3191CDBF6001A9D1B /* ProfileSharedMediaView.m in Sources */,
 				C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */,
 				C2AA4F0618A8ED5500E20C68 /* TGObserverProxy.m in Sources */,
+				C2B0DF8C1BA9CE290023982C /* TGUserContainerRowItem.m in Sources */,
 				0A9EDC121896FE010037E1BC /* TMHyperlinkTextField.m in Sources */,
 				C2D4B8671AFCE8F90035B4E4 /* YapDatabaseLogging.m in Sources */,
 				C23298DE18CF61DD000826E5 /* TMMediaController.mm in Sources */,

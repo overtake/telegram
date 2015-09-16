@@ -375,7 +375,7 @@
     
     TLChat *chat = self.controller.chat;
     
-    [[FullChatManager sharedManager]  performLoad:chat.n_id isChannel:[chat isKindOfClass:[TL_channel class]] callback:^(TLChatFull *fullChat) {
+    [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
     
          self.fullChat = fullChat;
         

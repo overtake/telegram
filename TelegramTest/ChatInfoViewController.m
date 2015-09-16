@@ -109,6 +109,7 @@
 
     
     
+    
     _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 410)];
     
 
@@ -136,9 +137,7 @@
 
 - (void)buildRightView {
     TMView *view = [[TMView alloc] init];
-    
-    [_headerView setType:self.type];
-    
+        
     int width = 0;
     
     TMTextButton *button;
@@ -323,7 +322,7 @@
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id isChannel:[strongSelf.chat isKindOfClass:[TL_channel class]] callback:^(TLChatFull *fullChat) {
+        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^(TLChatFull *fullChat) {
             item.isBlocking = NO;
             [item redrawRow];
         }];
@@ -388,7 +387,7 @@
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
     if([item isEqualTo:_headerItem]) {
         return _headerView.bounds.size.height;
-    }  else if([item isEqualTo:_bottomItem]) {
+    }  else if([item isKindOfClass:[ChatBottomItem class]]) {
         return 70;
     } else {
         return 50;

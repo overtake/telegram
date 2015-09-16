@@ -8,6 +8,7 @@
 
 #import "ChannelInfoHeaderView.h"
 #import "UserInfoParamsView.h"
+#import "ComposeActionAddChannelModeratorBehavior.h"
 @interface ChannelInfoHeaderView ()
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
@@ -26,6 +27,14 @@
 @property (nonatomic,strong) TMView *editAboutContainer;
 
 @property (nonatomic,strong) TMTextField *linkTextField;
+
+
+@property (nonatomic,strong) UserInfoShortButtonView *managmentButton;
+@property (nonatomic,strong) UserInfoShortButtonView *enableCommentsButton;
+
+
+@property (nonatomic,strong) ITSwitch *commentsSwitch;
+
 @end
 
 @implementation ChannelInfoHeaderView
@@ -115,6 +124,43 @@
             
         }];
         
+        self.managmentButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.Managment", nil) tapBlock:^{
+            
+            [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:self.controller.chat]];
+            
+        }];
+        
+        [self addSubview:self.managmentButton];
+        
+        
+        self.enableCommentsButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.EnableComments", nil) tapBlock:nil];
+        
+        
+        _commentsSwitch = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 30, 20)];
+        
+        weak();
+        
+        [_commentsSwitch setDidChangeHandler:^(BOOL isOn){
+           
+            [TMViewController showModalProgress];
+            
+            
+             [RPCRequest sendRequest:[TLAPI_channels_toggleComments createWithChannel:weakSelf.controller.chat.inputPeer enabled:isOn] successHandler:^(id request, id response) {
+                 
+
+                 
+             } errorHandler:^(id request, RpcError *error) {
+                 
+             }];
+            
+            [TMViewController hideModalProgress];
+            
+        }];
+        
+        [self.enableCommentsButton setRightContainer:_commentsSwitch];
+        
+        
+        [self addSubview:self.enableCommentsButton];
         
         self.linkTextField = [TMTextField defaultTextField];
         
@@ -131,6 +177,8 @@
         self.linkEditButton.textButton.textColor = TEXT_COLOR;
         self.setGroupPhotoButton.textButton.textColor = TEXT_COLOR;
         self.addMembersButton.textButton.textColor = TEXT_COLOR;
+        self.enableCommentsButton.textButton.textColor = TEXT_COLOR;
+        self.managmentButton.textButton.textColor = TEXT_COLOR;
         
         self.openOrJoinChannelButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.OpenChannel", nil) tapBlock:^{
             
@@ -151,7 +199,7 @@
     
     TLChat *chat = self.controller.chat;
     
-    [[FullChatManager sharedManager]  performLoad:chat.n_id isChannel:[chat isKindOfClass:[TL_channel class]] callback:^(TLChatFull *fullChat) {
+    [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
         
         self.controller.fullChat = fullChat;
         
@@ -175,6 +223,7 @@
             [self.linkEditButton setRightContainer:nil];
         }
         
+        [_commentsSwitch setOn:!chat.isBroadcast];
         
         [self.sharedLinksButton setConversation:self.controller.chat.dialog];
         [self.filesMediaButton setConversation:self.controller.chat.dialog];
@@ -210,9 +259,9 @@
 -(void)rebuildOrigins {
     
     [self.exportChatInvite setHidden:YES];
-    [self.sharedMediaButton setHidden:NO];
-    [self.filesMediaButton setHidden:NO];
-    [self.sharedLinksButton setHidden:NO];
+    [self.sharedMediaButton setHidden:self.type == ChatInfoViewControllerEdit];
+    [self.filesMediaButton setHidden:self.type == ChatInfoViewControllerEdit];
+    [self.sharedLinksButton setHidden:self.type == ChatInfoViewControllerEdit];
     
     
     [self.linkView setHidden:self.type == ChatInfoViewControllerEdit || self.linkView.string.length == 0];
@@ -225,32 +274,47 @@
     [self.linkEditButton setHidden:self.type != ChatInfoViewControllerEdit];
     [self.setGroupPhotoButton setHidden:self.type != ChatInfoViewControllerEdit];
     [self.openOrJoinChannelButton setHidden:self.type == ChatInfoViewControllerEdit];
+   
+    
+    [self.managmentButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.enableCommentsButton setHidden:self.type != ChatInfoViewControllerEdit];
     
     [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit];
     
-    int yOffset = 0;
+    
+     int yOffset = 42;
     
     [self.notificationView setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
-    
-    yOffset+=42;
-    
-    [self.sharedLinksButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-    
-    yOffset+=42;
-    
-    [self.filesMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-    
-    yOffset+=42;
-    
-    [self.sharedMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-    
-    yOffset+=42;
-    
+    if(self.type != ChatInfoViewControllerEdit) {
+       
+        
+        yOffset+=42;
+        
+        [self.sharedLinksButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+        
+        [self.filesMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+        
+        [self.sharedMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+    } else {
+        
+        yOffset+=42;
+        
+        [self.managmentButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+       
+    }
     
     
     if(!self.addMembersButton.isHidden) {
-        yOffset+=NSHeight(self.notificationView.frame);
+        yOffset+=42;
         
         [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
     }
@@ -291,9 +355,15 @@
         yOffset+=42;
         
         
+        
+        [self.enableCommentsButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+        
         [self.linkEditButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=NSHeight(self.linkEditButton.frame);
+        
         
         [self.setGroupPhotoButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
@@ -370,7 +440,7 @@
                     
                     [[Storage manager] insertFullChat:self.controller.fullChat completeHandler:nil];
                 } else {
-                    [[FullChatManager sharedManager] loadIfNeed:self.controller.chat.n_id force:YES isChannel:YES];
+                    [[FullChatManager sharedManager] loadIfNeed:self.controller.chat.n_id force:YES];
                 }
                 
                 

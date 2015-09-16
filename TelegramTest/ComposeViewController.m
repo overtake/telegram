@@ -40,7 +40,13 @@
 
 -(void)setAction:(ComposeAction *)action {
     _action = action;
-    [self view];
+    
+    [self loadViewIfNeeded];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    _action.currentViewController = self;
 }
 
 @end

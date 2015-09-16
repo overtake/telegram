@@ -173,15 +173,15 @@
         [self loadFullChatByChatId:chat_id force:force isChannel:isChannel];
 }
 
-- (void)performLoad:(int)chat_id isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
-    [self loadFullChatByChatId:chat_id force:NO isChannel:isChannel callback:callback];
+- (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:NO callback:callback];
 }
 
-- (void)performLoad:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
-    [self loadFullChatByChatId:chat_id force:force isChannel:isChannel callback:callback];
+- (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
+    [self loadFullChatByChatId:chat_id force:force callback:callback];
 }
 
-- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel callback:(void (^)(TLChatFull *fullChat))callback {
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
     
     TLChatFull *fullChat = [self find:chat_id];
     
@@ -258,7 +258,7 @@
 }
 
 - (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel {
-    [self loadFullChatByChatId:chat_id force:force isChannel:isChannel callback:nil];
+    [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 
 - (int)getOnlineCount:(int)chat_id {

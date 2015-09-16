@@ -437,7 +437,13 @@
     }
     
     if((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
-        [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
+        
+        id request = [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser]];
+        
+        if(dialog.type == DialogTypeChannel)
+            request = [TLAPI_channels_leaveChannel createWithChannel:dialog.chat.inputPeer];
+        
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             newBlock();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             newBlock();

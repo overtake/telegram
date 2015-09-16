@@ -3850,7 +3850,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(dialog.chat.left) {
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
-            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id isChannel:NO callback:nil];
+            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             

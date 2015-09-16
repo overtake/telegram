@@ -253,7 +253,7 @@
         
         
     } else if(self.dialog.type == DialogTypeChat) {
-        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated isChannel:self.dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
+        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated callback:^(TLChatFull * chatFull) {
             
             _chatFull = chatFull;
             
@@ -870,13 +870,12 @@
             
             [TMViewController showModalProgress];
             
-            [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:weakSelf.dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser] fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+            [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
                 
                 
                 weakSelf.dialog.invisibleChannel = NO;
                 
                 [weakSelf.dialog save];
-                
                 
                 
                 [[DialogsManager sharedManager] notifyAfterUpdateConversation:weakSelf.dialog];

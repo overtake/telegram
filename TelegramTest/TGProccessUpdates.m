@@ -662,7 +662,7 @@ static NSArray *channelUpdates;
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
         
-        [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES isChannel:NO callback:nil];
+        [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
         
         if(fullChat) {
             fullChat.participants = chatParticipants;

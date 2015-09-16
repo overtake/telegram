@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/ChannelFilter.m"
-            timestampString = "464086845.296278"
+            timestampString = "464105550.945611"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "-fillGroupHoles:bottom:"
             landmarkType = "5">
          </BreakpointContent>
@@ -185,13 +185,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "464102015.003864"
+            filePath = "TelegramTest/ComposeActionAddChannelModeratorBehavior.m"
+            timestampString = "464115836.568969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1950"
-            endingLineNumber = "1950"
-            landmarkName = "-deleteSelectedMessages"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "-composeDidDone"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,13 +201,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/FullChatManager.m"
-            timestampString = "464104024.068099"
+            filePath = "TelegramTest/ComposeActionAddChannelModeratorBehavior.m"
+            timestampString = "464115854.420195"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
-            landmarkName = "-loadFullChatByChatId:force:isChannel:callback:"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "-composeDidDone"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

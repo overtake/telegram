@@ -45,6 +45,7 @@
 #import "ComposeCreateChannelViewController.h"
 #import "ChannelInfoViewController.h"
 #import "ComposeCreateChannelUserNameStepViewController.h"
+#import "ComposeConfirmModeratorViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -94,7 +95,7 @@
 @property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
 @property (nonatomic, strong) ChannelInfoViewController *channelInfoViewController;
 @property (nonatomic, strong) ComposeCreateChannelUserNameStepViewController *composeCreateChannelUserNameStepViewController;
-
+@property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
 
 
 - (void)modalViewSendAction:(id)object;
@@ -166,5 +167,7 @@
 -(void)showChannelInfoPage:(TLChat *)chat;
 
 -(void)showComposeChangeUserName:(ComposeAction *)action;
+
+-(void)showComposeAddModerator:(ComposeAction *)action;
 
 @end

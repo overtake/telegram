@@ -184,7 +184,7 @@
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id-1 max_id:msg.n_id date:msg.date count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id-1 max_id:msg.n_id date:msg.date-1 count:0];
                 
                 hole.max_id = msg.n_id+1;
                 hole.messagesCount++;

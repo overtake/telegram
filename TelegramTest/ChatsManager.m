@@ -60,7 +60,7 @@
                     if(currentChat.version != newChat.version) {
                          currentChat.version = newChat.version;
                         
-                        [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES isChannel:[currentChat isKindOfClass:[TL_channel class]]]; // force load chat if changed version.
+                        [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
                     }
                    
                     

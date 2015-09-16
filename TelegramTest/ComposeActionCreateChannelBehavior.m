@@ -98,7 +98,7 @@
             
             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)response.chats[0] n_id]];
             
-            [[FullChatManager sharedManager] performLoad:channel.n_id isChannel:YES callback:^(TLChatFull *fullChat) {
+            [[FullChatManager sharedManager] performLoad:channel.n_id callback:^(TLChatFull *fullChat) {
                 
                 TL_conversation *conversation = channel.dialog;
                 

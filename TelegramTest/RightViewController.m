@@ -1061,4 +1061,26 @@
 
 }
 
+-(void)showComposeAddModerator:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == self.composeConfirmModeratorViewController && self.composeConfirmModeratorViewController.action == action)
+        return;
+    
+    if(_composeConfirmModeratorViewController == nil) {
+        _composeConfirmModeratorViewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [_composeConfirmModeratorViewController setAction:action];
+    [self.navigationViewController pushViewController:_composeConfirmModeratorViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+
+}
+
+
+-(void)showComposeAddModeratorView:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == self.composeCreateChannelUserNameStepViewController && self.composeCreateChannelUserNameStepViewController.action == action)
+        return;
+}
+
 @end
