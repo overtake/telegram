@@ -157,16 +157,21 @@
     
     - (void)inDatabaseWithDealocing:(void (^)(FMDatabase *db))block {
         FMDBRetain(self);
-        dispatch_sync(_queue, ^() {
-           
+        
+        dispatch_block_t eblock = ^{
             FMDatabase *db = [self database];
             block(db);
             
             if ([db hasOpenResultSets]) {
                 MTLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
             }
-            
-        });
+        };
+        
+        if(dispatch_get_current_queue() == _queue) {
+            eblock();
+        } else {
+            dispatch_sync(_queue, eblock);
+        }
         
         FMDBRelease(self);
     }

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.09.15.
+//  Auto created by Mikhail Filimonov on 16.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -394,6 +394,9 @@
 @end
 	
 @interface TLmessages_ChannelParticipants : TLObject
+@end
+	
+@interface TLmessages_ChannelParticipant : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -911,7 +914,7 @@
 @interface TLChatParticipants()
 @property int flags;
 @property int chat_id;
-@property (nonatomic, strong) TLChatParticipant* self_participant;
+@property (nonatomic, strong) TLChannelParticipant* self_participant;
 @property int admin_id;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property int version;
@@ -925,7 +928,7 @@
 +(TL_chatParticipants*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
 @end
 @interface TL_channelParticipants : TLChatParticipants<NSCoding>
-+(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChatParticipant*)self_participant;
++(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChannelParticipant*)self_participant;
 @end
 	
 @interface TLChatPhoto()
@@ -2613,6 +2616,7 @@
 @property int user_id;
 @property int inviter_id;
 @property int date;
+@property int kicked_by;
 @end
 
 @interface TL_channelParticipant : TLChannelParticipant<NSCoding>
@@ -2623,6 +2627,9 @@
 @end
 @interface TL_channelParticipantPublisher : TLChannelParticipant<NSCoding>
 +(TL_channelParticipantPublisher*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@end
+@interface TL_channelParticipantKicked : TLChannelParticipant<NSCoding>
++(TL_channelParticipantKicked*)createWithUser_id:(int)user_id kicked_by:(int)kicked_by date:(int)date;
 @end
 @interface TL_channelParticipantCreator : TLChannelParticipant<NSCoding>
 +(TL_channelParticipantCreator*)createWithUser_id:(int)user_id;
@@ -2637,6 +2644,9 @@
 @end
 @interface TL_channelParticipantsAdmins : TLChannelParticipantsFilter<NSCoding>
 +(TL_channelParticipantsAdmins*)create;
+@end
+@interface TL_channelParticipantsKicked : TLChannelParticipantsFilter<NSCoding>
++(TL_channelParticipantsKicked*)create;
 @end
 	
 @interface TLChannelParticipantRole()
@@ -2661,6 +2671,15 @@
 
 @interface TL_messages_channelParticipants : TLmessages_ChannelParticipants<NSCoding>
 +(TL_messages_channelParticipants*)createWithN_count:(int)n_count participants:(NSMutableArray*)participants users:(NSMutableArray*)users;
+@end
+	
+@interface TLmessages_ChannelParticipant()
+@property (nonatomic, strong) TLChannelParticipant* participant;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_messages_channelParticipant : TLmessages_ChannelParticipant<NSCoding>
++(TL_messages_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users;
 @end
 	
 @interface TLProtoMessage()

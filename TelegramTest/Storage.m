@@ -837,9 +837,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             NSPredicate *predicate;
             
             if(next)
-                predicate = [NSPredicate predicateWithFormat:@"self.n_id > %d",hole.max_id];
+                predicate = [NSPredicate predicateWithFormat:@"self.n_id >= %d",hole.max_id];
             else
-                predicate = [NSPredicate predicateWithFormat:@"self.n_id < %d",hole.min_id];
+                predicate = [NSPredicate predicateWithFormat:@"self.n_id <= %d",hole.min_id];
             
             messages = [[messages filteredArrayUsingPredicate:predicate] mutableCopy];
             
@@ -914,7 +914,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where (filter_mask & 4096) = 4096 and n_id <= ? order by n_id desc limit 1",tableChannelMessages],@(channelMsgId)];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id <= ? and  (filter_mask & ?) = ? order by n_id desc limit 1",tableChannelMessages],@(channelMsgId),@(HistoryFilterImportantChannelMessage),@(HistoryFilterImportantChannelMessage)];
         
         if([result next]) {
             msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
@@ -2767,6 +2767,27 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     
     return [holes copy];
+}
+
+-(void)addHolesAroundMessage:(TL_localMessage *)message {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        
+        BOOL messageIsset = [db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableChannelMessages],@(message.channelMsgId)];
+        
+        if(!messageIsset)
+        {
+            int minSynchedId = [self lastSyncedMessageIdWithChannelId:message.peer_id important:message.isImportantMessage];
+            
+            
+            if(minSynchedId > message.n_id) {
+                TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:message.n_id max_id:minSynchedId date:message.date count:0];
+                
+                [self insertMessagesHole:hole];
+            }
+        }
+        
+    }];
 }
 
 -(int)lastSyncedMessageIdWithChannelId:(int)channel_id important:(BOOL)important {

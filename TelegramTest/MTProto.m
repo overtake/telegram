@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.09.15.
+//  Auto created by Mikhail Filimonov on 16.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4152,7 +4152,7 @@
 @end
 
 @implementation TL_channelParticipants
-+(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChatParticipant*)self_participant {
++(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChannelParticipant*)self_participant {
 	TL_channelParticipants* obj = [[TL_channelParticipants alloc] init];
 	obj.flags = flags;
 	obj.channel_id = channel_id;
@@ -4196,7 +4196,7 @@
 
         
         
--(void)setSelf_participant:(TLChatParticipant*)self_participant
+-(void)setSelf_participant:(TLChannelParticipant*)self_participant
 {
     [super setSelf_participant:self_participant];
             
@@ -19979,6 +19979,54 @@
         
 @end
 
+@implementation TL_channelParticipantKicked
++(TL_channelParticipantKicked*)createWithUser_id:(int)user_id kicked_by:(int)kicked_by date:(int)date {
+	TL_channelParticipantKicked* obj = [[TL_channelParticipantKicked alloc] init];
+	obj.user_id = user_id;
+	obj.kicked_by = kicked_by;
+	obj.date = date;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeInt:self.kicked_by];
+	[stream writeInt:self.date];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.user_id = [stream readInt];
+	self.kicked_by = [stream readInt];
+	self.date = [stream readInt];
+}
+        
+-(TL_channelParticipantKicked *)copy {
+    
+    TL_channelParticipantKicked *objc = [[TL_channelParticipantKicked alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.kicked_by = self.kicked_by;
+    objc.date = self.date;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 @implementation TL_channelParticipantCreator
 +(TL_channelParticipantCreator*)createWithUser_id:(int)user_id {
 	TL_channelParticipantCreator* obj = [[TL_channelParticipantCreator alloc] init];
@@ -20079,6 +20127,46 @@
 -(TL_channelParticipantsAdmins *)copy {
     
     TL_channelParticipantsAdmins *objc = [[TL_channelParticipantsAdmins alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantsKicked
++(TL_channelParticipantsKicked*)create {
+	TL_channelParticipantsKicked* obj = [[TL_channelParticipantsKicked alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelParticipantsKicked *)copy {
+    
+    TL_channelParticipantsKicked *objc = [[TL_channelParticipantsKicked alloc] init];
     
     
     
@@ -20300,6 +20388,76 @@
     
     objc.n_count = self.n_count;
     objc.participants = [self.participants copy];
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+
+@implementation TLmessages_ChannelParticipant
+@end
+
+@implementation TL_messages_channelParticipant
++(TL_messages_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users {
+	TL_messages_channelParticipant* obj = [[TL_messages_channelParticipant alloc] init];
+	obj.participant = participant;
+	obj.users = users;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.participant stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.participant = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.users)
+			self.users = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLUser* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLUser class]])
+                 [self.users addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_messages_channelParticipant *)copy {
+    
+    TL_messages_channelParticipant *objc = [[TL_messages_channelParticipant alloc] init];
+    
+    objc.participant = [self.participant copy];
     objc.users = [self.users copy];
     
     return objc;

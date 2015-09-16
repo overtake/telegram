@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.09.15.
+//  Auto created by Mikhail Filimonov on 16.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -892,6 +892,13 @@
 @property int limit;
 
 +(TLAPI_messages_getChannelParticipants*)createWithChat_id:(TLInputChat*)chat_id filter:(TLChannelParticipantsFilter*)filter offset:(int)offset limit:(int)limit;
+@end
+
+@interface TLAPI_messages_getChannelParticipant : TLApiObject
+@property (nonatomic, strong) TLInputChat* chat_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+
++(TLAPI_messages_getChannelParticipant*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id;
 @end
 
 @interface TLAPI_messages_editChatAdmin : TLApiObject

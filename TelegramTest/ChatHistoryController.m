@@ -126,7 +126,7 @@ static NSMutableArray *listeners;
 }
 
 -(NSUInteger)selectLimit {
-    return 20;
+    return 5;
 }
 
 
@@ -137,9 +137,11 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
         
-        [self filterAndAdd:@[item] isLates:NO];
+        NSArray *items = [self filterAndAdd:@[item] isLates:NO];
 
-    
+        if(items.count == 0) {
+            int bp = 0;
+        }
     }];
 }
 
@@ -834,6 +836,8 @@ static NSMutableArray *listeners;
     for (Class filterClass in filters) {
         [filterClass removeAllItems:self.conversation.peer_id];
     }
+    
+    int bp = 0;
 }
 
 -(void)removeAllItemsWithPeerId:(int)peer_id {

@@ -58,7 +58,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 
 
--(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg selectHandler:(selectHandler)selectHandler;
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg limit:(int)limit selectHandler:(selectHandler)selectHandler;
 
 -(void)addItem:(MessageTableItem *)item;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation;

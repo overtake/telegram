@@ -127,6 +127,7 @@ static int pollingDelay = 5;
 -(void)checkInvalidatedMessages:(NSArray *)result important:(BOOL)important {
     
     
+    result = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id > 0"]];
     
     BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.invalidate == 1"]].count > 0;
     
@@ -137,11 +138,17 @@ static int pollingDelay = 5;
         return;
     }
     
-    int pts = [[(MessageTableItem *)[result lastObject] message] n_id];
+    MessageTableItem *firstObject = [result firstObject];
+    MessageTableItem *lastObject = [result lastObject];
+    
+    int pts = lastObject.message.n_id;
     
     int limit = _conversation.pts - pts;
     
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:[(TL_localMessage *)[result lastObject] n_id] max_id:[(TL_localMessage *)[result firstObject] n_id]]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
+    
+    
+    
+    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:lastObject.message.n_id max_id:firstObject.message.n_id]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
         
         
         if([response isKindOfClass:[TL_updates_channelDifference class]]) {
@@ -155,14 +162,16 @@ static int pollingDelay = 5;
         
         NSMutableArray *ids = [NSMutableArray array];
         
-        [result enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            [ids addObject:@(obj.channelMsgId)];
+        [result enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            [ids addObject:@(obj.message.channelMsgId)];
         }];
 
         [[Storage manager] validateChannelMessages:ids];
         
         
     } errorHandler:^(id request, RpcError *error) {
+        
+        int bp = 0;
         
     } timeout:0 queue:dispatch_get_current_queue()];
     

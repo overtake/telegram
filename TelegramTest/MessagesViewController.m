@@ -1430,7 +1430,7 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)showOrHideChannelDiscussion {
     
     
-    if(self.conversation.type == DialogTypeChannel) {
+    if(self.conversation.type == DialogTypeChannel && self.table.scrollView.documentOffset.y > 100) {
         NSRange range = [self.table rowsInRect:[self.table visibleRect]];
         __block MessageTableItem *item = [self objectAtIndex:range.location + range.length - 2];
         
@@ -2185,7 +2185,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         TL_conversation *conversation = self.conversation;
         
-        __block TL_localMessage *msg = conversation.type == DialogTypeChannel ? [[Storage manager] lastImportantMessageAroundMinId:channelMsgId(messageId, conversation.peer_id)] : [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
+        __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsgId == 0 ? [[Storage manager] lastImportantMessageAroundMinId:channelMsgId(messageId, conversation.peer_id)] : [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
         
         dispatch_block_t block = ^{
             
@@ -2195,7 +2195,10 @@ static NSTextAttachment *headerMediaIcon() {
             if(switchDiscussion)
                 [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
             
-            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : [self defHFClass]];
+            
+            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel && fromMsgId == 0 ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]];
+            
+            [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
                         
             [self.historyController removeAllItems];
             
@@ -2221,52 +2224,47 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 [self showModalProgress];
                 
-                [self.historyController loadAroundMessagesWithMessage:importantItem selectHandler:^(NSArray *result, NSRange range) {
+                
+                int count = NSHeight(self.table.containerView.frame)/20;
+                
+                [self.historyController loadAroundMessagesWithMessage:importantItem limit:count selectHandler:^(NSArray *result, NSRange range) {
+                    
                     
                     [self flushMessages];
                     
                     [self messagesLoadedTryToInsert:result pos:range.location next:YES];
                     
-                    if(rect.origin.y == 0) {
-                        [self scrollToItem:importantItem animated:NO centered:NO highlight:YES];
+                    [self.table setNeedsDisplay:YES];
+                    [self.table display];
+                    
+                    if(rect.origin.y == 0 || fromMsgId != 0) {
+                        [self scrollToItem:importantItem animated:NO centered:YES highlight:YES];
                     } else {
                         
                         __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
                         
-                        if(drect.origin.y <= 0) {
-                            int bp = 0;
+                        
+                        dispatch_block_t block = ^{
+                           // if(self.table.scrollView.documentOffset.y > drect.origin.y)
+                                drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                           // else
+                             //   drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                             
-                            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                            drect.origin.y = MAX(0,drect.origin.y);
                             
-                            [ASQueue dispatchOnStageQueue:^{
-                                
-                                dispatch_block_t block = ^{
-                                    drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
-                                };
-                                
-                                if(NSEqualRects(drect, NSZeroRect)) {
-                                    block();
-                                } else {
-                                    dispatch_semaphore_signal(semaphore);
-                                }
-                                
-                            } synchronous:NO];
+                            NSLog(@"%@",NSStringFromRect(drect));
                             
-                            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                            [self.table.scrollView.clipView scrollToPoint:drect.origin];
+                        };
+                        
+                        if(NSEqualRects(drect, NSZeroRect)) {
+                            
+                            dispatch_async(dispatch_get_main_queue(), block);
+                        } else {
+                            block();
                         }
                         
-                         if(self.table.scrollView.documentOffset.y > drect.origin.y)
-                             drect.origin.y += (NSHeight(self.table.containerView.frame)  -yTopOffset);
-                        else
-                            drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                         
-                        NSLog(@"%@",NSStringFromRect(drect));
-                        
-                        if(drect.origin.y < 0) {
-                            int bp = 0;
-                        }
-                        
-                        [self.table.scrollView.clipView scrollToPoint:drect.origin];
                     }
                     
                     [self addScrollEvent];
@@ -2511,9 +2509,9 @@ static NSTextAttachment *headerMediaIcon() {
             NSSize oldsize = self.table.scrollView.documentSize;
             NSPoint offset = self.table.scrollView.documentOffset;
             
-            [self.table beginUpdates];
+           // [self.table beginUpdates];
             [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
-            [self.table endUpdates];
+          //  [self.table endUpdates];
             
             if(!next) {
                 NSSize newsize = self.table.scrollView.documentSize;
@@ -2529,7 +2527,10 @@ static NSTextAttachment *headerMediaIcon() {
            // });
         } else {
              [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
+            [CATransaction begin];
+            [CATransaction disableActions];
             [self.table reloadData];
+            [CATransaction commit];
             [self didUpdateTable];
             self.locked = NO;
             
@@ -2640,12 +2641,6 @@ static NSTextAttachment *headerMediaIcon() {
                 [self updateScrollBtn];
                 
                 self.unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
-                
-                //TODO change it
-                [self messagesLoadedTryToInsert:result pos:2 next:NO];
-                 [self messagesLoadedTryToInsert:prevResult pos:0 next:YES];
-                
-                return;
                 
                 NSArray *completeResult = message_id == 0 && self.historyController.filter.class == self.defHFClass && prevResult.count > 0 ? [prevResult arrayByAddingObject:self.unreadMark] : prevResult;
                 

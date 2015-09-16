@@ -157,12 +157,14 @@ static TGChannelsPolling *channelPolling;
 
 
 
--(void)loadAroundMessagesWithMessage:(MessageTableItem *)item selectHandler:(selectHandler)selectHandler {
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)item limit:(int)limit selectHandler:(selectHandler)selectHandler {
     
     
     [self.queue dispatchOnQueue:^{
         
         [self addItemWithoutSavingState:item];
+    
+        [[Storage manager] addHolesAroundMessage:item.message];
         
         [[Storage manager] insertMessage:item.message];
         
@@ -170,7 +172,7 @@ static TGChannelsPolling *channelPolling;
         NSMutableArray *nextResult = [NSMutableArray array];
         
         self.proccessing = YES;
-        [self loadAroundMessagesWithSelectHandler:selectHandler prevResult:prevResult nextResult:nextResult];
+        [self loadAroundMessagesWithSelectHandler:selectHandler limit:(int)limit prevResult:prevResult nextResult:nextResult];
         
       
     } synchronous:YES];
@@ -178,18 +180,18 @@ static TGChannelsPolling *channelPolling;
     
 }
 
--(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult {
+-(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler limit:(int)limit prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult {
     
     
-    BOOL nextLoaded = nextResult.count > self.selectLimit || self.nextState == ChatHistoryStateFull;
-    BOOL prevLoaded = prevResult.count > self.selectLimit || self.prevState == ChatHistoryStateFull;
+    BOOL nextLoaded = nextResult.count >= limit/2 || self.nextState == ChatHistoryStateFull;
+    BOOL prevLoaded = prevResult.count >= limit/2 || self.prevState == ChatHistoryStateFull;
     
     
     if(nextLoaded && prevLoaded) {
         
-        NSArray *result = [prevResult arrayByAddingObjectsFromArray:nextResult];
+        NSArray *result = [self selectAllItems];
         
-        [self performCallback:selectHandler result:[self selectAllItems] range:NSMakeRange(0, result.count)];
+        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count)];
 
         [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
         
@@ -215,14 +217,11 @@ static TGChannelsPolling *channelPolling;
             [prevResult addObjectsFromArray:converted];
         }
         
-        if(state == ChatHistoryStateFull) {
-            int bp = 0;
-        }
         
         [self setState:state next:nextRequest];
         
     
-        [self loadAroundMessagesWithSelectHandler:selectHandler prevResult:prevResult nextResult:nextResult];
+        [self loadAroundMessagesWithSelectHandler:selectHandler limit:(int)limit prevResult:prevResult nextResult:nextResult];
         
     }];
     

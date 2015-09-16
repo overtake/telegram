@@ -42,7 +42,7 @@
 -(void)updateObject {
     NSColor *nameColor = LINK_COLOR;
     
-    NSString *name = [_replyMessage.to_id isKindOfClass:[TL_peerChannel class]] ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
+    NSString *name = _replyMessage.from_id == 0 ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
     
     NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
     
