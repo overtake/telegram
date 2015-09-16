@@ -125,6 +125,16 @@
     }
 }
 
+-(void)didChannelUpdatedFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(chat.n_id == self.dialog.chat.n_id) {
+        
+        [self setState:self.stateBottom animated:NO];
+        
+    }
+}
+
 -(void)didChangeAttachmentsCount:(int)futureCount {
     
     if(futureCount == 0 && _imageAttachmentsController.isShown) {
@@ -186,6 +196,7 @@
 
     
     [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
+    [Notification addObserver:self selector:@selector(didChannelUpdatedFlags:) name:CHAT_FLAGS_UPDATED];
     //botKeyboard
     
     
@@ -1046,6 +1057,9 @@
     
     
     [self becomeFirstResponder];
+    
+    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+
 }
 
 - (void)sendButtonAction {
@@ -1494,32 +1508,41 @@
     height = height % 2 == 1 ? height + 1 : height;
 //    MTLog(@"height %d", height);
     
-    if(_imageAttachmentsController.isShown ) {
-        height += 75;
-    }
+    
 
     
-    if(self.replyContainer != nil) {
-        height+= self.replyContainer.replyObject.containerHeight + 5;
+    if(self.stateBottom == MessagesBottomViewNormalState) {
+        
+        if(_imageAttachmentsController.isShown ) {
+            height += 75;
+        }
+        
+        if(self.replyContainer != nil) {
+            height+= self.replyContainer.replyObject.containerHeight + 5;
+        }
+        
+        if(self.fwdContainer != nil) {
+            height+= 35;
+        }
+        
+        if(self.webpageAttach != nil && self.inputMessageString.length > 0) {
+            height+= 35;
+        }
+        
+        if(_botKeyboard != nil) {
+            height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
+        }
+
+    } else {
+        height = 58;
     }
     
-    if(self.fwdContainer != nil) {
-        height+= 35;
-    }
-    
-    if(self.webpageAttach != nil && self.inputMessageString.length > 0) {
-        height+= 35;
-    }
-    
-    if(_botKeyboard != nil) {
-        height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
-    }
-    
+     NSSize layoutSize = NSMakeSize(self.bounds.size.width, height);
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
         
-        NSSize layoutSize = NSMakeSize(self.bounds.size.width, height);
+       
         
         if(isCleared) {
             
@@ -1575,6 +1598,9 @@
         
         
        // [self.layer setNeedsDisplay];
+    } else {
+        [self setFrameSize:layoutSize];
+        [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
     }
 }
 

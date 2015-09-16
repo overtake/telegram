@@ -86,6 +86,8 @@ extern NSString *const UPDATE_MESSAGE_ENTITIES;
 extern NSString *const UPDATE_MESSAGE_GROUP_HOLE;
 extern NSString *const UPDATE_MESSAGE_VIEWS;
 
+extern NSString *const CHAT_FLAGS_UPDATED;
+
 extern NSString *const KEY_PREVIEW_OBJECT;
 
 extern NSString *const KEY_USER;

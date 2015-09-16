@@ -465,6 +465,8 @@
     
     MessageTableItem *item = notification.userInfo[@"item"];
     
+    [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+    
     NSUInteger index = [self indexOfObject:item];
     
     if(index != NSNotFound)

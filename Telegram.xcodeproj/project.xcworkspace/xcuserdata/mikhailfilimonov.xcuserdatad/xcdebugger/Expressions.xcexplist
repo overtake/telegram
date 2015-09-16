@@ -76,6 +76,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItem isReplyMessage]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.replyMessage ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
@@ -611,6 +619,17 @@
          <PersistentStrings>
             <PersistentString
                value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableNavigationTitleView enableDiscussion:force:]:MessageTableNavigationTitleView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_dialog.chat.isBroadcast">
+            </PersistentString>
+            <PersistentString
+               value = "_dialog.chat.isPublic">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2240,9 +2259,6 @@
                value = "self.isHidden">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageTableItemServiceMessage initWithObject:]:MessageTableItemServiceMessage.m">
       </ContextState>
       <ContextState
          contextName = "__22-[Storage open:queue:]_block_invoke_2:Storage.m">

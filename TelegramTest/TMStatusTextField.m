@@ -213,6 +213,14 @@
     
 }
 
+-(void)clear {
+    self.chat = nil;
+    self.user = nil;
+    self->_broadcast = nil;
+    
+    self.attributedStringValue = nil;
+}
+
 @end
 
 

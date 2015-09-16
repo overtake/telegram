@@ -9,7 +9,7 @@
 #import "TGReplyObject.h"
 #import "MessagesUtils.h"
 #import "NSString+Extended.h"
-
+#import "MessageTableItem.h"
 @interface TGReplyObject ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -40,6 +40,12 @@
 }
 
 -(void)updateObject {
+    
+    if([_replyMessage isKindOfClass:[TL_localEmptyMessage class]]) {
+        _item.replyObject = nil;
+        return;
+    }
+    
     NSColor *nameColor = LINK_COLOR;
     
     NSString *name = _replyMessage.from_id == 0 ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
@@ -59,9 +65,13 @@
     
     if((_replyMessage.media == nil || [_replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]]) || [_replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
         
-        NSString *str = [_replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+        if(![_replyMessage isKindOfClass:[TL_localMessageService class]]) {
+            [replyText appendString:[[_replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:TEXT_COLOR];
+        } else {
+            [replyText appendString:[MessagesUtils serviceMessage:_replyMessage forAction:_replyMessage.action] withColor:GRAY_TEXT_COLOR];
+        }
         
-        [replyText appendString:[str fixEmoji] withColor:TEXT_COLOR];
+        
         
     } else {
         [replyText appendString:[[MessagesUtils mediaMessage:_replyMessage] fixEmoji] withColor:GRAY_TEXT_COLOR];
@@ -169,13 +179,21 @@
     [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
         
         
-        if(response.messages.count == 1 && ![response.messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+        if(response.messages.count == 1 ) {
+            
+            
             
             NSMutableArray *messages = [response.messages mutableCopy];
             [[response messages] removeAllObjects];
             
             
             [TL_localMessage convertReceivedMessages:messages];
+            
+            
+            if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:_fromMessage.to_id];
+            }
+            
             [SharedManager proccessGlobalResponse:response];
             
             [[Storage manager] addSupportMessages:messages];
@@ -183,7 +201,7 @@
             
             
             _replyMessage = messages[0];
-            
+            _fromMessage.replyMessage = _replyMessage;
             [self updateObject];
             
             if(_item != nil) {

@@ -49,7 +49,14 @@
         
         text = [NSString stringWithFormat:@"%@ %@", fullName,NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
         
-    }
+    }else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+        
+        
+        text = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
+        
+    } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
+        text = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
+   
     return text;
 }
 
@@ -223,7 +230,9 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
                 
-            }
+            } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
+                msgText = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
+
             
             
             if(chatUserNameString)
@@ -344,7 +353,8 @@
         
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
-    }
+    } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
+        actionText = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
     
     static float size = 11.5;
     

@@ -45,6 +45,8 @@
     
     [self.cs_classes setObject:[TL_conversation class] forKey:[NSNumber numberWithInt:16]];
     
+    [self.cs_classes setObject:[TL_localEmptyMessage class] forKey:[NSNumber numberWithInt:16]];
+    
     
     for(NSNumber* number in [self.cs_classes allKeys]) {
         [self.cs_constuctors setObject:number forKey:[self.cs_classes objectForKey:number]];

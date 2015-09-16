@@ -563,6 +563,7 @@
 		C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */; };
 		C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */; };
 		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
+		C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669851BA5571C004AF678 /* TGSettingsTableView.m */; };
@@ -2124,6 +2125,8 @@
 		C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRaceEmoji.m; sourceTree = "<group>"; };
 		C2ACCE6C1AE122A400ABEE78 /* EmojiButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiButton.h; sourceTree = "<group>"; };
 		C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiButton.m; sourceTree = "<group>"; };
+		C2B0DF751BA98E7C0023982C /* TL_localEmptyMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localEmptyMessage.h; sourceTree = "<group>"; };
+		C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localEmptyMessage.m; sourceTree = "<group>"; };
 		C2B1730B19A3BF43003FBA23 /* Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		C2B325EC1A237A420012DE34 /* TLApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLApiObject.h; sourceTree = "<group>"; };
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
@@ -4123,6 +4126,8 @@
 				C20A5ECE1B8B67D7007F4B49 /* TL_conversation_old34.m */,
 				C2FF82A11B99C7CE00DE2455 /* TGForceChannelUpdate.h */,
 				C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */,
+				C2B0DF751BA98E7C0023982C /* TL_localEmptyMessage.h */,
+				C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */,
 			);
 			name = constructors;
 			sourceTree = "<group>";
@@ -6761,6 +6766,7 @@
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,
+				C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */,
 				C2D4B7431AFCD3B80035B4E4 /* TGStickerPackModalView.m in Sources */,
 				0AC9FD431868DF5B00F7E95C /* TMNineImage.m in Sources */,
 				C20A5F351B8F4579007F4B49 /* TGChannelsPolling.m in Sources */,

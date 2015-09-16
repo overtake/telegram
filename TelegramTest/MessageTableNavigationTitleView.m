@@ -93,17 +93,30 @@
         
         _discussionSwitch.tintColor = BLUE_UI_COLOR;
         
+        weak();
+        
         [_discussionSwitch setDidChangeHandler:^(BOOL res){
             
+            [weakSelf setDialog:weakSelf.dialog];
+            
             [[Telegram rightViewController].messagesViewController showOrHideChannelDiscussion];
-            
-            
+    
         }];
         
         [self.container addSubview:_discussionSwitch];
         
+        
+        [Notification addObserver:self selector:@selector(chatFlagsUpdated:) name:CHAT_FLAGS_UPDATED];
+        
     }
     return self;
+}
+
+-(void)chatFlagsUpdated:(NSNotification *)notification {
+    
+    if(self.dialog.chat == notification.userInfo[KEY_CHAT]) {
+        [self setDialog:_dialog];
+    }
 }
 
 -(BOOL)discussIsEnabled {
@@ -113,6 +126,14 @@
 -(void)enableDiscussion:(BOOL)enable force:(BOOL)force {
     [_discussionSwitch setOn:enable];
     _discussForceSwitched = force;
+    
+    [_discussionSwitch setHidden:(_dialog.type != DialogTypeChannel || (_dialog.chat.isBroadcast &&  !_discussionSwitch.isOn))];
+    
+    [self.nameTextField update];
+    [self.statusTextField update];
+    
+    [self buildForSize:self.bounds.size];
+
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -128,10 +149,11 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
-    [_discussionSwitch setHidden:dialog.type != DialogTypeChannel || dialog.chat.isBroadcast];
 
     [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
+    [self enableDiscussion:_discussionSwitch.isOn force:NO];
+
     
     [self.nameTextField updateWithConversation:self.dialog];
 
@@ -140,7 +162,7 @@
     
 
     
-    [self sizeToFit];
+    
 }
 
 

@@ -72,7 +72,11 @@
            return;
        
        
-        NSMutableArray *messages = [response messages];
+        NSMutableArray *messages = [[response messages] mutableCopy];
+       
+       [[response messages] removeAllObjects];
+       
+       [SharedManager proccessGlobalResponse:response];
         
        [TL_localMessage convertReceivedMessages:messages];
        

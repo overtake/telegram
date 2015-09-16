@@ -716,7 +716,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views FROM channel_messages WHERE  peer_id = %d AND date >= %d AND date <= %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views FROM channel_messages WHERE  peer_id = %d AND date > %d AND date < %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -870,7 +870,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        [supportIds addObject:@([obj reply_to_msg_id])];
+        [supportIds addObject:@(channelMsgId([obj reply_to_msg_id], obj.peer_id))];
         
     }];
     
@@ -2486,7 +2486,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
             }
             
-            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
         }];
     }];
 }

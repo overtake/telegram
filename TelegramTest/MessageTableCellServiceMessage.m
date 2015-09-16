@@ -86,7 +86,7 @@
         [self.textField setFrameSize:item.textSize];
         
     
-        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth([Telegram rightViewController].view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : 0))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth([Telegram rightViewController].view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
             [self.photoImageView setHidden:NO];
@@ -105,13 +105,13 @@
         [self.textField setAttributedString:item.messageAttributedString];
        
         [self.textField setFrameOrigin:NSMakePoint(78, 0)];
-        
+        [_textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
         
     } else  {
         [self.photoImageView setHidden:YES];
         [self.textField setAttributedString:item.messageAttributedString];
         [self.textField setFrameSize:item.textSize];
-        [self.textField setFrameOrigin:NSMakePoint(74, 8)];
+        [_textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
     }
     
     

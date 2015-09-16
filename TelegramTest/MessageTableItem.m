@@ -413,7 +413,7 @@
 
 
 -(BOOL)isReplyMessage {
-    return self.message.reply_to_msg_id != 0;
+    return self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]];
 }
 
 -(BOOL)isFwdMessage {

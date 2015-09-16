@@ -47,7 +47,7 @@
 @property (nonatomic,assign,readonly) int blockWidth;
 
 
-@property (nonatomic,strong,readonly) TGReplyObject *replyObject;
+@property (nonatomic,strong) TGReplyObject *replyObject;
 
 
 

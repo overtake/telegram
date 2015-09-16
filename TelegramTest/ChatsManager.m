@@ -75,6 +75,7 @@
                     if(currentChat.flags != newChat.flags) {
                         currentChat.flags = newChat.flags;
                         isNeedUpdateTypeNotification = YES;
+                        [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
                     }
                     
                     if(isNeedUpdateTypeNotification)

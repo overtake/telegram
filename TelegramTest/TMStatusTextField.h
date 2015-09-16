@@ -31,4 +31,5 @@
 
 -(void)update;
 -(void)updateWithConversation:(TL_conversation *)conversation;
+-(void)clear;
 @end
