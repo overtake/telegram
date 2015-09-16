@@ -41,4 +41,15 @@
      [self.rightNavigationBarView setHidden:!self.chat.dialog.chat.isAdmin];
 }
 
+- (void)reloadParticipants {
+    [self.tableView removeAllItems:NO];
+    [self.tableView addItem:self.headerItem tableRedraw:NO];
+    
+    
+    
+    [self.tableView addItem:self.bottomItem tableRedraw:NO];
+    [self.tableView reloadData];
+
+}
+
 @end

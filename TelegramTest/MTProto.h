@@ -366,7 +366,13 @@
 @interface TLMessageEntity : TLObject
 @end
 	
-@interface TLInputChat : TLObject
+@interface TLInputChannel : TLObject
+@end
+	
+@interface TLcontacts_ResolvedPeer : TLObject
+@end
+	
+@interface TLChannelParticipants : TLObject
 @end
 	
 @interface TLMessageRange : TLObject
@@ -381,9 +387,6 @@
 @interface TLChannelMessagesFilter : TLObject
 @end
 	
-@interface TLcontacts_ResolvedPeer : TLObject
-@end
-	
 @interface TLChannelParticipant : TLObject
 @end
 	
@@ -393,10 +396,10 @@
 @interface TLChannelParticipantRole : TLObject
 @end
 	
-@interface TLmessages_ChannelParticipants : TLObject
+@interface TLchannels_ChannelParticipants : TLObject
 @end
 	
-@interface TLmessages_ChannelParticipant : TLObject
+@interface TLchannels_ChannelParticipant : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -895,7 +898,7 @@
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithN_id:(int)n_id participants:(TLChannelParticipants*)participants about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -914,11 +917,10 @@
 @interface TLChatParticipants()
 @property int flags;
 @property int chat_id;
-@property (nonatomic, strong) TLChannelParticipant* self_participant;
+@property (nonatomic, strong) TLChatParticipant* self_participant;
 @property int admin_id;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property int version;
-@property int channel_id;
 @end
 
 @interface TL_chatParticipantsForbidden : TLChatParticipants<NSCoding>
@@ -926,9 +928,6 @@
 @end
 @interface TL_chatParticipants : TLChatParticipants<NSCoding>
 +(TL_chatParticipants*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
-@end
-@interface TL_channelParticipants : TLChatParticipants<NSCoding>
-+(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChannelParticipant*)self_participant;
 @end
 	
 @interface TLChatPhoto()
@@ -1618,13 +1617,13 @@
 +(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateReadChannelInbox : TLUpdate<NSCoding>
-+(TL_updateReadChannelInbox*)createWithPeer:(TLPeer*)peer max_id:(int)max_id;
++(TL_updateReadChannelInbox*)createWithChannel_id:(int)channel_id max_id:(int)max_id;
 @end
 @interface TL_updateDeleteChannelMessages : TLUpdate<NSCoding>
-+(TL_updateDeleteChannelMessages*)createWithPeer:(TLPeer*)peer messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
++(TL_updateDeleteChannelMessages*)createWithChannel_id:(int)channel_id messages:(NSMutableArray*)messages pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateChannelMessageViews : TLUpdate<NSCoding>
-+(TL_updateChannelMessageViews*)createWithPeer:(TLPeer*)peer n_id:(int)n_id views:(int)views;
++(TL_updateChannelMessageViews*)createWithChannel_id:(int)channel_id n_id:(int)n_id views:(int)views;
 @end
 	
 @interface TLupdates_State()
@@ -2525,20 +2524,36 @@
 +(TL_messageEntityTextUrl*)createWithOffset:(int)offset length:(int)length url:(NSString*)url;
 @end
 	
-@interface TLInputChat()
-@property int chat_id;
+@interface TLInputChannel()
 @property int channel_id;
 @property long access_hash;
 @end
 
-@interface TL_inputChatEmpty : TLInputChat<NSCoding>
-+(TL_inputChatEmpty*)create;
+@interface TL_inputChannelEmpty : TLInputChannel<NSCoding>
++(TL_inputChannelEmpty*)create;
 @end
-@interface TL_inputChat : TLInputChat<NSCoding>
-+(TL_inputChat*)createWithChat_id:(int)chat_id;
-@end
-@interface TL_inputChannel : TLInputChat<NSCoding>
+@interface TL_inputChannel : TLInputChannel<NSCoding>
 +(TL_inputChannel*)createWithChannel_id:(int)channel_id access_hash:(long)access_hash;
+@end
+	
+@interface TLcontacts_ResolvedPeer()
+@property (nonatomic, strong) TLPeer* peer;
+@property (nonatomic, strong) NSMutableArray* chats;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_contacts_resolvedPeer : TLcontacts_ResolvedPeer<NSCoding>
++(TL_contacts_resolvedPeer*)createWithPeer:(TLPeer*)peer chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
+@end
+	
+@interface TLChannelParticipants()
+@property int flags;
+@property int channel_id;
+@property (nonatomic, strong) TLChannelParticipant* self_participant;
+@end
+
+@interface TL_channelParticipants : TLChannelParticipants<NSCoding>
++(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChannelParticipant*)self_participant;
 @end
 	
 @interface TLMessageRange()
@@ -2602,16 +2617,6 @@
 +(TL_channelMessagesFilterCollapsed*)create;
 @end
 	
-@interface TLcontacts_ResolvedPeer()
-@property (nonatomic, strong) TLPeer* peer;
-@property (nonatomic, strong) NSMutableArray* chats;
-@property (nonatomic, strong) NSMutableArray* users;
-@end
-
-@interface TL_contacts_resolvedPeer : TLcontacts_ResolvedPeer<NSCoding>
-+(TL_contacts_resolvedPeer*)createWithPeer:(TLPeer*)peer chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
-@end
-	
 @interface TLChannelParticipant()
 @property int user_id;
 @property int inviter_id;
@@ -2663,23 +2668,23 @@
 +(TL_channelRolePublisher*)create;
 @end
 	
-@interface TLmessages_ChannelParticipants()
+@interface TLchannels_ChannelParticipants()
 @property int n_count;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property (nonatomic, strong) NSMutableArray* users;
 @end
 
-@interface TL_messages_channelParticipants : TLmessages_ChannelParticipants<NSCoding>
-+(TL_messages_channelParticipants*)createWithN_count:(int)n_count participants:(NSMutableArray*)participants users:(NSMutableArray*)users;
+@interface TL_channels_channelParticipants : TLchannels_ChannelParticipants<NSCoding>
++(TL_channels_channelParticipants*)createWithN_count:(int)n_count participants:(NSMutableArray*)participants users:(NSMutableArray*)users;
 @end
 	
-@interface TLmessages_ChannelParticipant()
+@interface TLchannels_ChannelParticipant()
 @property (nonatomic, strong) TLChannelParticipant* participant;
 @property (nonatomic, strong) NSMutableArray* users;
 @end
 
-@interface TL_messages_channelParticipant : TLmessages_ChannelParticipant<NSCoding>
-+(TL_messages_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users;
+@interface TL_channels_channelParticipant : TLchannels_ChannelParticipant<NSCoding>
++(TL_channels_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users;
 @end
 	
 @interface TLProtoMessage()

@@ -347,38 +347,38 @@
 @end
 
 @interface TLAPI_messages_getFullChat : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 
-+(TLAPI_messages_getFullChat*)createWithChat_id:(TLInputChat*)chat_id;
++(TLAPI_messages_getFullChat*)createWithChat_id:(int)chat_id;
 @end
 
 @interface TLAPI_messages_editChatTitle : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 @property (nonatomic, strong) NSString* title;
 
-+(TLAPI_messages_editChatTitle*)createWithChat_id:(TLInputChat*)chat_id title:(NSString*)title;
++(TLAPI_messages_editChatTitle*)createWithChat_id:(int)chat_id title:(NSString*)title;
 @end
 
 @interface TLAPI_messages_editChatPhoto : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 @property (nonatomic, strong) TLInputChatPhoto* photo;
 
-+(TLAPI_messages_editChatPhoto*)createWithChat_id:(TLInputChat*)chat_id photo:(TLInputChatPhoto*)photo;
++(TLAPI_messages_editChatPhoto*)createWithChat_id:(int)chat_id photo:(TLInputChatPhoto*)photo;
 @end
 
 @interface TLAPI_messages_addChatUser : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 @property (nonatomic, strong) TLInputUser* user_id;
 @property int fwd_limit;
 
-+(TLAPI_messages_addChatUser*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id fwd_limit:(int)fwd_limit;
++(TLAPI_messages_addChatUser*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id fwd_limit:(int)fwd_limit;
 @end
 
 @interface TLAPI_messages_deleteChatUser : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 @property (nonatomic, strong) TLInputUser* user_id;
 
-+(TLAPI_messages_deleteChatUser*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id;
++(TLAPI_messages_deleteChatUser*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id;
 @end
 
 @interface TLAPI_messages_createChat : TLApiObject
@@ -755,9 +755,9 @@
 @end
 
 @interface TLAPI_messages_exportChatInvite : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 
-+(TLAPI_messages_exportChatInvite*)createWithChat_id:(TLInputChat*)chat_id;
++(TLAPI_messages_exportChatInvite*)createWithChat_id:(int)chat_id;
 @end
 
 @interface TLAPI_messages_checkChatInvite : TLApiObject
@@ -793,11 +793,11 @@
 
 @interface TLAPI_messages_startBot : TLApiObject
 @property (nonatomic, strong) TLInputUser* bot;
-@property (nonatomic, strong) TLInputChat* chat_id;
+@property int chat_id;
 @property long random_id;
 @property (nonatomic, strong) NSString* start_param;
 
-+(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(TLInputChat*)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
 @end
 
 @interface TLAPI_help_getAppChangelog : TLApiObject
@@ -809,126 +809,179 @@
 +(TLAPI_help_getAppChangelog*)createWithDevice_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version lang_code:(NSString*)lang_code;
 @end
 
-@interface TLAPI_messages_getChannelDialogs : TLApiObject
+@interface TLAPI_messages_getMessagesViews : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) NSMutableArray* n_id;
+@property Boolean increment;
+
++(TLAPI_messages_getMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id increment:(Boolean)increment;
+@end
+
+@interface TLAPI_channels_getDialogs : TLApiObject
 @property int offset;
 @property int limit;
 
-+(TLAPI_messages_getChannelDialogs*)createWithOffset:(int)offset limit:(int)limit;
++(TLAPI_channels_getDialogs*)createWithOffset:(int)offset limit:(int)limit;
 @end
 
-@interface TLAPI_messages_getImportantHistory : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
+@interface TLAPI_channels_getImportantHistory : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
 @property int offset_id;
 @property int add_offset;
 @property int limit;
 @property int max_id;
 @property int min_id;
 
-+(TLAPI_messages_getImportantHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
++(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
-@interface TLAPI_messages_readChannelHistory : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
+@interface TLAPI_channels_readHistory : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
 @property int max_id;
 
-+(TLAPI_messages_readChannelHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id;
++(TLAPI_channels_readHistory*)createWithChannel:(TLInputChannel*)channel max_id:(int)max_id;
 @end
 
-@interface TLAPI_messages_createChannel : TLApiObject
+@interface TLAPI_channels_deleteMessages : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_channels_deleteMessages*)createWithChannel:(TLInputChannel*)channel n_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_channels_getMessages : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_channels_getMessages*)createWithChannel:(TLInputChannel*)channel n_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_channels_getParticipants : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLChannelParticipantsFilter* filter;
+@property int offset;
+@property int limit;
+
++(TLAPI_channels_getParticipants*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelParticipantsFilter*)filter offset:(int)offset limit:(int)limit;
+@end
+
+@interface TLAPI_channels_getParticipant : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputUser* user_id;
+
++(TLAPI_channels_getParticipant*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id;
+@end
+
+@interface TLAPI_channels_getChannels : TLApiObject
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_channels_getChannels*)createWithN_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_channels_getFullChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+
++(TLAPI_channels_getFullChannel*)createWithChannel:(TLInputChannel*)channel;
+@end
+
+@interface TLAPI_channels_createChannel : TLApiObject
 @property int flags;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* about;
 @property (nonatomic, strong) NSMutableArray* users;
 
-+(TLAPI_messages_createChannel*)createWithFlags:(int)flags title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
++(TLAPI_channels_createChannel*)createWithFlags:(int)flags title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
 @end
 
-@interface TLAPI_messages_toggleChannelComments : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
-@property Boolean enabled;
-
-+(TLAPI_messages_toggleChannelComments*)createWithChat_id:(TLInputChat*)chat_id enabled:(Boolean)enabled;
-@end
-
-@interface TLAPI_messages_deleteChannelMessages : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
-@property (nonatomic, strong) NSMutableArray* n_id;
-
-+(TLAPI_messages_deleteChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
-@end
-
-@interface TLAPI_messages_getChannelMessages : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
-@property (nonatomic, strong) NSMutableArray* n_id;
-
-+(TLAPI_messages_getChannelMessages*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
-@end
-
-@interface TLAPI_messages_incrementMessagesViews : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
-@property (nonatomic, strong) NSMutableArray* n_id;
-
-+(TLAPI_messages_incrementMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
-@end
-
-@interface TLAPI_messages_getMessagesViews : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
-@property (nonatomic, strong) NSMutableArray* n_id;
-
-+(TLAPI_messages_getMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id;
-@end
-
-@interface TLAPI_messages_editChatAbout : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@interface TLAPI_channels_editAbout : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) NSString* about;
 
-+(TLAPI_messages_editChatAbout*)createWithChat_id:(TLInputChat*)chat_id about:(NSString*)about;
++(TLAPI_channels_editAbout*)createWithChannel:(TLInputChannel*)channel about:(NSString*)about;
 @end
 
-@interface TLAPI_messages_getChannelParticipants : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
-@property (nonatomic, strong) TLChannelParticipantsFilter* filter;
-@property int offset;
-@property int limit;
-
-+(TLAPI_messages_getChannelParticipants*)createWithChat_id:(TLInputChat*)chat_id filter:(TLChannelParticipantsFilter*)filter offset:(int)offset limit:(int)limit;
-@end
-
-@interface TLAPI_messages_getChannelParticipant : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
-@property (nonatomic, strong) TLInputUser* user_id;
-
-+(TLAPI_messages_getChannelParticipant*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id;
-@end
-
-@interface TLAPI_messages_editChatAdmin : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@interface TLAPI_channels_editAdmin : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) TLInputUser* user_id;
 @property (nonatomic, strong) TLChannelParticipantRole* role;
 
-+(TLAPI_messages_editChatAdmin*)createWithChat_id:(TLInputChat*)chat_id user_id:(TLInputUser*)user_id role:(TLChannelParticipantRole*)role;
++(TLAPI_channels_editAdmin*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id role:(TLChannelParticipantRole*)role;
 @end
 
-@interface TLAPI_messages_checkChannelUsername : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
-@property (nonatomic, strong) NSString* username;
+@interface TLAPI_channels_editTitle : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) NSString* title;
 
-+(TLAPI_messages_checkChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username;
++(TLAPI_channels_editTitle*)createWithChannel:(TLInputChannel*)channel title:(NSString*)title;
 @end
 
-@interface TLAPI_messages_updateChannelUsername : TLApiObject
-@property (nonatomic, strong) TLInputChat* chat_id;
+@interface TLAPI_channels_editPhoto : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputChatPhoto* photo;
+
++(TLAPI_channels_editPhoto*)createWithChannel:(TLInputChannel*)channel photo:(TLInputChatPhoto*)photo;
+@end
+
+@interface TLAPI_channels_toggleComments : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property Boolean enabled;
+
++(TLAPI_channels_toggleComments*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
+@end
+
+@interface TLAPI_channels_checkUsername : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) NSString* username;
 
-+(TLAPI_messages_updateChannelUsername*)createWithChat_id:(TLInputChat*)chat_id username:(NSString*)username;
++(TLAPI_channels_checkUsername*)createWithChannel:(TLInputChannel*)channel username:(NSString*)username;
+@end
+
+@interface TLAPI_channels_updateUsername : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) NSString* username;
+
++(TLAPI_channels_updateUsername*)createWithChannel:(TLInputChannel*)channel username:(NSString*)username;
+@end
+
+@interface TLAPI_channels_joinChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+
++(TLAPI_channels_joinChannel*)createWithChannel:(TLInputChannel*)channel;
+@end
+
+@interface TLAPI_channels_leaveChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+
++(TLAPI_channels_leaveChannel*)createWithChannel:(TLInputChannel*)channel;
+@end
+
+@interface TLAPI_channels_inviteToChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) NSMutableArray* users;
+
++(TLAPI_channels_inviteToChannel*)createWithChannel:(TLInputChannel*)channel users:(NSMutableArray*)users;
+@end
+
+@interface TLAPI_channels_kickFromChannel : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property Boolean kicked;
+
++(TLAPI_channels_kickFromChannel*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id kicked:(Boolean)kicked;
+@end
+
+@interface TLAPI_channels_exportInvite : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+
++(TLAPI_channels_exportInvite*)createWithChannel:(TLInputChannel*)channel;
 @end
 
 @interface TLAPI_updates_getChannelDifference : TLApiObject
-@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) TLChannelMessagesFilter* filter;
 @property int pts;
 @property int limit;
 
-+(TLAPI_updates_getChannelDifference*)createWithPeer:(TLInputPeer*)peer filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit;
++(TLAPI_updates_getChannelDifference*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit;
 @end
 

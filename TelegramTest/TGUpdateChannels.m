@@ -287,7 +287,7 @@
     
     TL_conversation *conversation = [self conversationWithChannelId:channel_id];
     
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
         
         
         TGMessageHole *longHole;

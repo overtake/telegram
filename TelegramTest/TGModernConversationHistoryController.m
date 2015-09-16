@@ -67,7 +67,7 @@ static const int limit = 1000;
 
 -(void)loadNext:(int)offset result:(NSArray *)result onQueue:(ASQueue *)queue{
     
-    [RPCRequest sendRequest:[TLAPI_messages_getChannelDialogs createWithOffset:offset limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
+    [RPCRequest sendRequest:[TLAPI_channels_getDialogs createWithOffset:offset limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
         
          [SharedManager proccessGlobalResponse:response];
         

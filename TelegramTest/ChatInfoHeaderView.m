@@ -161,7 +161,7 @@
                 
                 [TMViewController showModalProgress];
                 
-                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.controller.chat.inputPeer] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.controller.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
                     [TMViewController hideModalProgressWithSuccess];
                     

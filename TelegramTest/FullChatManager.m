@@ -196,8 +196,16 @@
     
     TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
     
-        
-    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:isChannel ? [TL_inputChannel createWithChannel_id:chat.n_id access_hash:chat.access_hash] : [TL_inputChat createWithChat_id:chat_id]] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
+    id request;
+    
+    if([chat isKindOfClass:[TL_channel class]]) {
+        request = [TLAPI_channels_getFullChannel createWithChannel:chat.inputPeer];
+    } else {
+        request = [TLAPI_messages_getFullChat createWithChat_id:chat.n_id];
+    }
+    
+    
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
         
          [SharedManager proccessGlobalResponse:result];
         
@@ -262,7 +270,7 @@
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
             TLChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
-            if(chatFull) {
+            if(chatFull && ![chatFull isKindOfClass:[TL_channelFull class]]) {
                 checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull queue:self.queue];
                 [self.membersCheker setObject:checker forKey:@(chat_id)];
             }
@@ -283,7 +291,7 @@
             
             TLChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];
             if(currentChat) {
-                if(currentChat.participants.participants.count != newChatFull.participants.participants.count) {
+                if([currentChat isKindOfClass:[TL_chatFull class]] && currentChat.participants.participants.count != newChatFull.participants.participants.count) {
                     currentChat.participants = newChatFull.participants;
                     [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(currentChat.n_id), KEY_PARTICIPANTS: currentChat.participants}];
                 }
@@ -299,15 +307,19 @@
                     currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
-            NSArray *copy = [currentChat.participants.participants copy];
-            
-            for (TL_chatParticipant *user in copy) {
-                TLUser *find = [[UsersManager sharedManager] find:user.user_id];
+            if(![currentChat.participants isKindOfClass:[TL_channelParticipants class]]) {
+                NSArray *copy = [currentChat.participants.participants copy];
                 
-                if([find isKindOfClass:[TL_userEmpty class]] || !find) {
-                    [currentChat.participants.participants removeObject:user];
+                for (TL_chatParticipant *user in copy) {
+                    TLUser *find = [[UsersManager sharedManager] find:user.user_id];
+                    
+                    if([find isKindOfClass:[TL_userEmpty class]] || !find) {
+                        [currentChat.participants.participants removeObject:user];
+                    }
                 }
             }
+            
+            
             
             
             if([newChatFull.participants isKindOfClass:[TL_chatParticipantsForbidden class]]) {

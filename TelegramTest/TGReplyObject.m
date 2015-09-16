@@ -50,6 +50,7 @@
     
     NSString *name = _replyMessage.from_id == 0 ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
     
+    
     NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
     
     [replyHeader appendString:name withColor:nameColor];
@@ -173,7 +174,7 @@
     if([_fromMessage.to_id isKindOfClass:[TL_peerChannel class]]) {
         
         
-        request = [TLAPI_messages_getChannelMessages createWithPeer:[TL_inputPeerChannel createWithChannel_id:_fromMessage.chat.n_id access_hash:_fromMessage.chat.access_hash] n_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
+        request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:_fromMessage.chat.n_id access_hash:_fromMessage.chat.access_hash] n_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
     }
     
     [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {

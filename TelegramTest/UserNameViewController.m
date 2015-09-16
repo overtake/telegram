@@ -181,7 +181,7 @@
     id request = [TLAPI_account_checkUsername createWithUsername:userNameToCheck];
     
     if(self.controller.channel) {
-        request = [TLAPI_messages_checkChannelUsername createWithChat_id:[self.controller.channel inputPeer] username:userNameToCheck];
+        request = [TLAPI_channels_checkUsername createWithChannel:[self.controller.channel inputPeer] username:userNameToCheck];
     }
     
     return request;

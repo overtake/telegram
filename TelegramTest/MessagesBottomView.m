@@ -870,7 +870,7 @@
             
             [TMViewController showModalProgress];
             
-            [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:weakSelf.dialog.chat.inputPeer user_id:[[UsersManager currentUser] inputUser] fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+            [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:weakSelf.dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser] fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
                 
                 
                 weakSelf.dialog.invisibleChannel = NO;

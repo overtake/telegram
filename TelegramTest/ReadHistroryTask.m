@@ -65,7 +65,7 @@
     } else if(_conversation.type != DialogTypeChannel) {
         request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id offset:offset];
     } else {
-        request = [TLAPI_messages_readChannelHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
+        request = [TLAPI_channels_readHistory createWithChannel:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {

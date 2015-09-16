@@ -148,7 +148,7 @@ static int pollingDelay = 5;
     
     
     
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithPeer:[TL_inputPeerChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:lastObject.message.n_id max_id:firstObject.message.n_id]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
+    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:lastObject.message.n_id max_id:firstObject.message.n_id]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
         
         
         if([response isKindOfClass:[TL_updates_channelDifference class]]) {

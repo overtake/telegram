@@ -192,8 +192,8 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return attributedString;
 }
 
--(TLInputChat *)inputPeer {
-    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? (TLInputChat *) [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : [TL_inputChat createWithChat_id:self.n_id]);
+-(id)inputPeer {
+    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }
 
 
@@ -202,34 +202,37 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return [self isKindOfClass:[TL_channel class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
 }
 
+
 -(BOOL)isAdmin {
     return self.flags & (1 << 0);
 }
 -(BOOL)isBroadcast {
-    return self.flags & (1 << 1);
+    return self.flags & (1 << 5);
 }
 -(BOOL)isPublic {
-    return self.flags & (1 << 2);
+    return self.flags & (1 << 6);
 }
 
 -(BOOL)left {
-    return self.flags & (1 << 3);
+    return self.flags & (1 << 2);
 }
 
 -(BOOL)isKicked {
-    return self.flags & (1 << 4);
+    return self.flags & (1 << 1);
 }
 
 -(BOOL)isPublisher {
-    return self.flags & (1 << 5);
+    return self.flags & (1 << 3);
 }
 
 -(BOOL)isModerator {
-    return self.flags & (1 << 6);
+    return self.flags & (1 << 4);
 }
 
 -(NSString *)usernameLink {
     return self.username.length > 0 ? [NSString stringWithFormat:@"https://telegram.me/%@",self.username] : @"";
 }
+
+
 
 @end

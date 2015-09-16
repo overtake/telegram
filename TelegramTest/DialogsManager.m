@@ -437,7 +437,7 @@
     }
     
     if((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
-        [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser]] successHandler:^(RPCRequest *request, id response) {
             newBlock();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             newBlock();

@@ -176,7 +176,9 @@
         }
         
         
-        
+        [self.sharedLinksButton setConversation:self.controller.chat.dialog];
+        [self.filesMediaButton setConversation:self.controller.chat.dialog];
+        [self.sharedMediaButton setConversation:self.controller.chat.dialog];
         
         
         
@@ -209,8 +211,8 @@
     
     [self.exportChatInvite setHidden:YES];
     [self.sharedMediaButton setHidden:NO];
-    [self.filesMediaButton setHidden:YES];
-    [self.sharedLinksButton setHidden:YES];
+    [self.filesMediaButton setHidden:NO];
+    [self.sharedLinksButton setHidden:NO];
     
     
     [self.linkView setHidden:self.type == ChatInfoViewControllerEdit || self.linkView.string.length == 0];
@@ -233,10 +235,19 @@
     
     yOffset+=42;
     
+    [self.sharedLinksButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+    
+    yOffset+=42;
+    
+    [self.filesMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+    
+    yOffset+=42;
     
     [self.sharedMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
     yOffset+=42;
+    
+    
     
     if(!self.addMembersButton.isHidden) {
         yOffset+=NSHeight(self.notificationView.frame);
@@ -350,7 +361,9 @@
       
         if(![self.controller.fullChat.about isEqualToString:self.aboutTextView.stringValue]) {
             
-            [RPCRequest sendRequest:[TLAPI_messages_editChatAbout createWithChat_id:self.controller.chat.inputPeer about:self.aboutTextView.stringValue] successHandler:^(RPCRequest *request, id response) {
+            
+            
+            [RPCRequest sendRequest:[TLAPI_channels_editAbout createWithChannel:self.controller.chat.inputPeer about:self.aboutTextView.stringValue] successHandler:^(RPCRequest *request, id response) {
                 
                 if(self.controller.fullChat != nil) {
                     self.controller.fullChat.about = [request.object about];
@@ -376,7 +389,7 @@
     
     if(![self.nameTextField.stringValue isEqualToString:self.controller.chat.title] && self.nameTextField.stringValue.length > 0) {
         
-        [RPCRequest sendRequest:[TLAPI_messages_editChatTitle createWithChat_id:self.controller.chat.inputPeer title:self.nameTextField.stringValue] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_channels_editTitle createWithChannel:self.controller.chat.inputPeer title:self.nameTextField.stringValue] successHandler:^(RPCRequest *request, id response) {
             next();
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             next();

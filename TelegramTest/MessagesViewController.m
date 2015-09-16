@@ -1947,7 +1947,7 @@ static NSTextAttachment *headerMediaIcon() {
     id request = [TLAPI_messages_deleteMessages createWithN_id:array];
     
     if(conversation.type == DialogTypeChannel)
-        request = [TLAPI_messages_deleteChannelMessages createWithPeer:[TL_inputPeerChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
+        request = [TLAPI_channels_deleteMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
     
     
     
@@ -1983,7 +1983,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             if(conversation.type == DialogTypeChannel)
             {
-                [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithPeer:conversation.peer messages:array pts:[response pts] pts_count:[response pts_count]]];
+                [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
             }
             
             completeBlock();
@@ -2295,7 +2295,7 @@ static NSTextAttachment *headerMediaIcon() {
             id request = [TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]];
             
             if(self.conversation.type == DialogTypeChannel) {
-                request = [TLAPI_messages_getChannelMessages createWithPeer:self.conversation.inputPeer n_id:[@[@(messageId)] mutableCopy]];
+                request = [TLAPI_channels_getMessages createWithChannel:self.conversation.inputPeer n_id:[@[@(messageId)] mutableCopy]];
             }
             
             [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
@@ -3844,7 +3844,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)leaveOrReturn:(TL_conversation *)dialog {
     TLInputUser *input = [[UsersManager currentUser] inputUser];
     
-    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.inputPeer user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.inputPeer user_id:input];
+    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
     
     
     if(dialog.chat.left) {
