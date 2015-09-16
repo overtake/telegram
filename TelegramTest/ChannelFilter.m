@@ -146,7 +146,7 @@
     // max to min
     [messages enumerateObjectsWithOptions:bottom ? NSEnumerationReverse : 0  usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        TGMessageGroupHole *slamHole = [[groups filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.max_id > %d AND self.min_id < %d",obj.n_id,obj.n_id]] firstObject];
+        TGMessageGroupHole *slamHole = [[groups filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.max_id >= %d AND self.min_id =< %d",obj.n_id,obj.n_id]] firstObject];
         
         
         if(slamHole != nil) {
@@ -154,11 +154,15 @@
             if((slamHole.min_id == 0 || slamHole.max_id == INT32_MAX)) {
                 if([obj isImportantMessage]) {
                     
-                    if(bottom) {
-                        slamHole.max_id = obj.n_id;
-                    } else {
+                    if(slamHole.min_id == 0) {
                         slamHole.min_id = obj.n_id;
+                        slamHole.max_id++;
+                    } else if(slamHole.max_id == INT32_MAX) {
+                        slamHole.max_id = obj.n_id;
+                        slamHole.min_id--;
                     }
+                    
+                    
                 } else {
                     slamHole.messagesCount++;
                 }
@@ -167,17 +171,23 @@
             
         } else  if(![obj isImportantMessage]) {
             
+            TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id-1:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:obj.date count:1];
             
-            [groups addObject:[[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id-1:0 max_id:bottom?INT32_MAX:obj.n_id+1 date:obj.date count:1]];
+            [groups addObject:groupHole];
         }
         
    }];
     
+   
     
     [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
         
+        NSLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
+        
         [[Storage manager] insertMessagesHole:obj];
     }];
+    
+     int bp = 0;
     
 }
 

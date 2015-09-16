@@ -57,21 +57,32 @@ static TGChannelsPolling *channelPolling;
         
         self.proccessing = YES;
         
+        
+       // ChannelHistoryController* __weak weakSelf = self;
+       
         [self.filter request:next callback:^(NSArray *result, ChatHistoryState state) {
             
-            NSArray *items = [self.controller messageTableItemsFromMessages:result];
+         //   ChannelHistoryController* strongSelf = weakSelf;
             
+          //  if(strongSelf != nil) {
+                NSArray *items = [self.controller messageTableItemsFromMessages:result];
+                
+                
+                NSArray *converted = [self filterAndAdd:items isLates:NO];
+                
+                
+                converted = [self sortItems:converted];
+                
+                [self setState:state next:next];
+                
+                [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+                
+                [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+        //    } else {
+          //      MTLog(@"ChatHistoryController is dealloced");
+         //   }
             
-            NSArray *converted = [self filterAndAdd:items isLates:NO];
-            
-            
-            converted = [self sortItems:converted];
-            
-            [self setState:state next:next];
-            
-            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-            
-            [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+           
             
         }];
         
@@ -165,6 +176,10 @@ static TGChannelsPolling *channelPolling;
         [self addItemWithoutSavingState:item];
     
         [[Storage manager] addHolesAroundMessage:item.message];
+        
+        if(self.filter.class == [ChannelFilter class]) {
+            [(ChannelFilter *)self.filter fillGroupHoles:@[item.message] bottom:NO];
+        }
         
         [[Storage manager] insertMessage:item.message];
         

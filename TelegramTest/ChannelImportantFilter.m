@@ -45,7 +45,7 @@
     
 }
 
--(void)request:(BOOL)next callback:(void (^)(NSArray *response,ChatHistoryState state))callback {
+-(void)request:(BOOL)next callback:(__weak void (^)(NSArray *response,ChatHistoryState state))callback {
     
     if([self.controller checkState:ChatHistoryStateRemote next:next]) {
         
@@ -147,35 +147,35 @@
 }
 
 
--(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages {
-    
-    TGMessageHole *nHole;
-    
-    if(hole != nil) {
-        
-        int min = hole.min_id;
-        int max = hole.max_id;
-        
-        if(messages.count > 0)
-        {
-            TL_localMessage *first = [messages firstObject];
-            TL_localMessage *last = [messages lastObject];
-            
-            max = first.n_id;
-            min = last.n_id;
-        }
-        
-        nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
-        
-        
-        if(nHole.min_id == nHole.max_id || abs(nHole.min_id - nHole.max_id) == 1) {
-            nHole = nil;
-        }
-        
-    }
-    
-    return nHole;
-}
+//-(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages {
+//    
+//    TGMessageHole *nHole;
+//    
+//    if(hole != nil) {
+//        
+//        int min = hole.min_id;
+//        int max = hole.max_id;
+//        
+//        if(messages.count > 0)
+//        {
+//            TL_localMessage *first = [messages firstObject];
+//            TL_localMessage *last = [messages lastObject];
+//            
+//            max = first.n_id;
+//            min = last.n_id;
+//        }
+//        
+//        nHole = [[TGMessageHole alloc] initWithUniqueId:hole.uniqueId peer_id:hole.peer_id min_id:next ? hole.min_id : max max_id:next ? min : hole.max_id date:hole.date count:0];
+//        
+//        
+//        if(nHole.min_id == nHole.max_id || abs(nHole.min_id - nHole.max_id) == 1) {
+//            nHole = nil;
+//        }
+//        
+//    }
+//    
+//    return nHole;
+//}
 
 -(int)additionSenderFlags {
     return (1 << 4);

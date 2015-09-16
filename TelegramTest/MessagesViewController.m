@@ -435,11 +435,6 @@
     self.searchItems = [[NSMutableArray alloc] init];
     
     
-   [self.historyController drop:NO];
-    
-    self.historyController = nil;
-    
-    self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:self.defHFClass];
     
     [self.searchMessagesView setHidden:YES];
     
@@ -755,13 +750,10 @@
 
 -(void)hideSearchBox:(BOOL)animated {
     
-    
-    
-    
     if(self.searchMessagesView.isHidden)
         return;
     
-    if(self.historyController.prevState != ChatHistoryStateFull)
+    if(self.historyController != nil && self.historyController.prevState != ChatHistoryStateFull)
         [self jumpToLastMessages:YES];
     
     [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
@@ -800,6 +792,7 @@
         [self.searchMessagesView setNeedsDisplay:YES];
         [self.searchMessagesView setHidden:YES];
     }
+    
 }
 
 
@@ -2337,7 +2330,12 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
+  
+    [self loadViewIfNeeded];
+    
     [self hideSearchBox:NO];
+    
+    
         
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
@@ -2370,6 +2368,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!historyFilter)
             historyFilter = [self defHFClass];
+        
         
         [self.historyController drop:NO];
         
@@ -2509,9 +2508,9 @@ static NSTextAttachment *headerMediaIcon() {
             NSSize oldsize = self.table.scrollView.documentSize;
             NSPoint offset = self.table.scrollView.documentOffset;
             
-           // [self.table beginUpdates];
+            [self.table beginUpdates];
             [self.table insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:NSTableViewAnimationEffectNone];
-          //  [self.table endUpdates];
+            [self.table endUpdates];
             
             if(!next) {
                 NSSize newsize = self.table.scrollView.documentSize;
@@ -2527,10 +2526,7 @@ static NSTextAttachment *headerMediaIcon() {
            // });
         } else {
              [self insertMessageTableItemsToList:array startPosition:pos needCheckLastMessage:NO backItems:nil checkActive:NO];
-            [CATransaction begin];
-            [CATransaction disableActions];
             [self.table reloadData];
-            [CATransaction commit];
             [self didUpdateTable];
             self.locked = NO;
             
@@ -2582,6 +2578,9 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     [self updateScrollBtn];
+    
+    [self.table setNeedsDisplay:YES];
+    [self.table display];
     
 }
 

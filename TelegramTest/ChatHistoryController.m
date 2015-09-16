@@ -663,53 +663,60 @@ static NSMutableArray *listeners;
                 
             } else if([self checkState:ChatHistoryStateRemote next:next]) {
                 
+                ChatHistoryController* __weak weakSelf = self;
+                
                 [self.filter remoteRequest:next peer_id:self.conversation.peer_id callback:^(id response) {
                     
-                    [TL_localMessage convertReceivedMessages:[response messages]];
+                     ChatHistoryController* strongSelf = weakSelf;
                     
-                    [queue dispatchOnQueue:^{
+                    if(strongSelf != nil) {
+                        [TL_localMessage convertReceivedMessages:[response messages]];
                         
-                        
-                        NSArray *messages = [[response messages] copy];
-                        
-                        if(self.filter.class != HistoryFilter.class || !_need_save_to_db) {
-                            [[response messages] removeAllObjects];
-                        }
-                        
-                        
-                        TL_localMessage *sync_message = [[response messages] lastObject];
-                        
-                        if(sync_message) {
-                            self.conversation.sync_message_id = sync_message.n_id;
-                            [self.conversation save];
-                        }
-                        
-                        
-                        [SharedManager proccessGlobalResponse:response];
-                        
-                        
-                        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
-                        
-                        converted = [self sortItems:converted];
-                        
-                        [self saveId:converted next:next];
-                        
-                        
-                        
-                        
-                        if(next && converted.count <  (self.selectLimit-1)) {
-                            [self setState:ChatHistoryStateFull next:next];
-                        }
-                        
-                        if(!next && (_min_id) == self.conversation.top_message) {
-                            [self setState:ChatHistoryStateFull next:next];
-                        }
-                        
-                        self.filter.request = nil;
-                        
-                        [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                    }];
-                    
+                        [queue dispatchOnQueue:^{
+                            
+                            
+                            NSArray *messages = [[response messages] copy];
+                            
+                            if(self.filter.class != HistoryFilter.class || !_need_save_to_db) {
+                                [[response messages] removeAllObjects];
+                            }
+                            
+                            
+                            TL_localMessage *sync_message = [[response messages] lastObject];
+                            
+                            if(sync_message) {
+                                self.conversation.sync_message_id = sync_message.n_id;
+                                [self.conversation save];
+                            }
+                            
+                            
+                            [SharedManager proccessGlobalResponse:response];
+                            
+                            
+                            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
+                            
+                            converted = [self sortItems:converted];
+                            
+                            [self saveId:converted next:next];
+                            
+                            
+                            
+                            
+                            if(next && converted.count <  (self.selectLimit-1)) {
+                                [self setState:ChatHistoryStateFull next:next];
+                            }
+                            
+                            if(!next && (_min_id) == self.conversation.top_message) {
+                                [self setState:ChatHistoryStateFull next:next];
+                            }
+                            
+                            self.filter.request = nil;
+                            
+                            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+                        }];
+                    } else {
+                        MTLog(@"ChatHistoryController is dealloced");
+                    }
                     
                 }];
                 

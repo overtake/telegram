@@ -470,6 +470,11 @@
       </ContextState>
       <ContextState
          contextName = "-[ChannelFilter fillGroupHoles:bottom:]:ChannelFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "bottom">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__29-[Storage groupHole:min:max:]_block_invoke:Storage.m">
@@ -1409,6 +1414,9 @@
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke212:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[ChatHistoryController dealloc]:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[TGPVMediaBehavior loadRemote:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
       </ContextState>
       <ContextState
@@ -1670,6 +1678,12 @@
             <PersistentString
                value = "range">
             </PersistentString>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "self.table.containerView.isHidden">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -1677,6 +1691,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController viewWillDisappear:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.table.containerView.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2044,6 +2066,9 @@
       </ContextState>
       <ContextState
          contextName = "__77-[ChannelHistoryController loadAroundMessagesWithMessage:sync:selectHandler:]_block_invoke:ChannelHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[Storage addHolesAroundMessage:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke_4235:TGPasswosdMainViewController.m">
@@ -3221,6 +3246,17 @@
          contextName = "-[ChannelFilter request:callback:]:ChannelFilter.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController hideSearchBox:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+            <PersistentString
+               value = "self.historyController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView downloadProgressHandler:]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -3366,6 +3402,17 @@
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService mtProto:receivedMessage:]:TGUpdateMessageService.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController didUpdateTable]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.table.containerView.isHidden">
+            </PersistentString>
+            <PersistentString
+               value = "self.noMessagesView.isHidden">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ConnectionStatusViewControllerView show:]:ConnectionStatusViewControllerView.m">

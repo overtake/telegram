@@ -176,7 +176,7 @@
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        int minId = [[Storage manager] lastSyncedMessageIdWithChannelId:msg.peer_id important:YES];
+        int minId = [[Storage manager] syncedMessageIdWithChannelId:msg.peer_id important:YES latest:YES];
         
         TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:INT32_MAX] lastObject];
         
@@ -368,7 +368,7 @@
                     [[Storage manager] insertMessagesHole:hole];
                 }
                 
-                int maxSyncedId = [[Storage manager] lastSyncedMessageIdWithChannelId:conversation.peer_id important:NO];
+                int maxSyncedId = [[Storage manager] syncedMessageIdWithChannelId:conversation.peer_id important:NO latest:YES];
                 
                 if(maxSyncedId != minMsg.n_id) {
                     longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:maxSyncedId max_id:minMsg.n_id date:minMsg.date count:0];
