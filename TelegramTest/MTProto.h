@@ -910,6 +910,9 @@
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
+@interface TL_chatFull_old34 : TLChatFull<NSCoding>
++(TL_chatFull_old34*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
+@end
 	
 @interface TLChatParticipant()
 @property int user_id;
