@@ -59,7 +59,7 @@
     if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
     }  else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
-        return [[(TL_updateDeleteChannelMessages *)update peer] channel_id];
+        return [(TL_updateDeleteChannelMessages *)update channel_id];
     }
     
     return 0;
@@ -341,6 +341,7 @@
             
             conversation.top_message = [response top_message];
             conversation.lastMessage = topMsg;
+            conversation.top_important_message = [response top_important_message];
             conversation.last_message_date = topMsg.date;
             
             if(conversation.last_marked_message == 0) {

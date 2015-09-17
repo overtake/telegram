@@ -118,7 +118,7 @@
         
     
         
-        TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:uniqueId peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:obj.n_count];
+        TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:uniqueId peer_id:peer_id min_id:obj.min_id max_id:obj.max_id date:obj.date count:obj.n_count isImploded:YES];
         
         [[Storage manager] insertMessagesHole:groupHole];
 

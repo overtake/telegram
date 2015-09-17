@@ -65,19 +65,12 @@ static TGChannelsPolling *channelPolling;
          //   ChannelHistoryController* strongSelf = weakSelf;
             
           //  if(strongSelf != nil) {
-                NSArray *items = [self.controller messageTableItemsFromMessages:result];
-                
-                
-                NSArray *converted = [self filterAndAdd:items isLates:NO];
-                
-                
-                converted = [self sortItems:converted];
-                
-                [self setState:state next:next];
-                
-                [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
-                
-                [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+            NSArray *converted = [self proccessResponse:result state:state next:next];
+            
+            
+            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+            
+            [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
         //    } else {
           //      MTLog(@"ChatHistoryController is dealloced");
          //   }
@@ -90,6 +83,22 @@ static TGChannelsPolling *channelPolling;
     
 }
 
+-(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next {
+    NSArray *items = [self.controller messageTableItemsFromMessages:result];
+    
+    
+    NSArray *converted = [self filterAndAdd:items isLates:NO];
+    
+    
+    converted = [self sortItems:converted];
+    
+    
+    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message : self.conversation.top_important_message) <= self.server_max_id ? ChatHistoryStateFull : state;
+    
+    [self setState:state next:next];
+    
+    return converted;
+}
 
 -(void)setFilter:(HistoryFilter *)filter {
     
@@ -220,20 +229,13 @@ static TGChannelsPolling *channelPolling;
     
     [self.filter request:nextRequest callback:^(NSArray *result, ChatHistoryState state) {
         
-        NSArray *items = [self.controller messageTableItemsFromMessages:result];
-        
-        NSArray *converted = [self filterAndAdd:items isLates:NO];
-        
-        converted = [self sortItems:converted];
+        NSArray *converted = [self proccessResponse:result state:state next:nextRequest];
         
         if(nextRequest) {
             [nextResult addObjectsFromArray:converted];
         } else {
             [prevResult addObjectsFromArray:converted];
         }
-        
-        
-        [self setState:state next:nextRequest];
         
     
         [self loadAroundMessagesWithSelectHandler:selectHandler limit:(int)limit prevResult:prevResult nextResult:nextResult];

@@ -135,7 +135,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil pts:0 isInvisibleChannel:YES];
+        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil pts:0 isInvisibleChannel:YES top_important_message:0];
         
         [dialog save];
         
@@ -254,7 +254,7 @@
 
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
-    [[Storage manager] lastMessageForPeer:dialog.peer completeHandler:^(TL_localMessage *lastMessage) {
+    [[Storage manager] lastMessageForPeer:dialog.peer completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
         
         [self.queue dispatchOnQueue:^{
             
@@ -270,6 +270,8 @@
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
             }
+            
+            dialog.top_important_message = importantMessage;
             
             dialog.lastMessage = lastMessage;
             
@@ -475,7 +477,7 @@
     dispatch_block_t blockSuccess = ^{
         dialog.top_message = 0;
         
-        
+        dialog.top_important_message = 0;
         
         
         dialog.unread_count = 0;
@@ -542,11 +544,14 @@
         
         
         if(message.unread && !message.n_out) {
-            if(dialog.type != DialogTypeChannel || message.isImportantMessage)
-                dialog.unread_count++;
+             dialog.unread_count++;
         }
         
         dialog.top_message = message.n_id;
+        
+        if(message.isImportantMessage) {
+            dialog.top_important_message = message.n_id;
+        }
         
         dialog.lastMessage = message;
         
@@ -646,6 +651,10 @@
             
             if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
                 dialog.top_message = message.n_id;
+                
+                if(message.isImportantMessage)
+                    dialog.top_important_message = message.n_id;
+                
                 
                 int last_real_date = dialog.last_real_message_date;
                 

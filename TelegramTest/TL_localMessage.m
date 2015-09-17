@@ -433,6 +433,10 @@ long channelMsgId(int msg_id, int peer_id) {
     int msgId = msg_id;
     int channelId = peer_id;
     
+    msg_id = NSSwapHostIntToBig(msg_id);
+    
+    
+    
     [data appendBytes:&msgId length:4];
     [data appendBytes:&channelId length:4];
     

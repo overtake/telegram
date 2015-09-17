@@ -23,6 +23,15 @@
     return self;
 }
 
+-(id)initWithUniqueId:(int)uniqueId peer_id:(int)peer_id min_id:(int)min_id max_id:(int)max_id date:(int)date count:(int)count isImploded:(BOOL)isImploded;
+{
+    if(self = [self initWithUniqueId:uniqueId peer_id:peer_id min_id:min_id max_id:max_id date:date count:count]) {
+        _isImploded = isImploded;
+    }
+    
+    return self;
+}
+
 -(void)save {
     [[Storage manager] insertMessagesHole:self];
 }

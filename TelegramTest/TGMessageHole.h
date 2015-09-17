@@ -17,8 +17,11 @@
 @property (nonatomic,assign) int date;
 @property (nonatomic,assign) int messagesCount;
 
--(id)initWithUniqueId:(int)uniqueId peer_id:(int)peer_id min_id:(int)min_id max_id:(int)max_id date:(int)date count:(int)count;
 
+@property (nonatomic,assign) BOOL isImploded;
+
+-(id)initWithUniqueId:(int)uniqueId peer_id:(int)peer_id min_id:(int)min_id max_id:(int)max_id date:(int)date count:(int)count isImploded:(BOOL)isImploded;
+-(id)initWithUniqueId:(int)uniqueId peer_id:(int)peer_id min_id:(int)min_id max_id:(int)max_id date:(int)date count:(int)count;
 -(void)save;
 -(void)remove;
 -(int)type;

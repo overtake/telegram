@@ -91,10 +91,6 @@
         if(callback) {
             ChatHistoryState state = hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote;
             
-            if(state == ChatHistoryStateFull) {
-                int bp = 0;
-            }
-            
             callback(messages,state);
         }
         
@@ -130,62 +126,71 @@
     if(messages.count == 0)
         return;
     
-    NSMutableArray *groups = [[NSMutableArray alloc] init];
-    
-    
-    
-    TL_localMessage *first = [messages firstObject];
-    TL_localMessage *last = [messages lastObject];
-    
-    int max = first.n_id;
-    int min = last.n_id;
-    
-    [groups addObjectsFromArray:[[Storage manager] groupHoles:self.controller.conversation.peer_id min:min max:max]];
 
     
     // max to min
-    [messages enumerateObjectsWithOptions:bottom ? NSEnumerationReverse : 0  usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-        
-        TGMessageGroupHole *slamHole = [[groups filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.max_id >= %d AND self.min_id =< %d",obj.n_id,obj.n_id]] firstObject];
+    [messages enumerateObjectsWithOptions:0  usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
         
-        if(slamHole != nil) {
+        if(![obj isImportantMessage]) {
             
-            if((slamHole.min_id == 0 || slamHole.max_id == INT32_MAX)) {
-                if([obj isImportantMessage]) {
-                    
-                    if(slamHole.min_id == 0) {
-                        slamHole.min_id = obj.n_id;
-                        slamHole.max_id++;
-                    } else if(slamHole.max_id == INT32_MAX) {
-                        slamHole.max_id = obj.n_id;
-                        slamHole.min_id--;
-                    }
-                    
-                    
-                } else {
-                    slamHole.messagesCount++;
+            int lastImportantMessage = [[[Storage manager] lastImportantMessageAroundMinId:obj.channelMsgId isTop:!bottom] n_id];
+            
+            lastImportantMessage = lastImportantMessage == 0 ? self.controller.conversation.top_message : lastImportantMessage;
+            
+            NSLog(@"min_id:%d max_id:%d",!bottom?obj.n_id:lastImportantMessage,bottom?obj.n_id:lastImportantMessage);
+            
+            NSArray *holes = [[Storage manager] groupHoles:obj.peer_id min:!bottom?obj.n_id:lastImportantMessage max:bottom?obj.n_id:lastImportantMessage];
+            
+            __block TGMessageGroupHole *hole;
+            
+            [holes enumerateObjectsUsingBlock:^(TGMessageGroupHole *gh, NSUInteger idx, BOOL *stop) {
+                if(gh.min_id <= obj.n_id && gh.max_id >= obj.n_id) {
+                    hole = gh;
+                    *stop = YES;
                 }
+            }];
+            
+            
+            if(hole) {
+                
+                if(!hole.isImploded) {
+                    if(bottom) {
+                        if(hole.max_id >= obj.n_id) {
+                            hole.max_id = obj.n_id+1;
+                            
+                            hole.messagesCount++;
+                            
+                            [hole save];
+                        }
+                    } else if(hole.min_id <= obj.n_id) {
+                        hole.min_id = obj.n_id-1;
+                        hole.messagesCount++;
+                        
+                        [hole save];
+                    }
+                }
+    
+            } else {
+                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:obj.n_id-1 max_id:obj.n_id+1 date:obj.date count:1];
+                [groupHole save];
             }
             
             
-        } else  if(![obj isImportantMessage]) {
-            
-            TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:bottom?obj.n_id:0 max_id:bottom?INT32_MAX:obj.n_id date:obj.date count:1];
-            
-            [groups addObject:groupHole];
         }
+        
+     
         
    }];
     
    
-    
-    [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
-        
-        MTLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
-        
-        [[Storage manager] insertMessagesHole:obj];
-    }];
+//    
+//    [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
+//        
+//        MTLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
+//        
+//        [[Storage manager] insertMessagesHole:obj];
+//    }];
     
     
 }
@@ -194,5 +199,34 @@
     return (1 << 4);
 }
 
+
+/*
+ if(slamHole != nil) {
+ 
+ if((slamHole.min_id == 0 || slamHole.max_id == INT32_MAX)) {
+ if([obj isImportantMessage]) {
+ 
+ if(slamHole.min_id == 0) {
+ slamHole.min_id = obj.n_id;
+ slamHole.max_id++;
+ } else if(slamHole.max_id == INT32_MAX) {
+ slamHole.max_id = obj.n_id;
+ slamHole.min_id--;
+ }
+ 
+ 
+ } else {
+ slamHole.messagesCount++;
+ }
+ }
+ 
+ 
+ } else  if(![obj isImportantMessage]) {
+ 
+ TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:obj.n_id-1 max_id:obj.n_id+1 date:obj.date count:1];
+ 
+ [groups addObject:groupHole];
+ }
+ */
 
 @end

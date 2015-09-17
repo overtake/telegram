@@ -1425,7 +1425,9 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)showOrHideChannelDiscussion {
     
     
-    if(self.conversation.type == DialogTypeChannel && self.table.scrollView.documentOffset.y > 100) {
+    [self.replyMsgsStack removeAllObjects];
+    
+    if(self.table.scrollView.documentOffset.y > 100) {
         NSRange range = [self.table rowsInRect:[self.table visibleRect]];
         __block MessageTableItem *item = [self objectAtIndex:range.location + range.length - 2];
         
@@ -2173,7 +2175,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(fromMsgId != 0)
         [_replyMsgsStack addObject:@(fromMsgId)];
     
-    if(item)
+    if(item && self.conversation.type != DialogTypeChannel)
     {
         [self scrollToItem:item animated:animated centered:YES highlight:YES];
     } else {
@@ -2233,7 +2235,7 @@ static NSTextAttachment *headerMediaIcon() {
                     [self.table display];
                     
                     if(rect.origin.y == 0 || fromMsgId != 0) {
-                        [self scrollToItem:importantItem animated:NO centered:YES highlight:YES];
+                        [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsgId != 0];
                     } else {
                         
                         __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];

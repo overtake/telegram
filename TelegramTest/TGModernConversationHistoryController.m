@@ -119,7 +119,7 @@ static const int limit = 1000;
                 
                 // need create group hole
                 
-                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id date:INT32_MAX count:0];
+                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id+1 date:INT32_MAX count:0];
                 
                 [[Storage manager] insertMessagesHole:groupHole];
                 
@@ -128,7 +128,7 @@ static const int limit = 1000;
             
             
             
-            [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:topMsg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:topMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:topMsg pts:channel.pts isInvisibleChannel:NO]];
+            [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:topMsg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:topMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:topMsg pts:channel.pts isInvisibleChannel:NO top_important_message:minMsg.n_id]];
             
         }];
         
@@ -303,7 +303,7 @@ static BOOL isStorageLoaded;
                 
                 TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",channel.top_message]] lastObject]];
                 
-                [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:msg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:msg pts:channel.pts isInvisibleChannel:NO]];
+                [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_count last_message_date:msg.date notify_settings:channel.notify_settings last_marked_message:channel.top_message top_message_fake:channel.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:msg pts:channel.pts isInvisibleChannel:NO top_important_message:channel.top_message]];
                 
             }];
             
