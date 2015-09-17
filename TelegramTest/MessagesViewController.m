@@ -1429,7 +1429,17 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(self.table.scrollView.documentOffset.y > 100) {
         NSRange range = [self.table rowsInRect:[self.table visibleRect]];
-        __block MessageTableItem *item = [self objectAtIndex:range.location + range.length - 2];
+        __block MessageTableItem *item;
+        
+        [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            if(![obj isKindOfClass:[MessageTableItemHole class]] && idx >= 2) {
+                item = obj;
+                *stop = YES;
+            }
+            
+            
+        }];
         
         
         if(item) {
@@ -2934,6 +2944,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
+    
+    if(item.message.isChannelMessage && item.message.isImportantMessage) {
+        
+        return;
+    }
     
     if(prevItem.message && item.message && ![item isReplyMessage] && (!item.message.media.webpage || [item.message.media.webpage isKindOfClass:[TL_webPageEmpty class]])) {
         if(!prevItem.message.action && !item.message.action) {

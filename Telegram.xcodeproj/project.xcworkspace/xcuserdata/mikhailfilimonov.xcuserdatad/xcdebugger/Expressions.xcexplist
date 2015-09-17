@@ -872,6 +872,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChannelHistoryController proccessResponse:state:next:]:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation.top_important_message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -1505,9 +1513,6 @@
                value = "[chat isPublic]">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessagesViewController showOrHideChannelDiscussion]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "__40-[ImageAttachSenderItem didEndUploading]_block_invoke156:ImageAttachSenderItem.m">
