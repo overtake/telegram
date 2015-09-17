@@ -1429,7 +1429,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.replyMsgsStack removeAllObjects];
     
-    if(self.table.scrollView.documentOffset.y > 100) {
+   // if(self.table.scrollView.documentOffset.y > 100) {
         NSRange range = [self.table rowsInRect:[self.table visibleRect]];
         __block MessageTableItem *item;
         
@@ -1449,7 +1449,7 @@ static NSTextAttachment *headerMediaIcon() {
             return;
         } 
 
-    }
+  //  }
     
     
     Class f = !self.normalNavigationCenterView.discussIsEnabled ? [ChannelImportantFilter class] : [ChannelFilter class];

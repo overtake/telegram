@@ -93,7 +93,10 @@ static TGChannelsPolling *channelPolling;
     converted = [self sortItems:converted];
     
     
-    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message < self.server_max_id : self.conversation.top_important_message) <= self.server_max_id ? ChatHistoryStateFull : state;
+    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message <= self.server_max_id : self.conversation.top_important_message <= self.server_min_id) ? ChatHistoryStateFull : state;
+    
+    
+    NSLog(@"top_msg:%d top_important:%d server_max_id:%d",self.conversation.top_message,self.conversation.top_important_message,self.server_max_id);
     
     [self setState:state next:next];
     
