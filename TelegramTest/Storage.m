@@ -1069,7 +1069,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         TL_localMessage *message;
         
-        int importantMessage;
+        int importantMessage = 0;
         
         
         if([peer isKindOfClass:[TL_peerChannel class]]) {
@@ -1099,7 +1099,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [result close];
             
             
-            importantMessage = [db intForQuery:[NSString stringWithFormat:@"select serialized,flags from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],peer_id,HistoryFilterImportantChannelMessage];
+            importantMessage = [db intForQuery:[NSString stringWithFormat:@"select serialized,flags from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],@(peer_id),@(HistoryFilterImportantChannelMessage)];
             
         } else {
             

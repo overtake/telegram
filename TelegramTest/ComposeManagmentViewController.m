@@ -26,9 +26,7 @@
     _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_tableView.containerView];
     
-    [self setCenterBarViewText:NSLocalizedString(@"Channel.Managment", nil)];
     
-    [self.doneButton setStringValue:@""];
 }
 
 -(void)setAction:(ComposeAction *)action {
@@ -44,13 +42,13 @@
             
             [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat]];
             
-        } description:NSLocalizedString(@"Channel.AddModerator", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
             return nil;
         }];
         
         [_tableView addItem:addModerator tableRedraw:NO];
         
-        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:82 flipped:YES];
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:62 flipped:YES];
         
         [_tableView addItem:description tableRedraw:NO];
         
@@ -100,6 +98,12 @@
 }
 
 
-
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self setCenterBarViewText:NSLocalizedString(@"Channel.Managment", nil)];
+    
+    [self.doneButton setStringValue:@""];
+}
 
 @end

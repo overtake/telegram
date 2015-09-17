@@ -10,10 +10,9 @@
 
 @interface TGGeneralRowItem : TMRowItem
 
-
 @property (nonatomic,assign) int height;
-
 @property (nonatomic,assign) int xOffset;
+@property (nonatomic,assign) BOOL drawsSeparator;
 
 -(id)initWithHeight:(int)height;
 

@@ -18,6 +18,7 @@
 -(id)initWithHeight:(int)height {
     if(self = [super init]) {
         _height = height;
+        _drawsSeparator = YES;
     }
     
     return self;

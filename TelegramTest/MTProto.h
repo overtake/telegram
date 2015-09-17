@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.09.15.
+//  Auto created by Mikhail Filimonov on 17.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1024,7 +1024,6 @@
 @property (nonatomic, strong) TLPhoto* photo;
 @property int user_id;
 @property int inviter_id;
-@property Boolean enabled;
 @end
 
 @interface TL_messageActionEmpty : TLMessageAction<NSCoding>
@@ -1053,9 +1052,6 @@
 @end
 @interface TL_messageActionChannelCreate : TLMessageAction<NSCoding>
 +(TL_messageActionChannelCreate*)createWithTitle:(NSString*)title;
-@end
-@interface TL_messageActionChannelToggleComments : TLMessageAction<NSCoding>
-+(TL_messageActionChannelToggleComments*)createWithEnabled:(Boolean)enabled;
 @end
 	
 @interface TLDialog()
@@ -2549,11 +2545,13 @@
 @interface TLChannelParticipants()
 @property int flags;
 @property int channel_id;
+@property int participants_count;
 @property (nonatomic, strong) TLChannelParticipant* self_participant;
+@property (nonatomic, strong) NSMutableArray* participants;
 @end
 
 @interface TL_channelParticipants : TLChannelParticipants<NSCoding>
-+(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id self_participant:(TLChannelParticipant*)self_participant;
++(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id participants_count:(int)participants_count self_participant:(TLChannelParticipant*)self_participant participants:(NSMutableArray*)participants;
 @end
 	
 @interface TLMessageRange()
@@ -2619,13 +2617,16 @@
 	
 @interface TLChannelParticipant()
 @property int user_id;
-@property int inviter_id;
 @property int date;
+@property int inviter_id;
 @property int kicked_by;
 @end
 
 @interface TL_channelParticipant : TLChannelParticipant<NSCoding>
-+(TL_channelParticipant*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
++(TL_channelParticipant*)createWithUser_id:(int)user_id date:(int)date;
+@end
+@interface TL_channelParticipantSelf : TLChannelParticipant<NSCoding>
++(TL_channelParticipantSelf*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
 @end
 @interface TL_channelParticipantModerator : TLChannelParticipant<NSCoding>
 +(TL_channelParticipantModerator*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;

@@ -17,11 +17,10 @@
 
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description  height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback {
-    if(self = [super init]) {
+    if(self = [super initWithHeight:height]) {
         _type = type;
         _callback = callback;
         _desc = description;
-        self.height = height;
         _stateback = stateback;
         _enabled = YES;
     }

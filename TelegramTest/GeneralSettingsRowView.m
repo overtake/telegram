@@ -189,11 +189,16 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [NSColorFromRGB(0xe0e0e0) setFill];
+    
     
     TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
     
-    NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(self.frame) - item.xOffset * 2, 1));
+    if(item.drawsSeparator) {
+        [NSColorFromRGB(0xe0e0e0) setFill];
+        
+        NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(self.frame) - item.xOffset * 2, 1));
+    }
+    
 }
 
 @end

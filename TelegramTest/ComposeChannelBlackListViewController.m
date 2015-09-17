@@ -9,7 +9,7 @@
 #import "ComposeChannelBlackListViewController.h"
 #import "SelectUsersTableView.h"
 
-@interface ComposeChannelBlackListViewController ()
+@interface ComposeChannelBlackListViewController ()<SelectTableDelegate,ComposeBehaviorDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @property (nonatomic,strong) RPCRequest *request;
 
@@ -29,13 +29,28 @@
     
 }
 
+-(void)behaviorDidEndRequest:(id)response {
+    
+    [self.tableView removeSelectedItems];
+    [self selectTableDidChangedItem:nil];
+    [self hideModalProgress];
+    
+}
+
+-(void)behaviorDidStartRequest {
+    [self showModalProgress];
+}
 
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
     
+    self.action.behavior.delegate = self;
     
-    [_tableView removeAllItems:NO];
+    [_tableView removeAllItems:YES];
     
+    
+    [_tableView setSelectLimit:action.behavior.limit];
+    _tableView.selectDelegate = self;
     
     [self setLoading:YES];
     
@@ -43,6 +58,28 @@
     
     [self loadNext];
     
+}
+
+-(void)selectTableDidChangedItem:(id)item {
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    
+    [self.tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        [users addObject:obj.user];
+        
+    }];
+    
+    if(!self.action.result)
+        self.action.result = [[ComposeResult alloc] initWithMultiObjects:users];
+    else
+        self.action.result.multiObjects = users;
+    
+    
+    [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
+    
+    [self.action.behavior composeDidChangeSelected];
+    
+    [self.doneButton setDisable:self.action.result.multiObjects.count == 0 || self.action.behavior.doneTitle.length == 0];
 }
 
 -(void)loadNext {
@@ -61,6 +98,8 @@
         [response.participants enumerateObjectsUsingBlock:^(TLChannelParticipant *obj, NSUInteger idx, BOOL *stop) {
             
             TLUser *user = users[@(obj.user_id)];
+            
+            [user rebuildNames];
             
             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
             

@@ -54,8 +54,7 @@
         
         text = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
         
-    } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
-        text = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
+    }
    
     return text;
 }
@@ -230,8 +229,7 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
                 
-            } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
-                msgText = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
+            } 
 
             
             
@@ -353,9 +351,7 @@
         
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
-    } else if([action isKindOfClass:[TL_messageActionChannelToggleComments class]])
-        actionText = action.enabled ? NSLocalizedString(@"Message.Action.Service.ChannelEnableComments", nil) : NSLocalizedString(@"Message.Action.Service.ChannelDisableComments", nil);
-    
+    }     
     static float size = 11.5;
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {

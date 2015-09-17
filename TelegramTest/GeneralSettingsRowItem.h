@@ -33,6 +33,7 @@ typedef enum
 @property (nonatomic,strong,readonly,getter=description) NSString *desc;
 @property (nonatomic,strong) NSString *subdesc;
 
+
 @property (nonatomic,assign) BOOL locked;
 
 -(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback;

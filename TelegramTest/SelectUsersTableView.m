@@ -86,6 +86,22 @@ static NSCache *cacheItems;
     [self readyItems:items];
 }
 
+-(void)removeSelectedItems {
+    self.defaultAnimation = NSTableViewAnimationEffectFade;
+    
+    NSArray *copy = [self.selectedItems copy];
+    
+    [copy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [self.items removeObject:obj];
+        
+        [self removeItem:obj tableRedraw:YES];
+        
+    }];
+    
+    self.defaultAnimation = NSTableViewAnimationEffectNone;
+}
+
 
 -(void)readyChats {
     
@@ -126,6 +142,14 @@ static NSCache *cacheItems;
     
     [self reloadData];
 
+}
+
+-(void)addItems:(NSArray *)items {
+    [self.items addObjectsFromArray:items];
+    
+    [self insert:items startIndex:self.count tableRedraw:NO];
+    
+    [self reloadData];
 }
 
 -(void)insertOther:(NSArray *)other {
@@ -274,6 +298,9 @@ static NSCache *cacheItems;
     else
         if(_type == SelectTableTypeChats)
             [self searchChats:searchString];
+    else
+        if(_type == SelectTableTypeCommon)
+            [self searchUsers:searchString];
 }
 
 
@@ -341,11 +368,13 @@ static NSCache *cacheItems;
     [self insert:sorted startIndex:1 tableRedraw:YES];
     
     
-    [_request cancelRequest];
-   
-    dispatch_after_seconds(0.2, ^{
-        [self remoteSearchByUserName:searchString];
-    });
+    if(_type == SelectTableTypeUser) {
+        [_request cancelRequest];
+        
+        dispatch_after_seconds(0.2, ^{
+            [self remoteSearchByUserName:searchString];
+        });
+    }
     
 }
 

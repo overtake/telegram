@@ -78,9 +78,6 @@ static NSMutableDictionary *keychains()
 
 
 NSString * serviceName() {
-    
-    return @"telegram-test-server";
-    
     return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] ? @"telegram-test-server" : @"Telegram";
 }
 

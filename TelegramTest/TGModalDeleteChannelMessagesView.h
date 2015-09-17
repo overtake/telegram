@@ -10,4 +10,6 @@
 
 @interface TGModalDeleteChannelMessagesView : TGModalView
 
+-(void)showWithAction:(ComposeAction *)action;
+
 @end

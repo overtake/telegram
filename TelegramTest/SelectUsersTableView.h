@@ -36,6 +36,9 @@ typedef enum {
 
 @property (nonatomic,strong) NSArray *selectedItems;
 
+-(void)addItems:(NSArray *)items;
+-(void)removeSelectedItems;
+
 @property (nonatomic,assign) NSUInteger selectLimit;
 
 @property (nonatomic,assign,readonly) SelectTableType type;

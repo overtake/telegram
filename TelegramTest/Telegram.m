@@ -249,7 +249,7 @@ int maxBroadcastUsers() {
 
 BOOL isTestServer() {
     BOOL result = [[NSProcessInfo processInfo].environment[@"test_server"] boolValue];
-    return YES;
+    return result;
 }
 
 NSString * appName() {

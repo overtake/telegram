@@ -33,6 +33,30 @@
     return self;
 }
 
+-(void)setAligment:(NSTextAlignment)aligment {
+    NSMutableAttributedString *attr = [_header mutableCopy];
+    
+    [attr setAlignment:aligment range:attr.range];
+    
+    _header = attr;
+}
+
+-(void)setTextColor:(NSColor *)textColor {
+    NSMutableAttributedString *attr = [_header mutableCopy];
+    
+    [attr addAttribute:NSForegroundColorAttributeName value:textColor range:attr.range];
+    
+    _header = attr;
+}
+
+-(void)setFont:(NSFont *)font {
+    NSMutableAttributedString *attr = [_header mutableCopy];
+    
+    [attr addAttribute:NSFontAttributeName value:font range:attr.range];
+    
+    _header = attr;
+}
+
 -(Class)viewClass {
     return [GeneralSettingsBlockHeaderView class];
 }
@@ -75,6 +99,7 @@
     GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
     
     [self.textField setAttributedStringValue:item.header];
+    
 }
 
 -(void)setFrameSize:(NSSize)newSize {

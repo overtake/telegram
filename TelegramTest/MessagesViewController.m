@@ -73,6 +73,8 @@
 #import "TGAudioPlayerWindow.h"
 #import "MessagesUtils.h"
 #import "ChannelImportantFilter.h"
+#import "TGModalDeleteChannelMessagesView.h"
+#import "ComposeActionDeleteChannelMessagesBehavior.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1958,8 +1960,30 @@ static NSTextAttachment *headerMediaIcon() {
     
     id request = [TLAPI_messages_deleteMessages createWithN_id:array];
     
-    if(conversation.type == DialogTypeChannel)
+    if(conversation.type == DialogTypeChannel) {
         request = [TLAPI_channels_deleteMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
+        
+        if(array.count == 1 && ![[(MessageTableItem *)self.selectedMessages[0] message] n_out] && [[(MessageTableItem *)self.selectedMessages[0] message] from_id] != 0) {
+            TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
+            
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
+            
+            action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(YES),@(NO),@(NO)]];
+            
+            
+            action.result.singleObject = [[(MessageTableItem *)self.selectedMessages[0] message] fromUser];
+            
+            [modalDeleteView showWithAction:action];
+            
+             [self unSelectAll];
+            
+            return;
+        }
+        
+        
+    }
+    
     
     
     

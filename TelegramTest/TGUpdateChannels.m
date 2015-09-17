@@ -203,7 +203,7 @@
         
         NSMutableArray *channelMessages = [NSMutableArray array];
         
-        int peer_id = -[[(TL_updateDeleteChannelMessages *)update peer] channel_id];
+        int peer_id = -[(TL_updateDeleteChannelMessages *)update channel_id];
         
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             

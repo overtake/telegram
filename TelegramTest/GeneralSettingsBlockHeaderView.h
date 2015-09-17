@@ -12,6 +12,10 @@
 @property (nonatomic,strong,readonly) NSAttributedString *header;
 @property (nonatomic,assign) BOOL isFlipped;
 
+-(void)setTextColor:(NSColor *)textColor;
+-(void)setFont:(NSFont *)font;
+-(void)setAligment:(NSTextAlignment)aligment;
+
 -(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped;
 
 @end
