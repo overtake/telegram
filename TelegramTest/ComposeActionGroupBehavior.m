@@ -68,9 +68,9 @@
     
 
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    for(SelectUserItem* item in selected) {
-        if(item.user.type != TLUserTypeSelf) {
-            [array addObject:[item.user inputUser]];
+    for(TLUser* item in selected) {
+        if(item.type != TLUserTypeSelf) {
+            [array addObject:[item inputUser]];
         }
         
     }

@@ -8,7 +8,7 @@
 
 #import "TGUserContainerView.h"
 #import "TGUserContainerRowItem.h"
-@interface TGUserContainerView ()<TMNameTextFieldProtocol>
+@interface TGUserContainerView ()
 @property (nonatomic,strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic,strong) TMStatusTextField *statusTextField;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
@@ -20,7 +20,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
+        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         
         [self.avatarImageView setFrameOrigin:NSMakePoint(30, NSMinY(self.avatarImageView.frame))];
         
@@ -36,6 +36,9 @@
         [self.statusTextField setFrameOrigin:NSMakePoint(NSMaxX(self.avatarImageView.frame) + 10, 13)];
         [self addSubview:self.statusTextField];
         
+        [_statusTextField setFont:TGSystemFont(12)];
+        [_statusTextField setTextColor:GRAY_TEXT_COLOR];
+        
         
     }
     return self;
@@ -47,16 +50,27 @@
     
     [NSColorFromRGB(0xe0e0e0) setFill];
     
-    NSRectFill(NSMakeRect(NSMaxX(_avatarImageView.frame) + 10, NSMinY(_avatarImageView.frame), NSWidth(self.frame) - (NSMaxX(_avatarImageView.frame) + 40), 1));
+    NSRectFill(NSMakeRect(NSMaxX(_avatarImageView.frame) + 10, 0, NSWidth(self.frame) - (NSMaxX(_avatarImageView.frame) + 40), 1));
     
 }
 
 -(void)redrawRow {
     TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
-    
+        
     [self setUser:item.user];
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+     TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
+    
+    if(item.stateCallback != nil) {
+        item.stateCallback();
+    } else {
+        [super mouseDown:theEvent];
+    }
+    
+    
+}
 
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -64,6 +78,12 @@
     
     [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.nameTextField.frame))];
     [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.statusTextField.frame))];
+    
+    
+    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame))];
+    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame)/2 )];
+    
+    [_avatarImageView setCenteredYByView:_avatarImageView.superview];
 }
 
 
@@ -71,6 +91,13 @@
     [self.statusTextField setUser:user];
     [self.nameTextField setUser:user];
     [self.avatarImageView setUser:user];
+    
+    TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
+    
+    if(item.status.length > 0) {
+        [_statusTextField setUser:nil];
+        [_statusTextField setStringValue:item.status];
+    }
     
     [self.statusTextField sizeToFit];
     [self.nameTextField sizeToFit];

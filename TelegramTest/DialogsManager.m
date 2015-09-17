@@ -675,7 +675,6 @@
                 }
                 
                 if(!message.n_out && message.unread) {
-                    if(dialog.type != DialogTypeChannel || message.isImportantMessage)
                     dialog.unread_count++;
                 }
                 

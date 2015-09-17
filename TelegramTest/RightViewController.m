@@ -1077,10 +1077,50 @@
 
 }
 
-
--(void)showComposeAddModeratorView:(ComposeAction *)action {
-    if(self.navigationViewController.currentController == self.composeCreateChannelUserNameStepViewController && self.composeCreateChannelUserNameStepViewController.action == action)
+-(void)showComposeManagment:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == self.composeManagmentViewController && self.composeManagmentViewController.action == action)
         return;
+    
+    if(_composeManagmentViewController == nil) {
+        _composeManagmentViewController = [[ComposeManagmentViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [_composeManagmentViewController setAction:action];
+    [self.navigationViewController pushViewController:_composeManagmentViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+-(void)showComposeChannelBlackList:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == _composeChannelBlackListViewController && _composeChannelBlackListViewController.action == action)
+        return;
+    
+    if(_composeChannelBlackListViewController == nil) {
+        _composeChannelBlackListViewController = [[ComposeChannelBlackListViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [_composeChannelBlackListViewController setAction:action];
+    [self.navigationViewController pushViewController:_composeChannelBlackListViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+}
+
+
+-(void)showComposeChannelMembers:(ComposeAction *)action {
+    if(self.navigationViewController.currentController == _composeChannelMembersViewController && _composeChannelMembersViewController.action == action)
+        return;
+    
+    if(_composeChannelMembersViewController == nil) {
+        _composeChannelMembersViewController = [[ComposeChannelMembersViewController alloc] initWithFrame:self.view.bounds];
+    }
+    
+    
+    [self hideModalView:YES animation:NO];
+    
+    [_composeChannelMembersViewController setAction:action];
+    [self.navigationViewController pushViewController:_composeChannelMembersViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
 @end

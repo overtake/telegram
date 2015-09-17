@@ -13,6 +13,12 @@
 
 @property (nonatomic,strong,readonly) TLUser *user;
 
+
+@property (nonatomic,assign) int avatarHeight;
+@property (nonatomic,strong) NSString *status;
+
+@property (nonatomic,strong) dispatch_block_t stateCallback;
+
 -(id)initWithUser:(TLUser *)user;
 
 @end

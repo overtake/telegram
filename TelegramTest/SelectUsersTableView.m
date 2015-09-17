@@ -70,29 +70,20 @@ static NSCache *cacheItems;
     [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
     
-    
-    self.tm_delegate = self;
-    
-    [self removeAllItems:NO];
-    
-    self.items = items;
-    
-    self.searchItem = [[TGSearchRowItem alloc] init];
-    
-    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
-    
-    [self insert:self.searchItem atIndex:0 tableRedraw:NO];
-    
-    [self insert:self.items startIndex:1 tableRedraw:NO];
-    
-    
-    [self reloadData];
+    [self readyItems:items];
     
     if(contacts.count > 30)
         dispatch_after_seconds(0.3, ^{
             [self insertOther:[contacts subarrayWithRange:NSMakeRange(30, contacts.count - 30)]];
         });
     
+}
+
+- (void)readyCommon:(NSArray *)items {
+    
+    _type = SelectTableTypeCommon;
+    
+    [self readyItems:items];
 }
 
 
@@ -112,12 +103,17 @@ static NSCache *cacheItems;
         
     }];
     
+    [self readyItems:items];
     
+}
+
+
+-(void)readyItems:(NSArray *)items {
     self.tm_delegate = self;
     
     [self removeAllItems:NO];
     
-    self.items = items;
+    self.items = [items mutableCopy];
     
     self.searchItem = [[TGSearchRowItem alloc] init];
     
@@ -129,7 +125,7 @@ static NSCache *cacheItems;
     
     
     [self reloadData];
-    
+
 }
 
 -(void)insertOther:(NSArray *)other {

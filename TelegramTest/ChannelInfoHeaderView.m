@@ -9,6 +9,8 @@
 #import "ChannelInfoHeaderView.h"
 #import "UserInfoParamsView.h"
 #import "ComposeActionAddChannelModeratorBehavior.h"
+#import "ComposeActionBehavior.h"
+#import "ComposeActionBlackListBehavior.h"
 @interface ChannelInfoHeaderView ()
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
@@ -30,10 +32,14 @@
 
 
 @property (nonatomic,strong) UserInfoShortButtonView *managmentButton;
+@property (nonatomic,strong) UserInfoShortButtonView *blackListButton;
+@property (nonatomic,strong) UserInfoShortButtonView *membersButton;
 @property (nonatomic,strong) UserInfoShortButtonView *enableCommentsButton;
 
 
 @property (nonatomic,strong) ITSwitch *commentsSwitch;
+
+@property (nonatomic,strong) ComposeAction *composeActionManagment;
 
 @end
 
@@ -126,11 +132,33 @@
         
         self.managmentButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.Managment", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:self.controller.chat]];
+            
+             [[Telegram rightViewController] showComposeManagment:_composeActionManagment];
+            
             
         }];
         
         [self addSubview:self.managmentButton];
+        
+        
+        self.blackListButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelBlackList", nil) tapBlock:^{
+            
+            
+            [[Telegram rightViewController] showComposeChannelBlackList:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:self.controller.chat]];
+            
+        }];
+        
+        [self addSubview:self.blackListButton];
+        
+        
+        self.membersButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelMembers", nil) tapBlock:^{
+            
+            
+            [[Telegram rightViewController] showComposeChannelMembers:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.controller.chat]];
+            
+        }];
+        
+        [self addSubview:self.membersButton];
         
         
         self.enableCommentsButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.EnableComments", nil) tapBlock:nil];
@@ -179,6 +207,8 @@
         self.addMembersButton.textButton.textColor = TEXT_COLOR;
         self.enableCommentsButton.textButton.textColor = TEXT_COLOR;
         self.managmentButton.textButton.textColor = TEXT_COLOR;
+        self.membersButton.textButton.textColor = TEXT_COLOR;
+        self.blackListButton.textButton.textColor = TEXT_COLOR;
         
         self.openOrJoinChannelButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.OpenChannel", nil) tapBlock:^{
             
@@ -198,6 +228,24 @@
     
     
     TLChat *chat = self.controller.chat;
+    
+    _composeActionManagment = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:chat];
+    
+    
+    if(chat.isAdmin || chat.isModerator || chat.isPublisher) {
+        [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.controller.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+            
+            [SharedManager proccessGlobalResponse:response];
+            
+            _composeActionManagment.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+    }
+    
+    
     
     [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
         
@@ -277,6 +325,8 @@
    
     
     [self.managmentButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.membersButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.blackListButton setHidden:self.type != ChatInfoViewControllerEdit];
     [self.enableCommentsButton setHidden:self.type != ChatInfoViewControllerEdit];
     
     [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit];
@@ -309,7 +359,14 @@
         [self.managmentButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
+        
+        [self.membersButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
        
+        [self.blackListButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
     }
     
     

@@ -15,4 +15,6 @@
 
 -(void)setAction:(ComposeAction *)action animated:(BOOL)animated;
 
+@property (nonatomic,assign,setter=setLoading:) BOOL isLoading;
+
 @end

@@ -191,6 +191,10 @@
             if(currentUser) {
                 BOOL isNeedRebuildNames = NO;
                 BOOL isNeedChangeTypeNotify = NO;
+                
+                currentUser.flags = newUser.flags;
+                
+                
                 if(newUser.type != currentUser.type) {
                     [currentUser setType:newUser.type];
                     

@@ -61,8 +61,6 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self setType:self.type];
 }
 
 -(void)setType:(ChatInfoViewControllerType)type {
@@ -78,7 +76,6 @@
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
     _addModeratorView.conversation = chat.dialog;
-    self.type = ChatInfoViewControllerNormal;
     
     [self.rightNavigationBarView setHidden:!self.chat.isAdmin];
 }

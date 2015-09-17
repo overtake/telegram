@@ -69,11 +69,13 @@
 }
 
 
+
+
 -(void)selectTableDidChangedItem:(SelectChatItem *)item {
     
     confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Bot.confirmAddBot", nil),item.chat.title], ^{
         
-        self.action.result = [[ComposeResult alloc] initWithMultiObjects:@[item]];
+        self.action.result = [[ComposeResult alloc] initWithMultiObjects:@[item.chat]];
         
         [self.action.behavior composeDidDone];
         

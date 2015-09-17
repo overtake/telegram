@@ -184,14 +184,6 @@
    }];
     
    
-//    
-//    [groups enumerateObjectsUsingBlock:^(TGMessageHole *obj, NSUInteger idx, BOOL *stop) {
-//        
-//        MTLog(@"min:%d max:%d count:%d",obj.min_id,obj.max_id,obj.messagesCount);
-//        
-//        [[Storage manager] insertMessagesHole:obj];
-//    }];
-    
     
 }
 

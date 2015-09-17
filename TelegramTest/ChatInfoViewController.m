@@ -266,7 +266,6 @@
     self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     
     [_headerView setController:self];
-    [_headerView reload];
     
     
 //    [self.fullChat.participants.participants enumerateObjectsUsingBlock:^(TL_chatParticipant *obj, NSUInteger idx, BOOL *stop) {

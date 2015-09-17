@@ -15,7 +15,7 @@
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) TGUserContainerRowItem *userContainer;
 
-@property (nonatomic,assign) BOOL isModerator;
+@property (nonatomic,strong) TLChannelParticipantRole *participantRole;
 @end
 
 @implementation ComposeConfirmModeratorViewController
@@ -27,7 +27,8 @@
     
     [self.view addSubview:_tableView.containerView];
     
-
+    [self setCenterBarViewText:NSLocalizedString(@"Channel.Moderator", nil)];
+    
     
 }
 
@@ -37,9 +38,9 @@
     [super setAction:action];
     
     
-    _isModerator = YES;
+    _participantRole = [TL_channelRoleModerator create];
     
-    _userContainer = [[TGUserContainerRowItem alloc] initWithUser:[(SelectUserItem *)action.result.multiObjects[0] user]];
+    _userContainer = [[TGUserContainerRowItem alloc] initWithUser:action.result.multiObjects[0]];
     
     _userContainer.height = 60;
     
@@ -49,21 +50,21 @@
     
     GeneralSettingsRowItem *moderatorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
         
-        self.isModerator = YES;
+        self.participantRole = [TL_channelRoleModerator create];
         [_tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.Moderator", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @(_isModerator);
+        return @([self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
    
     GeneralSettingsRowItem *editorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
         
-        self.isModerator = NO;
+        self.participantRole = [TL_channelRoleEditor create];
         [_tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.Editor", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-        return @(!_isModerator);
+        return @(![self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
      moderatorItem.xOffset = 30;
@@ -76,7 +77,7 @@
     
     accessHeader.xOffset = 30;
     
-    GeneralSettingsBlockHeaderItem *accessDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AccessDescription", nil) height:200 flipped:YES];
+    GeneralSettingsBlockHeaderItem *accessDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AccessDescription", nil) height:42 flipped:YES];
     
     accessDescription.xOffset = 30;
 
@@ -89,19 +90,39 @@
     
     [_tableView addItem:accessDescription tableRedraw:NO];
     
+    
+    if([self.action.reservedObject1 boolValue]) {
+       
+        GeneralSettingsRowItem *dismissModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+            
+            confirm(appName(), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
+                self.participantRole = [TL_channelRoleEmpty create];
+                
+                [self.action.behavior composeDidDone];
+                
+            }, nil);
+            
+            
+        } description:NSLocalizedString(@"Channel.DismissModerator", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+            return nil;
+        }];
+        
+        dismissModerator.textColor = [NSColor redColor];
+        
+        dismissModerator.xOffset = 30;
+        
+        [_tableView addItem:dismissModerator tableRedraw:NO];
+        
+    }
+    
     [_tableView reloadData];
 }
 
--(void)setIsModerator:(BOOL)isModerator {
-    _isModerator = isModerator;
+-(void)setParticipantRole:(TLChannelParticipantRole *)participantRole  {
+    _participantRole = participantRole;
     
-    self.action.result.singleObject = @(isModerator);
+    self.action.result.singleObject = participantRole;
 }
 
--(void)reloadData {
-    
-    
-    
-}
 
 @end

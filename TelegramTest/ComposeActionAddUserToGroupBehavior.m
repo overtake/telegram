@@ -46,17 +46,17 @@
 
 -(void)addMemberToChat:(NSArray *)members user:(TLUser *)user {
     
-    SelectChatItem *item = members[0];
+    TLChat *chat = members[0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:item.chat.n_id user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chat.n_id user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
-        [item.chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
-            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(item.chat.n_id)}];
+        [chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
+            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(chat.n_id)}];
         
         [self.delegate behaviorDidEndRequest:response];
             
         dispatch_after_seconds(0.2, ^{
-            [[Telegram rightViewController] showByDialog:item.chat.dialog sender:self];
+            [[Telegram rightViewController] showByDialog:chat.dialog sender:self];
             
             if(self.action.reservedObject1) {
                 [[Telegram rightViewController].messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];

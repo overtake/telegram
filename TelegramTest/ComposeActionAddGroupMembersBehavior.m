@@ -46,21 +46,44 @@
     
     [self.delegate behaviorDidStartRequest];
     
-    [self addMembersToChat:[self.action.result.multiObjects mutableCopy] toChatId:self.chat.n_id];
+    TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
+    
+    if([chat isKindOfClass:[TL_channel class]]) {
+        
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        for(TLUser* item in self.action.result.multiObjects) {
+            if(item.type != TLUserTypeSelf) {
+                [array addObject:[item inputUser]];
+            }
+            
+        }
+        
+        [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:array] successHandler:^(id request, id response) {
+            
+            
+            [[Telegram rightViewController] navigationGoBack];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [self.delegate behaviorDidEndRequest:nil];
+        }];
+        
+        
+    } else
+        [self addMembersToChat:[self.action.result.multiObjects mutableCopy] toChatId:self.chat.n_id];
     
 }
 
 -(void)addMembersToChat:(NSMutableArray *)members toChatId:(int)chatId {
     
-    SelectUserItem *item = members[0];
+    TLUser *user = members[0];
     
     [members removeObjectAtIndex:0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:item.user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
         
         if(self.chat) {
-            [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:item.user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
+            [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
             [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(self.chat.n_id)}];
         }
         
