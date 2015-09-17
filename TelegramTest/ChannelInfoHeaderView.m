@@ -11,6 +11,7 @@
 #import "ComposeActionAddChannelModeratorBehavior.h"
 #import "ComposeActionBehavior.h"
 #import "ComposeActionBlackListBehavior.h"
+#import "ComposeActionChannelMembersBehavior.h"
 @interface ChannelInfoHeaderView ()
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
@@ -154,7 +155,7 @@
         self.membersButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelMembers", nil) tapBlock:^{
             
             
-            [[Telegram rightViewController] showComposeChannelMembers:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.controller.chat]];
+            [[Telegram rightViewController] showComposeChannelMembers:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:self.controller.chat]];
             
         }];
         

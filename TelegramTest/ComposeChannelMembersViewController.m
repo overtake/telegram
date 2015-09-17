@@ -8,7 +8,7 @@
 
 #import "ComposeChannelMembersViewController.h"
 #import "SelectUsersTableView.h"
-@interface ComposeChannelMembersViewController ()<SelectTableDelegate>
+@interface ComposeChannelMembersViewController ()<SelectTableDelegate,ComposeBehaviorDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @property (nonatomic,strong) RPCRequest *request;
 
@@ -46,15 +46,26 @@
     }
 }
 
+-(void)behaviorDidEndRequest:(id)response {
+    
+    [self.tableView removeSelectedItems];
+    [self selectTableDidChangedItem:nil];
+    [self hideModalProgress];
+    
+}
+
+-(void)behaviorDidStartRequest {
+    [self showModalProgress];
+}
 
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
     
-    
+    self.action.behavior.delegate = self;
     [_tableView removeAllItems:YES];
     
     
-    [_tableView setSelectLimit:0];
+    [_tableView setSelectLimit:self.action.behavior.limit];
     _tableView.selectDelegate = self;
     
     [self setLoading:YES];
@@ -68,8 +79,25 @@
 }
 
 -(void)selectTableDidChangedItem:(SelectUserItem *)item {
+    NSMutableArray *users = [[NSMutableArray alloc] init];
     
-    [[Telegram rightViewController] showUserInfoPage:item.user];
+    [self.tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        [users addObject:obj.user];
+        
+    }];
+    
+    if(!self.action.result)
+        self.action.result = [[ComposeResult alloc] initWithMultiObjects:users];
+    else
+        self.action.result.multiObjects = users;
+    
+    
+    [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
+    
+    [self.action.behavior composeDidChangeSelected];
+    
+    [self.doneButton setDisable:self.action.result.multiObjects.count == 0 || self.action.behavior.doneTitle.length == 0];
     
 }
 
@@ -142,7 +170,5 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self setCenterBarViewText:NSLocalizedString(@"Channel.Members", nil)];
-    [self.doneButton setStringValue:@""];
 }
 @end

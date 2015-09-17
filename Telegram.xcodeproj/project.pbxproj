@@ -574,6 +574,7 @@
 		C2B0DF991BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF981BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m */; };
 		C2B0DF9C1BAB07DD0023982C /* ComposeActionBlackListBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF9B1BAB07DD0023982C /* ComposeActionBlackListBehavior.m */; };
 		C2B0DF9F1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF9E1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m */; };
+		C2B0DFA21BAB34330023982C /* ComposeActionChannelMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DFA11BAB34330023982C /* ComposeActionChannelMembersBehavior.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
 		C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669851BA5571C004AF678 /* TGSettingsTableView.m */; };
@@ -2157,6 +2158,8 @@
 		C2B0DF9B1BAB07DD0023982C /* ComposeActionBlackListBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionBlackListBehavior.m; sourceTree = "<group>"; };
 		C2B0DF9D1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionDeleteChannelMessagesBehavior.h; sourceTree = "<group>"; };
 		C2B0DF9E1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionDeleteChannelMessagesBehavior.m; sourceTree = "<group>"; };
+		C2B0DFA01BAB34330023982C /* ComposeActionChannelMembersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionChannelMembersBehavior.h; sourceTree = "<group>"; };
+		C2B0DFA11BAB34330023982C /* ComposeActionChannelMembersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionChannelMembersBehavior.m; sourceTree = "<group>"; };
 		C2B1730B19A3BF43003FBA23 /* Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		C2B325EC1A237A420012DE34 /* TLApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLApiObject.h; sourceTree = "<group>"; };
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
@@ -3702,6 +3705,8 @@
 				C2B0DF9B1BAB07DD0023982C /* ComposeActionBlackListBehavior.m */,
 				C2B0DF9D1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.h */,
 				C2B0DF9E1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m */,
+				C2B0DFA01BAB34330023982C /* ComposeActionChannelMembersBehavior.h */,
+				C2B0DFA11BAB34330023982C /* ComposeActionChannelMembersBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -6350,6 +6355,7 @@
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
 				C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */,
+				C2B0DFA21BAB34330023982C /* ComposeActionChannelMembersBehavior.m in Sources */,
 				C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */,
 				CEAE5D2E181E4C6F00C17645 /* TLFileLocation+Extensions.m in Sources */,
 				C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */,
