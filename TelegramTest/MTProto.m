@@ -3753,6 +3753,118 @@
         
 @end
 
+@implementation TL_chat_old32
++(TL_chat_old32*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version {
+	TL_chat_old32* obj = [[TL_chat_old32 alloc] init];
+	obj.n_id = n_id;
+	obj.title = title;
+	obj.photo = photo;
+	obj.participants_count = participants_count;
+	obj.date = date;
+	obj.left = left;
+	obj.version = version;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[stream writeString:self.title];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[stream writeInt:self.participants_count];
+	[stream writeInt:self.date];
+	[stream writeBool:self.left];
+	[stream writeInt:self.version];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.title = [stream readString];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.participants_count = [stream readInt];
+	self.date = [stream readInt];
+	self.left = [stream readBool];
+	self.version = [stream readInt];
+}
+        
+-(TL_chat_old32 *)copy {
+    
+    TL_chat_old32 *objc = [[TL_chat_old32 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.photo = [self.photo copy];
+    objc.participants_count = self.participants_count;
+    objc.date = self.date;
+    objc.left = self.left;
+    objc.version = self.version;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_chatForbidden_old34
++(TL_chatForbidden_old34*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date {
+	TL_chatForbidden_old34* obj = [[TL_chatForbidden_old34 alloc] init];
+	obj.n_id = n_id;
+	obj.title = title;
+	obj.date = date;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[stream writeString:self.title];
+	[stream writeInt:self.date];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.title = [stream readString];
+	self.date = [stream readInt];
+}
+        
+-(TL_chatForbidden_old34 *)copy {
+    
+    TL_chatForbidden_old34 *objc = [[TL_chatForbidden_old34 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.date = self.date;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 
 @implementation TLChatFull
 @end

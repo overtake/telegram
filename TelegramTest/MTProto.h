@@ -863,6 +863,7 @@
 @property int version;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
+@property Boolean left;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
@@ -879,6 +880,12 @@
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
+@end
+@interface TL_chat_old32 : TLChat<NSCoding>
++(TL_chat_old32*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version;
+@end
+@interface TL_chatForbidden_old34 : TLChat<NSCoding>
++(TL_chatForbidden_old34*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date;
 @end
 	
 @interface TLChatFull()

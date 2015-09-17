@@ -361,7 +361,7 @@ static BOOL isStorageLoaded;
     
     
     
-    mixed = [mixed subarrayWithRange:NSMakeRange(0, MIN(lastIndex,[self.delegate conversationsLoadingLimit]))];
+    mixed = [mixed subarrayWithRange:NSMakeRange(_offset, MIN(MIN(lastIndex,[self.delegate conversationsLoadingLimit]),mixed.count - _offset))];
     
     NSArray *channels = [mixed filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 4"]];
     

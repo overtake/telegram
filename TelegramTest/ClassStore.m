@@ -518,6 +518,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_audio_old29 class] forKey:[NSNumber numberWithInt:-945003370]];
    [cs_classes setObject:[TL_video_old29 class] forKey:[NSNumber numberWithInt:-291550643]];
    [cs_classes setObject:[TL_webPage_old34 class] forKey:[NSNumber numberWithInt:-1558273867]];
+   [cs_classes setObject:[TL_chat_old32 class] forKey:[NSNumber numberWithInt:1855757255]];
+   [cs_classes setObject:[TL_chatForbidden_old34 class] forKey:[NSNumber numberWithInt:-83047359]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

@@ -217,11 +217,12 @@
 
 -(TLPeer *)fwd_from_id {
     if(self.class != [TL_localMessage class]) {
-        return [TL_peerUser createWithUser_id:self.fwd_from_id_old];
+        return self.fwd_from_id_old != 0 ? [TL_peerUser createWithUser_id:self.fwd_from_id_old] : nil;
     }
     
     return [super fwd_from_id];
 }
+
 
 -(int)peer_id {
     int peer_id;

@@ -103,9 +103,7 @@
             
             [[Storage manager] loadChats:^(NSArray *chats) {
                 
-                
-                
-                [[ChatsManager sharedManager] add:chats];
+               [[ChatsManager sharedManager] add:chats];
                 
                 [self initConversations];
             }];
