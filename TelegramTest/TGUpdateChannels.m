@@ -176,7 +176,7 @@
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        int minId = [[Storage manager] syncedMessageIdWithChannelId:msg.peer_id important:YES latest:YES];
+        int minId = [[[Storage manager] lastImportantMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) isTop:NO] n_id];
         
         TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:msg.n_id +1] lastObject];
         
@@ -184,7 +184,7 @@
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minId max_id:msg.n_id+1 date:msg.date-1 count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minId max_id:msg.n_id+1 date:msg.date count:0];
                 
                 hole.max_id = msg.n_id+1;
                 hole.messagesCount++;
@@ -208,8 +208,10 @@
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
+            TL_localMessage *topMsg = [[Storage manager] lastImportantMessageAroundMinId:channelMsgId([obj intValue], peer_id) isTop:NO];
             
-            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:[obj intValue]-1 max:[obj intValue]+1];
+            
+            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsg.n_id max:[obj intValue]+1];
             
             if(groupHoles.count == 1) {
                 TGMessageGroupHole *hole = [groupHoles firstObject];
@@ -231,7 +233,7 @@
                 
                 botHole.min_id = botHole.min_id;
                 botHole.messagesCount += topHole.messagesCount;
-                
+                [botHole save];
                 
                 [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:botHole}];
                 [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(topHole.peer_id),KEY_MESSAGE_ID:@(topHole.uniqueId)}]}];
@@ -315,7 +317,9 @@
         } else if([response isKindOfClass:[TL_updates_channelDifference class]]) {
             
             
-            [[response other_updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [[response other_updates] enumerateObjectsUsingBlock:^(TLUpdate *obj, NSUInteger idx, BOOL *stop) {
+                
+                obj.channel_id = channel_id;
                 
                 [self proccessUpdate:obj];
                 
