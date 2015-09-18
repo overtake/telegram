@@ -816,6 +816,7 @@
 		C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FA1947E134001617DB /* OpenGL.framework */; };
 		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
+		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
@@ -2471,6 +2472,8 @@
 		C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
 		C2E5A05F1BABF33C00C1BCA1 /* TL_localMessageService_old34.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService_old34.h; sourceTree = "<group>"; };
 		C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService_old34.m; sourceTree = "<group>"; };
+		C2E5A0711BAC75C100C1BCA1 /* TGMessageViewSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageViewSender.h; sourceTree = "<group>"; };
+		C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageViewSender.m; sourceTree = "<group>"; };
 		C2ED357B18D9FECB00D0027C /* CAProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProgressLayer.h; sourceTree = "<group>"; };
 		C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAProgressLayer.m; sourceTree = "<group>"; };
 		C2F3995D190E7692006B36F7 /* ReadHistroryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadHistroryTask.h; sourceTree = "<group>"; };
@@ -5678,6 +5681,8 @@
 				C26752791A1A7CEF00152D9A /* TGCache.m */,
 				C2967B171A9B75B4003759B2 /* TGPasslock.h */,
 				C2967B181A9B75B4003759B2 /* TGPasslock.m */,
+				C2E5A0711BAC75C100C1BCA1 /* TGMessageViewSender.h */,
+				C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */,
 			);
 			name = logic;
 			sourceTree = "<group>";
@@ -6563,6 +6568,7 @@
 				0A241A9D18AB176B00C32F45 /* MessageTableCellTextView.m in Sources */,
 				CECBC15618008B3300AD98E6 /* CMath.c in Sources */,
 				C20A5EF01B8CD8CB007F4B49 /* TMBlueInputTextField.m in Sources */,
+				C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */,
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
 				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,

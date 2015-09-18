@@ -8,6 +8,7 @@
 
 #import "MessageTableCell.h"
 #import "MessageTableCellTextView.h"
+#import "TGMessageViewSender.h"
 @interface MessageTableCell()<NSMenuDelegate>
 
 @end
@@ -36,7 +37,11 @@
         }
     }
     
-    if(item.message.isChannelMessage && item.message.isImportantMessage && !item.message.isViewed) {
+    if(item.message.isChannelMessage && item.message.from_id == 0 && !item.message.isViewed) {
+        if(![item.message isKindOfClass:[TL_localMessageService class]]) {
+            item.message.viewed = YES;
+            [TGMessageViewSender addItem:item];
+        }
         
     }
     

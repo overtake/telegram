@@ -23,6 +23,7 @@
 
 - (void)setBody:(TLApiObject *)body
 {
+    
     [self setPayload:[TGTLSerialization serializeMessage:body] metadata:body responseParser:^id(NSData *data)
      {
          return [TGTLSerialization parseResponse:data request:body];
@@ -562,8 +563,12 @@ static int MAX_WORKER_POLL = 5;
     [_queue dispatchOnQueue:^{
          [_requestService removeRequestByInternalId:request.mtrequest.internalId];
     }];
-    
-   
+}
+
+-(void)cancelRequestWithInternalId:(id)internalId {
+    [_queue dispatchOnQueue:^{
+        [_requestService removeRequestByInternalId:internalId];
+    }];
 }
 
 -(void)sendRequest:(RPCRequest *)request forDatacenter:(int)datacenterId {
@@ -665,6 +670,16 @@ static int MAX_WORKER_POLL = 5;
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {
             [_requestService addRequest:[self constructRequest:request]];
         }
+    }];
+}
+
+-(void)addRequest:(MTRequest *)request {
+    [_queue dispatchOnQueue:^{
+        
+        if([self isAuth]) {
+             [_requestService addRequest:request];
+        }
+        
     }];
 }
 

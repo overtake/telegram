@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/Storage.m"
-            timestampString = "464272378.16464"
+            timestampString = "464291907.166069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2836"
-            endingLineNumber = "2836"
+            startingLineNumber = "2830"
+            endingLineNumber = "2830"
             landmarkName = "-groupHoles:min:max:"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,28 +122,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MTNetwork.m"
-            timestampString = "464207787.768109"
+            timestampString = "464290808.299578"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
+            startingLineNumber = "579"
+            endingLineNumber = "579"
             landmarkName = "-sendRequest:forDatacenter:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "464264994.674508"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "740"
-            endingLineNumber = "740"
-            landmarkName = "-loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:next:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

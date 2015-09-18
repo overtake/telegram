@@ -202,14 +202,37 @@
         NSMutableArray *channelMessages = [NSMutableArray array];
         
         int peer_id = -[(TL_updateDeleteChannelMessages *)update channel_id];
+    
+        
+        [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];
+        }];
+        
+        [[Storage manager] deleteChannelMessages:channelMessages completeHandler:^(NSArray *peer_update) {
+            
+            [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                
+                [[DialogsManager sharedManager] updateLastMessageForDialog:conversation];
+                
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
+            
+        }];
         
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
-            TL_localMessage *topMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue]-1, peer_id) important:NO isTop:NO];
+            TL_localMessage *topMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:NO];
             
+            TL_localMessage *botMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:YES];
             
-            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsg.n_id max:[obj intValue]+1];
+            int topMsgId = topMsg ? topMsg.n_id : [obj intValue]-1;
+            int botMsgId = botMsg ? botMsg.n_id : [obj intValue]+1;
+            
+            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsgId max:botMsgId];
             
             if(groupHoles.count == 1) {
         
@@ -245,10 +268,10 @@
                 
             }
             
-            [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];
         }];
         
         [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
+        
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
         [[Storage manager] updateMessageId:[(TL_updateMessageID *)update random_id] msg_id:[(TL_updateMessageID *)update n_id]];

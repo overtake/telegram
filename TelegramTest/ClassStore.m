@@ -115,6 +115,7 @@ static NSMutableDictionary *cs_constuctors;
         //Очень фикс, потому что может быть Long, или прочая хуета
         int constructor = [stream readInt];
         Class class = [cs_classes objectForKey:[NSNumber numberWithInt:constructor]];
+        
         if(class == nil) {
             [vector addObject:[NSNumber numberWithInt:constructor]];
         } else {

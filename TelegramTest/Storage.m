@@ -233,7 +233,7 @@ NSString *const tableMessageHoles = @"message_holes";
         }
         
         
-        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer)",tableChannelMessages]];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer, is_viewed integer)",tableChannelMessages]];
         
         
         // channel messages indexes
@@ -716,7 +716,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views FROM channel_messages WHERE  peer_id = %d AND date > %d AND date < %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views,is_viewed FROM channel_messages WHERE  peer_id = %d AND date > %d AND date < %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -728,6 +728,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             msg.invalidate = [result intForColumn:@"invalidate"];
             msg.pts = [result intForColumn:@"pts"];
             msg.views = [result intForColumn:@"views"];
+            msg.viewed = [result intForColumn:@"is_viewed"];
             if(msg) {
                 [messages addObject:msg];
                 [ids addObject:@(msg.n_id)];
@@ -736,9 +737,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         [result close];
         
-        if(!next) {
-            int bp = 0;
-        }
         
         TL_localMessage *lastMessage = next ? [messages lastObject] : [messages firstObject];
         
@@ -749,7 +747,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             int localCount = [db intForQuery:@"SELECT count(*) from channel_messages where  peer_id = ? and date = ?",@(lastMessage.peer_id),@(lastMessage.date)];
             if(selectedCount.count < localCount) {
                 
-                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,invalidate,pts from channel_messages where date = %d and n_id NOT IN (%@) and  peer_id = %d",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
+                NSString *sql = [NSString stringWithFormat:@"select serialized,flags,invalidate,pts,views,is_viewed from channel_messages where date = %d and n_id NOT IN (%@) and  peer_id = %d",lastMessage.date,[ids componentsJoinedByString:@","],lastMessage.peer_id];
                 
                 FMResultSet *result = [db executeQueryWithFormat:sql,nil];
                 
@@ -758,6 +756,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     msg.flags = [result intForColumn:@"flags"];
                     msg.invalidate = [result intForColumn:@"invalidate"];
                     msg.pts = [result intForColumn:@"pts"];
+                    msg.views = [result intForColumn:@"views"];
+                    msg.viewed = [result intForColumn:@"is_viewed"];
                     if(msg)
                         [messages addObject:msg];
                 }
@@ -818,20 +818,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     hole = nil;
                 }
               //  NOT(? >= max_id OR ? <= min_id)
-                if(!hole || !(hole.min_id <= gh.max_id || hole.max_id >= gh.min_id))
+              //  if(!hole || !(hole.min_id <= gh.max_id || hole.max_id >= gh.min_id))
                     [groupHoles addObject:gh];
                 
                 
             }
              
-             if(!next) {
-                 int bp = 0;
-             }
-            
             [result close];
         }
-        
-        
         
         
         
@@ -1079,7 +1073,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         if([peer isKindOfClass:[TL_peerChannel class]]) {
-            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages,peer_id,HistoryFilterChannelMessage];
+            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate,is_viewed from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages,peer_id,HistoryFilterChannelMessage];
             
             
            
@@ -1092,7 +1086,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 msg.pts = [result intForColumn:@"pts"];
                 msg.views = [result intForColumn:@"views"];
                 msg.invalidate = [result intForColumn:@"invalidate"];
-                
+                msg.viewed = [result intForColumn:@"is_viewed"];
             };
             
             result = [db executeQueryWithFormat:topMessage,nil];
@@ -1107,7 +1101,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             importantMessage = [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],@(peer_id),@(HistoryFilterImportantChannelMessage)];
             
-            int bp = 0;
             
         } else {
             
@@ -1459,11 +1452,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             dispatch_block_t clearWithFakeId = ^{
                 if(message.n_id < TGMINFAKEID) {
                     
-                    NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE fake_id = %d",message.fakeId];
+                    NSString *sql = [NSString stringWithFormat:@"delete from %@ WHERE fake_id = %d",tableMessages,message.fakeId];
                     [db executeUpdateWithFormat:sql,nil];
                     
                     
-                    sql = [NSString stringWithFormat:@"delete from channel_messages WHERE fake_id = %d",message.fakeId];
+                    sql = [NSString stringWithFormat:@"delete from %@ WHERE fake_id = %d",tableChannelMessages,message.fakeId];
                     [db executeUpdateWithFormat:sql,nil];
                     
                 }
@@ -1503,7 +1496,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 message.pts = pts;
                 
                 if(isset == 0) {
-                    [db executeUpdate:[NSString stringWithFormat:@"insert into channel_messages (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts,views) values (?,?,?,?,?,?,?,?,?,?,?,?)"],
+                    [db executeUpdate:[NSString stringWithFormat:@"insert into %@ (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts,views, is_viewed) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",tableChannelMessages],
                      @(message.channelMsgId),
                      @(message.date),
                      @(message.from_id),
@@ -1515,13 +1508,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                      @(message.dstate),
                      @(message.randomId),
                      @(pts),
-                     @(message.views)
+                     @(message.views),
+                     @(message.isViewed)
                      ];
 
                     
                 } else {
-                    [db executeUpdate:@"update channel_messages set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ?, views = ? WHERE n_id = ?",@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),
-                     @(message.views),@(message.channelMsgId),nil];
+                    [db executeUpdate:[NSString stringWithFormat:@"update %@ set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ?, views = ?, is_viewed = ? WHERE n_id = ?",tableChannelMessages],@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),
+                     @(message.views),@(message.isViewed),@(message.channelMsgId),nil];
 
                 }
                 
@@ -2762,7 +2756,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     message.flags = [result intForColumn:@"flags"];
                 }
                 @catch (NSException *exception) {
-                    int bp = 0;
+                   
                 }
                 
                 if(message)
