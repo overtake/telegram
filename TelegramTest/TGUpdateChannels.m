@@ -178,13 +178,13 @@
         
         int minId = [[Storage manager] syncedMessageIdWithChannelId:msg.peer_id important:YES latest:YES];
         
-        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:INT32_MAX] lastObject];
+        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:msg.n_id +1] lastObject];
         
         if(hole.max_id != minId) {
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:msg.n_id-1 max_id:msg.n_id date:msg.date-1 count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minId max_id:msg.n_id+1 date:msg.date-1 count:0];
                 
                 hole.max_id = msg.n_id+1;
                 hole.messagesCount++;
@@ -208,7 +208,8 @@
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
-            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:[obj intValue] max:[obj intValue]+1];
+            
+            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:[obj intValue]-1 max:[obj intValue]+1];
             
             if(groupHoles.count == 1) {
                 TGMessageGroupHole *hole = [groupHoles firstObject];
@@ -221,6 +222,20 @@
                     [hole save];
                 
                 [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            } else if(groupHoles.count == 2) {
+                
+                TGMessageGroupHole *topHole = groupHoles[0];
+                TGMessageGroupHole *botHole = groupHoles[1];
+                
+                [topHole remove];
+                
+                botHole.min_id = botHole.min_id;
+                botHole.messagesCount += topHole.messagesCount;
+                
+                
+                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:botHole}];
+                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(topHole.peer_id),KEY_MESSAGE_ID:@(topHole.uniqueId)}]}];
+                
             }
             
             [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];

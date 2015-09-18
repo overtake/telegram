@@ -160,7 +160,6 @@
     [TMTaskRequest executeAll];
     
     
-    
     [Notification perform:APP_RUN object:nil];
     
     [SelfDestructionController initialize];
