@@ -15,7 +15,7 @@
 @interface MessageTableCellServiceMessage()
 
 @property (nonatomic, strong) TGCTextView *textField;
-@property (nonatomic, strong) TGImageView *photoImageView;
+@property (nonatomic, strong) TMAvatarImageView *photoImageView;
 @end
 
 @implementation MessageTableCellServiceMessage
@@ -30,8 +30,7 @@
         
         [self addSubview:self.textField];
         
-        self.photoImageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
-        [self.photoImageView setRoundSize:4];
+        self.photoImageView = [TMAvatarImageView standartUserInfoAvatar];
         [self addSubview:self.photoImageView];
         
         self.wantsLayer = YES;
@@ -90,11 +89,9 @@
                 
         if(item.photo) {
             [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - item.photoSize.width) / 2), 5)];
-            [self.photoImageView setFrameSize:item.photoSize];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - _photoImageView.frame.size.width) / 2), 5)];
             
-            
-            self.photoImageView.object = item.imageObject;
+            [_photoImageView setChat:item.message.chat];
             
         } else {
             [self.photoImageView setHidden:YES];

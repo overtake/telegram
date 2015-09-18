@@ -308,16 +308,16 @@
     
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.ChangedGroupName",nil);
+        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.Service.ChangedGroupName",nil);
         title = action.title;
         
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto",nil);;
+        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.RemovedChannelPhoto" : @"MessageAction.Service.RemovedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto",nil);
+        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.ChangedChannelPhoto" : @"MessageAction.Service.ChangedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         

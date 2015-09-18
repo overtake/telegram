@@ -63,25 +63,10 @@
         
         if(object.action.photo) {
             self.photo = object.action.photo;
-            self.photoSize = NSMakeSize(100, 100);
+            self.photoSize = NSMakeSize(140, 140);
             
-            if(self.photo.sizes.count) {
-                //Find cacheImage;
-                for(TLPhotoSize *photoSize in self.photo.sizes) {
-                    if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
-                        self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
-                        break;
-                    }
-                }
-                
-                TLPhotoSize *photoSize = ((TLPhotoSize *)[self.photo.sizes objectAtIndex:MIN(2, self.photo.sizes.count) - 1]);
-                self.photoLocation = photoSize.location;
-                self.photoSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), 40, 250);
-            }
-            
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:self.cachePhoto];
-            
-            self.imageObject.imageSize = self.photoSize;
+          
+         
         }
         
         [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];

@@ -49,7 +49,9 @@
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
-        _containerOffset = self.isForwadedMessage ? 129 : 79;
+        _containerOffset = self.message.from_id != 0 ? 79 : 29;
+        
+        _containerOffsetForward  = self.message.from_id != 0 ? 129 : 91;
         
         if(self.message) {
            
@@ -69,6 +71,10 @@
         }
     }
     return self;
+}
+
+-(int)makeSize {
+    return MAX(NSWidth([Telegram rightViewController].view.frame) - (self.message.from_id == 0 ? (40 + self.dateSize.width) : 150),100);
 }
 
 - (void) headerStringBuilder {
@@ -128,6 +134,10 @@
     
     [header appendString:name withColor:nameColor];
     
+    if(self.message.from_id == 0) {
+        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
+    }
+    
     [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
     
     [header addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:uid] range:header.range];
@@ -163,6 +173,15 @@
         [self.forwardMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:rangeUser];
         [self.forwardMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:self.forwardMessageAttributedString.range];
     }
+}
+
+static NSTextAttachment *channelIconAttachment() {
+    static NSTextAttachment *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [NSMutableAttributedString textAttachmentByImage:[image_newConversationBroadcast() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
+    });
+    return instance;
 }
 
 - (void)setViewSize:(NSSize)viewSize {

@@ -95,7 +95,7 @@
     SearchItem *item = [self rowItem];
     
     
-    if(item.conversation.type == DialogTypeChat) {
+    if(item.conversation.type == DialogTypeChat || item.conversation.type == DialogTypeChannel) {
          [self.titleTextField setChat:item.chat];
     }
     
@@ -141,7 +141,9 @@
         [self.dateTextField setHidden:YES];
     } else {
         
-        if(item.conversation.type == DialogTypeChat) {
+        
+        
+        if(item.conversation.type == DialogTypeChat || item.conversation.type == DialogTypeChannel) {
             [self.avatarImageView setChat:item.chat];
         }
         

@@ -143,7 +143,7 @@
             }
             
             if(self.chat.isBroadcast) {
-                return NSLocalizedString(@"Conversation.Action.Share", nil);
+                return NSLocalizedString(@"Conversation.Action.CommentsBlocked", nil);
             }
             
             

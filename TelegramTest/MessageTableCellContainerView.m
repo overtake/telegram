@@ -114,7 +114,7 @@
     }
     
     if(!self.fwdContainer) {
-        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(68, 0, self.bounds.size.width - 130, self.bounds.size.height)];
+        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(self.item.containerOffset +1, 0, self.bounds.size.width - 130, self.bounds.size.height)];
         [self.fwdContainer setDrawBlock:^{
             [GRAY_BORDER_COLOR set];
             
@@ -244,6 +244,9 @@
         
         [self addSubview:self.nameTextField];
     }
+    
+    [_avatarImageView setHidden:NO];
+    [_nameTextField setHidden:NO];
 }
 
 
@@ -620,8 +623,6 @@ static BOOL dragAction = NO;
     
     [super setItem:item];
     
-    
-   
     [self.progressView setCurrentProgress:0];
         
     self.stateLayer.container = self;
@@ -636,7 +637,7 @@ static BOOL dragAction = NO;
             minus = FORWARMESSAGE_TITLE_HEIGHT;
             
             float minus = item.isHeaderMessage ? 30 : 12;
-            [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(80, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
+            [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(item.containerOffset+1, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
             
             [CATransaction begin];
             [CATransaction setDisableActions:YES];
@@ -678,18 +679,21 @@ static BOOL dragAction = NO;
     if(item.isHeaderMessage) {
         [self initHeader];
         [self.nameTextField setAttributedStringValue:item.headerName];
-        [self.nameTextField setFrameOrigin:NSMakePoint(77, item.viewSize.height - 24)];
+        [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
         if(item.message.from_id != 0)
             [self.avatarImageView setUser:item.user];
         else
             [self.avatarImageView setChat:item.message.chat];
         [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
+        
+        [self.avatarImageView setHidden:item.message.from_id == 0];
+        
     } else {
         [self deallocHeader];
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 10 : roundf((item.viewSize.height - item.blockSize.height)/2), self.containerView.bounds.size.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 10 : roundf((item.viewSize.height - item.blockSize.height)/2), item.blockSize.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])
@@ -701,7 +705,7 @@ static BOOL dragAction = NO;
         
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_replyContainer setFrame:NSMakeRect(NSMinX(_replyContainer.frame), NSHeight(_containerView.frame) + 10, item.blockWidth - 60 , item.replyObject.containerHeight)];
+        [_replyContainer setFrame:NSMakeRect(item.containerOffset + 1, NSHeight(_containerView.frame) + 10, item.blockWidth - 60 , item.replyObject.containerHeight)];
         
         
     } else {
@@ -730,7 +734,7 @@ static BOOL dragAction = NO;
     [self.dateLayer setString:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
     [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) , 18)];
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 10 , 18)];
     
     [self.rightView setToolTip:self.item.fullDate];
     
@@ -1031,11 +1035,14 @@ static int offsetEditable = 30;
                 state = MessageTableCellRead;
             else
                 state = MessageTableCellUnread;
+        } else  {
+            state = MessageTableCellUnread;
         }
+        
     }
     
     
-    [self.stateLayer setHidden:!self.item.message.n_out];
+    [self.stateLayer setHidden:!self.item.message.n_out && self.item.message.from_id != 0];
     
     if(!self.stateLayer.isHidden)
         [self.stateLayer setState:state];

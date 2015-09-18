@@ -281,6 +281,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates uptodate:qts:date:updateConnectionState:]:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_updateState.pts">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SearchItem initWithMessageItem:searchString:]:SearchItem.m">
@@ -421,6 +426,9 @@
       </ContextState>
       <ContextState
          contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke599:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
@@ -2293,6 +2301,9 @@
          contextName = "__61-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]_block_invoke:ChannelImportantFilter.m">
       </ContextState>
       <ContextState
+         contextName = "-[TL_conversation save]:TL_conversation.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController windowBecomeNotification:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -2938,9 +2949,6 @@
          contextName = "__38-[TGStickerPackEmojiController reload]_block_invoke:TGStickerPackEmojiController.m">
       </ContextState>
       <ContextState
-         contextName = "-[SearchViewController selectionDidChange:item:]:SearchViewController.m">
-      </ContextState>
-      <ContextState
          contextName = "__45-[TGPVUserBehavior load:next:limit:callback:]_block_invoke:TGPVUserBehavior.m">
       </ContextState>
       <ContextState
@@ -3089,6 +3097,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController setCurrentConversation:withJump:historyFilter:force:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialog.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

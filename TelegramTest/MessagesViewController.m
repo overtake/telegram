@@ -467,7 +467,7 @@
     
     MessageTableItem *item = notification.userInfo[@"item"];
     
-    [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+    [item makeSizeByWidth:item.makeSize];
     
     NSUInteger index = [self indexOfObject:item];
     
@@ -2285,7 +2285,8 @@ static NSTextAttachment *headerMediaIcon() {
                             
                             NSLog(@"%@",NSStringFromRect(drect));
                             
-                            [self.table.scrollView.clipView scrollToPoint:drect.origin];
+                            [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                            
                         };
                         
                         if(NSEqualRects(drect, NSZeroRect)) {
@@ -2374,18 +2375,24 @@ static NSTextAttachment *headerMediaIcon() {
     [self hideSearchBox:NO];
     
     
+    
+    
         
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
+        self.jumpMessageId = messageId;
+        self.conversation = dialog;
+        
+        
+        if(dialog.type == DialogTypeChannel && historyFilter == HistoryFilter.class) {
+            historyFilter = self.defHFClass;
+        }
         
         [self.normalNavigationCenterView enableDiscussion:NO force:NO];
         [TGHelpPopup popover].fadeDuration = 0;
         [TGHelpPopup close];
         
         [_replyMsgsStack removeAllObjects];
-        
-        self.jumpMessageId = messageId;
-        self.conversation = dialog;
         
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
@@ -2649,9 +2656,13 @@ static NSTextAttachment *headerMediaIcon() {
        if(prevResult.count > 0) {
             MessageTableItem *item = prevResult[0];
            if(self.conversation.peer_id != item.message.peer_id) {
-#ifdef TGDEBUG
-        assert(NO);
-#endif
+               return;
+               
+               /*
+                #ifdef TGDEBUG
+                assert(NO);
+                #endif
+                */
            }
            
         }
@@ -2928,8 +2939,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-        [current makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
-        [backItem makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+        [current makeSizeByWidth:current.makeSize];
+        [backItem makeSizeByWidth:backItem.makeSize];
         backItem = current;
         
     }];

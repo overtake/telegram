@@ -900,18 +900,18 @@
             
         } else if(weakSelf.dialog.chat.isBroadcast) {
             
-            [TMViewController showModalProgressWithDescription:NSLocalizedString(@"Channel.ShareCopyDescription",nil)];
-            
-            NSPasteboard* cb = [NSPasteboard generalPasteboard];
-            
-            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
-            [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.dialog.chat.username] forType:NSStringPboardType];
-            
-            dispatch_after_seconds(0.2, ^{
-                
-                [TMViewController hideModalProgressWithSuccess];
-                
-            });
+//            [TMViewController showModalProgressWithDescription:NSLocalizedString(@"Channel.ShareCopyDescription",nil)];
+//            
+//            NSPasteboard* cb = [NSPasteboard generalPasteboard];
+//            
+//            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
+//            [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.dialog.chat.username] forType:NSStringPboardType];
+//            
+//            dispatch_after_seconds(0.2, ^{
+//                
+//                [TMViewController hideModalProgressWithSuccess];
+//                
+//            });
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
         {

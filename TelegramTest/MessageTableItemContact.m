@@ -53,8 +53,9 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:_contactName attributes:@{NSFontAttributeName:TGSystemFont(13)}];
     
-    _contactNameSize = NSMakeSize(width - 100, 20);
+    _contactNameSize = [attr sizeForTextFieldForWidth:width];
     
     return YES;
 }

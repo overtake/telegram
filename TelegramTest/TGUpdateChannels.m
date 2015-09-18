@@ -174,15 +174,15 @@
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        int minId = [[[Storage manager] lastMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) important:YES isTop:NO] n_id];
+        TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) important:YES isTop:NO];
         
-        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:msg.n_id +1] lastObject];
+        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minMsg ? minMsg.n_id : msg.n_id - 1 max:msg.n_id +1] lastObject];
         
-        if(hole.max_id != minId) {
+        if(hole.max_id != msg.n_id) {
             if(![msg isImportantMessage]) {
                 
                 if(!hole)
-                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minId max_id:msg.n_id+1 date:msg.date count:0];
+                    hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minMsg ? minMsg.n_id : msg.n_id - 1 max_id:msg.n_id+1 date:minMsg.date count:0];
                 
                 hole.max_id = msg.n_id+1;
                 hole.messagesCount++;

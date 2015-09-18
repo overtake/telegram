@@ -275,7 +275,7 @@ static NSArray *channelUpdates;
     TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
-    if(statefulMessage.pts > 0 && _updateState.pts + statefulMessage.pts_count == statefulMessage.pts && !_holdUpdates) {
+    if(statefulMessage.pts > 0 && ((_updateState.pts + statefulMessage.pts_count == statefulMessage.pts) || _updateState.pts >= statefulMessage.pts) && !_holdUpdates) {
         [self proccessStatefulMessage:statefulMessage needSave:YES];
         return;
     }

@@ -14,8 +14,8 @@
 @implementation MessageTableItemHole
 
 -(id)initWithObject:(TL_localMessage *)object {
-    if(self = [super initWithObject:object]) {
-        
+    if(self = [super init]) {
+        self.message = object;
         [self updateWithHole:object.hole];
         
     }

@@ -108,7 +108,7 @@
         self.conversation = dialog;
         
         
-        if(self.conversation.type == DialogTypeChat) {
+        if(self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel) {
             self.chat = self.conversation.chat;
         } else if(self.conversation.type == DialogTypeSecretChat) {
             self.user = self.conversation.encryptedChat.peerUser;
@@ -120,7 +120,7 @@
         
         
         
-        [self.title appendString:self.conversation.type == DialogTypeChat ? dialog.chat.title : dialog.user.fullName withColor:DARK_BLACK];
+        [self.title appendString:self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel ? self.chat.title : dialog.user.fullName withColor:DARK_BLACK];
         
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString*)self.title selectionColor:BLUE_UI_COLOR];
         
@@ -147,7 +147,7 @@
             self.user =  self.conversation.encryptedChat.peerUser;
         }
 
-        if(self.conversation.type == DialogTypeChat) {
+        if(self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel) {
             self.chat = self.conversation.chat;
             [self.title appendString:self.chat.title withColor:DARK_BLACK];
         } else {
@@ -172,7 +172,7 @@
             [[self.status mutableString] replaceCharactersInRange:NSMakeRange(0, range.location - 8 + offset) withString:@"..."];
         }
         
-        if(self.conversation.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
+        if(self.conversation.type == DialogTypeChannel || self.conversation.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
             
             TLUser *user = [[UsersManager sharedManager] find:self.message.from_id];
             
