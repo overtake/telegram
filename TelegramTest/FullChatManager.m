@@ -164,13 +164,13 @@
 }
 
 
-- (void) loadIfNeed:(int)chat_id force:(BOOL)force  {
+- (void) loadIfNeed:(int)chat_id force:(BOOL)force  isChannel:(BOOL)isChannel {
     if(!self.isLoad)
         return;
     
     TLChatFull *chat = [self find:chat_id];
     if(!chat || (chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime]) || force || chat.class == [TL_chatFull_old29 class])
-        [self loadFullChatByChatId:chat_id force:force];
+        [self loadFullChatByChatId:chat_id force:force isChannel:isChannel];
 }
 
 - (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
@@ -192,6 +192,10 @@
                 return;
         }
         
+    }
+    
+    if(chat_id == 0) {
+        int bp = 0;
     }
     
     TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
@@ -257,7 +261,7 @@
     
 }
 
-- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force {
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel {
     [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 

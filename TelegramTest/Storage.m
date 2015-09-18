@@ -1754,7 +1754,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableSharedMedia],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelMessages],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
-        
+         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableBroadcasts],@(dialog.peer_id)];
      
         TLChat *chat = dialog.chat;
         
@@ -1765,12 +1765,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableEncryptedChats],@(dialog.chat.n_id)];
             [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChats],@(dialog.chat.n_id)];
             [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChatsFull], @(dialog.chat.n_id)];
-            [db executeUpdate:@"delete from self_destruction where chat_id = ?",@(dialog.peer.chat_id)];
-            [db executeUpdate:@"delete from broadcasts where n_id = ?",@(dialog.peer.chat_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableSelfDestruction],@(dialog.peer.chat_id)];
+           
         }
-        
-        
-        
         
         
         [db commit];

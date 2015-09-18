@@ -253,40 +253,38 @@
 - (void)setChat:(TLChat *)chat {
     self->_chat = chat;
     
-    [self view];
+    if(chat) {
+        [self view];
+        
+        [_headerView setController:self];
     
-    if(chat)
+        [_headerView reload];
+        
         _bottomView.conversation = chat.dialog;
+        
+        [_tableView scrollToBeginningOfDocument:_tableView];
+        [_tableView.scrollView scrollToPoint:NSMakePoint(0, 0) animation:NO];
+        
+        
+        self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+        
+        
+        
+        
+        [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
+        
+        [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:0] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self reloadParticipants];
+        
+        self.type = ChatInfoViewControllerNormal;
+        [self buildRightView];
+
+    } else {
+        _type = ChatInfoViewControllerNormal;
+        [_tableView removeAllItems:NO];
+        [_tableView reloadData];
+    }
     
-    [_tableView scrollToBeginningOfDocument:_tableView];
-    [_tableView.scrollView scrollToPoint:NSMakePoint(0, 0) animation:NO];
-    
-    
-    
-    self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    
-    [_headerView setController:self];
-    
-    
-//    [self.fullChat.participants.participants enumerateObjectsUsingBlock:^(TL_chatParticipant *obj, NSUInteger idx, BOOL *stop) {
-//        
-//        if(obj.user_id == [UsersManager currentUserId]) {
-//            
-//            MTLog(@"inviter:%@, inviteDate:%@",[[[UsersManager sharedManager] find:obj.inviter_id] fullName],[NSDate dateWithTimeIntervalSince1970:obj.date]);
-//            
-//        }
-//        
-//    }];
-    
-   // [_tableView.con setFrameOrigin:NSMakePoint(_tableView.frame.origin.x, _headerView.frame.size.height)];
-    
-    [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
-    
-    [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:0] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-    [self reloadParticipants];
-    
-    self.type = ChatInfoViewControllerNormal;
-    [self buildRightView];
 }
 
 - (void)kickParticipantByItem:(ChatParticipantItem *)item {

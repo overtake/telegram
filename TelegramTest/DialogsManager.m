@@ -399,13 +399,11 @@
                     [self->list removeObject:dialog];
                     [self->keys removeObjectForKey:@(dialog.peer_id)];
                     
-                    [[ChatsManager sharedManager] removeObjectWithKey:@(abs(dialog.peer_id))];
-                    
                     [[ChannelsManager sharedManager] removeObjectWithKey:@(dialog.peer_id)];
                     
                     [MessagesManager updateUnreadBadge];
                     
-                    if([dialog.peer isChat]) {
+                    if(dialog.chat != nil) {
                         [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
                         [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
                     }
@@ -765,6 +763,8 @@
                 current.read_inbox_max_id = dialog.read_inbox_max_id;
                 current.top_important_message = dialog.top_important_message;
                 current.unread_important_count = dialog.unread_important_count;
+                current.pts = dialog.pts;
+                current.invisibleChannel = dialog.invisibleChannel;
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer.peer_id)];

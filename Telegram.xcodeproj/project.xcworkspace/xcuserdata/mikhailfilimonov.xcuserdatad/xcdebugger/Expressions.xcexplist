@@ -557,6 +557,14 @@
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
       </ContextState>
       <ContextState
+         contextName = "__63-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:]_block_invoke:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "conversation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__53-[DialogsHistoryController loadlocal:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
       </ContextState>
       <ContextState
@@ -691,6 +699,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke243:FullChatManager.m">
       </ContextState>
       <ContextState
          contextName = "__30-[Storage insertMessagesHole:]_block_invoke:Storage.m">
