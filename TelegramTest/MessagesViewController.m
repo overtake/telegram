@@ -2489,7 +2489,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)tryRead {
-    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == self.defHFClass && ![TGPasslock isVisibility]) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility]) {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
