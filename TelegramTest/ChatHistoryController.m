@@ -125,10 +125,6 @@ static NSMutableArray *listeners;
     return queue;
 }
 
--(NSUInteger)selectLimit {
-    return 5;
-}
-
 
 
 
