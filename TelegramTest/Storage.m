@@ -736,7 +736,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         [result close];
         
-        
+        if(!next) {
+            int bp = 0;
+        }
         
         TL_localMessage *lastMessage = next ? [messages lastObject] : [messages firstObject];
         
@@ -818,9 +820,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
               //  NOT(? >= max_id OR ? <= min_id)
                 if(!hole || !(hole.min_id <= gh.max_id || hole.max_id >= gh.min_id))
                     [groupHoles addObject:gh];
+                
+                
             }
              
-             
+             if(!next) {
+                 int bp = 0;
+             }
             
             [result close];
         }
@@ -911,10 +917,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
 {
-    return [self lastImportantMessageAroundMinId:channelMsgId isTop:YES];
+    return [self lastMessageAroundMinId:channelMsgId important:YES isTop:NO];
 }
 
--(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId isTop:(BOOL)isTop {
+-(TL_localMessage *)lastMessageAroundMinId:(long)channelMsgId important:(BOOL)important isTop:(BOOL)isTop {
    
     __block TL_localMessage *msg;
     
@@ -928,7 +934,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id %@ ? and peer_id = ? and  (filter_mask & ?) = ? order by n_id %@ limit 1",tableChannelMessages,!isTop ? @"<=" : @">=",isTop ? @"asc" : @"desc"],@(channelMsgId),@(peer_id),@(HistoryFilterImportantChannelMessage),@(HistoryFilterImportantChannelMessage)];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id %@ ? and peer_id = ? and  (filter_mask & ?) = ? order by n_id %@ limit 1",tableChannelMessages,!isTop ? @"<=" : @">=",isTop ? @"asc" : @"desc"],@(channelMsgId),@(peer_id),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage)];
         
         if([result next]) {
             msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
@@ -1099,7 +1105,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [result close];
             
             
-            importantMessage = [db intForQuery:[NSString stringWithFormat:@"select serialized,flags from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],@(peer_id),@(HistoryFilterImportantChannelMessage)];
+            importantMessage = [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],@(peer_id),@(HistoryFilterImportantChannelMessage)];
+            
+            int bp = 0;
             
         } else {
             

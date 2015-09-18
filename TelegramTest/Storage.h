@@ -165,7 +165,7 @@ extern NSString *const RECENT_SEARCH;
 
 
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
--(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId isTop:(BOOL)isTop;
+-(TL_localMessage *)lastMessageAroundMinId:(long)channelMsgId important:(BOOL)important isTop:(BOOL)isTop;
 -(TL_localMessage *)messageById:(int)msgId inChannel:(int)channel_id;
 
 

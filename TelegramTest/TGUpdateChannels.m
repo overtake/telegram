@@ -176,7 +176,7 @@
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        int minId = [[[Storage manager] lastImportantMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) isTop:NO] n_id];
+        int minId = [[[Storage manager] lastMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) important:YES isTop:NO] n_id];
         
         TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:msg.n_id +1] lastObject];
         
@@ -208,35 +208,42 @@
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
-            TL_localMessage *topMsg = [[Storage manager] lastImportantMessageAroundMinId:channelMsgId([obj intValue], peer_id) isTop:NO];
+            TL_localMessage *topMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue]-1, peer_id) important:NO isTop:NO];
             
             
             NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsg.n_id max:[obj intValue]+1];
             
             if(groupHoles.count == 1) {
+        
                 TGMessageGroupHole *hole = [groupHoles firstObject];
                 
-                hole.messagesCount--;
+                if(hole.max_id > [obj intValue] && hole.min_id < [obj intValue])
+                     hole.messagesCount--;
+                else {
+                    hole.min_id = topMsg.n_id;
+                }
                 
-                if(hole.messagesCount == 0) {
+                if(hole.messagesCount == 0)
                     [hole remove];
-                } else
+                else
                     [hole save];
                 
                 [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+
             } else if(groupHoles.count == 2) {
                 
                 TGMessageGroupHole *topHole = groupHoles[0];
                 TGMessageGroupHole *botHole = groupHoles[1];
                 
-                [topHole remove];
+                [botHole remove];
                 
-                botHole.min_id = botHole.min_id;
-                botHole.messagesCount += topHole.messagesCount;
-                [botHole save];
                 
-                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:botHole}];
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(topHole.peer_id),KEY_MESSAGE_ID:@(topHole.uniqueId)}]}];
+                topHole.max_id = botHole.max_id;
+                topHole.messagesCount += botHole.messagesCount;
+                [topHole save];
+                
+                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:topHole}];
+                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(botHole.peer_id),KEY_MESSAGE_ID:@(botHole.uniqueId)}]}];
                 
             }
             
