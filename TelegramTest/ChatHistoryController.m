@@ -373,6 +373,10 @@ static NSMutableArray *listeners;
                 NSArray *items = [obj selectAllItems];
                 
                 int position = (int) [items indexOfObject:tableItem];
+                 
+                 if(position != 0) {
+                     int bp = 0;
+                 }
                 
                 if(res.count == 1) {
                     
@@ -831,7 +835,7 @@ static NSMutableArray *listeners;
 
     return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
         
-        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedAscending : NSOrderedDescending)));
     }];
 }
 

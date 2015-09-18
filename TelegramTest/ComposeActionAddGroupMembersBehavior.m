@@ -63,6 +63,9 @@
             
             [[Telegram rightViewController] navigationGoBack];
             
+            [self.delegate behaviorDidEndRequest:nil];
+            
+            
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
         }];

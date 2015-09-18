@@ -2917,6 +2917,9 @@
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGUpdateChannels proccessUpdate:]:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -3130,6 +3133,11 @@
       </ContextState>
       <ContextState
          contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "res">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[Storage open:]:Storage.m">
