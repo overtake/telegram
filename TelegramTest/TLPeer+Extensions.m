@@ -15,7 +15,7 @@
 }
 
 - (BOOL)isChat {
-    return self.chat_id != 0;
+    return self.chat_id != 0 || self.channel_id != 0;
 }
 
 - (BOOL)isSecret {

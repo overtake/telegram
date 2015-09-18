@@ -34,7 +34,7 @@
     
     
     [self.cs_classes setObject:[TL_outDocument class] forKey:[NSNumber numberWithInt:6]];
-    [self.cs_classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:8]];
+    [self.cs_classes setObject:[TL_localMessageService_old34 class] forKey:[NSNumber numberWithInt:8]];
     [self.cs_classes setObject:[TL_peerBroadcast class] forKey:[NSNumber numberWithInt:9]];
     [self.cs_classes setObject:[TL_broadcast class] forKey:[NSNumber numberWithInt:10]];
     [self.cs_classes setObject:[TL_messageActionSetMessageTTL class] forKey:[NSNumber numberWithInt:11]];
@@ -47,7 +47,7 @@
     [self.cs_classes setObject:[TL_conversation class] forKey:[NSNumber numberWithInt:16]];
     
     [self.cs_classes setObject:[TL_localEmptyMessage class] forKey:[NSNumber numberWithInt:17]];
-    [self.cs_classes setObject:[TL_localMessageService_old34 class] forKey:[NSNumber numberWithInt:18]];
+    [self.cs_classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:18]];
     
     for(NSNumber* number in [self.cs_classes allKeys]) {
         [self.cs_constuctors setObject:number forKey:[self.cs_classes objectForKey:number]];

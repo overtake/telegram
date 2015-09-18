@@ -270,7 +270,8 @@ static const int navigationOffset = 48;
     __block TMView *oldView = oldViewController.view;
     __block TMView *newView = newViewController.view;
     
-    
+    if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+        [oldViewController _didStackRemoved];
     
     if(oldView == newView) {
         [oldViewController viewWillDisappear:NO];

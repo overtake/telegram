@@ -164,13 +164,13 @@
 }
 
 
-- (void) loadIfNeed:(int)chat_id force:(BOOL)force  isChannel:(BOOL)isChannel {
+- (void) loadIfNeed:(int)chat_id force:(BOOL)force  {
     if(!self.isLoad)
         return;
     
     TLChatFull *chat = [self find:chat_id];
     if(!chat || (chat.lastUpdateTime + 300 < [[MTNetwork instance] getTime]) || force || chat.class == [TL_chatFull_old29 class])
-        [self loadFullChatByChatId:chat_id force:force isChannel:isChannel];
+        [self loadFullChatByChatId:chat_id force:force];
 }
 
 - (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback {
@@ -257,7 +257,7 @@
     
 }
 
-- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force isChannel:(BOOL)isChannel {
+- (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force {
     [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 

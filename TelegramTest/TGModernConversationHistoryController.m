@@ -345,35 +345,35 @@ static BOOL isStorageLoaded;
     
     
     NSArray *allChannels = [[ChannelsManager sharedManager] all];
-    NSArray *mixed = [self mixChannelsWithConversations:[allChannels subarrayWithRange:NSMakeRange(_channelsOffset, allChannels.count - _channelsOffset)] conversations:all];
+    NSArray *mixed = [self mixChannelsWithConversations:allChannels conversations:all];
     
     
     __block NSUInteger lastIndex = mixed.count;
-    
-    [mixed enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.type != DialogTypeChannel) {
-            lastIndex = idx+1;
-            *stop = YES;
-        }
-        
-    }];
-    
-    
-    
-    mixed = [mixed subarrayWithRange:NSMakeRange(_offset, MIN(MIN(lastIndex,[self.delegate conversationsLoadingLimit]),mixed.count - _offset))];
-    
-    NSArray *channels = [mixed filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 4"]];
-    
-    NSUInteger channelsOffsetCount = [channels count];
-    
-    [[DialogsManager sharedManager] add:channels];
-   
-    NSRange range = NSMakeRange(_offset+_channelsOffset, mixed.count);
+//    
+//    [mixed enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+//        
+//        if(obj.type != DialogTypeChannel) {
+//            lastIndex = idx+1;
+//            *stop = YES;
+//        }
+//        
+//    }];
+//    
+//    
+//    
+//    mixed = [mixed subarrayWithRange:NSMakeRange(_offset, MIN(MIN(lastIndex,[self.delegate conversationsLoadingLimit]),mixed.count - _offset))];
+//    
+//    NSArray *channels = [mixed filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 4"]];
+//    
+//    NSUInteger channelsOffsetCount = [channels count];
+//    
+//    [[DialogsManager sharedManager] add:channels];
+//   
+    NSRange range = NSMakeRange(_offset, mixed.count);
     
     [_delegate didLoadedConversations:mixed withRange:range];
     
-    _channelsOffset+=channelsOffsetCount;
+  //  _channelsOffset+=channelsOffsetCount;
     _offset+= mixed.count;
     
     _isLoading = NO;

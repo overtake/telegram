@@ -32,19 +32,17 @@
 
 -(int)ptsWithChannelId:(int)channel_id {
     
-    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],1);
+    return MAX([[[ChannelsManager sharedManager] find:-channel_id] pts],1);
 }
 
 -(TL_conversation *)conversationWithChannelId:(int)channel_id {
     
-    TL_conversation *conversation = [[DialogsManager sharedManager] find:-channel_id];
+    TL_conversation *conversation = [[ChannelsManager sharedManager] find:-channel_id];
     
     if(!conversation) {
         conversation = [[Storage manager] selectConversation:[TL_peerChannel createWithChannel_id:channel_id]];
-        
-        assert(conversation != nil);
-        
-        [[DialogsManager sharedManager] add:@[conversation]];
+                
+        [[ChannelsManager sharedManager] add:@[conversation]];
     }
     
     
@@ -379,6 +377,8 @@
             conversation.unread_count = [response unread_count];
             
             [conversation save];
+            
+            [[DialogsManager sharedManager] add:@[conversation]];
             
             [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
             

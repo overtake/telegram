@@ -875,6 +875,8 @@
                 
                 weakSelf.dialog.invisibleChannel = NO;
                 
+                [[DialogsManager sharedManager] updateLastMessageForDialog:weakSelf.dialog];
+                
                 [weakSelf.dialog save];
                 
                 

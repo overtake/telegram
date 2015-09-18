@@ -80,10 +80,24 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
 
 - (NSAttributedString *) dialogTitle {
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
-
+    
+    if([self isKindOfClass:[TL_channel class]]) {
+        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
+        [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
+    }
+    
+    
     [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    
+    
+    
+    
+    [self setDIALOGTITLE:dialogTitleAttributedString];
+    
+    return [self getDIALOGTITLE];
+
     
     [self setDIALOGTITLE:dialogTitleAttributedString];
     

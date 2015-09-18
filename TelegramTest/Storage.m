@@ -1403,13 +1403,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db beginTransaction];
         
         
-        NSString *sql = [NSString stringWithFormat:@"delete from messages WHERE peer_id = %d",dialog.peer.peer_id];
+        NSString *sql = [NSString stringWithFormat:@"delete from %@ WHERE peer_id = %d",tableMessages,dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE  peer_id = %d",dialog.peer.peer_id];
-        [db executeUpdateWithFormat:sql,nil];
+        if(dialog.type == DialogTypeChannel) {
+            sql = [NSString stringWithFormat:@"delete from %@ WHERE peer_id = %d",tableChannelMessages,dialog.peer.peer_id];
+            [db executeUpdateWithFormat:sql,nil];
+            
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
+        }
         
-        sql = [NSString stringWithFormat:@"delete from sharedmedia_v2 WHERE peer_id  =%d",dialog.peer.peer_id];
+        
+        sql = [NSString stringWithFormat:@"delete from %@ WHERE peer_id  =%d",tableSharedMedia,dialog.peer.peer_id];
         [db executeUpdateWithFormat:sql,nil];
         
         
@@ -1741,20 +1746,30 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)deleteDialog:(TL_conversation *)dialog completeHandler:(void (^)(void))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         [db beginTransaction];
-        [db executeUpdate:@"delete from dialogs where peer_id = ?",@(dialog.peer_id)];
-        [db executeUpdate:@"delete from messages where peer_id = ?",@(dialog.peer_id)];
-        [db executeUpdate:@"delete from channel_dialogs where peer_id = ?",@(dialog.peer_id)];
-        [db executeUpdate:@"delete from sharedmedia_v2 where peer_id = ?",@(dialog.peer_id)];
-        if([dialog.peer isChat]) {
-            [db executeUpdate:@"delete from encrypted_chats where chat_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
-            [db executeUpdate:@"delete from chats where n_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
-            if(dialog.type == DialogTypeSecretChat)
-                [db executeUpdate:@"delete from self_destruction where chat_id = ?",[NSNumber numberWithInt:dialog.peer.chat_id]];
-            
-            if(dialog.type == DialogTypeBroadcast) {
-                [db executeUpdate:@"delete from broadcasts where n_id = ?",@(dialog.peer.chat_id)];
-            }
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableDialogs],@(dialog.peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessages],@(dialog.peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelDialogs],@(dialog.peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableSharedMedia],@(dialog.peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelMessages],@(dialog.peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
+        
+     
+        TLChat *chat = dialog.chat;
+        
+        if([dialog.peer isKindOfClass:[TL_peerSecret class]])
+            chat = (TLChat *) dialog.encryptedChat;
+        
+        if(chat) {
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableEncryptedChats],@(dialog.chat.n_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChats],@(dialog.chat.n_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChatsFull], @(dialog.chat.n_id)];
+            [db executeUpdate:@"delete from self_destruction where chat_id = ?",@(dialog.peer.chat_id)];
+            [db executeUpdate:@"delete from broadcasts where n_id = ?",@(dialog.peer.chat_id)];
         }
+        
+        
         
         
         
@@ -2356,7 +2371,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         
-        NSString *sql = [NSString stringWithFormat:@"select * from %@ where peer_id = %d", [peer isKindOfClass:[TL_peerChannel class]] ? @"channel_dialogs" : @"dialogs",peer.peer_id];
+        NSString *sql = [NSString stringWithFormat:@"select * from %@ where peer_id = %d", [peer isKindOfClass:[TL_peerChannel class]] ? tableChannelDialogs : tableDialogs,peer.peer_id];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
@@ -2384,6 +2399,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 conversation.pts = [result intForColumn:@"pts"];
                 conversation.unread_important_count = [result intForColumn:@"unread_important_count"];
                 conversation.invisibleChannel = [result intForColumn:@"is_invisible"];
+                conversation.top_important_message = [result intForColumn:@"top_important_message"];
             }
             
            

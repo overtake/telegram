@@ -405,6 +405,10 @@
                     
                     [MessagesManager updateUnreadBadge];
                     
+                    if([dialog.peer isChat]) {
+                        [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+                        [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+                    }
                     
                     
                 }];
