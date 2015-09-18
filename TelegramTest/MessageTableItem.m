@@ -51,7 +51,7 @@
         
         _containerOffset = self.message.from_id != 0 ? 79 : 29;
         
-        _containerOffsetForward  = self.message.from_id != 0 ? 129 : 91;
+        _containerOffsetForward  = self.message.from_id != 0 ? 141 : 91;
         
         if(self.message) {
            

@@ -137,9 +137,7 @@
             int lastImportantMessage = [[[Storage manager] lastMessageAroundMinId:obj.channelMsgId important:YES isTop:!bottom] n_id];
             
             lastImportantMessage = lastImportantMessage == 0 ? (bottom ? 1 : self.controller.conversation.top_message) : lastImportantMessage;
-            
-            NSLog(@"min_id:%d max_id:%d",!bottom?obj.n_id:lastImportantMessage,bottom?obj.n_id:lastImportantMessage);
-            
+                        
             NSArray *holes = [[Storage manager] groupHoles:obj.peer_id min:!bottom?obj.n_id:lastImportantMessage max:bottom?obj.n_id:lastImportantMessage];
             
             __block TGMessageGroupHole *hole;

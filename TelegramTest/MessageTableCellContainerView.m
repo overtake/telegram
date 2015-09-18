@@ -660,7 +660,7 @@ static BOOL dragAction = NO;
             [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 48 - minus)];
         } else {
             [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - minus))];
-            [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 24 - minus)];
+            [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 28 - minus)];
         }
         
         
@@ -693,7 +693,7 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 10 : roundf((item.viewSize.height - item.blockSize.height)/2), item.blockSize.width, item.blockSize.height)];
+    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 7 : roundf((item.viewSize.height - item.blockSize.height)/2), item.blockSize.width, item.blockSize.height)];
     
     
     if([item isReplyMessage])
