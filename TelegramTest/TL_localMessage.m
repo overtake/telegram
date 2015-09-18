@@ -118,7 +118,7 @@
     TL_localMessage *msg;
     
     if([message isKindOfClass:[TL_messageService class]]) {
-        msg = [TL_localMessageService createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        msg = [TL_localMessageService createWithFlags:message.flags n_id:message.n_id from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
         msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities views:message.views isViewed:NO state:DeliveryStateNormal];
         

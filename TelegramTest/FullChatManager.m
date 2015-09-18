@@ -307,7 +307,7 @@
                     currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
-            if(![currentChat.participants isKindOfClass:[TL_channelParticipants class]]) {
+            if([currentChat isKindOfClass:[TL_chatFull class]]) {
                 NSArray *copy = [currentChat.participants.participants copy];
                 
                 for (TL_chatParticipant *user in copy) {

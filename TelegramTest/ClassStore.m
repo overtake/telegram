@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 17.09.15.
+    //  Created by keepcoder on 18.09.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -473,8 +473,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channel class] forKey:[NSNumber numberWithInt:1737397639]];
    [cs_classes setObject:[TL_channelForbidden class] forKey:[NSNumber numberWithInt:763724588]];
    [cs_classes setObject:[TL_contacts_resolvedPeer class] forKey:[NSNumber numberWithInt:2131196633]];
-   [cs_classes setObject:[TL_channelFull class] forKey:[NSNumber numberWithInt:915708496]];
-   [cs_classes setObject:[TL_channelParticipants class] forKey:[NSNumber numberWithInt:-555298285]];
+   [cs_classes setObject:[TL_channelFull class] forKey:[NSNumber numberWithInt:-158049435]];
    [cs_classes setObject:[TL_dialogChannel class] forKey:[NSNumber numberWithInt:1535415986]];
    [cs_classes setObject:[TL_messageRange class] forKey:[NSNumber numberWithInt:182649427]];
    [cs_classes setObject:[TL_messageGroup class] forKey:[NSNumber numberWithInt:-399216813]];
@@ -518,9 +517,11 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_audio_old29 class] forKey:[NSNumber numberWithInt:-945003370]];
    [cs_classes setObject:[TL_video_old29 class] forKey:[NSNumber numberWithInt:-291550643]];
    [cs_classes setObject:[TL_webPage_old34 class] forKey:[NSNumber numberWithInt:-1558273867]];
-   [cs_classes setObject:[TL_chat_old32 class] forKey:[NSNumber numberWithInt:1855757255]];
+   [cs_classes setObject:[TL_chat_old34 class] forKey:[NSNumber numberWithInt:1855757255]];
+   [cs_classes setObject:[TL_inputMediaUploadedVideo_old34 class] forKey:[NSNumber numberWithInt:-515910468]];
+   [cs_classes setObject:[TL_inputMediaUploadedThumbVideo_old32 class] forKey:[NSNumber numberWithInt:-1761896484]];
    [cs_classes setObject:[TL_chatForbidden_old34 class] forKey:[NSNumber numberWithInt:-83047359]];
-   [cs_classes setObject:[TL_chatFull_old34 class] forKey:[NSNumber numberWithInt:771925524]];
+   [cs_classes setObject:[TL_chatParticipantsForbidden_old34 class] forKey:[NSNumber numberWithInt:265468810]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

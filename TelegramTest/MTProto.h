@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.09.15.
+//  Auto created by Mikhail Filimonov on 18.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -372,9 +372,6 @@
 @interface TLcontacts_ResolvedPeer : TLObject
 @end
 	
-@interface TLChannelParticipants : TLObject
-@end
-	
 @interface TLMessageRange : TLObject
 @end
 	
@@ -614,6 +611,12 @@
 @end
 @interface TL_inputMediaVenue : TLInputMedia<NSCoding>
 +(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
+@interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
++(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
+@end
+@interface TL_inputMediaUploadedThumbVideo_old32 : TLInputMedia<NSCoding>
++(TL_inputMediaUploadedThumbVideo_old32*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
 @end
 	
 @interface TLInputChatPhoto()
@@ -881,8 +884,8 @@
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
 @end
-@interface TL_chat_old32 : TLChat<NSCoding>
-+(TL_chat_old32*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version;
+@interface TL_chat_old34 : TLChat<NSCoding>
++(TL_chat_old34*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version;
 @end
 @interface TL_chatForbidden_old34 : TLChat<NSCoding>
 +(TL_chatForbidden_old34*)createWithN_id:(int)n_id title:(NSString*)title date:(int)date;
@@ -895,7 +898,11 @@
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @property (nonatomic, strong) NSMutableArray* bot_info;
+@property int flags;
 @property (nonatomic, strong) NSString* about;
+@property int participants_count;
+@property int admins_count;
+@property int kicked_count;
 @property int read_inbox_max_id;
 @property int unread_count;
 @property int unread_important_count;
@@ -905,13 +912,10 @@
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithN_id:(int)n_id participants:(TLChannelParticipants*)participants about:(NSString*)about read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithFlags:(int)flags n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
-@end
-@interface TL_chatFull_old34 : TLChatFull<NSCoding>
-+(TL_chatFull_old34*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 	
 @interface TLChatParticipant()
@@ -938,6 +942,9 @@
 @end
 @interface TL_chatParticipants : TLChatParticipants<NSCoding>
 +(TL_chatParticipants*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
+@end
+@interface TL_chatParticipantsForbidden_old34 : TLChatParticipants<NSCoding>
++(TL_chatParticipantsForbidden_old34*)createWithChat_id:(int)chat_id;
 @end
 	
 @interface TLChatPhoto()
@@ -2550,18 +2557,6 @@
 
 @interface TL_contacts_resolvedPeer : TLcontacts_ResolvedPeer<NSCoding>
 +(TL_contacts_resolvedPeer*)createWithPeer:(TLPeer*)peer chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
-@end
-	
-@interface TLChannelParticipants()
-@property int flags;
-@property int channel_id;
-@property int participants_count;
-@property (nonatomic, strong) TLChannelParticipant* self_participant;
-@property (nonatomic, strong) NSMutableArray* participants;
-@end
-
-@interface TL_channelParticipants : TLChannelParticipants<NSCoding>
-+(TL_channelParticipants*)createWithFlags:(int)flags channel_id:(int)channel_id participants_count:(int)participants_count self_participant:(TLChannelParticipant*)self_participant participants:(NSMutableArray*)participants;
 @end
 	
 @interface TLMessageRange()

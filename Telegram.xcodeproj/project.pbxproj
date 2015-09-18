@@ -815,6 +815,7 @@
 		C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E3319D58E580079046E /* libstdc++.dylib */; };
 		C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FA1947E134001617DB /* OpenGL.framework */; };
 		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
+		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
@@ -2468,6 +2469,8 @@
 		C2E40E3119D58E500079046E /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		C2E40E3319D58E580079046E /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
+		C2E5A05F1BABF33C00C1BCA1 /* TL_localMessageService_old34.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService_old34.h; sourceTree = "<group>"; };
+		C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService_old34.m; sourceTree = "<group>"; };
 		C2ED357B18D9FECB00D0027C /* CAProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProgressLayer.h; sourceTree = "<group>"; };
 		C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAProgressLayer.m; sourceTree = "<group>"; };
 		C2F3995D190E7692006B36F7 /* ReadHistroryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadHistroryTask.h; sourceTree = "<group>"; };
@@ -4169,6 +4172,8 @@
 				C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */,
 				C2B0DF751BA98E7C0023982C /* TL_localEmptyMessage.h */,
 				C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */,
+				C2E5A05F1BABF33C00C1BCA1 /* TL_localMessageService_old34.h */,
+				C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */,
 			);
 			name = constructors;
 			sourceTree = "<group>";
@@ -6200,6 +6205,7 @@
 				C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */,
 				CEAE5CCA1818811000C17645 /* NSDate-Utilities.m in Sources */,
 				C2D4B8661AFCE8F90035B4E4 /* YapDatabaseConnectionState.m in Sources */,
+				C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */,
 				C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */,
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
 				C248F3BF19BE03F600BF658E /* opusenc.c in Sources */,
